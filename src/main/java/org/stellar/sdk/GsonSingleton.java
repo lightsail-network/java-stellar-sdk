@@ -13,6 +13,7 @@ class GsonSingleton {
       instance = new GsonBuilder()
                       .registerTypeAdapter(Account.class, new AccountDeserializer())
                       .registerTypeAdapter(AccountsPageDecorated.class, new AccountsPageDecoratedDeserializer())
+                      .registerTypeAdapter(LedgersPageDecorated.class, new LedgersPageDecoratedDeserializer())
                       .create();
     }
     return instance;

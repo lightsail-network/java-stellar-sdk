@@ -1,0 +1,127 @@
+package org.stellar.sdk;
+
+import com.google.gson.annotations.SerializedName;
+
+public class Ledger {
+  @SerializedName("sequence")
+  private final long sequence;
+  @SerializedName("hash")
+  private final String hash;
+  @SerializedName("prev_hash")
+  private final String prevHash;
+  @SerializedName("transaction_count")
+  private final int transactionCount;
+  @SerializedName("operation_count")
+  private final int operationCount;
+  @SerializedName("closed_at")
+  private final String closedAt;
+  @SerializedName("total_coins")
+  private final String totalCoins;
+  @SerializedName("fee_pool")
+  private final String feePool;
+  @SerializedName("base_fee")
+  private final long baseFee;
+  @SerializedName("base_reserve")
+  private final String baseReserve;
+  @SerializedName("max_tx_set_size")
+  private final int maxTxSetSize;
+  @SerializedName("_links")
+  private final Links links;
+
+  Ledger(long sequence, String hash, String prevHash, int transactionCount, int operationCount, String closedAt, String totalCoins, String feePool, long baseFee, String baseReserve, int maxTxSetSize, Links links) {
+    this.sequence = sequence;
+    this.hash = hash;
+    this.prevHash = prevHash;
+    this.transactionCount = transactionCount;
+    this.operationCount = operationCount;
+    this.closedAt = closedAt;
+    this.totalCoins = totalCoins;
+    this.feePool = feePool;
+    this.baseFee = baseFee;
+    this.baseReserve = baseReserve;
+    this.maxTxSetSize = maxTxSetSize;
+    this.links = links;
+  }
+
+  public long getSequence() {
+    return sequence;
+  }
+
+  public String getHash() {
+    return hash;
+  }
+
+  public String getPrevHash() {
+    return prevHash;
+  }
+
+  public int getTransactionCount() {
+    return transactionCount;
+  }
+
+  public int getOperationCount() {
+    return operationCount;
+  }
+
+  public String getClosedAt() {
+    return closedAt;
+  }
+
+  public String getTotalCoins() {
+    return totalCoins;
+  }
+
+  public String getFeePool() {
+    return feePool;
+  }
+
+  public long getBaseFee() {
+    return baseFee;
+  }
+
+  public String getBaseReserve() {
+    return baseReserve;
+  }
+
+  public int getMaxTxSetSize() {
+    return maxTxSetSize;
+  }
+
+  public Links getLinks() {
+    return links;
+  }
+
+  public static class Links {
+    @SerializedName("effects")
+    private final Link effects;
+    @SerializedName("operations")
+    private final Link operations;
+    @SerializedName("self")
+    private final Link self;
+    @SerializedName("transactions")
+    private final Link transactions;
+
+    Links(Link effects, Link operations, Link self, Link transactions) {
+      this.effects = effects;
+      this.operations = operations;
+      this.self = self;
+      this.transactions = transactions;
+    }
+
+    public Link getEffects() {
+      return effects;
+    }
+
+    public Link getOperations() {
+      return operations;
+    }
+
+    public Link getSelf() {
+      return self;
+    }
+
+    public Link getTransactions() {
+      return transactions;
+    }
+  }
+}

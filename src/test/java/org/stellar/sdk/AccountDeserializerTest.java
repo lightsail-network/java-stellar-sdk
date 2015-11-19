@@ -1,7 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.gson.Gson;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -9,43 +7,7 @@ import org.junit.Test;
 public class AccountDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    String json = "{\n" +
-            "  \"id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
-            "  \"paging_token\": \"1\",\n" +
-            "  \"address\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
-            "  \"sequence\": 2319149195853854,\n" +
-            "  \"subentry_count\": 0,\n" +
-            "  \"inflation_destination\": \"GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC\",\n" +
-            "  \"home_domain\": \"stellar.org\",\n" +
-            "  \"thresholds\": {\n" +
-            "    \"low_threshold\": 10,\n" +
-            "    \"med_threshold\": 20,\n" +
-            "    \"high_threshold\": 30\n" +
-            "  },\n" +
-            "  \"flags\": {\n" +
-            "    \"auth_required\": false,\n" +
-            "    \"auth_revocable\": true\n" +
-            "  },\n" +
-            "  \"balances\": [\n" +
-            "    {\n" +
-            "      \"asset_type\": \"native\",\n" +
-            "      \"balance\": \"20.0000300\"\n" +
-            "    }\n" +
-            "  ],\n" +
-            "  \"signers\": [\n" +
-            "    {\n" +
-            "      \"address\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
-            "      \"weight\": 0\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"address\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
-            "      \"weight\": 1\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
-
-    Gson gson = GsonSingleton.getInstance();
-    Account account = gson.fromJson(json, Account.class);
+    Account account = GsonSingleton.getInstance().fromJson(json, Account.class);
     assertEquals(account.getKeypair().getAddress(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSequenceNumber(), new Long(2319149195853854L));
     assertEquals(account.getSubentryCount(), new Integer(0));
@@ -66,5 +28,67 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getSigners()[0].getWeight(), 0);
     assertEquals(account.getSigners()[1].getAddress(), "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
     assertEquals(account.getSigners()[1].getWeight(), 1);
+
+    assertEquals(account.getLinks().getEffects().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/effects{?cursor,limit,order}");
+    assertEquals(account.getLinks().getOffers().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/offers{?cursor,limit,order}");
+    assertEquals(account.getLinks().getOperations().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}");
+    assertEquals(account.getLinks().getSelf().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+    assertEquals(account.getLinks().getTransactions().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}");
   }
+
+  String json = "{\n" +
+          "  \"_links\": {\n" +
+          "    \"effects\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/effects{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"offers\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/offers{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"operations\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"self\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\"\n" +
+          "    },\n" +
+          "    \"transactions\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    }\n" +
+          "  },"+
+          "  \"id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "  \"paging_token\": \"1\",\n" +
+          "  \"address\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "  \"sequence\": 2319149195853854,\n" +
+          "  \"subentry_count\": 0,\n" +
+          "  \"inflation_destination\": \"GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC\",\n" +
+          "  \"home_domain\": \"stellar.org\",\n" +
+          "  \"thresholds\": {\n" +
+          "    \"low_threshold\": 10,\n" +
+          "    \"med_threshold\": 20,\n" +
+          "    \"high_threshold\": 30\n" +
+          "  },\n" +
+          "  \"flags\": {\n" +
+          "    \"auth_required\": false,\n" +
+          "    \"auth_revocable\": true\n" +
+          "  },\n" +
+          "  \"balances\": [\n" +
+          "    {\n" +
+          "      \"asset_type\": \"native\",\n" +
+          "      \"balance\": \"20.0000300\"\n" +
+          "    }\n" +
+          "  ],\n" +
+          "  \"signers\": [\n" +
+          "    {\n" +
+          "      \"address\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "      \"weight\": 0\n" +
+          "    },\n" +
+          "    {\n" +
+          "      \"address\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
+          "      \"weight\": 1\n" +
+          "    }\n" +
+          "  ]\n" +
+          "}";
 }

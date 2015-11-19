@@ -27,6 +27,8 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
   private Balance[] balances;
   @SerializedName("signers")
   private Signers[] signers;
+  @SerializedName("_links")
+  private Links links;
 
   Account(Keypair keypair) {
     this.keypair = keypair;
@@ -171,7 +173,7 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
     @SerializedName("weight")
     private final int weight;
 
-    public Signers(String address, int weight) {
+    Signers(String address, int weight) {
       this.address = checkNotNull(address, "address cannot be null");
       this.weight = checkNotNull(weight, "weight cannot be null");
     }
@@ -182,6 +184,51 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
 
     public int getWeight() {
       return weight;
+    }
+  }
+
+  public Links getLinks() {
+    return links;
+  }
+
+  public static class Links {
+    @SerializedName("effects")
+    private final Link effects;
+    @SerializedName("offers")
+    private final Link offers;
+    @SerializedName("operations")
+    private final Link operations;
+    @SerializedName("self")
+    private final Link self;
+    @SerializedName("transactions")
+    private final Link transactions;
+
+    Links(Link effects, Link offers, Link operations, Link self, Link transactions) {
+      this.effects = effects;
+      this.offers = offers;
+      this.operations = operations;
+      this.self = self;
+      this.transactions = transactions;
+    }
+
+    public Link getEffects() {
+      return effects;
+    }
+
+    public Link getOffers() {
+      return offers;
+    }
+
+    public Link getOperations() {
+      return operations;
+    }
+
+    public Link getSelf() {
+      return self;
+    }
+
+    public Link getTransactions() {
+      return transactions;
     }
   }
 }
