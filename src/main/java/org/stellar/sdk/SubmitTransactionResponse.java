@@ -1,11 +1,16 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk;
+
+import com.google.gson.annotations.SerializedName;
 
 public class SubmitTransactionResponse {
+    @SerializedName("hash")
     private final String hash;
+    @SerializedName("ledger")
     private final Long ledger;
+    @SerializedName("extras")
     private final Extras extras;
 
-    public SubmitTransactionResponse(Extras extras, Long ledger, String hash) {
+    SubmitTransactionResponse(Extras extras, Long ledger, String hash) {
         this.extras = extras;
         this.ledger = ledger;
         this.hash = hash;
@@ -28,10 +33,12 @@ public class SubmitTransactionResponse {
     }
 
     public static class Extras {
+        @SerializedName("envelope_xdr")
         private final String envelopeXdr;
+        @SerializedName("result_xdr")
         private final String resultXdr;
 
-        public Extras(String envelopeXdr, String resultXdr) {
+        Extras(String envelopeXdr, String resultXdr) {
             this.envelopeXdr = envelopeXdr;
             this.resultXdr = resultXdr;
         }

@@ -13,12 +13,10 @@ import org.apache.http.message.BasicStatusLine;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.stellar.base.Account;
 import org.stellar.base.CreateAccountOperation;
 import org.stellar.base.Keypair;
 import org.stellar.base.Memo;
 import org.stellar.base.Transaction;
-import org.stellar.sdk.responses.SubmitTransactionResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -88,7 +86,7 @@ public class ServerTest extends TestCase {
         Keypair source = Keypair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
         Keypair destination = Keypair.fromAddress("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-        Account account = new Account(source, 2908908335136768L);
+        org.stellar.base.Account account = new org.stellar.base.Account(source, 2908908335136768L);
         Transaction transaction = new Transaction.Builder(account)
                 .addOperation(new CreateAccountOperation.Builder(destination, 20000000000L).build())
                 .addMemo(Memo.text("Hello world!"))
