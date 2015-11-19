@@ -1,0 +1,42 @@
+apply plugin: 'java'
+apply plugin: 'ivy-publish'
+
+sourceCompatibility = 1.6
+version = '0.0.1'
+group = 'stellar'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'stellar-sdk',
+                   'Implementation-Version': version
+    }
+    archiveName 'stellar-sdk.jar'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+publishing {
+    publications {
+        ivy(IvyPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        ivy {
+            url "$projectDir/repos"
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.httpcomponents:httpclient:4.5.1'
+    compile 'org.mockito:mockito-core:2.0.31-beta'
+    compile 'com.google.guava:guava:18.0'
+    compile 'com.google.code.gson:gson:2.4'
+    compile 'commons-io:commons-io:2.4'
+    compile fileTree(dir: 'libs', include: '*.jar')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
