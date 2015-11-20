@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class Ledger {
   @SerializedName("sequence")
-  private final long sequence;
+  private final Long sequence;
   @SerializedName("hash")
   private final String hash;
   @SerializedName("prev_hash")
   private final String prevHash;
   @SerializedName("transaction_count")
-  private final int transactionCount;
+  private final Integer transactionCount;
   @SerializedName("operation_count")
-  private final int operationCount;
+  private final Integer operationCount;
   @SerializedName("closed_at")
   private final String closedAt;
   @SerializedName("total_coins")
@@ -20,15 +20,15 @@ public class Ledger {
   @SerializedName("fee_pool")
   private final String feePool;
   @SerializedName("base_fee")
-  private final long baseFee;
+  private final Long baseFee;
   @SerializedName("base_reserve")
   private final String baseReserve;
   @SerializedName("max_tx_set_size")
-  private final int maxTxSetSize;
+  private final Integer maxTxSetSize;
   @SerializedName("_links")
   private final Links links;
 
-  Ledger(long sequence, String hash, String prevHash, int transactionCount, int operationCount, String closedAt, String totalCoins, String feePool, long baseFee, String baseReserve, int maxTxSetSize, Links links) {
+  Ledger(Long sequence, String hash, String prevHash, Integer transactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, Integer maxTxSetSize, Links links) {
     this.sequence = sequence;
     this.hash = hash;
     this.prevHash = prevHash;
@@ -43,7 +43,7 @@ public class Ledger {
     this.links = links;
   }
 
-  public long getSequence() {
+  public Long getSequence() {
     return sequence;
   }
 
@@ -55,11 +55,11 @@ public class Ledger {
     return prevHash;
   }
 
-  public int getTransactionCount() {
+  public Integer getTransactionCount() {
     return transactionCount;
   }
 
-  public int getOperationCount() {
+  public Integer getOperationCount() {
     return operationCount;
   }
 
@@ -75,7 +75,7 @@ public class Ledger {
     return feePool;
   }
 
-  public long getBaseFee() {
+  public Long getBaseFee() {
     return baseFee;
   }
 
@@ -83,7 +83,7 @@ public class Ledger {
     return baseReserve;
   }
 
-  public int getMaxTxSetSize() {
+  public Integer getMaxTxSetSize() {
     return maxTxSetSize;
   }
 

@@ -16,6 +16,13 @@ import java.lang.reflect.Type;
 class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
   private TypeToken<Page<E>> pageType;
 
+  /**
+   * "Generics on a type are typically erased at runtime, except when the type is compiled with the
+   * generic parameter bound. In that case, the compiler inserts the generic type information into
+   * the compiled class. In other cases, that is not possible."
+   * More info: http://stackoverflow.com/a/14506181
+   * @param pageType
+   */
   public PageDeserializer(TypeToken<Page<E>> pageType) {
     this.pageType = pageType;
   }

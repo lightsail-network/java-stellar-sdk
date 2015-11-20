@@ -6,8 +6,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.stellar.base.Keypair;
 
-import java.lang.reflect.Type;
-
 class GsonSingleton {
   private static Gson instance = null;
 
@@ -17,12 +15,14 @@ class GsonSingleton {
     if (instance == null) {
       TypeToken accountPageType = new TypeToken<Page<Account>>() {};
       TypeToken ledgerPageType = new TypeToken<Page<Ledger>>() {};
+      TypeToken trasactionPageType = new TypeToken<Page<Transaction>>() {};
 
       instance = new GsonBuilder()
                       .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
                       .registerTypeAdapter(accountPageType.getType(), new PageDeserializer<Account>(accountPageType))
                       .registerTypeAdapter(ledgerPageType.getType(), new PageDeserializer<Ledger>(ledgerPageType))
-              .create();
+                      .registerTypeAdapter(trasactionPageType.getType(), new PageDeserializer<Transaction>(trasactionPageType))
+                      .create();
     }
     return instance;
   }
