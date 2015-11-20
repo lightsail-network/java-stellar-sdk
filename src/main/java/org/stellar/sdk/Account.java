@@ -7,9 +7,7 @@ import org.stellar.base.Keypair;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Account implements org.stellar.base.TransactionBuilderAccount {
-  /**
-   * {@link AccountDeserializer used to deserialize this field}
-   */
+  @SerializedName("address") /* KeypairTypeAdapter used */
   private Keypair keypair;
   @SerializedName("sequence")
   private Long sequenceNumber;
@@ -42,10 +40,6 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
   @Override
   public Keypair getKeypair() {
     return keypair;
-  }
-
-  public void setKeypair(Keypair keypair) {
-    this.keypair = keypair;
   }
 
   @Override

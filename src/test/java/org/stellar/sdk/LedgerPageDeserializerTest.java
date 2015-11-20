@@ -1,16 +1,17 @@
 package org.stellar.sdk;
 
+import com.google.gson.reflect.TypeToken;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public class LedgerPageDecoratedDeserializerTest extends TestCase {
+public class LedgerPageDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    LedgersPageDecorated ledgersPageDecorated = GsonSingleton.getInstance().fromJson(json, LedgersPageDecorated.class);
-    LedgersPage ledgersPage = ledgersPageDecorated.getPage();
-    assertEquals(ledgersPage.getRecords()[0].getHash(), "f6fc9a29b5ecec90348e17a10a60e019c5cb8ea24f66a1063e92c13391b09b8d");
-    assertEquals(ledgersPage.getRecords()[9].getHash(), "8552b7d130e602ed068bcfec729b3056d0c8b94d77f06d91cd1ec8323c2d6177");
+    Page<Ledger> ledgersPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Ledger>>() {}.getType());
+    assertEquals(ledgersPage.getRecords().get(0).getHash(), "f6fc9a29b5ecec90348e17a10a60e019c5cb8ea24f66a1063e92c13391b09b8d");
+    assertEquals(ledgersPage.getRecords().get(9).getHash(), "8552b7d130e602ed068bcfec729b3056d0c8b94d77f06d91cd1ec8323c2d6177");
     assertEquals(ledgersPage.getLinks().getNext().getHref(), "/ledgers?order=desc&limit=10&cursor=3862163441582080");
     assertEquals(ledgersPage.getLinks().getPrev().getHref(), "/ledgers?order=asc&limit=10&cursor=3862202096287744");
     assertEquals(ledgersPage.getLinks().getSelf().getHref(), "/ledgers?order=desc&limit=10&cursor=");

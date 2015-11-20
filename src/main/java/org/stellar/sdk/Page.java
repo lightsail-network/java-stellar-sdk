@@ -1,12 +1,21 @@
 package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
-public abstract class Page {
+import java.util.ArrayList;
+
+public class Page<T> {
+  @SerializedName("records")
+  private ArrayList<T> records;
   @SerializedName("links")
   private Links links;
 
   Page() {}
+
+  public ArrayList<T> getRecords() {
+    return records;
+  }
 
   public Links getLinks() {
     return links;

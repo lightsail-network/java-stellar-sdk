@@ -1,16 +1,18 @@
 package org.stellar.sdk;
 
+import com.google.gson.reflect.TypeToken;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public class AccountsPageDecoratedDeserializerTest extends TestCase {
+public class AccountsPageDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    AccountsPageDecorated accountsPageDecorated = GsonSingleton.getInstance().fromJson(json, AccountsPageDecorated.class);
-    AccountsPage accountsPage = accountsPageDecorated.getPage();
-    assertEquals(accountsPage.getRecords()[0].getKeypair().getAddress(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
-    assertEquals(accountsPage.getRecords()[9].getKeypair().getAddress(), "GACFGMEV7A5H44O3K4EN6GRQ4SA543YJBZTKGNKPEMEQEAJFO4Q7ENG6");
+    Page<Account> accountsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Account>>() {}.getType());
+
+    assertEquals(accountsPage.getRecords().get(0).getKeypair().getAddress(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+    assertEquals(accountsPage.getRecords().get(9).getKeypair().getAddress(), "GACFGMEV7A5H44O3K4EN6GRQ4SA543YJBZTKGNKPEMEQEAJFO4Q7ENG6");
     assertEquals(accountsPage.getLinks().getNext().getHref(), "/accounts?order=asc&limit=10&cursor=86861418598401");
     assertEquals(accountsPage.getLinks().getPrev().getHref(), "/accounts?order=desc&limit=10&cursor=1");
     assertEquals(accountsPage.getLinks().getSelf().getHref(), "/accounts?order=asc&limit=10&cursor=");
