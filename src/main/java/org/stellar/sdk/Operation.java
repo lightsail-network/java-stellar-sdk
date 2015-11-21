@@ -9,6 +9,8 @@ public abstract class Operation {
   protected Long id;
   @SerializedName("source_account")
   protected Keypair sourceAccount;
+  @SerializedName("type")
+  protected String type;
   @SerializedName("_links")
   private Links links;
 
@@ -18,6 +20,10 @@ public abstract class Operation {
 
   public Keypair getSourceAccount() {
     return sourceAccount;
+  }
+
+  public String getType() {
+    return type;
   }
 
   public Links getLinks() {

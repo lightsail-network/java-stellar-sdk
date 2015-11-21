@@ -15,6 +15,7 @@ class GsonSingleton {
     if (instance == null) {
       TypeToken accountPageType = new TypeToken<Page<Account>>() {};
       TypeToken ledgerPageType = new TypeToken<Page<Ledger>>() {};
+      TypeToken operationPageType = new TypeToken<Page<Operation>>() {};
       TypeToken trasactionPageType = new TypeToken<Page<Transaction>>() {};
 
       instance = new GsonBuilder()
@@ -22,6 +23,7 @@ class GsonSingleton {
                       .registerTypeAdapter(Operation.class, new OperationDeserializer())
                       .registerTypeAdapter(accountPageType.getType(), new PageDeserializer<Account>(accountPageType))
                       .registerTypeAdapter(ledgerPageType.getType(), new PageDeserializer<Ledger>(ledgerPageType))
+                      .registerTypeAdapter(operationPageType.getType(), new PageDeserializer<Operation>(operationPageType))
                       .registerTypeAdapter(trasactionPageType.getType(), new PageDeserializer<Transaction>(trasactionPageType))
                       .create();
     }

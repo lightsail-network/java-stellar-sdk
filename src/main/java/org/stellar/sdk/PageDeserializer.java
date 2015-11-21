@@ -37,6 +37,7 @@ class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
     // Create new Gson object with adapters needed in Page
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
+            .registerTypeAdapter(Operation.class, new OperationDeserializer())
             .create();
 
     return gson.fromJson(newJson, pageType.getType());
