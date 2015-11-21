@@ -19,6 +19,7 @@ class GsonSingleton {
 
       instance = new GsonBuilder()
                       .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
+                      .registerTypeAdapter(Operation.class, new OperationDeserializer())
                       .registerTypeAdapter(accountPageType.getType(), new PageDeserializer<Account>(accountPageType))
                       .registerTypeAdapter(ledgerPageType.getType(), new PageDeserializer<Ledger>(ledgerPageType))
                       .registerTypeAdapter(trasactionPageType.getType(), new PageDeserializer<Transaction>(trasactionPageType))
