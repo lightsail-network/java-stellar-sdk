@@ -10,6 +10,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import org.stellar.base.Keypair;
+import org.stellar.sdk.operations.Operation;
 
 import java.lang.reflect.Type;
 

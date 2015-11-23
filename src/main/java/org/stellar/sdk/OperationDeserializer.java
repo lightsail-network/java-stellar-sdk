@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.stellar.base.Keypair;
+import org.stellar.sdk.operations.*;
 
 import java.lang.reflect.Type;
 

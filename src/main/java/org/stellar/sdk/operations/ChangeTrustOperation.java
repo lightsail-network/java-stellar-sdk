@@ -1,4 +1,4 @@
-package org.stellar.sdk;
+package org.stellar.sdk.operations;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,31 +6,39 @@ import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 
-public class PaymentOperation extends Operation {
-  @SerializedName("amount")
-  protected final String amount;
+public class ChangeTrustOperation extends Operation {
+  @SerializedName("trustor")
+  protected final Keypair trustor;
+  @SerializedName("trustee")
+  protected final Keypair trustee;
   @SerializedName("asset_type")
   protected final String assetType;
   @SerializedName("asset_code")
   protected final String assetCode;
   @SerializedName("asset_issuer")
   protected final String assetIssuer;
-  @SerializedName("from")
-  protected final Keypair from;
-  @SerializedName("to")
-  protected final Keypair to;
+  @SerializedName("limit")
+  protected final String limit;
 
-  PaymentOperation(String amount, String assetType, String assetCode, String assetIssuer, Keypair from, Keypair to) {
-    this.amount = amount;
+  ChangeTrustOperation(Keypair trustor, Keypair trustee, String assetType, String assetCode, String assetIssuer, String limit) {
+    this.trustor = trustor;
+    this.trustee = trustee;
     this.assetType = assetType;
     this.assetCode = assetCode;
     this.assetIssuer = assetIssuer;
-    this.from = from;
-    this.to = to;
+    this.limit = limit;
   }
 
-  public String getAmount() {
-    return amount;
+  public Keypair getTrustor() {
+    return trustor;
+  }
+
+  public Keypair getTrustee() {
+    return trustee;
+  }
+
+  public String getLimit() {
+    return limit;
   }
 
   public Asset getAsset() {
@@ -40,13 +48,5 @@ public class PaymentOperation extends Operation {
       Keypair issuer = Keypair.fromAddress(assetIssuer);
       return Asset.createNonNativeAsset(assetCode, issuer);
     }
-  }
-
-  public Keypair getFrom() {
-    return from;
-  }
-
-  public Keypair getTo() {
-    return to;
   }
 }

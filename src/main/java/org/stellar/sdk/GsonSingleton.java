@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.stellar.base.Keypair;
 import org.stellar.sdk.effects.Effect;
+import org.stellar.sdk.operations.Operation;
 
 class GsonSingleton {
   private static Gson instance = null;

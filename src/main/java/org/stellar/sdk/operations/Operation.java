@@ -1,8 +1,9 @@
-package org.stellar.sdk;
+package org.stellar.sdk.operations;
 
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Keypair;
+import org.stellar.sdk.Link;
 
 public abstract class Operation {
   @SerializedName("id")

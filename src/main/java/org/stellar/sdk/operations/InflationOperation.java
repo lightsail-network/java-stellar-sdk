@@ -1,4 +1,4 @@
-package org.stellar.sdk;
+package org.stellar.sdk.operations;
 
 public class InflationOperation extends Operation {
 }

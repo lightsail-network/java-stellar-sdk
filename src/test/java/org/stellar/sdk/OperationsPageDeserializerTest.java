@@ -6,6 +6,9 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.stellar.base.AssetTypeNative;
+import org.stellar.sdk.operations.CreateAccountOperation;
+import org.stellar.sdk.operations.Operation;
+import org.stellar.sdk.operations.PaymentOperation;
 
 public class OperationsPageDeserializerTest extends TestCase {
   @Test

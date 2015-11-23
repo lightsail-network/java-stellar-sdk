@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
+import org.stellar.sdk.operations.*;
 
 public class OperationDeserializeTest extends TestCase {
   @Test
