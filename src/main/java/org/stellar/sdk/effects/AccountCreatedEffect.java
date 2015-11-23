@@ -1,0 +1,16 @@
+package org.stellar.sdk.effects;
+
+import com.google.gson.annotations.SerializedName;
+
+public class AccountCreatedEffect extends Effect {
+  @SerializedName("starting_balance")
+  protected final String startingBalance;
+
+  public AccountCreatedEffect(String startingBalance) {
+    this.startingBalance = startingBalance;
+  }
+
+  public String getStartingBalance() {
+    return startingBalance;
+  }
+}
