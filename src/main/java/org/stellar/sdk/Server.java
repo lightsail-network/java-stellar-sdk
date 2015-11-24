@@ -33,14 +33,6 @@ public class Server {
         uriBuilder = new URIBuilder(horizonURI);
     }
 
-    /**
-     * To support mocking a client
-     * @param httpClient
-     */
-    void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
         URI transactionsURI;
         try {
