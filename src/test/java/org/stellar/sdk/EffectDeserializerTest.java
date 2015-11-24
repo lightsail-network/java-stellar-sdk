@@ -522,4 +522,50 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");
     assertEquals(effect.getLinks().getPrecedes().getHref(), "http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2");
   }
+
+  @Test
+  public void testDeserializeTradeEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/operations/33788507721730\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=33788507721730-2\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=33788507721730-2\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0000033788507721730-0000000002\",\n" +
+            "        \"paging_token\": \"33788507721730-2\",\n" +
+            "        \"account\": \"GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO\",\n" +
+            "        \"type\": \"trade\",\n" +
+            "        \"type_i\": 33,\n" +
+            "        \"seller\": \"GCVHDLN6EHZBYW2M3BQIY32C23E4GPIRZZDBNF2Q73DAZ5VJDRGSMYRB\",\n" +
+            "        \"offer_id\": 1,\n" +
+            "        \"sold_amount\": \"1000.0\",\n" +
+            "        \"sold_asset_type\": \"credit_alphanum4\",\n" +
+            "        \"sold_asset_code\": \"EUR\",\n" +
+            "        \"sold_asset_issuer\": \"GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS\",\n" +
+            "        \"bought_amount\": \"60.0\",\n" +
+            "        \"bought_asset_type\": \"credit_alphanum12\",\n" +
+            "        \"bought_asset_code\": \"TESTTEST\",\n" +
+            "        \"bought_asset_issuer\": \"GAHXPUDP3AK6F2QQM4FIRBGPNGKLRDDSTQCVKEXXKKRHJZUUQ23D5BU7\"\n" +
+            "      }";
+
+    TradeEffect effect = (TradeEffect) GsonSingleton.getInstance().fromJson(json, Effect.class);
+
+    assertEquals(effect.getAccount().getAddress(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
+    assertEquals(effect.getSeller().getAddress(), "GCVHDLN6EHZBYW2M3BQIY32C23E4GPIRZZDBNF2Q73DAZ5VJDRGSMYRB");
+    assertEquals(effect.getOfferId(), new Long(1));
+    assertEquals(effect.getSoldAmount(), "1000.0");
+    assertEquals(effect.getSoldAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS")));
+    assertEquals(effect.getBoughtAmount(), "60.0");
+    assertEquals(effect.getBoughtAsset(), Asset.createNonNativeAsset("TESTTEST", Keypair.fromAddress("GAHXPUDP3AK6F2QQM4FIRBGPNGKLRDDSTQCVKEXXKKRHJZUUQ23D5BU7")));
+
+    assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
+    assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");
+    assertEquals(effect.getLinks().getPrecedes().getHref(), "http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2");
+  }
 }
