@@ -10,6 +10,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import org.stellar.base.Keypair;
+import org.stellar.sdk.effects.Effect;
 import org.stellar.sdk.operations.Operation;
 
 import java.lang.reflect.Type;
@@ -39,6 +40,7 @@ class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
             .registerTypeAdapter(Operation.class, new OperationDeserializer())
+            .registerTypeAdapter(Effect.class, new EffectDeserializer())
             .create();
 
     return gson.fromJson(newJson, pageType.getType());

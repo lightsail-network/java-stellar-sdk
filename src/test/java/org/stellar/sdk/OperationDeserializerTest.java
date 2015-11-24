@@ -8,7 +8,7 @@ import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 import org.stellar.sdk.operations.*;
 
-public class OperationDeserializeTest extends TestCase {
+public class OperationDeserializerTest extends TestCase {
   @Test
   public void testDeserializeCreateAccountOperation() {
     String json = "{\n" +
