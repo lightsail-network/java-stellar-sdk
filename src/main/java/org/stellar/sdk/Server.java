@@ -71,4 +71,12 @@ public class Server {
         }
         return null;
     }
+
+    /**
+     * To support mocking a client
+     * @param httpClient
+     */
+    void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 }
