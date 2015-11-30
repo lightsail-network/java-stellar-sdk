@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public abstract class RequestBuilder {
-  private URIBuilder uriBuilder;
+  protected URIBuilder uriBuilder;
   private ArrayList<String> segments;
   private boolean segmentsAdded;
 

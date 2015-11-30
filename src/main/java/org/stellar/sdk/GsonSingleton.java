@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.stellar.base.Asset;
 import org.stellar.base.Keypair;
 import org.stellar.sdk.effects.Effect;
 import org.stellar.sdk.operations.Operation;
@@ -19,9 +20,11 @@ public class GsonSingleton {
       TypeToken effectPageType = new TypeToken<Page<Effect>>() {};
       TypeToken ledgerPageType = new TypeToken<Page<Ledger>>() {};
       TypeToken operationPageType = new TypeToken<Page<Operation>>() {};
+      TypeToken pathPageType = new TypeToken<Page<Path>>() {};
       TypeToken transactionPageType = new TypeToken<Page<Transaction>>() {};
 
       instance = new GsonBuilder()
+                      .registerTypeAdapter(Asset.class, new AssetDeserializer())
                       .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
                       .registerTypeAdapter(Operation.class, new OperationDeserializer())
                       .registerTypeAdapter(Effect.class, new EffectDeserializer())
@@ -29,6 +32,7 @@ public class GsonSingleton {
                       .registerTypeAdapter(effectPageType.getType(), new PageDeserializer<Account>(effectPageType))
                       .registerTypeAdapter(ledgerPageType.getType(), new PageDeserializer<Ledger>(ledgerPageType))
                       .registerTypeAdapter(operationPageType.getType(), new PageDeserializer<Operation>(operationPageType))
+                      .registerTypeAdapter(pathPageType.getType(), new PageDeserializer<Path>(pathPageType))
                       .registerTypeAdapter(transactionPageType.getType(), new PageDeserializer<Transaction>(transactionPageType))
                       .create();
     }

@@ -50,6 +50,10 @@ public class Server {
         return new OperationsRequestBuilder(serverURI);
     }
 
+    public PathsRequestBuilder paths() {
+        return new PathsRequestBuilder(serverURI);
+    }
+
     public PaymentsRequestBuilder payments() {
         return new PaymentsRequestBuilder(serverURI);
     }
