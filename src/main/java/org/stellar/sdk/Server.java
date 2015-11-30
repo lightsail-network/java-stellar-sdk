@@ -11,6 +11,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.stellar.base.Transaction;
+import org.stellar.sdk.requests.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,21 +23,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private URIBuilder uriBuilder;
+    private URI serverURI;
     private HttpClient httpClient = HttpClients.createDefault();
 
-    public Server(String horizonURI) throws URISyntaxException {
-        uriBuilder = new URIBuilder(horizonURI);
+    public Server(String uri) {
+        try {
+            serverURI = new URI(uri);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public Server(URI horizonURI) throws URISyntaxException {
-        uriBuilder = new URIBuilder(horizonURI);
+    public AccountsRequestBuilder accounts() {
+        return new AccountsRequestBuilder(serverURI);
+    }
+
+    public EffectsRequestBuilder effects() {
+        return new EffectsRequestBuilder(serverURI);
+    }
+
+    public LedgersRequestBuilder ledgers() {
+        return new LedgersRequestBuilder(serverURI);
+    }
+
+    public OperationsRequestBuilder operations() {
+        return new OperationsRequestBuilder(serverURI);
+    }
+
+    public PaymentsRequestBuilder payments() {
+        return new PaymentsRequestBuilder(serverURI);
+    }
+
+    public TransactionsRequestBuilder transactions() {
+        return new TransactionsRequestBuilder(serverURI);
     }
 
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
         URI transactionsURI;
         try {
-            transactionsURI = uriBuilder.setPath("/transactions").build();
+            transactionsURI = new URIBuilder(serverURI).setPath("/transactions").build();
         } catch (URISyntaxException e) {
             throw new AssertionError(e);
         }

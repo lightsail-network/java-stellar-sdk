@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Keypair;
 
-public abstract class TrustlineAuthorization extends Effect {
+abstract class TrustlineAuthorization extends Effect {
   @SerializedName("trustor")
   protected final Keypair trustor;
   @SerializedName("asset_type")

@@ -8,7 +8,7 @@ import org.stellar.base.Keypair;
 import org.stellar.sdk.effects.Effect;
 import org.stellar.sdk.operations.Operation;
 
-class GsonSingleton {
+public class GsonSingleton {
   private static Gson instance = null;
 
   protected GsonSingleton() {}

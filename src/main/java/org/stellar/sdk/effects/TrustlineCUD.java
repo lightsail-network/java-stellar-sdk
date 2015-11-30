@@ -6,7 +6,7 @@ import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 
-public abstract class TrustlineCUD extends Effect {
+abstract class TrustlineCUD extends Effect {
   @SerializedName("limit")
   protected final String limit;
   @SerializedName("asset_type")
