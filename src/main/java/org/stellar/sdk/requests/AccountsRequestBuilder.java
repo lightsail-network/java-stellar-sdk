@@ -10,6 +10,9 @@ import org.stellar.sdk.Page;
 import java.io.IOException;
 import java.net.URI;
 
+/**
+ * Builds requests connected to accounts.
+ */
 public class AccountsRequestBuilder extends RequestBuilder {
   public AccountsRequestBuilder(URI serverURI) {
     super(serverURI, "accounts");
@@ -18,7 +21,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
   public Account account(Keypair account) throws IOException {
     TypeToken type = new TypeToken<Account>() {};
     ResponseHandler<Account> responseHandler = new ResponseHandler<Account>(type);
-    this.addSegments("accounts", account.getAddress());
+    this.setSegments("accounts", account.getAddress());
     return (Account) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
   }
 

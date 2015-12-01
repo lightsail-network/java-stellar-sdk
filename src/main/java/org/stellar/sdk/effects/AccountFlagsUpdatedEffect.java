@@ -8,7 +8,7 @@ public class AccountFlagsUpdatedEffect extends Effect {
   @SerializedName("auth_revokable_flag")
   protected final Boolean authRevokableFlag;
 
-  public AccountFlagsUpdatedEffect(Boolean authRequiredFlag, Boolean authRevokableFlag) {
+  AccountFlagsUpdatedEffect(Boolean authRequiredFlag, Boolean authRevokableFlag) {
     this.authRequiredFlag = authRequiredFlag;
     this.authRevokableFlag = authRevokableFlag;
   }

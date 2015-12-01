@@ -12,7 +12,7 @@ abstract class TrustlineAuthorization extends Effect {
   @SerializedName("asset_code")
   protected final String assetCode;
 
-  public TrustlineAuthorization(Keypair trustor, String assetType, String assetCode) {
+  TrustlineAuthorization(Keypair trustor, String assetType, String assetCode) {
     this.trustor = trustor;
     this.assetType = assetType;
     this.assetCode = assetCode;

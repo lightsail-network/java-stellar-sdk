@@ -9,6 +9,9 @@ import org.stellar.sdk.Page;
 import java.io.IOException;
 import java.net.URI;
 
+/**
+ * Builds requests connected to ledgers.
+ */
 public class LedgersRequestBuilder extends RequestBuilder {
   public LedgersRequestBuilder(URI serverURI) {
     super(serverURI, "ledgers");
@@ -17,7 +20,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
   public Ledger ledger(long ledgerSeq) throws IOException {
     TypeToken type = new TypeToken<Ledger>() {};
     ResponseHandler<Ledger> responseHandler = new ResponseHandler<Ledger>(type);
-    this.addSegments("ledgers", String.valueOf(ledgerSeq));
+    this.setSegments("ledgers", String.valueOf(ledgerSeq));
     return (Ledger) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
   }
 

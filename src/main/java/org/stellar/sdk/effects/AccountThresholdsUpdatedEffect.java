@@ -10,7 +10,7 @@ public class AccountThresholdsUpdatedEffect extends Effect {
   @SerializedName("high_threshold")
   protected final Integer highThreshold;
 
-  public AccountThresholdsUpdatedEffect(Integer lowThreshold, Integer medThreshold, Integer highThreshold) {
+  AccountThresholdsUpdatedEffect(Integer lowThreshold, Integer medThreshold, Integer highThreshold) {
     this.lowThreshold = lowThreshold;
     this.medThreshold = medThreshold;
     this.highThreshold = highThreshold;

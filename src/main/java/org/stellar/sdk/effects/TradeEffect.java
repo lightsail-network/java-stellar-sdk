@@ -30,7 +30,7 @@ public class TradeEffect extends Effect {
   @SerializedName("bought_asset_issuer")
   protected final String boughtAssetIssuer;
 
-  public TradeEffect(Keypair seller, Long offerId, String soldAmount, String soldAssetType, String soldAssetCode, String soldAssetIssuer, String boughtAmount, String boughtAssetType, String boughtAssetCode, String boughtAssetIssuer) {
+  TradeEffect(Keypair seller, Long offerId, String soldAmount, String soldAssetType, String soldAssetCode, String soldAssetIssuer, String boughtAmount, String boughtAssetType, String boughtAssetCode, String boughtAssetIssuer) {
     this.seller = seller;
     this.offerId = offerId;
     this.soldAmount = soldAmount;

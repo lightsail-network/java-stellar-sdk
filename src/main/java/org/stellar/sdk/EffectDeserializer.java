@@ -12,7 +12,7 @@ import org.stellar.sdk.effects.*;
 
 import java.lang.reflect.Type;
 
-public class EffectDeserializer implements JsonDeserializer<Effect> {
+class EffectDeserializer implements JsonDeserializer<Effect> {
   @Override
   public Effect deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Operation

@@ -16,7 +16,7 @@ public class AccountCreditedEffect extends Effect {
   @SerializedName("asset_issuer")
   protected final String assetIssuer;
 
-  public AccountCreditedEffect(String amount, String assetType, String assetCode, String assetIssuer) {
+  AccountCreditedEffect(String amount, String assetType, String assetCode, String assetIssuer) {
     this.amount = amount;
     this.assetType = assetType;
     this.assetCode = assetCode;

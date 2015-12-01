@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Keypair;
 
+/**
+ * Represents CreateAccount operation response.
+ */
 public class CreateAccountOperation extends Operation {
   @SerializedName("account")
   protected final Keypair account;

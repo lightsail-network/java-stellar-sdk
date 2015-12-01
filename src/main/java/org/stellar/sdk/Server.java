@@ -50,6 +50,10 @@ public class Server {
         return new OperationsRequestBuilder(serverURI);
     }
 
+    public OrderBookRequestBuilder orderBook() {
+        return new OrderBookRequestBuilder(serverURI);
+    }
+
     public PathsRequestBuilder paths() {
         return new PathsRequestBuilder(serverURI);
     }

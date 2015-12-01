@@ -2,7 +2,7 @@ package org.stellar.sdk.effects;
 
 import com.google.gson.annotations.SerializedName;
 
-public abstract class SignerEffect extends Effect {
+abstract class SignerEffect extends Effect {
   @SerializedName("weight")
   protected final Integer weight;
   @SerializedName("public_key")

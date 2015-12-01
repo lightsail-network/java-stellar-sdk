@@ -6,7 +6,7 @@ public class AccountCreatedEffect extends Effect {
   @SerializedName("starting_balance")
   protected final String startingBalance;
 
-  public AccountCreatedEffect(String startingBalance) {
+  AccountCreatedEffect(String startingBalance) {
     this.startingBalance = startingBalance;
   }
 

@@ -6,6 +6,9 @@ import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 
+/**
+ * Represents ManageOffer operation response.
+ */
 public class ManageOfferOperation extends Operation {
   @SerializedName("offer_id")
   protected final Integer offerId;
@@ -30,7 +33,7 @@ public class ManageOfferOperation extends Operation {
   @SerializedName("selling_asset_issuer")
   protected final String sellingAssetIssuer;
 
-  public ManageOfferOperation(Integer offerId, String amount, String price, String buyingAssetType, String buyingAssetCode, String buyingAssetIssuer, String sellingAssetType, String sellingAssetCode, String sellingAssetIssuer) {
+  ManageOfferOperation(Integer offerId, String amount, String price, String buyingAssetType, String buyingAssetCode, String buyingAssetIssuer, String sellingAssetType, String sellingAssetCode, String sellingAssetIssuer) {
     this.offerId = offerId;
     this.amount = amount;
     this.price = price;

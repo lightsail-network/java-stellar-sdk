@@ -6,6 +6,9 @@ import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 
+/**
+ * Represents PathPayment operation response.
+ */
 public class PathPaymentOperation extends Operation {
   @SerializedName("amount")
   protected final String amount;
@@ -30,7 +33,7 @@ public class PathPaymentOperation extends Operation {
   @SerializedName("send_asset_issuer")
   protected final String sendAssetIssuer;
 
-  public PathPaymentOperation(String amount, String sourceAmount, Keypair from, Keypair to, String assetType, String assetCode, String assetIssuer, String sendAssetType, String sendAssetCode, String sendAssetIssuer) {
+  PathPaymentOperation(String amount, String sourceAmount, Keypair from, Keypair to, String assetType, String assetCode, String assetIssuer, String sendAssetType, String sendAssetCode, String sendAssetIssuer) {
     this.amount = amount;
     this.sourceAmount = sourceAmount;
     this.from = from;

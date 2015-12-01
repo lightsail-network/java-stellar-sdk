@@ -6,6 +6,9 @@ import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 
+/**
+ * Represents AllowTrust operation response.
+ */
 public class AllowTrustOperation extends Operation {
   @SerializedName("trustor")
   protected final Keypair trustor;

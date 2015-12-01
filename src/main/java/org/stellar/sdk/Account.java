@@ -6,6 +6,9 @@ import org.stellar.base.Keypair;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Represents account response.
+ */
 public class Account implements org.stellar.base.TransactionBuilderAccount {
   @SerializedName("address") /* KeypairTypeAdapter used */
   private Keypair keypair;

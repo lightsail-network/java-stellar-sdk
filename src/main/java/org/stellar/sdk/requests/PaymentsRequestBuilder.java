@@ -12,6 +12,9 @@ import java.net.URI;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Builds requests connected to payments.
+ */
 public class PaymentsRequestBuilder extends RequestBuilder {
   public PaymentsRequestBuilder(URI serverURI) {
     super(serverURI, "payments");
@@ -19,18 +22,18 @@ public class PaymentsRequestBuilder extends RequestBuilder {
 
   public PaymentsRequestBuilder forAccount(Keypair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.addSegments("accounts", account.getAddress(), "payments");
+    this.setSegments("accounts", account.getAddress(), "payments");
     return this;
   }
 
   public PaymentsRequestBuilder forLedger(long ledgerSeq) {
-    this.addSegments("ledgers", String.valueOf(ledgerSeq), "payments");
+    this.setSegments("ledgers", String.valueOf(ledgerSeq), "payments");
     return this;
   }
 
   public PaymentsRequestBuilder forTransaction(String transactionId) {
     transactionId = checkNotNull(transactionId, "transactionId cannot be null");
-    this.addSegments("transactions", transactionId, "payments");
+    this.setSegments("transactions", transactionId, "payments");
     return this;
   }
 

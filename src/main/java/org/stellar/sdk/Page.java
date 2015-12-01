@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+/**
+ * Represents page of objects.
+ */
 public class Page<T> {
   @SerializedName("records")
   private ArrayList<T> records;

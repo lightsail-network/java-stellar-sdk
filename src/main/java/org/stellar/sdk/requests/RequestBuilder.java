@@ -6,7 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-public abstract class RequestBuilder {
+abstract class RequestBuilder {
   protected URIBuilder uriBuilder;
   private ArrayList<String> segments;
   private boolean segmentsAdded;
@@ -15,12 +15,12 @@ public abstract class RequestBuilder {
     uriBuilder = new URIBuilder(serverURI);
     segments = new ArrayList<String>();
     if (defaultSegment != null) {
-      this.addSegments(defaultSegment);
+      this.setSegments(defaultSegment);
     }
     segmentsAdded = false; // Allow overwriting segments
   }
 
-  protected RequestBuilder addSegments(String ...segments) {
+  protected RequestBuilder setSegments(String... segments) {
     if (segmentsAdded) {
       throw new RuntimeException("URL segments have been already added.");
     }

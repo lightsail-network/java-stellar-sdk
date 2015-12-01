@@ -12,6 +12,9 @@ import java.net.URI;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Builds requests connected to effects.
+ */
 public class EffectsRequestBuilder extends RequestBuilder {
   public EffectsRequestBuilder(URI serverURI) {
     super(serverURI, "effects");
@@ -19,23 +22,23 @@ public class EffectsRequestBuilder extends RequestBuilder {
 
   public EffectsRequestBuilder forAccount(Keypair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.addSegments("accounts", account.getAddress(), "effects");
+    this.setSegments("accounts", account.getAddress(), "effects");
     return this;
   }
 
   public EffectsRequestBuilder forLedger(long ledgerSeq) {
-    this.addSegments("ledgers", String.valueOf(ledgerSeq), "effects");
+    this.setSegments("ledgers", String.valueOf(ledgerSeq), "effects");
     return this;
   }
 
   public EffectsRequestBuilder forTransaction(String transactionId) {
     transactionId = checkNotNull(transactionId, "transactionId cannot be null");
-    this.addSegments("transactions", transactionId, "effects");
+    this.setSegments("transactions", transactionId, "effects");
     return this;
   }
 
   public EffectsRequestBuilder forOperation(long operationId) {
-    this.addSegments("operations", String.valueOf(operationId), "effects");
+    this.setSegments("operations", String.valueOf(operationId), "effects");
     return this;
   }
 

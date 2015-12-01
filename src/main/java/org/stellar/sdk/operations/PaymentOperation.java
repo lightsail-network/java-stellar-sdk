@@ -6,6 +6,9 @@ import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 
+/**
+ * Represents Payment operation response.
+ */
 public class PaymentOperation extends Operation {
   @SerializedName("amount")
   protected final String amount;

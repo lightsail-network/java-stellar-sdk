@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Keypair;
 
+/**
+ * Represents transaction response.
+ */
 public class Transaction {
   @SerializedName("hash")
   private final String hash;

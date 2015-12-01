@@ -6,7 +6,7 @@ public class AccountHomeDomainUpdatedEffect extends Effect {
   @SerializedName("home_domain")
   protected final String homeDomain;
 
-  public AccountHomeDomainUpdatedEffect(String homeDomain) {
+  AccountHomeDomainUpdatedEffect(String homeDomain) {
     this.homeDomain = homeDomain;
   }
 

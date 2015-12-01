@@ -11,7 +11,7 @@ import org.stellar.base.Keypair;
 
 import java.lang.reflect.Type;
 
-public class AssetDeserializer implements JsonDeserializer<Asset> {
+class AssetDeserializer implements JsonDeserializer<Asset> {
   @Override
   public Asset deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     String type = json.getAsJsonObject().get("asset_type").getAsString();

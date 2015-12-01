@@ -12,6 +12,9 @@ import org.stellar.sdk.Path;
 import java.io.IOException;
 import java.net.URI;
 
+/**
+ * Builds requests connected to paths.
+ */
 public class PathsRequestBuilder extends RequestBuilder {
   public PathsRequestBuilder(URI serverURI) {
     super(serverURI, "paths");

@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Keypair;
 
+/**
+ * Represents SetOptions operation response.
+ */
 public class SetOptionsOperation extends Operation {
   @SerializedName("low_threshold")
   protected final Integer lowThreshold;

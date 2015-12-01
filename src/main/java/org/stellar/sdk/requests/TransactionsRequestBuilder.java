@@ -12,6 +12,9 @@ import java.net.URI;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Builds requests connected to transactions.
+ */
 public class TransactionsRequestBuilder extends RequestBuilder {
   public TransactionsRequestBuilder(URI serverURI) {
     super(serverURI, "transactions");
@@ -20,18 +23,18 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   public Transaction transaction(String transactionId) throws IOException {
     TypeToken type = new TypeToken<Transaction>() {};
     ResponseHandler<Transaction> responseHandler = new ResponseHandler<Transaction>(type);
-    this.addSegments("transaction", transactionId);
+    this.setSegments("transaction", transactionId);
     return (Transaction) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
   }
 
   public TransactionsRequestBuilder forAccount(Keypair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.addSegments("accounts", account.getAddress(), "transactions");
+    this.setSegments("accounts", account.getAddress(), "transactions");
     return this;
   }
 
   public TransactionsRequestBuilder forLedger(long ledgerSeq) {
-    this.addSegments("ledgers", String.valueOf(ledgerSeq), "transactions");
+    this.setSegments("ledgers", String.valueOf(ledgerSeq), "transactions");
     return this;
   }
 

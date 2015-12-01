@@ -8,6 +8,9 @@ import org.stellar.base.Keypair;
 
 import java.util.ArrayList;
 
+/**
+ * Represents path response.
+ */
 public class Path {
   @SerializedName("destination_amount")
   private final String destinationAmount;

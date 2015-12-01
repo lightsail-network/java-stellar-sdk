@@ -2,6 +2,9 @@ package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Represents ledger response.
+ */
 public class Ledger {
   @SerializedName("sequence")
   private final Long sequence;
