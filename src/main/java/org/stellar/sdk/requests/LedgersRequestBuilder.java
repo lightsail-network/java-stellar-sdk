@@ -17,17 +17,25 @@ public class LedgersRequestBuilder extends RequestBuilder {
     super(serverURI, "ledgers");
   }
 
-  public Ledger ledger(long ledgerSeq) throws IOException {
+  public Ledger ledger(URI uri) throws IOException {
     TypeToken type = new TypeToken<Ledger>() {};
     ResponseHandler<Ledger> responseHandler = new ResponseHandler<Ledger>(type);
+    return (Ledger) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Ledger ledger(long ledgerSeq) throws IOException {
     this.setSegments("ledgers", String.valueOf(ledgerSeq));
-    return (Ledger) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return this.ledger(this.buildUri());
+  }
+
+  public static Page<Ledger> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<Ledger>>() {};
+    ResponseHandler<Page<Ledger>> responseHandler = new ResponseHandler<Page<Ledger>>(type);
+    return (Page<Ledger>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   public Page<Ledger> execute() throws IOException {
-    TypeToken type = new TypeToken<Page<Ledger>>() {};
-    ResponseHandler<Page<Ledger>> responseHandler = new ResponseHandler<Page<Ledger>>(type);
-    return (Page<Ledger>) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return this.execute(this.buildUri());
   }
 
   @Override

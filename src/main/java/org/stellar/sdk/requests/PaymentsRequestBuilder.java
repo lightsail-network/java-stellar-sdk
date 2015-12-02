@@ -37,10 +37,14 @@ public class PaymentsRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public Page<Operation> execute() throws IOException {
+  public static Page<Operation> execute(URI uri) throws IOException {
     TypeToken type = new TypeToken<Page<Operation>>() {};
     ResponseHandler<Page<Operation>> responseHandler = new ResponseHandler<Page<Operation>>(type);
-    return (Page<Operation>) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return (Page<Operation>) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Page<Operation> execute() throws IOException {
+    return this.execute(this.buildUri());
   }
 
   @Override

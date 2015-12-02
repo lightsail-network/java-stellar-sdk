@@ -2,6 +2,10 @@ package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Represents server response after submitting transaction.
+ * @see Server#submitTransaction(org.stellar.base.Transaction)
+ */
 public class SubmitTransactionResponse {
     @SerializedName("hash")
     private final String hash;
@@ -32,6 +36,9 @@ public class SubmitTransactionResponse {
         return extras;
     }
 
+    /**
+     * Additional information returned by a server.
+     */
     public static class Extras {
         @SerializedName("envelope_xdr")
         private final String envelopeXdr;

@@ -90,6 +90,9 @@ public class Transaction {
     return links;
   }
 
+  /**
+   * Links connected to transaction.
+   */
   public static class Links {
     @SerializedName("account")
     private final Link account;

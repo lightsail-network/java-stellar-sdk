@@ -42,10 +42,14 @@ public class EffectsRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public Page<Effect> execute() throws IOException {
+  public static Page<Effect> execute(URI uri) throws IOException {
     TypeToken type = new TypeToken<Page<Effect>>() {};
     ResponseHandler<Page<Effect>> responseHandler = new ResponseHandler<Page<Effect>>(type);
-    return (Page<Effect>) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return (Page<Effect>) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Page<Effect> execute() throws IOException {
+    return this.execute(this.buildUri());
   }
 
   @Override

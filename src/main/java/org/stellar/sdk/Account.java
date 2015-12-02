@@ -83,6 +83,9 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
     return signers;
   }
 
+  /**
+   * Represents account thresholds.
+   */
   public static class Thresholds {
     @SerializedName("low_threshold")
     private final int lowThreshold;
@@ -110,6 +113,9 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
     }
   }
 
+  /**
+   * Represents account flags.
+   */
   public static class Flags {
     @SerializedName("auth_required")
     private final boolean authRequired;
@@ -130,6 +136,9 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
     }
   }
 
+  /**
+   * Represents account balance.
+   */
   public static class Balance {
     @SerializedName("asset_type")
     private final String assetType;
@@ -164,6 +173,9 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
     }
   }
 
+  /**
+   * Represents account signers.
+   */
   public static class Signers {
     @SerializedName("address")
     private final String address;
@@ -188,6 +200,9 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
     return links;
   }
 
+  /**
+   * Links connected to account.
+   */
   public static class Links {
     @SerializedName("effects")
     private final Link effects;

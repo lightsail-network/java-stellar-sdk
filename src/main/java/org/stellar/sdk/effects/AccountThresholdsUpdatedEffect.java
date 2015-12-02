@@ -2,6 +2,9 @@ package org.stellar.sdk.effects;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Represents account_thresholds_updated effect response.
+ */
 public class AccountThresholdsUpdatedEffect extends Effect {
   @SerializedName("low_threshold")
   protected final Integer lowThreshold;

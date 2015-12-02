@@ -6,6 +6,9 @@ import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 
+/**
+ * Represents account_credited effect response.
+ */
 public class AccountCreditedEffect extends Effect {
   @SerializedName("amount")
   protected final String amount;

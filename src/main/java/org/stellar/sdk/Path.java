@@ -36,7 +36,7 @@ public class Path {
   @SerializedName("_links")
   private final Links links;
 
-  public Path(String destinationAmount, String destinationAssetType, String destinationAssetCode, String destinationAssetIssuer, String sourceAmount, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer, ArrayList<Asset> path, Links links) {
+  Path(String destinationAmount, String destinationAssetType, String destinationAssetCode, String destinationAssetIssuer, String sourceAmount, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer, ArrayList<Asset> path, Links links) {
     this.destinationAmount = destinationAmount;
     this.destinationAssetType = destinationAssetType;
     this.destinationAssetCode = destinationAssetCode;
@@ -83,6 +83,9 @@ public class Path {
     return links;
   }
 
+  /**
+   * Links connected to path.
+   */
   public static class Links {
     @SerializedName("self")
     private final Link self;

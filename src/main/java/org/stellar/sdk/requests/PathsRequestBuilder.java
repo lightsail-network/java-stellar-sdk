@@ -45,9 +45,13 @@ public class PathsRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public Page<Path> execute() throws IOException {
+  public static Page<Path> execute(URI uri) throws IOException {
     TypeToken type = new TypeToken<Page<Path>>() {};
     ResponseHandler<Page<Path>> responseHandler = new ResponseHandler<Page<Path>>(type);
-    return (Page<Path>) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return (Page<Path>) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Page<Path> execute() throws IOException {
+    return this.execute(this.buildUri());
   }
 }

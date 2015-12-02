@@ -20,11 +20,15 @@ public class OperationsRequestBuilder extends RequestBuilder {
     super(serverURI, "operations");
   }
 
-  public Operation operation(long operationId) throws IOException {
+  public Operation operation(URI uri) throws IOException {
     TypeToken type = new TypeToken<Operation>() {};
     ResponseHandler<Operation> responseHandler = new ResponseHandler<Operation>(type);
+    return (Operation) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Operation operation(long operationId) throws IOException {
     this.setSegments("operation", String.valueOf(operationId));
-    return (Operation) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return this.operation(this.buildUri());
   }
 
   public OperationsRequestBuilder forAccount(Keypair account) {
@@ -44,10 +48,14 @@ public class OperationsRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public Page<Operation> execute() throws IOException {
+  public static Page<Operation> execute(URI uri) throws IOException {
     TypeToken type = new TypeToken<Page<Operation>>() {};
     ResponseHandler<Page<Operation>> responseHandler = new ResponseHandler<Page<Operation>>(type);
-    return (Page<Operation>) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return (Page<Operation>) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Page<Operation> execute() throws IOException {
+    return this.execute(this.buildUri());
   }
 
   @Override

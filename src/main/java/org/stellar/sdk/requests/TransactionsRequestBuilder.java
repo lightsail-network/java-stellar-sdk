@@ -20,11 +20,15 @@ public class TransactionsRequestBuilder extends RequestBuilder {
     super(serverURI, "transactions");
   }
 
-  public Transaction transaction(String transactionId) throws IOException {
+  public Transaction transaction(URI uri) throws IOException {
     TypeToken type = new TypeToken<Transaction>() {};
     ResponseHandler<Transaction> responseHandler = new ResponseHandler<Transaction>(type);
+    return (Transaction) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Transaction transaction(String transactionId) throws IOException {
     this.setSegments("transaction", transactionId);
-    return (Transaction) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return this.transaction(this.buildUri());
   }
 
   public TransactionsRequestBuilder forAccount(Keypair account) {
@@ -38,10 +42,14 @@ public class TransactionsRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public Page<Transaction> execute() throws IOException {
+  public static Page<Transaction> execute(URI uri) throws IOException {
     TypeToken type = new TypeToken<Page<Transaction>>() {};
     ResponseHandler<Page<Transaction>> responseHandler = new ResponseHandler<Page<Transaction>>(type);
-    return (Page<Transaction>) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return (Page<Transaction>) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Page<Transaction> execute() throws IOException {
+    return this.execute(this.buildUri());
   }
 
   @Override

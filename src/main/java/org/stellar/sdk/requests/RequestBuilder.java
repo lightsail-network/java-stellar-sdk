@@ -6,12 +6,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-abstract class RequestBuilder {
+/**
+ * Abstract class for request builders.
+ */
+public abstract class RequestBuilder {
   protected URIBuilder uriBuilder;
   private ArrayList<String> segments;
   private boolean segmentsAdded;
 
-  public RequestBuilder(URI serverURI, String defaultSegment) {
+  RequestBuilder(URI serverURI, String defaultSegment) {
     uriBuilder = new URIBuilder(serverURI);
     segments = new ArrayList<String>();
     if (defaultSegment != null) {
@@ -65,6 +68,9 @@ abstract class RequestBuilder {
     }
   }
 
+  /**
+   * Represents possible <code>order</code> parameter values.
+   */
   public enum Order {
     ASC("asc"),
     DESC("desc");

@@ -2,6 +2,9 @@ package org.stellar.sdk.effects;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Represents account_flags_updated effect response.
+ */
 public class AccountFlagsUpdatedEffect extends Effect {
   @SerializedName("auth_required_flag")
   protected final Boolean authRequiredFlag;

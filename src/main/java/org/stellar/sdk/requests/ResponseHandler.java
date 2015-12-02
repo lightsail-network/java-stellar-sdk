@@ -13,7 +13,7 @@ import org.stellar.sdk.GsonSingleton;
 import java.io.IOException;
 import java.io.StringWriter;
 
-class ResponseHandler<T> implements org.apache.http.client.ResponseHandler {
+public class ResponseHandler<T> implements org.apache.http.client.ResponseHandler {
 
   private TypeToken<T> type;
 

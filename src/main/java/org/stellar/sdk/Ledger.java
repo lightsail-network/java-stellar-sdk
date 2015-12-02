@@ -94,6 +94,9 @@ public class Ledger {
     return links;
   }
 
+  /**
+   * Links connected to ledger.
+   */
   public static class Links {
     @SerializedName("effects")
     private final Link effects;

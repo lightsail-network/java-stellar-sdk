@@ -50,7 +50,7 @@ public abstract class Operation {
   }
 
   /**
-   * Represents operation links
+   * Represents operation links.
    */
   public static class Links {
     @SerializedName("effects")

@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import org.stellar.base.Keypair;
 import org.stellar.sdk.Link;
 
+/**
+ * Abstract class for effect responses.
+ */
 public abstract class Effect {
   @SerializedName("id")
   protected String id;
@@ -23,6 +26,30 @@ public abstract class Effect {
     return account;
   }
 
+  /**
+   * <p>Returns effect type. Possible types:</p>
+   * <ul>
+   *   <li>account_created</li>
+   *   <li>account_removed</li>
+   *   <li>account_credited</li>
+   *   <li>account_debited</li>
+   *   <li>account_thresholds_updated</li>
+   *   <li>account_home_domain_updated</li>
+   *   <li>account_flags_updated</li>
+   *   <li>signer_created</li>
+   *   <li>signer_removed</li>
+   *   <li>signer_updated</li>
+   *   <li>trustline_created</li>
+   *   <li>trustline_removed</li>
+   *   <li>trustline_updated</li>
+   *   <li>trustline_authorized</li>
+   *   <li>trustline_deauthorized</li>
+   *   <li>offer_created</li>
+   *   <li>offer_removed</li>
+   *   <li>offer_updated</li>
+   *   <li>trade</li>
+   * </ul>
+   */
   public String getType() {
     return type;
   }
@@ -31,6 +58,9 @@ public abstract class Effect {
     return links;
   }
 
+  /**
+   * Represents effect links.
+   */
   public static class Links {
     @SerializedName("operation")
     private final Link operation;

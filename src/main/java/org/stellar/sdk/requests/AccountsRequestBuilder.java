@@ -18,17 +18,25 @@ public class AccountsRequestBuilder extends RequestBuilder {
     super(serverURI, "accounts");
   }
 
-  public Account account(Keypair account) throws IOException {
+  public Account account(URI uri) throws IOException {
     TypeToken type = new TypeToken<Account>() {};
     ResponseHandler<Account> responseHandler = new ResponseHandler<Account>(type);
+    return (Account) Request.Get(uri).execute().handleResponse(responseHandler);
+  }
+
+  public Account account(Keypair account) throws IOException {
     this.setSegments("accounts", account.getAddress());
-    return (Account) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return this.account(this.buildUri());
+  }
+
+  public static Page<Account> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<Account>>() {};
+    ResponseHandler<Page<Account>> responseHandler = new ResponseHandler<Page<Account>>(type);
+    return (Page<Account>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   public Page<Account> execute() throws IOException {
-    TypeToken type = new TypeToken<Page<Account>>() {};
-    ResponseHandler<Page<Account>> responseHandler = new ResponseHandler<Page<Account>>(type);
-    return (Page<Account>) Request.Get(this.buildUri()).execute().handleResponse(responseHandler);
+    return this.execute(this.buildUri());
   }
 
   @Override

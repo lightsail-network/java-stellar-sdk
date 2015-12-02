@@ -6,6 +6,9 @@ import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
 import org.stellar.base.Keypair;
 
+/**
+ * Represents trade effect response.
+ */
 public class TradeEffect extends Effect {
   @SerializedName("seller")
   protected final Keypair seller;

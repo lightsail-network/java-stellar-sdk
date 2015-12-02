@@ -22,6 +22,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main class used to connect to Horizon server.
+ */
 public class Server {
     private URI serverURI;
     private HttpClient httpClient = HttpClients.createDefault();
@@ -34,38 +37,68 @@ public class Server {
         }
     }
 
+    /**
+     * Returns {@link AccountsRequestBuilder} instance.
+     */
     public AccountsRequestBuilder accounts() {
         return new AccountsRequestBuilder(serverURI);
     }
 
+    /**
+     * Returns {@link EffectsRequestBuilder} instance.
+     */
     public EffectsRequestBuilder effects() {
         return new EffectsRequestBuilder(serverURI);
     }
 
+    /**
+     * Returns {@link LedgersRequestBuilder} instance.
+     */
     public LedgersRequestBuilder ledgers() {
         return new LedgersRequestBuilder(serverURI);
     }
 
+    /**
+     * Returns {@link OperationsRequestBuilder} instance.
+     */
     public OperationsRequestBuilder operations() {
         return new OperationsRequestBuilder(serverURI);
     }
 
+    /**
+     * Returns {@link OrderBookRequestBuilder} instance.
+     */
     public OrderBookRequestBuilder orderBook() {
         return new OrderBookRequestBuilder(serverURI);
     }
 
+    /**
+     * Returns {@link PathsRequestBuilder} instance.
+     */
     public PathsRequestBuilder paths() {
         return new PathsRequestBuilder(serverURI);
     }
 
+    /**
+     * Returns {@link PaymentsRequestBuilder} instance.
+     */
     public PaymentsRequestBuilder payments() {
         return new PaymentsRequestBuilder(serverURI);
     }
 
+    /**
+     * Returns {@link TransactionsRequestBuilder} instance.
+     */
     public TransactionsRequestBuilder transactions() {
         return new TransactionsRequestBuilder(serverURI);
     }
 
+    /**
+     * Submits transaction to the network.
+     * @param transaction transaction to submit to the network.
+     * @return {@link SubmitTransactionResponse}
+     * @throws IOException
+     */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
         URI transactionsURI;
         try {
