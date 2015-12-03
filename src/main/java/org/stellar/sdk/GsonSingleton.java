@@ -28,6 +28,7 @@ public class GsonSingleton {
                       .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
                       .registerTypeAdapter(Operation.class, new OperationDeserializer())
                       .registerTypeAdapter(Effect.class, new EffectDeserializer())
+                      .registerTypeAdapter(Transaction.class, new TransactionDeserializer())
                       .registerTypeAdapter(accountPageType.getType(), new PageDeserializer<Account>(accountPageType))
                       .registerTypeAdapter(effectPageType.getType(), new PageDeserializer<Account>(effectPageType))
                       .registerTypeAdapter(ledgerPageType.getType(), new PageDeserializer<Ledger>(ledgerPageType))

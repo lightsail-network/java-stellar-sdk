@@ -88,7 +88,7 @@ public class ServerTest extends TestCase {
 
         Account account = new Account(source, 2908908335136768L);
         Transaction transaction = new Transaction.Builder(account)
-                .addOperation(new CreateAccountOperation.Builder(destination, 20000000000L).build())
+                .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
                 .addMemo(Memo.text("Hello world!"))
                 .build();
 

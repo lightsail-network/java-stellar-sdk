@@ -3,6 +3,9 @@ package org.stellar.sdk;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Keypair;
+import org.stellar.base.Memo;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents transaction response.
@@ -28,11 +31,14 @@ public class Transaction {
   private final String resultXdr;
   @SerializedName("result_meta_xdr")
   private final String resultMetaXdr;
-  // TODO memo!
   @SerializedName("_links")
   private final Links links;
 
-  Transaction(String hash, Long ledger, String createdAt, Keypair sourceAccount, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Links links) {
+  // GSON won't serialize `transient` variables automatically. We need this behaviour
+  // because Memo is an abstract class and GSON tries to instantiate it.
+  private transient Memo memo;
+
+  Transaction(String hash, Long ledger, String createdAt, Keypair sourceAccount, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
     this.hash = hash;
     this.ledger = ledger;
     this.createdAt = createdAt;
@@ -43,6 +49,7 @@ public class Transaction {
     this.envelopeXdr = envelopeXdr;
     this.resultXdr = resultXdr;
     this.resultMetaXdr = resultMetaXdr;
+    this.memo = memo;
     this.links = links;
   }
 
@@ -84,6 +91,18 @@ public class Transaction {
 
   public String getResultMetaXdr() {
     return resultMetaXdr;
+  }
+
+  public Memo getMemo() {
+    return memo;
+  }
+
+  void setMemo(Memo memo) {
+    memo = checkNotNull(memo, "memo cannot be null");
+    if (this.memo != null) {
+      throw new RuntimeException("Memo has been already set.");
+    }
+    this.memo = memo;
   }
 
   public Links getLinks() {
