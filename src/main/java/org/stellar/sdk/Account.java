@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents account response.
  */
 public class Account implements org.stellar.base.TransactionBuilderAccount {
-  @SerializedName("address") /* KeypairTypeAdapter used */
+  @SerializedName("account_id") /* KeypairTypeAdapter used */
   private Keypair keypair;
   @SerializedName("sequence")
   private Long sequenceNumber;
@@ -177,18 +177,18 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
    * Represents account signers.
    */
   public static class Signers {
-    @SerializedName("address")
-    private final String address;
+    @SerializedName("public_key")
+    private final String accountId;
     @SerializedName("weight")
     private final int weight;
 
-    Signers(String address, int weight) {
-      this.address = checkNotNull(address, "address cannot be null");
+    Signers(String accountId, int weight) {
+      this.accountId = checkNotNull(accountId, "accountId cannot be null");
       this.weight = checkNotNull(weight, "weight cannot be null");
     }
 
-    public String getAddress() {
-      return address;
+    public String getAccountId() {
+      return accountId;
     }
 
     public int getWeight() {

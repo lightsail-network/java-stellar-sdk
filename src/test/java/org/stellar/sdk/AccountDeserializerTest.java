@@ -24,9 +24,9 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getBalances()[0].getAssetType(), "native");
     assertEquals(account.getBalances()[0].getBalance(), "20.0000300");
 
-    assertEquals(account.getSigners()[0].getAddress(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+    assertEquals(account.getSigners()[0].getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSigners()[0].getWeight(), 0);
-    assertEquals(account.getSigners()[1].getAddress(), "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
+    assertEquals(account.getSigners()[1].getAccountId(), "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
     assertEquals(account.getSigners()[1].getWeight(), 1);
 
     assertEquals(account.getLinks().getEffects().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/effects{?cursor,limit,order}");
@@ -60,7 +60,7 @@ public class AccountDeserializerTest extends TestCase {
           "  },"+
           "  \"id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
           "  \"paging_token\": \"1\",\n" +
-          "  \"address\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "  \"account_id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
           "  \"sequence\": 2319149195853854,\n" +
           "  \"subentry_count\": 0,\n" +
           "  \"inflation_destination\": \"GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC\",\n" +
@@ -82,11 +82,11 @@ public class AccountDeserializerTest extends TestCase {
           "  ],\n" +
           "  \"signers\": [\n" +
           "    {\n" +
-          "      \"address\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "      \"public_key\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
           "      \"weight\": 0\n" +
           "    },\n" +
           "    {\n" +
-          "      \"address\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
+          "      \"public_key\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
           "      \"weight\": 1\n" +
           "    }\n" +
           "  ]\n" +
