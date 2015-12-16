@@ -53,7 +53,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Build and execute request.
+   * Build and execute request. <strong>Warning!</strong> {@link Account}s in {@link Page} will contain only <code>keypair</code> field.
    * @return {@link Page} of {@link Account}
    * @throws IOException
    */
