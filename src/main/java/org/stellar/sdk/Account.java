@@ -8,6 +8,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents account response.
+ * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/account.html" target="_blank">Account documentation</a>
+ * @see org.stellar.sdk.requests.AccountsRequestBuilder
+ * @see org.stellar.sdk.Server#accounts()
  */
 public class Account implements org.stellar.base.TransactionBuilderAccount {
   @SerializedName("account_id") /* KeypairTypeAdapter used */

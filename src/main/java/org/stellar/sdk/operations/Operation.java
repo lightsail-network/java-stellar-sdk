@@ -7,6 +7,9 @@ import org.stellar.sdk.Link;
 
 /**
  * Abstract class for operation responses.
+ * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html" target="_blank">Operation documentation</a>
+ * @see org.stellar.sdk.requests.OperationsRequestBuilder
+ * @see org.stellar.sdk.Server#operations()
  */
 public abstract class Operation {
   @SerializedName("id")

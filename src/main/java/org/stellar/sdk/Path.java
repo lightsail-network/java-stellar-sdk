@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 /**
  * Represents path response.
+ * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/path.html" target="_blank">Path documentation</a>
+ * @see org.stellar.sdk.requests.PathsRequestBuilder
+ * @see org.stellar.sdk.Server#paths()
  */
 public class Path {
   @SerializedName("destination_amount")

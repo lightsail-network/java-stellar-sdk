@@ -7,6 +7,9 @@ import org.stellar.sdk.Link;
 
 /**
  * Abstract class for effect responses.
+ * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/effect.html" target="_blank">Effect documentation</a>
+ * @see org.stellar.sdk.requests.EffectsRequestBuilder
+ * @see org.stellar.sdk.Server#effects()
  */
 public abstract class Effect {
   @SerializedName("id")

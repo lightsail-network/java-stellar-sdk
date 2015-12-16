@@ -9,6 +9,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents transaction response.
+ * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/transaction.html" target="_blank">Transaction documentation</a>
+ * @see org.stellar.sdk.requests.TransactionsRequestBuilder
+ * @see org.stellar.sdk.Server#transactions()
  */
 public class Transaction {
   @SerializedName("hash")

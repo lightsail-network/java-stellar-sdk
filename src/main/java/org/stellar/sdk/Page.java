@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 /**
  * Represents page of objects.
+ * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/page.html" target="_blank">Page documentation</a>
  */
 public class Page<T> {
   @SerializedName("records")

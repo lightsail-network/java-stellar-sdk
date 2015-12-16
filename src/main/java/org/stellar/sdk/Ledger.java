@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Represents ledger response.
+ * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/ledger.html" target="_blank">Ledger documentation</a>
+ * @see org.stellar.sdk.requests.LedgersRequestBuilder
+ * @see org.stellar.sdk.Server#ledgers()
  */
 public class Ledger {
   @SerializedName("sequence")
