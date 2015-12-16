@@ -50,10 +50,20 @@ public class SubmitTransactionResponse {
             this.resultXdr = resultXdr;
         }
 
+        /**
+         * Returns XDR TransactionEnvelope base64-encoded string.
+         * Use <a href="http://stellar.github.io/xdr-viewer/">xdr-viewer</a> to debug.
+         * @return
+         */
         public String getEnvelopeXdr() {
             return envelopeXdr;
         }
 
+        /**
+         * Returns XDR TransactionResult base64-encoded string
+         * Use <a href="http://stellar.github.io/xdr-viewer/">xdr-viewer</a> to debug.
+         * @return
+         */
         public String getResultXdr() {
             return resultXdr;
         }
