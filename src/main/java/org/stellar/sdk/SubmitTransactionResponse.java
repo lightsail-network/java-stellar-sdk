@@ -53,7 +53,6 @@ public class SubmitTransactionResponse {
         /**
          * Returns XDR TransactionEnvelope base64-encoded string.
          * Use <a href="http://stellar.github.io/xdr-viewer/">xdr-viewer</a> to debug.
-         * @return
          */
         public String getEnvelopeXdr() {
             return envelopeXdr;
@@ -62,7 +61,6 @@ public class SubmitTransactionResponse {
         /**
          * Returns XDR TransactionResult base64-encoded string
          * Use <a href="http://stellar.github.io/xdr-viewer/">xdr-viewer</a> to debug.
-         * @return
          */
         public String getResultXdr() {
             return resultXdr;

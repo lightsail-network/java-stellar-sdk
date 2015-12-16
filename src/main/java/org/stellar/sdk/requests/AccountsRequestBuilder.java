@@ -18,23 +18,45 @@ public class AccountsRequestBuilder extends RequestBuilder {
     super(serverURI, "accounts");
   }
 
+  /**
+   * Requests specific <code>uri</code> and returns {@link Account}.
+   * This method is helpful for getting the links.
+   * @throws IOException
+   */
   public Account account(URI uri) throws IOException {
     TypeToken type = new TypeToken<Account>() {};
     ResponseHandler<Account> responseHandler = new ResponseHandler<Account>(type);
     return (Account) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
+  /**
+   * Requests <code>GET /accounts/{account}</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/accounts-single.html">Account Details</a>
+   * @param account Account to fetch
+   * @throws IOException
+   */
   public Account account(Keypair account) throws IOException {
     this.setSegments("accounts", account.getAddress());
     return this.account(this.buildUri());
   }
 
+  /**
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link Account}.
+   * This method is helpful for getting the next set of results.
+   * @return {@link Page} of {@link Account}
+   * @throws IOException
+   */
   public static Page<Account> execute(URI uri) throws IOException {
     TypeToken type = new TypeToken<Page<Account>>() {};
     ResponseHandler<Page<Account>> responseHandler = new ResponseHandler<Page<Account>>(type);
     return (Page<Account>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
+  /**
+   * Build and execute request.
+   * @return {@link Page} of {@link Account}
+   * @throws IOException
+   */
   public Page<Account> execute() throws IOException {
     return this.execute(this.buildUri());
   }
