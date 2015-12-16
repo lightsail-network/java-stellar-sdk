@@ -27,7 +27,7 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
   @SerializedName("balances")
   private Balance[] balances;
   @SerializedName("signers")
-  private Signers[] signers;
+  private Signer[] signers;
   @SerializedName("_links")
   private Links links;
 
@@ -79,7 +79,7 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
     return balances;
   }
 
-  public Signers[] getSigners() {
+  public Signer[] getSigners() {
     return signers;
   }
 
@@ -176,13 +176,13 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
   /**
    * Represents account signers.
    */
-  public static class Signers {
+  public static class Signer {
     @SerializedName("public_key")
     private final String accountId;
     @SerializedName("weight")
     private final int weight;
 
-    Signers(String accountId, int weight) {
+    Signer(String accountId, int weight) {
       this.accountId = checkNotNull(accountId, "accountId cannot be null");
       this.weight = checkNotNull(weight, "weight cannot be null");
     }
