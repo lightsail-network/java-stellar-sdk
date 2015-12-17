@@ -4,18 +4,18 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 import java.io.IOException;
 
-class KeypairTypeAdapter extends TypeAdapter<Keypair> {
+class KeyPairTypeAdapter extends TypeAdapter<KeyPair> {
   @Override
-  public void write(JsonWriter out, Keypair value) throws IOException {
+  public void write(JsonWriter out, KeyPair value) throws IOException {
     // Don't need this.
   }
 
   @Override
-  public Keypair read(JsonReader in) throws IOException {
-    return Keypair.fromAddress(in.nextString());
+  public KeyPair read(JsonReader in) throws IOException {
+    return KeyPair.fromAddress(in.nextString());
   }
 }

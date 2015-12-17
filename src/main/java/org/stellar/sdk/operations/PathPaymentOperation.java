@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 /**
  * Represents PathPayment operation response.
@@ -18,9 +18,9 @@ public class PathPaymentOperation extends Operation {
   @SerializedName("source_amount")
   protected final String sourceAmount;
   @SerializedName("from")
-  protected final Keypair from;
+  protected final KeyPair from;
   @SerializedName("to")
-  protected final Keypair to;
+  protected final KeyPair to;
 
   @SerializedName("asset_type")
   protected final String assetType;
@@ -36,7 +36,7 @@ public class PathPaymentOperation extends Operation {
   @SerializedName("send_asset_issuer")
   protected final String sendAssetIssuer;
 
-  PathPaymentOperation(String amount, String sourceAmount, Keypair from, Keypair to, String assetType, String assetCode, String assetIssuer, String sendAssetType, String sendAssetCode, String sendAssetIssuer) {
+  PathPaymentOperation(String amount, String sourceAmount, KeyPair from, KeyPair to, String assetType, String assetCode, String assetIssuer, String sendAssetType, String sendAssetCode, String sendAssetIssuer) {
     this.amount = amount;
     this.sourceAmount = sourceAmount;
     this.from = from;
@@ -57,11 +57,11 @@ public class PathPaymentOperation extends Operation {
     return sourceAmount;
   }
 
-  public Keypair getFrom() {
+  public KeyPair getFrom() {
     return from;
   }
 
-  public Keypair getTo() {
+  public KeyPair getTo() {
     return to;
   }
 
@@ -69,7 +69,7 @@ public class PathPaymentOperation extends Operation {
     if (assetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      Keypair issuer = Keypair.fromAddress(assetIssuer);
+      KeyPair issuer = KeyPair.fromAddress(assetIssuer);
       return Asset.createNonNativeAsset(assetCode, issuer);
     }
   }
@@ -78,7 +78,7 @@ public class PathPaymentOperation extends Operation {
     if (sendAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      Keypair issuer = Keypair.fromAddress(sendAssetIssuer);
+      KeyPair issuer = KeyPair.fromAddress(sendAssetIssuer);
       return Asset.createNonNativeAsset(sendAssetCode, issuer);
     }
   }

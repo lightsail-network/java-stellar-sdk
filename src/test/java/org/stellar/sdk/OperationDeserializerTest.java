@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.operations.*;
 
 public class OperationDeserializerTest extends TestCase {
@@ -135,7 +135,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getFrom().getAddress(), "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
     assertEquals(operation.getTo().getAddress(), "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
     assertEquals(operation.getAmount(), "1000000000.0");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
   }
 
   @Test
@@ -176,7 +176,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getTrustee().getAddress(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
     assertEquals(operation.getTrustor().getAddress(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.isAuthorize(), true);
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM")));
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM")));
   }
 
   @Test
@@ -217,7 +217,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getTrustee().getAddress(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
     assertEquals(operation.getTrustor().getAddress(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.getLimit(), "922337203685.4775807");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM")));
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM")));
   }
 
   @Test
@@ -347,7 +347,7 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getOfferId(), new Integer(0));
     assertEquals(operation.getAmount(), "100.0");
-    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("CNY", Keypair.fromAddress("GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN")));
+    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("CNY", KeyPair.fromAddress("GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN")));
     assertEquals(operation.getSellingAsset(), new AssetTypeNative());
   }
 
@@ -394,8 +394,8 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getTo().getAddress(), "GA5WBPYA5Y4WAEHXWR2UKO2UO4BUGHUQ74EUPKON2QHV4WRHOIRNKKH2");
     assertEquals(operation.getAmount(), "10.0");
     assertEquals(operation.getSourceAmount(), "100.0");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GCQPYGH4K57XBDENKKX55KDTWOTK5WDWRQOH2LHEDX3EKVIQRLMESGBG")));
-    assertEquals(operation.getSendAsset(), Asset.createNonNativeAsset("USD", Keypair.fromAddress("GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4")));
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GCQPYGH4K57XBDENKKX55KDTWOTK5WDWRQOH2LHEDX3EKVIQRLMESGBG")));
+    assertEquals(operation.getSendAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAddress("GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4")));
   }
 
   @Test
@@ -439,7 +439,7 @@ public class OperationDeserializerTest extends TestCase {
     CreatePassiveOfferOperation operation = (CreatePassiveOfferOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
 
     assertEquals(operation.getAmount(), "11.27827");
-    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("USD", Keypair.fromAddress("GDS5JW5E6DRSSN5XK4LW7E6VUMFKKE2HU5WCOVFTO7P2RP7OXVCBLJ3Y")));
+    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAddress("GDS5JW5E6DRSSN5XK4LW7E6VUMFKKE2HU5WCOVFTO7P2RP7OXVCBLJ3Y")));
     assertEquals(operation.getSellingAsset(), new AssetTypeNative());
   }
 

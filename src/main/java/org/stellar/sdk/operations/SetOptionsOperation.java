@@ -2,7 +2,7 @@ package org.stellar.sdk.operations;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 /**
  * Represents SetOptions operation response.
@@ -18,11 +18,11 @@ public class SetOptionsOperation extends Operation {
   @SerializedName("high_threshold")
   protected final Integer highThreshold;
   @SerializedName("inflation_dest")
-  protected final Keypair inflationDestination;
+  protected final KeyPair inflationDestination;
   @SerializedName("home_domain")
   protected final String homeDomain;
   @SerializedName("signer_key")
-  protected final Keypair signerKey;
+  protected final KeyPair signerKey;
   @SerializedName("signer_weight")
   protected final Integer signerWeight;
   @SerializedName("master_key_weight")
@@ -32,7 +32,7 @@ public class SetOptionsOperation extends Operation {
   @SerializedName("set_flags_s")
   protected final String[] setFlags;
 
-  SetOptionsOperation(Integer lowThreshold, Integer medThreshold, Integer highThreshold, Keypair inflationDestination, String homeDomain, Keypair signerKey, Integer signerWeight, Integer masterKeyWeight, String[] clearFlags, String[] setFlags) {
+  SetOptionsOperation(Integer lowThreshold, Integer medThreshold, Integer highThreshold, KeyPair inflationDestination, String homeDomain, KeyPair signerKey, Integer signerWeight, Integer masterKeyWeight, String[] clearFlags, String[] setFlags) {
     this.lowThreshold = lowThreshold;
     this.medThreshold = medThreshold;
     this.highThreshold = highThreshold;
@@ -57,7 +57,7 @@ public class SetOptionsOperation extends Operation {
     return highThreshold;
   }
 
-  public Keypair getInflationDestination() {
+  public KeyPair getInflationDestination() {
     return inflationDestination;
   }
 
@@ -65,7 +65,7 @@ public class SetOptionsOperation extends Operation {
     return homeDomain;
   }
 
-  public Keypair getSigner() {
+  public KeyPair getSigner() {
     return signerKey;
   }
 

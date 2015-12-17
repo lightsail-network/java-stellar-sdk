@@ -7,7 +7,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.effects.*;
 
 import java.lang.reflect.Type;
@@ -17,7 +17,7 @@ class EffectDeserializer implements JsonDeserializer<Effect> {
   public Effect deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Operation
     Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
+            .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
             .create();
 
     int type = json.getAsJsonObject().get("type_i").getAsInt();

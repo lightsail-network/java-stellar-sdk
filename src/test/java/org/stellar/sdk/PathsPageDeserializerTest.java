@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.junit.Test;
 import org.stellar.base.Asset;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,25 +15,25 @@ public class PathsPageDeserializerTest {
     Page<Path> pathsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Path>>() {}.getType());
 
     assertEquals(pathsPage.getRecords().get(0).getDestinationAmount(), "20.0000000");
-    assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
+    assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
     assertEquals(pathsPage.getRecords().get(0).getPath().size(), 0);
     assertEquals(pathsPage.getRecords().get(0).getSourceAmount(), "30.0000000");
-    assertEquals(pathsPage.getRecords().get(0).getSourceAsset(), Asset.createNonNativeAsset("USD", Keypair.fromAddress("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
+    assertEquals(pathsPage.getRecords().get(0).getSourceAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAddress("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
 
     assertEquals(pathsPage.getRecords().get(1).getDestinationAmount(), "50.0000000");
-    assertEquals(pathsPage.getRecords().get(1).getDestinationAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GBFMFKDUFYYITWRQXL4775CVUV3A3WGGXNJUAP4KTXNEQ2HG7JRBITGH")));
+    assertEquals(pathsPage.getRecords().get(1).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GBFMFKDUFYYITWRQXL4775CVUV3A3WGGXNJUAP4KTXNEQ2HG7JRBITGH")));
     assertEquals(pathsPage.getRecords().get(1).getPath().size(), 1);
-    assertEquals(pathsPage.getRecords().get(1).getPath().get(0), Asset.createNonNativeAsset("GBP", Keypair.fromAddress("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
+    assertEquals(pathsPage.getRecords().get(1).getPath().get(0), Asset.createNonNativeAsset("GBP", KeyPair.fromAddress("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
     assertEquals(pathsPage.getRecords().get(1).getSourceAmount(), "60.0000000");
-    assertEquals(pathsPage.getRecords().get(1).getSourceAsset(), Asset.createNonNativeAsset("USD", Keypair.fromAddress("GBRAOXQDNQZRDIOK64HZI4YRDTBFWNUYH3OIHQLY4VEK5AIGMQHCLGXI")));
+    assertEquals(pathsPage.getRecords().get(1).getSourceAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAddress("GBRAOXQDNQZRDIOK64HZI4YRDTBFWNUYH3OIHQLY4VEK5AIGMQHCLGXI")));
 
     assertEquals(pathsPage.getRecords().get(2).getDestinationAmount(), "200.0000000");
-    assertEquals(pathsPage.getRecords().get(2).getDestinationAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GBRCOBK7C7UE72PB5JCPQU3ZI45ZCEM7HKQ3KYV3YD3XB7EBOPBEDN2G")));
+    assertEquals(pathsPage.getRecords().get(2).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GBRCOBK7C7UE72PB5JCPQU3ZI45ZCEM7HKQ3KYV3YD3XB7EBOPBEDN2G")));
     assertEquals(pathsPage.getRecords().get(2).getPath().size(), 2);
-    assertEquals(pathsPage.getRecords().get(2).getPath().get(0), Asset.createNonNativeAsset("GBP", Keypair.fromAddress("GAX7B3ZT3EOZW5POAMV4NGPPKCYUOYW2QQDIAF23JAXF72NMGRYPYOPM")));
-    assertEquals(pathsPage.getRecords().get(2).getPath().get(1), Asset.createNonNativeAsset("PLN", Keypair.fromAddress("GACWIA2XGDFWWN3WKPX63JTK4S2J5NDPNOIVYMZY6RVTS7LWF2VHZLV3")));
+    assertEquals(pathsPage.getRecords().get(2).getPath().get(0), Asset.createNonNativeAsset("GBP", KeyPair.fromAddress("GAX7B3ZT3EOZW5POAMV4NGPPKCYUOYW2QQDIAF23JAXF72NMGRYPYOPM")));
+    assertEquals(pathsPage.getRecords().get(2).getPath().get(1), Asset.createNonNativeAsset("PLN", KeyPair.fromAddress("GACWIA2XGDFWWN3WKPX63JTK4S2J5NDPNOIVYMZY6RVTS7LWF2VHZLV3")));
     assertEquals(pathsPage.getRecords().get(2).getSourceAmount(), "300.0000000");
-    assertEquals(pathsPage.getRecords().get(2).getSourceAsset(), Asset.createNonNativeAsset("USD", Keypair.fromAddress("GC7J5IHS3GABSX7AZLRINXWLHFTL3WWXLU4QX2UGSDEAIAQW2Q72U3KH")));
+    assertEquals(pathsPage.getRecords().get(2).getSourceAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAddress("GC7J5IHS3GABSX7AZLRINXWLHFTL3WWXLU4QX2UGSDEAIAQW2Q72U3KH")));
   }
 
   String json = "{\n" +

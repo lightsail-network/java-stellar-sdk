@@ -2,7 +2,7 @@ package org.stellar.sdk.operations;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.Link;
 
 /**
@@ -15,7 +15,7 @@ public abstract class Operation {
   @SerializedName("id")
   protected Long id;
   @SerializedName("source_account")
-  protected Keypair sourceAccount;
+  protected KeyPair sourceAccount;
   @SerializedName("type")
   protected String type;
   @SerializedName("_links")
@@ -25,7 +25,7 @@ public abstract class Operation {
     return id;
   }
 
-  public Keypair getSourceAccount() {
+  public KeyPair getSourceAccount() {
     return sourceAccount;
   }
 

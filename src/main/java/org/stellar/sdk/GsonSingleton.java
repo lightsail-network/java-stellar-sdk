@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.stellar.base.Asset;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.effects.Effect;
 import org.stellar.sdk.operations.Operation;
 
@@ -25,7 +25,7 @@ public class GsonSingleton {
 
       instance = new GsonBuilder()
                       .registerTypeAdapter(Asset.class, new AssetDeserializer())
-                      .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
+                      .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
                       .registerTypeAdapter(Operation.class, new OperationDeserializer())
                       .registerTypeAdapter(Effect.class, new EffectDeserializer())
                       .registerTypeAdapter(Transaction.class, new TransactionDeserializer())

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 /**
  * Represents ChangeTrust operation response.
@@ -14,9 +14,9 @@ import org.stellar.base.Keypair;
  */
 public class ChangeTrustOperation extends Operation {
   @SerializedName("trustor")
-  protected final Keypair trustor;
+  protected final KeyPair trustor;
   @SerializedName("trustee")
-  protected final Keypair trustee;
+  protected final KeyPair trustee;
   @SerializedName("asset_type")
   protected final String assetType;
   @SerializedName("asset_code")
@@ -26,7 +26,7 @@ public class ChangeTrustOperation extends Operation {
   @SerializedName("limit")
   protected final String limit;
 
-  ChangeTrustOperation(Keypair trustor, Keypair trustee, String assetType, String assetCode, String assetIssuer, String limit) {
+  ChangeTrustOperation(KeyPair trustor, KeyPair trustee, String assetType, String assetCode, String assetIssuer, String limit) {
     this.trustor = trustor;
     this.trustee = trustee;
     this.assetType = assetType;
@@ -35,11 +35,11 @@ public class ChangeTrustOperation extends Operation {
     this.limit = limit;
   }
 
-  public Keypair getTrustor() {
+  public KeyPair getTrustor() {
     return trustor;
   }
 
-  public Keypair getTrustee() {
+  public KeyPair getTrustee() {
     return trustee;
   }
 
@@ -51,7 +51,7 @@ public class ChangeTrustOperation extends Operation {
     if (assetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      Keypair issuer = Keypair.fromAddress(assetIssuer);
+      KeyPair issuer = KeyPair.fromAddress(assetIssuer);
       return Asset.createNonNativeAsset(assetCode, issuer);
     }
   }

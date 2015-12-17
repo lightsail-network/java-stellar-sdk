@@ -2,7 +2,7 @@ package org.stellar.sdk.effects;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.Link;
 
 /**
@@ -15,7 +15,7 @@ public abstract class Effect {
   @SerializedName("id")
   protected String id;
   @SerializedName("account")
-  protected Keypair account;
+  protected KeyPair account;
   @SerializedName("type")
   protected String type;
   @SerializedName("_links")
@@ -25,7 +25,7 @@ public abstract class Effect {
     return id;
   }
 
-  public Keypair getAccount() {
+  public KeyPair getAccount() {
     return account;
   }
 

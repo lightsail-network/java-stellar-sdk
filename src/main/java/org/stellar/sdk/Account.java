@@ -2,7 +2,7 @@ package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -13,8 +13,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see org.stellar.sdk.Server#accounts()
  */
 public class Account implements org.stellar.base.TransactionBuilderAccount {
-  @SerializedName("account_id") /* KeypairTypeAdapter used */
-  private Keypair keypair;
+  @SerializedName("account_id") /* KeyPairTypeAdapter used */
+  private KeyPair keypair;
   @SerializedName("sequence")
   private Long sequenceNumber;
   @SerializedName("subentry_count")
@@ -34,17 +34,17 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
   @SerializedName("_links")
   private Links links;
 
-  Account(Keypair keypair) {
+  Account(KeyPair keypair) {
     this.keypair = keypair;
   }
 
-  public Account(Keypair keypair, Long sequenceNumber) {
+  public Account(KeyPair keypair, Long sequenceNumber) {
     this.keypair = keypair;
     this.sequenceNumber = sequenceNumber;
   }
 
   @Override
-  public Keypair getKeypair() {
+  public KeyPair getKeypair() {
     return keypair;
   }
 

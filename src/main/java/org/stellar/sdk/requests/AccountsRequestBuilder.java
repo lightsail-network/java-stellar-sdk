@@ -6,7 +6,7 @@ import org.apache.http.client.fluent.Request;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.Account;
 import org.stellar.sdk.GsonSingleton;
 import org.stellar.sdk.Page;
@@ -43,7 +43,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @param account Account to fetch
    * @throws IOException
    */
-  public Account account(Keypair account) throws IOException {
+  public Account account(KeyPair account) throws IOException {
     this.setSegments("accounts", account.getAddress());
     return this.account(this.buildUri());
   }

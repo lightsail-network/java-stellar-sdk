@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.http.client.fluent.Request;
 import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeCreditAlphaNum;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.Page;
 import org.stellar.sdk.Path;
 
@@ -20,12 +20,12 @@ public class PathsRequestBuilder extends RequestBuilder {
     super(serverURI, "paths");
   }
 
-  public PathsRequestBuilder destinationAccount(Keypair account) {
+  public PathsRequestBuilder destinationAccount(KeyPair account) {
     uriBuilder.addParameter("destination_account", account.getAddress());
     return this;
   }
 
-  public PathsRequestBuilder sourceAccount(Keypair account) {
+  public PathsRequestBuilder sourceAccount(KeyPair account) {
     uriBuilder.addParameter("source_account", account.getAddress());
     return this;
   }

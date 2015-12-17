@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 /**
  * Represents trade effect response.
@@ -14,7 +14,7 @@ import org.stellar.base.Keypair;
  */
 public class TradeEffect extends Effect {
   @SerializedName("seller")
-  protected final Keypair seller;
+  protected final KeyPair seller;
   @SerializedName("offer_id")
   protected final Long offerId;
   
@@ -36,7 +36,7 @@ public class TradeEffect extends Effect {
   @SerializedName("bought_asset_issuer")
   protected final String boughtAssetIssuer;
 
-  TradeEffect(Keypair seller, Long offerId, String soldAmount, String soldAssetType, String soldAssetCode, String soldAssetIssuer, String boughtAmount, String boughtAssetType, String boughtAssetCode, String boughtAssetIssuer) {
+  TradeEffect(KeyPair seller, Long offerId, String soldAmount, String soldAssetType, String soldAssetCode, String soldAssetIssuer, String boughtAmount, String boughtAssetType, String boughtAssetCode, String boughtAssetIssuer) {
     this.seller = seller;
     this.offerId = offerId;
     this.soldAmount = soldAmount;
@@ -49,7 +49,7 @@ public class TradeEffect extends Effect {
     this.boughtAssetIssuer = boughtAssetIssuer;
   }
 
-  public Keypair getSeller() {
+  public KeyPair getSeller() {
     return seller;
   }
 
@@ -69,7 +69,7 @@ public class TradeEffect extends Effect {
     if (soldAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      Keypair issuer = Keypair.fromAddress(soldAssetIssuer);
+      KeyPair issuer = KeyPair.fromAddress(soldAssetIssuer);
       return Asset.createNonNativeAsset(soldAssetCode, issuer);
     }
   }
@@ -78,7 +78,7 @@ public class TradeEffect extends Effect {
     if (boughtAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      Keypair issuer = Keypair.fromAddress(boughtAssetIssuer);
+      KeyPair issuer = KeyPair.fromAddress(boughtAssetIssuer);
       return Asset.createNonNativeAsset(boughtAssetCode, issuer);
     }
   }

@@ -6,7 +6,7 @@ import org.apache.http.client.fluent.Request;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.GsonSingleton;
 import org.stellar.sdk.Page;
 import org.stellar.sdk.effects.Effect;
@@ -33,7 +33,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/effects-for-account.html">Effects for Account</a>
    * @param account Account for which to get effects
    */
-  public EffectsRequestBuilder forAccount(Keypair account) {
+  public EffectsRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
     this.setSegments("accounts", account.getAddress(), "effects");
     return this;

@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.effects.*;
 
 public class EffectDeserializerTest extends TestCase {
@@ -371,7 +371,7 @@ public class EffectDeserializerTest extends TestCase {
     TrustlineCreatedEffect effect = (TrustlineCreatedEffect) GsonSingleton.getInstance().fromJson(json, Effect.class);
 
     assertEquals(effect.getAccount().getAddress(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
+    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
     assertEquals(effect.getLimit(), "1000.0");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
@@ -407,7 +407,7 @@ public class EffectDeserializerTest extends TestCase {
     TrustlineRemovedEffect effect = (TrustlineRemovedEffect) GsonSingleton.getInstance().fromJson(json, Effect.class);
 
     assertEquals(effect.getAccount().getAddress(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
+    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
     assertEquals(effect.getLimit(), "0.0");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
@@ -443,7 +443,7 @@ public class EffectDeserializerTest extends TestCase {
     TrustlineUpdatedEffect effect = (TrustlineUpdatedEffect) GsonSingleton.getInstance().fromJson(json, Effect.class);
 
     assertEquals(effect.getAccount().getAddress(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("TESTTEST", Keypair.fromAddress("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
+    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("TESTTEST", KeyPair.fromAddress("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
     assertEquals(effect.getLimit(), "100.0");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
@@ -560,9 +560,9 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getSeller().getAddress(), "GCVHDLN6EHZBYW2M3BQIY32C23E4GPIRZZDBNF2Q73DAZ5VJDRGSMYRB");
     assertEquals(effect.getOfferId(), new Long(1));
     assertEquals(effect.getSoldAmount(), "1000.0");
-    assertEquals(effect.getSoldAsset(), Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS")));
+    assertEquals(effect.getSoldAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS")));
     assertEquals(effect.getBoughtAmount(), "60.0");
-    assertEquals(effect.getBoughtAsset(), Asset.createNonNativeAsset("TESTTEST", Keypair.fromAddress("GAHXPUDP3AK6F2QQM4FIRBGPNGKLRDDSTQCVKEXXKKRHJZUUQ23D5BU7")));
+    assertEquals(effect.getBoughtAsset(), Asset.createNonNativeAsset("TESTTEST", KeyPair.fromAddress("GAHXPUDP3AK6F2QQM4FIRBGPNGKLRDDSTQCVKEXXKKRHJZUUQ23D5BU7")));
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
     assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");

@@ -2,7 +2,7 @@ package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.base.Memo;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,7 +21,7 @@ public class Transaction {
   @SerializedName("created_at")
   private final String createdAt;
   @SerializedName("source_account")
-  private final Keypair sourceAccount;
+  private final KeyPair sourceAccount;
   @SerializedName("source_account_sequence")
   private final Long sourceAccountSequence;
   @SerializedName("fee_paid")
@@ -41,7 +41,7 @@ public class Transaction {
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  Transaction(String hash, Long ledger, String createdAt, Keypair sourceAccount, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
+  Transaction(String hash, Long ledger, String createdAt, KeyPair sourceAccount, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
     this.hash = hash;
     this.ledger = ledger;
     this.createdAt = createdAt;
@@ -68,7 +68,7 @@ public class Transaction {
     return createdAt;
   }
 
-  public Keypair getSourceAccount() {
+  public KeyPair getSourceAccount() {
     return sourceAccount;
   }
 

@@ -2,7 +2,7 @@ package org.stellar.sdk.requests;
 
 import org.junit.Test;
 import org.stellar.base.Asset;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.Server;
 
 import java.net.URI;
@@ -14,8 +14,8 @@ public class OrderBookRequestBuilderTest {
   public void testOrderBook() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     URI uri = server.orderBook()
-            .buyingAsset(Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W")))
-            .sellingAsset(Asset.createNonNativeAsset("USD", Keypair.fromAddress("GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ")))
+            .buyingAsset(Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W")))
+            .sellingAsset(Asset.createNonNativeAsset("USD", KeyPair.fromAddress("GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ")))
             .cursor("13537736921089")
             .limit(200)
             .order(RequestBuilder.Order.ASC)
@@ -38,8 +38,8 @@ public class OrderBookRequestBuilderTest {
     Server server = new Server("https://horizon-testnet.stellar.org");
     URI uri = server.orderBook()
             .trades()
-            .buyingAsset(Asset.createNonNativeAsset("EUR", Keypair.fromAddress("GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W")))
-            .sellingAsset(Asset.createNonNativeAsset("USD", Keypair.fromAddress("GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ")))
+            .buyingAsset(Asset.createNonNativeAsset("EUR", KeyPair.fromAddress("GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W")))
+            .sellingAsset(Asset.createNonNativeAsset("USD", KeyPair.fromAddress("GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ")))
             .cursor("13537736921089")
             .limit(200)
             .order(RequestBuilder.Order.ASC)

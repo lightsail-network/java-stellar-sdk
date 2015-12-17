@@ -7,7 +7,7 @@ import com.google.gson.JsonParseException;
 
 import org.stellar.base.Asset;
 import org.stellar.base.AssetTypeNative;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 import java.lang.reflect.Type;
 
@@ -20,7 +20,7 @@ class AssetDeserializer implements JsonDeserializer<Asset> {
     } else {
       String code = json.getAsJsonObject().get("asset_code").getAsString();
       String issuer = json.getAsJsonObject().get("asset_issuer").getAsString();
-      return Asset.createNonNativeAsset(code, Keypair.fromAddress(issuer));
+      return Asset.createNonNativeAsset(code, KeyPair.fromAddress(issuer));
     }
   }
 }

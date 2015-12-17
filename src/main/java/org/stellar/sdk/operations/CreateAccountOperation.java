@@ -2,7 +2,7 @@ package org.stellar.sdk.operations;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 /**
  * Represents CreateAccount operation response.
@@ -12,19 +12,19 @@ import org.stellar.base.Keypair;
  */
 public class CreateAccountOperation extends Operation {
   @SerializedName("account")
-  protected final Keypair account;
+  protected final KeyPair account;
   @SerializedName("funder")
-  protected final Keypair funder;
+  protected final KeyPair funder;
   @SerializedName("starting_balance")
   protected final String startingBalance;
 
-  CreateAccountOperation(Keypair funder, String startingBalance, Keypair account) {
+  CreateAccountOperation(KeyPair funder, String startingBalance, KeyPair account) {
     this.funder = funder;
     this.startingBalance = startingBalance;
     this.account = account;
   }
 
-  public Keypair getAccount() {
+  public KeyPair getAccount() {
     return account;
   }
 
@@ -32,7 +32,7 @@ public class CreateAccountOperation extends Operation {
     return startingBalance;
   }
 
-  public Keypair getFunder() {
+  public KeyPair getFunder() {
     return funder;
   }
 }

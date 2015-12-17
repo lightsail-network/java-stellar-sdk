@@ -3,7 +3,7 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.client.fluent.Request;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.sdk.Page;
 import org.stellar.sdk.operations.Operation;
 
@@ -47,7 +47,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/operations-for-account.html">Operations for Account</a>
    * @param account Account for which to get operations
    */
-  public OperationsRequestBuilder forAccount(Keypair account) {
+  public OperationsRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
     this.setSegments("accounts", account.getAddress(), "operations");
     return this;

@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 import org.stellar.base.Memo;
 
 import java.lang.reflect.Type;
@@ -18,7 +18,7 @@ public class TransactionDeserializer implements JsonDeserializer<Transaction> {
   public Transaction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Transaction
     Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Keypair.class, new KeypairTypeAdapter().nullSafe())
+            .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
             .create();
 
     Transaction transaction = gson.fromJson(json, Transaction.class);

@@ -1,6 +1,6 @@
 package org.stellar.sdk.effects;
 
-import org.stellar.base.Keypair;
+import org.stellar.base.KeyPair;
 
 /**
  * Represents trustline_authorized effect response.
@@ -9,7 +9,7 @@ import org.stellar.base.Keypair;
  * @see org.stellar.sdk.Server#effects()
  */
 public class TrustlineAuthorizedEffect extends TrustlineAuthorization {
-  TrustlineAuthorizedEffect(Keypair trustor, String assetType, String assetCode) {
+  TrustlineAuthorizedEffect(KeyPair trustor, String assetType, String assetCode) {
     super(trustor, assetType, assetCode);
   }
 }
