@@ -1,6 +1,7 @@
 package org.stellar.sdk.requests;
 
 import org.junit.Test;
+import org.stellar.sdk.Ledger;
 import org.stellar.sdk.Server;
 
 import java.net.URI;

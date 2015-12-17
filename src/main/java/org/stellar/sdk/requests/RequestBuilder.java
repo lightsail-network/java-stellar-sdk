@@ -1,10 +1,19 @@
 package org.stellar.sdk.requests;
 
 import org.apache.http.client.utils.URIBuilder;
+import org.glassfish.jersey.media.sse.EventSource;
+import org.glassfish.jersey.media.sse.InboundEvent;
+import org.glassfish.jersey.media.sse.SseFeature;
+import org.stellar.sdk.GsonSingleton;
+import org.stellar.sdk.Ledger;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 
 /**
  * Abstract class for request builders.
