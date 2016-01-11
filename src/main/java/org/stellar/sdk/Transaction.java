@@ -22,6 +22,8 @@ public class Transaction {
   private final String createdAt;
   @SerializedName("source_account")
   private final KeyPair sourceAccount;
+  @SerializedName("paging_token")
+  private final String pagingToken;
   @SerializedName("source_account_sequence")
   private final Long sourceAccountSequence;
   @SerializedName("fee_paid")
@@ -41,11 +43,12 @@ public class Transaction {
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  Transaction(String hash, Long ledger, String createdAt, KeyPair sourceAccount, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
+  Transaction(String hash, Long ledger, String createdAt, KeyPair sourceAccount, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
     this.hash = hash;
     this.ledger = ledger;
     this.createdAt = createdAt;
     this.sourceAccount = sourceAccount;
+    this.pagingToken = pagingToken;
     this.sourceAccountSequence = sourceAccountSequence;
     this.feePaid = feePaid;
     this.operationCount = operationCount;
@@ -70,6 +73,10 @@ public class Transaction {
 
   public KeyPair getSourceAccount() {
     return sourceAccount;
+  }
+
+  public String getPagingToken() {
+    return pagingToken;
   }
 
   public Long getSourceAccountSequence() {

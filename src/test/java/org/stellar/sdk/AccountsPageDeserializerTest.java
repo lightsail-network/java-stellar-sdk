@@ -12,6 +12,7 @@ public class AccountsPageDeserializerTest extends TestCase {
     Page<Account> accountsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Account>>() {}.getType());
 
     assertEquals(accountsPage.getRecords().get(0).getKeypair().getAddress(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+    assertEquals(accountsPage.getRecords().get(0).getPagingToken(), "1");
     assertEquals(accountsPage.getRecords().get(9).getKeypair().getAddress(), "GACFGMEV7A5H44O3K4EN6GRQ4SA543YJBZTKGNKPEMEQEAJFO4Q7ENG6");
     assertEquals(accountsPage.getLinks().getNext().getHref(), "/accounts?order=asc&limit=10&cursor=86861418598401");
     assertEquals(accountsPage.getLinks().getPrev().getHref(), "/accounts?order=desc&limit=10&cursor=1");

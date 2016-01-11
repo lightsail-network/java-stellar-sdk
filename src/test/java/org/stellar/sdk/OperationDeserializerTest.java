@@ -42,6 +42,7 @@ public class OperationDeserializerTest extends TestCase {
     CreateAccountOperation operation = (CreateAccountOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
 
     assertEquals(operation.getSourceAccount().getAddress(), "GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD");
+    assertEquals(operation.getPagingToken(), "3936840037961729");
     assertEquals(operation.getId(), new Long(3936840037961729L));
 
     assertEquals(operation.getAccount().getAddress(), "GAR4DDXYNSN2CORG3XQFLAPWYKTUMLZYHYWV4Y2YJJ4JO6ZJFXMJD7PT");

@@ -35,6 +35,7 @@ public class EffectDeserializerTest extends TestCase {
 
     assertEquals(effect.getAccount().getAddress(), "GCBQ6JRBPF3SXQBQ6SO5MRBE7WVV4UCHYOSHQGXSZNPZLFRYVYOWBZRQ");
     assertEquals(effect.getStartingBalance(), "30.0");
+    assertEquals(effect.getPagingToken(), "65571265847297-1");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/65571265847297");
     assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=65571265847297-1");

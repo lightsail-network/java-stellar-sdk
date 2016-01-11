@@ -17,6 +17,8 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
   private KeyPair keypair;
   @SerializedName("sequence")
   private Long sequenceNumber;
+  @SerializedName("paging_token")
+  private String pagingToken;
   @SerializedName("subentry_count")
   private Integer subentryCount;
   @SerializedName("inflation_destination")
@@ -56,6 +58,10 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
   @Override
   public void incrementSequenceNumber() {
     sequenceNumber++;
+  }
+
+  public String getPagingToken() {
+    return pagingToken;
   }
 
   public Integer getSubentryCount() {

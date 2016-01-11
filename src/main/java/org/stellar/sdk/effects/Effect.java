@@ -18,6 +18,8 @@ public abstract class Effect {
   protected KeyPair account;
   @SerializedName("type")
   protected String type;
+  @SerializedName("paging_token")
+  protected String pagingToken;
   @SerializedName("_links")
   private Links links;
 
@@ -55,6 +57,10 @@ public abstract class Effect {
    */
   public String getType() {
     return type;
+  }
+
+  public String getPagingToken() {
+    return pagingToken;
   }
 
   public Links getLinks() {

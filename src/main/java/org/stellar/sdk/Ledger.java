@@ -13,6 +13,8 @@ public class Ledger {
   private final Long sequence;
   @SerializedName("hash")
   private final String hash;
+  @SerializedName("paging_token")
+  private final String pagingToken;
   @SerializedName("prev_hash")
   private final String prevHash;
   @SerializedName("transaction_count")
@@ -34,9 +36,10 @@ public class Ledger {
   @SerializedName("_links")
   private final Links links;
 
-  Ledger(Long sequence, String hash, String prevHash, Integer transactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, Integer maxTxSetSize, Links links) {
+  Ledger(Long sequence, String hash, String pagingToken, String prevHash, Integer transactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, Integer maxTxSetSize, Links links) {
     this.sequence = sequence;
     this.hash = hash;
+    this.pagingToken = pagingToken;
     this.prevHash = prevHash;
     this.transactionCount = transactionCount;
     this.operationCount = operationCount;
@@ -55,6 +58,10 @@ public class Ledger {
 
   public String getHash() {
     return hash;
+  }
+
+  public String getPagingToken() {
+    return pagingToken;
   }
 
   public String getPrevHash() {

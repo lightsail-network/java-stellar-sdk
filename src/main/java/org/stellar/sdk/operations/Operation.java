@@ -16,6 +16,8 @@ public abstract class Operation {
   protected Long id;
   @SerializedName("source_account")
   protected KeyPair sourceAccount;
+  @SerializedName("paging_token")
+  protected String pagingToken;
   @SerializedName("type")
   protected String type;
   @SerializedName("_links")
@@ -27,6 +29,10 @@ public abstract class Operation {
 
   public KeyPair getSourceAccount() {
     return sourceAccount;
+  }
+
+  public String getPagingToken() {
+    return pagingToken;
   }
 
   /**

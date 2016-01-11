@@ -17,6 +17,7 @@ public class OperationsPageDeserializerTest extends TestCase {
 
     CreateAccountOperation createAccountOperation = (CreateAccountOperation) operationsPage.getRecords().get(0);
     assertEquals(createAccountOperation.getStartingBalance(), "10000.0");
+    assertEquals(createAccountOperation.getPagingToken(), "3717508943056897");
     assertEquals(createAccountOperation.getAccount().getAddress(), "GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE");
     assertEquals(createAccountOperation.getFunder().getAddress(), "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K");
 

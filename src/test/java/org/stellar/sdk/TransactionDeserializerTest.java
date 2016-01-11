@@ -12,6 +12,7 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(transaction.getHash(), "5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b");
     assertEquals(transaction.getLedger(), new Long(915744));
     assertEquals(transaction.getCreatedAt(), "2015-11-20T17:01:28Z");
+    assertEquals(transaction.getPagingToken(), "3933090531512320");
     assertEquals(transaction.getSourceAccount().getAddress(), "GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK");
     assertEquals(transaction.getSourceAccountSequence(), new Long(2373051035426646L));
     assertEquals(transaction.getFeePaid(), new Long(100));

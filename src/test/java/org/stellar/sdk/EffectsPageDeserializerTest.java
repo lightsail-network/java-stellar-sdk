@@ -16,6 +16,7 @@ public class EffectsPageDeserializerTest extends TestCase {
 
     SignerCreatedEffect signerCreatedEffect = (SignerCreatedEffect) effectsPage.getRecords().get(0);
     assertEquals(signerCreatedEffect.getPublicKey(), "GAZHVTAM3NRJ6W643LOVA76T2W3TUKPF34ED5VNE4ZKJ2B5T2EUQHIQI");
+    assertEquals(signerCreatedEffect.getPagingToken(), "3964757325385729-3");
 
     AccountCreatedEffect accountCreatedEffect = (AccountCreatedEffect) effectsPage.getRecords().get(8);
     assertEquals(accountCreatedEffect.getStartingBalance(), "10000.0");
