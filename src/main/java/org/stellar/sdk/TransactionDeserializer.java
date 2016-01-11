@@ -24,20 +24,22 @@ public class TransactionDeserializer implements JsonDeserializer<Transaction> {
     Transaction transaction = gson.fromJson(json, Transaction.class);
 
     String memoType = json.getAsJsonObject().get("memo_type").getAsString();
-    String memoValue = json.getAsJsonObject().get("memo").getAsString();
     Memo memo;
     if (memoType.equals("none")) {
       memo = Memo.none();
-    } else if (memoType.equals("text")) {
-      memo = Memo.text(memoValue);
-    } else if (memoType.equals("id")) {
-      memo = Memo.id(Long.parseLong(memoValue));
-    } else if (memoType.equals("hash")) {
-      memo = Memo.hash(Base64.decodeBase64(memoValue));
-    } else if (memoType.equals("return")) {
-      memo = Memo.returnHash(Base64.decodeBase64(memoValue));
     } else {
-      throw new JsonParseException("Unknown memo type.");
+      String memoValue = json.getAsJsonObject().get("memo").getAsString();
+      if (memoType.equals("text")) {
+        memo = Memo.text(memoValue);
+      } else if (memoType.equals("id")) {
+        memo = Memo.id(Long.parseLong(memoValue));
+      } else if (memoType.equals("hash")) {
+        memo = Memo.hash(Base64.decodeBase64(memoValue));
+      } else if (memoType.equals("return")) {
+        memo = Memo.returnHash(Base64.decodeBase64(memoValue));
+      } else {
+        throw new JsonParseException("Unknown memo type.");
+      }
     }
 
     transaction.setMemo(memo);
