@@ -1,0 +1,41 @@
+package org.stellar.sdk.federation;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Object to hold a response from a federation server.
+ * @see <a href="https://www.stellar.org/developers/learn/concepts/federation.html" target="_blank">Federation docs</a>
+ */
+public class FederationResponse {
+  @SerializedName("stellar_address")
+  private final String stellarAddress;
+  @SerializedName("account_id")
+  private final String accountId;
+  @SerializedName("memo_type")
+  private final String memoType;
+  @SerializedName("memo")
+  private final String memo;
+
+  public FederationResponse(String stellarAddress, String accountId, String memoType, String memo) {
+    this.stellarAddress = stellarAddress;
+    this.accountId = accountId;
+    this.memoType = memoType;
+    this.memo = memo;
+  }
+
+  public String getStellarAddress() {
+    return stellarAddress;
+  }
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public String getMemoType() {
+    return memoType;
+  }
+
+  public String getMemo() {
+    return memo;
+  }
+}

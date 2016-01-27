@@ -34,6 +34,7 @@ repositories {
 dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.1'
     compile 'org.apache.httpcomponents:fluent-hc:4.5.1'
+    compile 'com.moandjiezana.toml:toml4j:0.5.1'
     compile 'org.mockito:mockito-core:2.0.31-beta'
     compile 'com.google.guava:guava:18.0'
     compile 'com.google.code.gson:gson:2.4'

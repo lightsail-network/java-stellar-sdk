@@ -50,7 +50,7 @@ public class ServerTest extends TestCase {
             "  \"result_meta_xdr\": \"AAAAAAAAAAEAAAACAAAAAAAMmyYAAAAAAAAAAG2EKvHpNRorZjQVJaBp3rX1sUqcZbICuPF4uunSC9zKAAAAAAvrwgAADJsmAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAMmyYAAAAAAAAAAKu3N77S+cHLEDfVD2eW/CqRiN9yvAKH+qkeLjHQs1u+AAAAFzCfYtQADJKDAAAAAwAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA\"\n" +
             "}";
 
-    private final StatusLine httpBadRequest = new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_OK, "Bad Request");
+    private final StatusLine httpBadRequest = new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_BAD_REQUEST, "Bad Request");
     private final String failureResponse =
             "{\n" +
             "  \"type\": \"https://stellar.org/horizon-errors/transaction_failed\",\n" +
@@ -84,7 +84,7 @@ public class ServerTest extends TestCase {
     Transaction buildTransaction() throws IOException {
         // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
         KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
-        KeyPair destination = KeyPair.fromAddress("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+        KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
         Account account = new Account(source, 2908908335136768L);
         Transaction transaction = new Transaction.Builder(account)
