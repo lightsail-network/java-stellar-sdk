@@ -6,10 +6,10 @@ import org.apache.http.client.fluent.Request;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
-import org.stellar.base.KeyPair;
-import org.stellar.sdk.Account;
-import org.stellar.sdk.GsonSingleton;
-import org.stellar.sdk.Page;
+import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.Account;
+import org.stellar.sdk.responses.GsonSingleton;
+import org.stellar.sdk.responses.Page;
 
 import java.io.IOException;
 import java.net.URI;

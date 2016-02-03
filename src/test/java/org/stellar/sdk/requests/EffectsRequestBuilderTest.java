@@ -1,7 +1,7 @@
 package org.stellar.sdk.requests;
 
 import org.junit.Test;
-import org.stellar.base.KeyPair;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Server;
 
 import java.net.URI;
@@ -23,7 +23,7 @@ public class EffectsRequestBuilderTest {
   public void testForAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     URI uri = server.effects()
-            .forAccount(KeyPair.fromAddress("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
+            .forAccount(KeyPair.fromAccountId("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
             .limit(200)
             .order(RequestBuilder.Order.DESC)
             .buildUri();

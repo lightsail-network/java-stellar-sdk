@@ -3,9 +3,9 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.client.fluent.Request;
-import org.stellar.base.KeyPair;
-import org.stellar.sdk.Page;
-import org.stellar.sdk.operations.Operation;
+import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.Page;
+import org.stellar.sdk.responses.operations.Operation;
 
 import java.io.IOException;
 import java.net.URI;

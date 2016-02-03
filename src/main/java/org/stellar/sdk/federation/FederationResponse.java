@@ -16,7 +16,7 @@ public class FederationResponse {
   @SerializedName("memo")
   private final String memo;
 
-  public FederationResponse(String stellarAddress, String accountId, String memoType, String memo) {
+  FederationResponse(String stellarAddress, String accountId, String memoType, String memo) {
     this.stellarAddress = stellarAddress;
     this.accountId = accountId;
     this.memoType = memoType;

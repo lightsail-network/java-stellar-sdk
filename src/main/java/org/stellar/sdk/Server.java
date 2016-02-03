@@ -10,8 +10,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.stellar.base.Transaction;
 import org.stellar.sdk.requests.*;
+import org.stellar.sdk.responses.GsonSingleton;
+import org.stellar.sdk.responses.SubmitTransactionResponse;
 
 import java.io.IOException;
 import java.io.InputStream;

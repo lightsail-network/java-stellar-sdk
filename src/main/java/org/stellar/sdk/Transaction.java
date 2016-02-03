@@ -1,179 +1,223 @@
 package org.stellar.sdk;
 
-import com.google.gson.annotations.SerializedName;
+import org.apache.commons.codec.binary.Base64;
+import org.stellar.sdk.xdr.DecoratedSignature;
+import org.stellar.sdk.xdr.EnvelopeType;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
-import org.stellar.base.KeyPair;
-import org.stellar.base.Memo;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Represents transaction response.
- * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/transaction.html" target="_blank">Transaction documentation</a>
- * @see org.stellar.sdk.requests.TransactionsRequestBuilder
- * @see org.stellar.sdk.Server#transactions()
+ * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction {
-  @SerializedName("hash")
-  private final String hash;
-  @SerializedName("ledger")
-  private final Long ledger;
-  @SerializedName("created_at")
-  private final String createdAt;
-  @SerializedName("source_account")
-  private final KeyPair sourceAccount;
-  @SerializedName("paging_token")
-  private final String pagingToken;
-  @SerializedName("source_account_sequence")
-  private final Long sourceAccountSequence;
-  @SerializedName("fee_paid")
-  private final Long feePaid;
-  @SerializedName("operation_count")
-  private final Integer operationCount;
-  @SerializedName("envelope_xdr")
-  private final String envelopeXdr;
-  @SerializedName("result_xdr")
-  private final String resultXdr;
-  @SerializedName("result_meta_xdr")
-  private final String resultMetaXdr;
-  @SerializedName("_links")
-  private final Links links;
+  private final int BASE_FEE = 100;
 
-  // GSON won't serialize `transient` variables automatically. We need this behaviour
-  // because Memo is an abstract class and GSON tries to instantiate it.
-  private transient Memo memo;
+  private final int mFee;
+  private final KeyPair mSourceAccount;
+  private final long mSequenceNumber;
+  private final Operation[] mOperations;
+  private final Memo mMemo;
+  private List<DecoratedSignature> mSignatures;
 
-  Transaction(String hash, Long ledger, String createdAt, KeyPair sourceAccount, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
-    this.hash = hash;
-    this.ledger = ledger;
-    this.createdAt = createdAt;
-    this.sourceAccount = sourceAccount;
-    this.pagingToken = pagingToken;
-    this.sourceAccountSequence = sourceAccountSequence;
-    this.feePaid = feePaid;
-    this.operationCount = operationCount;
-    this.envelopeXdr = envelopeXdr;
-    this.resultXdr = resultXdr;
-    this.resultMetaXdr = resultMetaXdr;
-    this.memo = memo;
-    this.links = links;
-  }
+  Transaction(KeyPair sourceAccount, long sequenceNumber, Operation[] operations, Memo memo) {
+    mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
+    mOperations = checkNotNull(operations, "operations cannot be null");
+    checkArgument(operations.length > 0, "At least one operation required");
 
-  public String getHash() {
-    return hash;
-  }
-
-  public Long getLedger() {
-    return ledger;
-  }
-
-  public String getCreatedAt() {
-    return createdAt;
-  }
-
-  public KeyPair getSourceAccount() {
-    return sourceAccount;
-  }
-
-  public String getPagingToken() {
-    return pagingToken;
-  }
-
-  public Long getSourceAccountSequence() {
-    return sourceAccountSequence;
-  }
-
-  public Long getFeePaid() {
-    return feePaid;
-  }
-
-  public Integer getOperationCount() {
-    return operationCount;
-  }
-
-  public String getEnvelopeXdr() {
-    return envelopeXdr;
-  }
-
-  public String getResultXdr() {
-    return resultXdr;
-  }
-
-  public String getResultMetaXdr() {
-    return resultMetaXdr;
-  }
-
-  public Memo getMemo() {
-    return memo;
-  }
-
-  void setMemo(Memo memo) {
-    memo = checkNotNull(memo, "memo cannot be null");
-    if (this.memo != null) {
-      throw new RuntimeException("Memo has been already set.");
-    }
-    this.memo = memo;
-  }
-
-  public Links getLinks() {
-    return links;
+    mFee = operations.length * BASE_FEE;
+    mSignatures = new ArrayList<DecoratedSignature>();
+    mMemo = memo != null ? memo : Memo.none();
   }
 
   /**
-   * Links connected to transaction.
+   * Adds a new signature to this transaction.
+   * @param signer {@link KeyPair} object representing a signer
    */
-  public static class Links {
-    @SerializedName("account")
-    private final Link account;
-    @SerializedName("effects")
-    private final Link effects;
-    @SerializedName("ledger")
-    private final Link ledger;
-    @SerializedName("operations")
-    private final Link operations;
-    @SerializedName("precedes")
-    private final Link precedes;
-    @SerializedName("self")
-    private final Link self;
-    @SerializedName("succeeds")
-    private final Link succeeds;
+  public void sign(KeyPair signer) {
+    byte[] txHash = this.hash();
+    mSignatures.add(signer.signDecorated(txHash));
+  }
 
-    Links(Link account, Link effects, Link ledger, Link operations, Link self, Link precedes, Link succeeds) {
-      this.account = account;
-      this.effects = effects;
-      this.ledger = ledger;
-      this.operations = operations;
-      this.self = self;
-      this.precedes = precedes;
-      this.succeeds = succeeds;
+  /**
+   * Returns transaction hash.
+   */
+  public byte[] hash() {
+    return Util.hash(this.signatureBase());
+  }
+
+  /**
+   * Returns signature base.
+   */
+  public byte[] signatureBase() {
+    try {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      // Hashed NetworkID
+      outputStream.write(Network.current().getNetworkId());
+      // Envelope Type - 4 bytes
+      outputStream.write(ByteBuffer.allocate(4).putInt(EnvelopeType.ENVELOPE_TYPE_TX.getValue()).array());
+      // Transaction XDR bytes
+      ByteArrayOutputStream txOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
+      org.stellar.sdk.xdr.Transaction.encode(xdrOutputStream, this.toXdr());
+      outputStream.write(txOutputStream.toByteArray());
+
+      return outputStream.toByteArray();
+    } catch (IOException exception) {
+      return null;
+    }
+  }
+
+  public KeyPair getSourceAccount() {
+    return mSourceAccount;
+  }
+
+  public long getSequenceNumber() {
+    return mSequenceNumber;
+  }
+
+  public Memo getMemo() {
+    return mMemo;
+  }
+
+  /**
+   * Returns fee paid for transaction in stroops (1 stroop = 0.0000001 XLM).
+   */
+  public int getFee() {
+    return mFee;
+  }
+
+  /**
+   * Generates Transaction XDR object.
+   */
+  public org.stellar.sdk.xdr.Transaction toXdr() {
+    // fee
+    org.stellar.sdk.xdr.Uint32 fee = new org.stellar.sdk.xdr.Uint32();
+    fee.setUint32(mFee);
+    // sequenceNumber
+    org.stellar.sdk.xdr.Uint64 sequenceNumberUint = new org.stellar.sdk.xdr.Uint64();
+    sequenceNumberUint.setUint64(mSequenceNumber);
+    org.stellar.sdk.xdr.SequenceNumber sequenceNumber = new org.stellar.sdk.xdr.SequenceNumber();
+    sequenceNumber.setSequenceNumber(sequenceNumberUint);
+    // sourceAccount
+    org.stellar.sdk.xdr.AccountID sourceAccount = new org.stellar.sdk.xdr.AccountID();
+    sourceAccount.setAccountID(mSourceAccount.getXdrPublicKey());
+    // operations
+    org.stellar.sdk.xdr.Operation[] operations = new org.stellar.sdk.xdr.Operation[mOperations.length];
+    for (int i = 0; i < mOperations.length; i++) {
+      operations[i] = mOperations[i].toXdr();
+    }
+    // ext
+    org.stellar.sdk.xdr.Transaction.TransactionExt ext = new org.stellar.sdk.xdr.Transaction.TransactionExt();
+    ext.setDiscriminant(0);
+
+    org.stellar.sdk.xdr.Transaction transaction = new org.stellar.sdk.xdr.Transaction();
+    transaction.setFee(fee);
+    transaction.setSeqNum(sequenceNumber);
+    transaction.setSourceAccount(sourceAccount);
+    transaction.setOperations(operations);
+    transaction.setMemo(mMemo.toXdr());
+    transaction.setExt(ext);
+    return transaction;
+  }
+
+  /**
+   * Generates TransactionEnvelope XDR object. Transaction need to have at least one signature.
+   */
+  public org.stellar.sdk.xdr.TransactionEnvelope toEnvelopeXdr() {
+    if (mSignatures.size() == 0) {
+      throw new NotEnoughSignaturesException("Transaction must be signed by at least one signer. Use transaction.sign().");
     }
 
-    public Link getAccount() {
-      return account;
+    org.stellar.sdk.xdr.TransactionEnvelope xdr = new org.stellar.sdk.xdr.TransactionEnvelope();
+    org.stellar.sdk.xdr.Transaction transaction = this.toXdr();
+    xdr.setTx(transaction);
+
+    DecoratedSignature[] signatures = new DecoratedSignature[mSignatures.size()];
+    signatures = mSignatures.toArray(signatures);
+    xdr.setSignatures(signatures);
+    return xdr;
+  }
+
+  /**
+   * Returns base64-encoded TransactionEnvelope XDR object. Transaction need to have at least one signature.
+   */
+  public String toEnvelopeXdrBase64() {
+    try {
+      org.stellar.sdk.xdr.TransactionEnvelope envelope = this.toEnvelopeXdr();
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
+      org.stellar.sdk.xdr.TransactionEnvelope.encode(xdrOutputStream, envelope);
+      Base64 base64Codec = new Base64();
+      return base64Codec.encodeAsString(outputStream.toByteArray());
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+  }
+
+  /**
+   * Builds a new Transaction object.
+   */
+  public static class Builder {
+    private final TransactionBuilderAccount mSourceAccount;
+    private Memo mMemo;
+    List<Operation> mOperations;
+
+    /**
+     * Construct a new transaction builder.
+     * @param sourceAccount The source account for this transaction. This account is the account
+     * who will use a sequence number. When build() is called, the account object's sequence number
+     * will be incremented.
+     */
+    public Builder(TransactionBuilderAccount sourceAccount) {
+      checkNotNull(sourceAccount, "sourceAccount cannot be null");
+      mSourceAccount = sourceAccount;
+      mOperations = new ArrayList<Operation>();
     }
 
-    public Link getEffects() {
-      return effects;
+    /**
+     * Adds a new <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">operation</a> to this transaction.
+     * @param operation
+     * @return Builder object so you can chain methods.
+     * @see Operation
+     */
+    public Builder addOperation(Operation operation) {
+      checkNotNull(operation, "operation cannot be null");
+      mOperations.add(operation);
+      return this;
     }
 
-    public Link getLedger() {
-      return ledger;
+    /**
+     * Adds a <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">memo</a> to this transaction.
+     * @param memo
+     * @return Builder object so you can chain methods.
+     * @see Memo
+     */
+    public Builder addMemo(Memo memo) {
+      if (mMemo != null) {
+        throw new RuntimeException("Memo has been already added.");
+      }
+      checkNotNull(memo, "memo cannot be null");
+      mMemo = memo;
+      return this;
     }
 
-    public Link getOperations() {
-      return operations;
-    }
-
-    public Link getPrecedes() {
-      return precedes;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
-
-    public Link getSucceeds() {
-      return succeeds;
+    /**
+     * Builds a transaction.
+     */
+    public Transaction build() {
+      Operation[] operations = new Operation[mOperations.size()];
+      operations = mOperations.toArray(operations);
+      mSourceAccount.incrementSequenceNumber();
+      return new Transaction(mSourceAccount.getKeypair(), mSourceAccount.getSequenceNumber(), operations, mMemo);
     }
   }
 }

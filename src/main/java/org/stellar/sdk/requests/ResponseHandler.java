@@ -8,7 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
-import org.stellar.sdk.GsonSingleton;
+import org.stellar.sdk.responses.GsonSingleton;
 
 import java.io.IOException;
 import java.io.StringWriter;

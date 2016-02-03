@@ -1,7 +1,7 @@
 package org.stellar.sdk.requests;
 
-import org.stellar.base.Asset;
-import org.stellar.base.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeCreditAlphaNum;
 
 import java.net.URI;
 
