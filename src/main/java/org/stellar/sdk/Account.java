@@ -155,12 +155,15 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
     private final String assetCode;
     @SerializedName("asset_issuer")
     private final String assetIssuer;
+    @SerializedName("limit")
+    private final String limit;
     @SerializedName("balance")
     private final String balance;
 
-    Balance(String assetType, String assetCode, String assetIssuer, String balance) {
+    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit) {
       this.assetType = checkNotNull(assetType, "assertType cannot be null");
       this.balance = checkNotNull(balance, "balance cannot be null");
+      this.limit = limit;
       this.assetCode = assetCode;
       this.assetIssuer = assetIssuer;
     }
@@ -179,6 +182,10 @@ public class Account implements org.stellar.base.TransactionBuilderAccount {
 
     public String getBalance() {
       return balance;
+    }
+
+    public String getLimit() {
+      return limit;
     }
   }
 

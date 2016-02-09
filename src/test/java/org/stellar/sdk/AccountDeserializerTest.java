@@ -22,8 +22,15 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getFlags().getAuthRequired(), false);
     assertEquals(account.getFlags().getAuthRevocable(), true);
 
-    assertEquals(account.getBalances()[0].getAssetType(), "native");
-    assertEquals(account.getBalances()[0].getBalance(), "20.0000300");
+    assertEquals(account.getBalances()[0].getAssetType(), "credit_alphanum4");
+    assertEquals(account.getBalances()[0].getAssetCode(), "ABC");
+    assertEquals(account.getBalances()[0].getAssetIssuer(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
+    assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
+
+    assertEquals(account.getBalances()[1].getAssetType(), "native");
+    assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
+    assertEquals(account.getBalances()[1].getLimit(), null);
 
     assertEquals(account.getSigners()[0].getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSigners()[0].getWeight(), 0);
@@ -76,6 +83,13 @@ public class AccountDeserializerTest extends TestCase {
           "    \"auth_revocable\": true\n" +
           "  },\n" +
           "  \"balances\": [\n" +
+          "    {\n" +
+          "      \"balance\": \"1001.0000000\",\n" +
+          "      \"limit\": \"12000.4775807\",\n" +
+          "      \"asset_type\": \"credit_alphanum4\",\n" +
+          "      \"asset_code\": \"ABC\",\n" +
+          "      \"asset_issuer\": \"GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU\"\n" +
+          "    },"+
           "    {\n" +
           "      \"asset_type\": \"native\",\n" +
           "      \"balance\": \"20.0000300\"\n" +
