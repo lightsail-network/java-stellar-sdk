@@ -23,9 +23,15 @@ public class Federation {
    * given Account ID.</li>
    * </ul>
    * @param value Stellar address or account id
-   * @throws IOException
+   * @throws MalformedAddressException
+   * @throws ConnectionErrorException
+   * @throws NoFederationServerException
+   * @throws FederationServerInvalidException
+   * @throws StellarTomlNotFoundInvalidException
+   * @throws NotFoundException
+   * @throws ServerErrorException
    */
-  public static FederationResponse resolve(String value) throws IOException {
+  public static FederationResponse resolve(String value) {
     String[] tokens = value.split("\\*");
     if (tokens.length == 1) {
       // accountId
@@ -35,7 +41,7 @@ public class Federation {
       FederationServer server = FederationServer.createForDomain(InternetDomainName.from(domain));
       return server.resolveAddress(value);
     } else {
-      throw new RuntimeException("Malformed Stellar address");
+      throw new MalformedAddressException();
     }
   }
 }

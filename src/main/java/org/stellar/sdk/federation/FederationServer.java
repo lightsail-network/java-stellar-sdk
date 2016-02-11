@@ -8,6 +8,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
@@ -39,11 +40,12 @@ public class FederationServer {
    * Creates a new <code>FederationServer</code> instance.
    * @param serverUri Federation Server URI
    * @param domain Domain name this federation server is responsible for
+   * @throws FederationServerInvalidException
    */
   public FederationServer(URI serverUri, InternetDomainName domain) {
     this.serverUri = serverUri;
     if (this.serverUri.getScheme() != "https") {
-      throw new RuntimeException("Only HTTPS servers allowed");
+      throw new FederationServerInvalidException();
     }
     this.domain = domain;
   }
@@ -52,12 +54,13 @@ public class FederationServer {
    * Creates a new <code>FederationServer</code> instance.
    * @param serverUri Federation Server URI
    * @param domain Domain name this federation server is responsible for
+   * @throws FederationServerInvalidException
    */
   public FederationServer(String serverUri, InternetDomainName domain) {
     try {
       this.serverUri = new URI(serverUri);
     } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
+      throw new FederationServerInvalidException();
     }
     this.domain = domain;
   }
@@ -67,9 +70,12 @@ public class FederationServer {
    * It tries to find a federation server URL in stellar.toml file.
    * @see <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.html" target="_blank">Stellar.toml docs</a>
    * @param domain Domain to find a federation server for
-   * @throws IOException
+   * @throws ConnectionErrorException
+   * @throws NoFederationServerException
+   * @throws FederationServerInvalidException
+   * @throws StellarTomlNotFoundInvalidException
    */
-  public static FederationServer createForDomain(InternetDomainName domain) throws IOException {
+  public static FederationServer createForDomain(InternetDomainName domain) {
     Executor executor = Executor.newInstance(FederationServer.httpClient);
     URI stellarTomlUri;
     try {
@@ -77,29 +83,34 @@ public class FederationServer {
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
-    Toml stellarToml = executor.execute(Request.Get(stellarTomlUri))
-            .handleResponse(new org.apache.http.client.ResponseHandler<Toml>() {
-              @Override
-              public Toml handleResponse(HttpResponse response) throws IOException {
-                if (response.getStatusLine().getStatusCode() >= 300) {
-                  throw new RuntimeException("stellar.toml file not found");
-                }
+    Toml stellarToml = null;
+    try {
+      stellarToml = executor.execute(Request.Get(stellarTomlUri))
+              .handleResponse(new org.apache.http.client.ResponseHandler<Toml>() {
+                @Override
+                public Toml handleResponse(HttpResponse response) throws IOException {
+                  if (response.getStatusLine().getStatusCode() >= 300) {
+                    throw new StellarTomlNotFoundInvalidException();
+                  }
 
-                HttpEntity entity = response.getEntity();
-                if (entity == null) {
-                  throw new RuntimeException("stellar.toml response contains no content");
-                }
+                  HttpEntity entity = response.getEntity();
+                  if (entity == null) {
+                    throw new StellarTomlNotFoundInvalidException();
+                  }
 
-                StringWriter writer = new StringWriter();
-                InputStream content = entity.getContent();
-                IOUtils.copy(content, writer);
-                return new Toml().read(writer.toString());
-              }
-            });
+                  StringWriter writer = new StringWriter();
+                  InputStream content = entity.getContent();
+                  IOUtils.copy(content, writer);
+                  return new Toml().read(writer.toString());
+                }
+              });
+    } catch (IOException e) {
+      throw new ConnectionErrorException();
+    }
 
     String federationServer = stellarToml.getString("FEDERATION_SERVER");
     if (federationServer == null) {
-      throw new RuntimeException("stellar.toml file does not contain FEDERATION_SERVER field");
+      throw new NoFederationServerException();
     }
 
     return new FederationServer(federationServer, domain);
@@ -108,12 +119,15 @@ public class FederationServer {
   /**
    * Resolves a stellar address using a given federation server.
    * @param address Stellar addres, like <code>bob*stellar.org</code>
-   * @throws IOException
+   * @throws MalformedAddressException
+   * @throws ConnectionErrorException
+   * @throws NotFoundException
+   * @throws ServerErrorException
    */
-  public FederationResponse resolveAddress(String address) throws IOException {
+  public FederationResponse resolveAddress(String address) {
     String[] tokens = address.split("\\*");
     if (tokens.length != 2) {
-      throw new RuntimeException("Invalid Stellar address");
+      throw new MalformedAddressException();
     }
 
     URIBuilder uriBuilder = new URIBuilder(this.serverUri);
@@ -129,7 +143,17 @@ public class FederationServer {
     TypeToken type = new TypeToken<FederationResponse>() {};
     ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<FederationResponse>(type);
     Executor executor = Executor.newInstance(FederationServer.httpClient);
-    return (FederationResponse) executor.execute(Request.Get(uri)).handleResponse(responseHandler);
+    try {
+      return (FederationResponse) executor.execute(Request.Get(uri)).handleResponse(responseHandler);
+    } catch (HttpResponseException e) {
+      if (e.getStatusCode() == 404) {
+        throw new NotFoundException();
+      } else {
+        throw new ServerErrorException();
+      }
+    } catch (IOException e) {
+      throw new ConnectionErrorException();
+    }
   }
 
   /**
