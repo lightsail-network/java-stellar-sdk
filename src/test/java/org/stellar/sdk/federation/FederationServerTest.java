@@ -107,6 +107,6 @@ public class FederationServerTest extends TestCase {
     try {
       FederationResponse response = server.resolveAddress("bob*stellar.org");
       fail("Expected exception");
-    } catch (Exception e) {}
+    } catch (NotFoundException e) {}
   }
 }

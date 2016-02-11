@@ -61,12 +61,12 @@ public class FederationTest extends TestCase {
   }
 
   @Test
-  public void testMalformedAddress() throws IOException {
+  public void testMalformedAddress() {
     try {
       FederationResponse response = Federation.resolve("bob*stellar.org*test");
       fail("Expected exception");
-    } catch (RuntimeException e) {
-      assertEquals(e.getMessage(), "Malformed Stellar address");
+    } catch (MalformedAddressException e) {
+      //
     }
   }
 }
