@@ -9,7 +9,7 @@ import org.junit.Test;
 public class LedgerPageDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    Page<Ledger> ledgersPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Ledger>>() {}.getType());
+    Page<LedgerResponse> ledgersPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<LedgerResponse>>() {}.getType());
     assertEquals(ledgersPage.getRecords().get(0).getHash(), "f6fc9a29b5ecec90348e17a10a60e019c5cb8ea24f66a1063e92c13391b09b8d");
     assertEquals(ledgersPage.getRecords().get(0).getPagingToken(), "3862202096287744");
     assertEquals(ledgersPage.getRecords().get(9).getHash(), "8552b7d130e602ed068bcfec729b3056d0c8b94d77f06d91cd1ec8323c2d6177");

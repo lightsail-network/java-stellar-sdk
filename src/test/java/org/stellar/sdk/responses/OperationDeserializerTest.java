@@ -7,17 +7,17 @@ import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 
 import org.junit.Test;
-import org.stellar.sdk.responses.operations.AccountMergeOperation;
-import org.stellar.sdk.responses.operations.AllowTrustOperation;
-import org.stellar.sdk.responses.operations.ChangeTrustOperation;
-import org.stellar.sdk.responses.operations.CreateAccountOperation;
-import org.stellar.sdk.responses.operations.CreatePassiveOfferOperation;
-import org.stellar.sdk.responses.operations.InflationOperation;
-import org.stellar.sdk.responses.operations.ManageOfferOperation;
-import org.stellar.sdk.responses.operations.Operation;
-import org.stellar.sdk.responses.operations.PathPaymentOperation;
-import org.stellar.sdk.responses.operations.PaymentOperation;
-import org.stellar.sdk.responses.operations.SetOptionsOperation;
+import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;
+import org.stellar.sdk.responses.operations.AllowTrustOperationResponse;
+import org.stellar.sdk.responses.operations.ChangeTrustOperationResponse;
+import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
+import org.stellar.sdk.responses.operations.CreatePassiveOfferOperationResponse;
+import org.stellar.sdk.responses.operations.InflationOperationResponse;
+import org.stellar.sdk.responses.operations.ManageOfferOperationResponse;
+import org.stellar.sdk.responses.operations.OperationResponse;
+import org.stellar.sdk.responses.operations.PathPaymentOperationResponse;
+import org.stellar.sdk.responses.operations.PaymentOperationResponse;
+import org.stellar.sdk.responses.operations.SetOptionsOperationResponse;
 
 public class OperationDeserializerTest extends TestCase {
   @Test
@@ -50,7 +50,7 @@ public class OperationDeserializerTest extends TestCase {
             "  \"type\": \"create_account\",\n" +
             "  \"type_i\": 0\n" +
             "}";
-    CreateAccountOperation operation = (CreateAccountOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    CreateAccountOperationResponse operation = (CreateAccountOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getSourceAccount().getAccountId(), "GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD");
     assertEquals(operation.getPagingToken(), "3936840037961729");
@@ -98,7 +98,7 @@ public class OperationDeserializerTest extends TestCase {
             "        \"type\": \"payment\",\n" +
             "        \"type_i\": 1\n" +
             "      }";
-    PaymentOperation operation = (PaymentOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    PaymentOperationResponse operation = (PaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getSourceAccount().getAccountId(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
     assertEquals(operation.getId(), new Long(3940808587743233L));
@@ -142,7 +142,7 @@ public class OperationDeserializerTest extends TestCase {
             "        \"amount\": \"1000000000.0\"\n" +
             "      }";
 
-    PaymentOperation operation = (PaymentOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    PaymentOperationResponse operation = (PaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getFrom().getAccountId(), "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
     assertEquals(operation.getTo().getAccountId(), "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
@@ -183,7 +183,7 @@ public class OperationDeserializerTest extends TestCase {
             "        \"authorize\": true\n" +
             "      }";
 
-    AllowTrustOperation operation = (AllowTrustOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    AllowTrustOperationResponse operation = (AllowTrustOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getTrustee().getAccountId(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
     assertEquals(operation.getTrustor().getAccountId(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
@@ -224,7 +224,7 @@ public class OperationDeserializerTest extends TestCase {
             "        \"trustor\": \"GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F\"\n" +
             "      }";
 
-    ChangeTrustOperation operation = (ChangeTrustOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    ChangeTrustOperationResponse operation = (ChangeTrustOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getTrustee().getAccountId(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
     assertEquals(operation.getTrustor().getAccountId(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
@@ -273,7 +273,7 @@ public class OperationDeserializerTest extends TestCase {
             "        ]"+
             "      }";
 
-    SetOptionsOperation operation = (SetOptionsOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    SetOptionsOperationResponse operation = (SetOptionsOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getSigner().getAccountId(), "GD3ZYXVC7C3ECD5I4E5NGPBFJJSULJ6HJI2FBHGKYFV34DSIWB4YEKJZ");
     assertEquals(operation.getSignerWeight(), new Integer(1));
@@ -316,7 +316,7 @@ public class OperationDeserializerTest extends TestCase {
             "        \"into\": \"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN\"\n" +
             "      }";
 
-    AccountMergeOperation operation = (AccountMergeOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    AccountMergeOperationResponse operation = (AccountMergeOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getAccount().getAccountId(), "GD6GKRABNDVYDETEZJQEPS7IBQMERCN44R5RCI4LJNX6BMYQM2KPGGZ2");
     assertEquals(operation.getInto().getAccountId(), "GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN");
@@ -355,7 +355,7 @@ public class OperationDeserializerTest extends TestCase {
             "        \"selling_asset_type\": \"native\"\n" +
             "      }";
 
-    ManageOfferOperation operation = (ManageOfferOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    ManageOfferOperationResponse operation = (ManageOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getOfferId(), new Integer(0));
     assertEquals(operation.getAmount(), "100.0");
@@ -400,7 +400,7 @@ public class OperationDeserializerTest extends TestCase {
             "  \"type\": \"path_payment\"\n" +
             "}";
 
-    PathPaymentOperation operation = (PathPaymentOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    PathPaymentOperationResponse operation = (PathPaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getFrom().getAccountId(), "GCXKG6RN4ONIEPCMNFB732A436Z5PNDSRLGWK7GBLCMQLIFO4S7EYWVU");
     assertEquals(operation.getTo().getAccountId(), "GA5WBPYA5Y4WAEHXWR2UKO2UO4BUGHUQ74EUPKON2QHV4WRHOIRNKKH2");
@@ -448,7 +448,7 @@ public class OperationDeserializerTest extends TestCase {
             "  \"type\": \"create_passive_offer\"\n" +
             "}";
 
-    CreatePassiveOfferOperation operation = (CreatePassiveOfferOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    CreatePassiveOfferOperationResponse operation = (CreatePassiveOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getAmount(), "11.27827");
     assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GDS5JW5E6DRSSN5XK4LW7E6VUMFKKE2HU5WCOVFTO7P2RP7OXVCBLJ3Y")));
@@ -482,7 +482,7 @@ public class OperationDeserializerTest extends TestCase {
             "  \"type\": \"inflation\"\n" +
             "}";
 
-    InflationOperation operation = (InflationOperation) GsonSingleton.getInstance().fromJson(json, Operation.class);
+    InflationOperationResponse operation = (InflationOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getId(), new Long(12884914177L));
   }

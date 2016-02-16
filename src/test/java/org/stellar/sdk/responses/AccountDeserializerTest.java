@@ -7,7 +7,7 @@ import org.junit.Test;
 public class AccountDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    Account account = GsonSingleton.getInstance().fromJson(json, Account.class);
+    AccountResponse account = GsonSingleton.getInstance().fromJson(json, AccountResponse.class);
     assertEquals(account.getKeypair().getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getPagingToken(), "1");
     assertEquals(account.getSequenceNumber(), new Long(2319149195853854L));

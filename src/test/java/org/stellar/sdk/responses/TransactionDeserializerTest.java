@@ -9,7 +9,7 @@ import org.stellar.sdk.MemoNone;
 public class TransactionDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    Transaction transaction = GsonSingleton.getInstance().fromJson(json, Transaction.class);
+    TransactionResponse transaction = GsonSingleton.getInstance().fromJson(json, TransactionResponse.class);
     assertEquals(transaction.getHash(), "5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b");
     assertEquals(transaction.getLedger(), new Long(915744));
     assertEquals(transaction.getCreatedAt(), "2015-11-20T17:01:28Z");
@@ -37,7 +37,7 @@ public class TransactionDeserializerTest extends TestCase {
 
   @Test
   public void testDeserializeWithoutMemo() {
-    Transaction transaction = GsonSingleton.getInstance().fromJson(jsonMemoNone, Transaction.class);
+    TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonMemoNone, TransactionResponse.class);
     assertTrue(transaction.getMemo() instanceof MemoNone);
   }
 

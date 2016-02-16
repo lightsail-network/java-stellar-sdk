@@ -11,8 +11,8 @@ import com.google.gson.reflect.TypeToken;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.responses.effects.Effect;
-import org.stellar.sdk.responses.operations.Operation;
+import org.stellar.sdk.responses.effects.EffectResponse;
+import org.stellar.sdk.responses.operations.OperationResponse;
 
 import java.lang.reflect.Type;
 
@@ -41,8 +41,8 @@ class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
             .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
-            .registerTypeAdapter(Operation.class, new OperationDeserializer())
-            .registerTypeAdapter(Effect.class, new EffectDeserializer())
+            .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
+            .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
             .create();
 
     return gson.fromJson(newJson, pageType.getType());

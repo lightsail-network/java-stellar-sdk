@@ -8,23 +8,23 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.responses.operations.Operation;
-import org.stellar.sdk.responses.operations.CreateAccountOperation;
-import org.stellar.sdk.responses.operations.PaymentOperation;
-import org.stellar.sdk.responses.operations.PathPaymentOperation;
-import org.stellar.sdk.responses.operations.ManageOfferOperation;
-import org.stellar.sdk.responses.operations.CreatePassiveOfferOperation;
-import org.stellar.sdk.responses.operations.SetOptionsOperation;
-import org.stellar.sdk.responses.operations.ChangeTrustOperation;
-import org.stellar.sdk.responses.operations.AllowTrustOperation;
-import org.stellar.sdk.responses.operations.AccountMergeOperation;
-import org.stellar.sdk.responses.operations.InflationOperation;
+import org.stellar.sdk.responses.operations.OperationResponse;
+import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
+import org.stellar.sdk.responses.operations.PaymentOperationResponse;
+import org.stellar.sdk.responses.operations.PathPaymentOperationResponse;
+import org.stellar.sdk.responses.operations.ManageOfferOperationResponse;
+import org.stellar.sdk.responses.operations.CreatePassiveOfferOperationResponse;
+import org.stellar.sdk.responses.operations.SetOptionsOperationResponse;
+import org.stellar.sdk.responses.operations.ChangeTrustOperationResponse;
+import org.stellar.sdk.responses.operations.AllowTrustOperationResponse;
+import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;
+import org.stellar.sdk.responses.operations.InflationOperationResponse;
 
 import java.lang.reflect.Type;
 
-class OperationDeserializer implements JsonDeserializer<Operation> {
+class OperationDeserializer implements JsonDeserializer<OperationResponse> {
   @Override
-  public Operation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+  public OperationResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Operation
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
@@ -33,25 +33,25 @@ class OperationDeserializer implements JsonDeserializer<Operation> {
     int type = json.getAsJsonObject().get("type_i").getAsInt();
     switch (type) {
       case 0:
-        return gson.fromJson(json, CreateAccountOperation.class);
+        return gson.fromJson(json, CreateAccountOperationResponse.class);
       case 1:
-        return gson.fromJson(json, PaymentOperation.class);
+        return gson.fromJson(json, PaymentOperationResponse.class);
       case 2:
-        return gson.fromJson(json, PathPaymentOperation.class);
+        return gson.fromJson(json, PathPaymentOperationResponse.class);
       case 3:
-        return gson.fromJson(json, ManageOfferOperation.class);
+        return gson.fromJson(json, ManageOfferOperationResponse.class);
       case 4:
-        return gson.fromJson(json, CreatePassiveOfferOperation.class);
+        return gson.fromJson(json, CreatePassiveOfferOperationResponse.class);
       case 5:
-        return gson.fromJson(json, SetOptionsOperation.class);
+        return gson.fromJson(json, SetOptionsOperationResponse.class);
       case 6:
-        return gson.fromJson(json, ChangeTrustOperation.class);
+        return gson.fromJson(json, ChangeTrustOperationResponse.class);
       case 7:
-        return gson.fromJson(json, AllowTrustOperation.class);
+        return gson.fromJson(json, AllowTrustOperationResponse.class);
       case 8:
-        return gson.fromJson(json, AccountMergeOperation.class);
+        return gson.fromJson(json, AccountMergeOperationResponse.class);
       case 9:
-        return gson.fromJson(json, InflationOperation.class);
+        return gson.fromJson(json, InflationOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

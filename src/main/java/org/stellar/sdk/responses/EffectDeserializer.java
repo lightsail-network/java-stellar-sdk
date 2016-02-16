@@ -12,9 +12,9 @@ import org.stellar.sdk.responses.effects.*;
 
 import java.lang.reflect.Type;
 
-class EffectDeserializer implements JsonDeserializer<Effect> {
+class EffectDeserializer implements JsonDeserializer<EffectResponse> {
   @Override
-  public Effect deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+  public EffectResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Operation
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
@@ -24,46 +24,46 @@ class EffectDeserializer implements JsonDeserializer<Effect> {
     switch (type) {
       // Account effects
       case 0:
-        return gson.fromJson(json, AccountCreatedEffect.class);
+        return gson.fromJson(json, AccountCreatedEffectResponse.class);
       case 1:
-        return gson.fromJson(json, AccountRemovedEffect.class);
+        return gson.fromJson(json, AccountRemovedEffectResponse.class);
       case 2:
-        return gson.fromJson(json, AccountCreditedEffect.class);
+        return gson.fromJson(json, AccountCreditedEffectResponse.class);
       case 3:
-        return gson.fromJson(json, AccountDebitedEffect.class);
+        return gson.fromJson(json, AccountDebitedEffectResponse.class);
       case 4:
-        return gson.fromJson(json, AccountThresholdsUpdatedEffect.class);
+        return gson.fromJson(json, AccountThresholdsUpdatedEffectResponse.class);
       case 5:
-        return gson.fromJson(json, AccountHomeDomainUpdatedEffect.class);
+        return gson.fromJson(json, AccountHomeDomainUpdatedEffectResponse.class);
       case 6:
-        return gson.fromJson(json, AccountFlagsUpdatedEffect.class);
+        return gson.fromJson(json, AccountFlagsUpdatedEffectResponse.class);
       // Signer effects
       case 10:
-        return gson.fromJson(json, SignerCreatedEffect.class);
+        return gson.fromJson(json, SignerCreatedEffectResponse.class);
       case 11:
-        return gson.fromJson(json, SignerRemovedEffect.class);
+        return gson.fromJson(json, SignerRemovedEffectResponse.class);
       case 12:
-        return gson.fromJson(json, SignerUpdatedEffect.class);
+        return gson.fromJson(json, SignerUpdatedEffectResponse.class);
       // Trustline effects
       case 20:
-        return gson.fromJson(json, TrustlineCreatedEffect.class);
+        return gson.fromJson(json, TrustlineCreatedEffectResponse.class);
       case 21:
-        return gson.fromJson(json, TrustlineRemovedEffect.class);
+        return gson.fromJson(json, TrustlineRemovedEffectResponse.class);
       case 22:
-        return gson.fromJson(json, TrustlineUpdatedEffect.class);
+        return gson.fromJson(json, TrustlineUpdatedEffectResponse.class);
       case 23:
-        return gson.fromJson(json, TrustlineAuthorizedEffect.class);
+        return gson.fromJson(json, TrustlineAuthorizedEffectResponse.class);
       case 24:
-        return gson.fromJson(json, TrustlineDeauthorizedEffect.class);
+        return gson.fromJson(json, TrustlineDeauthorizedEffectResponse.class);
       // Trading effects
       case 30:
-        return gson.fromJson(json, OfferCreatedEffect.class);
+        return gson.fromJson(json, OfferCreatedEffectResponse.class);
       case 31:
-        return gson.fromJson(json, OfferRemovedEffect.class);
+        return gson.fromJson(json, OfferRemovedEffectResponse.class);
       case 32:
-        return gson.fromJson(json, OfferUpdatedEffect.class);
+        return gson.fromJson(json, OfferUpdatedEffectResponse.class);
       case 33:
-        return gson.fromJson(json, TradeEffect.class);
+        return gson.fromJson(json, TradeEffectResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

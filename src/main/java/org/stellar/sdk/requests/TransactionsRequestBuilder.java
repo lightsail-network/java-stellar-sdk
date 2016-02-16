@@ -9,7 +9,7 @@ import org.glassfish.jersey.media.sse.SseFeature;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.responses.Transaction;
+import org.stellar.sdk.responses.TransactionResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,14 +29,14 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Transaction}.
+   * Requests specific <code>uri</code> and returns {@link TransactionResponse}.
    * This method is helpful for getting the links.
    * @throws IOException
    */
-  public Transaction transaction(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Transaction>() {};
-    ResponseHandler<Transaction> responseHandler = new ResponseHandler<Transaction>(type);
-    return (Transaction) Request.Get(uri).execute().handleResponse(responseHandler);
+  public TransactionResponse transaction(URI uri) throws IOException {
+    TypeToken type = new TypeToken<TransactionResponse>() {};
+    ResponseHandler<TransactionResponse> responseHandler = new ResponseHandler<TransactionResponse>(type);
+    return (TransactionResponse) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -45,7 +45,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param transactionId Transaction to fetch
    * @throws IOException
    */
-  public Transaction transaction(String transactionId) throws IOException {
+  public TransactionResponse transaction(String transactionId) throws IOException {
     this.setSegments("transaction", transactionId);
     return this.transaction(this.buildUri());
   }
@@ -72,15 +72,15 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link Transaction}.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link TransactionResponse}.
    * This method is helpful for getting the next set of results.
-   * @return {@link Page} of {@link Transaction}
+   * @return {@link Page} of {@link TransactionResponse}
    * @throws IOException
    */
-  public static Page<Transaction> execute(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Page<Transaction>>() {};
-    ResponseHandler<Page<Transaction>> responseHandler = new ResponseHandler<Page<Transaction>>(type);
-    return (Page<Transaction>) Request.Get(uri).execute().handleResponse(responseHandler);
+  public static Page<TransactionResponse> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<TransactionResponse>>() {};
+    ResponseHandler<Page<TransactionResponse>> responseHandler = new ResponseHandler<Page<TransactionResponse>>(type);
+    return (Page<TransactionResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -90,10 +90,10 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
    * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
-   * @param listener {@link EventListener} implementation with {@link Transaction} type
+   * @param listener {@link EventListener} implementation with {@link TransactionResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<Transaction> listener) {
+  public EventSource stream(final EventListener<TransactionResponse> listener) {
     Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
     WebTarget target = client.target(this.buildUri());
     EventSource eventSource = new EventSource(target) {
@@ -103,7 +103,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
         if (data.equals("\"hello\"")) {
           return;
         }
-        Transaction transaction = GsonSingleton.getInstance().fromJson(data, Transaction.class);
+        TransactionResponse transaction = GsonSingleton.getInstance().fromJson(data, TransactionResponse.class);
         listener.onEvent(transaction);
       }
     };
@@ -112,10 +112,10 @@ public class TransactionsRequestBuilder extends RequestBuilder {
 
   /**
    * Build and execute request.
-   * @return {@link Page} of {@link Transaction}
+   * @return {@link Page} of {@link TransactionResponse}
    * @throws IOException
    */
-  public Page<Transaction> execute() throws IOException {
+  public Page<TransactionResponse> execute() throws IOException {
     return this.execute(this.buildUri());
   }
 

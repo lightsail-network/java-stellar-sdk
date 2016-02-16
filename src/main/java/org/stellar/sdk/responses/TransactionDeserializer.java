@@ -13,15 +13,15 @@ import org.stellar.sdk.Memo;
 
 import java.lang.reflect.Type;
 
-public class TransactionDeserializer implements JsonDeserializer<Transaction> {
+public class TransactionDeserializer implements JsonDeserializer<TransactionResponse> {
   @Override
-  public Transaction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+  public TransactionResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Transaction
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
             .create();
 
-    Transaction transaction = gson.fromJson(json, Transaction.class);
+    TransactionResponse transaction = gson.fromJson(json, TransactionResponse.class);
 
     String memoType = json.getAsJsonObject().get("memo_type").getAsString();
     Memo memo;

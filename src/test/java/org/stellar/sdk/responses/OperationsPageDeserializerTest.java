@@ -6,22 +6,22 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.responses.operations.CreateAccountOperation;
-import org.stellar.sdk.responses.operations.Operation;
-import org.stellar.sdk.responses.operations.PaymentOperation;
+import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
+import org.stellar.sdk.responses.operations.OperationResponse;
+import org.stellar.sdk.responses.operations.PaymentOperationResponse;
 
 public class OperationsPageDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    Page<Operation> operationsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Operation>>() {}.getType());
+    Page<OperationResponse> operationsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<OperationResponse>>() {}.getType());
 
-    CreateAccountOperation createAccountOperation = (CreateAccountOperation) operationsPage.getRecords().get(0);
+    CreateAccountOperationResponse createAccountOperation = (CreateAccountOperationResponse) operationsPage.getRecords().get(0);
     assertEquals(createAccountOperation.getStartingBalance(), "10000.0");
     assertEquals(createAccountOperation.getPagingToken(), "3717508943056897");
     assertEquals(createAccountOperation.getAccount().getAccountId(), "GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE");
     assertEquals(createAccountOperation.getFunder().getAccountId(), "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K");
 
-    PaymentOperation paymentOperation = (PaymentOperation) operationsPage.getRecords().get(4);
+    PaymentOperationResponse paymentOperation = (PaymentOperationResponse) operationsPage.getRecords().get(4);
     assertEquals(paymentOperation.getAmount(), "10.123");
     TestCase.assertEquals(paymentOperation.getAsset(), new AssetTypeNative());
     assertEquals(paymentOperation.getFrom().getAccountId(), "GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R");

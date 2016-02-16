@@ -9,7 +9,7 @@ import org.glassfish.jersey.media.sse.SseFeature;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.responses.effects.Effect;
+import org.stellar.sdk.responses.effects.EffectResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -71,15 +71,15 @@ public class EffectsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link Effect}.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link EffectResponse}.
    * This method is helpful for getting the next set of results.
-   * @return {@link Page} of {@link Effect}
+   * @return {@link Page} of {@link EffectResponse}
    * @throws IOException
    */
-  public static Page<Effect> execute(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Page<Effect>>() {};
-    ResponseHandler<Page<Effect>> responseHandler = new ResponseHandler<Page<Effect>>(type);
-    return (Page<Effect>) Request.Get(uri).execute().handleResponse(responseHandler);
+  public static Page<EffectResponse> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<EffectResponse>>() {};
+    ResponseHandler<Page<EffectResponse>> responseHandler = new ResponseHandler<Page<EffectResponse>>(type);
+    return (Page<EffectResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -89,10 +89,10 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
    * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
-   * @param listener {@link EventListener} implementation with {@link Effect} type
+   * @param listener {@link EventListener} implementation with {@link EffectResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<Effect> listener) {
+  public EventSource stream(final EventListener<EffectResponse> listener) {
     Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
     WebTarget target = client.target(this.buildUri());
     EventSource eventSource = new EventSource(target) {
@@ -102,7 +102,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
         if (data.equals("\"hello\"")) {
           return;
         }
-        Effect effect = GsonSingleton.getInstance().fromJson(data, Effect.class);
+        EffectResponse effect = GsonSingleton.getInstance().fromJson(data, EffectResponse.class);
         listener.onEvent(effect);
       }
     };
@@ -111,10 +111,10 @@ public class EffectsRequestBuilder extends RequestBuilder {
 
   /**
    * Build and execute request.
-   * @return {@link Page} of {@link Effect}
+   * @return {@link Page} of {@link EffectResponse}
    * @throws IOException
    */
-  public Page<Effect> execute() throws IOException {
+  public Page<EffectResponse> execute() throws IOException {
     return this.execute(this.buildUri());
   }
 

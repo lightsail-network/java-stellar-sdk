@@ -5,20 +5,20 @@ import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.stellar.sdk.responses.effects.AccountCreatedEffect;
-import org.stellar.sdk.responses.effects.Effect;
-import org.stellar.sdk.responses.effects.SignerCreatedEffect;
+import org.stellar.sdk.responses.effects.AccountCreatedEffectResponse;
+import org.stellar.sdk.responses.effects.EffectResponse;
+import org.stellar.sdk.responses.effects.SignerCreatedEffectResponse;
 
 public class EffectsPageDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    Page<Effect> effectsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Effect>>() {}.getType());
+    Page<EffectResponse> effectsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<EffectResponse>>() {}.getType());
 
-    SignerCreatedEffect signerCreatedEffect = (SignerCreatedEffect) effectsPage.getRecords().get(0);
+    SignerCreatedEffectResponse signerCreatedEffect = (SignerCreatedEffectResponse) effectsPage.getRecords().get(0);
     assertEquals(signerCreatedEffect.getPublicKey(), "GAZHVTAM3NRJ6W643LOVA76T2W3TUKPF34ED5VNE4ZKJ2B5T2EUQHIQI");
     assertEquals(signerCreatedEffect.getPagingToken(), "3964757325385729-3");
 
-    AccountCreatedEffect accountCreatedEffect = (AccountCreatedEffect) effectsPage.getRecords().get(8);
+    AccountCreatedEffectResponse accountCreatedEffect = (AccountCreatedEffectResponse) effectsPage.getRecords().get(8);
     assertEquals(accountCreatedEffect.getStartingBalance(), "10000.0");
     assertEquals(accountCreatedEffect.getAccount().getAccountId(), "GDIQJ6G5AWSBRMHIZYWVWCFN64Q4BZ4TYEAQRO5GVR4EWR23RKBJ2A4R");
 

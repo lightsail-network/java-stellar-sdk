@@ -40,7 +40,7 @@ public class LedgerDeserializerTest extends TestCase {
             "  \"max_tx_set_size\": 50\n" +
             "}";
 
-    Ledger ledger = GsonSingleton.getInstance().fromJson(json, Ledger.class);
+    LedgerResponse ledger = GsonSingleton.getInstance().fromJson(json, LedgerResponse.class);
     assertEquals(ledger.getHash(), "686bb246db89b099cd3963a4633eb5e4315d89dfd3c00594c80b41a483847bfa");
     assertEquals(ledger.getPagingToken(), "3860428274794496");
     assertEquals(ledger.getPrevHash(), "50c8695eb32171a19858413e397cc50b504ceacc819010bdf8ff873aff7858d7");

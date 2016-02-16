@@ -13,7 +13,7 @@ public class PathsPageDeserializerTest {
 
   @Test
   public void testDeserialize() {
-    Page<Path> pathsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Path>>() {}.getType());
+    Page<PathResponse> pathsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<PathResponse>>() {}.getType());
 
     assertEquals(pathsPage.getRecords().get(0).getDestinationAmount(), "20.0000000");
     Assert.assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));

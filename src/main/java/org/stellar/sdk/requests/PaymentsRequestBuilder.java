@@ -9,7 +9,7 @@ import org.glassfish.jersey.media.sse.SseFeature;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.responses.operations.Operation;
+import org.stellar.sdk.responses.operations.OperationResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -61,15 +61,15 @@ public class PaymentsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link Operation}.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link OperationResponse}.
    * This method is helpful for getting the next set of results.
-   * @return {@link Page} of {@link Operation}
+   * @return {@link Page} of {@link OperationResponse}
    * @throws IOException
    */
-  public static Page<Operation> execute(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Page<Operation>>() {};
-    ResponseHandler<Page<Operation>> responseHandler = new ResponseHandler<Page<Operation>>(type);
-    return (Page<Operation>) Request.Get(uri).execute().handleResponse(responseHandler);
+  public static Page<OperationResponse> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<OperationResponse>>() {};
+    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
+    return (Page<OperationResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -79,10 +79,10 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
    * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
-   * @param listener {@link EventListener} implementation with {@link Operation} type
+   * @param listener {@link EventListener} implementation with {@link OperationResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<Operation> listener) {
+  public EventSource stream(final EventListener<OperationResponse> listener) {
     Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
     WebTarget target = client.target(this.buildUri());
     EventSource eventSource = new EventSource(target) {
@@ -92,7 +92,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
         if (data.equals("\"hello\"")) {
           return;
         }
-        Operation payment = GsonSingleton.getInstance().fromJson(data, Operation.class);
+        OperationResponse payment = GsonSingleton.getInstance().fromJson(data, OperationResponse.class);
         listener.onEvent(payment);
       }
     };
@@ -101,10 +101,10 @@ public class PaymentsRequestBuilder extends RequestBuilder {
 
   /**
    * Build and execute request.
-   * @return {@link Page} of {@link Operation}
+   * @return {@link Page} of {@link OperationResponse}
    * @throws IOException
    */
-  public Page<Operation> execute() throws IOException {
+  public Page<OperationResponse> execute() throws IOException {
     return this.execute(this.buildUri());
   }
 

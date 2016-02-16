@@ -9,7 +9,7 @@ import org.junit.Test;
 public class TransactionPageDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
-    Page<Transaction> transactionsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<Transaction>>() {}.getType());
+    Page<TransactionResponse> transactionsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<TransactionResponse>>() {}.getType());
 
     assertEquals(transactionsPage.getRecords().get(0).getSourceAccount().getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(transactionsPage.getRecords().get(0).getPagingToken(), "12884905984");
