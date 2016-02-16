@@ -35,7 +35,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    */
   public EffectsRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account.getAddress(), "effects");
+    this.setSegments("accounts", account.getAccountId(), "effects");
     return this;
   }
 

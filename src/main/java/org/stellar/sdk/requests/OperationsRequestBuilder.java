@@ -49,7 +49,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    */
   public OperationsRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account.getAddress(), "operations");
+    this.setSegments("accounts", account.getAccountId(), "operations");
     return this;
   }
 

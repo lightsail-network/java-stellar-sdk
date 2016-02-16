@@ -21,12 +21,12 @@ public class PathsRequestBuilder extends RequestBuilder {
   }
 
   public PathsRequestBuilder destinationAccount(KeyPair account) {
-    uriBuilder.addParameter("destination_account", account.getAddress());
+    uriBuilder.addParameter("destination_account", account.getAccountId());
     return this;
   }
 
   public PathsRequestBuilder sourceAccount(KeyPair account) {
-    uriBuilder.addParameter("source_account", account.getAddress());
+    uriBuilder.addParameter("source_account", account.getAccountId());
     return this;
   }
 
@@ -40,7 +40,7 @@ public class PathsRequestBuilder extends RequestBuilder {
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.addParameter("destination_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.addParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAddress());
+      uriBuilder.addParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }

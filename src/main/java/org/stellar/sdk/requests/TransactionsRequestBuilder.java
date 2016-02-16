@@ -57,7 +57,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    */
   public TransactionsRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account.getAddress(), "transactions");
+    this.setSegments("accounts", account.getAccountId(), "transactions");
     return this;
   }
 

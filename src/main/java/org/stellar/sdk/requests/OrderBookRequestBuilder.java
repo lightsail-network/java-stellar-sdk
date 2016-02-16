@@ -18,7 +18,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.addParameter("buying_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.addParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAddress());
+      uriBuilder.addParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }
@@ -28,7 +28,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.addParameter("selling_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.addParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAddress());
+      uriBuilder.addParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }

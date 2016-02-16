@@ -112,16 +112,6 @@ public class KeyPair {
   }
 
   /**
-   * Creates a new Stellar KeyPair from a strkey encoded Stellar account ID.
-   * @param accountId The strkey encoded Stellar account ID.
-   * @deprecated Use {@link KeyPair#fromAccountId}
-   * @return {@link KeyPair}
-   */
-  public static KeyPair fromAddress(String accountId) {
-    return fromAccountId(accountId);
-  }
-
-  /**
    * Creates a new Stellar keypair from a 32 byte address.
    * @param publicKey The 32 byte public key.
    * @return {@link KeyPair}
@@ -144,14 +134,6 @@ public class KeyPair {
    * Returns the human readable account ID encoded in strkey.
    */
   public String getAccountId() {
-    return StrKey.encodeStellarAccountId(mPublicKey.getAbyte());
-  }
-
-  /**
-   * Returns the human readable account ID encoded in strkey.
-   * @deprecated Use {@link KeyPair#getAccountId}
-   */
-  public String getAddress() {
     return StrKey.encodeStellarAccountId(mPublicKey.getAbyte());
   }
 
