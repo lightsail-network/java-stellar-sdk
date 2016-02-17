@@ -16,7 +16,7 @@ public class FederationResponse {
   @SerializedName("memo")
   private final String memo;
 
-  FederationResponse(String stellarAddress, String accountId, String memoType, String memo) {
+  public FederationResponse(String stellarAddress, String accountId, String memoType, String memo) {
     this.stellarAddress = stellarAddress;
     this.accountId = accountId;
     this.memoType = memoType;
@@ -31,10 +31,16 @@ public class FederationResponse {
     return accountId;
   }
 
+  /**
+   * @return Memo type or null when no memo attached
+   */
   public String getMemoType() {
     return memoType;
   }
 
+  /**
+   * @return Memo value or null when no memo attached
+   */
   public String getMemo() {
     return memo;
   }
