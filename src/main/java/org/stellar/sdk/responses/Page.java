@@ -31,7 +31,15 @@ public class Page<T> {
     return links;
   }
 
+  /**
+   * @return The next page of results or null when there is no more results
+   * @throws URISyntaxException
+   * @throws IOException
+   */
   public Page<T> getNextPage() throws URISyntaxException, IOException {
+    if (this.getLinks().getNext() == null) {
+      return null;
+    }
     TypeToken type = new TypeToken<Page<T>>() {};
     ResponseHandler<Page<T>> responseHandler = new ResponseHandler<Page<T>>(type);
     URI uri = new URI(this.getLinks().getNext().getHref());
