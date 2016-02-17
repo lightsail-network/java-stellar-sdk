@@ -32,6 +32,7 @@ repositories {
 }
 
 dependencies {
+    compile 'commons-codec:commons-codec:1.5'
     compile 'org.apache.httpcomponents:httpclient:4.5.1'
     compile 'org.apache.httpcomponents:fluent-hc:4.5.1'
     compile 'com.moandjiezana.toml:toml4j:0.5.1'

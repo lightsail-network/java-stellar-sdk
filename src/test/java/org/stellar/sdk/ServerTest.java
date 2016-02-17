@@ -13,10 +13,7 @@ import org.apache.http.message.BasicStatusLine;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.stellar.base.CreateAccountOperation;
-import org.stellar.base.KeyPair;
-import org.stellar.base.Memo;
-import org.stellar.base.Transaction;
+import org.stellar.sdk.responses.SubmitTransactionResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -3,11 +3,11 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.client.fluent.Request;
-import org.stellar.base.Asset;
-import org.stellar.base.AssetTypeCreditAlphaNum;
-import org.stellar.base.KeyPair;
-import org.stellar.sdk.Page;
-import org.stellar.sdk.Path;
+import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.Page;
+import org.stellar.sdk.responses.PathResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,12 +21,12 @@ public class PathsRequestBuilder extends RequestBuilder {
   }
 
   public PathsRequestBuilder destinationAccount(KeyPair account) {
-    uriBuilder.addParameter("destination_account", account.getAddress());
+    uriBuilder.addParameter("destination_account", account.getAccountId());
     return this;
   }
 
   public PathsRequestBuilder sourceAccount(KeyPair account) {
-    uriBuilder.addParameter("source_account", account.getAddress());
+    uriBuilder.addParameter("source_account", account.getAccountId());
     return this;
   }
 
@@ -40,18 +40,18 @@ public class PathsRequestBuilder extends RequestBuilder {
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.addParameter("destination_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.addParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAddress());
+      uriBuilder.addParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }
 
-  public static Page<Path> execute(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Page<Path>>() {};
-    ResponseHandler<Page<Path>> responseHandler = new ResponseHandler<Page<Path>>(type);
-    return (Page<Path>) Request.Get(uri).execute().handleResponse(responseHandler);
+  public static Page<PathResponse> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<PathResponse>>() {};
+    ResponseHandler<Page<PathResponse>> responseHandler = new ResponseHandler<Page<PathResponse>>(type);
+    return (Page<PathResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
-  public Page<Path> execute() throws IOException {
+  public Page<PathResponse> execute() throws IOException {
     return this.execute(this.buildUri());
   }
 }

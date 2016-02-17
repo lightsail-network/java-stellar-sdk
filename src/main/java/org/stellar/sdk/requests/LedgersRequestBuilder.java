@@ -6,9 +6,9 @@ import org.apache.http.client.fluent.Request;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
-import org.stellar.sdk.GsonSingleton;
-import org.stellar.sdk.Ledger;
-import org.stellar.sdk.Page;
+import org.stellar.sdk.responses.GsonSingleton;
+import org.stellar.sdk.responses.LedgerResponse;
+import org.stellar.sdk.responses.Page;
 
 import java.io.IOException;
 import java.net.URI;
@@ -26,14 +26,14 @@ public class LedgersRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Ledger}.
+   * Requests specific <code>uri</code> and returns {@link LedgerResponse}.
    * This method is helpful for getting the links.
    * @throws IOException
    */
-  public Ledger ledger(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Ledger>() {};
-    ResponseHandler<Ledger> responseHandler = new ResponseHandler<Ledger>(type);
-    return (Ledger) Request.Get(uri).execute().handleResponse(responseHandler);
+  public LedgerResponse ledger(URI uri) throws IOException {
+    TypeToken type = new TypeToken<LedgerResponse>() {};
+    ResponseHandler<LedgerResponse> responseHandler = new ResponseHandler<LedgerResponse>(type);
+    return (LedgerResponse) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -42,21 +42,21 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @param ledgerSeq Ledger to fetch
    * @throws IOException
    */
-  public Ledger ledger(long ledgerSeq) throws IOException {
+  public LedgerResponse ledger(long ledgerSeq) throws IOException {
     this.setSegments("ledgers", String.valueOf(ledgerSeq));
     return this.ledger(this.buildUri());
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link Ledger}.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link LedgerResponse}.
    * This method is helpful for getting the next set of results.
-   * @return {@link Page} of {@link Ledger}
+   * @return {@link Page} of {@link LedgerResponse}
    * @throws IOException
    */
-  public static Page<Ledger> execute(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Page<Ledger>>() {};
-    ResponseHandler<Page<Ledger>> responseHandler = new ResponseHandler<Page<Ledger>>(type);
-    return (Page<Ledger>) Request.Get(uri).execute().handleResponse(responseHandler);
+  public static Page<LedgerResponse> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<LedgerResponse>>() {};
+    ResponseHandler<Page<LedgerResponse>> responseHandler = new ResponseHandler<Page<LedgerResponse>>(type);
+    return (Page<LedgerResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -66,10 +66,10 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
    * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
-   * @param listener {@link EventListener} implementation with {@link Ledger} type
+   * @param listener {@link EventListener} implementation with {@link LedgerResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<Ledger> listener) {
+  public EventSource stream(final EventListener<LedgerResponse> listener) {
     Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
     WebTarget target = client.target(this.buildUri());
     EventSource eventSource = new EventSource(target) {
@@ -79,7 +79,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
         if (data.equals("\"hello\"")) {
           return;
         }
-        Ledger ledger = GsonSingleton.getInstance().fromJson(data, Ledger.class);
+        LedgerResponse ledger = GsonSingleton.getInstance().fromJson(data, LedgerResponse.class);
         listener.onEvent(ledger);
       }
     };
@@ -88,10 +88,10 @@ public class LedgersRequestBuilder extends RequestBuilder {
 
   /**
    * Build and execute request.
-   * @return {@link Page} of {@link Ledger}
+   * @return {@link Page} of {@link LedgerResponse}
    * @throws IOException
    */
-  public Page<Ledger> execute() throws IOException {
+  public Page<LedgerResponse> execute() throws IOException {
     return this.execute(this.buildUri());
   }
 

@@ -3,9 +3,9 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.client.fluent.Request;
-import org.stellar.base.KeyPair;
-import org.stellar.sdk.Page;
-import org.stellar.sdk.operations.Operation;
+import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.Page;
+import org.stellar.sdk.responses.operations.OperationResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,14 +21,14 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Operation}.
+   * Requests specific <code>uri</code> and returns {@link OperationResponse}.
    * This method is helpful for getting the links.
    * @throws IOException
    */
-  public Operation operation(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Operation>() {};
-    ResponseHandler<Operation> responseHandler = new ResponseHandler<Operation>(type);
-    return (Operation) Request.Get(uri).execute().handleResponse(responseHandler);
+  public OperationResponse operation(URI uri) throws IOException {
+    TypeToken type = new TypeToken<OperationResponse>() {};
+    ResponseHandler<OperationResponse> responseHandler = new ResponseHandler<OperationResponse>(type);
+    return (OperationResponse) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -37,7 +37,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @param operationId Operation to fetch
    * @throws IOException
    */
-  public Operation operation(long operationId) throws IOException {
+  public OperationResponse operation(long operationId) throws IOException {
     this.setSegments("operation", String.valueOf(operationId));
     return this.operation(this.buildUri());
   }
@@ -49,7 +49,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    */
   public OperationsRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account.getAddress(), "operations");
+    this.setSegments("accounts", account.getAccountId(), "operations");
     return this;
   }
 
@@ -75,23 +75,23 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link Operation}.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link OperationResponse}.
    * This method is helpful for getting the next set of results.
-   * @return {@link Page} of {@link Operation}
+   * @return {@link Page} of {@link OperationResponse}
    * @throws IOException
    */
-  public static Page<Operation> execute(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Page<Operation>>() {};
-    ResponseHandler<Page<Operation>> responseHandler = new ResponseHandler<Page<Operation>>(type);
-    return (Page<Operation>) Request.Get(uri).execute().handleResponse(responseHandler);
+  public static Page<OperationResponse> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<OperationResponse>>() {};
+    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
+    return (Page<OperationResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
    * Build and execute request.
-   * @return {@link Page} of {@link Operation}
+   * @return {@link Page} of {@link OperationResponse}
    * @throws IOException
    */
-  public Page<Operation> execute() throws IOException {
+  public Page<OperationResponse> execute() throws IOException {
     return this.execute(this.buildUri());
   }
 

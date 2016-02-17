@@ -6,10 +6,10 @@ import org.apache.http.client.fluent.Request;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
-import org.stellar.base.KeyPair;
-import org.stellar.sdk.Account;
-import org.stellar.sdk.GsonSingleton;
-import org.stellar.sdk.Page;
+import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.AccountResponse;
+import org.stellar.sdk.responses.GsonSingleton;
+import org.stellar.sdk.responses.Page;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,14 +27,14 @@ public class AccountsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Account}.
+   * Requests specific <code>uri</code> and returns {@link AccountResponse}.
    * This method is helpful for getting the links.
    * @throws IOException
    */
-  public Account account(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Account>() {};
-    ResponseHandler<Account> responseHandler = new ResponseHandler<Account>(type);
-    return (Account) Request.Get(uri).execute().handleResponse(responseHandler);
+  public AccountResponse account(URI uri) throws IOException {
+    TypeToken type = new TypeToken<AccountResponse>() {};
+    ResponseHandler<AccountResponse> responseHandler = new ResponseHandler<AccountResponse>(type);
+    return (AccountResponse) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -43,21 +43,21 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @param account Account to fetch
    * @throws IOException
    */
-  public Account account(KeyPair account) throws IOException {
-    this.setSegments("accounts", account.getAddress());
+  public AccountResponse account(KeyPair account) throws IOException {
+    this.setSegments("accounts", account.getAccountId());
     return this.account(this.buildUri());
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link Account}.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link AccountResponse}.
    * This method is helpful for getting the next set of results.
-   * @return {@link Page} of {@link Account}
+   * @return {@link Page} of {@link AccountResponse}
    * @throws IOException
    */
-  public static Page<Account> execute(URI uri) throws IOException {
-    TypeToken type = new TypeToken<Page<Account>>() {};
-    ResponseHandler<Page<Account>> responseHandler = new ResponseHandler<Page<Account>>(type);
-    return (Page<Account>) Request.Get(uri).execute().handleResponse(responseHandler);
+  public static Page<AccountResponse> execute(URI uri) throws IOException {
+    TypeToken type = new TypeToken<Page<AccountResponse>>() {};
+    ResponseHandler<Page<AccountResponse>> responseHandler = new ResponseHandler<Page<AccountResponse>>(type);
+    return (Page<AccountResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
@@ -67,10 +67,10 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
    * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
-   * @param listener {@link EventListener} implementation with {@link Account} type
+   * @param listener {@link EventListener} implementation with {@link AccountResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<Account> listener) {
+  public EventSource stream(final EventListener<AccountResponse> listener) {
     Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
     WebTarget target = client.target(this.buildUri());
     EventSource eventSource = new EventSource(target) {
@@ -80,7 +80,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
         if (data.equals("\"hello\"")) {
           return;
         }
-        Account account = GsonSingleton.getInstance().fromJson(data, Account.class);
+        AccountResponse account = GsonSingleton.getInstance().fromJson(data, AccountResponse.class);
         listener.onEvent(account);
       }
     };
@@ -88,11 +88,11 @@ public class AccountsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Build and execute request. <strong>Warning!</strong> {@link Account}s in {@link Page} will contain only <code>keypair</code> field.
-   * @return {@link Page} of {@link Account}
+   * Build and execute request. <strong>Warning!</strong> {@link AccountResponse}s in {@link Page} will contain only <code>keypair</code> field.
+   * @return {@link Page} of {@link AccountResponse}
    * @throws IOException
    */
-  public Page<Account> execute() throws IOException {
+  public Page<AccountResponse> execute() throws IOException {
     return this.execute(this.buildUri());
   }
 
