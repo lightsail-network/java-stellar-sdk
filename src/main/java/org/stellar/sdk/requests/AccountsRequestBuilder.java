@@ -52,6 +52,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link AccountResponse}.
    * This method is helpful for getting the next set of results.
    * @return {@link Page} of {@link AccountResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
   public static Page<AccountResponse> execute(URI uri) throws IOException {
@@ -90,6 +91,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
   /**
    * Build and execute request. <strong>Warning!</strong> {@link AccountResponse}s in {@link Page} will contain only <code>keypair</code> field.
    * @return {@link Page} of {@link AccountResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
   public Page<AccountResponse> execute() throws IOException {

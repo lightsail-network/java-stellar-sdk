@@ -74,6 +74,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link EffectResponse}.
    * This method is helpful for getting the next set of results.
    * @return {@link Page} of {@link EffectResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
   public static Page<EffectResponse> execute(URI uri) throws IOException {
@@ -112,6 +113,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
   /**
    * Build and execute request.
    * @return {@link Page} of {@link EffectResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
   public Page<EffectResponse> execute() throws IOException {

@@ -64,6 +64,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link OperationResponse}.
    * This method is helpful for getting the next set of results.
    * @return {@link Page} of {@link OperationResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
   public static Page<OperationResponse> execute(URI uri) throws IOException {
@@ -102,6 +103,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
   /**
    * Build and execute request.
    * @return {@link Page} of {@link OperationResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
   public Page<OperationResponse> execute() throws IOException {

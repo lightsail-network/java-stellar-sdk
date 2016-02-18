@@ -51,6 +51,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link LedgerResponse}.
    * This method is helpful for getting the next set of results.
    * @return {@link Page} of {@link LedgerResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
   public static Page<LedgerResponse> execute(URI uri) throws IOException {
@@ -89,6 +90,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
   /**
    * Build and execute request.
    * @return {@link Page} of {@link LedgerResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
   public Page<LedgerResponse> execute() throws IOException {

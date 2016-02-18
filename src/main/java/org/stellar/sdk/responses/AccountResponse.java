@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see org.stellar.sdk.requests.AccountsRequestBuilder
  * @see org.stellar.sdk.Server#accounts()
  */
-public class AccountResponse implements org.stellar.sdk.TransactionBuilderAccount {
+public class AccountResponse extends Response implements org.stellar.sdk.TransactionBuilderAccount {
   @SerializedName("account_id") /* KeyPairTypeAdapter used */
   private KeyPair keypair;
   @SerializedName("sequence")
