@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -180,7 +181,7 @@ public class Transaction {
     public Builder(TransactionBuilderAccount sourceAccount) {
       checkNotNull(sourceAccount, "sourceAccount cannot be null");
       mSourceAccount = sourceAccount;
-      mOperations = new ArrayList<Operation>();
+      mOperations = Collections.synchronizedList(new ArrayList<Operation>());
     }
 
     /**
