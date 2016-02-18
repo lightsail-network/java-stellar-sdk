@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import java.util.Arrays;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -11,22 +13,29 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
     protected final KeyPair mIssuer;
 
     public AssetTypeCreditAlphaNum(String code, KeyPair issuer) {
-        mCode = checkNotNull(code, "code cannot be null");
-        mIssuer = checkNotNull(issuer, "issuer cannot be null");
+        checkNotNull(code, "code cannot be null");
+        checkNotNull(issuer, "issuer cannot be null");
+        mCode = new String(code);
+        mIssuer = KeyPair.fromAccountId(issuer.getAccountId());
     }
 
     /**
      * Returns asset code
      */
     public String getCode() {
-        return mCode;
+        return new String(mCode);
     }
 
     /**
      * Returns asset issuer
      */
     public KeyPair getIssuer() {
-        return mIssuer;
+        return KeyPair.fromAccountId(mIssuer.getAccountId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new Object[]{this.getCode(), this.getIssuer().getAccountId()});
     }
 
     @Override
