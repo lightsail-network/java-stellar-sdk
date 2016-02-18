@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -39,6 +40,27 @@ public class AssetTest {
     AssetTypeCreditAlphaNum12 parsedAsset = (AssetTypeCreditAlphaNum12) Asset.fromXdr(xdr);
     assertEquals(code, asset.getCode());
     assertEquals(issuer.getAccountId(), parsedAsset.getIssuer().getAccountId());
+  }
+
+  @Test
+  public void testHashCode() {
+    KeyPair issuer1 = KeyPair.random();
+    KeyPair issuer2 = KeyPair.random();
+
+    // Equal
+    assertEquals(new AssetTypeNative().hashCode(), new AssetTypeNative().hashCode());
+    assertEquals(new AssetTypeCreditAlphaNum4("USD", issuer1).hashCode(), new AssetTypeCreditAlphaNum4("USD", issuer1).hashCode());
+    assertEquals(new AssetTypeCreditAlphaNum12("ABCDE", issuer1).hashCode(), new AssetTypeCreditAlphaNum12("ABCDE", issuer1).hashCode());
+
+    // Not equal
+    assertNotEquals(new AssetTypeNative().hashCode(), new AssetTypeCreditAlphaNum4("USD", issuer1).hashCode());
+    assertNotEquals(new AssetTypeNative().hashCode(), new AssetTypeCreditAlphaNum12("ABCDE", issuer1).hashCode());
+    assertNotEquals(new AssetTypeCreditAlphaNum4("EUR", issuer1).hashCode(), new AssetTypeCreditAlphaNum4("USD", issuer1).hashCode());
+    assertNotEquals(new AssetTypeCreditAlphaNum4("EUR", issuer1).hashCode(), new AssetTypeCreditAlphaNum4("EUR", issuer2).hashCode());
+    assertNotEquals(new AssetTypeCreditAlphaNum4("EUR", issuer1).hashCode(), new AssetTypeCreditAlphaNum12("EUROPE", issuer1).hashCode());
+    assertNotEquals(new AssetTypeCreditAlphaNum4("EUR", issuer1).hashCode(), new AssetTypeCreditAlphaNum12("EUROPE", issuer2).hashCode());
+    assertNotEquals(new AssetTypeCreditAlphaNum12("ABCDE", issuer1).hashCode(), new AssetTypeCreditAlphaNum12("EDCBA", issuer1).hashCode());
+    assertNotEquals(new AssetTypeCreditAlphaNum12("ABCDE", issuer1).hashCode(), new AssetTypeCreditAlphaNum12("ABCDE", issuer2).hashCode());
   }
 
   @Test
