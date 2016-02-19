@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Link;
+import org.stellar.sdk.responses.Response;
 
 /**
  * Abstract class for effect responses.
@@ -11,7 +12,7 @@ import org.stellar.sdk.responses.Link;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
-public abstract class EffectResponse {
+public abstract class EffectResponse extends Response {
   @SerializedName("id")
   protected String id;
   @SerializedName("account")

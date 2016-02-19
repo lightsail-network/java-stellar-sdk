@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @see org.stellar.sdk.requests.PathsRequestBuilder
  * @see org.stellar.sdk.Server#paths()
  */
-public class PathResponse {
+public class PathResponse extends Response {
   @SerializedName("destination_amount")
   private final String destinationAmount;
   @SerializedName("destination_asset_type")

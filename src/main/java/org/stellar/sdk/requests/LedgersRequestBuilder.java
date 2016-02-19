@@ -51,9 +51,10 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link LedgerResponse}.
    * This method is helpful for getting the next set of results.
    * @return {@link Page} of {@link LedgerResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<LedgerResponse> execute(URI uri) throws IOException {
+  public static Page<LedgerResponse> execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<LedgerResponse>>() {};
     ResponseHandler<Page<LedgerResponse>> responseHandler = new ResponseHandler<Page<LedgerResponse>>(type);
     return (Page<LedgerResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
@@ -89,9 +90,10 @@ public class LedgersRequestBuilder extends RequestBuilder {
   /**
    * Build and execute request.
    * @return {@link Page} of {@link LedgerResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public Page<LedgerResponse> execute() throws IOException {
+  public Page<LedgerResponse> execute() throws IOException, TooManyRequestsException {
     return this.execute(this.buildUri());
   }
 

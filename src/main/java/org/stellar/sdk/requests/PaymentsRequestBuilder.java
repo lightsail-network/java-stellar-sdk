@@ -64,9 +64,10 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link OperationResponse}.
    * This method is helpful for getting the next set of results.
    * @return {@link Page} of {@link OperationResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<OperationResponse> execute(URI uri) throws IOException {
+  public static Page<OperationResponse> execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<OperationResponse>>() {};
     ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
     return (Page<OperationResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
@@ -102,9 +103,10 @@ public class PaymentsRequestBuilder extends RequestBuilder {
   /**
    * Build and execute request.
    * @return {@link Page} of {@link OperationResponse}
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public Page<OperationResponse> execute() throws IOException {
+  public Page<OperationResponse> execute() throws IOException, TooManyRequestsException {
     return this.execute(this.buildUri());
   }
 

@@ -8,7 +8,7 @@ import org.stellar.sdk.Server;
  * Represents server response after submitting transaction.
  * @see Server#submitTransaction(org.stellar.sdk.Transaction)
  */
-public class SubmitTransactionResponse {
+public class SubmitTransactionResponse extends Response {
     @SerializedName("hash")
     private final String hash;
     @SerializedName("ledger")
