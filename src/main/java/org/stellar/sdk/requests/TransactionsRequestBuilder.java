@@ -78,7 +78,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<TransactionResponse> execute(URI uri) throws IOException {
+  public static Page<TransactionResponse> execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<TransactionResponse>>() {};
     ResponseHandler<Page<TransactionResponse>> responseHandler = new ResponseHandler<Page<TransactionResponse>>(type);
     return (Page<TransactionResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
@@ -117,7 +117,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public Page<TransactionResponse> execute() throws IOException {
+  public Page<TransactionResponse> execute() throws IOException, TooManyRequestsException {
     return this.execute(this.buildUri());
   }
 

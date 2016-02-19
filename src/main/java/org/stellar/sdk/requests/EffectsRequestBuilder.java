@@ -77,7 +77,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<EffectResponse> execute(URI uri) throws IOException {
+  public static Page<EffectResponse> execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<EffectResponse>>() {};
     ResponseHandler<Page<EffectResponse>> responseHandler = new ResponseHandler<Page<EffectResponse>>(type);
     return (Page<EffectResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
@@ -116,7 +116,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public Page<EffectResponse> execute() throws IOException {
+  public Page<EffectResponse> execute() throws IOException, TooManyRequestsException {
     return this.execute(this.buildUri());
   }
 

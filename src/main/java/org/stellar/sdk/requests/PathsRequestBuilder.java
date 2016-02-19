@@ -49,7 +49,7 @@ public class PathsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<PathResponse> execute(URI uri) throws IOException {
+  public static Page<PathResponse> execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<PathResponse>>() {};
     ResponseHandler<Page<PathResponse>> responseHandler = new ResponseHandler<Page<PathResponse>>(type);
     return (Page<PathResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
@@ -59,7 +59,7 @@ public class PathsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public Page<PathResponse> execute() throws IOException {
+  public Page<PathResponse> execute() throws IOException, TooManyRequestsException {
     return this.execute(this.buildUri());
   }
 }

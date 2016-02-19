@@ -30,7 +30,7 @@ public class ResponseHandler<T> implements org.apache.http.client.ResponseHandle
     this.type = type;
   }
 
-  public T handleResponse(final HttpResponse response) throws IOException {
+  public T handleResponse(final HttpResponse response) throws IOException, TooManyRequestsException {
     StatusLine statusLine = response.getStatusLine();
     HttpEntity entity = response.getEntity();
 
