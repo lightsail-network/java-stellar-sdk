@@ -212,7 +212,7 @@ public class Transaction {
     }
 
     /**
-     * Builds a transaction.
+     * Builds a transaction. It will increment sequence number of the source account.
      */
     public Transaction build() {
       Operation[] operations = new Operation[mOperations.size()];
