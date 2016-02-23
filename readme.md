@@ -7,3 +7,6 @@ This library provides API to connect to [horizon](https://github.com/stellar/hor
 ### Download
 
 Grab the latest jar in the [releases tab](https://github.com/stellar/java-stellar-sdk/releases).
+
+### Documentation
+https://stellar.github.io/java-stellar-sdk
