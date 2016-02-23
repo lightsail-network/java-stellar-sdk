@@ -15,6 +15,11 @@ public interface TransactionBuilderAccount {
   Long getSequenceNumber();
 
   /**
+   * Returns sequence number incremented by one, but does not increment internal counter.
+   */
+  Long getIncrementedSequenceNumber();
+
+  /**
    * Increments sequence number in this object by one.
    */
   void incrementSequenceNumber();

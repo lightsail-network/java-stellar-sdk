@@ -84,11 +84,14 @@ public class ServerTest extends TestCase {
         KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
         Account account = new Account(source, 2908908335136768L);
-        Transaction transaction = new Transaction.Builder(account)
+        Transaction.Builder builder = new Transaction.Builder(account)
                 .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
-                .addMemo(Memo.text("Hello world!"))
-                .build();
+                .addMemo(Memo.text("Hello world!"));
 
+        assertEquals(1, builder.getOperationsCount());
+        Transaction transaction = builder.build();
+        assertEquals(2908908335136769L, transaction.getSequenceNumber());
+        assertEquals(new Long(2908908335136769L), account.getSequenceNumber());
         transaction.sign(source);
         return transaction;
     }

@@ -21,18 +21,19 @@ public class Account implements TransactionBuilderAccount {
     mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
   }
 
-  /**
-   * Returns keypair associated with this Account
-   */
+  @Override
   public KeyPair getKeypair() {
     return mKeyPair;
   }
 
-  /**
-   * Returns current sequence number ot this Account.
-   */
+  @Override
   public Long getSequenceNumber() {
     return mSequenceNumber;
+  }
+
+  @Override
+  public Long getIncrementedSequenceNumber() {
+    return new Long(mSequenceNumber + 1);
   }
 
   /**

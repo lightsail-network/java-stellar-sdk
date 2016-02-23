@@ -184,6 +184,10 @@ public class Transaction {
       mOperations = Collections.synchronizedList(new ArrayList<Operation>());
     }
 
+    public int getOperationsCount() {
+      return mOperations.size();
+    }
+
     /**
      * Adds a new <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">operation</a> to this transaction.
      * @param operation
@@ -217,8 +221,10 @@ public class Transaction {
     public Transaction build() {
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
+      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo);
+      // Increment sequence number when there were no exceptions when creating a transaction
       mSourceAccount.incrementSequenceNumber();
-      return new Transaction(mSourceAccount.getKeypair(), mSourceAccount.getSequenceNumber(), operations, mMemo);
+      return transaction;
     }
   }
 }
