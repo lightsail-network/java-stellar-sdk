@@ -2,9 +2,14 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
-## Unreleased
+## 0.1.3
+
+* Added ResultCodes to SubmitTransactionResponse ([79e2260](https://github.com/stellar/java-stellar-sdk/commit/79e2260)).
+
+## 0.1.2
 
 * Rate limiting data in responses ([e0ee7f1](https://github.com/stellar/java-stellar-sdk/commit/e0ee7f15e3b21fe156e89991629d019c511c4676)).
+* Fixed a bug in `Transaction.Builder.build()` ([657c720](https://github.com/stellar/java-stellar-sdk/commit/657c720)).
 
 ## 0.1.1
 
