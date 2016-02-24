@@ -14,7 +14,6 @@ public class TooManyRequestsException extends RuntimeException {
 
   /**
    * Returns number of seconds a client should wait before sending requests again.
-   * @return
    */
   public int getRetryAfter() {
     return retryAfter;

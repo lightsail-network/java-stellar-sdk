@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Server;
 
+import java.util.ArrayList;
+
 /**
  * Represents server response after submitting transaction.
  * @see Server#submitTransaction(org.stellar.sdk.Transaction)
@@ -34,6 +36,9 @@ public class SubmitTransactionResponse extends Response {
         return ledger;
     }
 
+    /**
+     * Additional information returned by a server. This will be <code>null</code> if transaction succeeded.
+     */
     public Extras getExtras() {
         return extras;
     }
@@ -46,10 +51,13 @@ public class SubmitTransactionResponse extends Response {
         private final String envelopeXdr;
         @SerializedName("result_xdr")
         private final String resultXdr;
+        @SerializedName("result_codes")
+        private final ResultCodes resultCodes;
 
-        Extras(String envelopeXdr, String resultXdr) {
+        Extras(String envelopeXdr, String resultXdr, ResultCodes resultCodes) {
             this.envelopeXdr = envelopeXdr;
             this.resultXdr = resultXdr;
+            this.resultCodes = resultCodes;
         }
 
         /**
@@ -66,6 +74,37 @@ public class SubmitTransactionResponse extends Response {
          */
         public String getResultXdr() {
             return resultXdr;
+        }
+
+        /**
+         * Returns ResultCodes object that contains result codes for transaction.
+         */
+        public ResultCodes getResultCodes() {
+            return resultCodes;
+        }
+
+        /**
+         * Contains result codes for this transaction.
+         * @see <a href="https://github.com/stellar/horizon/blob/master/src/github.com/stellar/horizon/codes/main.go" target="_blank">Possible values</a>
+         */
+        public static class ResultCodes {
+            @SerializedName("transaction")
+            private final String transactionResultCode;
+            @SerializedName("operations")
+            private final ArrayList<String> operationsResultCodes;
+
+            public ResultCodes(String transactionResultCode, ArrayList<String> operationsResultCodes) {
+                this.transactionResultCode = transactionResultCode;
+                this.operationsResultCodes = operationsResultCodes;
+            }
+
+            public String getTransactionResultCode() {
+                return transactionResultCode;
+            }
+
+            public ArrayList<String> getOperationsResultCodes() {
+                return operationsResultCodes;
+            }
         }
     }
 }

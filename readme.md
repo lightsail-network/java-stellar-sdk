@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/stellar/java-stellar-sdk.svg)](https://travis-ci.org/stellar/java-stellar-sdk)
 
-This library provides API to connect to [horizon](https://github.com/stellar/horizon).
+This library provides API to build transactions and connect to [Horizon](https://github.com/stellar/horizon).
 
 ### Download
 

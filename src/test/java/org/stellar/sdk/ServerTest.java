@@ -106,6 +106,7 @@ public class ServerTest extends TestCase {
         assertTrue(response.isSuccess());
         assertEquals(response.getLedger(), new Long(826150L));
         assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
+        assertNull(response.getExtras());
     }
 
     @Test
@@ -120,5 +121,8 @@ public class ServerTest extends TestCase {
         assertNull(response.getHash());
         assertEquals(response.getExtras().getEnvelopeXdr(), "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
         assertEquals(response.getExtras().getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
+        assertNotNull(response.getExtras());
+        assertEquals("tx_failed", response.getExtras().getResultCodes().getTransactionResultCode());
+        assertEquals("op_no_destination", response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
     }
 }
