@@ -100,8 +100,10 @@ public class TransactionResult  {
     }
     }
     public static TransactionResultResult decode(XdrDataInputStream stream) throws IOException {
-      TransactionResultResult decodedTransactionResultResult = new TransactionResultResult();
-      switch (decodedTransactionResultResult.getDiscriminant()) {
+    TransactionResultResult decodedTransactionResultResult = new TransactionResultResult();
+    TransactionResultCode discriminant = TransactionResultCode.decode(stream);
+    decodedTransactionResultResult.setDiscriminant(discriminant);
+    switch (decodedTransactionResultResult.getDiscriminant()) {
     case txSUCCESS:
     case txFAILED:
     int resultssize = stream.readInt();
@@ -134,8 +136,10 @@ public class TransactionResult  {
     }
     }
     public static TransactionResultExt decode(XdrDataInputStream stream) throws IOException {
-      TransactionResultExt decodedTransactionResultExt = new TransactionResultExt();
-      switch (decodedTransactionResultExt.getDiscriminant()) {
+    TransactionResultExt decodedTransactionResultExt = new TransactionResultExt();
+    Integer discriminant = stream.readInt();
+    decodedTransactionResultExt.setDiscriminant(discriminant);
+    switch (decodedTransactionResultExt.getDiscriminant()) {
     case 0:
     break;
     }

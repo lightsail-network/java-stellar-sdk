@@ -60,8 +60,10 @@ public class PathPaymentResult  {
   }
   }
   public static PathPaymentResult decode(XdrDataInputStream stream) throws IOException {
-    PathPaymentResult decodedPathPaymentResult = new PathPaymentResult();
-    switch (decodedPathPaymentResult.getDiscriminant()) {
+  PathPaymentResult decodedPathPaymentResult = new PathPaymentResult();
+  PathPaymentResultCode discriminant = PathPaymentResultCode.decode(stream);
+  decodedPathPaymentResult.setDiscriminant(discriminant);
+  switch (decodedPathPaymentResult.getDiscriminant()) {
   case PATH_PAYMENT_SUCCESS:
   decodedPathPaymentResult.success = PathPaymentResultSuccess.decode(stream);
   break;

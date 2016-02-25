@@ -36,8 +36,10 @@ public class SetOptionsResult  {
   }
   }
   public static SetOptionsResult decode(XdrDataInputStream stream) throws IOException {
-    SetOptionsResult decodedSetOptionsResult = new SetOptionsResult();
-    switch (decodedSetOptionsResult.getDiscriminant()) {
+  SetOptionsResult decodedSetOptionsResult = new SetOptionsResult();
+  SetOptionsResultCode discriminant = SetOptionsResultCode.decode(stream);
+  decodedSetOptionsResult.setDiscriminant(discriminant);
+  switch (decodedSetOptionsResult.getDiscriminant()) {
   case SET_OPTIONS_SUCCESS:
   break;
   default:

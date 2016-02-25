@@ -40,8 +40,10 @@ public class PublicKey  {
   }
   }
   public static PublicKey decode(XdrDataInputStream stream) throws IOException {
-    PublicKey decodedPublicKey = new PublicKey();
-    switch (decodedPublicKey.getDiscriminant()) {
+  PublicKey decodedPublicKey = new PublicKey();
+  CryptoKeyType discriminant = CryptoKeyType.decode(stream);
+  decodedPublicKey.setDiscriminant(discriminant);
+  switch (decodedPublicKey.getDiscriminant()) {
   case KEY_TYPE_ED25519:
   decodedPublicKey.ed25519 = Uint256.decode(stream);
   break;

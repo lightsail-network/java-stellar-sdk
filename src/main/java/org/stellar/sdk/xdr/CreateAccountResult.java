@@ -36,8 +36,10 @@ public class CreateAccountResult  {
   }
   }
   public static CreateAccountResult decode(XdrDataInputStream stream) throws IOException {
-    CreateAccountResult decodedCreateAccountResult = new CreateAccountResult();
-    switch (decodedCreateAccountResult.getDiscriminant()) {
+  CreateAccountResult decodedCreateAccountResult = new CreateAccountResult();
+  CreateAccountResultCode discriminant = CreateAccountResultCode.decode(stream);
+  decodedCreateAccountResult.setDiscriminant(discriminant);
+  switch (decodedCreateAccountResult.getDiscriminant()) {
   case CREATE_ACCOUNT_SUCCESS:
   break;
   default:

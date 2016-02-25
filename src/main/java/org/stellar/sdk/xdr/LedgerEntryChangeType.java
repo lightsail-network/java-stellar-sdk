@@ -12,7 +12,8 @@ import java.io.IOException;
 //  {
 //      LEDGER_ENTRY_CREATED = 0, // entry was added to the ledger
 //      LEDGER_ENTRY_UPDATED = 1, // entry was modified in the ledger
-//      LEDGER_ENTRY_REMOVED = 2  // entry was removed from the ledger
+//      LEDGER_ENTRY_REMOVED = 2, // entry was removed from the ledger
+//      LEDGER_ENTRY_STATE = 3    // value of the entry
 //  };
 
 //  ===========================================================================
@@ -20,6 +21,7 @@ public enum LedgerEntryChangeType  {
   LEDGER_ENTRY_CREATED(0),
   LEDGER_ENTRY_UPDATED(1),
   LEDGER_ENTRY_REMOVED(2),
+  LEDGER_ENTRY_STATE(3),
   ;
   private int mValue;
 
@@ -37,6 +39,7 @@ public enum LedgerEntryChangeType  {
       case 0: return LEDGER_ENTRY_CREATED;
       case 1: return LEDGER_ENTRY_UPDATED;
       case 2: return LEDGER_ENTRY_REMOVED;
+      case 3: return LEDGER_ENTRY_STATE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

@@ -1,7 +1,13 @@
 package org.stellar.sdk;
 
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -106,6 +112,7 @@ public class TransactionTest {
       fail();
     } catch (RuntimeException exception) {
       assertTrue(exception.getMessage().contains("At least one operation required"));
+      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
     }
   }
 

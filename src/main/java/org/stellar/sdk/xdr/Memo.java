@@ -80,8 +80,10 @@ public class Memo  {
   }
   }
   public static Memo decode(XdrDataInputStream stream) throws IOException {
-    Memo decodedMemo = new Memo();
-    switch (decodedMemo.getDiscriminant()) {
+  Memo decodedMemo = new Memo();
+  MemoType discriminant = MemoType.decode(stream);
+  decodedMemo.setDiscriminant(discriminant);
+  switch (decodedMemo.getDiscriminant()) {
   case MEMO_NONE:
   break;
   case MEMO_TEXT:

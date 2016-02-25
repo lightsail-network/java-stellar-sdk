@@ -22,24 +22,23 @@ import java.io.IOException;
 //              SCPBallot ballot;         // b
 //              SCPBallot* prepared;      // p
 //              SCPBallot* preparedPrime; // p'
-//              uint32 nC;                // n_c
-//              uint32 nP;                // n_P
+//              uint32 nC;                // c.n
+//              uint32 nH;                // h.n
 //          } prepare;
 //      case SCP_ST_CONFIRM:
 //          struct
 //          {
+//              SCPBallot ballot;   // b
+//              uint32 nPrepared;   // p.n
+//              uint32 nCommit;     // c.n
+//              uint32 nH;          // h.n
 //              Hash quorumSetHash; // D
-//              uint32 nPrepared;   // n_p
-//              SCPBallot commit;   // c
-//              uint32 nP;          // n_P
 //          } confirm;
 //      case SCP_ST_EXTERNALIZE:
 //          struct
 //          {
-//              SCPBallot commit; // c
-//              uint32 nP;        // n_P
-//              // not from the paper, but useful to build tooling to
-//              // traverse the graph based off only the latest statement
+//              SCPBallot commit;         // c
+//              uint32 nH;                // h.n
 //              Hash commitQuorumSetHash; // D used before EXTERNALIZE
 //          } externalize;
 //      case SCP_ST_NOMINATE:
@@ -140,8 +139,10 @@ public class SCPStatement  {
     }
     }
     public static SCPStatementPledges decode(XdrDataInputStream stream) throws IOException {
-      SCPStatementPledges decodedSCPStatementPledges = new SCPStatementPledges();
-      switch (decodedSCPStatementPledges.getDiscriminant()) {
+    SCPStatementPledges decodedSCPStatementPledges = new SCPStatementPledges();
+    SCPStatementType discriminant = SCPStatementType.decode(stream);
+    decodedSCPStatementPledges.setDiscriminant(discriminant);
+    switch (decodedSCPStatementPledges.getDiscriminant()) {
     case SCP_ST_PREPARE:
     decodedSCPStatementPledges.prepare = SCPStatementPrepare.decode(stream);
     break;
@@ -195,12 +196,12 @@ public class SCPStatement  {
       public void setNC(Uint32 value) {
         this.nC = value;
       }
-      private Uint32 nP;
-      public Uint32 getNP() {
-        return this.nP;
+      private Uint32 nH;
+      public Uint32 getNH() {
+        return this.nH;
       }
-      public void setNP(Uint32 value) {
-        this.nP = value;
+      public void setNH(Uint32 value) {
+        this.nH = value;
       }
       public static void encode(XdrDataOutputStream stream, SCPStatementPrepare encodedSCPStatementPrepare) throws IOException{
         Hash.encode(stream, encodedSCPStatementPrepare.quorumSetHash);
@@ -218,7 +219,7 @@ public class SCPStatement  {
         stream.writeInt(0);
         }
         Uint32.encode(stream, encodedSCPStatementPrepare.nC);
-        Uint32.encode(stream, encodedSCPStatementPrepare.nP);
+        Uint32.encode(stream, encodedSCPStatementPrepare.nH);
       }
       public static SCPStatementPrepare decode(XdrDataInputStream stream) throws IOException {
         SCPStatementPrepare decodedSCPStatementPrepare = new SCPStatementPrepare();
@@ -233,19 +234,19 @@ public class SCPStatement  {
         decodedSCPStatementPrepare.preparedPrime = SCPBallot.decode(stream);
         }
         decodedSCPStatementPrepare.nC = Uint32.decode(stream);
-        decodedSCPStatementPrepare.nP = Uint32.decode(stream);
+        decodedSCPStatementPrepare.nH = Uint32.decode(stream);
         return decodedSCPStatementPrepare;
       }
 
     }
     public static class SCPStatementConfirm {
       public SCPStatementConfirm () {}
-      private Hash quorumSetHash;
-      public Hash getQuorumSetHash() {
-        return this.quorumSetHash;
+      private SCPBallot ballot;
+      public SCPBallot getBallot() {
+        return this.ballot;
       }
-      public void setQuorumSetHash(Hash value) {
-        this.quorumSetHash = value;
+      public void setBallot(SCPBallot value) {
+        this.ballot = value;
       }
       private Uint32 nPrepared;
       public Uint32 getNPrepared() {
@@ -254,32 +255,41 @@ public class SCPStatement  {
       public void setNPrepared(Uint32 value) {
         this.nPrepared = value;
       }
-      private SCPBallot commit;
-      public SCPBallot getCommit() {
-        return this.commit;
+      private Uint32 nCommit;
+      public Uint32 getNCommit() {
+        return this.nCommit;
       }
-      public void setCommit(SCPBallot value) {
-        this.commit = value;
+      public void setNCommit(Uint32 value) {
+        this.nCommit = value;
       }
-      private Uint32 nP;
-      public Uint32 getNP() {
-        return this.nP;
+      private Uint32 nH;
+      public Uint32 getNH() {
+        return this.nH;
       }
-      public void setNP(Uint32 value) {
-        this.nP = value;
+      public void setNH(Uint32 value) {
+        this.nH = value;
+      }
+      private Hash quorumSetHash;
+      public Hash getQuorumSetHash() {
+        return this.quorumSetHash;
+      }
+      public void setQuorumSetHash(Hash value) {
+        this.quorumSetHash = value;
       }
       public static void encode(XdrDataOutputStream stream, SCPStatementConfirm encodedSCPStatementConfirm) throws IOException{
-        Hash.encode(stream, encodedSCPStatementConfirm.quorumSetHash);
+        SCPBallot.encode(stream, encodedSCPStatementConfirm.ballot);
         Uint32.encode(stream, encodedSCPStatementConfirm.nPrepared);
-        SCPBallot.encode(stream, encodedSCPStatementConfirm.commit);
-        Uint32.encode(stream, encodedSCPStatementConfirm.nP);
+        Uint32.encode(stream, encodedSCPStatementConfirm.nCommit);
+        Uint32.encode(stream, encodedSCPStatementConfirm.nH);
+        Hash.encode(stream, encodedSCPStatementConfirm.quorumSetHash);
       }
       public static SCPStatementConfirm decode(XdrDataInputStream stream) throws IOException {
         SCPStatementConfirm decodedSCPStatementConfirm = new SCPStatementConfirm();
-        decodedSCPStatementConfirm.quorumSetHash = Hash.decode(stream);
+        decodedSCPStatementConfirm.ballot = SCPBallot.decode(stream);
         decodedSCPStatementConfirm.nPrepared = Uint32.decode(stream);
-        decodedSCPStatementConfirm.commit = SCPBallot.decode(stream);
-        decodedSCPStatementConfirm.nP = Uint32.decode(stream);
+        decodedSCPStatementConfirm.nCommit = Uint32.decode(stream);
+        decodedSCPStatementConfirm.nH = Uint32.decode(stream);
+        decodedSCPStatementConfirm.quorumSetHash = Hash.decode(stream);
         return decodedSCPStatementConfirm;
       }
 
@@ -293,12 +303,12 @@ public class SCPStatement  {
       public void setCommit(SCPBallot value) {
         this.commit = value;
       }
-      private Uint32 nP;
-      public Uint32 getNP() {
-        return this.nP;
+      private Uint32 nH;
+      public Uint32 getNH() {
+        return this.nH;
       }
-      public void setNP(Uint32 value) {
-        this.nP = value;
+      public void setNH(Uint32 value) {
+        this.nH = value;
       }
       private Hash commitQuorumSetHash;
       public Hash getCommitQuorumSetHash() {
@@ -309,13 +319,13 @@ public class SCPStatement  {
       }
       public static void encode(XdrDataOutputStream stream, SCPStatementExternalize encodedSCPStatementExternalize) throws IOException{
         SCPBallot.encode(stream, encodedSCPStatementExternalize.commit);
-        Uint32.encode(stream, encodedSCPStatementExternalize.nP);
+        Uint32.encode(stream, encodedSCPStatementExternalize.nH);
         Hash.encode(stream, encodedSCPStatementExternalize.commitQuorumSetHash);
       }
       public static SCPStatementExternalize decode(XdrDataInputStream stream) throws IOException {
         SCPStatementExternalize decodedSCPStatementExternalize = new SCPStatementExternalize();
         decodedSCPStatementExternalize.commit = SCPBallot.decode(stream);
-        decodedSCPStatementExternalize.nP = Uint32.decode(stream);
+        decodedSCPStatementExternalize.nH = Uint32.decode(stream);
         decodedSCPStatementExternalize.commitQuorumSetHash = Hash.decode(stream);
         return decodedSCPStatementExternalize;
       }

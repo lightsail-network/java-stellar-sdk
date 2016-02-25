@@ -36,8 +36,10 @@ public class PaymentResult  {
   }
   }
   public static PaymentResult decode(XdrDataInputStream stream) throws IOException {
-    PaymentResult decodedPaymentResult = new PaymentResult();
-    switch (decodedPaymentResult.getDiscriminant()) {
+  PaymentResult decodedPaymentResult = new PaymentResult();
+  PaymentResultCode discriminant = PaymentResultCode.decode(stream);
+  decodedPaymentResult.setDiscriminant(discriminant);
+  switch (decodedPaymentResult.getDiscriminant()) {
   case PAYMENT_SUCCESS:
   break;
   default:

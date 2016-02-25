@@ -16,7 +16,8 @@ import java.io.IOException;
 //          opaque ipv4[4];
 //      case IPv6:
 //          opaque ipv6[16];
-//      } ip;
+//      }
+//      ip;
 //      uint32 port;
 //      uint32 numFailures;
 //  };
@@ -95,8 +96,10 @@ public class PeerAddress  {
     }
     }
     public static PeerAddressIp decode(XdrDataInputStream stream) throws IOException {
-      PeerAddressIp decodedPeerAddressIp = new PeerAddressIp();
-      switch (decodedPeerAddressIp.getDiscriminant()) {
+    PeerAddressIp decodedPeerAddressIp = new PeerAddressIp();
+    IPAddrType discriminant = IPAddrType.decode(stream);
+    decodedPeerAddressIp.setDiscriminant(discriminant);
+    switch (decodedPeerAddressIp.getDiscriminant()) {
     case IPv4:
     int ipv4size = 4;
     decodedPeerAddressIp.ipv4 = new byte[ipv4size];

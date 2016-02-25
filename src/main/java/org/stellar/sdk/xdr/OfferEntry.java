@@ -132,8 +132,10 @@ public class OfferEntry  {
     }
     }
     public static OfferEntryExt decode(XdrDataInputStream stream) throws IOException {
-      OfferEntryExt decodedOfferEntryExt = new OfferEntryExt();
-      switch (decodedOfferEntryExt.getDiscriminant()) {
+    OfferEntryExt decodedOfferEntryExt = new OfferEntryExt();
+    Integer discriminant = stream.readInt();
+    decodedOfferEntryExt.setDiscriminant(discriminant);
+    switch (decodedOfferEntryExt.getDiscriminant()) {
     case 0:
     break;
     }

@@ -48,8 +48,10 @@ public class InflationResult  {
   }
   }
   public static InflationResult decode(XdrDataInputStream stream) throws IOException {
-    InflationResult decodedInflationResult = new InflationResult();
-    switch (decodedInflationResult.getDiscriminant()) {
+  InflationResult decodedInflationResult = new InflationResult();
+  InflationResultCode discriminant = InflationResultCode.decode(stream);
+  decodedInflationResult.setDiscriminant(discriminant);
+  switch (decodedInflationResult.getDiscriminant()) {
   case INFLATION_SUCCESS:
   int payoutssize = stream.readInt();
   decodedInflationResult.payouts = new InflationPayout[payoutssize];

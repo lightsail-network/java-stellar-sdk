@@ -33,6 +33,8 @@ import java.io.IOException;
 //          AccountMergeResult accountMergeResult;
 //      case INFLATION:
 //          InflationResult inflationResult;
+//      case MANAGE_DATA:
+//          ManageDataResult manageDataResult;
 //      }
 //      tr;
 //  default:
@@ -67,8 +69,10 @@ public class OperationResult  {
   }
   }
   public static OperationResult decode(XdrDataInputStream stream) throws IOException {
-    OperationResult decodedOperationResult = new OperationResult();
-    switch (decodedOperationResult.getDiscriminant()) {
+  OperationResult decodedOperationResult = new OperationResult();
+  OperationResultCode discriminant = OperationResultCode.decode(stream);
+  decodedOperationResult.setDiscriminant(discriminant);
+  switch (decodedOperationResult.getDiscriminant()) {
   case opINNER:
   decodedOperationResult.tr = OperationResultTr.decode(stream);
   break;
@@ -157,6 +161,13 @@ public class OperationResult  {
     public void setInflationResult(InflationResult value) {
       this.inflationResult = value;
     }
+    private ManageDataResult manageDataResult;
+    public ManageDataResult getManageDataResult() {
+      return this.manageDataResult;
+    }
+    public void setManageDataResult(ManageDataResult value) {
+      this.manageDataResult = value;
+    }
     public static void encode(XdrDataOutputStream stream, OperationResultTr encodedOperationResultTr) throws IOException {
     stream.writeInt(encodedOperationResultTr.getDiscriminant().getValue());
     switch (encodedOperationResultTr.getDiscriminant()) {
@@ -190,11 +201,16 @@ public class OperationResult  {
     case INFLATION:
     InflationResult.encode(stream, encodedOperationResultTr.inflationResult);
     break;
+    case MANAGE_DATA:
+    ManageDataResult.encode(stream, encodedOperationResultTr.manageDataResult);
+    break;
     }
     }
     public static OperationResultTr decode(XdrDataInputStream stream) throws IOException {
-      OperationResultTr decodedOperationResultTr = new OperationResultTr();
-      switch (decodedOperationResultTr.getDiscriminant()) {
+    OperationResultTr decodedOperationResultTr = new OperationResultTr();
+    OperationType discriminant = OperationType.decode(stream);
+    decodedOperationResultTr.setDiscriminant(discriminant);
+    switch (decodedOperationResultTr.getDiscriminant()) {
     case CREATE_ACCOUNT:
     decodedOperationResultTr.createAccountResult = CreateAccountResult.decode(stream);
     break;
@@ -224,6 +240,9 @@ public class OperationResult  {
     break;
     case INFLATION:
     decodedOperationResultTr.inflationResult = InflationResult.decode(stream);
+    break;
+    case MANAGE_DATA:
+    decodedOperationResultTr.manageDataResult = ManageDataResult.decode(stream);
     break;
     }
       return decodedOperationResultTr;

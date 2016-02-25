@@ -88,8 +88,10 @@ public class ManageOfferSuccessResult  {
     }
     }
     public static ManageOfferSuccessResultOffer decode(XdrDataInputStream stream) throws IOException {
-      ManageOfferSuccessResultOffer decodedManageOfferSuccessResultOffer = new ManageOfferSuccessResultOffer();
-      switch (decodedManageOfferSuccessResultOffer.getDiscriminant()) {
+    ManageOfferSuccessResultOffer decodedManageOfferSuccessResultOffer = new ManageOfferSuccessResultOffer();
+    ManageOfferEffect discriminant = ManageOfferEffect.decode(stream);
+    decodedManageOfferSuccessResultOffer.setDiscriminant(discriminant);
+    switch (decodedManageOfferSuccessResultOffer.getDiscriminant()) {
     case MANAGE_OFFER_CREATED:
     case MANAGE_OFFER_UPDATED:
     decodedManageOfferSuccessResultOffer.offer = OfferEntry.decode(stream);

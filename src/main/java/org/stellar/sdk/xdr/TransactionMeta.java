@@ -44,8 +44,10 @@ public class TransactionMeta  {
   }
   }
   public static TransactionMeta decode(XdrDataInputStream stream) throws IOException {
-    TransactionMeta decodedTransactionMeta = new TransactionMeta();
-    switch (decodedTransactionMeta.getDiscriminant()) {
+  TransactionMeta decodedTransactionMeta = new TransactionMeta();
+  Integer discriminant = stream.readInt();
+  decodedTransactionMeta.setDiscriminant(discriminant);
+  switch (decodedTransactionMeta.getDiscriminant()) {
   case 0:
   int operationssize = stream.readInt();
   decodedTransactionMeta.operations = new OperationMeta[operationssize];

@@ -12,6 +12,7 @@ import java.io.IOException;
 //  {
 //      uint32 ledgerVersion;
 //      uint32 overlayVersion;
+//      uint32 overlayMinVersion;
 //      Hash networkID;
 //      string versionStr<100>;
 //      int listeningPort;
@@ -36,6 +37,13 @@ public class Hello  {
   }
   public void setOverlayVersion(Uint32 value) {
     this.overlayVersion = value;
+  }
+  private Uint32 overlayMinVersion;
+  public Uint32 getOverlayMinVersion() {
+    return this.overlayMinVersion;
+  }
+  public void setOverlayMinVersion(Uint32 value) {
+    this.overlayMinVersion = value;
   }
   private Hash networkID;
   public Hash getNetworkID() {
@@ -82,6 +90,7 @@ public class Hello  {
   public static void encode(XdrDataOutputStream stream, Hello encodedHello) throws IOException{
     Uint32.encode(stream, encodedHello.ledgerVersion);
     Uint32.encode(stream, encodedHello.overlayVersion);
+    Uint32.encode(stream, encodedHello.overlayMinVersion);
     Hash.encode(stream, encodedHello.networkID);
     stream.writeString(encodedHello.versionStr);
     stream.writeInt(encodedHello.listeningPort);
@@ -93,6 +102,7 @@ public class Hello  {
     Hello decodedHello = new Hello();
     decodedHello.ledgerVersion = Uint32.decode(stream);
     decodedHello.overlayVersion = Uint32.decode(stream);
+    decodedHello.overlayMinVersion = Uint32.decode(stream);
     decodedHello.networkID = Hash.decode(stream);
     decodedHello.versionStr = stream.readString();
     decodedHello.listeningPort = stream.readInt();

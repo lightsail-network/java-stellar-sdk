@@ -101,8 +101,10 @@ public class AllowTrustOp  {
     }
     }
     public static AllowTrustOpAsset decode(XdrDataInputStream stream) throws IOException {
-      AllowTrustOpAsset decodedAllowTrustOpAsset = new AllowTrustOpAsset();
-      switch (decodedAllowTrustOpAsset.getDiscriminant()) {
+    AllowTrustOpAsset decodedAllowTrustOpAsset = new AllowTrustOpAsset();
+    AssetType discriminant = AssetType.decode(stream);
+    decodedAllowTrustOpAsset.setDiscriminant(discriminant);
+    switch (decodedAllowTrustOpAsset.getDiscriminant()) {
     case ASSET_TYPE_CREDIT_ALPHANUM4:
     int assetCode4size = 4;
     decodedAllowTrustOpAsset.assetCode4 = new byte[assetCode4size];

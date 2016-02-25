@@ -108,8 +108,10 @@ public class TrustLineEntry  {
     }
     }
     public static TrustLineEntryExt decode(XdrDataInputStream stream) throws IOException {
-      TrustLineEntryExt decodedTrustLineEntryExt = new TrustLineEntryExt();
-      switch (decodedTrustLineEntryExt.getDiscriminant()) {
+    TrustLineEntryExt decodedTrustLineEntryExt = new TrustLineEntryExt();
+    Integer discriminant = stream.readInt();
+    decodedTrustLineEntryExt.setDiscriminant(discriminant);
+    switch (decodedTrustLineEntryExt.getDiscriminant()) {
     case 0:
     break;
     }

@@ -36,8 +36,10 @@ public class AllowTrustResult  {
   }
   }
   public static AllowTrustResult decode(XdrDataInputStream stream) throws IOException {
-    AllowTrustResult decodedAllowTrustResult = new AllowTrustResult();
-    switch (decodedAllowTrustResult.getDiscriminant()) {
+  AllowTrustResult decodedAllowTrustResult = new AllowTrustResult();
+  AllowTrustResultCode discriminant = AllowTrustResultCode.decode(stream);
+  decodedAllowTrustResult.setDiscriminant(discriminant);
+  switch (decodedAllowTrustResult.getDiscriminant()) {
   case ALLOW_TRUST_SUCCESS:
   break;
   default:

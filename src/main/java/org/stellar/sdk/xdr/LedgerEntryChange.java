@@ -16,6 +16,8 @@ import java.io.IOException;
 //      LedgerEntry updated;
 //  case LEDGER_ENTRY_REMOVED:
 //      LedgerKey removed;
+//  case LEDGER_ENTRY_STATE:
+//      LedgerEntry state;
 //  };
 
 //  ===========================================================================
@@ -49,6 +51,13 @@ public class LedgerEntryChange  {
   public void setRemoved(LedgerKey value) {
     this.removed = value;
   }
+  private LedgerEntry state;
+  public LedgerEntry getState() {
+    return this.state;
+  }
+  public void setState(LedgerEntry value) {
+    this.state = value;
+  }
   public static void encode(XdrDataOutputStream stream, LedgerEntryChange encodedLedgerEntryChange) throws IOException {
   stream.writeInt(encodedLedgerEntryChange.getDiscriminant().getValue());
   switch (encodedLedgerEntryChange.getDiscriminant()) {
@@ -61,11 +70,16 @@ public class LedgerEntryChange  {
   case LEDGER_ENTRY_REMOVED:
   LedgerKey.encode(stream, encodedLedgerEntryChange.removed);
   break;
+  case LEDGER_ENTRY_STATE:
+  LedgerEntry.encode(stream, encodedLedgerEntryChange.state);
+  break;
   }
   }
   public static LedgerEntryChange decode(XdrDataInputStream stream) throws IOException {
-    LedgerEntryChange decodedLedgerEntryChange = new LedgerEntryChange();
-    switch (decodedLedgerEntryChange.getDiscriminant()) {
+  LedgerEntryChange decodedLedgerEntryChange = new LedgerEntryChange();
+  LedgerEntryChangeType discriminant = LedgerEntryChangeType.decode(stream);
+  decodedLedgerEntryChange.setDiscriminant(discriminant);
+  switch (decodedLedgerEntryChange.getDiscriminant()) {
   case LEDGER_ENTRY_CREATED:
   decodedLedgerEntryChange.created = LedgerEntry.decode(stream);
   break;
@@ -74,6 +88,9 @@ public class LedgerEntryChange  {
   break;
   case LEDGER_ENTRY_REMOVED:
   decodedLedgerEntryChange.removed = LedgerKey.decode(stream);
+  break;
+  case LEDGER_ENTRY_STATE:
+  decodedLedgerEntryChange.state = LedgerEntry.decode(stream);
   break;
   }
     return decodedLedgerEntryChange;

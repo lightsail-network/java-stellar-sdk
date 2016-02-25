@@ -11,7 +11,6 @@ import java.io.IOException;
 //  enum MessageType
 //  {
 //      ERROR_MSG = 0,
-//      HELLO = 1,
 //      AUTH = 2,
 //      DONT_HAVE = 3,
 //  
@@ -26,13 +25,16 @@ import java.io.IOException;
 //      // SCP
 //      GET_SCP_QUORUMSET = 9,
 //      SCP_QUORUMSET = 10,
-//      SCP_MESSAGE = 11
+//      SCP_MESSAGE = 11,
+//      GET_SCP_STATE = 12,
+//  
+//      // new messages
+//      HELLO = 13
 //  };
 
 //  ===========================================================================
 public enum MessageType  {
   ERROR_MSG(0),
-  HELLO(1),
   AUTH(2),
   DONT_HAVE(3),
   GET_PEERS(4),
@@ -43,6 +45,8 @@ public enum MessageType  {
   GET_SCP_QUORUMSET(9),
   SCP_QUORUMSET(10),
   SCP_MESSAGE(11),
+  GET_SCP_STATE(12),
+  HELLO(13),
   ;
   private int mValue;
 
@@ -58,7 +62,6 @@ public enum MessageType  {
     int value = stream.readInt();
     switch (value) {
       case 0: return ERROR_MSG;
-      case 1: return HELLO;
       case 2: return AUTH;
       case 3: return DONT_HAVE;
       case 4: return GET_PEERS;
@@ -69,6 +72,8 @@ public enum MessageType  {
       case 9: return GET_SCP_QUORUMSET;
       case 10: return SCP_QUORUMSET;
       case 11: return SCP_MESSAGE;
+      case 12: return GET_SCP_STATE;
+      case 13: return HELLO;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

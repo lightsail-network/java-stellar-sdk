@@ -36,8 +36,10 @@ public class ChangeTrustResult  {
   }
   }
   public static ChangeTrustResult decode(XdrDataInputStream stream) throws IOException {
-    ChangeTrustResult decodedChangeTrustResult = new ChangeTrustResult();
-    switch (decodedChangeTrustResult.getDiscriminant()) {
+  ChangeTrustResult decodedChangeTrustResult = new ChangeTrustResult();
+  ChangeTrustResultCode discriminant = ChangeTrustResultCode.decode(stream);
+  decodedChangeTrustResult.setDiscriminant(discriminant);
+  switch (decodedChangeTrustResult.getDiscriminant()) {
   case CHANGE_TRUST_SUCCESS:
   break;
   default:

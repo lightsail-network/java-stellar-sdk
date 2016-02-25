@@ -20,6 +20,8 @@ import java.io.IOException;
 //          TrustLineEntry trustLine;
 //      case OFFER:
 //          OfferEntry offer;
+//      case DATA:
+//          DataEntry data;
 //      }
 //      data;
 //  
@@ -99,6 +101,13 @@ public class LedgerEntry  {
     public void setOffer(OfferEntry value) {
       this.offer = value;
     }
+    private DataEntry data;
+    public DataEntry getData() {
+      return this.data;
+    }
+    public void setData(DataEntry value) {
+      this.data = value;
+    }
     public static void encode(XdrDataOutputStream stream, LedgerEntryData encodedLedgerEntryData) throws IOException {
     stream.writeInt(encodedLedgerEntryData.getDiscriminant().getValue());
     switch (encodedLedgerEntryData.getDiscriminant()) {
@@ -111,11 +120,16 @@ public class LedgerEntry  {
     case OFFER:
     OfferEntry.encode(stream, encodedLedgerEntryData.offer);
     break;
+    case DATA:
+    DataEntry.encode(stream, encodedLedgerEntryData.data);
+    break;
     }
     }
     public static LedgerEntryData decode(XdrDataInputStream stream) throws IOException {
-      LedgerEntryData decodedLedgerEntryData = new LedgerEntryData();
-      switch (decodedLedgerEntryData.getDiscriminant()) {
+    LedgerEntryData decodedLedgerEntryData = new LedgerEntryData();
+    LedgerEntryType discriminant = LedgerEntryType.decode(stream);
+    decodedLedgerEntryData.setDiscriminant(discriminant);
+    switch (decodedLedgerEntryData.getDiscriminant()) {
     case ACCOUNT:
     decodedLedgerEntryData.account = AccountEntry.decode(stream);
     break;
@@ -124,6 +138,9 @@ public class LedgerEntry  {
     break;
     case OFFER:
     decodedLedgerEntryData.offer = OfferEntry.decode(stream);
+    break;
+    case DATA:
+    decodedLedgerEntryData.data = DataEntry.decode(stream);
     break;
     }
       return decodedLedgerEntryData;
@@ -147,8 +164,10 @@ public class LedgerEntry  {
     }
     }
     public static LedgerEntryExt decode(XdrDataInputStream stream) throws IOException {
-      LedgerEntryExt decodedLedgerEntryExt = new LedgerEntryExt();
-      switch (decodedLedgerEntryExt.getDiscriminant()) {
+    LedgerEntryExt decodedLedgerEntryExt = new LedgerEntryExt();
+    Integer discriminant = stream.readInt();
+    decodedLedgerEntryExt.setDiscriminant(discriminant);
+    switch (decodedLedgerEntryExt.getDiscriminant()) {
     case 0:
     break;
     }

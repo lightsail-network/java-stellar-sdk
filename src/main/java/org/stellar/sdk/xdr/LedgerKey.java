@@ -29,6 +29,13 @@ import java.io.IOException;
 //          AccountID sellerID;
 //          uint64 offerID;
 //      } offer;
+//  
+//  case DATA:
+//      struct
+//      {
+//          AccountID accountID;
+//          string64 dataName;
+//      } data;
 //  };
 
 //  ===========================================================================
@@ -62,6 +69,13 @@ public class LedgerKey  {
   public void setOffer(LedgerKeyOffer value) {
     this.offer = value;
   }
+  private LedgerKeyData data;
+  public LedgerKeyData getData() {
+    return this.data;
+  }
+  public void setData(LedgerKeyData value) {
+    this.data = value;
+  }
   public static void encode(XdrDataOutputStream stream, LedgerKey encodedLedgerKey) throws IOException {
   stream.writeInt(encodedLedgerKey.getDiscriminant().getValue());
   switch (encodedLedgerKey.getDiscriminant()) {
@@ -74,11 +88,16 @@ public class LedgerKey  {
   case OFFER:
   LedgerKeyOffer.encode(stream, encodedLedgerKey.offer);
   break;
+  case DATA:
+  LedgerKeyData.encode(stream, encodedLedgerKey.data);
+  break;
   }
   }
   public static LedgerKey decode(XdrDataInputStream stream) throws IOException {
-    LedgerKey decodedLedgerKey = new LedgerKey();
-    switch (decodedLedgerKey.getDiscriminant()) {
+  LedgerKey decodedLedgerKey = new LedgerKey();
+  LedgerEntryType discriminant = LedgerEntryType.decode(stream);
+  decodedLedgerKey.setDiscriminant(discriminant);
+  switch (decodedLedgerKey.getDiscriminant()) {
   case ACCOUNT:
   decodedLedgerKey.account = LedgerKeyAccount.decode(stream);
   break;
@@ -87,6 +106,9 @@ public class LedgerKey  {
   break;
   case OFFER:
   decodedLedgerKey.offer = LedgerKeyOffer.decode(stream);
+  break;
+  case DATA:
+  decodedLedgerKey.data = LedgerKeyData.decode(stream);
   break;
   }
     return decodedLedgerKey;
@@ -164,6 +186,34 @@ public class LedgerKey  {
       decodedLedgerKeyOffer.sellerID = AccountID.decode(stream);
       decodedLedgerKeyOffer.offerID = Uint64.decode(stream);
       return decodedLedgerKeyOffer;
+    }
+
+  }
+  public static class LedgerKeyData {
+    public LedgerKeyData () {}
+    private AccountID accountID;
+    public AccountID getAccountID() {
+      return this.accountID;
+    }
+    public void setAccountID(AccountID value) {
+      this.accountID = value;
+    }
+    private String64 dataName;
+    public String64 getDataName() {
+      return this.dataName;
+    }
+    public void setDataName(String64 value) {
+      this.dataName = value;
+    }
+    public static void encode(XdrDataOutputStream stream, LedgerKeyData encodedLedgerKeyData) throws IOException{
+      AccountID.encode(stream, encodedLedgerKeyData.accountID);
+      String64.encode(stream, encodedLedgerKeyData.dataName);
+    }
+    public static LedgerKeyData decode(XdrDataInputStream stream) throws IOException {
+      LedgerKeyData decodedLedgerKeyData = new LedgerKeyData();
+      decodedLedgerKeyData.accountID = AccountID.decode(stream);
+      decodedLedgerKeyData.dataName = String64.decode(stream);
+      return decodedLedgerKeyData;
     }
 
   }

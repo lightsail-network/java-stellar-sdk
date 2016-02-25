@@ -215,8 +215,10 @@ public class LedgerHeader  {
     }
     }
     public static LedgerHeaderExt decode(XdrDataInputStream stream) throws IOException {
-      LedgerHeaderExt decodedLedgerHeaderExt = new LedgerHeaderExt();
-      switch (decodedLedgerHeaderExt.getDiscriminant()) {
+    LedgerHeaderExt decodedLedgerHeaderExt = new LedgerHeaderExt();
+    Integer discriminant = stream.readInt();
+    decodedLedgerHeaderExt.setDiscriminant(discriminant);
+    switch (decodedLedgerHeaderExt.getDiscriminant()) {
     case 0:
     break;
     }

@@ -38,6 +38,8 @@ import java.io.IOException;
 //      SCPQuorumSet qSet;
 //  case SCP_MESSAGE:
 //      SCPEnvelope envelope;
+//  case GET_SCP_STATE:
+//      uint32 getSCPLedgerSeq; // ledger seq requested ; if 0, requests the latest
 //  };
 
 //  ===========================================================================
@@ -127,6 +129,13 @@ public class StellarMessage  {
   public void setEnvelope(SCPEnvelope value) {
     this.envelope = value;
   }
+  private Uint32 getSCPLedgerSeq;
+  public Uint32 getGetSCPLedgerSeq() {
+    return this.getSCPLedgerSeq;
+  }
+  public void setGetSCPLedgerSeq(Uint32 value) {
+    this.getSCPLedgerSeq = value;
+  }
   public static void encode(XdrDataOutputStream stream, StellarMessage encodedStellarMessage) throws IOException {
   stream.writeInt(encodedStellarMessage.getDiscriminant().getValue());
   switch (encodedStellarMessage.getDiscriminant()) {
@@ -169,11 +178,16 @@ public class StellarMessage  {
   case SCP_MESSAGE:
   SCPEnvelope.encode(stream, encodedStellarMessage.envelope);
   break;
+  case GET_SCP_STATE:
+  Uint32.encode(stream, encodedStellarMessage.getSCPLedgerSeq);
+  break;
   }
   }
   public static StellarMessage decode(XdrDataInputStream stream) throws IOException {
-    StellarMessage decodedStellarMessage = new StellarMessage();
-    switch (decodedStellarMessage.getDiscriminant()) {
+  StellarMessage decodedStellarMessage = new StellarMessage();
+  MessageType discriminant = MessageType.decode(stream);
+  decodedStellarMessage.setDiscriminant(discriminant);
+  switch (decodedStellarMessage.getDiscriminant()) {
   case ERROR_MSG:
   decodedStellarMessage.error = Error.decode(stream);
   break;
@@ -212,6 +226,9 @@ public class StellarMessage  {
   break;
   case SCP_MESSAGE:
   decodedStellarMessage.envelope = SCPEnvelope.decode(stream);
+  break;
+  case GET_SCP_STATE:
+  decodedStellarMessage.getSCPLedgerSeq = Uint32.decode(stream);
   break;
   }
     return decodedStellarMessage;

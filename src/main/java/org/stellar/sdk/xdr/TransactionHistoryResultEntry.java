@@ -76,8 +76,10 @@ public class TransactionHistoryResultEntry  {
     }
     }
     public static TransactionHistoryResultEntryExt decode(XdrDataInputStream stream) throws IOException {
-      TransactionHistoryResultEntryExt decodedTransactionHistoryResultEntryExt = new TransactionHistoryResultEntryExt();
-      switch (decodedTransactionHistoryResultEntryExt.getDiscriminant()) {
+    TransactionHistoryResultEntryExt decodedTransactionHistoryResultEntryExt = new TransactionHistoryResultEntryExt();
+    Integer discriminant = stream.readInt();
+    decodedTransactionHistoryResultEntryExt.setDiscriminant(discriminant);
+    switch (decodedTransactionHistoryResultEntryExt.getDiscriminant()) {
     case 0:
     break;
     }

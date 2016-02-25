@@ -141,8 +141,10 @@ public class Transaction  {
     }
     }
     public static TransactionExt decode(XdrDataInputStream stream) throws IOException {
-      TransactionExt decodedTransactionExt = new TransactionExt();
-      switch (decodedTransactionExt.getDiscriminant()) {
+    TransactionExt decodedTransactionExt = new TransactionExt();
+    Integer discriminant = stream.readInt();
+    decodedTransactionExt.setDiscriminant(discriminant);
+    switch (decodedTransactionExt.getDiscriminant()) {
     case 0:
     break;
     }

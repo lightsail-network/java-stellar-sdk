@@ -44,8 +44,10 @@ public class AccountMergeResult  {
   }
   }
   public static AccountMergeResult decode(XdrDataInputStream stream) throws IOException {
-    AccountMergeResult decodedAccountMergeResult = new AccountMergeResult();
-    switch (decodedAccountMergeResult.getDiscriminant()) {
+  AccountMergeResult decodedAccountMergeResult = new AccountMergeResult();
+  AccountMergeResultCode discriminant = AccountMergeResultCode.decode(stream);
+  decodedAccountMergeResult.setDiscriminant(discriminant);
+  switch (decodedAccountMergeResult.getDiscriminant()) {
   case ACCOUNT_MERGE_SUCCESS:
   decodedAccountMergeResult.sourceAccountBalance = Int64.decode(stream);
   break;

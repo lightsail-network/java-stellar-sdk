@@ -12,7 +12,8 @@ import java.io.IOException;
 //  {
 //      ACCOUNT = 0,
 //      TRUSTLINE = 1,
-//      OFFER = 2
+//      OFFER = 2,
+//      DATA = 3
 //  };
 
 //  ===========================================================================
@@ -20,6 +21,7 @@ public enum LedgerEntryType  {
   ACCOUNT(0),
   TRUSTLINE(1),
   OFFER(2),
+  DATA(3),
   ;
   private int mValue;
 
@@ -37,6 +39,7 @@ public enum LedgerEntryType  {
       case 0: return ACCOUNT;
       case 1: return TRUSTLINE;
       case 2: return OFFER;
+      case 3: return DATA;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

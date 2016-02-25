@@ -68,8 +68,10 @@ public class Asset  {
   }
   }
   public static Asset decode(XdrDataInputStream stream) throws IOException {
-    Asset decodedAsset = new Asset();
-    switch (decodedAsset.getDiscriminant()) {
+  Asset decodedAsset = new Asset();
+  AssetType discriminant = AssetType.decode(stream);
+  decodedAsset.setDiscriminant(discriminant);
+  switch (decodedAsset.getDiscriminant()) {
   case ASSET_TYPE_NATIVE:
   break;
   case ASSET_TYPE_CREDIT_ALPHANUM4:

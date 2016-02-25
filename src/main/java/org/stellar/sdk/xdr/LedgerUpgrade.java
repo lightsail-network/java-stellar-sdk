@@ -64,8 +64,10 @@ public class LedgerUpgrade  {
   }
   }
   public static LedgerUpgrade decode(XdrDataInputStream stream) throws IOException {
-    LedgerUpgrade decodedLedgerUpgrade = new LedgerUpgrade();
-    switch (decodedLedgerUpgrade.getDiscriminant()) {
+  LedgerUpgrade decodedLedgerUpgrade = new LedgerUpgrade();
+  LedgerUpgradeType discriminant = LedgerUpgradeType.decode(stream);
+  decodedLedgerUpgrade.setDiscriminant(discriminant);
+  switch (decodedLedgerUpgrade.getDiscriminant()) {
   case LEDGER_UPGRADE_VERSION:
   decodedLedgerUpgrade.newLedgerVersion = Uint32.decode(stream);
   break;

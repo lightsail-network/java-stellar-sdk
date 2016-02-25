@@ -100,8 +100,10 @@ public class StellarValue  {
     }
     }
     public static StellarValueExt decode(XdrDataInputStream stream) throws IOException {
-      StellarValueExt decodedStellarValueExt = new StellarValueExt();
-      switch (decodedStellarValueExt.getDiscriminant()) {
+    StellarValueExt decodedStellarValueExt = new StellarValueExt();
+    Integer discriminant = stream.readInt();
+    decodedStellarValueExt.setDiscriminant(discriminant);
+    switch (decodedStellarValueExt.getDiscriminant()) {
     case 0:
     break;
     }

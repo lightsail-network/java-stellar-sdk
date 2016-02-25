@@ -53,8 +53,10 @@ public class BucketEntry  {
   }
   }
   public static BucketEntry decode(XdrDataInputStream stream) throws IOException {
-    BucketEntry decodedBucketEntry = new BucketEntry();
-    switch (decodedBucketEntry.getDiscriminant()) {
+  BucketEntry decodedBucketEntry = new BucketEntry();
+  BucketEntryType discriminant = BucketEntryType.decode(stream);
+  decodedBucketEntry.setDiscriminant(discriminant);
+  switch (decodedBucketEntry.getDiscriminant()) {
   case LIVEENTRY:
   decodedBucketEntry.liveEntry = LedgerEntry.decode(stream);
   break;

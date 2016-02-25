@@ -76,8 +76,10 @@ public class LedgerHeaderHistoryEntry  {
     }
     }
     public static LedgerHeaderHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
-      LedgerHeaderHistoryEntryExt decodedLedgerHeaderHistoryEntryExt = new LedgerHeaderHistoryEntryExt();
-      switch (decodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
+    LedgerHeaderHistoryEntryExt decodedLedgerHeaderHistoryEntryExt = new LedgerHeaderHistoryEntryExt();
+    Integer discriminant = stream.readInt();
+    decodedLedgerHeaderHistoryEntryExt.setDiscriminant(discriminant);
+    switch (decodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
     case 0:
     break;
     }

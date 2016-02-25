@@ -168,8 +168,10 @@ public class AccountEntry  {
     }
     }
     public static AccountEntryExt decode(XdrDataInputStream stream) throws IOException {
-      AccountEntryExt decodedAccountEntryExt = new AccountEntryExt();
-      switch (decodedAccountEntryExt.getDiscriminant()) {
+    AccountEntryExt decodedAccountEntryExt = new AccountEntryExt();
+    Integer discriminant = stream.readInt();
+    decodedAccountEntryExt.setDiscriminant(discriminant);
+    switch (decodedAccountEntryExt.getDiscriminant()) {
     case 0:
     break;
     }

@@ -37,6 +37,8 @@ import java.io.IOException;
 //          AccountID destination;
 //      case INFLATION:
 //          void;
+//      case MANAGE_DATA:
+//          ManageDataOp manageDataOp;
 //      }
 //      body;
 //  };
@@ -149,6 +151,13 @@ public class Operation  {
     public void setDestination(AccountID value) {
       this.destination = value;
     }
+    private ManageDataOp manageDataOp;
+    public ManageDataOp getManageDataOp() {
+      return this.manageDataOp;
+    }
+    public void setManageDataOp(ManageDataOp value) {
+      this.manageDataOp = value;
+    }
     public static void encode(XdrDataOutputStream stream, OperationBody encodedOperationBody) throws IOException {
     stream.writeInt(encodedOperationBody.getDiscriminant().getValue());
     switch (encodedOperationBody.getDiscriminant()) {
@@ -181,11 +190,16 @@ public class Operation  {
     break;
     case INFLATION:
     break;
+    case MANAGE_DATA:
+    ManageDataOp.encode(stream, encodedOperationBody.manageDataOp);
+    break;
     }
     }
     public static OperationBody decode(XdrDataInputStream stream) throws IOException {
-      OperationBody decodedOperationBody = new OperationBody();
-      switch (decodedOperationBody.getDiscriminant()) {
+    OperationBody decodedOperationBody = new OperationBody();
+    OperationType discriminant = OperationType.decode(stream);
+    decodedOperationBody.setDiscriminant(discriminant);
+    switch (decodedOperationBody.getDiscriminant()) {
     case CREATE_ACCOUNT:
     decodedOperationBody.createAccountOp = CreateAccountOp.decode(stream);
     break;
@@ -214,6 +228,9 @@ public class Operation  {
     decodedOperationBody.destination = AccountID.decode(stream);
     break;
     case INFLATION:
+    break;
+    case MANAGE_DATA:
+    decodedOperationBody.manageDataOp = ManageDataOp.decode(stream);
     break;
     }
       return decodedOperationBody;
