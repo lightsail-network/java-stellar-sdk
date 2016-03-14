@@ -2,8 +2,14 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.codec.binary.Base64;
 import org.stellar.sdk.Server;
+import org.stellar.sdk.xdr.OperationType;
+import org.stellar.sdk.xdr.TransactionResult;
+import org.stellar.sdk.xdr.XdrDataInputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -15,13 +21,19 @@ public class SubmitTransactionResponse extends Response {
     private final String hash;
     @SerializedName("ledger")
     private final Long ledger;
+    @SerializedName("envelope_xdr")
+    private final String envelopeXdr;
+    @SerializedName("result_xdr")
+    private final String resultXdr;
     @SerializedName("extras")
     private final Extras extras;
 
-    SubmitTransactionResponse(Extras extras, Long ledger, String hash) {
+    SubmitTransactionResponse(Extras extras, Long ledger, String hash, String envelopeXdr, String resultXdr) {
         this.extras = extras;
         this.ledger = ledger;
         this.hash = hash;
+        this.envelopeXdr = envelopeXdr;
+        this.resultXdr = resultXdr;
     }
 
     public boolean isSuccess() {
@@ -34,6 +46,56 @@ public class SubmitTransactionResponse extends Response {
 
     public Long getLedger() {
         return ledger;
+    }
+
+    public String getEnvelopeXdr() {
+        if (this.isSuccess()) {
+            return this.envelopeXdr;
+        } else {
+            return this.getExtras().getEnvelopeXdr();
+        }
+    }
+
+    public String getResultXdr() {
+        if (this.isSuccess()) {
+            return this.resultXdr;
+        } else {
+            return this.getExtras().getResultXdr();
+        }
+    }
+
+    /**
+     * Helper method that returns Offer ID for ManageOffer from TransactionResult Xdr.
+     * This is helpful when you need ID of an offer to update it later.
+     * @param position Position of ManageOffer operation. If ManageOffer is second operation in this transaction this should be equal <code>1</code>.
+     * @return Offer ID or <code>null</code> when operation at <code>position</code> is not a ManageOffer operation or error has occurred.
+     */
+    public Long getOfferIdFromResult(int position) {
+        if (!this.isSuccess()) {
+            return null;
+        }
+
+        Base64 base64Codec = new Base64();
+        byte[] bytes = base64Codec.decode(this.getResultXdr());
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
+        TransactionResult result;
+
+        try {
+            result = TransactionResult.decode(xdrInputStream);
+        } catch (IOException e) {
+            return null;
+        }
+
+        if (result.getResult().getResults()[position] == null) {
+            return null;
+        }
+
+        if (result.getResult().getResults()[position].getTr().getDiscriminant() != OperationType.MANAGE_OFFER) {
+            return null;
+        }
+
+        return result.getResult().getResults()[0].getTr().getManageOfferResult().getSuccess().getOffer().getOffer().getOfferID().getUint64();
     }
 
     /**
