@@ -60,6 +60,13 @@ public class Server {
     }
 
     /**
+     * Returns {@link OffersRequestBuilder} instance.
+     */
+    public OffersRequestBuilder offers() {
+        return new OffersRequestBuilder(serverURI);
+    }
+
+    /**
      * Returns {@link OperationsRequestBuilder} instance.
      */
     public OperationsRequestBuilder operations() {

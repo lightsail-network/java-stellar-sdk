@@ -19,6 +19,7 @@ public class GsonSingleton {
       TypeToken accountPageType = new TypeToken<Page<AccountResponse>>() {};
       TypeToken effectPageType = new TypeToken<Page<EffectResponse>>() {};
       TypeToken ledgerPageType = new TypeToken<Page<LedgerResponse>>() {};
+      TypeToken offerPageType = new TypeToken<Page<OfferResponse>>() {};
       TypeToken operationPageType = new TypeToken<Page<OperationResponse>>() {};
       TypeToken pathPageType = new TypeToken<Page<PathResponse>>() {};
       TypeToken transactionPageType = new TypeToken<Page<TransactionResponse>>() {};
@@ -32,6 +33,7 @@ public class GsonSingleton {
                       .registerTypeAdapter(accountPageType.getType(), new PageDeserializer<AccountResponse>(accountPageType))
                       .registerTypeAdapter(effectPageType.getType(), new PageDeserializer<AccountResponse>(effectPageType))
                       .registerTypeAdapter(ledgerPageType.getType(), new PageDeserializer<LedgerResponse>(ledgerPageType))
+                      .registerTypeAdapter(offerPageType.getType(), new PageDeserializer<OfferResponse>(offerPageType))
                       .registerTypeAdapter(operationPageType.getType(), new PageDeserializer<OperationResponse>(operationPageType))
                       .registerTypeAdapter(pathPageType.getType(), new PageDeserializer<PathResponse>(pathPageType))
                       .registerTypeAdapter(transactionPageType.getType(), new PageDeserializer<TransactionResponse>(transactionPageType))
