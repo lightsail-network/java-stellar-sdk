@@ -88,7 +88,8 @@ public class ManageOfferOperation extends Operation {
   }
 
   /**
-   * Builds ManageOffer operation.
+   * Builds ManageOffer operation. If you want to update existing offer use
+   * {@link org.stellar.sdk.ManageOfferOperation.Builder#setOfferId(long)}.
    * @see ManageOfferOperation
    */
   public static class Builder {
@@ -116,7 +117,8 @@ public class ManageOfferOperation extends Operation {
     }
 
     /**
-     * Creates a new ManageOffer builder.
+     * Creates a new ManageOffer builder. If you want to update existing offer use
+     * {@link org.stellar.sdk.ManageOfferOperation.Builder#setOfferId(long)}.
      * @param selling The asset being sold in this operation
      * @param buying The asset being bought in this operation
      * @param amount Amount of selling being sold.
