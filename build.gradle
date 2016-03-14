@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'ivy-publish'
 
 sourceCompatibility = 1.6
-version = '0.1.4'
+version = '0.1.5'
 group = 'stellar'
 
 jar {
