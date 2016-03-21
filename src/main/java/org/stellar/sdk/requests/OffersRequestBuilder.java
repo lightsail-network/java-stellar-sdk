@@ -6,7 +6,6 @@ import org.apache.http.client.fluent.Request;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.responses.TransactionResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -40,14 +39,14 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public static Page<OfferResponse> execute(URI uri) throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<TransactionResponse>>() {};
+    TypeToken type = new TypeToken<Page<OfferResponse>>() {};
     ResponseHandler<Page<OfferResponse>> responseHandler = new ResponseHandler<Page<OfferResponse>>(type);
     return (Page<OfferResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
   /**
    * Build and execute request.
-   * @return {@link Page} of {@link TransactionResponse}
+   * @return {@link Page} of {@link OfferResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
