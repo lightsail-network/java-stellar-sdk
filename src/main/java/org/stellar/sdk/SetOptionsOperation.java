@@ -48,6 +48,7 @@ public class SetOptionsOperation extends Operation {
 
   /**
    * Indicates which flags to clear. For details about the flags, please refer to the <a href="https://www.stellar.org/developers/learn/concepts/accounts.html" target="_blank">accounts doc</a>.
+   * You can also use {@link AccountFlag} enum.
    */
   public Integer getClearFlags() {
     return clearFlags;
@@ -55,6 +56,7 @@ public class SetOptionsOperation extends Operation {
 
   /**
    * Indicates which flags to set. For details about the flags, please refer to the <a href="https://www.stellar.org/developers/learn/concepts/accounts.html" target="_blank">accounts doc</a>.
+   * You can also use {@link AccountFlag} enum.
    */
   public Integer getSetFlags() {
     return setFlags;
