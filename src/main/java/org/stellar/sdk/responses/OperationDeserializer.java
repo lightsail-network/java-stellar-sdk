@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.operations.ManageDataOperationResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
 import org.stellar.sdk.responses.operations.PaymentOperationResponse;
@@ -52,6 +53,8 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         return gson.fromJson(json, AccountMergeOperationResponse.class);
       case 9:
         return gson.fromJson(json, InflationOperationResponse.class);
+      case 10:
+        return gson.fromJson(json, ManageDataOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

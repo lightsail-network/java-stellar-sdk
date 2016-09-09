@@ -13,6 +13,7 @@ import org.stellar.sdk.responses.operations.ChangeTrustOperationResponse;
 import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
 import org.stellar.sdk.responses.operations.CreatePassiveOfferOperationResponse;
 import org.stellar.sdk.responses.operations.InflationOperationResponse;
+import org.stellar.sdk.responses.operations.ManageDataOperationResponse;
 import org.stellar.sdk.responses.operations.ManageOfferOperationResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentOperationResponse;
@@ -485,5 +486,75 @@ public class OperationDeserializerTest extends TestCase {
     InflationOperationResponse operation = (InflationOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getId(), new Long(12884914177L));
+  }
+
+  @Test
+  public void testDeserializeManageDataOperation() {
+    String json = "{\n" +
+            "  \"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/operations/14336188517191688\"\n" +
+            "    },\n" +
+            "    \"transaction\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/transactions/ad99999615f653528e67d8c8783e14044519c3e5233b73633aa88050c5856103\"\n" +
+            "    },\n" +
+            "    \"effects\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/operations/14336188517191688/effects\"\n" +
+            "    },\n" +
+            "    \"succeeds\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=14336188517191688\"\n" +
+            "    },\n" +
+            "    \"precedes\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=14336188517191688\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"id\": \"14336188517191688\",\n" +
+            "  \"paging_token\": \"14336188517191688\",\n" +
+            "  \"source_account\": \"GAC3U2W4KPZJX7GX5AZPOEWBJVUTJQ4TZNO74YN24ETTFIJVY7EMMANP\",\n" +
+            "  \"type\": \"manage_data\",\n" +
+            "  \"type_i\": 10,\n" +
+            "  \"name\": \"CollateralValue\",\n" +
+            "  \"value\": \"MjAwMA==\"\n" +
+            "}";
+
+    ManageDataOperationResponse operation = (ManageDataOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId(), new Long(14336188517191688L));
+    assertEquals(operation.getName(), "CollateralValue");
+    assertEquals(operation.getValue(), "MjAwMA==");
+  }
+
+  @Test
+  public void testDeserializeManageDataOperationValueEmpty() {
+    String json = "{\n" +
+            "  \"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/operations/14336188517191688\"\n" +
+            "    },\n" +
+            "    \"transaction\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/transactions/ad99999615f653528e67d8c8783e14044519c3e5233b73633aa88050c5856103\"\n" +
+            "    },\n" +
+            "    \"effects\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/operations/14336188517191688/effects\"\n" +
+            "    },\n" +
+            "    \"succeeds\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=14336188517191688\"\n" +
+            "    },\n" +
+            "    \"precedes\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=14336188517191688\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"id\": \"14336188517191688\",\n" +
+            "  \"paging_token\": \"14336188517191688\",\n" +
+            "  \"source_account\": \"GAC3U2W4KPZJX7GX5AZPOEWBJVUTJQ4TZNO74YN24ETTFIJVY7EMMANP\",\n" +
+            "  \"type\": \"manage_data\",\n" +
+            "  \"type_i\": 10,\n" +
+            "  \"name\": \"CollateralValue\",\n" +
+            "  \"value\": null\n" +
+            "}";
+
+    ManageDataOperationResponse operation = (ManageDataOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getValue(), null);
   }
 }

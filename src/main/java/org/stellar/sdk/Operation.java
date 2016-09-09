@@ -96,6 +96,9 @@ public abstract class Operation {
       case ACCOUNT_MERGE:
         operation = new AccountMergeOperation.Builder(body).build();
         break;
+      case MANAGE_DATA:
+        operation = new ManageDataOperation.Builder(body.getManageDataOp()).build();
+        break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }
