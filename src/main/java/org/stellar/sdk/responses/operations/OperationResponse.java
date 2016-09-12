@@ -49,6 +49,7 @@ public abstract class OperationResponse extends Response {
    *   <li>path_payment</li>
    *   <li>create_passive_offer</li>
    *   <li>inflation</li>
+   *   <li>manage_data</li>
    * </ul>
    */
   public String getType() {

@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -374,6 +375,48 @@ public class OperationTest {
 
     assertEquals(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAgAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxA=",
+            operation.toXdrBase64());
+  }
+
+  @Test
+  public void testManageDataOperation() throws IOException, FormatException {
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+
+    ManageDataOperation operation = new ManageDataOperation.Builder("test", new byte[]{0, 1, 2, 3, 4})
+            .setSourceAccount(source)
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+
+    ManageDataOperation parsedOperation = (ManageDataOperation) Operation.fromXdr(xdr);
+
+    assertEquals("test", parsedOperation.getName());
+    assertTrue(Arrays.equals(new byte[]{0, 1, 2, 3, 4}, parsedOperation.getValue()));
+
+    assertEquals(
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAEAAAAFAAECAwQ=",
+            operation.toXdrBase64());
+  }
+
+  @Test
+  public void testManageDataOperationEmptyValue() throws IOException, FormatException {
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+
+    ManageDataOperation operation = new ManageDataOperation.Builder("test", null)
+            .setSourceAccount(source)
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+
+    ManageDataOperation parsedOperation = (ManageDataOperation) Operation.fromXdr(xdr);
+
+    assertEquals("test", parsedOperation.getName());
+    assertEquals(null, parsedOperation.getValue());
+
+    assertEquals(
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAA=",
             operation.toXdrBase64());
   }
 
