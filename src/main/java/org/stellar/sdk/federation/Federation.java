@@ -23,13 +23,14 @@ public class Federation {
    * given Account ID.</li>
    * </ul>
    * @param value Stellar address or account id
-   * @throws MalformedAddressException
-   * @throws ConnectionErrorException
-   * @throws NoFederationServerException
-   * @throws FederationServerInvalidException
-   * @throws StellarTomlNotFoundInvalidException
-   * @throws NotFoundException
-   * @throws ServerErrorException
+   * @throws MalformedAddressException Address is malformed
+   * @throws ConnectionErrorException Connection problems
+   * @throws NoFederationServerException Stellar.toml does not contain federation server info
+   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
+   * @throws StellarTomlNotFoundInvalidException Stellar.toml file was not found or was malformed.
+   * @throws NotFoundException Stellar address not found by federation server
+   * @throws ServerErrorException Federation server responded with error
+   * @return FederationResponse
    */
   public static FederationResponse resolve(String value) {
     String[] tokens = value.split("\\*");

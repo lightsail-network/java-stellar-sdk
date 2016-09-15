@@ -217,7 +217,7 @@ public class KeyPair {
    * @param data The data that was signed.
    * @param signature The signature.
    * @return True if they match, false otherwise.
-   * @throws SignatureException If the signature length is wrong.
+   * @throws RuntimeException
    */
   public boolean verify(byte[] data, byte[] signature) {
     try {

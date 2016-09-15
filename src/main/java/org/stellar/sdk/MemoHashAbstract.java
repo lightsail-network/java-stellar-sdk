@@ -31,11 +31,11 @@ abstract class MemoHashAbstract extends Memo {
    * <p>Returns hex representation of bytes contained in this memo.</p>
    *
    * <p>Example:</p>
-   * <code><pre>
+   * <code>
    *   MemoHash memo = new MemoHash("4142434445");
    *   memo.getHexValue(); // 4142434445000000000000000000000000000000000000000000000000000000
    *   memo.getTrimmedHexValue(); // 4142434445
-   * </pre></code>
+   * </code>
    */
   public String getHexValue() {
     return new String(Hex.encodeHex(this.bytes));
@@ -45,11 +45,11 @@ abstract class MemoHashAbstract extends Memo {
    * <p>Returns hex representation of bytes contained in this memo until null byte (0x00) is found.</p>
    *
    * <p>Example:</p>
-   * <code><pre>
+   * <code>
    *   MemoHash memo = new MemoHash("4142434445");
    *   memo.getHexValue(); // 4142434445000000000000000000000000000000000000000000000000000000
    *   memo.getTrimmedHexValue(); // 4142434445
-   * </pre></code>
+   * </code>
    */
   public String getTrimmedHexValue() {
     return this.getHexValue().split("00")[0];

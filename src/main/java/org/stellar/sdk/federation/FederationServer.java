@@ -40,7 +40,7 @@ public class FederationServer {
    * Creates a new <code>FederationServer</code> instance.
    * @param serverUri Federation Server URI
    * @param domain Domain name this federation server is responsible for
-   * @throws FederationServerInvalidException
+   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
    */
   public FederationServer(URI serverUri, InternetDomainName domain) {
     this.serverUri = serverUri;
@@ -54,7 +54,7 @@ public class FederationServer {
    * Creates a new <code>FederationServer</code> instance.
    * @param serverUri Federation Server URI
    * @param domain Domain name this federation server is responsible for
-   * @throws FederationServerInvalidException
+   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
    */
   public FederationServer(String serverUri, InternetDomainName domain) {
     try {
@@ -70,10 +70,11 @@ public class FederationServer {
    * It tries to find a federation server URL in stellar.toml file.
    * @see <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.html" target="_blank">Stellar.toml docs</a>
    * @param domain Domain to find a federation server for
-   * @throws ConnectionErrorException
-   * @throws NoFederationServerException
-   * @throws FederationServerInvalidException
-   * @throws StellarTomlNotFoundInvalidException
+   * @throws ConnectionErrorException Connection problems
+   * @throws NoFederationServerException Stellar.toml does not contain federation server info
+   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
+   * @throws StellarTomlNotFoundInvalidException Stellar.toml file was not found or was malformed.
+   * @return FederationServer
    */
   public static FederationServer createForDomain(InternetDomainName domain) {
     Executor executor = Executor.newInstance(FederationServer.httpClient);
@@ -119,10 +120,11 @@ public class FederationServer {
   /**
    * Resolves a stellar address using a given federation server.
    * @param address Stellar addres, like <code>bob*stellar.org</code>
-   * @throws MalformedAddressException
-   * @throws ConnectionErrorException
-   * @throws NotFoundException
-   * @throws ServerErrorException
+   * @throws MalformedAddressException Address is malformed
+   * @throws ConnectionErrorException Connection problems
+   * @throws NotFoundException Stellar address not found by federation server
+   * @throws ServerErrorException Federation server responded with error
+   * @return FederationResponse
    */
   public FederationResponse resolveAddress(String address) {
     String[] tokens = address.split("\\*");
@@ -158,6 +160,7 @@ public class FederationServer {
 
   /**
    * Returns a federation server URI.
+   * @return URI
    */
   public URI getServerUri() {
     return serverUri;
@@ -165,6 +168,7 @@ public class FederationServer {
 
   /**
    * Returns a domain this server is responsible for.
+   * @return InternetDomainName
    */
   public InternetDomainName getDomain() {
     return domain;
