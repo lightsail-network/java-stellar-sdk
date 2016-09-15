@@ -1,5 +1,10 @@
 language: java
+env:
+  global:
+    # GITHUB_TOKEN
+    - secure: "sLQlgb6CU0tHrF4tXwJno/Xqme+mmgu74Qd9H9KuJexfb4OyYw593Q6tn3wMWrImyZlTmcbum1EYIFsgJGhCn8kMuF6PuOywGFPC44LooyBL9Pg4RTYeigQaAEwV4Nfofb7wf7Od09WVbwrb2+e25ya9b7DqtMEVAeFCXqVeGWtudHk+yxyG6N9usA3zvwMGd/Ku3s2WPlviNbGyd0h2aRBuhiAZcgC8OPSgwZNXm2nFgRs/GSxo40LeUSnoO8ilJ4Mp4JbGswXjacj21RGmVCXtwhIOJsy4dk8I0RApv04fCq9/e37K+N0K8Zf4l+n7DyfJzXAT8j/mSzea1RQQlv5lOkj4vBV6q6PBvBgnjrg/1POoP83cPHoJHv/6dbsQJ1GbBDDAbCIuyqXaLDrixvTXJc7x8SPnFUJHXOjzwcsX+oOo7DRqvwS1B4CUYbWnjvxxwHAxbDzW2G3iUKaNdtvBk1Ht/6AFnl2GqSlcEZDfwjIHtOcLNyAhMn2sw9Fjqsn+wXRH0ya9+VlgL+z8VvnJHzhrqUhrn1QJ+1YrpWShsJv61JKoMzQLvgiWoahjcXAnQ0YfAf+SUDlYrGvSgIZdJJfTcHFsdiXyJZuXwmeTNPeOrBS/WNVMJJWwCiYw/Z9KgRZdh8+/EhRSgLBZ0uSfIRbO37uOpdTWHkIFB4w="
 before_deploy: "./gradlew jar"
+after_deploy: ./after_deploy.sh
 deploy:
   provider: releases
   api_key:
