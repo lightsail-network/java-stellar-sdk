@@ -2,6 +2,8 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -173,6 +175,14 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       this.assetIssuer = assetIssuer;
     }
 
+    public Asset getAsset() {
+      if (assetType.equals("native")) {
+        return new AssetTypeNative();
+      } else {
+        return Asset.createNonNativeAsset(assetCode, getAssetIssuer());
+      }
+    }
+
     public String getAssetType() {
       return assetType;
     }
@@ -181,8 +191,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       return assetCode;
     }
 
-    public String getAssetIssuer() {
-      return assetIssuer;
+    public KeyPair getAssetIssuer() {
+      return KeyPair.fromAccountId(assetIssuer);
     }
 
     public String getBalance() {

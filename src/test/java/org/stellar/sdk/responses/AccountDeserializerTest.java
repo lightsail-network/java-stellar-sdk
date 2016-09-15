@@ -24,7 +24,7 @@ public class AccountDeserializerTest extends TestCase {
 
     assertEquals(account.getBalances()[0].getAssetType(), "credit_alphanum4");
     assertEquals(account.getBalances()[0].getAssetCode(), "ABC");
-    assertEquals(account.getBalances()[0].getAssetIssuer(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    assertEquals(account.getBalances()[0].getAssetIssuer().getAccountId(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
 
