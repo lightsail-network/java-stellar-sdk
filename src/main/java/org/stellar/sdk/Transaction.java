@@ -59,6 +59,10 @@ public class Transaction {
    * Returns signature base.
    */
   public byte[] signatureBase() {
+    if (Network.current() == null) {
+      throw new NoNetworkSelectedException();
+    }
+
     try {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       // Hashed NetworkID

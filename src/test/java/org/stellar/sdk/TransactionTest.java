@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import org.apache.commons.codec.binary.Base64;
+import org.junit.Before;
 import org.junit.Test;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.XdrDataInputStream;
@@ -16,7 +17,8 @@ import static org.junit.Assert.fail;
 
 public class TransactionTest {
 
-  public void tearDown() {
+  @Before
+  public void setupNetwork() {
     Network.useTestNetwork();
   }
 
