@@ -80,7 +80,11 @@ public class FederationServer {
     Executor executor = Executor.newInstance(FederationServer.httpClient);
     URI stellarTomlUri;
     try {
-      stellarTomlUri = new URI("https://www."+domain.toString()+"/.well-known/stellar.toml");
+      StringBuilder uriBuilder = new StringBuilder();
+      uriBuilder.append("https://");
+      uriBuilder.append(domain.toString());
+      uriBuilder.append("/.well-known/stellar.toml");
+      stellarTomlUri = new URI(uriBuilder.toString());
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }

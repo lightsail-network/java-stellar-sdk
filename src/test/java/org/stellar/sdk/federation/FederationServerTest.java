@@ -11,15 +11,19 @@ import org.apache.http.HttpVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
@@ -70,6 +74,10 @@ public class FederationServerTest extends TestCase {
     FederationServer server = FederationServer.createForDomain(InternetDomainName.from("stellar.org"));
     assertEquals(server.getServerUri().toString(), "https://api.stellar.org/federation");
     assertEquals(server.getDomain().toString(), "stellar.org");
+
+    ArgumentCaptor<HttpUriRequest> argument = ArgumentCaptor.forClass(HttpUriRequest.class);
+    Mockito.verify(mockClient).execute(argument.capture(), (HttpClientContext) any());
+    assertEquals(URI.create("https://stellar.org/.well-known/stellar.toml"), argument.getValue().getURI());
   }
 
   @Test
