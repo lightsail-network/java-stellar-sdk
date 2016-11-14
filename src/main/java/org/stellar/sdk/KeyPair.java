@@ -86,7 +86,6 @@ public class KeyPair {
     byte[] decoded = StrKey.decodeStellarSecretSeed(charSeed);
     KeyPair keypair = fromSecretSeed(decoded);
     Arrays.fill(charSeed, ' ');
-    Arrays.fill(decoded, (byte) 0);
     return keypair;
   }
 

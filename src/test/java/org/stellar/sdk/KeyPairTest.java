@@ -54,6 +54,7 @@ public class KeyPairTest {
       String accountId = keypairs.get(seed);
       KeyPair keypair = KeyPair.fromSecretSeed(seed);
       assertEquals(accountId, keypair.getAccountId());
+      assertEquals(seed, String.valueOf(keypair.getSecretSeed()));
     }
   }
 
