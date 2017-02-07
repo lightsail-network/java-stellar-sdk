@@ -21,7 +21,7 @@ public class Network {
      * Creates a new Network object to represent a network with a given passphrase
      * @param networkPassphrase
      */
-    Network(String networkPassphrase) {
+    public Network(String networkPassphrase) {
         this.networkPassphrase = checkNotNull(networkPassphrase, "networkPassphrase cannot be null");
     }
 
