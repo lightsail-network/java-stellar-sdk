@@ -1,17 +1,25 @@
 package org.stellar.sdk;
 
+import org.junit.After;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class NetworkTest {
-
-    public void tearDown() {
-        Network.useTestNetwork();
+    @After
+    public void resetNetwork() {
+        Network.use(null);
     }
 
     @Test
-    public void testDefaultTestNetwork() {
+    public void testNoDefaultNetwork() {
+        assertNull(Network.current());
+    }
+
+    @Test
+    public void testSwitchToTestNetwork() {
+        Network.useTestNetwork();
         assertEquals("Test SDF Network ; September 2015", Network.current().getNetworkPassphrase());
     }
 
@@ -19,6 +27,5 @@ public class NetworkTest {
     public void testSwitchToPublicNetwork() {
         Network.usePublicNetwork();
         assertEquals("Public Global Stellar Network ; September 2015", Network.current().getNetworkPassphrase());
-        Network.useTestNetwork();
     }
 }

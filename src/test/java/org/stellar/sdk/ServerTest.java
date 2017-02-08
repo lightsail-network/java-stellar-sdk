@@ -10,6 +10,8 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -69,13 +71,21 @@ public class ServerTest extends TestCase {
 
     private Server server;
 
+    @Before
     public void setUp() throws URISyntaxException, IOException {
+        Network.useTestNetwork();
+
         MockitoAnnotations.initMocks(this);
         server = new Server("https://horizon.stellar.org");
         server.setHttpClient(mockClient);
 
         when(mockResponse.getEntity()).thenReturn(mockEntity);
         when(mockClient.execute((HttpPost) any())).thenReturn(mockResponse);
+    }
+
+    @After
+    public void resetNetwork() {
+        Network.use(null);
     }
 
     Transaction buildTransaction() throws IOException {

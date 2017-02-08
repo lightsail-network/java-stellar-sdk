@@ -11,6 +11,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -38,6 +39,7 @@ public class FederationTest extends TestCase {
   private final String successResponse =
           "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}";
 
+  @Before
   public void setUp() throws URISyntaxException, IOException {
     MockitoAnnotations.initMocks(this);
     FederationServer.setHttpClient(mockClient);

@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -53,6 +54,7 @@ public class FederationServerTest extends TestCase {
   private final String stellarToml =
           "FEDERATION_SERVER = \"https://api.stellar.org/federation\"";
 
+  @Before
   public void setUp() throws URISyntaxException, IOException {
     MockitoAnnotations.initMocks(this);
     server = new FederationServer(

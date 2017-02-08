@@ -8,12 +8,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Network class is used to specify which Stellar network you want to use.
  * Each network has a <code>networkPassphrase</code> which is hashed to
  * every transaction id.
- * Default network is <a href="https://www.stellar.org/developers/learn/get-started/test-net.html" target="_blank">Test Network</a>.
+ * There is no default network. You need to specify network when initializing your app by calling
+ * {@link Network#use(Network)}, {@link Network#usePublicNetwork()} or {@link Network#useTestNetwork()}.
  */
 public class Network {
     private final static String PUBLIC = "Public Global Stellar Network ; September 2015";
     private final static String TESTNET = "Test SDF Network ; September 2015";
-    private static Network current = new Network(TESTNET);
+    private static Network current;
 
     private final String networkPassphrase;
 
@@ -51,7 +52,6 @@ public class Network {
      * @param network Network object to set as current network
      */
     public static void use(Network network) {
-        checkNotNull(network, "network cannot be null");
         current = network;
     }
 
