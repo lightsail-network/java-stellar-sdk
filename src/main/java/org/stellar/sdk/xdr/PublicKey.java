@@ -8,20 +8,20 @@ import java.io.IOException;
 
 // === xdr source ============================================================
 
-//  union PublicKey switch (CryptoKeyType type)
+//  union PublicKey switch (PublicKeyType type)
 //  {
-//  case KEY_TYPE_ED25519:
+//  case PUBLIC_KEY_TYPE_ED25519:
 //      uint256 ed25519;
 //  };
 
 //  ===========================================================================
 public class PublicKey  {
   public PublicKey () {}
-  CryptoKeyType type;
-  public CryptoKeyType getDiscriminant() {
+  PublicKeyType type;
+  public PublicKeyType getDiscriminant() {
     return this.type;
   }
-  public void setDiscriminant(CryptoKeyType value) {
+  public void setDiscriminant(PublicKeyType value) {
     this.type = value;
   }
   private Uint256 ed25519;
@@ -34,17 +34,17 @@ public class PublicKey  {
   public static void encode(XdrDataOutputStream stream, PublicKey encodedPublicKey) throws IOException {
   stream.writeInt(encodedPublicKey.getDiscriminant().getValue());
   switch (encodedPublicKey.getDiscriminant()) {
-  case KEY_TYPE_ED25519:
+  case PUBLIC_KEY_TYPE_ED25519:
   Uint256.encode(stream, encodedPublicKey.ed25519);
   break;
   }
   }
   public static PublicKey decode(XdrDataInputStream stream) throws IOException {
   PublicKey decodedPublicKey = new PublicKey();
-  CryptoKeyType discriminant = CryptoKeyType.decode(stream);
+  PublicKeyType discriminant = PublicKeyType.decode(stream);
   decodedPublicKey.setDiscriminant(discriminant);
   switch (decodedPublicKey.getDiscriminant()) {
-  case KEY_TYPE_ED25519:
+  case PUBLIC_KEY_TYPE_ED25519:
   decodedPublicKey.ed25519 = Uint256.decode(stream);
   break;
   }

@@ -9,12 +9,7 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 
-import org.stellar.sdk.xdr.CryptoKeyType;
-import org.stellar.sdk.xdr.DecoratedSignature;
-import org.stellar.sdk.xdr.PublicKey;
-import org.stellar.sdk.xdr.SignatureHint;
-import org.stellar.sdk.xdr.Uint256;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.stellar.sdk.xdr.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -165,14 +160,27 @@ public class KeyPair {
 
   public PublicKey getXdrPublicKey() {
     PublicKey publicKey = new PublicKey();
-    publicKey.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
+    publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
     Uint256 uint256 = new Uint256();
     uint256.setUint256(getPublicKey());
     publicKey.setEd25519(uint256);
     return publicKey;
   }
 
+  public SignerKey getXdrSignerKey() {
+    SignerKey signerKey = new SignerKey();
+    signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519);
+    Uint256 uint256 = new Uint256();
+    uint256.setUint256(getPublicKey());
+    signerKey.setEd25519(uint256);
+    return signerKey;
+  }
+
   public static KeyPair fromXdrPublicKey(PublicKey key) {
+    return KeyPair.fromPublicKey(key.getEd25519().getUint256());
+  }
+
+  public static KeyPair fromXdrSignerKey(SignerKey key) {
     return KeyPair.fromPublicKey(key.getEd25519().getUint256());
   }
 

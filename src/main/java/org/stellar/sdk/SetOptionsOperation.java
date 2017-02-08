@@ -1,11 +1,8 @@
 package org.stellar.sdk;
 
-import org.stellar.sdk.xdr.AccountID;
-import org.stellar.sdk.xdr.OperationType;
-import org.stellar.sdk.xdr.SetOptionsOp;
-import org.stellar.sdk.xdr.Signer;
-import org.stellar.sdk.xdr.String32;
-import org.stellar.sdk.xdr.Uint32;
+import org.stellar.sdk.xdr.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#set-options">SetOptions</a> operation.
@@ -21,12 +18,12 @@ public class SetOptionsOperation extends Operation {
   private final Integer mediumThreshold;
   private final Integer highThreshold;
   private final String homeDomain;
-  private final KeyPair signer;
+  private final SignerKey signer;
   private final Integer signerWeight;
 
   private SetOptionsOperation(KeyPair inflationDestination, Integer clearFlags, Integer setFlags,
                               Integer masterKeyWeight, Integer lowThreshold, Integer mediumThreshold,
-                              Integer highThreshold, String homeDomain, KeyPair signer, Integer signerWeight) {
+                              Integer highThreshold, String homeDomain, SignerKey signer, Integer signerWeight) {
     this.inflationDestination = inflationDestination;
     this.clearFlags = clearFlags;
     this.setFlags = setFlags;
@@ -100,7 +97,7 @@ public class SetOptionsOperation extends Operation {
   /**
    * Additional signer added/removed in this operation.
    */
-  public KeyPair getSigner() {
+  public SignerKey getSigner() {
     return signer;
   }
 
@@ -155,12 +152,10 @@ public class SetOptionsOperation extends Operation {
       op.setHomeDomain(homeDomain);
     }
     if (signer != null) {
-      Signer signer = new Signer();
+      org.stellar.sdk.xdr.Signer signer = new org.stellar.sdk.xdr.Signer();
       Uint32 weight = new Uint32();
-      weight.setUint32((int) signerWeight & 0xFF);
-      AccountID accountID = new AccountID();
-      accountID.setAccountID(this.signer.getXdrPublicKey());
-      signer.setPubKey(accountID);
+      weight.setUint32(signerWeight & 0xFF);
+      signer.setKey(this.signer);
       signer.setWeight(weight);
       op.setSigner(signer);
     }
@@ -184,7 +179,7 @@ public class SetOptionsOperation extends Operation {
     private Integer mediumThreshold;
     private Integer highThreshold;
     private String homeDomain;
-    private KeyPair signer;
+    private SignerKey signer;
     private Integer signerWeight;
     private KeyPair sourceAccount;
 
@@ -215,7 +210,7 @@ public class SetOptionsOperation extends Operation {
         homeDomain = op.getHomeDomain().getString32();
       }
       if (op.getSigner() != null) {
-        signer = KeyPair.fromXdrPublicKey(op.getSigner().getPubKey().getAccountID());
+        signer = op.getSigner().getKey();
         signerWeight = op.getSigner().getWeight().getUint32().intValue() & 0xFF;
       }
     }
@@ -310,11 +305,13 @@ public class SetOptionsOperation extends Operation {
 
     /**
      * Add, update, or remove a signer from the account. Signer is deleted if the weight = 0;
-     * @param signer The keypair to set as a signer.
-     * @param weight The weight to attach to the signer (0-255)
+     * @param signer The signer key. Use {@link org.stellar.sdk.Signer} helper to create this object.
+     * @param weight The weight to attach to the signer (0-255).
      * @return Builder object so you can chain methods.
      */
-    public Builder setSigner(KeyPair signer, Integer weight) {
+    public Builder setSigner(SignerKey signer, Integer weight) {
+      checkNotNull(signer, "signer cannot be null");
+      checkNotNull(weight, "weight cannot be null");
       this.signer = signer;
       signerWeight = weight & 0xFF;
       return this;

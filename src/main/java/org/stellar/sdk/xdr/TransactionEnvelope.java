@@ -11,7 +11,10 @@ import java.io.IOException;
 //  struct TransactionEnvelope
 //  {
 //      Transaction tx;
-//      DecoratedSignature signatures<20>;
+//      /* Each decorated signature is a signature over the SHA256 hash of
+//       * a TransactionSignaturePayload */
+//      DecoratedSignature
+//      signatures<20>;
 //  };
 
 //  ===========================================================================

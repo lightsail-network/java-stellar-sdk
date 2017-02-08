@@ -11,7 +11,7 @@ import java.io.IOException;
 //  struct TimeBounds
 //  {
 //      uint64 minTime;
-//      uint64 maxTime;
+//      uint64 maxTime; // 0 here means no maxTime
 //  };
 
 //  ===========================================================================

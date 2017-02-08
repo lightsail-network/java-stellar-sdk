@@ -10,6 +10,8 @@ import org.stellar.sdk.xdr.XdrDataOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -82,6 +84,28 @@ public class TransactionTest {
     assertEquals(
             "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDzfR5PgRFim5Wdvq9ImdZNWGBxBWwYkQPa9l5iiBdtPLzAZv6qj+iOfSrqinsoF0XrLkwdIcZQVtp3VRHhRoUE",
             transaction.toEnvelopeXdrBase64());
+  }
+
+  @Test
+  public void testSha256HashSigning() throws FormatException {
+    Network.usePublicNetwork();
+
+    KeyPair source = KeyPair.fromAccountId("GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB");
+    KeyPair destination = KeyPair.fromAccountId("GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2");
+
+    Account account = new Account(source, 0L);
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "2000").build())
+            .build();
+
+    byte[] preimage = new byte[64];
+    new SecureRandom().nextBytes(preimage);
+    byte[] hash = Util.hash(preimage);
+
+    transaction.sign(preimage);
+
+    assertTrue(Arrays.equals(transaction.getSignatures().get(0).getSignature().getSignature(), preimage));
+    assertTrue(Arrays.equals(transaction.getSignatures().get(0).getHint().getSignatureHint(), Arrays.copyOfRange(hash, hash.length - 4, hash.length)));
   }
 
   @Test

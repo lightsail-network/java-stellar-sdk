@@ -11,7 +11,7 @@ import java.io.IOException;
 //  struct TransactionSet
 //  {
 //      Hash previousLedgerHash;
-//      TransactionEnvelope txs<MAX_TX_PER_LEDGER>;
+//      TransactionEnvelope txs<>;
 //  };
 
 //  ===========================================================================
