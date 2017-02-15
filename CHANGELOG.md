@@ -2,6 +2,15 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.1.9
+
+* Support for new signer types: `sha256Hash`, `preAuthTx`.
+* **Breaking change** `Network` must be explicitly selected. Previously testnet was a default network.
+
+## 0.1.8
+
+* New location of `stellar.toml` file
+
 ## 0.1.7
 
 * Support for `ManageData` operation ([c5faa15](https://github.com/stellar/java-stellar-sdk/commit/c5faa1578defb6f74513f8f96521c64dbfa6f6f2)),
