@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import org.junit.Test;
+import org.stellar.sdk.xdr.SignerKey;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -209,7 +210,7 @@ public class OperationTest {
     // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
     KeyPair inflationDestination = KeyPair.fromSecretSeed("SDHZGHURAYXKU2KMVHPOXI6JG2Q4BSQUQCEOY72O3QQTCLR2T455PMII");
     // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
-    KeyPair signer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
+    SignerKey signer = Signer.ed25519PublicKey(KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ"));
 
     Integer clearFlags = 1;
     Integer setFlags = 1;
@@ -244,7 +245,8 @@ public class OperationTest {
     assertEquals(mediumThreshold, parsedOperation.getMediumThreshold());
     assertEquals(highThreshold, parsedOperation.getHighThreshold());
     assertEquals(homeDomain, parsedOperation.getHomeDomain());
-    assertEquals(signer.getAccountId(), parsedOperation.getSigner().getAccountId());
+    assertEquals(signer.getDiscriminant().getValue(), parsedOperation.getSigner().getDiscriminant().getValue());
+    assertEquals(signer.getEd25519().getUint256(), parsedOperation.getSigner().getEd25519().getUint256());
     assertEquals(signerWeight, parsedOperation.getSignerWeight());
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount().getAccountId());
 
@@ -283,6 +285,81 @@ public class OperationTest {
     assertEquals(
           "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAtzdGVsbGFyLm9yZwAAAAAA",
           operation.toXdrBase64());
+  }
+
+  @Test
+  public void testSetOptionsOperationSignerSha256() {
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+
+    byte[] preimage = "stellar.org".getBytes();
+    byte[] hash = Util.hash(preimage);
+
+    SetOptionsOperation operation = new SetOptionsOperation.Builder()
+            .setSigner(Signer.sha256Hash(hash), 10)
+            .setSourceAccount(source)
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(xdr);
+
+    assertEquals(null, parsedOperation.getInflationDestination());
+    assertEquals(null, parsedOperation.getClearFlags());
+    assertEquals(null, parsedOperation.getSetFlags());
+    assertEquals(null, parsedOperation.getMasterKeyWeight());
+    assertEquals(null, parsedOperation.getLowThreshold());
+    assertEquals(null, parsedOperation.getMediumThreshold());
+    assertEquals(null, parsedOperation.getHighThreshold());
+    assertEquals(null, parsedOperation.getHomeDomain());
+    assertTrue(Arrays.equals(hash, parsedOperation.getSigner().getHashX().getUint256()));
+    assertEquals(new Integer(10), parsedOperation.getSignerWeight());
+    assertEquals(source.getAccountId(), parsedOperation.getSourceAccount().getAccountId());
+
+    assertEquals(
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAACbpRqMkaQAfCYSk/n3xIl4fCoHfKqxF34ht2iuvSYEJQAAAAK",
+            operation.toXdrBase64());
+  }
+
+  @Test
+  public void testSetOptionsOperationPreAuthTxSigner() {
+    Network.useTestNetwork();
+
+    // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    long sequenceNumber = 2908908335136768L;
+    Account account = new Account(source, sequenceNumber);
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .build();
+
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair opSource = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+
+    SetOptionsOperation operation = new SetOptionsOperation.Builder()
+            .setSigner(Signer.preAuthTx(transaction), 10)
+            .setSourceAccount(opSource)
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(xdr);
+
+    assertEquals(null, parsedOperation.getInflationDestination());
+    assertEquals(null, parsedOperation.getClearFlags());
+    assertEquals(null, parsedOperation.getSetFlags());
+    assertEquals(null, parsedOperation.getMasterKeyWeight());
+    assertEquals(null, parsedOperation.getLowThreshold());
+    assertEquals(null, parsedOperation.getMediumThreshold());
+    assertEquals(null, parsedOperation.getHighThreshold());
+    assertEquals(null, parsedOperation.getHomeDomain());
+    assertTrue(Arrays.equals(transaction.hash(), parsedOperation.getSigner().getPreAuthTx().getUint256()));
+    assertEquals(new Integer(10), parsedOperation.getSignerWeight());
+    assertEquals(opSource.getAccountId(), parsedOperation.getSourceAccount().getAccountId());
+
+    assertEquals(
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAB1vRBIRC3w7ZH5rQa17hIBKUwZTvBP4kNmSP7jVyw1fQAAAAK",
+            operation.toXdrBase64());
   }
 
   @Test

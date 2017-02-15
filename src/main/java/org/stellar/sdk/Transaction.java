@@ -3,12 +3,14 @@ package org.stellar.sdk;
 import org.apache.commons.codec.binary.Base64;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
+import org.stellar.sdk.xdr.SignatureHint;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,12 +42,34 @@ public class Transaction {
   }
 
   /**
-   * Adds a new signature to this transaction.
+   * Adds a new signature ed25519PublicKey to this transaction.
    * @param signer {@link KeyPair} object representing a signer
    */
   public void sign(KeyPair signer) {
+    checkNotNull(signer, "signer cannot be null");
     byte[] txHash = this.hash();
     mSignatures.add(signer.signDecorated(txHash));
+  }
+
+  /**
+   * Adds a new sha256Hash signature to this transaction by revealing preimage.
+   * @param preimage the sha256 hash of preimage should be equal to signer hash
+   */
+  public void sign(byte[] preimage) {
+    checkNotNull(preimage, "preimage cannot be null");
+    org.stellar.sdk.xdr.Signature signature = new org.stellar.sdk.xdr.Signature();
+    signature.setSignature(preimage);
+
+    byte[] hash = Util.hash(preimage);
+    byte[] signatureHintBytes = Arrays.copyOfRange(hash, hash.length - 4, hash.length);
+    SignatureHint signatureHint = new SignatureHint();
+    signatureHint.setSignatureHint(signatureHintBytes);
+
+    DecoratedSignature decoratedSignature = new DecoratedSignature();
+    decoratedSignature.setHint(signatureHint);
+    decoratedSignature.setSignature(signature);
+
+    mSignatures.add(decoratedSignature);
   }
 
   /**
@@ -87,6 +111,10 @@ public class Transaction {
 
   public long getSequenceNumber() {
     return mSequenceNumber;
+  }
+
+  public List<DecoratedSignature> getSignatures() {
+    return mSignatures;
   }
 
   public Memo getMemo() {

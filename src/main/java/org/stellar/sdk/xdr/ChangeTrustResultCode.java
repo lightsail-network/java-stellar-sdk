@@ -17,7 +17,8 @@ import java.io.IOException;
 //      CHANGE_TRUST_NO_ISSUER = -2,     // could not find issuer
 //      CHANGE_TRUST_INVALID_LIMIT = -3, // cannot drop limit below balance
 //                                       // cannot create with a limit of 0
-//      CHANGE_TRUST_LOW_RESERVE = -4 // not enough funds to create a new trust line
+//      CHANGE_TRUST_LOW_RESERVE = -4, // not enough funds to create a new trust line,
+//      CHANGE_TRUST_SELF_NOT_ALLOWED = -5 // trusting self is not allowed
 //  };
 
 //  ===========================================================================
@@ -27,6 +28,7 @@ public enum ChangeTrustResultCode  {
   CHANGE_TRUST_NO_ISSUER(-2),
   CHANGE_TRUST_INVALID_LIMIT(-3),
   CHANGE_TRUST_LOW_RESERVE(-4),
+  CHANGE_TRUST_SELF_NOT_ALLOWED(-5),
   ;
   private int mValue;
 
@@ -46,6 +48,7 @@ public enum ChangeTrustResultCode  {
       case -2: return CHANGE_TRUST_NO_ISSUER;
       case -3: return CHANGE_TRUST_INVALID_LIMIT;
       case -4: return CHANGE_TRUST_LOW_RESERVE;
+      case -5: return CHANGE_TRUST_SELF_NOT_ALLOWED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

@@ -8,8 +8,10 @@ import java.util.Arrays;
 
 class StrKey {
     public enum VersionByte {
-        ACCOUNT_ID((byte)0x30),
-        SEED((byte)0x90);
+        ACCOUNT_ID((byte)(6 << 3)), // G
+        SEED((byte)(18 << 3)), // S
+        PRE_AUTH_TX((byte)(19 << 3)), // T
+        SHA256_HASH((byte)(23 << 3)); // X
         private final byte value;
         VersionByte(byte value) {
             this.value = value;
@@ -24,16 +26,34 @@ class StrKey {
         return String.valueOf(encoded);
     }
 
-    public static char[] encodeStellarSecretSeed(byte[] data) {
-        return encodeCheck(VersionByte.SEED, data);
-    }
-
     public static byte[] decodeStellarAccountId(String data) {
         return decodeCheck(VersionByte.ACCOUNT_ID, data.toCharArray());
     }
 
+    public static char[] encodeStellarSecretSeed(byte[] data) {
+        return encodeCheck(VersionByte.SEED, data);
+    }
+
     public static byte[] decodeStellarSecretSeed(char[] data) {
         return decodeCheck(VersionByte.SEED, data);
+    }
+
+    public static String encodePreAuthTx(byte[] data) {
+        char[] encoded = encodeCheck(VersionByte.PRE_AUTH_TX, data);
+        return String.valueOf(encoded);
+    }
+
+    public static byte[] decodePreAuthTx(String data) {
+        return decodeCheck(VersionByte.PRE_AUTH_TX, data.toCharArray());
+    }
+
+    public static String encodeSha256Hash(byte[] data) {
+        char[] encoded = encodeCheck(VersionByte.SHA256_HASH, data);
+        return String.valueOf(encoded);
+    }
+
+    public static byte[] decodeSha256Hash(String data) {
+        return decodeCheck(VersionByte.SHA256_HASH, data.toCharArray());
     }
 
     protected static char[] encodeCheck(VersionByte versionByte, byte[] data) {

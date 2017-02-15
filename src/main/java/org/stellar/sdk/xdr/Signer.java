@@ -10,19 +10,19 @@ import java.io.IOException;
 
 //  struct Signer
 //  {
-//      AccountID pubKey;
+//      SignerKey key;
 //      uint32 weight; // really only need 1byte
 //  };
 
 //  ===========================================================================
 public class Signer  {
   public Signer () {}
-  private AccountID pubKey;
-  public AccountID getPubKey() {
-    return this.pubKey;
+  private SignerKey key;
+  public SignerKey getKey() {
+    return this.key;
   }
-  public void setPubKey(AccountID value) {
-    this.pubKey = value;
+  public void setKey(SignerKey value) {
+    this.key = value;
   }
   private Uint32 weight;
   public Uint32 getWeight() {
@@ -32,12 +32,12 @@ public class Signer  {
     this.weight = value;
   }
   public static void encode(XdrDataOutputStream stream, Signer encodedSigner) throws IOException{
-    AccountID.encode(stream, encodedSigner.pubKey);
+    SignerKey.encode(stream, encodedSigner.key);
     Uint32.encode(stream, encodedSigner.weight);
   }
   public static Signer decode(XdrDataInputStream stream) throws IOException {
     Signer decodedSigner = new Signer();
-    decodedSigner.pubKey = AccountID.decode(stream);
+    decodedSigner.key = SignerKey.decode(stream);
     decodedSigner.weight = Uint32.decode(stream);
     return decodedSigner;
   }

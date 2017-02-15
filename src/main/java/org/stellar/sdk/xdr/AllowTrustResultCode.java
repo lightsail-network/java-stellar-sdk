@@ -17,7 +17,8 @@ import java.io.IOException;
 //      ALLOW_TRUST_NO_TRUST_LINE = -2, // trustor does not have a trustline
 //                                      // source account does not require trust
 //      ALLOW_TRUST_TRUST_NOT_REQUIRED = -3,
-//      ALLOW_TRUST_CANT_REVOKE = -4 // source account can't revoke trust
+//      ALLOW_TRUST_CANT_REVOKE = -4, // source account can't revoke trust,
+//      ALLOW_TRUST_SELF_NOT_ALLOWED = -5 // trusting self is not allowed
 //  };
 
 //  ===========================================================================
@@ -27,6 +28,7 @@ public enum AllowTrustResultCode  {
   ALLOW_TRUST_NO_TRUST_LINE(-2),
   ALLOW_TRUST_TRUST_NOT_REQUIRED(-3),
   ALLOW_TRUST_CANT_REVOKE(-4),
+  ALLOW_TRUST_SELF_NOT_ALLOWED(-5),
   ;
   private int mValue;
 
@@ -46,6 +48,7 @@ public enum AllowTrustResultCode  {
       case -2: return ALLOW_TRUST_NO_TRUST_LINE;
       case -3: return ALLOW_TRUST_TRUST_NOT_REQUIRED;
       case -4: return ALLOW_TRUST_CANT_REVOKE;
+      case -5: return ALLOW_TRUST_SELF_NOT_ALLOWED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

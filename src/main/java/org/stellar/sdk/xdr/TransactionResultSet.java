@@ -10,7 +10,7 @@ import java.io.IOException;
 
 //  struct TransactionResultSet
 //  {
-//      TransactionResultPair results<MAX_TX_PER_LEDGER>;
+//      TransactionResultPair results<>;
 //  };
 
 //  ===========================================================================

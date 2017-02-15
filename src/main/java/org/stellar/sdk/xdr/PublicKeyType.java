@@ -8,22 +8,18 @@ import java.io.IOException;
 
 // === xdr source ============================================================
 
-//  enum CryptoKeyType
+//  enum PublicKeyType
 //  {
-//      KEY_TYPE_ED25519 = 0,
-//      KEY_TYPE_PRE_AUTH_TX = 1,
-//      KEY_TYPE_HASH_X = 2
+//      PUBLIC_KEY_TYPE_ED25519 = KEY_TYPE_ED25519
 //  };
 
 //  ===========================================================================
-public enum CryptoKeyType  {
-  KEY_TYPE_ED25519(0),
-  KEY_TYPE_PRE_AUTH_TX(1),
-  KEY_TYPE_HASH_X(2),
+public enum PublicKeyType  {
+  PUBLIC_KEY_TYPE_ED25519(0),
   ;
   private int mValue;
 
-  CryptoKeyType(int value) {
+  PublicKeyType(int value) {
       mValue = value;
   }
 
@@ -31,18 +27,16 @@ public enum CryptoKeyType  {
       return mValue;
   }
 
-  static CryptoKeyType decode(XdrDataInputStream stream) throws IOException {
+  static PublicKeyType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return KEY_TYPE_ED25519;
-      case 1: return KEY_TYPE_PRE_AUTH_TX;
-      case 2: return KEY_TYPE_HASH_X;
+      case 0: return PUBLIC_KEY_TYPE_ED25519;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  static void encode(XdrDataOutputStream stream, CryptoKeyType value) throws IOException {
+  static void encode(XdrDataOutputStream stream, PublicKeyType value) throws IOException {
     stream.writeInt(value.getValue());
   }
 }
