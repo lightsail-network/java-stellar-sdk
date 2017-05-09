@@ -46,7 +46,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public TransactionResponse transaction(String transactionId) throws IOException {
-    this.setSegments("transaction", transactionId);
+    this.setSegments("transactions", transactionId);
     return this.transaction(this.buildUri());
   }
 
