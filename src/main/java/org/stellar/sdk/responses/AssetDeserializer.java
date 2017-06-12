@@ -15,7 +15,7 @@ class AssetDeserializer implements JsonDeserializer<Asset> {
   @Override
   public Asset deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     String type = json.getAsJsonObject().get("asset_type").getAsString();
-    if (type == "native") {
+    if (type.equals("native")) {
       return new AssetTypeNative();
     } else {
       String code = json.getAsJsonObject().get("asset_code").getAsString();
