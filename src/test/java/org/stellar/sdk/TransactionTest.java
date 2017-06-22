@@ -1,14 +1,10 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
-import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -64,6 +60,32 @@ public class TransactionTest {
     assertEquals(
             "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAEAAAAMSGVsbG8gd29ybGQhAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAxzofBhoayuUnz8t0T1UNWrTgmJ+lCh9KaeOGu2ppNOz9UGw0abGLhv+9oWQsstaHx6YjwWxL+8GBvwBUVWRlBQ==",
             transaction.toEnvelopeXdrBase64());
+  }
+  
+  @Test
+  public void testBuilderTimeBounds() throws FormatException, IOException {
+    // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    Account account = new Account(source, 2908908335136768L);
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .addTimeBounds(new TimeBounds(42, 1337))
+            .build();
+
+    transaction.sign(source);
+    
+    // Convert transaction to binary XDR and back again to make sure timebounds are correctly de/serialized.
+    XdrDataInputStream is = new XdrDataInputStream(
+    		new ByteArrayInputStream(
+    				javax.xml.bind.DatatypeConverter.parseBase64Binary(transaction.toEnvelopeXdrBase64())
+    		)
+    );
+    org.stellar.sdk.xdr.Transaction decodedTransaction = org.stellar.sdk.xdr.Transaction.decode(is);
+
+    assertEquals(decodedTransaction.getTimeBounds().getMinTime().getUint64().longValue(), 42);
+    assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getUint64().longValue(), 1337);
   }
 
   @Test
