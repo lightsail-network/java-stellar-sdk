@@ -28,9 +28,10 @@ public class Transaction {
   private final long mSequenceNumber;
   private final Operation[] mOperations;
   private final Memo mMemo;
+  private final TimeBounds mTimeBounds;
   private List<DecoratedSignature> mSignatures;
 
-  Transaction(KeyPair sourceAccount, long sequenceNumber, Operation[] operations, Memo memo) {
+  Transaction(KeyPair sourceAccount, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds) {
     mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
     mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
     mOperations = checkNotNull(operations, "operations cannot be null");
@@ -39,6 +40,7 @@ public class Transaction {
     mFee = operations.length * BASE_FEE;
     mSignatures = new ArrayList<DecoratedSignature>();
     mMemo = memo != null ? memo : Memo.none();
+    mTimeBounds = timeBounds;
   }
 
   /**
@@ -120,6 +122,13 @@ public class Transaction {
   public Memo getMemo() {
     return mMemo;
   }
+  
+  /**
+   * @return TimeBounds, or null (representing no time restrictions)
+   */
+  public TimeBounds getTimeBounds() {
+    return mTimeBounds;
+  }
 
   /**
    * Returns fee paid for transaction in stroops (1 stroop = 0.0000001 XLM).
@@ -158,6 +167,7 @@ public class Transaction {
     transaction.setSourceAccount(sourceAccount);
     transaction.setOperations(operations);
     transaction.setMemo(mMemo.toXdr());
+    transaction.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
     transaction.setExt(ext);
     return transaction;
   }
@@ -202,6 +212,7 @@ public class Transaction {
   public static class Builder {
     private final TransactionBuilderAccount mSourceAccount;
     private Memo mMemo;
+    private TimeBounds mTimeBounds;
     List<Operation> mOperations;
 
     /**
@@ -246,6 +257,21 @@ public class Transaction {
       mMemo = memo;
       return this;
     }
+    
+    /**
+     * Adds a <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">time-bounds</a> to this transaction.
+     * @param timeBounds
+     * @return Builder object so you can chain methods.
+     * @see TimeBounds
+     */
+    public Builder addTimeBounds(TimeBounds timeBounds) {
+      if (mTimeBounds != null) {
+        throw new RuntimeException("TimeBounds has been already added.");
+      }
+      checkNotNull(timeBounds, "timeBounds cannot be null");
+      mTimeBounds = timeBounds;
+      return this;
+    }
 
     /**
      * Builds a transaction. It will increment sequence number of the source account.
@@ -253,7 +279,7 @@ public class Transaction {
     public Transaction build() {
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
-      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo);
+      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
       // Increment sequence number when there were no exceptions when creating a transaction
       mSourceAccount.incrementSequenceNumber();
       return transaction;
