@@ -39,7 +39,7 @@ public class TradesRequestBuilder extends RequestBuilder {
 
     public static TradeResponse execute(URI uri) throws IOException, TooManyRequestsException {
         TypeToken type = new TypeToken<TradeResponse>() {};
-        ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<>(type);
+        ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<TradeResponse>(type);
         return (TradeResponse) Request.Get(uri).execute().handleResponse(responseHandler);
     }
 

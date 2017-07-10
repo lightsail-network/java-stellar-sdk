@@ -39,7 +39,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
 
   public static OrderBookResponse execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<OrderBookResponse>() {};
-    ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<>(type);
+    ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<OrderBookResponse>(type);
     return (OrderBookResponse) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
