@@ -1,8 +1,12 @@
 package org.stellar.sdk.requests;
 
+import com.google.gson.reflect.TypeToken;
+import org.apache.http.client.fluent.Request;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.responses.OrderBookResponse;
 
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -33,12 +37,28 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public OrderBookRequestBuilder trades() {
-    this.setSegments("order_book", "trades");
-    return this;
+  public static OrderBookResponse execute(URI uri) throws IOException, TooManyRequestsException {
+    TypeToken type = new TypeToken<OrderBookResponse>() {};
+    ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<>(type);
+    return (OrderBookResponse) Request.Get(uri).execute().handleResponse(responseHandler);
   }
 
-  public void execute() {
+  public OrderBookResponse execute() throws IOException, TooManyRequestsException {
+    return this.execute(this.buildUri());
+  }
+
+  @Override
+  public RequestBuilder cursor(String cursor) {
+    throw new RuntimeException("Not implemented yet.");
+  }
+
+  @Override
+  public RequestBuilder limit(int number) {
+    throw new RuntimeException("Not implemented yet.");
+  }
+
+  @Override
+  public RequestBuilder order(Order direction) {
     throw new RuntimeException("Not implemented yet.");
   }
 }

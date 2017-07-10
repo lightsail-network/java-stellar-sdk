@@ -81,6 +81,13 @@ public class Server {
     }
 
     /**
+     * Returns {@link TradesRequestBuilder} instance.
+     */
+    public TradesRequestBuilder trades() {
+        return new TradesRequestBuilder(serverURI);
+    }
+
+    /**
      * Returns {@link PathsRequestBuilder} instance.
      */
     public PathsRequestBuilder paths() {

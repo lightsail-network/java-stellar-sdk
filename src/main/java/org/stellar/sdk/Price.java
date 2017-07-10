@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.xdr.Int32;
 
 import java.math.BigDecimal;
@@ -12,7 +13,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents Price. Price in Stellar is represented as a fraction.
  */
 public class Price {
+    @SerializedName("n")
     private final int n;
+    @SerializedName("d")
     private final int d;
 
     /**
