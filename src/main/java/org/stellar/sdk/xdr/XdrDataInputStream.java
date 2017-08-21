@@ -10,9 +10,6 @@ public class XdrDataInputStream extends DataInputStream {
     // The underlying input stream
     private final XdrInputStream mIn;
 
-    // The total bytes read so far.
-    private final int mCount;
-
     /**
      * Creates a XdrDataInputStream that uses the specified
      * underlying InputStream.
@@ -22,14 +19,12 @@ public class XdrDataInputStream extends DataInputStream {
     public XdrDataInputStream(InputStream in) {
         super(new XdrInputStream(in));
         mIn = (XdrInputStream) super.in;
-        mCount = 0;
     }
 
     public String readString() throws IOException {
         int l = readInt();
         byte[] ascii = new byte[l];
-        readFully(ascii);
-        pad();
+        read(ascii);
         return new String(ascii, Charset.forName("US-ASCII"));
     }
 
@@ -38,7 +33,7 @@ public class XdrDataInputStream extends DataInputStream {
         return readIntArray(l);
     }
 
-    public int[] readIntArray(int l) throws IOException {
+    private int[] readIntArray(int l) throws IOException {
         int[] arr = new int[l];
         for (int i = 0; i < l; i++) {
             arr[i] = readInt();
@@ -51,7 +46,7 @@ public class XdrDataInputStream extends DataInputStream {
         return readFloatArray(l);
     }
 
-    public float[] readFloatArray(int l) throws IOException {
+    private float[] readFloatArray(int l) throws IOException {
         float[] arr = new float[l];
         for (int i = 0; i < l; i++) {
             arr[i] = readFloat();
@@ -64,19 +59,12 @@ public class XdrDataInputStream extends DataInputStream {
         return readDoubleArray(l);
     }
 
-    public double[] readDoubleArray(int l) throws IOException {
+    private double[] readDoubleArray(int l) throws IOException {
         double[] arr = new double[l];
         for (int i = 0; i < l; i++) {
             arr[i] = readDouble();
         }
         return arr;
-    }
-
-    /**
-     * Skips ahead to bring the stream to 4 byte alignment.
-     */
-    public void pad() throws IOException {
-        mIn.pad();
     }
 
     @Override
@@ -119,6 +107,7 @@ public class XdrDataInputStream extends DataInputStream {
         public int read(byte[] b, int off, int len) throws IOException {
             int read = mIn.read(b, off, len);
             mCount += read;
+            pad();
             return read;
         }
 
@@ -128,7 +117,13 @@ public class XdrDataInputStream extends DataInputStream {
             if (mod > 0) {
                 pad = 4-mod;
             }
-            skip(pad);
+
+            while (pad-- > 0) {
+                int b = mIn.read();
+                if (b != 0) {
+                    throw new IOException("non-zero padding");
+                }
+            }
         }
     }
 }
