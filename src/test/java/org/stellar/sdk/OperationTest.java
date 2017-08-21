@@ -472,7 +472,7 @@ public class OperationTest {
     assertTrue(Arrays.equals(new byte[]{0, 1, 2, 3, 4}, parsedOperation.getValue()));
 
     assertEquals(
-            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAEAAAAFAAECAwQ=",
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAEAAAAFAAECAwQAAAA=",
             operation.toXdrBase64());
   }
 

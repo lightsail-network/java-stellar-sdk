@@ -2,7 +2,6 @@ package org.stellar.sdk.xdr;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 public class XdrDataOutputStream extends DataOutputStream {
@@ -18,7 +17,6 @@ public class XdrDataOutputStream extends DataOutputStream {
         byte[] chars = s.getBytes();
         writeInt(chars.length);
         write(chars);
-        pad();
     }
 
     public void writeIntArray(int[] a) throws IOException {
@@ -26,7 +24,7 @@ public class XdrDataOutputStream extends DataOutputStream {
         writeIntArray(a, a.length);
     }
 
-    public void writeIntArray(int[] a, int l) throws IOException {
+    private void writeIntArray(int[] a, int l) throws IOException {
         for (int i = 0; i < l; i++) {
             writeInt(a[i]);
         }
@@ -37,7 +35,7 @@ public class XdrDataOutputStream extends DataOutputStream {
         writeFloatArray(a, a.length);
     }
 
-    public void writeFloatArray(float[] a, int l) throws IOException {
+    private void writeFloatArray(float[] a, int l) throws IOException {
         for (int i = 0; i < l; i++) {
             writeFloat(a[i]);
         }
@@ -48,20 +46,17 @@ public class XdrDataOutputStream extends DataOutputStream {
         writeDoubleArray(a, a.length);
     }
 
-    public void writeDoubleArray(double[] a, int l) throws IOException {
+    private void writeDoubleArray(double[] a, int l) throws IOException {
         for (int i = 0; i < l; i++) {
             writeDouble(a[i]);
         }
-    }
-
-    public void pad() throws IOException {
-        mOut.pad();
     }
 
     private static final class XdrOutputStream extends OutputStream {
 
         private final OutputStream mOut;
 
+        // Number of bytes written
         private int mCount;
 
         public XdrOutputStream(OutputStream out) {
@@ -72,18 +67,24 @@ public class XdrDataOutputStream extends DataOutputStream {
         @Override
         public void write(int b) throws IOException {
             mOut.write(b);
+            // https://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html#write(int):
+            // > The byte to be written is the eight low-order bits of the argument b.
+            // > The 24 high-order bits of b are ignored.
             mCount++;
         }
 
         @Override
         public void write(byte[] b) throws IOException {
-            mOut.write(b);
-            mCount += b.length;
+            // https://docs.oracle.com/javase/7/docs/api/java/io/OutputStream.html#write(byte[]):
+            // > The general contract for write(b) is that it should have exactly the same effect
+            // > as the call write(b, 0, b.length).
+            write(b, 0, b.length);
         }
 
         public void write(byte[] b, int offset, int length) throws IOException {
             mOut.write(b, offset, length);
             mCount += length;
+            pad();
         }
 
         public void pad() throws IOException {
