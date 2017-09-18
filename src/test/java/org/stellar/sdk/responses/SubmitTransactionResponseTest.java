@@ -80,4 +80,24 @@ public class SubmitTransactionResponseTest extends TestCase {
     assertEquals(submitTransactionResponse.getResultXdr(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAAAAPEAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAA==");
     assertEquals(submitTransactionResponse.getOfferIdFromResult(0), new Long(241));
   }
+
+  @Test
+  public void testDeserializeNoOfferID() {
+    String json = "{\n" +
+            "  \"_links\": {\n" +
+            "    \"transaction\": {\n" +
+            "      \"href\": \"https://horizon-testnet.stellar.org/transactions/ee14b93fcd31d4cfe835b941a0a8744e23a6677097db1fafe0552d8657bed940\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"hash\": \"ee14b93fcd31d4cfe835b941a0a8744e23a6677097db1fafe0552d8657bed940\",\n" +
+            "  \"ledger\": 3128812,\n" +
+            "  \"envelope_xdr\": \"AAAAAP0uDCJGzWofMAUkG/F3YCPctgLkeP3VTr3P1mHKznAHAAAAZAA5klgAAABLAAAAAAAAAAAAAAABAAAAAQAAAAD9LgwiRs1qHzAFJBvxd2Aj3LYC5Hj91U69z9Zhys5wBwAAAAMAAAABRVVSAAAAAAD9LgwiRs1qHzAFJBvxd2Aj3LYC5Hj91U69z9Zhys5wBwAAAAFVU0QAAAAAAOw4Vbv3zJ23hiG1bjU7M/AOuVNHKnREERoitIr1Zj/ZAAAAAAOThwAAAAACAAAAAQAAAAAAAAAAAAAAAAAAAAHKznAHAAAAQEe1jyNCeK3TckPuuKeWIICf6nvz2zBZ8mbbUamWLnOFMMqvQPTllOe9DIdloNxaixgle9zi2F+yyOhLzpNhkAg=\",\n" +
+            "  \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAEAAAAA7DhVu/fMnbeGIbVuNTsz8A65U0cqdEQRGiK0ivVmP9kAAAAAAAASJQAAAAFVU0QAAAAAAOw4Vbv3zJ23hiG1bjU7M/AOuVNHKnREERoitIr1Zj/ZAAAAAAcnDgAAAAABRVVSAAAAAAD9LgwiRs1qHzAFJBvxd2Aj3LYC5Hj91U69z9Zhys5wBwAAAAADk4cAAAAAAgAAAAA=\",\n" +
+            "  \"result_meta_xdr\": \"AAAAAAAAAAEAAAACAAAAAAAvoHwAAAACAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAAAAPEAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAAAAAAEAL6B8AAAAAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAABZ9zvNAABPdNQAAADAAAAAEAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA==\"\n" +
+            "}";
+
+    SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(json, SubmitTransactionResponse.class);
+    assertEquals(submitTransactionResponse.isSuccess(), true);
+    assertNull(submitTransactionResponse.getOfferIdFromResult(0));
+  }
 }
