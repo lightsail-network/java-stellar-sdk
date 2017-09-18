@@ -10,6 +10,7 @@ deploy:
   api_key:
     secure: qvr18ooYvp+7hKbhulo9dKeiBrimnhEOFDfdq6TQk3mxul7zrY7Xe8ubPCubYqGbZR7vPIXUoprF+A7CZMizNbqiZGtljqw+svC4OlcPYQF8zKxwqGrQ98xf5bQB5X8lihZ4qVrcZy6XLHVKJXrEnMk61X0iD0RBUfBODG7J9njlRXtaeBcgpoTafd1dzVE5qnSEFLS93QCyg2NvbWTwh0XHhB+wNZN28Ij7E9HJdKm8RxK57wgXpvQ/025U1UseQc8Q77aHYRtgtaR+1YGBUMcqb1AfTZ4cHhAhlrrGErNMRqQFOFHzSsJl3d5JMAJYHAPNlGbeODVbhIGmST3WZHqiBHEJrjB1elbX5MnCpeMg0T7LlhwdiiZvm2m8/8mjxNxxb9RQdWROJtx0XTESTU2lQwsefZ0qoiTpDiuuFzLlNC3C2ri3EBWxFwunVF2VWjw46UYeb9/n6kOAcPZR1Te1YseOWKD6wo8qUhaeq1XvUKs5R8q2LDjmizu58wekFpDdmk3tqFRTUNSW5Ii+BnQXA0PIE42NHRKAlrRZ4nOeDhmPVY0Dkpqim5qhQa8+ijbba+CITUSrNatw7j4ySjdKCTZ49wX4ssrYL3XtXBOgOCL+ArFU5t1im9Yf/HKmCfeVwuaq+IqlzmJitt89ptrRcNDr2Dt5xURaqBQu/5Y=
   file: "./build/libs/stellar-sdk.jar"
+  skip_cleanup: true
   on:
     repo: stellar/java-stellar-sdk
     tags: true
