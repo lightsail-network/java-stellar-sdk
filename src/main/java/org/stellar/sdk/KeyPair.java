@@ -191,7 +191,7 @@ public class KeyPair {
    */
   public byte[] sign(byte[] data) {
     if (mPrivateKey == null) {
-      return null;
+      throw new RuntimeException("KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
     }
     try {
       Signature sgr = new EdDSAEngine(MessageDigest.getInstance("SHA-512"));

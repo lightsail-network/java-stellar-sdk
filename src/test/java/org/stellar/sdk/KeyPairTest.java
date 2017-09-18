@@ -6,9 +6,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class KeyPairTest {
 
@@ -65,5 +63,17 @@ public class KeyPairTest {
     assertTrue(keypair.canSign());
     keypair = KeyPair.fromAccountId("GABXJTV7ELEB2TQZKJYEGXBUIG6QODJULKJDI65KZMIZZG2EACJU5EA7");
     assertFalse(keypair.canSign());
+  }
+
+  @Test
+  public void testSignWithoutSecret() {
+    KeyPair keypair = KeyPair.fromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ");
+    String data = "hello world";
+    try {
+      byte[] sig = keypair.sign(data.getBytes());
+      fail();
+    } catch (RuntimeException e) {
+      assertEquals("KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.", e.getMessage());
+    }
   }
 }
