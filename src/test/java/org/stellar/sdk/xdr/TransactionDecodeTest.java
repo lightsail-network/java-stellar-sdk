@@ -5,8 +5,10 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TransactionDecodeTest {
 
@@ -44,6 +46,17 @@ public class TransactionDecodeTest {
 
         TransactionMeta transactionMeta = TransactionMeta.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
         assertEquals(1, transactionMeta.getOperations().length);
+    }
+
+    @Test
+    public void testTransactionEnvelopeWithMemo() throws IOException {
+        String transactionEnvelopeToDecode = "AAAAACq1Ixcw1fchtF5aLTSw1zaYAYjb3WbBRd4jqYJKThB9AAAAZAA8tDoAAAALAAAAAAAAAAEAAAAZR29sZCBwYXltZW50IGZvciBzZXJ2aWNlcwAAAAAAAAEAAAAAAAAAAQAAAAARREGslec48mbJJygIwZoLvRtL6/gGL4ss2TOpnOUOhgAAAAFHT0xEAAAAACq1Ixcw1fchtF5aLTSw1zaYAYjb3WbBRd4jqYJKThB9AAAAADuaygAAAAAAAAAAAA==";
+        Base64 base64Codec = new Base64();
+        byte[] bytes = base64Codec.decode(transactionEnvelopeToDecode);
+
+        TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+        assertEquals(1, transactionEnvelope.getTx().getOperations().length);
+        assertTrue(Arrays.equals(new byte[]{'G', 'O', 'L', 'D'}, transactionEnvelope.getTx().getOperations()[0].getBody().getPaymentOp().getAsset().getAlphaNum4().getAssetCode()));
     }
 
 }
