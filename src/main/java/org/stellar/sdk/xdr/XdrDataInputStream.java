@@ -119,7 +119,7 @@ public class XdrDataInputStream extends DataInputStream {
             }
 
             while (pad-- > 0) {
-                int b = mIn.read();
+                int b = read();
                 if (b != 0) {
                     throw new IOException("non-zero padding");
                 }
