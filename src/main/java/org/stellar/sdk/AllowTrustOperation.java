@@ -89,7 +89,7 @@ public class AllowTrustOperation extends Operation {
           assetCode = new String(op.getAsset().getAssetCode4());
           break;
         case ASSET_TYPE_CREDIT_ALPHANUM12:
-          assetCode = new String(op.getAsset().getAssetCode12().toString());
+          assetCode = new String(op.getAsset().getAssetCode12());
           break;
         default:
           throw new RuntimeException("Unknown asset code");
