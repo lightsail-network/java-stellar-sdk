@@ -43,6 +43,7 @@ class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
             .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
             .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
             .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
+            .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
             .create();
 
     return gson.fromJson(newJson, pageType.getType());
