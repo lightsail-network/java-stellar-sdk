@@ -36,7 +36,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.3'
     compile 'org.apache.httpcomponents:fluent-hc:4.5.3'
     compile 'com.moandjiezana.toml:toml4j:0.5.1'
-    compile 'org.mockito:mockito-core:2.0.31-beta'
+    compile 'org.mockito:mockito-core:2.4.0'
     compile 'com.google.guava:guava:18.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'commons-io:commons-io:2.4'
@@ -44,4 +44,9 @@ dependencies {
     compile 'org.glassfish.jersey.media:jersey-media-sse:2.22.1'
     compile fileTree(dir: 'libs', include: '*.jar')
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'org.powermock:powermock-module-junit4-rule-agent:1.7.1'
+    testCompile 'org.powermock:powermock-module-junit4-rule:1.7.1'
+    testCompile 'org.powermock:powermock-module-junit4:1.7.1'
+    testCompile 'org.powermock:powermock-api-mockito2:1.7.1'
+
 }
