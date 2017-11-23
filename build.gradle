@@ -11,13 +11,28 @@ jar {
                    'Implementation-Version': version
     }
     archiveName 'stellar-sdk.jar'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
+
+task fatJar(type: Jar) {
+    description 'Builds a fat jar that includes all of the dependencies.'
+    classifier = 'all'
+    manifest {
+        attributes 'Implementation-Title': 'stellar-sdk-all',
+                   'Implementation-Version': version
+    }
+    archiveName 'stellar-sdk-all.jar'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+assemble.dependsOn fatJar
+fatJar.dependsOn jar
 
 publishing {
     publications {
         ivy(IvyPublication) {
             from components.java
+            artifact fatJar
         }
     }
     repositories {
