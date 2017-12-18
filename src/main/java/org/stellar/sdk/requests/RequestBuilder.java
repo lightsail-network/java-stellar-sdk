@@ -13,9 +13,11 @@ public abstract class RequestBuilder {
   protected URIBuilder uriBuilder;
   private ArrayList<String> segments;
   private boolean segmentsAdded;
+  private String originalPath;
 
   RequestBuilder(URI serverURI, String defaultSegment) {
     uriBuilder = new URIBuilder(serverURI);
+    originalPath = serverURI.getPath();
     segments = new ArrayList<String>();
     if (defaultSegment != null) {
       this.setSegments(defaultSegment);
@@ -72,7 +74,7 @@ public abstract class RequestBuilder {
 
   URI buildUri() {
     if (segments.size() > 0) {
-      String path = "";
+      String path = this.originalPath;
       for (String segment : segments) {
         path += "/"+segment;
       }
@@ -84,7 +86,7 @@ public abstract class RequestBuilder {
       throw new RuntimeException(e);
     }
   }
-
+  
   /**
    * Represents possible <code>order</code> parameter values.
    */

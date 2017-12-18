@@ -117,7 +117,7 @@ public class Server {
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
         URI transactionsURI;
         try {
-            transactionsURI = new URIBuilder(serverURI).setPath("/transactions").build();
+            transactionsURI = new URIBuilder(serverURI).setPath(serverURI.getPath()+"/transactions").build();
         } catch (URISyntaxException e) {
             throw new AssertionError(e);
         }
