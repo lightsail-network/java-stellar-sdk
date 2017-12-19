@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.stellar.sdk.MemoText;
 
 public class TransactionPageDeserializerTest extends TestCase {
   @Test
@@ -13,8 +14,16 @@ public class TransactionPageDeserializerTest extends TestCase {
 
     assertEquals(transactionsPage.getRecords().get(0).getSourceAccount().getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(transactionsPage.getRecords().get(0).getPagingToken(), "12884905984");
+    assertTrue(transactionsPage.getRecords().get(0).getMemo() instanceof MemoText);
+    MemoText memoText = (MemoText) transactionsPage.getRecords().get(0).getMemo();
+    assertEquals(memoText.getText(), "hello world");
     assertEquals(transactionsPage.getRecords().get(0).getLinks().getAccount().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(transactionsPage.getRecords().get(9).getSourceAccount().getAccountId(), "GAENIE5LBJIXLMJIAJ7225IUPA6CX7EGHUXRX5FLCZFFAQSG2ZUYSWFK");
+
+    // Empty memo_text
+    assertTrue(transactionsPage.getRecords().get(2).getMemo() instanceof MemoText);
+    memoText = (MemoText) transactionsPage.getRecords().get(2).getMemo();
+    assertEquals(memoText.getText(), "");
 
     assertEquals(transactionsPage.getLinks().getNext().getHref(), "/transactions?order=asc&limit=10&cursor=81058917781504");
     assertEquals(transactionsPage.getLinks().getPrev().getHref(), "/transactions?order=desc&limit=10&cursor=12884905984");
