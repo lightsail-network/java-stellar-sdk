@@ -49,7 +49,7 @@ repositories {
 }*/
 
 dependencies {
-    compile 'commons-codec:commons-codec:1.5'
+    compile fileTree(dir: 'libs', include: '*.jar')
     compile 'org.apache.httpcomponents:httpclient:4.5.3'
     compile 'org.apache.httpcomponents:fluent-hc:4.5.3'
     compile 'com.moandjiezana.toml:toml4j:0.5.1'
@@ -59,6 +59,5 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'org.glassfish.jersey.core:jersey-client:2.22.1'
     compile 'org.glassfish.jersey.media:jersey-media-sse:2.22.1'
-    compile fileTree(dir: 'libs', include: '*.jar')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
