@@ -1,47 +1,23 @@
-apply plugin: 'java'
-apply plugin: 'ivy-publish'
 
-sourceCompatibility = 1.6
-version = '0.1.14'
-group = 'stellar'
-
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'stellar-sdk',
-                   'Implementation-Version': version
-    }
-    archiveName 'stellar-sdk.jar'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
-
-publishing {
-    publications {
-        ivy(IvyPublication) {
-            from components.java
-        }
-    }
+buildscript {
     repositories {
-        ivy {
-            url "$projectDir/repos"
-        }
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
 }
 
-dependencies {
-    compile 'commons-codec:commons-codec:1.5'
-    compile 'org.apache.httpcomponents:httpclient:4.5.3'
-    compile 'org.apache.httpcomponents:fluent-hc:4.5.3'
-    compile 'com.moandjiezana.toml:toml4j:0.5.1'
-    compile 'org.mockito:mockito-core:2.0.31-beta'
-    compile 'com.google.guava:guava:18.0'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.glassfish.jersey.core:jersey-client:2.22.1'
-    compile 'org.glassfish.jersey.media:jersey-media-sse:2.22.1'
-    compile fileTree(dir: 'libs', include: '*.jar')
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
