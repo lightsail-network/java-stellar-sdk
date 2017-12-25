@@ -7,7 +7,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.android.codec.binary.Base64;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Memo;
 

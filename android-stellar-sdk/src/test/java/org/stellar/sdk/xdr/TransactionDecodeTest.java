@@ -1,6 +1,6 @@
 package org.stellar.sdk.xdr;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.android.codec.binary.Base64;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

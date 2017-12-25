@@ -1,7 +1,7 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import org.apache.http.client.fluent.Request;
+
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.TradeResponse;
@@ -18,21 +18,21 @@ public class TradesRequestBuilder extends RequestBuilder {
     }
 
     public TradesRequestBuilder buyingAsset(Asset asset) {
-        uriBuilder.addParameter("buying_asset_type", asset.getType());
+        uriBuilder.appendQueryParameter("buying_asset_type", asset.getType());
         if (asset instanceof AssetTypeCreditAlphaNum) {
             AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-            uriBuilder.addParameter("buying_asset_code", creditAlphaNumAsset.getCode());
-            uriBuilder.addParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+            uriBuilder.appendQueryParameter("buying_asset_code", creditAlphaNumAsset.getCode());
+            uriBuilder.appendQueryParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
         }
         return this;
     }
 
     public TradesRequestBuilder sellingAsset(Asset asset) {
-        uriBuilder.addParameter("selling_asset_type", asset.getType());
+        uriBuilder.appendQueryParameter("selling_asset_type", asset.getType());
         if (asset instanceof AssetTypeCreditAlphaNum) {
             AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-            uriBuilder.addParameter("selling_asset_code", creditAlphaNumAsset.getCode());
-            uriBuilder.addParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+            uriBuilder.appendQueryParameter("selling_asset_code", creditAlphaNumAsset.getCode());
+            uriBuilder.appendQueryParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
         }
         return this;
     }
@@ -40,7 +40,7 @@ public class TradesRequestBuilder extends RequestBuilder {
     public static TradeResponse execute(URI uri) throws IOException, TooManyRequestsException {
         TypeToken type = new TypeToken<TradeResponse>() {};
         ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<TradeResponse>(type);
-        return (TradeResponse) Request.Get(uri).execute().handleResponse(responseHandler);
+        return responseHandler.handleGetRequest(uri);
     }
 
     public TradeResponse execute() throws IOException, TooManyRequestsException {

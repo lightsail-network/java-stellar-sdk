@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.client.fluent.Request;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
@@ -33,7 +32,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
   public LedgerResponse ledger(URI uri) throws IOException {
     TypeToken type = new TypeToken<LedgerResponse>() {};
     ResponseHandler<LedgerResponse> responseHandler = new ResponseHandler<LedgerResponse>(type);
-    return (LedgerResponse) Request.Get(uri).execute().handleResponse(responseHandler);
+    return responseHandler.handleGetRequest(uri);
   }
 
   /**
@@ -57,7 +56,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
   public static Page<LedgerResponse> execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<LedgerResponse>>() {};
     ResponseHandler<Page<LedgerResponse>> responseHandler = new ResponseHandler<Page<LedgerResponse>>(type);
-    return (Page<LedgerResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
+    return responseHandler.handleGetRequest(uri);
   }
 
   /**

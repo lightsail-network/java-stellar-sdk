@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.android.codec.binary.Base64;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.SignatureHint;

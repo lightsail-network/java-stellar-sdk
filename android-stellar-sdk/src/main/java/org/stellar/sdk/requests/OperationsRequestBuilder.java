@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.client.fluent.Request;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
@@ -28,7 +27,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
   public OperationResponse operation(URI uri) throws IOException {
     TypeToken type = new TypeToken<OperationResponse>() {};
     ResponseHandler<OperationResponse> responseHandler = new ResponseHandler<OperationResponse>(type);
-    return (OperationResponse) Request.Get(uri).execute().handleResponse(responseHandler);
+    return responseHandler.handleGetRequest(uri);
   }
 
   /**
@@ -84,7 +83,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
   public static Page<OperationResponse> execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<OperationResponse>>() {};
     ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
-    return (Page<OperationResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
+    return responseHandler.handleGetRequest(uri);
   }
 
   /**

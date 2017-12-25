@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.client.fluent.Request;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
@@ -80,7 +79,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
   public static Page<EffectResponse> execute(URI uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<EffectResponse>>() {};
     ResponseHandler<Page<EffectResponse>> responseHandler = new ResponseHandler<Page<EffectResponse>>(type);
-    return (Page<EffectResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
+    return responseHandler.handleGetRequest(uri);
   }
 
   /**

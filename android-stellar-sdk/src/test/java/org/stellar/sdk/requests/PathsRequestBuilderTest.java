@@ -1,6 +1,8 @@
 package org.stellar.sdk.requests;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Server;
@@ -9,6 +11,7 @@ import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class PathsRequestBuilderTest {
   @Test
   public void testAccounts() {

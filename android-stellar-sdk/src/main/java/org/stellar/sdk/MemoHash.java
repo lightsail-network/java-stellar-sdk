@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.DecoderException;
+import org.apache.commons.android.codec.DecoderException;
 import org.stellar.sdk.xdr.MemoType;
 
 /**

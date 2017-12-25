@@ -2,38 +2,35 @@ package org.stellar.sdk.federation;
 
 import junit.framework.TestCase;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
+
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
 public class FederationTest extends TestCase {
-  @Mock
-  private HttpClient mockClient;
-  @Mock
-  private HttpResponse mockResponse;
-  @Mock
-  private HttpEntity mockEntity;
 
-  private final StatusLine httpOK = new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_OK, "OK");
+  @Mock
+  private OkHttpClient fakeClient;
+  @Mock
+  private Call mockCall;
+
   private final String stellarToml =
           "FEDERATION_SERVER = \"https://api.stellar.org/federation\"";
   private final String successResponse =
@@ -42,18 +39,35 @@ public class FederationTest extends TestCase {
   @Before
   public void setUp() throws URISyntaxException, IOException {
     MockitoAnnotations.initMocks(this);
-    FederationServer.setHttpClient(mockClient);
-    when(mockResponse.getEntity()).thenReturn(mockEntity);
-    when(mockClient.execute((HttpGet) any(), (HttpClientContext) any())).thenReturn(mockResponse);
+    FederationServer.setHttpClient(fakeClient);
+
+    when(fakeClient.newCall((Request) any())).thenReturn(mockCall);
   }
 
   @Test
   public void testResolveSuccess() throws IOException {
-    InputStream stellarTomlresponse = new ByteArrayInputStream(stellarToml.getBytes(StandardCharsets.UTF_8));
-    InputStream federationResponse = new ByteArrayInputStream(successResponse.getBytes(StandardCharsets.UTF_8));
+    Response mockResponseToml = new Response.Builder()
+        .code(200)
+        .message("OK")
+        .protocol(Protocol.HTTP_1_1)
+        .body(ResponseBody.create(MediaType.parse("application/json"), stellarToml))
+        .request(new Request.Builder()
+            .url("http://www.test.com")
+            .get()
+            .build())
+        .build();
+    Response mockResponseSuccess = new Response.Builder()
+        .code(200)
+        .message("OK")
+        .protocol(Protocol.HTTP_1_1)
+        .body(ResponseBody.create(MediaType.parse("application/json"), successResponse))
+        .request(new Request.Builder()
+            .url("http://www.test.com")
+            .get()
+            .build())
+        .build();
 
-    when(mockResponse.getStatusLine()).thenReturn(httpOK, httpOK);
-    when(mockEntity.getContent()).thenReturn(stellarTomlresponse, federationResponse);
+    when(mockCall.execute()).thenReturn(mockResponseToml, mockResponseSuccess);
 
     FederationResponse response = Federation.resolve("bob*stellar.org");
     assertEquals(response.getStellarAddress(), "bob*stellar.org");

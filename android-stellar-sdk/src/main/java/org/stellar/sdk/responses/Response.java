@@ -1,16 +1,18 @@
 package org.stellar.sdk.responses;
 
-import org.apache.http.Header;
-
 public abstract class Response {
   protected int rateLimitLimit;
   protected int rateLimitRemaining;
   protected int rateLimitReset;
 
-  public void setHeaders(Header limit, Header remaining, Header reset) {
-    this.rateLimitLimit = Integer.parseInt(limit.getValue());
-    this.rateLimitRemaining = Integer.parseInt(remaining.getValue());
-    this.rateLimitReset = Integer.parseInt(reset.getValue());
+  public void setHeaders(String limit, String remaining, String reset) {
+    try {
+      this.rateLimitLimit = Integer.parseInt(limit);
+      this.rateLimitRemaining = Integer.parseInt(remaining);
+      this.rateLimitReset = Integer.parseInt(reset);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**

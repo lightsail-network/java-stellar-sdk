@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.binary.Base32;
+
+import org.apache.commons.android.codec.binary.Base32;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.DecoderException;
+import org.apache.commons.android.codec.DecoderException;
 
 /**
  * <p>The memo contains optional extra information. It is the responsibility of the client to interpret this value. Memos can be one of the following types:</p>

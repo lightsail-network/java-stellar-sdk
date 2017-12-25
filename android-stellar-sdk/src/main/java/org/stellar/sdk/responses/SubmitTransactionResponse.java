@@ -2,7 +2,7 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.android.codec.binary.Base64;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.TransactionResult;

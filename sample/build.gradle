@@ -3,8 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
 
-
-
     defaultConfig {
         applicationId "org.stellar.android.sample"
         minSdkVersion 16

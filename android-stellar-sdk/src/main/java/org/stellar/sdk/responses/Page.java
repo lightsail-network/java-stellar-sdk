@@ -3,7 +3,6 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.client.fluent.Request;
 import org.stellar.sdk.requests.ResponseHandler;
 
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class Page<T> extends Response {
     TypeToken type = new TypeToken<Page<T>>() {};
     ResponseHandler<Page<T>> responseHandler = new ResponseHandler<Page<T>>(type);
     URI uri = new URI(this.getLinks().getNext().getHref());
-    return (Page<T>) Request.Get(uri).execute().handleResponse(responseHandler);
+    return responseHandler.handleGetRequest(uri);
   }
 
   /**
