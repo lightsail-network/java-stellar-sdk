@@ -121,7 +121,7 @@ public class Server {
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
         Uri transactionsUri = Uri.parse(serverURI.toString())
                 .buildUpon()
-                .appendPath("/transactions")
+                .appendPath("transactions")
                 .build();
 
         RequestBody formBody = new FormBody.Builder()
