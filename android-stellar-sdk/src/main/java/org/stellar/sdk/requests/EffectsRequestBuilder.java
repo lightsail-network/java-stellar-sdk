@@ -1,21 +1,14 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import com.here.oksse.ServerSentEvent;
 
-import org.glassfish.jersey.media.sse.EventSource;
-import org.glassfish.jersey.media.sse.InboundEvent;
-import org.glassfish.jersey.media.sse.SseFeature;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.effects.EffectResponse;
 
 import java.io.IOException;
 import java.net.URI;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -90,23 +83,11 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
    * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link EffectResponse} type
-   * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
+   * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<EffectResponse> listener) {
-    Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-    WebTarget target = client.target(this.buildUri());
-    EventSource eventSource = new EventSource(target) {
-      @Override
-      public void onEvent(InboundEvent inboundEvent) {
-        String data = inboundEvent.readData(String.class);
-        if (data.equals("\"hello\"")) {
-          return;
-        }
-        EffectResponse effect = GsonSingleton.getInstance().fromJson(data, EffectResponse.class);
-        listener.onEvent(effect);
-      }
-    };
-    return eventSource;
+  public ServerSentEvent stream(final EventListener<EffectResponse> listener) throws IOException {
+    return new StreamHandler<>(new TypeToken<EffectResponse>() {})
+        .handleStream(this.buildUri(),listener);
   }
 
   /**

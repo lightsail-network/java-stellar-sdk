@@ -51,9 +51,12 @@ dependencies {
     compile 'com.moandjiezana.toml:toml4j:0.5.1'
     compile 'com.google.guava:guava:18.0'
     compile 'com.google.code.gson:gson:2.4'
+    compile('com.github.heremaps:oksse:master-SNAPSHOT'){
+        exclude module: 'com.squareup.okhttp3'
+    }
     //compile 'commons-io:commons-io:2.4'
     //compile 'org.glassfish.jersey.core:jersey-client:2.22.1'
-    compile 'org.glassfish.jersey.media:jersey-media-sse:2.22.1'
+    //compile 'org.glassfish.jersey.media:jersey-media-sse:2.22.1'
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     testImplementation 'org.mockito:mockito-core:2.0.31-beta'
     testImplementation "org.robolectric:robolectric:3.6.1"
