@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'ivy-publish'
+//apply plugin: 'ivy-publish'
 
 android {
     compileSdkVersion 26
@@ -12,7 +12,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -46,18 +46,13 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    //compile 'org.apache.httpcomponents:httpclient:4.5.3'
-    //compile 'org.apache.httpcomponents:fluent-hc:4.5.3'
-    compile 'com.moandjiezana.toml:toml4j:0.5.1'
-    compile 'com.google.guava:guava:18.0'
-    compile 'com.google.code.gson:gson:2.4'
-    compile('com.github.heremaps:oksse:master-SNAPSHOT'){
+    implementation 'com.moandjiezana.toml:toml4j:0.5.1'
+    implementation 'com.google.guava:guava:18.0'
+    implementation 'com.google.code.gson:gson:2.4'
+    implementation('com.github.heremaps:oksse:master-SNAPSHOT') {
         exclude module: 'com.squareup.okhttp3'
     }
-    //compile 'commons-io:commons-io:2.4'
-    //compile 'org.glassfish.jersey.core:jersey-client:2.22.1'
-    //compile 'org.glassfish.jersey.media:jersey-media-sse:2.22.1'
-    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     testImplementation 'org.mockito:mockito-core:2.0.31-beta'
     testImplementation "org.robolectric:robolectric:3.6.1"
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.8.1'
