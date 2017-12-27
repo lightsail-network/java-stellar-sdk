@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'ivy-publish'
 
 android {
     compileSdkVersion 26
@@ -17,32 +16,6 @@ android {
         }
     }
 }
-
-/*jar {
-    manifest {
-        attributes 'Implementation-Title': 'stellar-sdk',
-                   'Implementation-Version': version
-    }
-    archiveName 'stellar-sdk.jar'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
-
-publishing {
-    publications {
-        ivy(IvyPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        ivy {
-            url "$projectDir/repos"
-        }
-    }
-}
-
-repositories {
-    mavenCentral()
-}*/
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
