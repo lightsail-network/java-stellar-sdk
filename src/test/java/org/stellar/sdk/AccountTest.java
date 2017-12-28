@@ -3,20 +3,29 @@ package org.stellar.sdk;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class AccountTest  {
   @Test
-  public void testNullArguments() {
+  public void testNullArgumentsThrowNullPointerExceptions() {
+    boolean firstConstructorThrewException = false;
+    boolean secondConstructorThrewException = false;
     try {
       new Account(null, 10L);
-      fail();
-    } catch (NullPointerException e) {}
+      fail(); // Causes the test to fail if executed
+    } catch (NullPointerException e) {
+      firstConstructorThrewException = true;
+    }
 
     try {
       new Account(KeyPair.random(), null);
-      fail();
-    } catch (NullPointerException e) {}
+      fail(); // Causes the test to fail if executed
+    } catch (NullPointerException e) {
+      secondConstructorThrewException = true;
+    }
+    assertTrue(firstConstructorThrewException);
+    assertTrue(secondConstructorThrewException);
   }
 
   @Test
