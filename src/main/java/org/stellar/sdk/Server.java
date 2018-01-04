@@ -1,39 +1,34 @@
 package org.stellar.sdk;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.stellar.sdk.requests.*;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
+import org.stellar.sdk.utils.UrlUtils;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main class used to connect to Horizon server.
  */
 public class Server {
+
     private URI serverURI;
-    private HttpClient httpClient = HttpClients.createDefault();
+
+    private URL submitTransactionUrl;
 
     public Server(String uri) {
         try {
             serverURI = new URI(uri);
-        } catch (URISyntaxException e) {
+            submitTransactionUrl = new URL(serverURI.toURL(), "/transactions");
+        } catch (URISyntaxException | MalformedURLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -110,46 +105,44 @@ public class Server {
 
     /**
      * Submits transaction to the network.
+     *
      * @param transaction transaction to submit to the network.
      * @return {@link SubmitTransactionResponse}
      * @throws IOException
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
-        URI transactionsURI;
-        try {
-            transactionsURI = new URIBuilder(serverURI).setPath("/transactions").build();
-        } catch (URISyntaxException e) {
-            throw new AssertionError(e);
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("tx", transaction.toEnvelopeXdrBase64());
+        String postData = UrlUtils.getParametersAsString(parameters);
+
+        HttpURLConnection conn = (HttpURLConnection) submitTransactionUrl.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("Accept-Encoding", "identity");
+        conn.setRequestProperty("Content-Length", String.valueOf(postData.length()));
+
+        try (DataOutputStream out = new DataOutputStream(conn.getOutputStream())) {
+            out.write(postData.getBytes());
         }
-        HttpPost submitTransactionRequest = new HttpPost(transactionsURI);
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("tx", transaction.toEnvelopeXdrBase64()));
-        submitTransactionRequest.setEntity(new UrlEncodedFormEntity(params));
-
-        HttpResponse response = httpClient.execute(submitTransactionRequest);
-        HttpEntity entity = response.getEntity();
-
-        if (entity != null) {
-            InputStream responseStream = entity.getContent();
-            try {
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(responseStream, writer, StandardCharsets.UTF_8);
-                String responseString = writer.toString();
-                SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
-                return submitTransactionResponse;
-            } finally {
-                responseStream.close();
-            }
+        try (InputStream responseStream = conn.getInputStream()) {
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(responseStream, writer, StandardCharsets.UTF_8);
+            String responseString = writer.toString();
+            return GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
         }
-        return null;
+
     }
 
     /**
      * To support mocking a client
-     * @param httpClient
+     * @param url submit transaction url
      */
-    void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
+    void setSubmitTransactionUrl(URL url) {
+        submitTransactionUrl = url;
     }
+
 }
