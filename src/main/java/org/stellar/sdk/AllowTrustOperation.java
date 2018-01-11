@@ -86,10 +86,10 @@ public class AllowTrustOperation extends Operation {
       trustor = KeyPair.fromXdrPublicKey(op.getTrustor().getAccountID());
       switch (op.getAsset().getDiscriminant()) {
         case ASSET_TYPE_CREDIT_ALPHANUM4:
-          assetCode = new String(op.getAsset().getAssetCode4());
+          assetCode = new String(op.getAsset().getAssetCode4()).trim();
           break;
         case ASSET_TYPE_CREDIT_ALPHANUM12:
-          assetCode = new String(op.getAsset().getAssetCode12());
+          assetCode = new String(op.getAsset().getAssetCode12()).trim();
           break;
         default:
           throw new RuntimeException("Unknown asset code");
