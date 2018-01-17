@@ -109,6 +109,20 @@ public class TransactionTest {
   }
 
   @Test
+  public void testTransactionFromEnvelopeXdrBase64() {
+    String xdrBase64Envelope;
+    Transaction tx;
+
+    xdrBase64Envelope = "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDzfR5PgRFim5Wdvq9ImdZNWGBxBWwYkQPa9l5iiBdtPLzAZv6qj+iOfSrqinsoF0XrLkwdIcZQVtp3VRHhRoUE";
+    tx = Transaction.fromEnvelope(Transaction.decodeBase64XdrEnvelope(xdrBase64Envelope));
+    assertEquals(xdrBase64Envelope, tx.toEnvelopeXdrBase64());
+
+    xdrBase64Envelope = "AAAAANsc5j01PQN1UKWKTdrD6vv0wBgXxBW5D+mhHV/i5nKQAAAAZABlcJIAAAAGAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAANzIBPq8a7WNSxKoZfsLmrGETqAfr4iGPmxRrQLEsHQSAAAAAAAAAAEqBfIAAAAAAAAAAAHi5nKQAAAAQM9vvEUpodJbquHyUyCfqTw21h9/iajVIl6KyQOE13GKmpPQDXXop/NKHEy+7da0QkH7l8g0uztw/u0C5tk4zgg=";
+    tx = Transaction.fromEnvelope(Transaction.decodeBase64XdrEnvelope(xdrBase64Envelope));
+    assertEquals(xdrBase64Envelope, tx.toEnvelopeXdrBase64());
+  }
+
+  @Test
   public void testSha256HashSigning() throws FormatException {
     Network.usePublicNetwork();
 

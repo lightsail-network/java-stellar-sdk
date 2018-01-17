@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import org.apache.commons.codec.DecoderException;
+import org.stellar.sdk.xdr.MemoType;
 
 /**
  * <p>The memo contains optional extra information. It is the responsibility of the client to interpret this value. Memos can be one of the following types:</p>
@@ -73,4 +74,30 @@ public abstract class Memo {
     }
 
     abstract org.stellar.sdk.xdr.Memo toXdr();
+
+    /**
+     * Creates new Memo from XDR-encoded memo.
+     * @param xdrMemo
+     * @return the new Memo instance
+     */
+    public static Memo fromXdr(org.stellar.sdk.xdr.Memo xdrMemo) {
+        MemoType memoType = xdrMemo.getDiscriminant();
+        switch (memoType) {
+            case MEMO_NONE:
+                return none();
+            case MEMO_TEXT:
+                return text(xdrMemo.getText());
+            case MEMO_ID:
+                return id(xdrMemo.getId().getUint64());
+            case MEMO_HASH:
+                return hash(xdrMemo.getHash().getHash());
+            case MEMO_RETURN:
+                return returnHash(xdrMemo.getRetHash().getHash());
+            default:
+                // all possible cases were covered above,
+                // so this code should never be reached
+                throw new RuntimeException("Unknown enum value:" + memoType);
+        }
+    }
+
 }
