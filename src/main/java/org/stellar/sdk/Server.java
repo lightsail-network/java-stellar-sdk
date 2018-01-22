@@ -40,6 +40,13 @@ public class Server {
     }
 
     /**
+     * Returns {@link AssetsRequestBuilder} instance.
+     */
+    public AssetsRequestBuilder assets() {
+        return new AssetsRequestBuilder(httpClient, serverURI);
+    }
+
+    /**
      * Returns {@link EffectsRequestBuilder} instance.
      */
     public EffectsRequestBuilder effects() {
@@ -79,6 +86,13 @@ public class Server {
      */
     public TradesRequestBuilder trades() {
         return new TradesRequestBuilder(httpClient, serverURI);
+    }
+
+    /**
+     * Returns {@link TradeAggregationsRequestBuilder} instance.
+     */
+    public TradeAggregationsRequestBuilder tradeAggregations(Asset baseAsset, Asset counterAsset, long startTime, long endTime, long resolution) {
+        return new TradeAggregationsRequestBuilder(httpClient, serverURI, baseAsset, counterAsset, startTime, endTime, resolution);
     }
 
     /**
