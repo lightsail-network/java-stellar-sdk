@@ -2,13 +2,15 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.client.fluent.Request;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
 import java.io.IOException;
-import java.net.URI;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Builds requests connected to operations.
  */
 public class OperationsRequestBuilder extends RequestBuilder {
-  public OperationsRequestBuilder(URI serverURI) {
+  public OperationsRequestBuilder(HttpUrl serverURI) {
     super(serverURI, "operations");
   }
 
@@ -25,10 +27,15 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * This method is helpful for getting the links.
    * @throws IOException
    */
-  public OperationResponse operation(URI uri) throws IOException {
+  public OperationResponse operation(HttpUrl uri) throws IOException {
     TypeToken type = new TypeToken<OperationResponse>() {};
     ResponseHandler<OperationResponse> responseHandler = new ResponseHandler<OperationResponse>(type);
-    return (OperationResponse) Request.Get(uri).execute().handleResponse(responseHandler);
+
+    OkHttpClient client = HttpClientSingleton.getInstance();
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = client.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
   }
 
   /**
@@ -81,10 +88,15 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<OperationResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<OperationResponse> execute(HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<OperationResponse>>() {};
     ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
-    return (Page<OperationResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
+
+    OkHttpClient client = new OkHttpClient();
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = client.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
   }
 
   /**

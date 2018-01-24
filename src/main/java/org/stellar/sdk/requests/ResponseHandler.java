@@ -2,20 +2,13 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpResponseException;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.stellar.sdk.responses.GsonSingleton;
-import org.stellar.sdk.responses.Response;
 
 import java.io.IOException;
-import java.io.StringWriter;
 
-public class ResponseHandler<T> implements org.apache.http.client.ResponseHandler {
+public class ResponseHandler<T> {
 
   private TypeToken<T> type;
 
@@ -30,35 +23,27 @@ public class ResponseHandler<T> implements org.apache.http.client.ResponseHandle
     this.type = type;
   }
 
-  public T handleResponse(final HttpResponse response) throws IOException, TooManyRequestsException {
-    StatusLine statusLine = response.getStatusLine();
-    HttpEntity entity = response.getEntity();
-
+  public T handleResponse(final Response response) throws IOException, TooManyRequestsException {
     // Too Many Requests
-    if (statusLine.getStatusCode() == 429) {
-      int retryAfter = Integer.parseInt(response.getFirstHeader("Retry-After").getValue());
+    if (response.code() == 429) {
+      int retryAfter = Integer.parseInt(response.header("Retry-After"));
       throw new TooManyRequestsException(retryAfter);
     }
-    // Other errors
-    if (statusLine.getStatusCode() >= 300) {
-      throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
-    }
+
     // No content
-    if (entity == null) {
-      throw new ClientProtocolException("Response contains no content");
+    ResponseBody body = response.body();
+    if (body == null) {
+      throw new RuntimeException("Response contains no content");
     }
 
-    StringWriter writer = new StringWriter();
-    IOUtils.copy(entity.getContent(), writer);
-    String content = writer.toString();
+    // Other errors
+    if (response.code() >= 300) {
+      throw new ErrorResponse(response.code(), body.string());
+    }
 
-    T object = GsonSingleton.getInstance().fromJson(content, type.getType());
-    if (object instanceof Response) {
-      ((Response) object).setHeaders(
-              response.getFirstHeader("X-Ratelimit-Limit"),
-              response.getFirstHeader("X-Ratelimit-Remaining"),
-              response.getFirstHeader("X-Ratelimit-Reset")
-      );
+    T object = GsonSingleton.getInstance().fromJson(body.string(), type.getType());
+    if (object instanceof org.stellar.sdk.responses.Response) {
+      ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
     }
     return object;
   }

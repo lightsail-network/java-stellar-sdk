@@ -1,46 +1,54 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import org.apache.http.client.fluent.Request;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.OrderBookResponse;
 
 import java.io.IOException;
-import java.net.URI;
 
 /**
  * Builds requests connected to order book.
  */
 public class OrderBookRequestBuilder extends RequestBuilder {
-  public OrderBookRequestBuilder(URI serverURI) {
+  public OrderBookRequestBuilder(HttpUrl serverURI) {
     super(serverURI, "order_book");
   }
 
   public OrderBookRequestBuilder buyingAsset(Asset asset) {
-    uriBuilder.addParameter("buying_asset_type", asset.getType());
+    uriBuilder.setQueryParameter("buying_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.addParameter("buying_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.addParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+      uriBuilder.setQueryParameter("buying_asset_code", creditAlphaNumAsset.getCode());
+      uriBuilder.setQueryParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }
   
   public OrderBookRequestBuilder sellingAsset(Asset asset) {
-    uriBuilder.addParameter("selling_asset_type", asset.getType());
+    uriBuilder.setQueryParameter("selling_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.addParameter("selling_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.addParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+      uriBuilder.setQueryParameter("selling_asset_code", creditAlphaNumAsset.getCode());
+      uriBuilder.setQueryParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }
 
-  public static OrderBookResponse execute(URI uri) throws IOException, TooManyRequestsException {
+  public static OrderBookResponse execute(HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<OrderBookResponse>() {};
     ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<OrderBookResponse>(type);
-    return (OrderBookResponse) Request.Get(uri).execute().handleResponse(responseHandler);
+
+    OkHttpClient client = HttpClientSingleton.getInstance();
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = client.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
   }
 
   public OrderBookResponse execute() throws IOException, TooManyRequestsException {

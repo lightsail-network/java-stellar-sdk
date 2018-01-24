@@ -1,46 +1,53 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import org.apache.http.client.fluent.Request;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.TradeResponse;
 
 import java.io.IOException;
-import java.net.URI;
 
 /**
  * Builds requests connected to trades.
  */
 public class TradesRequestBuilder extends RequestBuilder {
-    public TradesRequestBuilder(URI serverURI) {
-        super(serverURI, "order_book/trades");
+    public TradesRequestBuilder(HttpUrl serverURI) {
+        super(serverURI, "trades");
     }
 
     public TradesRequestBuilder buyingAsset(Asset asset) {
-        uriBuilder.addParameter("buying_asset_type", asset.getType());
+        uriBuilder.setQueryParameter("buying_asset_type", asset.getType());
         if (asset instanceof AssetTypeCreditAlphaNum) {
             AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-            uriBuilder.addParameter("buying_asset_code", creditAlphaNumAsset.getCode());
-            uriBuilder.addParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+            uriBuilder.setQueryParameter("buying_asset_code", creditAlphaNumAsset.getCode());
+            uriBuilder.setQueryParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
         }
         return this;
     }
 
     public TradesRequestBuilder sellingAsset(Asset asset) {
-        uriBuilder.addParameter("selling_asset_type", asset.getType());
+        uriBuilder.setQueryParameter("selling_asset_type", asset.getType());
         if (asset instanceof AssetTypeCreditAlphaNum) {
             AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-            uriBuilder.addParameter("selling_asset_code", creditAlphaNumAsset.getCode());
-            uriBuilder.addParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+            uriBuilder.setQueryParameter("selling_asset_code", creditAlphaNumAsset.getCode());
+            uriBuilder.setQueryParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
         }
         return this;
     }
 
-    public static TradeResponse execute(URI uri) throws IOException, TooManyRequestsException {
+    public static TradeResponse execute(HttpUrl uri) throws IOException, TooManyRequestsException {
         TypeToken type = new TypeToken<TradeResponse>() {};
         ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<TradeResponse>(type);
-        return (TradeResponse) Request.Get(uri).execute().handleResponse(responseHandler);
+
+        OkHttpClient client = HttpClientSingleton.getInstance();
+        Request request = new Request.Builder().get().url(uri).build();
+        Response response = client.newCall(request).execute();
+        return responseHandler.handleResponse(response);
     }
 
     public TradeResponse execute() throws IOException, TooManyRequestsException {

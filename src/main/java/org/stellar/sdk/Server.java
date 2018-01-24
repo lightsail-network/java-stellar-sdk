@@ -1,41 +1,23 @@
 package org.stellar.sdk;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
+import okhttp3.*;
 import org.stellar.sdk.requests.*;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Main class used to connect to Horizon server.
  */
 public class Server {
-    private URI serverURI;
-    private HttpClient httpClient = HttpClients.createDefault();
+    private HttpUrl serverURI;
+    private OkHttpClient httpClient;
 
     public Server(String uri) {
-        try {
-            serverURI = new URI(uri);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        serverURI = HttpUrl.parse(uri);
+        httpClient = HttpClientSingleton.getInstance();
     }
 
     /**
@@ -115,41 +97,46 @@ public class Server {
      * @throws IOException
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
-        URI transactionsURI;
-        try {
-            transactionsURI = new URIBuilder(serverURI).setPath("/transactions").build();
-        } catch (URISyntaxException e) {
-            throw new AssertionError(e);
+        HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("tx", transaction.toEnvelopeXdrBase64())
+                .build();
+        Request submitTransactionRequest = new Request.Builder().url(transactionsURI).post(requestBody).build();
+        Response response = this.httpClient.newCall(submitTransactionRequest).execute();
+
+        ResponseBody responseBody = response.body();
+
+        if (responseBody == null) {
+            return null;
         }
-        HttpPost submitTransactionRequest = new HttpPost(transactionsURI);
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("tx", transaction.toEnvelopeXdrBase64()));
-        submitTransactionRequest.setEntity(new UrlEncodedFormEntity(params));
-
-        HttpResponse response = httpClient.execute(submitTransactionRequest);
-        HttpEntity entity = response.getEntity();
-
-        if (entity != null) {
-            InputStream responseStream = entity.getContent();
-            try {
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(responseStream, writer, StandardCharsets.UTF_8);
-                String responseString = writer.toString();
-                SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
-                return submitTransactionResponse;
-            } finally {
-                responseStream.close();
-            }
-        }
-        return null;
+        SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(responseBody.string(), SubmitTransactionResponse.class);
+        return submitTransactionResponse;
     }
 
-    /**
-     * To support mocking a client
-     * @param httpClient
-     */
-    void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
+    private static class HttpClientSingleton {
+        private static OkHttpClient instance = null;
+
+        private HttpClientSingleton() {
+        }
+
+        public static OkHttpClient getInstance() {
+            if (instance == null) {
+                synchronized (HttpClientSingleton.class) {
+                    if(instance == null) {
+                        instance = new OkHttpClient.Builder()
+                                .connectTimeout(10, TimeUnit.SECONDS)
+                                .readTimeout(60, TimeUnit.SECONDS)
+                                .retryOnConnectionFailure(false)
+                                .build();
+                    }
+                }
+
+            }
+            return instance;
+        }
+
     }
 }

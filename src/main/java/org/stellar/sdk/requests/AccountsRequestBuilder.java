@@ -2,7 +2,10 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.client.fluent.Request;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
@@ -12,7 +15,6 @@ import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
 
 import java.io.IOException;
-import java.net.URI;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -22,7 +24,7 @@ import javax.ws.rs.client.WebTarget;
  * Builds requests connected to accounts.
  */
 public class AccountsRequestBuilder extends RequestBuilder {
-  public AccountsRequestBuilder(URI serverURI) {
+  public AccountsRequestBuilder(HttpUrl serverURI) {
     super(serverURI, "accounts");
   }
 
@@ -31,10 +33,15 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * This method is helpful for getting the links.
    * @throws IOException
    */
-  public AccountResponse account(URI uri) throws IOException {
+  public AccountResponse account(HttpUrl uri) throws IOException {
     TypeToken type = new TypeToken<AccountResponse>() {};
     ResponseHandler<AccountResponse> responseHandler = new ResponseHandler<AccountResponse>(type);
-    return (AccountResponse) Request.Get(uri).execute().handleResponse(responseHandler);
+
+    OkHttpClient client = HttpClientSingleton.getInstance();
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = client.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
   }
 
   /**
@@ -55,10 +62,15 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<AccountResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<AccountResponse> execute(HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<AccountResponse>>() {};
     ResponseHandler<Page<AccountResponse>> responseHandler = new ResponseHandler<Page<AccountResponse>>(type);
-    return (Page<AccountResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
+
+    OkHttpClient client = new OkHttpClient();
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = client.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
   }
 
   /**
@@ -73,7 +85,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    */
   public EventSource stream(final EventListener<AccountResponse> listener) {
     Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-    WebTarget target = client.target(this.buildUri());
+    WebTarget target = client.target(this.buildUri().uri());
     EventSource eventSource = new EventSource(target) {
       @Override
       public void onEvent(InboundEvent inboundEvent) {

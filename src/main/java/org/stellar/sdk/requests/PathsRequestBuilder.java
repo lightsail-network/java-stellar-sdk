@@ -2,7 +2,10 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.client.fluent.Request;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.KeyPair;
@@ -10,37 +13,36 @@ import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
 import java.io.IOException;
-import java.net.URI;
 
 /**
  * Builds requests connected to paths.
  */
 public class PathsRequestBuilder extends RequestBuilder {
-  public PathsRequestBuilder(URI serverURI) {
+  public PathsRequestBuilder(HttpUrl serverURI) {
     super(serverURI, "paths");
   }
 
   public PathsRequestBuilder destinationAccount(KeyPair account) {
-    uriBuilder.addParameter("destination_account", account.getAccountId());
+    uriBuilder.setQueryParameter("destination_account", account.getAccountId());
     return this;
   }
 
   public PathsRequestBuilder sourceAccount(KeyPair account) {
-    uriBuilder.addParameter("source_account", account.getAccountId());
+    uriBuilder.setQueryParameter("source_account", account.getAccountId());
     return this;
   }
 
   public PathsRequestBuilder destinationAmount(String amount) {
-    uriBuilder.addParameter("destination_amount", amount);
+    uriBuilder.setQueryParameter("destination_amount", amount);
     return this;
   }
 
   public PathsRequestBuilder destinationAsset(Asset asset) {
-    uriBuilder.addParameter("destination_asset_type", asset.getType());
+    uriBuilder.setQueryParameter("destination_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.addParameter("destination_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.addParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+      uriBuilder.setQueryParameter("destination_asset_code", creditAlphaNumAsset.getCode());
+      uriBuilder.setQueryParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
     }
     return this;
   }
@@ -49,10 +51,15 @@ public class PathsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<PathResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<PathResponse> execute(HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<PathResponse>>() {};
     ResponseHandler<Page<PathResponse>> responseHandler = new ResponseHandler<Page<PathResponse>>(type);
-    return (Page<PathResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
+
+    OkHttpClient client = HttpClientSingleton.getInstance();
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = client.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
   }
 
   /**
