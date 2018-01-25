@@ -26,8 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Builds requests connected to payments.
  */
 public class PaymentsRequestBuilder extends RequestBuilder {
-  public PaymentsRequestBuilder(HttpUrl serverURI) {
-    super(serverURI, "payments");
+  public PaymentsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "payments");
   }
 
   /**
@@ -69,13 +69,12 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<OperationResponse> execute(HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static Page<OperationResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<OperationResponse>>() {};
     ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
 
-    OkHttpClient client = HttpClientSingleton.getInstance();
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = client.newCall(request).execute();
+    Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }
@@ -114,7 +113,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<OperationResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(this.httpClient, this.buildUri());
   }
 
   @Override

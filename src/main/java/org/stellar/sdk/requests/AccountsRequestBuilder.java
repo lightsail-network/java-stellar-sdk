@@ -24,8 +24,8 @@ import javax.ws.rs.client.WebTarget;
  * Builds requests connected to accounts.
  */
 public class AccountsRequestBuilder extends RequestBuilder {
-  public AccountsRequestBuilder(HttpUrl serverURI) {
-    super(serverURI, "accounts");
+  public AccountsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "accounts");
   }
 
   /**
@@ -37,9 +37,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
     TypeToken type = new TypeToken<AccountResponse>() {};
     ResponseHandler<AccountResponse> responseHandler = new ResponseHandler<AccountResponse>(type);
 
-    OkHttpClient client = HttpClientSingleton.getInstance();
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = client.newCall(request).execute();
+    Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }

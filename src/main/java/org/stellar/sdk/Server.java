@@ -17,77 +17,89 @@ public class Server {
 
     public Server(String uri) {
         serverURI = HttpUrl.parse(uri);
-        httpClient = HttpClientSingleton.getInstance();
+        httpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(false)
+                .build();
+    }
+
+    public OkHttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public void setHttpClient(OkHttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     /**
      * Returns {@link AccountsRequestBuilder} instance.
      */
     public AccountsRequestBuilder accounts() {
-        return new AccountsRequestBuilder(serverURI);
+        return new AccountsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link EffectsRequestBuilder} instance.
      */
     public EffectsRequestBuilder effects() {
-        return new EffectsRequestBuilder(serverURI);
+        return new EffectsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link LedgersRequestBuilder} instance.
      */
     public LedgersRequestBuilder ledgers() {
-        return new LedgersRequestBuilder(serverURI);
+        return new LedgersRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link OffersRequestBuilder} instance.
      */
     public OffersRequestBuilder offers() {
-        return new OffersRequestBuilder(serverURI);
+        return new OffersRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link OperationsRequestBuilder} instance.
      */
     public OperationsRequestBuilder operations() {
-        return new OperationsRequestBuilder(serverURI);
+        return new OperationsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link OrderBookRequestBuilder} instance.
      */
     public OrderBookRequestBuilder orderBook() {
-        return new OrderBookRequestBuilder(serverURI);
+        return new OrderBookRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link TradesRequestBuilder} instance.
      */
     public TradesRequestBuilder trades() {
-        return new TradesRequestBuilder(serverURI);
+        return new TradesRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link PathsRequestBuilder} instance.
      */
     public PathsRequestBuilder paths() {
-        return new PathsRequestBuilder(serverURI);
+        return new PathsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link PaymentsRequestBuilder} instance.
      */
     public PaymentsRequestBuilder payments() {
-        return new PaymentsRequestBuilder(serverURI);
+        return new PaymentsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link TransactionsRequestBuilder} instance.
      */
     public TransactionsRequestBuilder transactions() {
-        return new TransactionsRequestBuilder(serverURI);
+        return new TransactionsRequestBuilder(httpClient, serverURI);
     }
 
     /**
@@ -114,29 +126,5 @@ public class Server {
 
         SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(responseBody.string(), SubmitTransactionResponse.class);
         return submitTransactionResponse;
-    }
-
-    private static class HttpClientSingleton {
-        private static OkHttpClient instance = null;
-
-        private HttpClientSingleton() {
-        }
-
-        public static OkHttpClient getInstance() {
-            if (instance == null) {
-                synchronized (HttpClientSingleton.class) {
-                    if(instance == null) {
-                        instance = new OkHttpClient.Builder()
-                                .connectTimeout(10, TimeUnit.SECONDS)
-                                .readTimeout(60, TimeUnit.SECONDS)
-                                .retryOnConnectionFailure(false)
-                                .build();
-                    }
-                }
-
-            }
-            return instance;
-        }
-
     }
 }

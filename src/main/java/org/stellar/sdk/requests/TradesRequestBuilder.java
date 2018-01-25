@@ -16,8 +16,8 @@ import java.io.IOException;
  * Builds requests connected to trades.
  */
 public class TradesRequestBuilder extends RequestBuilder {
-    public TradesRequestBuilder(HttpUrl serverURI) {
-        super(serverURI, "trades");
+    public TradesRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+        super(httpClient, serverURI, "trades");
     }
 
     public TradesRequestBuilder buyingAsset(Asset asset) {
@@ -40,17 +40,16 @@ public class TradesRequestBuilder extends RequestBuilder {
         return this;
     }
 
-    public static TradeResponse execute(HttpUrl uri) throws IOException, TooManyRequestsException {
+    public static TradeResponse execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
         TypeToken type = new TypeToken<TradeResponse>() {};
         ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<TradeResponse>(type);
 
-        OkHttpClient client = HttpClientSingleton.getInstance();
         Request request = new Request.Builder().get().url(uri).build();
-        Response response = client.newCall(request).execute();
+        Response response = httpClient.newCall(request).execute();
         return responseHandler.handleResponse(response);
     }
 
     public TradeResponse execute() throws IOException, TooManyRequestsException {
-        return this.execute(this.buildUri());
+        return this.execute(this.httpClient, this.buildUri());
     }
 }

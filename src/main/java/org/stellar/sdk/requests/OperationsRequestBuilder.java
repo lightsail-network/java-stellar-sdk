@@ -18,8 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Builds requests connected to operations.
  */
 public class OperationsRequestBuilder extends RequestBuilder {
-  public OperationsRequestBuilder(HttpUrl serverURI) {
-    super(serverURI, "operations");
+  public OperationsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "operations");
   }
 
   /**
@@ -31,9 +31,8 @@ public class OperationsRequestBuilder extends RequestBuilder {
     TypeToken type = new TypeToken<OperationResponse>() {};
     ResponseHandler<OperationResponse> responseHandler = new ResponseHandler<OperationResponse>(type);
 
-    OkHttpClient client = HttpClientSingleton.getInstance();
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = client.newCall(request).execute();
+    Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }

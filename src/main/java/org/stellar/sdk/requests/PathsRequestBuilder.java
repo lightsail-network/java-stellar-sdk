@@ -18,8 +18,8 @@ import java.io.IOException;
  * Builds requests connected to paths.
  */
 public class PathsRequestBuilder extends RequestBuilder {
-  public PathsRequestBuilder(HttpUrl serverURI) {
-    super(serverURI, "paths");
+  public PathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "paths");
   }
 
   public PathsRequestBuilder destinationAccount(KeyPair account) {
@@ -51,13 +51,12 @@ public class PathsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<PathResponse> execute(HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static Page<PathResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<PathResponse>>() {};
     ResponseHandler<Page<PathResponse>> responseHandler = new ResponseHandler<Page<PathResponse>>(type);
 
-    OkHttpClient client = HttpClientSingleton.getInstance();
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = client.newCall(request).execute();
+    Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }
@@ -67,6 +66,6 @@ public class PathsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<PathResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(this.httpClient, this.buildUri());
   }
 }

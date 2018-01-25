@@ -26,8 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Builds requests connected to effects.
  */
 public class EffectsRequestBuilder extends RequestBuilder {
-  public EffectsRequestBuilder(HttpUrl serverURI) {
-    super(serverURI, "effects");
+  public EffectsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "effects");
   }
 
   /**
@@ -79,13 +79,12 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<EffectResponse> execute(HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static Page<EffectResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<EffectResponse>>() {};
     ResponseHandler<Page<EffectResponse>> responseHandler = new ResponseHandler<Page<EffectResponse>>(type);
 
-    OkHttpClient client = HttpClientSingleton.getInstance();
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = client.newCall(request).execute();
+    Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }
@@ -124,7 +123,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<EffectResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(this.httpClient, this.buildUri());
   }
 
   @Override

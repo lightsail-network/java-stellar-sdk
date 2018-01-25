@@ -16,8 +16,8 @@ import java.io.IOException;
  * Builds requests connected to order book.
  */
 public class OrderBookRequestBuilder extends RequestBuilder {
-  public OrderBookRequestBuilder(HttpUrl serverURI) {
-    super(serverURI, "order_book");
+  public OrderBookRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "order_book");
   }
 
   public OrderBookRequestBuilder buyingAsset(Asset asset) {
@@ -40,19 +40,18 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public static OrderBookResponse execute(HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static OrderBookResponse execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<OrderBookResponse>() {};
     ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<OrderBookResponse>(type);
 
-    OkHttpClient client = HttpClientSingleton.getInstance();
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = client.newCall(request).execute();
+    Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }
 
   public OrderBookResponse execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(this.httpClient, this.buildUri());
   }
 
   @Override

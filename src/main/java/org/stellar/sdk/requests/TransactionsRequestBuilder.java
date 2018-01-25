@@ -26,8 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Builds requests connected to transactions.
  */
 public class TransactionsRequestBuilder extends RequestBuilder {
-  public TransactionsRequestBuilder(HttpUrl serverURI) {
-    super(serverURI, "transactions");
+  public TransactionsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "transactions");
   }
 
   /**
@@ -39,9 +39,8 @@ public class TransactionsRequestBuilder extends RequestBuilder {
     TypeToken type = new TypeToken<TransactionResponse>() {};
     ResponseHandler<TransactionResponse> responseHandler = new ResponseHandler<TransactionResponse>(type);
 
-    OkHttpClient client = HttpClientSingleton.getInstance();
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = client.newCall(request).execute();
+    Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }

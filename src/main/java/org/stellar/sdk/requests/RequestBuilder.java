@@ -1,6 +1,7 @@
 package org.stellar.sdk.requests;
 
 import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
 
 import java.util.ArrayList;
 
@@ -9,10 +10,12 @@ import java.util.ArrayList;
  */
 public abstract class RequestBuilder {
   protected HttpUrl.Builder uriBuilder;
+  protected OkHttpClient httpClient;
   private ArrayList<String> segments;
   private boolean segmentsAdded;
 
-  RequestBuilder(HttpUrl serverURI, String defaultSegment) {
+  RequestBuilder(OkHttpClient httpClient, HttpUrl serverURI, String defaultSegment) {
+    this.httpClient = httpClient;
     uriBuilder = serverURI.newBuilder();
     segments = new ArrayList<String>();
     if (defaultSegment != null) {

@@ -18,8 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Builds requests connected to offers.
  */
 public class OffersRequestBuilder extends RequestBuilder {
-  public OffersRequestBuilder(HttpUrl serverURI) {
-    super(serverURI, "offers");
+  public OffersRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "offers");
   }
 
   /**
@@ -40,13 +40,12 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<OfferResponse> execute(HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<OfferResponse>>() {};
     ResponseHandler<Page<OfferResponse>> responseHandler = new ResponseHandler<Page<OfferResponse>>(type);
 
-    OkHttpClient client = HttpClientSingleton.getInstance();
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = client.newCall(request).execute();
+    Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }
@@ -58,7 +57,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<OfferResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(this.httpClient, this.buildUri());
   }
 
   @Override
