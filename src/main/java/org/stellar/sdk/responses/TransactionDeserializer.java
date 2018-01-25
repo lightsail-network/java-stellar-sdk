@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -7,7 +8,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import org.apache.commons.codec.binary.Base64;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Memo;
 
@@ -41,12 +41,13 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
         }
       } else {
         String memoValue = json.getAsJsonObject().get("memo").getAsString();
+        BaseEncoding base64Encoding = BaseEncoding.base64();
         if (memoType.equals("id")) {
           memo = Memo.id(Long.parseLong(memoValue));
         } else if (memoType.equals("hash")) {
-          memo = Memo.hash(Base64.decodeBase64(memoValue));
+          memo = Memo.hash(base64Encoding.decode(memoValue));
         } else if (memoType.equals("return")) {
-          memo = Memo.returnHash(Base64.decodeBase64(memoValue));
+          memo = Memo.returnHash(base64Encoding.decode(memoValue));
         } else {
           throw new JsonParseException("Unknown memo type.");
         }
