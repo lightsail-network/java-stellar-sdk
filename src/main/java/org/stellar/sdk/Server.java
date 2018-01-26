@@ -110,11 +110,7 @@ public class Server {
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
         HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
-
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("tx", transaction.toEnvelopeXdrBase64())
-                .build();
+        RequestBody requestBody = new FormBody.Builder().add("tx", transaction.toEnvelopeXdrBase64()).build();
         Request submitTransactionRequest = new Request.Builder().url(transactionsURI).post(requestBody).build();
         Response response = this.httpClient.newCall(submitTransactionRequest).execute();
 
