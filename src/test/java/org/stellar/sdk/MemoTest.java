@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.DecoderException;
 import org.junit.Test;
 import org.stellar.sdk.xdr.MemoType;
 
@@ -60,8 +59,17 @@ public class MemoTest {
     }
 
     @Test
-    public void testMemoHashSuccess() throws DecoderException {
+    public void testMemoHashSuccess() {
         MemoHash memo = Memo.hash("4142434445464748494a4b4c");
+        assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
+        String test = "ABCDEFGHIJKL";
+        assertEquals(test, Util.paddedByteArrayToString(memo.getBytes()));
+        assertEquals("4142434445464748494a4b4c", memo.getTrimmedHexValue());
+    }
+
+    @Test
+    public void testMemoHashSuccessUppercase() {
+        MemoHash memo = Memo.hash("4142434445464748494a4b4c".toUpperCase());
         assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
         String test = "ABCDEFGHIJKL";
         assertEquals(test, Util.paddedByteArrayToString(memo.getBytes()));
@@ -96,13 +104,13 @@ public class MemoTest {
         try {
             Memo.hash("test");
             fail();
-        } catch (DecoderException e) {
+        } catch (Exception e) {
 
         }
     }
 
     @Test
-    public void testMemoReturnHashSuccess() throws DecoderException {
+    public void testMemoReturnHashSuccess() {
         MemoReturnHash memo = Memo.returnHash("4142434445464748494a4b4c");
         assertEquals(MemoType.MEMO_RETURN, memo.toXdr().getDiscriminant());
         assertEquals("4142434445464748494a4b4c", memo.getTrimmedHexValue());

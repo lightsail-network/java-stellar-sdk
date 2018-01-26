@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.DecoderException;
 import org.stellar.sdk.xdr.Memo;
 import org.stellar.sdk.xdr.MemoType;
 
@@ -12,7 +11,7 @@ public class MemoReturnHash extends MemoHashAbstract {
     super(bytes);
   }
 
-  public MemoReturnHash(String hexString) throws DecoderException {
+  public MemoReturnHash(String hexString) {
     super(hexString);
   }
 

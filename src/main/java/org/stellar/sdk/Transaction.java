@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.binary.Base64;
+import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.SignatureHint;
@@ -202,8 +202,8 @@ public class Transaction {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
       TransactionEnvelope.encode(xdrOutputStream, envelope);
-      Base64 base64Codec = new Base64();
-      return base64Codec.encodeAsString(outputStream.toByteArray());
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(outputStream.toByteArray());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -212,20 +212,13 @@ public class Transaction {
   /**
    * Decodes a base64-encoded XDR {@link TransactionEnvelope}.
    *
-   * @bug Does not work on Android, as it performs a call to the method
-   *      decode() of class org.apache.commons.codec.binary.Base64, which
-   *      conflicts with a legacy Apache class included in Android.
-   *      To decode a base64-encoded {@link TransactionEnvelope} on Android,
-   *      use {@code android.util.Base64.decode()}, then pass the result to
-   *      the method {@link #decodeXdrEnvelope(byte[])}.
-   *
    * @param encodedXdrTxEnvelope the base64-encoding of an XDR-encoded {@link TransactionEnvelope}.
    * @return the decoded {@link TransactionEnvelope}
    */
   public static TransactionEnvelope decodeBase64XdrEnvelope(String encodedXdrTxEnvelope) {
     checkNotNull(encodedXdrTxEnvelope, "Transaction envelope cannot be null");
-    Base64 base64Codec = new Base64();
-    byte[] xdrTxEnvelope = base64Codec.decode(encodedXdrTxEnvelope);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] xdrTxEnvelope = base64Encoding.decode(encodedXdrTxEnvelope);
     return decodeXdrEnvelope(xdrTxEnvelope);
   }
 

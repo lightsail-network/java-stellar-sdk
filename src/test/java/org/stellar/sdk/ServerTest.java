@@ -2,39 +2,19 @@ package org.stellar.sdk;
 
 import junit.framework.TestCase;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicStatusLine;
+import okhttp3.*;
+import okhttp3.internal.http.StatusLine;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 public class ServerTest extends TestCase {
-    @Mock
-    private HttpClient mockClient;
-    @Mock
-    private HttpResponse mockResponse;
-    @Mock
-    private HttpEntity mockEntity;
-
-    private final StatusLine httpOK = new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_OK, "OK");
     private final String successResponse =
             "{\n" +
             "  \"_links\": {\n" +
@@ -49,7 +29,6 @@ public class ServerTest extends TestCase {
             "  \"result_meta_xdr\": \"AAAAAAAAAAEAAAACAAAAAAAMmyYAAAAAAAAAAG2EKvHpNRorZjQVJaBp3rX1sUqcZbICuPF4uunSC9zKAAAAAAvrwgAADJsmAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAMmyYAAAAAAAAAAKu3N77S+cHLEDfVD2eW/CqRiN9yvAKH+qkeLjHQs1u+AAAAFzCfYtQADJKDAAAAAwAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA\"\n" +
             "}";
 
-    private final StatusLine httpBadRequest = new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_BAD_REQUEST, "Bad Request");
     private final String failureResponse =
             "{\n" +
             "  \"type\": \"https://stellar.org/horizon-errors/transaction_failed\",\n" +
@@ -69,18 +48,9 @@ public class ServerTest extends TestCase {
             "  }\n" +
             "}";
 
-    private Server server;
-
     @Before
     public void setUp() throws URISyntaxException, IOException {
         Network.useTestNetwork();
-
-        MockitoAnnotations.initMocks(this);
-        server = new Server("https://horizon.stellar.org");
-        server.setHttpClient(mockClient);
-
-        when(mockResponse.getEntity()).thenReturn(mockEntity);
-        when(mockClient.execute((HttpPost) any())).thenReturn(mockResponse);
     }
 
     @After
@@ -108,9 +78,11 @@ public class ServerTest extends TestCase {
 
     @Test
     public void testSubmitTransactionSuccess() throws IOException {
-        InputStream jsonResponse = new ByteArrayInputStream(successResponse.getBytes(StandardCharsets.UTF_8));
-        when(mockResponse.getStatusLine()).thenReturn(httpOK);
-        when(mockEntity.getContent()).thenReturn(jsonResponse);
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
 
         SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
         assertTrue(response.isSuccess());
@@ -121,9 +93,11 @@ public class ServerTest extends TestCase {
 
     @Test
     public void testSubmitTransactionFail() throws IOException {
-        InputStream jsonResponse = new ByteArrayInputStream(failureResponse.getBytes(StandardCharsets.UTF_8));
-        when(mockResponse.getStatusLine()).thenReturn(httpBadRequest);
-        when(mockEntity.getContent()).thenReturn(jsonResponse);
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(failureResponse));
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
 
         SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
         assertFalse(response.isSuccess());

@@ -33,7 +33,7 @@ public class StrKeyTest {
         try {
             StrKey.decodeCheck(StrKey.VersionByte.SEED, seed.toCharArray());
             fail();
-        } catch (FormatException e) {}
+        } catch (Exception e) {}
     }
 
     // TODO more tests

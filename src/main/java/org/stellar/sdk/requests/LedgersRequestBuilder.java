@@ -2,7 +2,10 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.client.fluent.Request;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
@@ -11,7 +14,6 @@ import org.stellar.sdk.responses.LedgerResponse;
 import org.stellar.sdk.responses.Page;
 
 import java.io.IOException;
-import java.net.URI;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -21,8 +23,8 @@ import javax.ws.rs.client.WebTarget;
  * Builds requests connected to ledgers.
  */
 public class LedgersRequestBuilder extends RequestBuilder {
-  public LedgersRequestBuilder(URI serverURI) {
-    super(serverURI, "ledgers");
+  public LedgersRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "ledgers");
   }
 
   /**
@@ -30,10 +32,14 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * This method is helpful for getting the links.
    * @throws IOException
    */
-  public LedgerResponse ledger(URI uri) throws IOException {
+  public LedgerResponse ledger(HttpUrl uri) throws IOException {
     TypeToken type = new TypeToken<LedgerResponse>() {};
     ResponseHandler<LedgerResponse> responseHandler = new ResponseHandler<LedgerResponse>(type);
-    return (LedgerResponse) Request.Get(uri).execute().handleResponse(responseHandler);
+
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = httpClient.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
   }
 
   /**
@@ -54,10 +60,14 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<LedgerResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<LedgerResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<LedgerResponse>>() {};
     ResponseHandler<Page<LedgerResponse>> responseHandler = new ResponseHandler<Page<LedgerResponse>>(type);
-    return (Page<LedgerResponse>) Request.Get(uri).execute().handleResponse(responseHandler);
+
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = httpClient.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
   }
 
   /**
@@ -72,7 +82,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    */
   public EventSource stream(final EventListener<LedgerResponse> listener) {
     Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-    WebTarget target = client.target(this.buildUri());
+    WebTarget target = client.target(this.buildUri().uri());
     EventSource eventSource = new EventSource(target) {
       @Override
       public void onEvent(InboundEvent inboundEvent) {
@@ -94,7 +104,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<LedgerResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(this.httpClient, this.buildUri());
   }
 
   @Override

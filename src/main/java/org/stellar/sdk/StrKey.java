@@ -1,9 +1,8 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.binary.Base32;
+import com.google.common.io.BaseEncoding;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 
 class StrKey {
@@ -20,6 +19,8 @@ class StrKey {
             return value;
         }
     }
+
+    private static BaseEncoding base32Encoding = BaseEncoding.base32().upperCase().omitPadding();
 
     public static String encodeStellarAccountId(byte[] data) {
         char[] encoded = encodeCheck(VersionByte.ACCOUNT_ID, data);
@@ -65,18 +66,26 @@ class StrKey {
             byte checksum[] = StrKey.calculateChecksum(payload);
             outputStream.write(checksum);
             byte unencoded[] = outputStream.toByteArray();
-            Base32 base32Codec = new Base32();
-            byte[] bytesEncoded = base32Codec.encode(unencoded);
 
-            char[] charsEncoded = new char[bytesEncoded.length];
-            for (int i = 0; i < bytesEncoded.length; i++) {
-                charsEncoded[i] = (char) bytesEncoded[i];
-            }
+            // Why not use base32Encoding.encode here?
+            // We don't want secret seed to be stored as String in memory because of security reasons. It's impossible
+            // to erase it from memory when we want it to be erased (ASAP).
+            CharArrayWriter charArrayWriter = new CharArrayWriter(unencoded.length);
+            OutputStream charOutputStream = StrKey.base32Encoding.encodingStream(charArrayWriter);
+            charOutputStream.write(unencoded);
+            char[] charsEncoded = charArrayWriter.toCharArray();
 
             if (VersionByte.SEED == versionByte) {
                 Arrays.fill(unencoded, (byte) 0);
                 Arrays.fill(payload, (byte) 0);
-                Arrays.fill(bytesEncoded, (byte) 0);
+                Arrays.fill(checksum, (byte) 0);
+
+                // Clean charArrayWriter internal buffer
+                int bufferSize = charArrayWriter.size();
+                char[] zeros = new char[bufferSize];
+                Arrays.fill(zeros, '0');
+                charArrayWriter.reset();
+                charArrayWriter.write(zeros);
             }
 
             return charsEncoded;
@@ -94,8 +103,7 @@ class StrKey {
             bytes[i] = (byte) encoded[i];
         }
 
-        Base32 base32Codec = new Base32();
-        byte[] decoded = base32Codec.decode(bytes);
+        byte[] decoded = StrKey.base32Encoding.decode(java.nio.CharBuffer.wrap(encoded));
         byte decodedVersionByte = decoded[0];
         byte[] payload  = Arrays.copyOfRange(decoded, 0, decoded.length-2);
         byte[] data     = Arrays.copyOfRange(payload, 1, payload.length);
