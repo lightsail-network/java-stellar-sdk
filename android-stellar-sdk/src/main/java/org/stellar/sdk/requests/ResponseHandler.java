@@ -10,14 +10,15 @@ import org.stellar.sdk.responses.Response;
 import java.io.IOException;
 import java.net.URI;
 
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 
 public class ResponseHandler<T> {
 
-  private TypeToken<T> type;
-  private OkHttpClient client = new OkHttpClient();
+  private final TypeToken<T> type;
+  private final OkHttpClient client;
 
   /**
    * "Generics on a type are typically erased at runtime, except when the type is compiled with the
@@ -27,9 +28,23 @@ public class ResponseHandler<T> {
    *
    * @param type
    */
-  public ResponseHandler(TypeToken<T> type) {
+  public ResponseHandler(OkHttpClient client, TypeToken<T> type) {
     this.type = type;
+    this.client = client;
   }
+
+    /**
+     * "Generics on a type are typically erased at runtime, except when the type is compiled with the
+     * generic parameter bound. In that case, the compiler inserts the generic type information into
+     * the compiled class. In other cases, that is not possible."
+     * More info: http://stackoverflow.com/a/14506181
+     *
+     * @param type
+     */
+    public ResponseHandler(TypeToken<T> type) {
+        this.type = type;
+        this.client = new OkHttpClient();
+    }
 
   public T handleGetRequest(final URI uri) throws IOException {
     return handleResponse(client.newCall(
@@ -38,6 +53,10 @@ public class ResponseHandler<T> {
             .build()
     )
         .execute());
+  }
+
+  public T handleCall(final Call call) throws IOException {
+    return handleResponse(call.execute());
   }
 
   public T handleResponse(final okhttp3.Response response) throws IOException, TooManyRequestsException {

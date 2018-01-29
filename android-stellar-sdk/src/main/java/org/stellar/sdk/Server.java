@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import android.net.Uri;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.stellar.sdk.requests.AccountsRequestBuilder;
 import org.stellar.sdk.requests.EffectsRequestBuilder;
 import org.stellar.sdk.requests.LedgersRequestBuilder;
@@ -10,20 +12,21 @@ import org.stellar.sdk.requests.OperationsRequestBuilder;
 import org.stellar.sdk.requests.OrderBookRequestBuilder;
 import org.stellar.sdk.requests.PathsRequestBuilder;
 import org.stellar.sdk.requests.PaymentsRequestBuilder;
+import org.stellar.sdk.requests.ResponseHandler;
 import org.stellar.sdk.requests.TradesRequestBuilder;
 import org.stellar.sdk.requests.TransactionsRequestBuilder;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 
 /**
  * Main class used to connect to Horizon server.
@@ -31,9 +34,33 @@ import okhttp3.ResponseBody;
 public class Server {
     private URI serverURI;
 
-    private OkHttpClient httpClient = new OkHttpClient();
+    private OkHttpClient httpClient;
 
+    /**
+     * Creates server with input uri
+     * @param uri Horizon server uri
+     */
     public Server(String uri) {
+        createUri(uri);
+        httpClient = new OkHttpClient();
+    }
+
+    /**
+     * Creates server with input uri and read timeout for transactions, i.e. {@link Server#submitTransaction(Transaction)}
+     * <p>Read time out is the time waiting for server to respond, increase to support
+     * ledger close time above default of 10 sec</p>
+     * @param uri Horizon server uri
+     * @param transactionsTimeout transactions read timeout value
+     * @param timeUnit transactions read timeout unit
+     */
+    public Server(String uri, int transactionsTimeout, TimeUnit timeUnit) {
+        createUri(uri);
+        httpClient = new OkHttpClient.Builder()
+                .readTimeout(transactionsTimeout, timeUnit)
+                .build();
+    }
+
+    private void createUri(String uri) {
         try {
             serverURI = new URI(uri);
         } catch (URISyntaxException e) {
@@ -131,15 +158,12 @@ public class Server {
                 .url(transactionsUri.toString())
                 .post(formBody)
                 .build();
-        ResponseBody responseBody = httpClient.newCall(request)
-                .execute()
-                .body();
+        Call call = httpClient.newCall(request);
 
-        if (responseBody != null) {
-            String responseString = responseBody.string();
-            return GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
-        }
-        return null;
+        TypeToken type = new TypeToken<SubmitTransactionResponse>() {};
+        ResponseHandler<SubmitTransactionResponse> responseHandler =
+                new ResponseHandler<SubmitTransactionResponse>(httpClient, type);
+        return responseHandler.handleCall(call);
     }
 
     /**
