@@ -46,16 +46,18 @@ public class Server {
     }
 
     /**
-     * Creates server with input uri and read timeout for transactions, i.e. {@link Server#submitTransaction(Transaction)}
-     * <p>Read time out is the time waiting for server to respond, increase to support
-     * ledger close time above default of 10 sec</p>
+     * Creates server with input uri and timeout for transactions, i.e. {@link Server#submitTransaction(Transaction)}
+     * <p>Increase timeout to prevent timeout exception for transaction with ledger close
+     * time above default of 10 sec</p>
      * @param uri Horizon server uri
-     * @param transactionsTimeout transactions read timeout value
-     * @param timeUnit transactions read timeout unit
+     * @param transactionsTimeout transactions timeout value
+     * @param timeUnit transactions timeout unit
      */
     public Server(String uri, int transactionsTimeout, TimeUnit timeUnit) {
         createUri(uri);
         httpClient = new OkHttpClient.Builder()
+                .connectTimeout(transactionsTimeout, timeUnit)
+                .writeTimeout(transactionsTimeout, timeUnit)
                 .readTimeout(transactionsTimeout, timeUnit)
                 .build();
     }
