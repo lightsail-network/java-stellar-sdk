@@ -24,27 +24,27 @@ public class ResponseHandler<T> {
   }
 
   public T handleResponse(final Response response) throws IOException, TooManyRequestsException {
-    // Too Many Requests
-    if (response.code() == 429) {
-      int retryAfter = Integer.parseInt(response.header("Retry-After"));
-      throw new TooManyRequestsException(retryAfter);
-    }
+    try {
+      // Too Many Requests
+      if (response.code() == 429) {
+        int retryAfter = Integer.parseInt(response.header("Retry-After"));
+        throw new TooManyRequestsException(retryAfter);
+      }
 
-    // No content
-    ResponseBody body = response.body();
-    if (body == null) {
-      throw new RuntimeException("Response contains no content");
-    }
+      String content = response.body().string();
 
-    // Other errors
-    if (response.code() >= 300) {
-      throw new ErrorResponse(response.code(), body.string());
-    }
+      // Other errors
+      if (response.code() >= 300) {
+        throw new ErrorResponse(response.code(), content);
+      }
 
-    T object = GsonSingleton.getInstance().fromJson(body.string(), type.getType());
-    if (object instanceof org.stellar.sdk.responses.Response) {
-      ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
+      T object = GsonSingleton.getInstance().fromJson(content, type.getType());
+      if (object instanceof org.stellar.sdk.responses.Response) {
+        ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
+      }
+      return object;
+    } finally {
+      response.close();
     }
-    return object;
   }
 }
