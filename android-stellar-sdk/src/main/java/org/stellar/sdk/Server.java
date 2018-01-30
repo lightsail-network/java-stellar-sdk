@@ -2,8 +2,6 @@ package org.stellar.sdk;
 
 import android.net.Uri;
 
-import com.google.gson.reflect.TypeToken;
-
 import org.stellar.sdk.requests.AccountsRequestBuilder;
 import org.stellar.sdk.requests.EffectsRequestBuilder;
 import org.stellar.sdk.requests.LedgersRequestBuilder;
@@ -12,9 +10,9 @@ import org.stellar.sdk.requests.OperationsRequestBuilder;
 import org.stellar.sdk.requests.OrderBookRequestBuilder;
 import org.stellar.sdk.requests.PathsRequestBuilder;
 import org.stellar.sdk.requests.PaymentsRequestBuilder;
-import org.stellar.sdk.requests.ResponseHandler;
 import org.stellar.sdk.requests.TradesRequestBuilder;
 import org.stellar.sdk.requests.TransactionsRequestBuilder;
+import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
 
 import java.io.IOException;
@@ -22,11 +20,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 /**
  * Main class used to connect to Horizon server.
@@ -160,12 +158,15 @@ public class Server {
                 .url(transactionsUri.toString())
                 .post(formBody)
                 .build();
-        Call call = httpClient.newCall(request);
+        ResponseBody responseBody = httpClient.newCall(request)
+                .execute()
+                .body();
 
-        TypeToken type = new TypeToken<SubmitTransactionResponse>() {};
-        ResponseHandler<SubmitTransactionResponse> responseHandler =
-                new ResponseHandler<SubmitTransactionResponse>(httpClient, type);
-        return responseHandler.handleCall(call);
+        if (responseBody != null) {
+            String responseString = responseBody.string();
+            return GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
+        }
+        return null;
     }
 
     /**
