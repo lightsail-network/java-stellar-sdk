@@ -18,6 +18,7 @@ import org.stellar.sdk.responses.SubmitTransactionResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -31,9 +32,35 @@ import okhttp3.ResponseBody;
 public class Server {
     private URI serverURI;
 
-    private OkHttpClient httpClient = new OkHttpClient();
+    private OkHttpClient httpClient;
 
+    /**
+     * Creates server with input uri
+     * @param uri Horizon server uri
+     */
     public Server(String uri) {
+        createUri(uri);
+        httpClient = new OkHttpClient();
+    }
+
+    /**
+     * Creates server with input uri and timeout for transactions, i.e. {@link Server#submitTransaction(Transaction)}
+     * <p>Increase timeout to prevent timeout exception for transaction with ledger close
+     * time above default of 10 sec</p>
+     * @param uri Horizon server uri
+     * @param transactionsTimeout transactions timeout value
+     * @param timeUnit transactions timeout unit
+     */
+    public Server(String uri, int transactionsTimeout, TimeUnit timeUnit) {
+        createUri(uri);
+        httpClient = new OkHttpClient.Builder()
+                .connectTimeout(transactionsTimeout, timeUnit)
+                .writeTimeout(transactionsTimeout, timeUnit)
+                .readTimeout(transactionsTimeout, timeUnit)
+                .build();
+    }
+
+    private void createUri(String uri) {
         try {
             serverURI = new URI(uri);
         } catch (URISyntaxException e) {
