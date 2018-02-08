@@ -3,8 +3,8 @@ package org.stellar.sdk.xdr;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+
+import static org.stellar.sdk.Util.CHARSET_UT8;
 
 public class XdrDataInputStream extends DataInputStream {
 
@@ -26,7 +26,7 @@ public class XdrDataInputStream extends DataInputStream {
         int l = readInt();
         byte[] bytes = new byte[l];
         read(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
+        return new String(bytes, CHARSET_UT8);
     }
 
     public int[] readIntArray() throws IOException {

@@ -1,8 +1,9 @@
 package org.stellar.sdk;
 
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.stellar.sdk.Util.CHARSET_UT8;
 
 /**
  * Network class is used to specify which Stellar network you want to use.
@@ -37,7 +38,12 @@ public class Network {
      * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
      */
     public byte[] getNetworkId() {
-        return Util.hash(current.getNetworkPassphrase().getBytes(StandardCharsets.UTF_8));
+        try {
+            return Util.hash(current.getNetworkPassphrase().getBytes(CHARSET_UT8));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
