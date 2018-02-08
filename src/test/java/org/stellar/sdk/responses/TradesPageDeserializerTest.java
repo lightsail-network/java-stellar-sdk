@@ -3,31 +3,39 @@ package org.stellar.sdk.responses;
 import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.KeyPair;
 
 public class TradesPageDeserializerTest extends TestCase {
     @Test
     public void testDeserialize() {
         Page<TradeResponse> tradesPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<TradeResponse>>() {}.getType());
 
-        assertEquals(tradesPage.getLinks().getNext().getHref(), "https://horizon.stellar.org/order_book/trades?order=asc&limit=10&cursor=43186647780560897-5");
-        assertEquals(tradesPage.getLinks().getPrev().getHref(), "https://horizon.stellar.org/order_book/trades?order=desc&limit=10&cursor=37129640086605825-1");
-        assertEquals(tradesPage.getLinks().getSelf().getHref(), "https://horizon.stellar.org/order_book/trades?order=asc&limit=10&cursor=");
+        assertEquals(tradesPage.getLinks().getNext().getHref(), "https://horizon.stellar.org/trades?order=asc&limit=10&cursor=3748308153536513-0");
+        assertEquals(tradesPage.getLinks().getPrev().getHref(), "https://horizon.stellar.org/trades?order=desc&limit=10&cursor=3697472920621057-0");
+        assertEquals(tradesPage.getLinks().getSelf().getHref(), "https://horizon.stellar.org/trades?order=asc&limit=10&cursor=");
 
-        assertEquals(tradesPage.getRecords().get(0).getId(), "37129640086605825-1");
-        assertEquals(tradesPage.getRecords().get(0).getPagingToken(), "37129640086605825-1");
-        assertEquals(tradesPage.getRecords().get(1).getBaseAccount().getAccountId(), "GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A");
+        assertEquals(tradesPage.getRecords().get(0).getId(), "3697472920621057-0");
+        assertEquals(tradesPage.getRecords().get(0).getPagingToken(), "3697472920621057-0");
+        assertEquals(tradesPage.getRecords().get(0).getLedgerCloseTime(), "2015-11-18T03:47:47Z");
+        assertEquals(tradesPage.getRecords().get(0).getOfferId(), "9");
+        assertEquals(tradesPage.getRecords().get(0).getBaseAsset(), new AssetTypeNative());
+        assertEquals(tradesPage.getRecords().get(0).getCounterAsset(), Asset.createNonNativeAsset("JPY", KeyPair.fromAccountId("GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM")));
+
+        assertEquals(tradesPage.getRecords().get(1).getBaseAccount().getAccountId(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     }
 
     String json = "{\n" +
             "  \"_links\": {\n" +
             "    \"self\": {\n" +
-            "      \"href\": \"https://horizon.stellar.org/order_book/trades?order=asc\\u0026limit=10\\u0026cursor=\"\n" +
+            "      \"href\": \"https://horizon.stellar.org/trades?order=asc\\u0026limit=10\\u0026cursor=\"\n" +
             "    },\n" +
             "    \"next\": {\n" +
-            "      \"href\": \"https://horizon.stellar.org/order_book/trades?order=asc\\u0026limit=10\\u0026cursor=43186647780560897-5\"\n" +
+            "      \"href\": \"https://horizon.stellar.org/trades?order=asc\\u0026limit=10\\u0026cursor=3748308153536513-0\"\n" +
             "    },\n" +
             "    \"prev\": {\n" +
-            "      \"href\": \"https://horizon.stellar.org/order_book/trades?order=desc\\u0026limit=10\\u0026cursor=37129640086605825-1\"\n" +
+            "      \"href\": \"https://horizon.stellar.org/trades?order=desc\\u0026limit=10\\u0026cursor=3697472920621057-0\"\n" +
             "    }\n" +
             "  },\n" +
             "  \"_embedded\": {\n" +
@@ -35,242 +43,292 @@ public class TradesPageDeserializerTest extends TestCase {
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3697472920621057\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"37129640086605825-1\",\n" +
-            "        \"paging_token\": \"37129640086605825-1\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"1520.0000000\",\n" +
+            "        \"id\": \"3697472920621057-0\",\n" +
+            "        \"paging_token\": \"3697472920621057-0\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T03:47:47Z\",\n" +
+            "        \"offer_id\": \"9\",\n" +
+            "        \"base_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"base_amount\": \"10.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\",\n" +
-            "        \"counter_amount\": \"3.6854018\",\n" +
+            "        \"counter_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"counter_amount\": \"2.6700000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-01-17T21:28:19Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": true\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3697472920621057\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"37130752483135489-2\",\n" +
-            "        \"paging_token\": \"37130752483135489-2\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"100.5759309\",\n" +
+            "        \"id\": \"3697472920621057-1\",\n" +
+            "        \"paging_token\": \"3697472920621057-1\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T03:47:47Z\",\n" +
+            "        \"offer_id\": \"4\",\n" +
+            "        \"base_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"base_amount\": \"10.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\",\n" +
-            "        \"counter_amount\": \"0.2508100\",\n" +
+            "        \"counter_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"counter_amount\": \"2.6800000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-01-17T21:49:54Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": true\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3697472920621057\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"37141648815165441-1\",\n" +
-            "        \"paging_token\": \"37141648815165441-1\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"25.0000000\",\n" +
+            "        \"id\": \"3697472920621057-2\",\n" +
+            "        \"paging_token\": \"3697472920621057-2\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T03:47:47Z\",\n" +
+            "        \"offer_id\": \"8\",\n" +
+            "        \"base_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"base_amount\": \"20.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\",\n" +
-            "        \"counter_amount\": \"0.0623425\",\n" +
+            "        \"counter_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"counter_amount\": \"5.3600000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-01-18T01:21:09Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": true\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3712329212497921\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"37141717534642177-2\",\n" +
-            "        \"paging_token\": \"37141717534642177-2\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"100.5759309\",\n" +
+            "        \"id\": \"3712329212497921-0\",\n" +
+            "        \"paging_token\": \"3712329212497921-0\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T07:26:21Z\",\n" +
+            "        \"offer_id\": \"36\",\n" +
+            "        \"base_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"base_amount\": \"5.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\",\n" +
-            "        \"counter_amount\": \"0.2508100\",\n" +
+            "        \"counter_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"counter_amount\": \"1.2000192\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-01-18T01:22:31Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": false\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3716237632737281\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"37228243945787393-2\",\n" +
-            "        \"paging_token\": \"37228243945787393-2\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"10.0001205\",\n" +
+            "        \"id\": \"3716237632737281-0\",\n" +
+            "        \"paging_token\": \"3716237632737281-0\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T08:27:26Z\",\n" +
+            "        \"offer_id\": \"37\",\n" +
+            "        \"base_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"base_amount\": \"10.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GDFGO6BQAYGGBC4IANIMTAUUOITROGFO42ZPPG5J2SAF5UHNGRABVAE3\",\n" +
-            "        \"counter_amount\": \"0.0250930\",\n" +
+            "        \"counter_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"counter_amount\": \"2.4500000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-01-19T05:20:43Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": true\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GAKLCFRTFDXKOEEUSBS23FBSUUVJRMDQHGCHNGGGJZQRK7BCPIMHUC4P\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3716302057246721\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"42890518375436289-1\",\n" +
-            "        \"paging_token\": \"42890518375436289-1\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"0.0001000\",\n" +
+            "        \"id\": \"3716302057246721-0\",\n" +
+            "        \"paging_token\": \"3716302057246721-0\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T08:28:40Z\",\n" +
+            "        \"offer_id\": \"35\",\n" +
+            "        \"base_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"base_amount\": \"10.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GAKLCFRTFDXKOEEUSBS23FBSUUVJRMDQHGCHNGGGJZQRK7BCPIMHUC4P\",\n" +
-            "        \"counter_amount\": \"0.0000002\",\n" +
+            "        \"counter_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"counter_amount\": \"2.5000000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-04-05T23:28:35Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": true\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GAKLCFRTFDXKOEEUSBS23FBSUUVJRMDQHGCHNGGGJZQRK7BCPIMHUC4P\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3716302057246721\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"42891175505436673-1\",\n" +
-            "        \"paging_token\": \"42891175505436673-1\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"1.0000000\",\n" +
+            "        \"id\": \"3716302057246721-1\",\n" +
+            "        \"paging_token\": \"3716302057246721-1\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T08:28:40Z\",\n" +
+            "        \"offer_id\": \"34\",\n" +
+            "        \"base_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"base_amount\": \"10.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GAKLCFRTFDXKOEEUSBS23FBSUUVJRMDQHGCHNGGGJZQRK7BCPIMHUC4P\",\n" +
-            "        \"counter_amount\": \"0.0024937\",\n" +
+            "        \"counter_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"counter_amount\": \"3.0000000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-04-05T23:41:17Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": true\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCPP2T36NFH4D7OOCYCHKJSL3IWVRQC6CGHWADUB6JL6XKSZZP3KXACP\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3725961438695425\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"43186647780560897-1\",\n" +
-            "        \"paging_token\": \"43186647780560897-1\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"73.9999198\",\n" +
+            "        \"id\": \"3725961438695425-0\",\n" +
+            "        \"paging_token\": \"3725961438695425-0\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T11:09:30Z\",\n" +
+            "        \"offer_id\": \"47\",\n" +
+            "        \"base_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"base_amount\": \"5.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GCPP2T36NFH4D7OOCYCHKJSL3IWVRQC6CGHWADUB6JL6XKSZZP3KXACP\",\n" +
-            "        \"counter_amount\": \"0.1845336\",\n" +
+            "        \"counter_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"counter_amount\": \"1.0000000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-04-09T09:57:43Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": false\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCPP2T36NFH4D7OOCYCHKJSL3IWVRQC6CGHWADUB6JL6XKSZZP3KXACP\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3748080520269825\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"43186647780560897-3\",\n" +
-            "        \"paging_token\": \"43186647780560897-3\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"100.0000000\",\n" +
+            "        \"id\": \"3748080520269825-0\",\n" +
+            "        \"paging_token\": \"3748080520269825-0\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T16:56:09Z\",\n" +
+            "        \"offer_id\": \"53\",\n" +
+            "        \"base_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"base_amount\": \"10.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GCPP2T36NFH4D7OOCYCHKJSL3IWVRQC6CGHWADUB6JL6XKSZZP3KXACP\",\n" +
-            "        \"counter_amount\": \"0.2493700\",\n" +
+            "        \"counter_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"counter_amount\": \"3.0000000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-04-09T09:57:43Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": true\n" +
             "      },\n" +
             "      {\n" +
             "        \"_links\": {\n" +
             "          \"self\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"\"\n" +
             "          },\n" +
             "          \"base\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\"\n" +
             "          },\n" +
             "          \"counter\": {\n" +
-            "            \"href\": \"https://horizon.stellar.org/accounts/GCPP2T36NFH4D7OOCYCHKJSL3IWVRQC6CGHWADUB6JL6XKSZZP3KXACP\"\n" +
+            "            \"href\": \"https://horizon.stellar.org/accounts/GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\"\n" +
+            "          },\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/3748308153536513\"\n" +
             "          }\n" +
             "        },\n" +
-            "        \"id\": \"43186647780560897-5\",\n" +
-            "        \"paging_token\": \"43186647780560897-5\",\n" +
-            "        \"base_account\": \"GCI7ILB37OFVHLLSA74UCXZFCTPEBJOZK7YCNBI7DKH7D76U4CRJBL2A\",\n" +
-            "        \"base_amount\": \"274.0057219\",\n" +
+            "        \"id\": \"3748308153536513-0\",\n" +
+            "        \"paging_token\": \"3748308153536513-0\",\n" +
+            "        \"ledger_close_time\": \"2015-11-18T16:59:37Z\",\n" +
+            "        \"offer_id\": \"59\",\n" +
+            "        \"base_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+            "        \"base_amount\": \"30.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
-            "        \"counter_account\": \"GCPP2T36NFH4D7OOCYCHKJSL3IWVRQC6CGHWADUB6JL6XKSZZP3KXACP\",\n" +
-            "        \"counter_amount\": \"0.6800000\",\n" +
+            "        \"counter_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+            "        \"counter_amount\": \"9.0000000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"counter_asset_code\": \"DEMO\",\n" +
-            "        \"counter_asset_issuer\": \"GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE\",\n" +
-            "        \"created_at\": \"2017-04-09T09:57:43Z\"\n" +
+            "        \"counter_asset_code\": \"JPY\",\n" +
+            "        \"counter_asset_issuer\": \"GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM\",\n" +
+            "        \"base_is_seller\": true\n" +
             "      }\n" +
             "    ]\n" +
             "  }\n" +
