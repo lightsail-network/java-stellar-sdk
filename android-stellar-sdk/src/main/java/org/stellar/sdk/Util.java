@@ -4,11 +4,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-class Util {
+public class Util {
 
-  public static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+  public static final String CHARSET_UT8 = "UTF-8";
+  static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
-  public static String bytesToHex(byte[] bytes) {
+  static String bytesToHex(byte[] bytes) {
     char[] hexChars = new char[bytes.length * 2];
     for ( int j = 0; j < bytes.length; j++ ) {
       int v = bytes[j] & 0xFF;
@@ -18,7 +19,7 @@ class Util {
     return new String(hexChars);
   }
 
-  public static byte[] hexToBytes(String s) {
+  static byte[] hexToBytes(String s) {
     int len = s.length();
     byte[] data = new byte[len / 2];
     for (int i = 0; i < len; i += 2) {
@@ -32,7 +33,7 @@ class Util {
    * Returns SHA-256 hash of <code>data</code>.
    * @param data
    */
-  public static byte[] hash(byte[] data) {
+  static byte[] hash(byte[] data) {
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
       md.update(data);

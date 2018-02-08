@@ -4,6 +4,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static org.stellar.sdk.Util.CHARSET_UT8;
+
 public class XdrDataOutputStream extends DataOutputStream {
 
     private final XdrOutputStream mOut;
@@ -14,7 +16,7 @@ public class XdrDataOutputStream extends DataOutputStream {
     }
 
     public void writeString(String s) throws IOException {
-        byte[] chars = s.getBytes("UTF-8");
+        byte[] chars = s.getBytes(CHARSET_UT8);
         writeInt(chars.length);
         write(chars);
     }

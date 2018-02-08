@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.stellar.sdk.Util.CHARSET_UT8;
+
 public class XdrDataInputStream extends DataInputStream {
 
     // The underlying input stream
@@ -24,7 +26,7 @@ public class XdrDataInputStream extends DataInputStream {
         int l = readInt();
         byte[] bytes = new byte[l];
         read(bytes);
-        return new String(bytes, "UTF-8");
+        return new String(bytes, CHARSET_UT8);
     }
 
     public int[] readIntArray() throws IOException {
