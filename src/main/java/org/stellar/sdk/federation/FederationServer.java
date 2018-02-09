@@ -83,35 +83,29 @@ public class FederationServer {
     OkHttpClient httpClient = FederationServer.createHttpClient();
 
     Request request = new Request.Builder().get().url(stellarTomlUri).build();
-    Response response;
+    Response response = null;
     try {
       response = httpClient.newCall(request).execute();
+
+      if (response.code() >= 300) {
+        throw new StellarTomlNotFoundInvalidException();
+      }
+
+      Toml stellarToml = new Toml().read(response.body().string());
+
+      String federationServer = stellarToml.getString("FEDERATION_SERVER");
+      if (federationServer == null) {
+        throw new NoFederationServerException();
+      }
+
+      return new FederationServer(federationServer, domain);
     } catch (IOException e) {
       throw new ConnectionErrorException();
+    } finally {
+      if (response != null) {
+        response.close();
+      }
     }
-
-    if (response.code() >= 300) {
-      throw new StellarTomlNotFoundInvalidException();
-    }
-
-    ResponseBody responseBody = response.body();
-    if (responseBody == null) {
-      throw new StellarTomlNotFoundInvalidException();
-    }
-
-    Toml stellarToml;
-    try {
-      stellarToml = new Toml().read(responseBody.string());
-    } catch (IOException e) {
-      throw new ConnectionErrorException();
-    }
-
-    String federationServer = stellarToml.getString("FEDERATION_SERVER");
-    if (federationServer == null) {
-      throw new NoFederationServerException();
-    }
-
-    return new FederationServer(federationServer, domain);
   }
 
   /**
@@ -138,8 +132,9 @@ public class FederationServer {
     ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<FederationResponse>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
+    Response response = null;
     try {
-      Response response = this.httpClient.newCall(request).execute();
+      response = this.httpClient.newCall(request).execute();
       if (response.code() == 404) {
         throw new NotFoundException();
       }
@@ -147,6 +142,10 @@ public class FederationServer {
       return responseHandler.handleResponse(response);
     } catch (IOException e) {
       throw new ConnectionErrorException();
+    } finally {
+      if (response != null) {
+        response.close();
+      }
     }
   }
 

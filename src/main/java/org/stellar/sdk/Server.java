@@ -112,15 +112,16 @@ public class Server {
         HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
         RequestBody requestBody = new FormBody.Builder().add("tx", transaction.toEnvelopeXdrBase64()).build();
         Request submitTransactionRequest = new Request.Builder().url(transactionsURI).post(requestBody).build();
-        Response response = this.httpClient.newCall(submitTransactionRequest).execute();
 
-        ResponseBody responseBody = response.body();
-
-        if (responseBody == null) {
-            return null;
+        Response response = null;
+        try {
+            response = this.httpClient.newCall(submitTransactionRequest).execute();
+            SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(response.body().string(), SubmitTransactionResponse.class);
+            return submitTransactionResponse;
+        } finally {
+            if (response != null) {
+                response.close();
+            }
         }
-
-        SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(responseBody.string(), SubmitTransactionResponse.class);
-        return submitTransactionResponse;
     }
 }
