@@ -110,16 +110,59 @@ public class TransactionTest {
 
   @Test
   public void testTransactionFromEnvelopeXdrBase64() {
+    // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    long sequenceNumber = 2908908335136768L;
+    Account account = new Account(source, sequenceNumber);
+
+    Transaction tx1, tx2;
     String xdrBase64Envelope;
-    Transaction tx;
 
-    xdrBase64Envelope = "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDzfR5PgRFim5Wdvq9ImdZNWGBxBWwYkQPa9l5iiBdtPLzAZv6qj+iOfSrqinsoF0XrLkwdIcZQVtp3VRHhRoUE";
-    tx = Transaction.fromEnvelope(Transaction.decodeBase64XdrEnvelope(xdrBase64Envelope));
-    assertEquals(xdrBase64Envelope, tx.toEnvelopeXdrBase64());
+    // the simplest case
+    tx1 = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .build();
+    tx1.sign(source);
 
-    xdrBase64Envelope = "AAAAANsc5j01PQN1UKWKTdrD6vv0wBgXxBW5D+mhHV/i5nKQAAAAZABlcJIAAAAGAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAANzIBPq8a7WNSxKoZfsLmrGETqAfr4iGPmxRrQLEsHQSAAAAAAAAAAEqBfIAAAAAAAAAAAHi5nKQAAAAQM9vvEUpodJbquHyUyCfqTw21h9/iajVIl6KyQOE13GKmpPQDXXop/NKHEy+7da0QkH7l8g0uztw/u0C5tk4zgg=";
-    tx = Transaction.fromEnvelope(Transaction.decodeBase64XdrEnvelope(xdrBase64Envelope));
-    assertEquals(xdrBase64Envelope, tx.toEnvelopeXdrBase64());
+    xdrBase64Envelope = tx1.toEnvelopeXdrBase64();
+    tx2 = Transaction.fromEnvelope(Transaction.decodeXdrEnvelope(xdrBase64Envelope));
+    assertEquals(xdrBase64Envelope, tx2.toEnvelopeXdrBase64());
+
+    // transaction with memo
+    tx1 = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .addMemo(Memo.text("Hello world!"))
+            .build();
+    tx1.sign(source);
+
+    xdrBase64Envelope = tx1.toEnvelopeXdrBase64();
+    tx2 = Transaction.fromEnvelope(Transaction.decodeXdrEnvelope(xdrBase64Envelope));
+    assertEquals(xdrBase64Envelope, tx2.toEnvelopeXdrBase64());
+
+    // transaction with time bounds
+    tx1 = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .addTimeBounds(new TimeBounds(42, 1337))
+            .build();
+    tx1.sign(source);
+
+    xdrBase64Envelope = tx1.toEnvelopeXdrBase64();
+    tx2 = Transaction.fromEnvelope(Transaction.decodeXdrEnvelope(xdrBase64Envelope));
+    assertEquals(xdrBase64Envelope, tx2.toEnvelopeXdrBase64());
+
+    // transaction with memo and time bounds
+    tx1 = new Transaction.Builder(account)
+            .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "2000").build())
+            .addMemo(Memo.text("Hello world!"))
+            .addTimeBounds(new TimeBounds(42, 1337))
+            .build();
+    tx1.sign(source);
+
+    xdrBase64Envelope = tx1.toEnvelopeXdrBase64();
+    tx2 = Transaction.fromEnvelope(Transaction.decodeXdrEnvelope(xdrBase64Envelope));
+    assertEquals(xdrBase64Envelope, tx2.toEnvelopeXdrBase64());
   }
 
   @Test
