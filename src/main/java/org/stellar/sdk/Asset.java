@@ -7,6 +7,14 @@ package org.stellar.sdk;
 public abstract class Asset {
   Asset() {}
 
+  public static Asset create(String type, String code, String issuer) {
+    if (type.equals("native")) {
+      return new AssetTypeNative();
+    } else {
+      return Asset.createNonNativeAsset(code, KeyPair.fromAccountId(issuer));
+    }
+  }
+
   /**
    * Creates one of AssetTypeCreditAlphaNum4 or AssetTypeCreditAlphaNum12 object based on a <code>code</code> length
    * @param code Asset code

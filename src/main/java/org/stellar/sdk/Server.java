@@ -1,111 +1,119 @@
 package org.stellar.sdk;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
+import okhttp3.*;
 import org.stellar.sdk.requests.*;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Main class used to connect to Horizon server.
  */
 public class Server {
-    private URI serverURI;
-    private HttpClient httpClient = HttpClients.createDefault();
+    private HttpUrl serverURI;
+    private OkHttpClient httpClient;
 
     public Server(String uri) {
-        try {
-            serverURI = new URI(uri);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        serverURI = HttpUrl.parse(uri);
+        httpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(false)
+                .build();
+    }
+
+    public OkHttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public void setHttpClient(OkHttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     /**
      * Returns {@link AccountsRequestBuilder} instance.
      */
     public AccountsRequestBuilder accounts() {
-        return new AccountsRequestBuilder(serverURI);
+        return new AccountsRequestBuilder(httpClient, serverURI);
+    }
+
+    /**
+     * Returns {@link AssetsRequestBuilder} instance.
+     */
+    public AssetsRequestBuilder assets() {
+        return new AssetsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link EffectsRequestBuilder} instance.
      */
     public EffectsRequestBuilder effects() {
-        return new EffectsRequestBuilder(serverURI);
+        return new EffectsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link LedgersRequestBuilder} instance.
      */
     public LedgersRequestBuilder ledgers() {
-        return new LedgersRequestBuilder(serverURI);
+        return new LedgersRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link OffersRequestBuilder} instance.
      */
     public OffersRequestBuilder offers() {
-        return new OffersRequestBuilder(serverURI);
+        return new OffersRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link OperationsRequestBuilder} instance.
      */
     public OperationsRequestBuilder operations() {
-        return new OperationsRequestBuilder(serverURI);
+        return new OperationsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link OrderBookRequestBuilder} instance.
      */
     public OrderBookRequestBuilder orderBook() {
-        return new OrderBookRequestBuilder(serverURI);
+        return new OrderBookRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link TradesRequestBuilder} instance.
      */
     public TradesRequestBuilder trades() {
-        return new TradesRequestBuilder(serverURI);
+        return new TradesRequestBuilder(httpClient, serverURI);
+    }
+
+    /**
+     * Returns {@link TradeAggregationsRequestBuilder} instance.
+     */
+    public TradeAggregationsRequestBuilder tradeAggregations(Asset baseAsset, Asset counterAsset, long startTime, long endTime, long resolution) {
+        return new TradeAggregationsRequestBuilder(httpClient, serverURI, baseAsset, counterAsset, startTime, endTime, resolution);
     }
 
     /**
      * Returns {@link PathsRequestBuilder} instance.
      */
     public PathsRequestBuilder paths() {
-        return new PathsRequestBuilder(serverURI);
+        return new PathsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link PaymentsRequestBuilder} instance.
      */
     public PaymentsRequestBuilder payments() {
-        return new PaymentsRequestBuilder(serverURI);
+        return new PaymentsRequestBuilder(httpClient, serverURI);
     }
 
     /**
      * Returns {@link TransactionsRequestBuilder} instance.
      */
     public TransactionsRequestBuilder transactions() {
-        return new TransactionsRequestBuilder(serverURI);
+        return new TransactionsRequestBuilder(httpClient, serverURI);
     }
 
     /**
@@ -115,41 +123,19 @@ public class Server {
      * @throws IOException
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
-        URI transactionsURI;
+        HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
+        RequestBody requestBody = new FormBody.Builder().add("tx", transaction.toEnvelopeXdrBase64()).build();
+        Request submitTransactionRequest = new Request.Builder().url(transactionsURI).post(requestBody).build();
+
+        Response response = null;
         try {
-            transactionsURI = new URIBuilder(serverURI).setPath("/transactions").build();
-        } catch (URISyntaxException e) {
-            throw new AssertionError(e);
-        }
-        HttpPost submitTransactionRequest = new HttpPost(transactionsURI);
-
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("tx", transaction.toEnvelopeXdrBase64()));
-        submitTransactionRequest.setEntity(new UrlEncodedFormEntity(params));
-
-        HttpResponse response = httpClient.execute(submitTransactionRequest);
-        HttpEntity entity = response.getEntity();
-
-        if (entity != null) {
-            InputStream responseStream = entity.getContent();
-            try {
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(responseStream, writer, StandardCharsets.UTF_8);
-                String responseString = writer.toString();
-                SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(responseString, SubmitTransactionResponse.class);
-                return submitTransactionResponse;
-            } finally {
-                responseStream.close();
+            response = this.httpClient.newCall(submitTransactionRequest).execute();
+            SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(response.body().string(), SubmitTransactionResponse.class);
+            return submitTransactionResponse;
+        } finally {
+            if (response != null) {
+                response.close();
             }
         }
-        return null;
-    }
-
-    /**
-     * To support mocking a client
-     * @param httpClient
-     */
-    void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
     }
 }

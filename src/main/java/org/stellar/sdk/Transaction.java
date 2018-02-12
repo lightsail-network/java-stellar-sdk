@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.binary.Base64;
+import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.SignatureHint;
@@ -202,8 +202,8 @@ public class Transaction {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
       TransactionEnvelope.encode(xdrOutputStream, envelope);
-      Base64 base64Codec = new Base64();
-      return base64Codec.encodeAsString(outputStream.toByteArray());
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(outputStream.toByteArray());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

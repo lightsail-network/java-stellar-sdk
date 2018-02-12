@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.DecoderException;
+import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.MemoType;
 
 /**
@@ -50,9 +50,8 @@ public abstract class Memo {
     /**
      * Creates new {@link MemoHash} instance from hex-encoded string
      * @param hexString
-     * @throws DecoderException
      */
-    public static MemoHash hash(String hexString) throws DecoderException {
+    public static MemoHash hash(String hexString) {
         return new MemoHash(hexString);
     }
 
@@ -67,10 +66,10 @@ public abstract class Memo {
     /**
      * Creates new {@link MemoReturnHash} instance from hex-encoded string.
      * @param hexString
-     * @throws DecoderException
      */
-    public static MemoReturnHash returnHash(String hexString) throws DecoderException {
-        return new MemoReturnHash(hexString);
+    public static MemoReturnHash returnHash(String hexString) {
+        // We change to lowercase because we want to decode both: upper cased and lower cased alphabets.
+        return new MemoReturnHash(BaseEncoding.base16().lowerCase().decode(hexString.toLowerCase()));
     }
 
     abstract org.stellar.sdk.xdr.Memo toXdr();

@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -37,7 +37,7 @@ public class Network {
      * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
      */
     public byte[] getNetworkId() {
-        return Util.hash(current.getNetworkPassphrase().getBytes(StandardCharsets.UTF_8));
+        return Util.hash(current.getNetworkPassphrase().getBytes(Charset.forName("UTF-8")));
     }
 
     /**

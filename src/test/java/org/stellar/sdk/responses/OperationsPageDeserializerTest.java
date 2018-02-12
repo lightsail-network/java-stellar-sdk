@@ -20,6 +20,8 @@ public class OperationsPageDeserializerTest extends TestCase {
     assertEquals(createAccountOperation.getPagingToken(), "3717508943056897");
     assertEquals(createAccountOperation.getAccount().getAccountId(), "GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE");
     assertEquals(createAccountOperation.getFunder().getAccountId(), "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K");
+    assertEquals(createAccountOperation.getCreatedAt(), "2018-01-22T21:30:53Z");
+    assertEquals(createAccountOperation.getTransactionHash(), "dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046");
 
     PaymentOperationResponse paymentOperation = (PaymentOperationResponse) operationsPage.getRecords().get(4);
     assertEquals(paymentOperation.getAmount(), "10.123");
@@ -65,6 +67,8 @@ public class OperationsPageDeserializerTest extends TestCase {
           "        \"source_account\": \"GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K\",\n" +
           "        \"type\": \"create_account\",\n" +
           "        \"type_i\": 0,\n" +
+          "        \"created_at\": \"2018-01-22T21:30:53Z\",\n" +
+          "        \"transaction_hash\": \"dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046\","+
           "        \"starting_balance\": \"10000.0\",\n" +
           "        \"funder\": \"GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K\",\n" +
           "        \"account\": \"GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE\"\n" +
