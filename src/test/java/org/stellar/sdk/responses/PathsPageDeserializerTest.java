@@ -2,6 +2,7 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.reflect.TypeToken;
 
+import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
@@ -19,7 +20,8 @@ public class PathsPageDeserializerTest {
   public void testDeserialize() throws IOException, URISyntaxException {
     Page<PathResponse> pathsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<PathResponse>>() {}.getType());
 
-    assertNull(pathsPage.getNextPage());
+    // We're checking if next page is null so we can pass any OkHttpClient object - it won't be used anyway.
+    assertNull(pathsPage.getNextPage(new OkHttpClient()));
 
     assertEquals(pathsPage.getRecords().get(0).getDestinationAmount(), "20.0000000");
     Assert.assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));

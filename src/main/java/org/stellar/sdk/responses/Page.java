@@ -38,7 +38,7 @@ public class Page<T> extends Response {
    * @throws URISyntaxException
    * @throws IOException
    */
-  public Page<T> getNextPage() throws URISyntaxException, IOException {
+  public Page<T> getNextPage(OkHttpClient httpClient) throws URISyntaxException, IOException {
     if (this.getLinks().getNext() == null) {
       return null;
     }
@@ -46,9 +46,8 @@ public class Page<T> extends Response {
     ResponseHandler<Page<T>> responseHandler = new ResponseHandler<Page<T>>(type);
     String url = this.getLinks().getNext().getHref();
 
-    OkHttpClient client = new OkHttpClient();
     Request request = new Request.Builder().get().url(url).build();
-    okhttp3.Response response = client.newCall(request).execute();
+    okhttp3.Response response = httpClient.newCall(request).execute();
 
     return responseHandler.handleResponse(response);
   }
