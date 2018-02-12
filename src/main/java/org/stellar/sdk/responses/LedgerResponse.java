@@ -31,12 +31,16 @@ public class LedgerResponse extends Response {
   private final Long baseFee;
   @SerializedName("base_reserve")
   private final String baseReserve;
+  @SerializedName("base_fee_in_stroops")
+  private final String baseFeeInStroops;
+  @SerializedName("base_reserve_in_stroops")
+  private final String baseReserveInStroops;
   @SerializedName("max_tx_set_size")
   private final Integer maxTxSetSize;
   @SerializedName("_links")
   private final Links links;
 
-  LedgerResponse(Long sequence, String hash, String pagingToken, String prevHash, Integer transactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, Integer maxTxSetSize, Links links) {
+  LedgerResponse(Long sequence, String hash, String pagingToken, String prevHash, Integer transactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, String baseFeeInStroops, String baseReserveInStroops, Integer maxTxSetSize, Links links) {
     this.sequence = sequence;
     this.hash = hash;
     this.pagingToken = pagingToken;
@@ -47,7 +51,9 @@ public class LedgerResponse extends Response {
     this.totalCoins = totalCoins;
     this.feePool = feePool;
     this.baseFee = baseFee;
+    this.baseFeeInStroops = baseFeeInStroops;
     this.baseReserve = baseReserve;
+    this.baseReserveInStroops = baseReserveInStroops;
     this.maxTxSetSize = maxTxSetSize;
     this.links = links;
   }
@@ -94,6 +100,14 @@ public class LedgerResponse extends Response {
 
   public String getBaseReserve() {
     return baseReserve;
+  }
+
+  public String getBaseFeeInStroops() {
+    return baseFeeInStroops;
+  }
+
+  public String getBaseReserveInStroops() {
+    return baseReserveInStroops;
   }
 
   public Integer getMaxTxSetSize() {

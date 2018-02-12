@@ -19,6 +19,10 @@ public abstract class OperationResponse extends Response {
   protected KeyPair sourceAccount;
   @SerializedName("paging_token")
   protected String pagingToken;
+  @SerializedName("created_at")
+  protected String createdAt;
+  @SerializedName("transaction_hash")
+  protected String transactionHash;
   @SerializedName("type")
   protected String type;
   @SerializedName("_links")
@@ -54,6 +58,17 @@ public abstract class OperationResponse extends Response {
    */
   public String getType() {
     return type;
+  }
+
+  public String getCreatedAt() {
+    return createdAt;
+  }
+
+  /**
+   * Returns transaction hash of transaction this operation belongs to.
+   */
+  public String getTransactionHash() {
+    return transactionHash;
   }
 
   public Links getLinks() {
