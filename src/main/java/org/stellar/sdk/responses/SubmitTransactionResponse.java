@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 
-import org.apache.commons.codec.binary.Base64;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.TransactionResult;
@@ -75,8 +75,8 @@ public class SubmitTransactionResponse extends Response {
             return null;
         }
 
-        Base64 base64Codec = new Base64();
-        byte[] bytes = base64Codec.decode(this.getResultXdr());
+        BaseEncoding base64Encoding = BaseEncoding.base64();
+        byte[] bytes = base64Encoding.decode(this.getResultXdr());
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
         TransactionResult result;

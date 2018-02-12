@@ -2,61 +2,44 @@ package org.stellar.sdk.federation;
 
 import junit.framework.TestCase;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.message.BasicStatusLine;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 public class FederationTest extends TestCase {
-  @Mock
-  private HttpClient mockClient;
-  @Mock
-  private HttpResponse mockResponse;
-  @Mock
-  private HttpEntity mockEntity;
-
-  private final StatusLine httpOK = new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_OK, "OK");
-  private final String stellarToml =
-          "FEDERATION_SERVER = \"https://api.stellar.org/federation\"";
-  private final String successResponse =
-          "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}";
-
   @Before
-  public void setUp() throws URISyntaxException, IOException {
-    MockitoAnnotations.initMocks(this);
-    FederationServer.setHttpClient(mockClient);
-    when(mockResponse.getEntity()).thenReturn(mockEntity);
-    when(mockClient.execute((HttpGet) any(), (HttpClientContext) any())).thenReturn(mockResponse);
+  public void setUp() throws IOException {
+    FederationServer.httpsConnection = false;
+  }
+
+  @After
+  public void tearDown() throws IOException {
+    FederationServer.httpsConnection = true;
   }
 
   @Test
   public void testResolveSuccess() throws IOException {
-    InputStream stellarTomlresponse = new ByteArrayInputStream(stellarToml.getBytes(StandardCharsets.UTF_8));
-    InputStream federationResponse = new ByteArrayInputStream(successResponse.getBytes(StandardCharsets.UTF_8));
+    MockWebServer mockWebServer = new MockWebServer();
+    mockWebServer.start();
 
-    when(mockResponse.getStatusLine()).thenReturn(httpOK, httpOK);
-    when(mockEntity.getContent()).thenReturn(stellarTomlresponse, federationResponse);
+    HttpUrl baseUrl = mockWebServer.url("");
+    String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
 
-    FederationResponse response = Federation.resolve("bob*stellar.org");
-    assertEquals(response.getStellarAddress(), "bob*stellar.org");
+      String stellarToml =
+              "FEDERATION_SERVER = \"http://"+domain+"/federation\"";
+      String successResponse =
+              "{\"stellar_address\":\"bob*"+domain+"\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}";
+
+    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(stellarToml));
+    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
+
+    FederationResponse response = Federation.resolve("bob*"+domain);
+    assertEquals(response.getStellarAddress(), "bob*"+domain);
     assertEquals(response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
     assertNull(response.getMemoType());
     assertNull(response.getMemo());

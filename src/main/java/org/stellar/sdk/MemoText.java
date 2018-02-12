@@ -2,7 +2,7 @@ package org.stellar.sdk;
 
 import org.stellar.sdk.xdr.MemoType;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -15,7 +15,7 @@ public class MemoText extends Memo {
   public MemoText(String text) {
     this.text = checkNotNull(text, "text cannot be null");
 
-    int length = text.getBytes((StandardCharsets.UTF_8)).length;
+    int length = text.getBytes((Charset.forName("UTF-8"))).length;
     if (length > 28) {
       throw new MemoTooLongException("text must be <= 28 bytes. length=" + String.valueOf(length));
     }
