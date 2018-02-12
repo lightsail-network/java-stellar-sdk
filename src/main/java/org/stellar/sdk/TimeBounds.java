@@ -15,8 +15,11 @@ final public class TimeBounds {
 	 * @param maxTime 64bit Unix timestamp
 	 */
 	public TimeBounds(long minTime, long maxTime) {
-		if (minTime > maxTime) {
-			throw new IllegalArgumentException("minTime must be <= maxTime");
+		if (minTime < 0 || maxTime < 0) {
+			throw new IllegalArgumentException("minTime and maxTime cannot be negative");
+		}
+		else if (maxTime != 0 && minTime >= maxTime) {
+			throw new IllegalArgumentException("minTime must be < maxTime");
 		}
 		
 		mMinTime = minTime;
@@ -40,5 +43,15 @@ final public class TimeBounds {
 		timeBounds.setMinTime(minTime);
 		timeBounds.setMaxTime(maxTime);
 		return timeBounds;
+	}
+
+	/**
+	 * Creates new TimeBounds object from XDR-encoded time bounds.
+	 * @param xdrTimeBounds
+	 * @return the new TimeBounds instance
+	 */
+	public static TimeBounds fromXdr(org.stellar.sdk.xdr.TimeBounds xdrTimeBounds) {
+		return new TimeBounds(xdrTimeBounds.getMinTime().getUint64(),
+				              xdrTimeBounds.getMaxTime().getUint64());
 	}
 }

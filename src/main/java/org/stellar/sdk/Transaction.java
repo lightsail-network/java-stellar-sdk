@@ -215,7 +215,7 @@ public class Transaction {
    * @param encodedXdrTxEnvelope the base64-encoding of an XDR-encoded {@link TransactionEnvelope}.
    * @return the decoded {@link TransactionEnvelope}
    */
-  public static TransactionEnvelope decodeBase64XdrEnvelope(String encodedXdrTxEnvelope) {
+  public static TransactionEnvelope decodeXdrEnvelope(String encodedXdrTxEnvelope) {
     checkNotNull(encodedXdrTxEnvelope, "Transaction envelope cannot be null");
     BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] xdrTxEnvelope = base64Encoding.decode(encodedXdrTxEnvelope);
@@ -255,8 +255,7 @@ public class Transaction {
     org.stellar.sdk.xdr.TimeBounds xdrTimeBounds = xdrTx.getTimeBounds();
     TimeBounds timeBounds = null;
     if (xdrTimeBounds != null) {
-      timeBounds = new TimeBounds(xdrTimeBounds.getMinTime().getUint64(),
-                                  xdrTimeBounds.getMaxTime().getUint64());
+      timeBounds = TimeBounds.fromXdr(xdrTimeBounds);
     }
     Transaction tx = new Transaction(sourceAccount, sequenceNumber, operations, memo, timeBounds);
     DecoratedSignature[] signatures = txEnv.getSignatures();
