@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Util {
 
-  public static final String CHARSET_UT8 = "UTF-8";
+  public static final String CHARSET_UTF8 = "UTF-8";
   static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
   static String bytesToHex(byte[] bytes) {

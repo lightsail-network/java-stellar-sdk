@@ -5,7 +5,7 @@ import org.stellar.sdk.xdr.MemoType;
 import java.io.UnsupportedEncodingException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.stellar.sdk.Util.CHARSET_UT8;
+import static org.stellar.sdk.Util.CHARSET_UTF8;
 
 /**
  * Represents MEMO_TEXT.
@@ -18,7 +18,7 @@ public class MemoText extends Memo {
 
     int length = 0;
     try {
-      length = text.getBytes(CHARSET_UT8).length;
+      length = text.getBytes(CHARSET_UTF8).length;
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }
