@@ -75,7 +75,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link OperationResponse} type
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public ServerSentEvent stream(final EventListener<OperationResponse> listener) throws IOException {
+  public ServerSentEvent stream(final EventListener<OperationResponse> listener) {
     return new StreamHandler<>(new TypeToken<OperationResponse>() {})
         .handleStream(this.buildUri(),listener);
   }

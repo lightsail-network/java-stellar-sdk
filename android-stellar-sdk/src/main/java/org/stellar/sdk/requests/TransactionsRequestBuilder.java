@@ -86,7 +86,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link TransactionResponse} type
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public ServerSentEvent stream(final EventListener<TransactionResponse> listener) throws IOException {
+  public ServerSentEvent stream(final EventListener<TransactionResponse> listener) {
     return new StreamHandler<>(new TypeToken<TransactionResponse>() {})
         .handleStream(this.buildUri(),listener);
   }
