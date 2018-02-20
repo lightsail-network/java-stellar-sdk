@@ -1,29 +1,24 @@
 package org.stellar.sdk.requests;
 
 
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import com.here.oksse.OkSse;
-import com.here.oksse.ServerSentEvent;
 
-import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.ClientProtocolException;
 import org.stellar.sdk.responses.GsonSingleton;
-import org.stellar.sdk.responses.HttpResponseException;
-import org.stellar.sdk.responses.Response;
+import org.stellar.sdk.sse.OkSse;
+import org.stellar.sdk.sse.ServerSentEvent;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 
 public class StreamHandler<T> {
 
   private TypeToken<T> type;
-  OkSse okSse = new OkSse();
+  private OkSse okSse = new OkSse();
 
   /**
    * "Generics on a type are typically erased at runtime, except when the type is compiled with the
@@ -53,8 +48,14 @@ public class StreamHandler<T> {
           if (data.equals("\"hello\"")) {
             return;
           }
-          T object = GsonSingleton.getInstance().fromJson(data, type.getType());
-          listener.onEvent(object);
+          try {
+            T object = GsonSingleton.getInstance().fromJson(data, type.getType());
+            if (object != null) {
+              listener.onEvent(object);
+            }
+          } catch (JsonParseException e) {
+            e.printStackTrace();
+          }
         }
 
         @Override
@@ -63,12 +64,12 @@ public class StreamHandler<T> {
 
         @Override
         public boolean onRetryTime(ServerSentEvent sse, long milliseconds) {
-          return false;
+          return true;
         }
 
         @Override
         public boolean onRetryError(ServerSentEvent sse, Throwable throwable, okhttp3.Response response) {
-          return false;
+          return true;
         }
 
         @Override
@@ -77,7 +78,7 @@ public class StreamHandler<T> {
 
         @Override
         public Request onPreRetry(ServerSentEvent sse, Request originalRequest) {
-          return null;
+          return originalRequest;
         }
       });
     } catch (MalformedURLException e) {
