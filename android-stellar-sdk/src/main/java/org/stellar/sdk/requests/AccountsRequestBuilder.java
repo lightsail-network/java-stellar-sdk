@@ -1,22 +1,14 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import com.here.oksse.ServerSentEvent;
 
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.AccountResponse;
-import org.stellar.sdk.responses.ClientProtocolException;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.sse.ServerSentEvent;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 
 /**
  * Builds requests connected to accounts.

@@ -3,10 +3,10 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+import com.here.oksse.OkSse;
+import com.here.oksse.ServerSentEvent;
 
 import org.stellar.sdk.responses.GsonSingleton;
-import org.stellar.sdk.sse.OkSse;
-import org.stellar.sdk.sse.ServerSentEvent;
 
 import java.net.URI;
 

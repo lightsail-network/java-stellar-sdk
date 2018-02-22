@@ -1,10 +1,10 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import com.here.oksse.ServerSentEvent;
 
 import org.stellar.sdk.responses.LedgerResponse;
 import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.sse.ServerSentEvent;
 
 import java.io.IOException;
 import java.net.URI;
