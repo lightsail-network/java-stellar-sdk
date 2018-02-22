@@ -62,7 +62,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link LedgerResponse} type
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public ServerSentEvent stream(final EventListener<LedgerResponse> listener) throws IOException {
+  public ServerSentEvent stream(final EventListener<LedgerResponse> listener) {
     return new StreamHandler<>(new TypeToken<LedgerResponse>() {})
         .handleStream(this.buildUri(),listener);
   }

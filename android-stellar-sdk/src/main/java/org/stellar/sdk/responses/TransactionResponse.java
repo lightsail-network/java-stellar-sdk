@@ -2,13 +2,26 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.android.codec.binary.Base64;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Memo;
+import org.stellar.sdk.Operation;
+import org.stellar.sdk.xdr.Transaction;
+import org.stellar.sdk.xdr.XdrDataInputStream;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.stellar.sdk.Util.CHARSET_UTF8;
 
 /**
  * Represents transaction response.
+ *
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/transaction.html" target="_blank">Transaction documentation</a>
  * @see org.stellar.sdk.requests.TransactionsRequestBuilder
  * @see org.stellar.sdk.Server#transactions()
@@ -106,6 +119,33 @@ public class TransactionResponse extends Response {
   public Memo getMemo() {
     return memo;
   }
+
+  public List<Operation> getOperations() {
+    String envelopeXdr = getEnvelopeXdr();
+    try {
+      Transaction transaction = extractTransaction(envelopeXdr);
+      org.stellar.sdk.xdr.Operation[] xdrOperations = transaction.getOperations();
+      ArrayList<Operation> operationsList = new ArrayList<>(xdrOperations.length);
+      for (org.stellar.sdk.xdr.Operation xdrOperation : xdrOperations) {
+        operationsList.add(Operation.fromXdr(xdrOperation));
+      }
+      return operationsList;
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private Transaction extractTransaction(String envelopeXdr) throws IOException {
+    Base64 base64 = new Base64();
+    byte[] decoded = base64.decode(envelopeXdr.getBytes(CHARSET_UTF8));
+    InputStream is = new ByteArrayInputStream(decoded);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(is);
+    return Transaction.decode(xdrDataInputStream);
+  }
+
 
   public void setMemo(Memo memo) {
     memo = checkNotNull(memo, "memo cannot be null");

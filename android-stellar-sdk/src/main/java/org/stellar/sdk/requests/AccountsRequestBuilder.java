@@ -5,18 +5,10 @@ import com.here.oksse.ServerSentEvent;
 
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.AccountResponse;
-import org.stellar.sdk.responses.ClientProtocolException;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 
 /**
  * Builds requests connected to accounts.
@@ -71,7 +63,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link AccountResponse} type
    * @return ServerSentEvent object, so you can <code>close()</code> connection when not needed anymore
    */
-  public ServerSentEvent stream(final EventListener<AccountResponse> listener) throws IOException {
+  public ServerSentEvent stream(final EventListener<AccountResponse> listener) {
     return new StreamHandler<>(new TypeToken<AccountResponse>() {})
         .handleStream(this.buildUri(),listener);
   }

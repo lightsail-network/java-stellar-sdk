@@ -8,11 +8,16 @@ import org.stellar.sdk.KeyPair;
 
 /**
  * Represents Payment operation response.
+ *
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html" target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
 public class PaymentOperationResponse extends OperationResponse {
+  @SerializedName("created_at")
+  protected final String createdAt;
+  @SerializedName("transaction_hash")
+  protected final String transactionHash;
   @SerializedName("amount")
   protected final String amount;
   @SerializedName("asset_type")
@@ -26,7 +31,9 @@ public class PaymentOperationResponse extends OperationResponse {
   @SerializedName("to")
   protected final KeyPair to;
 
-  PaymentOperationResponse(String amount, String assetType, String assetCode, String assetIssuer, KeyPair from, KeyPair to) {
+  PaymentOperationResponse(String createdAt, String transactionHash, String amount, String assetType, String assetCode, String assetIssuer, KeyPair from, KeyPair to) {
+    this.createdAt = createdAt;
+    this.transactionHash = transactionHash;
     this.amount = amount;
     this.assetType = assetType;
     this.assetCode = assetCode;
@@ -54,5 +61,13 @@ public class PaymentOperationResponse extends OperationResponse {
 
   public KeyPair getTo() {
     return to;
+  }
+
+  public String getCreatedAt() {
+    return createdAt;
+  }
+
+  public String getTransactionHash() {
+    return transactionHash;
   }
 }
