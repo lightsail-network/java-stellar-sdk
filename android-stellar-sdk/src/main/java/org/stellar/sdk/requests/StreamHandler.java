@@ -41,9 +41,6 @@ public class StreamHandler<T> {
 
       @Override
       public void onMessage(ServerSentEvent sse, String id, String event, String data) {
-        if (data.equals("\"hello\"")) {
-          return;
-        }
         try {
           T object = GsonSingleton.getInstance().fromJson(data, type.getType());
           if (object != null) {
