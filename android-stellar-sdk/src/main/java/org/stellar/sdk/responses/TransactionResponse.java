@@ -123,11 +123,7 @@ public class TransactionResponse extends Response {
   public List<Operation> getOperations() {
     String envelopeXdr = getEnvelopeXdr();
     try {
-      Base64 base64 = new Base64();
-      byte[] decoded = base64.decode(envelopeXdr.getBytes(CHARSET_UTF8));
-      InputStream is = new ByteArrayInputStream(decoded);
-      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(is);
-      Transaction transaction = Transaction.decode(xdrDataInputStream);
+      Transaction transaction = extractTransaction(envelopeXdr);
       org.stellar.sdk.xdr.Operation[] xdrOperations = transaction.getOperations();
       ArrayList<Operation> operationsList = new ArrayList<>(xdrOperations.length);
       for (org.stellar.sdk.xdr.Operation xdrOperation : xdrOperations) {
@@ -140,6 +136,14 @@ public class TransactionResponse extends Response {
       e.printStackTrace();
     }
     return null;
+  }
+
+  private Transaction extractTransaction(String envelopeXdr) throws IOException {
+    Base64 base64 = new Base64();
+    byte[] decoded = base64.decode(envelopeXdr.getBytes(CHARSET_UTF8));
+    InputStream is = new ByteArrayInputStream(decoded);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(is);
+    return Transaction.decode(xdrDataInputStream);
   }
 
 
