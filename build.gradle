@@ -1,8 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'ivy-publish'
+apply plugin: 'maven-publish'
 
-sourceCompatibility = 1.6
-version = '0.2.0'
+sourceCompatibility = 1.8
+version = '0.2.0-berlinguyinca'
 group = 'stellar'
 
 jar {
@@ -20,11 +21,24 @@ publishing {
         ivy(IvyPublication) {
             from components.java
         }
+
+    	mavenCustom(MavenPublication) {
+          pom.withXml {
+            asNode().appendNode('description',
+                                'A demonstration of maven POM customization')
+          }
+        }
+        mavenJava(MavenPublication) {
+            groupId 'org.stellar.sdk'
+            artifactId 'stellar-sdk'
+            from components.java
+        }
     }
     repositories {
         ivy {
             url "$projectDir/repos"
         }
+	mavenLocal()
     }
 }
 

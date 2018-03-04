@@ -40,7 +40,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   @SerializedName("_links")
   private Links links;
   @SerializedName("data")
-  private Map<String,String> data;
+  private Map<String,byte[]> data;
 
   AccountResponse(KeyPair keypair) {
     this.keypair = keypair;
@@ -103,7 +103,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     return signers;
   }
 
-  public Map<String,String> getData() { return data; }
+  public Map<String,byte[]> getData() { return data; }
 
   /**
    * Represents account thresholds.

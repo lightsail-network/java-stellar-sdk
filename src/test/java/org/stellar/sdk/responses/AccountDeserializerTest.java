@@ -44,8 +44,8 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getLinks().getTransactions().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}");
 
     assertEquals(account.getData().size(),2);
-    assertEquals(account.getData().get("test"),"one");
-    assertEquals(account.getData().get("test2"),"two");
+    assertEquals(new String(account.getData().get("test")),"test");
+    assertEquals(new String(account.getData().get("test2")),"test2");
 
   }
 
@@ -111,8 +111,8 @@ public class AccountDeserializerTest extends TestCase {
           "    }\n" +
           "  ],\n" +
           "  \"data\": {\n" +
-          "    \"test\": one,\n" +
-          "    \"test2\": two\n" +
+          "    \"test\": \"dGVzdA==\",\n" +
+          "    \"test2\": \"dGVzdDI=\"\n" +
           "  }\n" +
           "}";
 }
