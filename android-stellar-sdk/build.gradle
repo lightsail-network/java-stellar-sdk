@@ -23,7 +23,7 @@ dependencies {
     implementation 'com.google.guava:guava:18.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    api 'com.github.kinfoundation:oksse:0.0.1'
+    api 'com.github.kinfoundation:oksse:06b006bfa9eb6a787e3677ce7ee492d7fa21f92c'
 
     testImplementation 'org.mockito:mockito-core:2.13.0'
     testImplementation "org.robolectric:robolectric:3.6.1"

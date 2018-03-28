@@ -14,6 +14,7 @@ import okhttp3.Request;
 
 public class StreamHandler<T> {
 
+  private static final String OPEN_MESSAGE_DATA = "\"hello\""; //opening message contains "hello" string
   private TypeToken<T> type;
   private OkSse okSse = new OkSse();
 
@@ -41,6 +42,9 @@ public class StreamHandler<T> {
 
       @Override
       public void onMessage(ServerSentEvent sse, String id, String event, String data) {
+        if (OPEN_MESSAGE_DATA.equals(data)) {
+          return;
+        }
         try {
           T object = GsonSingleton.getInstance().fromJson(data, type.getType());
           if (object != null) {
