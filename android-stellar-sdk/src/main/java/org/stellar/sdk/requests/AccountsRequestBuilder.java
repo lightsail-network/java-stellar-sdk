@@ -10,6 +10,8 @@ import org.stellar.sdk.responses.Page;
 import java.io.IOException;
 import java.net.URI;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Builds requests connected to accounts.
  */
@@ -38,6 +40,12 @@ public class AccountsRequestBuilder extends RequestBuilder {
   public AccountResponse account(KeyPair account) throws IOException {
     this.setSegments("accounts", account.getAccountId());
     return this.account(this.buildUri());
+  }
+
+  public AccountsRequestBuilder forAccount(KeyPair account) {
+    account = checkNotNull(account, "account cannot be null");
+    this.setSegments("accounts", account.getAccountId(), "transactions");
+    return this;
   }
 
   /**
