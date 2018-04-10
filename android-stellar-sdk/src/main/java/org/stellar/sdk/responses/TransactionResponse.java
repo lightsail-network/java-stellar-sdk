@@ -146,7 +146,7 @@ public class TransactionResponse extends Response {
     return Transaction.decode(xdrDataInputStream);
   }
 
-  List<LedgerEntryChanges> getLedgerChanges() {
+  public List<LedgerEntryChanges> getLedgerChanges() {
     String resultMetaXdr = getResultMetaXdr();
     try {
       TransactionMeta transactionMeta = extractTransactionMeta(resultMetaXdr);
