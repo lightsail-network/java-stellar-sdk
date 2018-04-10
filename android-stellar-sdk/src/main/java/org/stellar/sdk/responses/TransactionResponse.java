@@ -4,9 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.android.codec.binary.Base64;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.LedgerEntryChanges;
 import org.stellar.sdk.Memo;
 import org.stellar.sdk.Operation;
+import org.stellar.sdk.xdr.OperationMeta;
 import org.stellar.sdk.xdr.Transaction;
+import org.stellar.sdk.xdr.TransactionMeta;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 
 import java.io.ByteArrayInputStream;
@@ -139,13 +142,39 @@ public class TransactionResponse extends Response {
   }
 
   private Transaction extractTransaction(String envelopeXdr) throws IOException {
-    Base64 base64 = new Base64();
-    byte[] decoded = base64.decode(envelopeXdr.getBytes(CHARSET_UTF8));
-    InputStream is = new ByteArrayInputStream(decoded);
-    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(is);
+    XdrDataInputStream xdrDataInputStream = createXdrDataInputStream(envelopeXdr);
     return Transaction.decode(xdrDataInputStream);
   }
 
+  public List<LedgerEntryChanges> getLedgerChanges() {
+    String resultMetaXdr = getResultMetaXdr();
+    try {
+      TransactionMeta transactionMeta = extractTransactionMeta(resultMetaXdr);
+      OperationMeta[] operationMetas = transactionMeta.getOperations();
+      ArrayList<LedgerEntryChanges> ledgerChangesList = new ArrayList<>(operationMetas.length);
+      for (OperationMeta operationMeta : operationMetas) {
+        ledgerChangesList.add(LedgerEntryChanges.fromXdr(operationMeta.getChanges()));
+      }
+      return ledgerChangesList;
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private TransactionMeta extractTransactionMeta(String envelopeXdr) throws IOException {
+    XdrDataInputStream xdrDataInputStream = createXdrDataInputStream(envelopeXdr);
+    return TransactionMeta.decode(xdrDataInputStream);
+  }
+
+  private XdrDataInputStream createXdrDataInputStream(String envelopeXdr) throws UnsupportedEncodingException {
+    Base64 base64 = new Base64();
+    byte[] decoded = base64.decode(envelopeXdr.getBytes(CHARSET_UTF8));
+    InputStream is = new ByteArrayInputStream(decoded);
+    return new XdrDataInputStream(is);
+  }
 
   public void setMemo(Memo memo) {
     memo = checkNotNull(memo, "memo cannot be null");
