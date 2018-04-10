@@ -14,7 +14,7 @@ public class TrustLineLedgerEntryChange extends LedgerEntryChange {
   TrustLineLedgerEntryChange() {
   }
 
-  public KeyPair getAccountID() {
+  public KeyPair getAccount() {
     return this.accountID;
   }
 

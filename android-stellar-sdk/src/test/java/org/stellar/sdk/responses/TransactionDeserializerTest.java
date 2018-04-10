@@ -62,7 +62,7 @@ public class TransactionDeserializerTest extends TestCase {
     LedgerEntryChange sentAccountState = ledgerEntryChanges.getLedgerEntryStates()[0];
     assertTrue(sentAccountState instanceof TrustLineLedgerEntryChange);
     TrustLineLedgerEntryChange sentAccountTrustLineState = (TrustLineLedgerEntryChange) sentAccountState;
-    assertEquals("GA62NHJCFCAEOZXTBA7DG6PTGSHYJP2UTMYFCZV2OQKDC3CMXBFMIICL", sentAccountTrustLineState.getAccountID().getAccountId());
+    assertEquals("GA62NHJCFCAEOZXTBA7DG6PTGSHYJP2UTMYFCZV2OQKDC3CMXBFMIICL", sentAccountTrustLineState.getAccount().getAccountId());
     assertEquals("922337203685.4775807", sentAccountTrustLineState.getLimit());
     assertEquals("3982", sentAccountTrustLineState.getBalance());
     assertTrue(sentAccountTrustLineState.getAsset() instanceof AssetTypeCreditAlphaNum4);
@@ -72,7 +72,7 @@ public class TransactionDeserializerTest extends TestCase {
     LedgerEntryChange receivedAccountState = ledgerEntryChanges.getLedgerEntryStates()[1];
     assertTrue(receivedAccountState instanceof TrustLineLedgerEntryChange);
     TrustLineLedgerEntryChange recievedAccountTrustLineState = (TrustLineLedgerEntryChange) receivedAccountState;
-    assertEquals("GDHPNRNU5PCP46DPW3MHK74XQU3BOMVBJKCTW3DV4WZNBOJB6JTJTFXC", recievedAccountTrustLineState.getAccountID().getAccountId());
+    assertEquals("GDHPNRNU5PCP46DPW3MHK74XQU3BOMVBJKCTW3DV4WZNBOJB6JTJTFXC", recievedAccountTrustLineState.getAccount().getAccountId());
     assertEquals("922337203685.4775807", recievedAccountTrustLineState.getLimit());
     assertEquals("8039", recievedAccountTrustLineState.getBalance());
     assertTrue(recievedAccountTrustLineState.getAsset() instanceof AssetTypeCreditAlphaNum4);
@@ -82,7 +82,7 @@ public class TransactionDeserializerTest extends TestCase {
     LedgerEntryChange sentAccountUpdate = ledgerEntryChanges.getLedgerEntryUpdates()[0];
     assertTrue(sentAccountUpdate instanceof TrustLineLedgerEntryChange);
     TrustLineLedgerEntryChange sentAccountTrustLineUpdate = (TrustLineLedgerEntryChange) sentAccountUpdate;
-    assertEquals("GA62NHJCFCAEOZXTBA7DG6PTGSHYJP2UTMYFCZV2OQKDC3CMXBFMIICL", sentAccountTrustLineUpdate.getAccountID().getAccountId());
+    assertEquals("GA62NHJCFCAEOZXTBA7DG6PTGSHYJP2UTMYFCZV2OQKDC3CMXBFMIICL", sentAccountTrustLineUpdate.getAccount().getAccountId());
     assertEquals("922337203685.4775807", sentAccountTrustLineUpdate.getLimit());
     assertEquals("3961", sentAccountTrustLineUpdate.getBalance());
     assertTrue(sentAccountTrustLineUpdate.getAsset() instanceof AssetTypeCreditAlphaNum4);
@@ -93,7 +93,7 @@ public class TransactionDeserializerTest extends TestCase {
     LedgerEntryChange receivedAccountUpdate = ledgerEntryChanges.getLedgerEntryUpdates()[1];
     assertTrue(receivedAccountUpdate instanceof TrustLineLedgerEntryChange);
     TrustLineLedgerEntryChange receivedAccountTrustLineUpdate = (TrustLineLedgerEntryChange) receivedAccountUpdate;
-    assertEquals("GDHPNRNU5PCP46DPW3MHK74XQU3BOMVBJKCTW3DV4WZNBOJB6JTJTFXC", receivedAccountTrustLineUpdate.getAccountID().getAccountId());
+    assertEquals("GDHPNRNU5PCP46DPW3MHK74XQU3BOMVBJKCTW3DV4WZNBOJB6JTJTFXC", receivedAccountTrustLineUpdate.getAccount().getAccountId());
     assertEquals("922337203685.4775807", receivedAccountTrustLineUpdate.getLimit());
     assertEquals("8060", receivedAccountTrustLineUpdate.getBalance());
     assertTrue(receivedAccountTrustLineUpdate.getAsset() instanceof AssetTypeCreditAlphaNum4);
