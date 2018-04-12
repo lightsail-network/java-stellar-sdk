@@ -13,65 +13,75 @@ import static org.stellar.sdk.Util.CHARSET_UTF8;
  * {@link Network#use(Network)}, {@link Network#usePublicNetwork()} or {@link Network#useTestNetwork()}.
  */
 public class Network {
-    private final static String PUBLIC = "Public Global Stellar Network ; September 2015";
-    private final static String TESTNET = "Test SDF Network ; September 2015";
-    private static Network current;
+  private final static String PUBLIC = "Public Global Stellar Network ; September 2015";
+  private final static String TESTNET = "Test SDF Network ; September 2015";
+  private static Network current;
 
-    private final String networkPassphrase;
+  private final String networkPassphrase;
 
-    /**
-     * Creates a new Network object to represent a network with a given passphrase
-     * @param networkPassphrase
-     */
-    public Network(String networkPassphrase) {
-        this.networkPassphrase = checkNotNull(networkPassphrase, "networkPassphrase cannot be null");
+  /**
+   * Creates a new Network object to represent a network with a given passphrase
+   *
+   * @param networkPassphrase
+   */
+  public Network(String networkPassphrase) {
+    this.networkPassphrase = checkNotNull(networkPassphrase, "networkPassphrase cannot be null");
+  }
+
+  /**
+   * Returns network passphrase
+   */
+  public String getNetworkPassphrase() {
+    return networkPassphrase;
+  }
+
+  /**
+   * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
+   */
+  public byte[] getNetworkId() {
+    try {
+      return Util.hash(current.getNetworkPassphrase().getBytes(CHARSET_UTF8));
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+      return null;
     }
+  }
 
-    /**
-     * Returns network passphrase
-     */
-    public String getNetworkPassphrase() {
-        return networkPassphrase;
-    }
+  /**
+   * Returns currently used Network object.
+   */
+  public static Network current() {
+    return current;
+  }
 
-    /**
-     * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
-     */
-    public byte[] getNetworkId() {
-        try {
-            return Util.hash(current.getNetworkPassphrase().getBytes(CHARSET_UTF8));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+  /**
+   * Use <code>network</code> as a current network.
+   *
+   * @param network Network object to set as current network
+   */
+  public static void use(Network network) {
+    current = network;
+  }
 
-    /**
-     * Returns currently used Network object.
-     */
-    public static Network current() {
-        return current;
-    }
+  /**
+   * Use Stellar Public Network
+   */
+  public static void usePublicNetwork() {
+    Network.use(getPublicNetwork());
+  }
 
-    /**
-     * Use <code>network</code> as a current network.
-     * @param network Network object to set as current network
-     */
-    public static void use(Network network) {
-        current = network;
-    }
+  /**
+   * Use Stellar Test Network.
+   */
+  public static void useTestNetwork() {
+    Network.use(getTestNetwork());
+  }
 
-    /**
-     * Use Stellar Public Network
-     */
-    public static void usePublicNetwork() {
-        Network.use(new Network(PUBLIC));
-    }
+  public static Network getPublicNetwork() {
+    return new Network(PUBLIC);
+  }
 
-    /**
-     * Use Stellar Test Network.
-     */
-    public static void useTestNetwork() {
-        Network.use(new Network(TESTNET));
-    }
+  public static Network getTestNetwork() {
+    return new Network(TESTNET);
+  }
 }
