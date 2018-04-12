@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
+import com.google.common.io.BaseEncoding;
 
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
@@ -16,8 +15,9 @@ abstract class MemoHashAbstract extends Memo {
     this.bytes = bytes;
   }
 
-  public MemoHashAbstract(String hexString) throws DecoderException {
-    this(Hex.decodeHex(hexString.toCharArray()));
+  public MemoHashAbstract(String hexString) {
+    // We change to lowercase because we want to decode both: upper cased and lower cased alphabets.
+    this(BaseEncoding.base16().lowerCase().decode(hexString.toLowerCase()));
   }
 
   /**
@@ -38,7 +38,7 @@ abstract class MemoHashAbstract extends Memo {
    * </code>
    */
   public String getHexValue() {
-    return new String(Hex.encodeHex(this.bytes));
+    return BaseEncoding.base16().lowerCase().encode(this.bytes);
   }
 
   /**

@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -7,7 +8,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import org.apache.commons.codec.binary.Base64;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Memo;
 
@@ -28,17 +28,29 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
     if (memoType.equals("none")) {
       memo = Memo.none();
     } else {
-      String memoValue = json.getAsJsonObject().get("memo").getAsString();
+      // Because of the way "encoding/json" works on structs in Go, if transaction
+      // has an empty `memo_text` value, the `memo` field won't be present in a JSON
+      // representation of a transaction. That's why we need to handle a special case
+      // here.
       if (memoType.equals("text")) {
-        memo = Memo.text(memoValue);
-      } else if (memoType.equals("id")) {
-        memo = Memo.id(Long.parseLong(memoValue));
-      } else if (memoType.equals("hash")) {
-        memo = Memo.hash(Base64.decodeBase64(memoValue));
-      } else if (memoType.equals("return")) {
-        memo = Memo.returnHash(Base64.decodeBase64(memoValue));
+        JsonElement memoField = json.getAsJsonObject().get("memo");
+        if (memoField != null) {
+          memo = Memo.text(memoField.getAsString());
+        } else {
+          memo = Memo.text("");
+        }
       } else {
-        throw new JsonParseException("Unknown memo type.");
+        String memoValue = json.getAsJsonObject().get("memo").getAsString();
+        BaseEncoding base64Encoding = BaseEncoding.base64();
+        if (memoType.equals("id")) {
+          memo = Memo.id(Long.parseLong(memoValue));
+        } else if (memoType.equals("hash")) {
+          memo = Memo.hash(base64Encoding.decode(memoValue));
+        } else if (memoType.equals("return")) {
+          memo = Memo.returnHash(base64Encoding.decode(memoValue));
+        } else {
+          throw new JsonParseException("Unknown memo type.");
+        }
       }
     }
 
