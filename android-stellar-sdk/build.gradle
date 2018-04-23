@@ -1,5 +1,11 @@
 apply plugin: 'com.android.library'
 
+
+// maven plugin and group definition
+// needed for jitpack support
+apply plugin: 'maven'
+group = 'com.github.kinecosystem'
+
 android {
     compileSdkVersion 26
     defaultConfig {
