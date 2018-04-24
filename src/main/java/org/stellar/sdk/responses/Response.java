@@ -8,9 +8,15 @@ public abstract class Response {
   protected int rateLimitReset;
 
   public void setHeaders(Headers headers) {
-    this.rateLimitLimit = Integer.parseInt(headers.get("X-Ratelimit-Limit"));
-    this.rateLimitRemaining = Integer.parseInt(headers.get("X-Ratelimit-Remaining"));
-    this.rateLimitReset = Integer.parseInt(headers.get("X-Ratelimit-Reset"));
+    if (headers.get("X-Ratelimit-Limit") != null) {
+      this.rateLimitLimit = Integer.parseInt(headers.get("X-Ratelimit-Limit"));
+    }
+    if (headers.get("X-Ratelimit-Remaining") != null) {
+      this.rateLimitRemaining = Integer.parseInt(headers.get("X-Ratelimit-Remaining"));
+    }
+    if (headers.get("X-Ratelimit-Reset") != null) {
+      this.rateLimitReset = Integer.parseInt(headers.get("X-Ratelimit-Reset"));
+    }
   }
 
   /**
