@@ -38,7 +38,7 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
   }
 
   /**
-   * @return The next page of results or null when there is no more results
+   * @return The next page of results or null when there is no link for the next page of results
    * @throws URISyntaxException
    * @throws IOException
    */

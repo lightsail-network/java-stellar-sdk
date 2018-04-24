@@ -1,15 +1,15 @@
 package org.stellar.sdk;
 
 import junit.framework.TestCase;
-
-import okhttp3.*;
-import okhttp3.internal.http.StatusLine;
+import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
+import org.stellar.sdk.responses.operations.OperationResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -45,6 +45,53 @@ public class ServerTest extends TestCase {
             "      ]\n" +
             "    },\n" +
             "    \"result_xdr\": \"AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=\"\n" +
+            "  }\n" +
+            "}";
+
+    private final String operationsPageResponse = "{\n" +
+            "  \"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"http://horizon-testnet.stellar.org/operations?order=desc\\u0026limit=10\\u0026cursor=\"\n" +
+            "    },\n" +
+            "    \"next\": {\n" +
+            "      \"href\": \"http://horizon-testnet.stellar.org/operations?order=desc\\u0026limit=10\\u0026cursor=3695540185337857\"\n" +
+            "    },\n" +
+            "    \"prev\": {\n" +
+            "      \"href\": \"http://horizon-testnet.stellar.org/operations?order=asc\\u0026limit=10\\u0026cursor=3717508943056897\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"_embedded\": {\n" +
+            "    \"records\": [\n" +
+            "      {\n" +
+            "        \"_links\": {\n" +
+            "          \"self\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/operations/3717508943056897\"\n" +
+            "          },\n" +
+            "          \"transaction\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/transactions/ce81d957352501a46d9b938462cbef76283dcba8108d2649e0d79279a8f36488\"\n" +
+            "          },\n" +
+            "          \"effects\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/operations/3717508943056897/effects\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=3717508943056897\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=3717508943056897\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"3717508943056897\",\n" +
+            "        \"paging_token\": \"3717508943056897\",\n" +
+            "        \"source_account\": \"GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K\",\n" +
+            "        \"type\": \"create_account\",\n" +
+            "        \"type_i\": 0,\n" +
+            "        \"created_at\": \"2018-01-22T21:30:53Z\",\n" +
+            "        \"transaction_hash\": \"dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046\","+
+            "        \"starting_balance\": \"10000.0\",\n" +
+            "        \"funder\": \"GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K\",\n" +
+            "        \"account\": \"GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE\"\n" +
+            "      }\n"+
+            "    ]\n" +
             "  }\n" +
             "}";
 
@@ -108,5 +155,21 @@ public class ServerTest extends TestCase {
         assertNotNull(response.getExtras());
         assertEquals("tx_failed", response.getExtras().getResultCodes().getTransactionResultCode());
         assertEquals("op_no_destination", response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
+    }
+
+    @Test
+    public void testNextPage() throws IOException, URISyntaxException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(operationsPageResponse));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(operationsPageResponse));
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        Page<OperationResponse> page = server.operations().execute();
+        assertEquals(1, page.getRecords().size());
+        assertEquals("dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046", page.getRecords().get(0).getTransactionHash());
+        Page<OperationResponse> nextPage = page.getNextPage(server.getHttpClient());
+        assertEquals(1, page.getRecords().size());
     }
 }
