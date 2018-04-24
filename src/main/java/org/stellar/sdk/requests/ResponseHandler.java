@@ -2,11 +2,12 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import org.stellar.sdk.responses.GsonSingleton;
+import org.stellar.sdk.responses.TypedResponse;
 
 import java.io.IOException;
+
+import okhttp3.Response;
 
 public class ResponseHandler<T> {
 
@@ -41,6 +42,9 @@ public class ResponseHandler<T> {
       T object = GsonSingleton.getInstance().fromJson(content, type.getType());
       if (object instanceof org.stellar.sdk.responses.Response) {
         ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
+      }
+      if(object instanceof TypedResponse) {
+    	  	((TypedResponse) object).setType(type);
       }
       return object;
     } finally {

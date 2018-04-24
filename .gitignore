@@ -8,6 +8,11 @@
 .idea/
 /local.properties
 
+# Eclipse project files
+.settings
+.classpath
+.project 
+
 # Gradle
 .gradle
 build
