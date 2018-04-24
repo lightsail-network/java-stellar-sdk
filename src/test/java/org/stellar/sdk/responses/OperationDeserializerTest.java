@@ -368,47 +368,48 @@ public class OperationDeserializerTest extends TestCase {
   public void testDeserializePathPaymentOperation() {
     String json = "{\n" +
             "  \"_links\": {\n" +
-            "    \"effects\": {\n" +
-            "      \"href\": \"/operations/25769807873/effects/{?cursor,limit,order}\",\n" +
-            "      \"templated\": true\n" +
-            "    },\n" +
-            "    \"precedes\": {\n" +
-            "      \"href\": \"/operations?cursor=25769807873\\u0026order=asc\"\n" +
-            "    },\n" +
             "    \"self\": {\n" +
-            "      \"href\": \"/operations/25769807873\"\n" +
-            "    },\n" +
-            "    \"succeeds\": {\n" +
-            "      \"href\": \"/operations?cursor=25769807873\\u0026order=desc\"\n" +
+            "      \"href\": \"https://horizon.stellar.org/operations/75252830662840321\"\n" +
             "    },\n" +
             "    \"transaction\": {\n" +
-            "      \"href\": \"/transactions/25769807872\"\n" +
+            "      \"href\": \"https://horizon.stellar.org/transactions/fb2f5655c70a459220ac09eb3d6870422b58dcf5c5ffb5e5b21817b4d248826e\"\n" +
+            "    },\n" +
+            "    \"effects\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/operations/75252830662840321/effects\"\n" +
+            "    },\n" +
+            "    \"succeeds\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/effects?order=desc\\u0026cursor=75252830662840321\"\n" +
+            "    },\n" +
+            "    \"precedes\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/effects?order=asc\\u0026cursor=75252830662840321\"\n" +
             "    }\n" +
             "  },\n" +
-            "  \"amount\": \"10.0\",\n" +
-            "  \"asset_code\": \"EUR\",\n" +
-            "  \"asset_issuer\": \"GCQPYGH4K57XBDENKKX55KDTWOTK5WDWRQOH2LHEDX3EKVIQRLMESGBG\",\n" +
-            "  \"asset_type\": \"credit_alphanum4\",\n" +
-            "  \"from\": \"GCXKG6RN4ONIEPCMNFB732A436Z5PNDSRLGWK7GBLCMQLIFO4S7EYWVU\",\n" +
-            "  \"id\": 25769807873,\n" +
-            "  \"paging_token\": \"25769807873\",\n" +
-            "  \"send_asset_code\": \"USD\",\n" +
-            "  \"send_asset_issuer\": \"GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4\",\n" +
-            "  \"send_asset_type\": \"credit_alphanum4\",\n" +
-            "  \"source_amount\": \"100.0\",\n" +
-            "  \"to\": \"GA5WBPYA5Y4WAEHXWR2UKO2UO4BUGHUQ74EUPKON2QHV4WRHOIRNKKH2\",\n" +
+            "  \"id\": \"75252830662840321\",\n" +
+            "  \"paging_token\": \"75252830662840321\",\n" +
+            "  \"source_account\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"type\": \"path_payment\",\n" +
             "  \"type_i\": 2,\n" +
-            "  \"type\": \"path_payment\"\n" +
+            "  \"created_at\": \"2018-04-24T12:58:12Z\",\n" +
+            "  \"transaction_hash\": \"fb2f5655c70a459220ac09eb3d6870422b58dcf5c5ffb5e5b21817b4d248826e\",\n" +
+            "  \"asset_type\": \"native\",\n" +
+            "  \"from\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"to\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"amount\": \"2.5000000\",\n" +
+            "  \"path\": [],\n" +
+            "  \"source_max\": \"1.1779523\",\n" +
+            "  \"source_asset_type\": \"credit_alphanum4\",\n" +
+            "  \"source_asset_code\": \"XRP\",\n" +
+            "  \"source_asset_issuer\": \"GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5\"\n" +
             "}";
 
     PathPaymentOperationResponse operation = (PathPaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getFrom().getAccountId(), "GCXKG6RN4ONIEPCMNFB732A436Z5PNDSRLGWK7GBLCMQLIFO4S7EYWVU");
-    assertEquals(operation.getTo().getAccountId(), "GA5WBPYA5Y4WAEHXWR2UKO2UO4BUGHUQ74EUPKON2QHV4WRHOIRNKKH2");
-    assertEquals(operation.getAmount(), "10.0");
-    assertEquals(operation.getSourceAmount(), "100.0");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GCQPYGH4K57XBDENKKX55KDTWOTK5WDWRQOH2LHEDX3EKVIQRLMESGBG")));
-    assertEquals(operation.getSendAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4")));
+    assertEquals(operation.getFrom().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getTo().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getAmount(), "2.5000000");
+    assertEquals(operation.getSourceMax(), "1.1779523");
+    assertEquals(operation.getAsset(), new AssetTypeNative());
+    assertEquals(operation.getSourceAsset(), Asset.createNonNativeAsset("XRP", KeyPair.fromAccountId("GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5")));
   }
 
   @Test

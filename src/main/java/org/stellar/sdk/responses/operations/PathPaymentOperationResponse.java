@@ -15,8 +15,8 @@ import org.stellar.sdk.KeyPair;
 public class PathPaymentOperationResponse extends OperationResponse {
   @SerializedName("amount")
   protected final String amount;
-  @SerializedName("source_amount")
-  protected final String sourceAmount;
+  @SerializedName("source_max")
+  protected final String sourceMax;
   @SerializedName("from")
   protected final KeyPair from;
   @SerializedName("to")
@@ -29,32 +29,32 @@ public class PathPaymentOperationResponse extends OperationResponse {
   @SerializedName("asset_issuer")
   protected final String assetIssuer;
 
-  @SerializedName("send_asset_type")
-  protected final String sendAssetType;
-  @SerializedName("send_asset_code")
-  protected final String sendAssetCode;
-  @SerializedName("send_asset_issuer")
-  protected final String sendAssetIssuer;
+  @SerializedName("source_asset_type")
+  protected final String sourceAssetType;
+  @SerializedName("source_asset_code")
+  protected final String sourceAssetCode;
+  @SerializedName("source_asset_issuer")
+  protected final String sourceAssetIssuer;
 
-  PathPaymentOperationResponse(String amount, String sourceAmount, KeyPair from, KeyPair to, String assetType, String assetCode, String assetIssuer, String sendAssetType, String sendAssetCode, String sendAssetIssuer) {
+  public PathPaymentOperationResponse(String amount, String sourceMax, KeyPair from, KeyPair to, String assetType, String assetCode, String assetIssuer, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer) {
     this.amount = amount;
-    this.sourceAmount = sourceAmount;
+    this.sourceMax = sourceMax;
     this.from = from;
     this.to = to;
     this.assetType = assetType;
     this.assetCode = assetCode;
     this.assetIssuer = assetIssuer;
-    this.sendAssetType = sendAssetType;
-    this.sendAssetCode = sendAssetCode;
-    this.sendAssetIssuer = sendAssetIssuer;
+    this.sourceAssetType = sourceAssetType;
+    this.sourceAssetCode = sourceAssetCode;
+    this.sourceAssetIssuer = sourceAssetIssuer;
   }
 
   public String getAmount() {
     return amount;
   }
 
-  public String getSourceAmount() {
-    return sourceAmount;
+  public String getSourceMax() {
+    return sourceMax;
   }
 
   public KeyPair getFrom() {
@@ -74,12 +74,12 @@ public class PathPaymentOperationResponse extends OperationResponse {
     }
   }
 
-  public Asset getSendAsset() {
-    if (sendAssetType.equals("native")) {
+  public Asset getSourceAsset() {
+    if (sourceAssetCode.equals("native")) {
       return new AssetTypeNative();
     } else {
-      KeyPair issuer = KeyPair.fromAccountId(sendAssetIssuer);
-      return Asset.createNonNativeAsset(sendAssetCode, issuer);
+      KeyPair issuer = KeyPair.fromAccountId(sourceAssetIssuer);
+      return Asset.createNonNativeAsset(sourceAssetCode, issuer);
     }
   }
 }
