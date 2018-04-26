@@ -7,12 +7,16 @@ public abstract class Response {
 
   public void setHeaders(String limit, String remaining, String reset) {
     try {
-      this.rateLimitLimit = Integer.parseInt(limit);
-      this.rateLimitRemaining = Integer.parseInt(remaining);
-      this.rateLimitReset = Integer.parseInt(reset);
+      this.rateLimitLimit = safeParse(limit);
+      this.rateLimitRemaining = safeParse(remaining);
+      this.rateLimitReset = safeParse(reset);
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  private int safeParse(String number) {
+    return number == null || number.isEmpty() ? 0 : Integer.parseInt(number);
   }
 
   /**
