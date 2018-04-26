@@ -1,22 +1,22 @@
 package org.stellar.sdk.requests;
 
-import com.google.gson.reflect.TypeToken;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.net.URI;
+import okhttp3.OkHttpClient;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
-
-import java.io.IOException;
-import java.net.URI;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Builds requests connected to operations.
  */
 public class OperationsRequestBuilder extends RequestBuilder {
-  public OperationsRequestBuilder(URI serverURI) {
-    super(serverURI, "operations");
+
+  public OperationsRequestBuilder(OkHttpClient httpClient, URI serverURI) {
+    super(httpClient, serverURI, "operations");
   }
 
   /**
@@ -26,7 +26,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    */
   public OperationResponse operation(URI uri) throws IOException {
     TypeToken type = new TypeToken<OperationResponse>() {};
-    ResponseHandler<OperationResponse> responseHandler = new ResponseHandler<OperationResponse>(type);
+    ResponseHandler<OperationResponse> responseHandler = new ResponseHandler<OperationResponse>(httpClient, type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -80,9 +80,11 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<OperationResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<OperationResponse> execute(OkHttpClient httpClient, URI uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<OperationResponse>>() {};
-    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
+    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(httpClient,
+        type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -93,7 +95,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<OperationResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(httpClient, this.buildUri());
   }
 
   @Override

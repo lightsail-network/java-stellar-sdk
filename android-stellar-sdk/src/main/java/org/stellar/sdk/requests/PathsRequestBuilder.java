@@ -1,22 +1,22 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
+import java.io.IOException;
+import java.net.URI;
+import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
-import java.io.IOException;
-import java.net.URI;
-
 /**
  * Builds requests connected to paths.
  */
 public class PathsRequestBuilder extends RequestBuilder {
-  public PathsRequestBuilder(URI serverURI) {
-    super(serverURI, "paths");
+
+  public PathsRequestBuilder(OkHttpClient httpClient, URI serverURI) {
+    super(httpClient, serverURI, "paths");
   }
 
   public PathsRequestBuilder destinationAccount(KeyPair account) {
@@ -48,9 +48,10 @@ public class PathsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<PathResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<PathResponse> execute(OkHttpClient httpClient, URI uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<PathResponse>>() {};
-    ResponseHandler<Page<PathResponse>> responseHandler = new ResponseHandler<Page<PathResponse>>(type);
+    ResponseHandler<Page<PathResponse>> responseHandler = new ResponseHandler<Page<PathResponse>>(httpClient, type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -59,6 +60,6 @@ public class PathsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<PathResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(httpClient, this.buildUri());
   }
 }

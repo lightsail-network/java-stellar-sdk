@@ -1,23 +1,23 @@
 package org.stellar.sdk.requests;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
-
+import java.io.IOException;
+import java.net.URI;
+import okhttp3.OkHttpClient;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
-
-import java.io.IOException;
-import java.net.URI;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Builds requests connected to payments.
  */
 public class PaymentsRequestBuilder extends RequestBuilder {
-  public PaymentsRequestBuilder(URI serverURI) {
-    super(serverURI, "payments");
+
+  public PaymentsRequestBuilder(OkHttpClient httpClient, URI serverURI) {
+    super(httpClient, serverURI, "payments");
   }
 
   /**
@@ -59,9 +59,11 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<OperationResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<OperationResponse> execute(OkHttpClient httpClient, URI uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<OperationResponse>>() {};
-    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
+    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(httpClient,
+        type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -87,7 +89,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<OperationResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(httpClient, this.buildUri());
   }
 
   @Override

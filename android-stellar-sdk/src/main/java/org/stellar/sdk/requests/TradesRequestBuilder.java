@@ -1,20 +1,20 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
+import java.io.IOException;
+import java.net.URI;
+import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.TradeResponse;
-
-import java.io.IOException;
-import java.net.URI;
 
 /**
  * Builds requests connected to trades.
  */
 public class TradesRequestBuilder extends RequestBuilder {
-    public TradesRequestBuilder(URI serverURI) {
-        super(serverURI, "order_book/trades");
+
+    public TradesRequestBuilder(OkHttpClient httpClient, URI serverURI) {
+        super(httpClient, serverURI, "order_book/trades");
     }
 
     public TradesRequestBuilder buyingAsset(Asset asset) {
@@ -37,13 +37,13 @@ public class TradesRequestBuilder extends RequestBuilder {
         return this;
     }
 
-    public static TradeResponse execute(URI uri) throws IOException, TooManyRequestsException {
+    public static TradeResponse execute(OkHttpClient httpClient, URI uri) throws IOException, TooManyRequestsException {
         TypeToken type = new TypeToken<TradeResponse>() {};
-        ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<TradeResponse>(type);
+        ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<TradeResponse>(httpClient, type);
         return responseHandler.handleGetRequest(uri);
     }
 
     public TradeResponse execute() throws IOException, TooManyRequestsException {
-        return this.execute(this.buildUri());
+        return this.execute(httpClient, this.buildUri());
     }
 }

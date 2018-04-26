@@ -2,20 +2,20 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
-
+import java.io.IOException;
+import java.net.URI;
+import okhttp3.OkHttpClient;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
-
-import java.io.IOException;
-import java.net.URI;
 
 /**
  * Builds requests connected to accounts.
  */
 public class AccountsRequestBuilder extends RequestBuilder {
-  public AccountsRequestBuilder(URI serverURI) {
-    super(serverURI, "accounts");
+
+  public AccountsRequestBuilder(OkHttpClient httpClient, URI serverURI) {
+    super(httpClient, serverURI, "accounts");
   }
 
   /**
@@ -25,7 +25,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    */
   public AccountResponse account(URI uri) throws IOException {
     TypeToken type = new TypeToken<AccountResponse>() {};
-    ResponseHandler<AccountResponse> responseHandler = new ResponseHandler<AccountResponse>(type);
+    ResponseHandler<AccountResponse> responseHandler = new ResponseHandler<AccountResponse>(httpClient, type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -47,9 +47,11 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<AccountResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<AccountResponse> execute(OkHttpClient httpClient, URI uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<AccountResponse>>() {};
-    ResponseHandler<Page<AccountResponse>> responseHandler = new ResponseHandler<Page<AccountResponse>>(type);
+    ResponseHandler<Page<AccountResponse>> responseHandler = new ResponseHandler<Page<AccountResponse>>(httpClient,
+        type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -75,7 +77,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<AccountResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(httpClient, this.buildUri());
   }
 
   @Override

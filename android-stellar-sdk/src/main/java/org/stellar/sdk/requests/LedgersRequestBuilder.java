@@ -2,19 +2,19 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
-
-import org.stellar.sdk.responses.LedgerResponse;
-import org.stellar.sdk.responses.Page;
-
 import java.io.IOException;
 import java.net.URI;
+import okhttp3.OkHttpClient;
+import org.stellar.sdk.responses.LedgerResponse;
+import org.stellar.sdk.responses.Page;
 
 /**
  * Builds requests connected to ledgers.
  */
 public class LedgersRequestBuilder extends RequestBuilder {
-  public LedgersRequestBuilder(URI serverURI) {
-    super(serverURI, "ledgers");
+
+  public LedgersRequestBuilder(OkHttpClient httpClient, URI serverURI) {
+    super(httpClient, serverURI, "ledgers");
   }
 
   /**
@@ -24,7 +24,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    */
   public LedgerResponse ledger(URI uri) throws IOException {
     TypeToken type = new TypeToken<LedgerResponse>() {};
-    ResponseHandler<LedgerResponse> responseHandler = new ResponseHandler<LedgerResponse>(type);
+    ResponseHandler<LedgerResponse> responseHandler = new ResponseHandler<LedgerResponse>(httpClient, type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -46,9 +46,10 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<LedgerResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<LedgerResponse> execute(OkHttpClient httpClient, URI uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<LedgerResponse>>() {};
-    ResponseHandler<Page<LedgerResponse>> responseHandler = new ResponseHandler<Page<LedgerResponse>>(type);
+    ResponseHandler<Page<LedgerResponse>> responseHandler = new ResponseHandler<Page<LedgerResponse>>(httpClient, type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -74,7 +75,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<LedgerResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(httpClient, this.buildUri());
   }
 
   @Override

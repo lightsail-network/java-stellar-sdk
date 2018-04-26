@@ -1,20 +1,20 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
+import java.io.IOException;
+import java.net.URI;
+import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.OrderBookResponse;
-
-import java.io.IOException;
-import java.net.URI;
 
 /**
  * Builds requests connected to order book.
  */
 public class OrderBookRequestBuilder extends RequestBuilder {
-  public OrderBookRequestBuilder(URI serverURI) {
-    super(serverURI, "order_book");
+
+  public OrderBookRequestBuilder(OkHttpClient httpClient, URI serverURI) {
+    super(httpClient, serverURI, "order_book");
   }
 
   public OrderBookRequestBuilder buyingAsset(Asset asset) {
@@ -37,14 +37,15 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public static OrderBookResponse execute(URI uri) throws IOException, TooManyRequestsException {
+  public static OrderBookResponse execute(OkHttpClient httpClient, URI uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<OrderBookResponse>() {};
-    ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<OrderBookResponse>(type);
+    ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<OrderBookResponse>(httpClient, type);
     return responseHandler.handleGetRequest(uri);
   }
 
   public OrderBookResponse execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(httpClient, this.buildUri());
   }
 
   @Override

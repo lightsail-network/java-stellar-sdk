@@ -1,23 +1,26 @@
 package org.stellar.sdk.requests;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;
-
+import java.io.IOException;
+import java.net.URI;
+import okhttp3.OkHttpClient;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
-
-import java.io.IOException;
-import java.net.URI;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Builds requests connected to transactions.
  */
 public class TransactionsRequestBuilder extends RequestBuilder {
-  public TransactionsRequestBuilder(URI serverURI) {
-    super(serverURI, "transactions");
+
+  private final OkHttpClient httpClient;
+
+  public TransactionsRequestBuilder(OkHttpClient httpClient, URI serverURI) {
+    super(httpClient, serverURI, "transactions");
+    this.httpClient = httpClient;
   }
 
   /**
@@ -27,7 +30,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    */
   public TransactionResponse transaction(URI uri) throws IOException {
     TypeToken type = new TypeToken<TransactionResponse>() {};
-    ResponseHandler<TransactionResponse> responseHandler = new ResponseHandler<TransactionResponse>(type);
+    ResponseHandler<TransactionResponse> responseHandler = new ResponseHandler<TransactionResponse>(httpClient, type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -70,9 +73,11 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<TransactionResponse> execute(URI uri) throws IOException, TooManyRequestsException {
+  public static Page<TransactionResponse> execute(OkHttpClient httpClient, URI uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<TransactionResponse>>() {};
-    ResponseHandler<Page<TransactionResponse>> responseHandler = new ResponseHandler<Page<TransactionResponse>>(type);
+    ResponseHandler<Page<TransactionResponse>> responseHandler = new ResponseHandler<Page<TransactionResponse>>(
+        httpClient, type);
     return responseHandler.handleGetRequest(uri);
   }
 
@@ -98,7 +103,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<TransactionResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.buildUri());
+    return this.execute(httpClient, this.buildUri());
   }
 
   @Override
