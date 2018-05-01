@@ -1,25 +1,28 @@
 package org.stellar.sdk.requests;
 
 import android.net.Uri;
-
 import java.net.URI;
 import java.util.ArrayList;
+import okhttp3.OkHttpClient;
 
 /**
  * Abstract class for request builders.
  */
 public abstract class RequestBuilder {
-  protected Uri.Builder uriBuilder;
-  private ArrayList<String> segments;
+
+  protected final Uri.Builder uriBuilder;
+  protected final OkHttpClient httpClient;
+  private final ArrayList<String> segments;
   private boolean segmentsAdded;
 
-  RequestBuilder(URI serverURI, String defaultSegment) {
+  RequestBuilder(OkHttpClient httpClient, URI serverURI, String defaultSegment) {
     uriBuilder = Uri.parse(serverURI.toString()).buildUpon();
     segments = new ArrayList<String>();
     if (defaultSegment != null) {
       this.setSegments(defaultSegment);
     }
     segmentsAdded = false; // Allow overwriting segments
+    this.httpClient = httpClient;
   }
 
   protected RequestBuilder setSegments(String... segments) {

@@ -1,17 +1,16 @@
 package org.stellar.sdk.responses;
 
-import com.google.gson.reflect.TypeToken;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class PathsPageDeserializerTest {
 
@@ -19,7 +18,7 @@ public class PathsPageDeserializerTest {
   public void testDeserialize() throws IOException, URISyntaxException {
     Page<PathResponse> pathsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<PathResponse>>() {}.getType());
 
-    assertNull(pathsPage.getNextPage());
+    assertNull(pathsPage.getNextPage(new OkHttpClient()));
 
     assertEquals(pathsPage.getRecords().get(0).getDestinationAmount(), "20.0000000");
     Assert.assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
