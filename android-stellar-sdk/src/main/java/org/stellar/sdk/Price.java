@@ -1,13 +1,12 @@
 package org.stellar.sdk;
 
-import com.google.gson.annotations.SerializedName;
-import org.stellar.sdk.xdr.Int32;
+import static org.stellar.sdk.Util.checkNotNull;
 
+import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.stellar.sdk.xdr.Int32;
 
 /**
  * Represents Price. Price in Stellar is represented as a fraction.

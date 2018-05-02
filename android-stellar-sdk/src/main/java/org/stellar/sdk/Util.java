@@ -71,4 +71,18 @@ public class Util {
   static String paddedByteArrayToString(byte[] bytes) {
     return new String(bytes).split("\0")[0];
   }
+
+    public static <T> T checkNotNull(T obj, String msg) {
+        if (obj == null) {
+            throw new NullPointerException(msg);
+        } else {
+            return obj;
+        }
+    }
+
+    public static void checkArgument(boolean expression, final Object errorMessage) {
+        if (!expression) {
+            throw new IllegalArgumentException(String.valueOf(errorMessage));
+        }
+    }
 }

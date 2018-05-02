@@ -1,11 +1,10 @@
 package org.stellar.sdk;
 
-import org.stellar.sdk.xdr.MemoType;
+import static org.stellar.sdk.Util.CHARSET_UTF8;
+import static org.stellar.sdk.Util.checkNotNull;
 
 import java.io.UnsupportedEncodingException;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.stellar.sdk.Util.CHARSET_UTF8;
+import org.stellar.sdk.xdr.MemoType;
 
 /**
  * Represents MEMO_TEXT.

@@ -1,10 +1,10 @@
 package org.stellar.sdk;
 
+import static org.stellar.sdk.Util.checkNotNull;
+
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#account-merge" target="_blank">AccountMerge</a> operation.

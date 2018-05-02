@@ -1,6 +1,7 @@
 package org.stellar.sdk.requests;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+
+import static org.stellar.sdk.Util.checkNotNull;
 
 import com.google.gson.reflect.TypeToken;
 import com.here.oksse.ServerSentEvent;

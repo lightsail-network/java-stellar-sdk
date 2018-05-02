@@ -1,10 +1,7 @@
 package org.stellar.sdk;
 
-import org.apache.commons.android.codec.binary.Base64;
-import org.stellar.sdk.xdr.DecoratedSignature;
-import org.stellar.sdk.xdr.EnvelopeType;
-import org.stellar.sdk.xdr.SignatureHint;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
+import static org.stellar.sdk.Util.checkArgument;
+import static org.stellar.sdk.Util.checkNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,9 +10,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.android.codec.binary.Base64;
+import org.stellar.sdk.xdr.DecoratedSignature;
+import org.stellar.sdk.xdr.EnvelopeType;
+import org.stellar.sdk.xdr.SignatureHint;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.

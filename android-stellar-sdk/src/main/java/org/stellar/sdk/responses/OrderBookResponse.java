@@ -1,10 +1,11 @@
 package org.stellar.sdk.responses;
 
+import static org.stellar.sdk.Util.checkNotNull;
+
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Price;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents order book response.

@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+
+import static org.stellar.sdk.Util.checkNotNull;
 
 /**
  * Represents an account in Stellar network with it's sequence number.

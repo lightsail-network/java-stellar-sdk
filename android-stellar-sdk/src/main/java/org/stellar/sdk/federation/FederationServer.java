@@ -1,7 +1,6 @@
 package org.stellar.sdk.federation;
 
 import android.net.Uri;
-import com.google.common.net.InternetDomainName;
 import com.google.gson.reflect.TypeToken;
 import com.moandjiezana.toml.Toml;
 import java.io.IOException;
@@ -26,7 +25,7 @@ import org.stellar.sdk.responses.HttpResponseException;
  */
 public class FederationServer {
   private final URI serverUri;
-  private final InternetDomainName domain;
+  private final String domain;
   private static OkHttpClient httpClient = new OkHttpClient();
 
   /**
@@ -36,7 +35,7 @@ public class FederationServer {
    * @param domain    Domain name this federation server is responsible for
    * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
    */
-  public FederationServer(URI serverUri, InternetDomainName domain) {
+  public FederationServer(URI serverUri, String domain) {
     this.serverUri = serverUri;
     if (this.serverUri.getScheme() != "https") {
       throw new FederationServerInvalidException();
@@ -51,7 +50,7 @@ public class FederationServer {
    * @param domain    Domain name this federation server is responsible for
    * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
    */
-  public FederationServer(String serverUri, InternetDomainName domain) {
+  public FederationServer(String serverUri, String domain) {
     try {
       this.serverUri = new URI(serverUri);
     } catch (URISyntaxException e) {
@@ -72,12 +71,12 @@ public class FederationServer {
    * @throws StellarTomlNotFoundInvalidException Stellar.toml file was not found or was malformed.
    * @see <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.html" target="_blank">Stellar.toml docs</a>
    */
-  public static FederationServer createForDomain(InternetDomainName domain) {
+  public static FederationServer createForDomain(String domain) {
     URI stellarTomlUri;
     try {
       StringBuilder uriBuilder = new StringBuilder();
       uriBuilder.append("https://");
-      uriBuilder.append(domain.toString());
+      uriBuilder.append(domain);
       uriBuilder.append("/.well-known/stellar.toml");
       stellarTomlUri = new URI(uriBuilder.toString());
     } catch (URISyntaxException e) {
@@ -170,7 +169,7 @@ public class FederationServer {
    *
    * @return InternetDomainName
    */
-  public InternetDomainName getDomain() {
+  public String getDomain() {
     return domain;
   }
 

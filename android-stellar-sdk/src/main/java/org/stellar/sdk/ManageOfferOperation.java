@@ -1,14 +1,13 @@
 package org.stellar.sdk;
 
+import static org.stellar.sdk.Util.checkNotNull;
+
+import java.math.BigDecimal;
 import org.stellar.sdk.xdr.CreateAccountOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.ManageOfferOp;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.Uint64;
-
-import java.math.BigDecimal;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-offer" target="_blank">ManageOffer</a> operation.

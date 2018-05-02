@@ -1,21 +1,14 @@
 package org.stellar.sdk.federation;
 
-import com.google.common.net.InternetDomainName;
-
-import junit.framework.TestCase;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import junit.framework.TestCase;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -25,11 +18,13 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23)
@@ -59,7 +54,7 @@ public class FederationServerTest extends TestCase {
     FederationServer.setHttpClient(fakeClient);
     server = new FederationServer(
         mockWebServer.url("/federation").toString(),
-        InternetDomainName.from("stellar.org")
+        "stellar.org"
     );
   }
 
@@ -82,9 +77,9 @@ public class FederationServerTest extends TestCase {
 
     when(mockCall.execute()).thenReturn(mockResponseSuccess);
 
-    FederationServer server = FederationServer.createForDomain(InternetDomainName.from("stellar.org"));
+    FederationServer server = FederationServer.createForDomain("stellar.org");
     assertEquals(server.getServerUri().toString(), "https://api.stellar.org/federation");
-    assertEquals(server.getDomain().toString(), "stellar.org");
+    assertEquals(server.getDomain(), "stellar.org");
 
     ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class);
     verify(mockClient).newCall(argument.capture());

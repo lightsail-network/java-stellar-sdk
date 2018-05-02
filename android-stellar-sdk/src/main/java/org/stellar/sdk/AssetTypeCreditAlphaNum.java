@@ -1,8 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Arrays;
+import static org.stellar.sdk.Util.checkNotNull;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Arrays;
 
 /**
  * Base class for AssetTypeCreditAlphaNum4 and AssetTypeCreditAlphaNum12 subclasses.

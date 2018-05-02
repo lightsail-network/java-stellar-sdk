@@ -1,7 +1,15 @@
 package org.stellar.sdk.responses;
 
-import com.google.gson.annotations.SerializedName;
+import static org.stellar.sdk.Util.CHARSET_UTF8;
+import static org.stellar.sdk.Util.checkNotNull;
 
+import com.google.gson.annotations.SerializedName;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.android.codec.binary.Base64;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LedgerEntryChanges;
@@ -11,16 +19,6 @@ import org.stellar.sdk.xdr.OperationMeta;
 import org.stellar.sdk.xdr.Transaction;
 import org.stellar.sdk.xdr.TransactionMeta;
 import org.stellar.sdk.xdr.XdrDataInputStream;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.stellar.sdk.Util.CHARSET_UTF8;
 
 /**
  * Represents transaction response.

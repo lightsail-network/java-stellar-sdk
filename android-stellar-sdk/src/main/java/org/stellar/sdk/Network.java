@@ -1,9 +1,9 @@
 package org.stellar.sdk;
 
-import java.io.UnsupportedEncodingException;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.stellar.sdk.Util.CHARSET_UTF8;
+import static org.stellar.sdk.Util.checkNotNull;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Network class is used to specify which Stellar network you want to use.
