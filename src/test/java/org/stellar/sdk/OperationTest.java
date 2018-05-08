@@ -436,11 +436,10 @@ public class OperationTest {
 
     ManageOfferOperation manageOfferOperation = (ManageOfferOperation)Operation.fromXdr(xdrTransaction.getOperations()[0]);
 
-    Price priceExpected = new Price(74915, 1585546269);
-    Price priceObtained = Price.fromString(manageOfferOperation.getPrice());
+    Price priceObtained = manageOfferOperation.getPriceR();
 
-    assertEquals(priceExpected, priceObtained);
-
+    assertEquals(74915, priceObtained.getNumerator());
+    assertEquals(1585546269, priceObtained.getDenominator());
 
   }
   

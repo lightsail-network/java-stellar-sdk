@@ -9,6 +9,7 @@ import org.stellar.sdk.xdr.Uint64;
 import java.math.BigDecimal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.math.RoundingMode;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-offer" target="_blank">ManageOffer</a> operation.
@@ -19,10 +20,10 @@ public class ManageOfferOperation extends Operation {
   private final Asset selling;
   private final Asset buying;
   private final String amount;
-  private final String price;
+  private final Price price;
   private final long offerId;
 
-  private ManageOfferOperation(Asset selling, Asset buying, String amount, String price, long offerId) {
+  private ManageOfferOperation(Asset selling, Asset buying, String amount, Price price, long offerId) {
     this.selling = checkNotNull(selling, "selling cannot be null");
     this.buying = checkNotNull(buying, "buying cannot be null");
     this.amount = checkNotNull(amount, "amount cannot be null");
@@ -55,7 +56,12 @@ public class ManageOfferOperation extends Operation {
   /**
    * Price of 1 unit of selling in terms of buying.
    */
+  @Deprecated
   public String getPrice() {
+    return new BigDecimal(price.getNumerator()).divide(new BigDecimal(price.getDenominator()),8, RoundingMode.DOWN).toPlainString();
+  }
+  
+  public Price getPriceR() {
     return price;
   }
 
@@ -74,8 +80,7 @@ public class ManageOfferOperation extends Operation {
     Int64 amount = new Int64();
     amount.setInt64(Operation.toXdrAmount(this.amount));
     op.setAmount(amount);
-    Price price = Price.fromString(this.price);
-    op.setPrice(price.toXdr());
+    op.setPrice(this.price.toXdr());
     Uint64 offerId = new Uint64();
     offerId.setUint64(Long.valueOf(this.offerId));
     op.setOfferID(offerId);
@@ -97,7 +102,7 @@ public class ManageOfferOperation extends Operation {
     private final Asset selling;
     private final Asset buying;
     private final String amount;
-    private final String price;
+    private final Price price;
     private long offerId = 0;
 
     private KeyPair mSourceAccount;
@@ -112,7 +117,7 @@ public class ManageOfferOperation extends Operation {
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
       int n = op.getPrice().getN().getInt32().intValue();
       int d = op.getPrice().getD().getInt32().intValue();
-      price = new BigDecimal(n).divide(new BigDecimal(d)).toString();
+      price = new Price(n, d);
       offerId = op.getOfferID().getUint64().longValue();
     }
 
@@ -125,10 +130,28 @@ public class ManageOfferOperation extends Operation {
      * @param price Price of 1 unit of selling in terms of buying.
      * @throws ArithmeticException when amount has more than 7 decimal places.
      */
-    public Builder(Asset selling, Asset buying, String amount, String price) {
+    public Builder(Asset selling, Asset buying, String amount, Price price) {
       this.selling = checkNotNull(selling, "selling cannot be null");
       this.buying = checkNotNull(buying, "buying cannot be null");
       this.amount = checkNotNull(amount, "amount cannot be null");
+      this.price = checkNotNull(price, "price cannot be null");
+    }
+    
+    /**
+     * Creates a new ManageOffer builder. If you want to update existing offer use
+     * {@link org.stellar.sdk.ManageOfferOperation.Builder#setOfferId(long)}.
+     * @param selling The asset being sold in this operation
+     * @param buying The asset being bought in this operation
+     * @param amount Amount of selling being sold.
+     * @param price Price of 1 unit of selling in terms of buying.
+     * @throws ArithmeticException when amount has more than 7 decimal places.
+     */
+    @Deprecated
+    public Builder(Asset selling, Asset buying, String amount, String _price) {
+      this.selling = checkNotNull(selling, "selling cannot be null");
+      this.buying = checkNotNull(buying, "buying cannot be null");
+      this.amount = checkNotNull(amount, "amount cannot be null");
+      Price price = Price.fromString(_price);
       this.price = checkNotNull(price, "price cannot be null");
     }
 
