@@ -13,7 +13,6 @@ public abstract class RequestBuilder {
   protected OkHttpClient httpClient;
   private ArrayList<String> segments;
   private boolean segmentsAdded;
-  private String originalPath;
 
   RequestBuilder(OkHttpClient httpClient, HttpUrl serverURI, String defaultSegment) {
     this.httpClient = httpClient;
