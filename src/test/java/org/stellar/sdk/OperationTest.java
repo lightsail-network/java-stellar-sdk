@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
 import org.junit.Test;
 import org.stellar.sdk.xdr.SignerKey;
 
@@ -9,6 +11,8 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.XdrDataInputStream;
 
 public class OperationTest {
 
@@ -418,6 +422,28 @@ public class OperationTest {
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAMAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
             operation.toXdrBase64());
   }
+  
+  @Test
+  public void testManageOfferOperationPrice() throws IOException, FormatException {
+
+    String transactionEnvelopeXdr = "AAAAACq1Ixcw1fchtF5aLTSw1zaYAYjb3WbBRd4jqYJKThB9AAAAZAA8tDoAAAAaAAAAAAAAAAAAAAABAAAAAAAAAAMAAAAAAAAAAUJUQwAAAAAAmyMegjdqwy59ijGMyd+sKLgoCfagDexhF17wyd36y2oAAAAABfXhAAABJKNegYQdAAAAAAAAAAAAAAAAAAAAAA==";
+
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(transactionEnvelopeXdr);
+
+    org.stellar.sdk.xdr.TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+    org.stellar.sdk.xdr.Transaction xdrTransaction = transactionEnvelope.getTx();
+
+    ManageOfferOperation manageOfferOperation = (ManageOfferOperation)Operation.fromXdr(xdrTransaction.getOperations()[0]);
+
+    Price priceExpected = new Price(74915, 1585546269);
+    Price priceObtained = Price.fromString(manageOfferOperation.getPrice());
+
+    assertEquals(priceExpected, priceObtained);
+
+
+  }
+  
 
   @Test
   public void testCreatePassiveOfferOperation() throws IOException, FormatException {

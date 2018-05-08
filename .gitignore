@@ -16,6 +16,7 @@
 # Gradle
 .gradle
 build
+.nb-gradle
 
 # Mac
 .DS_Store
