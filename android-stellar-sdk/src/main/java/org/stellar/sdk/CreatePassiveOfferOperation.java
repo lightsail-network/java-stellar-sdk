@@ -1,12 +1,11 @@
 package org.stellar.sdk;
 
+import static org.stellar.sdk.Util.checkNotNull;
+
+import java.math.BigDecimal;
 import org.stellar.sdk.xdr.CreatePassiveOfferOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
-
-import java.math.BigDecimal;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#create-passive-offer" target="_blank">CreatePassiveOffer</a> operation.

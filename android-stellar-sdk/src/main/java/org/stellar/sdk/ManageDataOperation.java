@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
+import static org.stellar.sdk.Util.checkNotNull;
+
 import org.stellar.sdk.xdr.DataValue;
 import org.stellar.sdk.xdr.ManageDataOp;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.String64;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-data" target="_blank">ManageData</a> operation.

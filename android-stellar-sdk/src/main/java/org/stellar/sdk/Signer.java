@@ -1,10 +1,10 @@
 package org.stellar.sdk;
 
+import static org.stellar.sdk.Util.checkNotNull;
+
 import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Signer is a helper class that creates {@link org.stellar.sdk.xdr.SignerKey} objects.

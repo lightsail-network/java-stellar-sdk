@@ -21,7 +21,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation 'com.moandjiezana.toml:toml4j:0.5.1'
-    implementation 'com.google.guava:guava:18.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     api 'com.github.kinecosystem:oksse:93f4ef7445f9c3db3c3bc2d1ccb2691fc7246810'

@@ -1,12 +1,13 @@
 package org.stellar.sdk;
 
+import static org.stellar.sdk.Util.checkArgument;
+import static org.stellar.sdk.Util.checkNotNull;
+
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentOp;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment" target="_blank">PathPayment</a> operation.
