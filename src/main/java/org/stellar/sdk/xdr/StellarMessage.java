@@ -21,7 +21,7 @@ import java.io.IOException;
 //  case GET_PEERS:
 //      void;
 //  case PEERS:
-//      PeerAddress peers<>;
+//      PeerAddress peers<100>;
 //  
 //  case GET_TX_SET:
 //      uint256 txSetHash;

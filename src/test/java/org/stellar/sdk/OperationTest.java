@@ -518,6 +518,26 @@ public class OperationTest {
   }
 
   @Test
+  public void testBumpSequence() throws IOException, FormatException {
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+
+    BumpSequenceOperation operation = new BumpSequenceOperation.Builder(156L)
+            .setSourceAccount(source)
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+
+    BumpSequenceOperation parsedOperation = (BumpSequenceOperation) Operation.fromXdr(xdr);
+
+    assertEquals(156L, parsedOperation.getBumpTo());
+
+    assertEquals(
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAsAAAAAAAAAnA==",
+            operation.toXdrBase64());
+  }
+
+  @Test
   public void testToXdrAmount() {
     assertEquals(0L, Operation.toXdrAmount("0"));
     assertEquals(1L, Operation.toXdrAmount("0.0000001"));

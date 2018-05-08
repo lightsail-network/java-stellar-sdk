@@ -39,6 +39,8 @@ import java.io.IOException;
 //          void;
 //      case MANAGE_DATA:
 //          ManageDataOp manageDataOp;
+//      case BUMP_SEQUENCE:
+//          BumpSequenceOp bumpSequenceOp;
 //      }
 //      body;
 //  };
@@ -158,6 +160,13 @@ public class Operation  {
     public void setManageDataOp(ManageDataOp value) {
       this.manageDataOp = value;
     }
+    private BumpSequenceOp bumpSequenceOp;
+    public BumpSequenceOp getBumpSequenceOp() {
+      return this.bumpSequenceOp;
+    }
+    public void setBumpSequenceOp(BumpSequenceOp value) {
+      this.bumpSequenceOp = value;
+    }
     public static void encode(XdrDataOutputStream stream, OperationBody encodedOperationBody) throws IOException {
     stream.writeInt(encodedOperationBody.getDiscriminant().getValue());
     switch (encodedOperationBody.getDiscriminant()) {
@@ -192,6 +201,9 @@ public class Operation  {
     break;
     case MANAGE_DATA:
     ManageDataOp.encode(stream, encodedOperationBody.manageDataOp);
+    break;
+    case BUMP_SEQUENCE:
+    BumpSequenceOp.encode(stream, encodedOperationBody.bumpSequenceOp);
     break;
     }
     }
@@ -231,6 +243,9 @@ public class Operation  {
     break;
     case MANAGE_DATA:
     decodedOperationBody.manageDataOp = ManageDataOp.decode(stream);
+    break;
+    case BUMP_SEQUENCE:
+    decodedOperationBody.bumpSequenceOp = BumpSequenceOp.decode(stream);
     break;
     }
       return decodedOperationBody;

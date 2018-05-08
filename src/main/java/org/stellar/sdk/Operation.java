@@ -99,6 +99,9 @@ public abstract class Operation {
       case MANAGE_DATA:
         operation = new ManageDataOperation.Builder(body.getManageDataOp()).build();
         break;
+      case BUMP_SEQUENCE:
+        operation = new BumpSequenceOperation.Builder(body.getBumpSequenceOp()).build();
+        break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }

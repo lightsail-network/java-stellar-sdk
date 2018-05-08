@@ -145,8 +145,8 @@ public class Transaction {
     org.stellar.sdk.xdr.Uint32 fee = new org.stellar.sdk.xdr.Uint32();
     fee.setUint32(mFee);
     // sequenceNumber
-    org.stellar.sdk.xdr.Uint64 sequenceNumberUint = new org.stellar.sdk.xdr.Uint64();
-    sequenceNumberUint.setUint64(mSequenceNumber);
+    org.stellar.sdk.xdr.Int64 sequenceNumberUint = new org.stellar.sdk.xdr.Int64();
+    sequenceNumberUint.setInt64(mSequenceNumber);
     org.stellar.sdk.xdr.SequenceNumber sequenceNumber = new org.stellar.sdk.xdr.SequenceNumber();
     sequenceNumber.setSequenceNumber(sequenceNumberUint);
     // sourceAccount
