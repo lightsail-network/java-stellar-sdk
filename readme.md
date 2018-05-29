@@ -6,6 +6,24 @@ The Java Stellar Sdk library provides APIs to build transactions and connect to 
 
 ## Installation
 
+### Maven
+
+Use [jitpack.io](https://jitpack.io)'s Maven repository:
+
+```
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    implementation 'com.github.stellar:java-stellar-sdk:{version}'
+}
+```
+
+The list of versions to install can be found in the [Releases](./releases) section. More information can be found in [jitpack.io docs](https://jitpack.io/docs/).
+
+### JAR
+
 Download the latest jar from the GitHub repo's [releases tab](https://github.com/stellar/java-stellar-sdk/releases). Add the `jar` package to your project according to how your environment is set up.
 
 ## Basic Usage
