@@ -1,7 +1,7 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
+import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -10,8 +10,7 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
-
-import java.io.IOException;
+import org.stellar.sdk.responses.TransactionResponse;
 
 /**
  * Builds requests connected to trades.
@@ -41,16 +40,18 @@ public class TradesRequestBuilder extends RequestBuilder {
         return this;
     }
 
-    public static TradeResponse execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
-        TypeToken type = new TypeToken<TradeResponse>() {};
-        ResponseHandler<TradeResponse> responseHandler = new ResponseHandler<TradeResponse>(type);
+    public static Page<TradeResponse> execute(OkHttpClient httpClient, HttpUrl uri)
+        throws IOException, TooManyRequestsException {
+        TypeToken type = new TypeToken<Page<TradeResponse>>() {};
+        ResponseHandler<Page<TradeResponse>> responseHandler = new ResponseHandler<Page<TradeResponse>>(
+            type);
 
         Request request = new Request.Builder().get().url(uri).build();
         Response response = httpClient.newCall(request).execute();
         return responseHandler.handleResponse(response);
     }
 
-    public TradeResponse execute() throws IOException, TooManyRequestsException {
+    public Page<TradeResponse> execute() throws IOException, TooManyRequestsException {
         return this.execute(this.httpClient, this.buildUri());
     }
 
