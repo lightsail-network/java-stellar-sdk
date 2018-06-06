@@ -37,6 +37,8 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         return gson.fromJson(json, AccountHomeDomainUpdatedEffectResponse.class);
       case 6:
         return gson.fromJson(json, AccountFlagsUpdatedEffectResponse.class);
+      case 7:
+        return gson.fromJson(json, AccountInflationDestinationUpdatedEffectResponse.class);
       // Signer effects
       case 10:
         return gson.fromJson(json, SignerCreatedEffectResponse.class);
@@ -64,6 +66,13 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         return gson.fromJson(json, OfferUpdatedEffectResponse.class);
       case 33:
         return gson.fromJson(json, TradeEffectResponse.class);
+      // Data effects
+      case 40:
+        return gson.fromJson(json, DataCreatedEffectResponse.class);
+      case 41:
+        return gson.fromJson(json, DataRemovedEffectResponse.class);
+      case 42:
+        return gson.fromJson(json, DataUpdatedEffectResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

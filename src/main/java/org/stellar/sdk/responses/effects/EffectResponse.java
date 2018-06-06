@@ -19,6 +19,8 @@ public abstract class EffectResponse extends Response {
   protected KeyPair account;
   @SerializedName("type")
   protected String type;
+  @SerializedName("created_at")
+  protected String createdAt;
   @SerializedName("paging_token")
   protected String pagingToken;
   @SerializedName("_links")
@@ -42,6 +44,7 @@ public abstract class EffectResponse extends Response {
    *   <li>account_thresholds_updated</li>
    *   <li>account_home_domain_updated</li>
    *   <li>account_flags_updated</li>
+   *   <li>account_inflation_destination_updated</li>
    *   <li>signer_created</li>
    *   <li>signer_removed</li>
    *   <li>signer_updated</li>
@@ -54,6 +57,9 @@ public abstract class EffectResponse extends Response {
    *   <li>offer_removed</li>
    *   <li>offer_updated</li>
    *   <li>trade</li>
+   *   <li>data_created</li>
+   *   <li>data_removed</li>
+   *   <li>data_updated</li>
    * </ul>
    */
   public String getType() {
@@ -62,6 +68,10 @@ public abstract class EffectResponse extends Response {
 
   public String getPagingToken() {
     return pagingToken;
+  }
+
+  public String getCreatedAt() {
+    return createdAt;
   }
 
   public Links getLinks() {

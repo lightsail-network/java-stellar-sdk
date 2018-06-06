@@ -243,6 +243,34 @@ public class EffectDeserializerTest extends TestCase {
   }
 
   @Test
+  public void testDeserializeAccountInflationDestinationUpdatedEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/operations/40181321724596225\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc&cursor=40181321724596225-1\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc&cursor=40181321724596225-1\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0040181321724596225-0000000001\",\n" +
+            "        \"paging_token\": \"40181321724596225-1\",\n" +
+            "        \"account\": \"GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF\",\n" +
+            "        \"type\": \"account_inflation_destination_updated\",\n" +
+            "        \"type_i\": 7,\n" +
+            "        \"created_at\": \"2018-06-06T10:20:50Z\"\n" +
+            "      }";
+
+    AccountInflationDestinationUpdatedEffectResponse effect = (AccountInflationDestinationUpdatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getAccount().getAccountId(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
+    assertEquals(effect.getCreatedAt(), "2018-06-06T10:20:50Z");
+  }
+
+  @Test
   public void testDeserializeSignerCreatedEffect() {
     String json = "{\n" +
             "        \"_links\": {\n" +
@@ -568,5 +596,89 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
     assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");
     assertEquals(effect.getLinks().getPrecedes().getHref(), "http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2");
+  }
+
+  @Test
+  public void testDeserializeDataCreatedEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/operations/40181480638386177\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc&cursor=40181480638386177-1\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc&cursor=40181480638386177-1\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0040181480638386177-0000000001\",\n" +
+            "        \"paging_token\": \"40181480638386177-1\",\n" +
+            "        \"account\": \"GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF\",\n" +
+            "        \"type\": \"data_created\",\n" +
+            "        \"type_i\": 40,\n" +
+            "        \"created_at\": \"2018-06-06T10:23:57Z\"\n" +
+            "      }";
+
+    DataCreatedEffectResponse effect = (DataCreatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getAccount().getAccountId(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
+    assertEquals(effect.getCreatedAt(), "2018-06-06T10:23:57Z");
+  }
+
+  @Test
+  public void testDeserializeDataRemovedEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/operations/40181480638386177\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc&cursor=40181480638386177-1\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc&cursor=40181480638386177-1\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0040181480638386177-0000000001\",\n" +
+            "        \"paging_token\": \"40181480638386177-1\",\n" +
+            "        \"account\": \"GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF\",\n" +
+            "        \"type\": \"data_removed\",\n" +
+            "        \"type_i\": 41,\n" +
+            "        \"created_at\": \"2018-06-06T10:23:57Z\"\n" +
+            "      }";
+
+    DataRemovedEffectResponse effect = (DataRemovedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getAccount().getAccountId(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
+    assertEquals(effect.getCreatedAt(), "2018-06-06T10:23:57Z");
+  }
+
+  @Test
+  public void testDeserializeDataUpdatedEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/operations/40181480638386177\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc&cursor=40181480638386177-1\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc&cursor=40181480638386177-1\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0040181480638386177-0000000001\",\n" +
+            "        \"paging_token\": \"40181480638386177-1\",\n" +
+            "        \"account\": \"GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF\",\n" +
+            "        \"type\": \"data_updated\",\n" +
+            "        \"type_i\": 42,\n" +
+            "        \"created_at\": \"2018-06-06T10:23:57Z\"\n" +
+            "      }";
+
+    DataUpdatedEffectResponse effect = (DataUpdatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getAccount().getAccountId(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
+    assertEquals(effect.getCreatedAt(), "2018-06-06T10:23:57Z");
   }
 }
