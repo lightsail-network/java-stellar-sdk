@@ -148,7 +148,17 @@ public class TradeResponse extends Response {
         return links;
     }
 
-    /**
+    
+    public Price getPrice() {
+		return price;
+	}
+
+	public void setPrice(Price price) {
+		this.price = price;
+	}
+
+
+	/**
      * Links connected to a trade.
      */
     public static class Links {
