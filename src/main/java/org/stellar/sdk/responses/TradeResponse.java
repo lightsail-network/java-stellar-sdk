@@ -3,8 +3,8 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
-
-import java.util.Date;
+import org.stellar.sdk.Price;
+;
 
 /**
  * Represents trades response.
@@ -48,10 +48,13 @@ public class TradeResponse extends Response {
     @SerializedName("counter_asset_issuer")
     protected final String counterAssetIssuer;
 
+    @SerializedName("price")
+    protected final Price price;
+
     @SerializedName("_links")
     private TradeResponse.Links links;
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, KeyPair baseAccount, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, KeyPair counterAccount, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, KeyPair baseAccount, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, KeyPair counterAccount, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
@@ -67,6 +70,7 @@ public class TradeResponse extends Response {
         this.counterAssetType = counterAssetType;
         this.counterAssetCode = counterAssetCode;
         this.counterAssetIssuer = counterAssetIssuer;
+        this.price = price;
     }
 
     public String getId() {
@@ -135,6 +139,10 @@ public class TradeResponse extends Response {
 
     public String getCounterAssetIssuer() {
         return counterAssetIssuer;
+    }
+
+    public Price getPrice() {
+        return price;
     }
 
     public Links getLinks() {
