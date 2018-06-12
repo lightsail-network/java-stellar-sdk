@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TradesRequestBuilderTest {
     @Test
-    public void testOrderBook() {
+    public void testTrades() {
         Server server = new Server("https://horizon-testnet.stellar.org");
         HttpUrl uri = server.trades()
                 .baseAsset(Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W")))
@@ -27,6 +27,22 @@ public class TradesRequestBuilderTest {
                 "counter_asset_type=credit_alphanum4&" +
                 "counter_asset_code=USD&" +
                 "counter_asset_issuer=GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ&" +
+                "cursor=13537736921089&" +
+                "limit=200&" +
+                "order=asc", uri.toString());
+    }
+
+    @Test
+    public void testTradesForAccount() {
+        Server server = new Server("https://horizon-testnet.stellar.org");
+        HttpUrl uri = server.trades()
+                .forAccount(KeyPair.fromAccountId("GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
+                .cursor("13537736921089")
+                .limit(200)
+                .order(RequestBuilder.Order.ASC)
+                .buildUri();
+
+        assertEquals("https://horizon-testnet.stellar.org/accounts/GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ/trades?" +
                 "cursor=13537736921089&" +
                 "limit=200&" +
                 "order=asc", uri.toString());
