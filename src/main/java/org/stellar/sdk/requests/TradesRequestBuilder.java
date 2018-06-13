@@ -1,13 +1,19 @@
 package org.stellar.sdk.requests;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
+
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
 import org.stellar.sdk.responses.TransactionResponse;
@@ -20,6 +26,17 @@ public class TradesRequestBuilder extends RequestBuilder {
         super(httpClient, serverURI, "trades");
     }
 
+    /**
+     * Builds request to <code>GET /accounts/{account}/trades</code>
+     * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-account.html">Trade for Account</a>
+     * @param account Account for which to get trade
+     */
+    public TradesRequestBuilder forAccount(KeyPair account) {
+      account = checkNotNull(account, "account cannot be null");
+      this.setSegments("accounts", account.getAccountId(), "trades");
+      return this;
+    }
+    
     public TradesRequestBuilder baseAsset(Asset asset) {
         uriBuilder.setQueryParameter("base_asset_type", asset.getType());
         if (asset instanceof AssetTypeCreditAlphaNum) {

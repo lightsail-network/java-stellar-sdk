@@ -14,6 +14,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see org.stellar.sdk.Server#transactions()
  */
 public class TransactionResponse extends Response {
+  @SerializedName("id")
+  private final String id;
   @SerializedName("hash")
   private final String hash;
   @SerializedName("ledger")
@@ -43,7 +45,7 @@ public class TransactionResponse extends Response {
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  TransactionResponse(String hash, Long ledger, String createdAt, KeyPair sourceAccount, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
+  TransactionResponse(String hash, Long ledger, String createdAt, KeyPair sourceAccount, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links,String id) {
     this.hash = hash;
     this.ledger = ledger;
     this.createdAt = createdAt;
@@ -57,6 +59,7 @@ public class TransactionResponse extends Response {
     this.resultMetaXdr = resultMetaXdr;
     this.memo = memo;
     this.links = links;
+    this.id=id;
   }
 
   public String getHash() {
@@ -118,8 +121,14 @@ public class TransactionResponse extends Response {
   public Links getLinks() {
     return links;
   }
+  
 
-  /**
+  public String getId() {
+	return id;
+}
+
+
+/**
    * Links connected to transaction.
    */
   public static class Links {

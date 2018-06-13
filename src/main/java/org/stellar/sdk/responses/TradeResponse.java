@@ -1,8 +1,10 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
+
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.Price;
 
 import java.util.Date;
 
@@ -50,8 +52,12 @@ public class TradeResponse extends Response {
 
     @SerializedName("_links")
     private TradeResponse.Links links;
+    
+    @SerializedName("price")
+    private Price	price;
+    
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, KeyPair baseAccount, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, KeyPair counterAccount, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, KeyPair baseAccount, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, KeyPair counterAccount, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer,Price price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
@@ -67,6 +73,7 @@ public class TradeResponse extends Response {
         this.counterAssetType = counterAssetType;
         this.counterAssetCode = counterAssetCode;
         this.counterAssetIssuer = counterAssetIssuer;
+        this.price=price;
     }
 
     public String getId() {
@@ -141,7 +148,17 @@ public class TradeResponse extends Response {
         return links;
     }
 
-    /**
+    
+    public Price getPrice() {
+		return price;
+	}
+
+	public void setPrice(Price price) {
+		this.price = price;
+	}
+
+
+	/**
      * Links connected to a trade.
      */
     public static class Links {
