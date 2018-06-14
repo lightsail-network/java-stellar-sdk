@@ -1,8 +1,10 @@
 package org.stellar.sdk;
 
+import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import org.stellar.sdk.requests.*;
 import org.stellar.sdk.responses.GsonSingleton;
+import org.stellar.sdk.responses.RootResponse;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
 
 import java.io.IOException;
@@ -30,6 +32,19 @@ public class Server {
 
     public void setHttpClient(OkHttpClient httpClient) {
         this.httpClient = httpClient;
+    }
+
+    /**
+     * Returns {@link RootResponse}.
+     */
+    public RootResponse root() throws IOException {
+        TypeToken type = new TypeToken<RootResponse>() {};
+        ResponseHandler<RootResponse> responseHandler = new ResponseHandler<RootResponse>(type);
+
+        Request request = new Request.Builder().get().url(serverURI).build();
+        Response response = httpClient.newCall(request).execute();
+
+        return responseHandler.handleResponse(response);
     }
 
     /**

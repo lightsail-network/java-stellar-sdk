@@ -8,9 +8,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
 import org.stellar.sdk.responses.TransactionResponse;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Builds requests connected to trades.
@@ -37,6 +40,17 @@ public class TradesRequestBuilder extends RequestBuilder {
             uriBuilder.setQueryParameter("counter_asset_code", creditAlphaNumAsset.getCode());
             uriBuilder.setQueryParameter("counter_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
         }
+        return this;
+    }
+
+    /**
+     * Builds request to <code>GET /accounts/{account}/trades</code>
+     * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-account.html">Trades for Account</a>
+     * @param account Account for which to get trades
+     */
+    public TradesRequestBuilder forAccount(KeyPair account) {
+        account = checkNotNull(account, "account cannot be null");
+        this.setSegments("accounts", account.getAccountId(), "trades");
         return this;
     }
 

@@ -79,19 +79,19 @@ public class OfferResponse extends Response {
     @SerializedName("self")
     private final Link self;
     @SerializedName("offer_maker")
-    private final Link offerMager;
+    private final Link offerMaker;
 
-    public Links(Link self, Link offerMager) {
+    public Links(Link self, Link offerMaker) {
       this.self = self;
-      this.offerMager = offerMager;
+      this.offerMaker = offerMaker;
     }
 
     public Link getSelf() {
       return self;
     }
 
-    public Link getOfferMager() {
-      return offerMager;
+    public Link getOfferMaker() {
+      return offerMaker;
     }
   }
 }
