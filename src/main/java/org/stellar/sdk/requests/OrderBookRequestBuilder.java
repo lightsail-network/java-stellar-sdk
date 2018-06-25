@@ -95,11 +95,6 @@ public class OrderBookRequestBuilder extends RequestBuilder {
   }
 
   @Override
-  public RequestBuilder limit(int number) {
-    throw new RuntimeException("Not implemented yet.");
-  }
-
-  @Override
   public RequestBuilder order(Order direction) {
     throw new RuntimeException("Not implemented yet.");
   }
