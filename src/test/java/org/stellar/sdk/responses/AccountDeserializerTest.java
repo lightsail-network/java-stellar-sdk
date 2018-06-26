@@ -42,6 +42,11 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getLinks().getOperations().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}");
     assertEquals(account.getLinks().getSelf().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getLinks().getTransactions().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}");
+
+    assertEquals(account.getData().size(),2);
+    assertEquals(new String(account.getData().get("test")),"test");
+    assertEquals(new String(account.getData().get("test2")),"test2");
+
   }
 
   String json = "{\n" +
@@ -104,6 +109,10 @@ public class AccountDeserializerTest extends TestCase {
           "      \"public_key\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
           "      \"weight\": 1\n" +
           "    }\n" +
-          "  ]\n" +
+          "  ],\n" +
+          "  \"data\": {\n" +
+          "    \"test\": \"dGVzdA==\",\n" +
+          "    \"test2\": \"dGVzdDI=\"\n" +
+          "  }\n" +
           "}";
 }

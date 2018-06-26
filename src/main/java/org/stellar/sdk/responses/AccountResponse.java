@@ -6,6 +6,8 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 
+import java.util.Map;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -37,6 +39,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private Signer[] signers;
   @SerializedName("_links")
   private Links links;
+  @SerializedName("data")
+  private Map<String,byte[]> data;
 
   AccountResponse(KeyPair keypair) {
     this.keypair = keypair;
@@ -98,6 +102,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   public Signer[] getSigners() {
     return signers;
   }
+
+  public Map<String,byte[]> getData() { return data; }
 
   /**
    * Represents account thresholds.
