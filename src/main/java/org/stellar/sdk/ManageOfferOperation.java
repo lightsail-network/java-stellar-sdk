@@ -81,8 +81,7 @@ public class ManageOfferOperation extends Operation {
     Int64 amount = new Int64();
     amount.setInt64(Operation.toXdrAmount(this.amount));
     op.setAmount(amount);
-    Price price = this.price;
-    op.setPrice(price.toXdr());
+    op.setPrice(this.price.toXdr());
     Uint64 offerId = new Uint64();
     offerId.setUint64(Long.valueOf(this.offerId));
     op.setOfferID(offerId);
