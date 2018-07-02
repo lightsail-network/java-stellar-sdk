@@ -73,4 +73,22 @@ public class TradesRequestBuilder extends RequestBuilder {
         uriBuilder.setQueryParameter("offer_id", offerId);
         return this;
     }
+
+    @Override
+    public TradesRequestBuilder cursor(String cursor) {
+         super.cursor(cursor);
+        return this;
+    }
+
+    @Override
+    public TradesRequestBuilder limit(int number) {
+         super.limit(number);
+        return this;
+    }
+
+    @Override
+    public TradesRequestBuilder order(Order direction) {
+         super.order(direction);
+        return this;
+    }
 }
