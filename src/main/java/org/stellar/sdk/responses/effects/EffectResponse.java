@@ -60,6 +60,7 @@ public abstract class EffectResponse extends Response {
    *   <li>data_created</li>
    *   <li>data_removed</li>
    *   <li>data_updated</li>
+   *   <li>sequence_bumped</li>
    * </ul>
    */
   public String getType() {

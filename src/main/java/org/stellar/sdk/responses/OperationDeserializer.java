@@ -8,18 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.responses.operations.ManageDataOperationResponse;
-import org.stellar.sdk.responses.operations.OperationResponse;
-import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
-import org.stellar.sdk.responses.operations.PaymentOperationResponse;
-import org.stellar.sdk.responses.operations.PathPaymentOperationResponse;
-import org.stellar.sdk.responses.operations.ManageOfferOperationResponse;
-import org.stellar.sdk.responses.operations.CreatePassiveOfferOperationResponse;
-import org.stellar.sdk.responses.operations.SetOptionsOperationResponse;
-import org.stellar.sdk.responses.operations.ChangeTrustOperationResponse;
-import org.stellar.sdk.responses.operations.AllowTrustOperationResponse;
-import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;
-import org.stellar.sdk.responses.operations.InflationOperationResponse;
+import org.stellar.sdk.responses.operations.*;
 
 import java.lang.reflect.Type;
 
@@ -55,6 +44,8 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         return gson.fromJson(json, InflationOperationResponse.class);
       case 10:
         return gson.fromJson(json, ManageDataOperationResponse.class);
+      case 11:
+        return gson.fromJson(json, BumpSequenceOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }
