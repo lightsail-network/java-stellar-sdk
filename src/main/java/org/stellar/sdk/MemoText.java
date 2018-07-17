@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 
 import java.nio.charset.Charset;
@@ -31,5 +32,13 @@ public class MemoText extends Memo {
     memo.setDiscriminant(MemoType.MEMO_TEXT);
     memo.setText(text);
     return memo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MemoText memoText = (MemoText) o;
+    return Objects.equal(text, memoText.text);
   }
 }

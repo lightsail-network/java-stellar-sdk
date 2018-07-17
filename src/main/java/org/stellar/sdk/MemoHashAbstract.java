@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 
 abstract class MemoHashAbstract extends Memo {
@@ -57,4 +58,12 @@ abstract class MemoHashAbstract extends Memo {
 
   @Override
   abstract org.stellar.sdk.xdr.Memo toXdr();
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MemoHashAbstract that = (MemoHashAbstract) o;
+    return Objects.equal(bytes, that.bytes);
+  }
 }

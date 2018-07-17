@@ -29,4 +29,12 @@ public class MemoId extends Memo {
     memo.setId(idXdr);
     return memo;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MemoId memoId = (MemoId) o;
+    return id == memoId.id;
+  }
 }
