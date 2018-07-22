@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 
+import java.util.Arrays;
+
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
 
@@ -57,4 +59,19 @@ abstract class MemoHashAbstract extends Memo {
 
   @Override
   abstract org.stellar.sdk.xdr.Memo toXdr();
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    MemoHashAbstract that = (MemoHashAbstract) o;
+
+    return Arrays.equals(getBytes(), that.getBytes());
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(getBytes());
+  }
 }

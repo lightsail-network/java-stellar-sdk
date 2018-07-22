@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.AllowTrustOp;
 import org.stellar.sdk.xdr.AssetType;
@@ -129,5 +131,29 @@ public class AllowTrustOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    AllowTrustOperation that = (AllowTrustOperation) o;
+
+    return super.equals(o) && new EqualsBuilder()
+            .append(getAuthorize(), that.getAuthorize())
+            .append(getTrustor().getAccountId(), that.getTrustor().getAccountId())
+            .append(getAssetCode(), that.getAssetCode())
+            .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+            .append(getTrustor().getAccountId())
+            .append(getAssetCode())
+            .append(getAuthorize())
+            .toHashCode();
   }
 }

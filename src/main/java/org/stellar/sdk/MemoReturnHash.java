@@ -21,7 +21,7 @@ public class MemoReturnHash extends MemoHashAbstract {
     memo.setDiscriminant(MemoType.MEMO_RETURN);
 
     org.stellar.sdk.xdr.Hash hash = new org.stellar.sdk.xdr.Hash();
-    hash.setHash(bytes);
+    hash.setHash(bytes); // todo -
 
     memo.setHash(hash);
     return memo;

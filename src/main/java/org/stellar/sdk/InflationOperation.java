@@ -13,4 +13,15 @@ public class InflationOperation extends Operation {
         body.setDiscriminant(OperationType.INFLATION);
         return body;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || super.equals(o) && o instanceof InflationOperation;
+    }
+
+    @Override
+    public int hashCode() {
+        return InflationOperation.class.hashCode();
+    }
 }

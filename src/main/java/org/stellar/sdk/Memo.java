@@ -71,5 +71,28 @@ public abstract class Memo {
         return new MemoReturnHash(BaseEncoding.base16().lowerCase().decode(hexString.toLowerCase()));
     }
 
+    /**
+     * Creates a Memo from an XDR Memo instance.
+     */
+    public static Memo fromXdr(org.stellar.sdk.xdr.Memo memo) {
+        if (memo == null) {
+            return Memo.none();
+        }
+        switch (memo.getDiscriminant()) {
+            case MEMO_NONE:
+                return Memo.none();
+            case MEMO_TEXT:
+                return new MemoText(memo.getText());
+            case MEMO_ID:
+                return new MemoId(memo.getId().getUint64());
+            case MEMO_HASH:
+                return new MemoHash(memo.getHash().getHash());
+            case MEMO_RETURN:
+                return new MemoReturnHash(memo.getHash().getHash());
+            default:
+                throw new AssertionError("Unrecognized memo discriminant: " + memo.getDiscriminant());
+        }
+    }
+
     abstract org.stellar.sdk.xdr.Memo toXdr();
 }

@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.MemoType;
 
 import java.nio.charset.Charset;
@@ -31,5 +33,25 @@ public class MemoText extends Memo {
     memo.setDiscriminant(MemoType.MEMO_TEXT);
     memo.setText(text);
     return memo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    MemoText memoText = (MemoText) o;
+
+    return new EqualsBuilder()
+            .append(getText(), memoText.getText())
+            .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+            .append(getText())
+            .toHashCode();
   }
 }

@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -147,6 +148,23 @@ public class TransactionTest {
     } catch (RuntimeException exception) {
       assertTrue(exception.getMessage().contains("Transaction must be signed by at least one signer."));
     }
+  }
+
+  @Test
+  public void testFromEnvelopeXdrBase64Success() {
+    KeyPair source = KeyPair.random();
+    KeyPair destination = KeyPair.random();
+
+    Account account = new Account(source, Math.abs(new Random().nextLong()));
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "5000").build())
+            .build();
+    transaction.sign(source);
+
+    Transaction actual = Transaction.fromEnvelopeXdrBase64(transaction.toEnvelopeXdrBase64());
+
+    assertEquals(transaction, actual);
   }
 
   @Test

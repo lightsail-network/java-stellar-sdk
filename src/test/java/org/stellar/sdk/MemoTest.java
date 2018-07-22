@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.stellar.sdk.xdr.MemoType;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -114,5 +115,55 @@ public class MemoTest {
         MemoReturnHash memo = Memo.returnHash("4142434445464748494a4b4c");
         assertEquals(MemoType.MEMO_RETURN, memo.toXdr().getDiscriminant());
         assertEquals("4142434445464748494a4b4c", memo.getTrimmedHexValue());
+    }
+
+    @Test
+    public void testMemoNoneFromXDR() {
+        Memo expected = new MemoNone();
+        Memo actual = Memo.fromXdr(expected.toXdr());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testMemoIdFromXDR() {
+        Memo expected = new MemoId(Math.abs(new Random().nextLong()));
+        Memo actual = Memo.fromXdr(expected.toXdr());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testMemoTextFromXDR() {
+        Memo expected = new MemoText(randomString());
+        Memo actual = Memo.fromXdr(expected.toXdr());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testMemoHashFromXDR() {
+        Memo expected = new MemoHash(randomString().getBytes());
+        Memo actual = Memo.fromXdr(expected.toXdr());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testMemoRetHashFromXDR() {
+        Memo expected = new MemoReturnHash(randomString().getBytes());
+        Memo actual = Memo.fromXdr(expected.toXdr());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testMemoNullFromXDR() {
+        assertEquals(Memo.none(), Memo.fromXdr(null));
+    }
+
+    private String randomString() {
+        StringBuilder b = new StringBuilder();
+        Random rand = new Random();
+        int length = rand.nextInt(27) + 1;
+        for (int i = 0; i < length; i++) {
+            b.append((char)(rand.nextInt(95)+ 32));
+        }
+        return b.toString();
     }
 }

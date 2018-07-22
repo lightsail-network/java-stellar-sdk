@@ -1,6 +1,8 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
@@ -128,4 +130,18 @@ public abstract class Operation {
    * @return OperationBody XDR object
    */
   abstract org.stellar.sdk.xdr.Operation.OperationBody toOperationBody();
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Operation operation = (Operation) o;
+
+    return (mSourceAccount == null) ? operation.mSourceAccount == null : operation.mSourceAccount != null &&
+            new EqualsBuilder()
+            .append(mSourceAccount.getAccountId(), operation.mSourceAccount.getAccountId())
+            .isEquals();
+  }
 }
