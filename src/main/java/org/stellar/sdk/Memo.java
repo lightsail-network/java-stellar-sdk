@@ -88,7 +88,7 @@ public abstract class Memo {
             case MEMO_HASH:
                 return new MemoHash(memo.getHash().getHash());
             case MEMO_RETURN:
-                return new MemoReturnHash(memo.getHash().getHash());
+                return new MemoReturnHash(memo.getRetHash().getHash());
             default:
                 throw new AssertionError("Unrecognized memo discriminant: " + memo.getDiscriminant());
         }
