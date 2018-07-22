@@ -1,11 +1,12 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
-import org.stellar.sdk.xdr.DecoratedSignature;
-import org.stellar.sdk.xdr.EnvelopeType;
-import org.stellar.sdk.xdr.SignatureHint;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.stellar.sdk.xdr.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -21,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction {
-  private final int BASE_FEE = 100;
+  private static final int BASE_FEE = 100;
 
   private final int mFee;
   private final KeyPair mSourceAccount;
@@ -173,6 +174,28 @@ public class Transaction {
   }
 
   /**
+   * Generates a Transaction from a Transaction XDR instance.
+   */
+  public static Transaction fromXdr(org.stellar.sdk.xdr.Transaction tx) {
+    Account account = new Account(
+        KeyPair.fromPublicKey(tx.getSourceAccount().getAccountID().getEd25519().getUint256()),
+        tx.getSeqNum().getSequenceNumber().getUint64()
+    );
+
+    Operation[] operations = new Operation[tx.getOperations().length];
+    for (int i = 0; i < operations.length; i++) {
+      operations[i] = Operation.fromXdr(tx.getOperations()[i]);
+    }
+
+    return new Transaction(
+            account.getKeypair(),
+            account.getSequenceNumber(),
+            operations,
+            Memo.fromXdr(tx.getMemo()),
+            TimeBounds.fromXdr(tx.getTimeBounds()));
+  }
+
+  /**
    * Generates TransactionEnvelope XDR object. Transaction need to have at least one signature.
    */
   public org.stellar.sdk.xdr.TransactionEnvelope toEnvelopeXdr() {
@@ -191,6 +214,16 @@ public class Transaction {
   }
 
   /**
+   * Generates a Transaction from a TransactionEnvelope XDR instance.
+   */
+  public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope) {
+    Transaction tx = fromXdr(envelope.getTx());
+    tx.mSignatures = new ArrayList<DecoratedSignature>();
+    tx.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
+    return tx;
+  }
+
+  /**
    * Returns base64-encoded TransactionEnvelope XDR object. Transaction need to have at least one signature.
    */
   public String toEnvelopeXdrBase64() {
@@ -202,6 +235,21 @@ public class Transaction {
 
       BaseEncoding base64Encoding = BaseEncoding.base64();
       return base64Encoding.encode(outputStream.toByteArray());
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+  }
+
+  /**
+   * Generates a Transaction from a base64-encoded Transaction XDR instance.
+   */
+  public static Transaction fromEnvelopeXdrBase64(String base64) {
+    try {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(base64);
+      XdrDataInputStream in = new XdrDataInputStream(new ByteArrayInputStream(bytes));
+      TransactionEnvelope envelope = TransactionEnvelope.decode(in);
+      return fromEnvelopeXdr(envelope);
     } catch (IOException e) {
       throw new AssertionError(e);
     }
@@ -285,5 +333,62 @@ public class Transaction {
       mSourceAccount.incrementSequenceNumber();
       return transaction;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Transaction that = (Transaction) o;
+
+    return new EqualsBuilder()
+            .append(mFee, that.mFee)
+            .append(mSequenceNumber, that.mSequenceNumber)
+            .append(mSourceAccount.getAccountId(), that.mSourceAccount.getAccountId())
+            .append(mOperations, that.mOperations)
+            .append(mMemo, that.mMemo)
+            .append(mTimeBounds, that.mTimeBounds)
+            .append(signatureStrings(mSignatures), signatureStrings(that.mSignatures))
+            .isEquals();
+  }
+
+  // To assist with deep equality checking on XDR DecoratedSignatures
+  private List<String> signatureStrings(List<DecoratedSignature> signatures) {
+    BaseEncoding b64 = BaseEncoding.base64();
+    List<String> signatureStrings = new ArrayList<String>(signatures.size());
+    for (DecoratedSignature sig: signatures) {
+      signatureStrings.add(String.format("hint=%s,sig=%s",
+              b64.encode(sig.getHint().getSignatureHint()),
+              b64.encode(sig.getSignature().getSignature())));
+    }
+    return signatureStrings;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+            .append(mFee)
+            .append(mSourceAccount.getAccountId())
+            .append(mSequenceNumber)
+            .append(mOperations)
+            .append(mMemo)
+            .append(mTimeBounds)
+            .append(signatureStrings(mSignatures))
+            .toHashCode();
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this)
+            .append("mFee", mFee)
+            .append("mSourceAccount", mSourceAccount)
+            .append("mSequenceNumber", mSequenceNumber)
+            .append("mOperations", mOperations)
+            .append("mMemo", mMemo)
+            .append("mTimeBounds", mTimeBounds)
+            .append("mSignatures", signatureStrings(mSignatures))
+            .toString();
   }
 }

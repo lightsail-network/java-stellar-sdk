@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.DataValue;
 import org.stellar.sdk.xdr.ManageDataOp;
 import org.stellar.sdk.xdr.OperationType;
@@ -103,5 +105,27 @@ public class ManageDataOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    ManageDataOperation that = (ManageDataOperation) o;
+
+    return super.equals(o) && new EqualsBuilder()
+            .append(getName(), that.getName())
+            .append(getValue(), that.getValue())
+            .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+            .append(getName())
+            .append(getValue())
+            .toHashCode();
   }
 }

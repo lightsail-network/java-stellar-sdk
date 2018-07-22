@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -339,5 +341,49 @@ public class SetOptionsOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    SetOptionsOperation that = (SetOptionsOperation) o;
+
+    return super.equals(o) && new EqualsBuilder()
+            .append(getInflationDestination().getAccountId(), that.getInflationDestination().getAccountId())
+            .append(getClearFlags(), that.getClearFlags())
+            .append(getSetFlags(), that.getSetFlags())
+            .append(getMasterKeyWeight(), that.getMasterKeyWeight())
+            .append(getLowThreshold(), that.getLowThreshold())
+            .append(getMediumThreshold(), that.getMediumThreshold())
+            .append(getHighThreshold(), that.getHighThreshold())
+            .append(getHomeDomain(), that.getHomeDomain())
+            .append(getSigner().getDiscriminant(), that.getSigner().getDiscriminant())
+            .append(getSigner().getEd25519().getUint256(), that.getSigner().getEd25519().getUint256())
+            .append(getSigner().getHashX().getUint256(), that.getSigner().getHashX().getUint256())
+            .append(getSigner().getPreAuthTx().getUint256(), that.getSigner().getPreAuthTx().getUint256())
+            .append(getSignerWeight(), that.getSignerWeight())
+            .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+            .append(getInflationDestination())
+            .append(getClearFlags())
+            .append(getSetFlags())
+            .append(getMasterKeyWeight())
+            .append(getLowThreshold())
+            .append(getMediumThreshold())
+            .append(getHighThreshold())
+            .append(getHomeDomain())
+            .append(getSigner().getDiscriminant())
+            .append(getSigner().getEd25519().getUint256())
+            .append(getSigner().getHashX().getUint256())
+            .append(getSigner().getPreAuthTx().getUint256())
+            .append(getSignerWeight())
+            .toHashCode();
   }
 }

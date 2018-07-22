@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.ChangeTrustOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -94,5 +96,27 @@ public class ChangeTrustOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    ChangeTrustOperation that = (ChangeTrustOperation) o;
+
+    return super.equals(o) && new EqualsBuilder()
+            .append(getAsset(), that.getAsset())
+            .append(getLimit(), that.getLimit())
+            .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+            .append(getAsset())
+            .append(getLimit())
+            .toHashCode();
   }
 }

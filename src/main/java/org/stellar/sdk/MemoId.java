@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
 
@@ -28,5 +30,25 @@ public class MemoId extends Memo {
     idXdr.setUint64(id);
     memo.setId(idXdr);
     return memo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    MemoId memoId = (MemoId) o;
+
+    return new EqualsBuilder()
+            .append(getId(), memoId.getId())
+            .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+            .append(getId())
+            .toHashCode();
   }
 }

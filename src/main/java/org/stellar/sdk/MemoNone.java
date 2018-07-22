@@ -12,4 +12,14 @@ public class MemoNone extends Memo {
     memo.setDiscriminant(MemoType.MEMO_NONE);
     return memo;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    return this == o || o instanceof MemoNone;
+  }
+
+  @Override
+  public int hashCode() {
+    return MemoNone.class.hashCode();
+  }
 }

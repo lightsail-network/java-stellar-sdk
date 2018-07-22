@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.CreatePassiveOfferOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -132,5 +134,31 @@ public class CreatePassiveOfferOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    CreatePassiveOfferOperation that = (CreatePassiveOfferOperation) o;
+
+    return super.equals(o) && new EqualsBuilder()
+            .append(getSelling(), that.getSelling())
+            .append(getBuying(), that.getBuying())
+            .append(getAmount(), that.getAmount())
+            .append(getPrice(), that.getPrice())
+            .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+            .append(getSelling())
+            .append(getBuying())
+            .append(getAmount())
+            .append(getPrice())
+            .toHashCode();
   }
 }

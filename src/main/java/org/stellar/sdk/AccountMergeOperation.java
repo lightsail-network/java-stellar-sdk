@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
@@ -76,5 +78,25 @@ public class AccountMergeOperation extends Operation {
             }
             return operation;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AccountMergeOperation that = (AccountMergeOperation) o;
+
+        return super.equals(o) && new EqualsBuilder()
+                .append(getDestination().getAccountId(), that.getDestination().getAccountId())
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(getDestination().getAccountId())
+                .toHashCode();
     }
 }
