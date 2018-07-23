@@ -1,13 +1,12 @@
 package org.stellar.sdk;
 
+import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 import org.stellar.sdk.xdr.MemoType;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class MemoTest {
     @Test
@@ -112,7 +111,10 @@ public class MemoTest {
     @Test
     public void testMemoReturnHashSuccess() {
         MemoReturnHash memo = Memo.returnHash("4142434445464748494a4b4c");
-        assertEquals(MemoType.MEMO_RETURN, memo.toXdr().getDiscriminant());
+        org.stellar.sdk.xdr.Memo memoXdr = memo.toXdr();
+        assertEquals(MemoType.MEMO_RETURN, memoXdr.getDiscriminant());
+        assertNull(memoXdr.getHash());
+        assertEquals("4142434445464748494a4b4c0000000000000000000000000000000000000000", BaseEncoding.base16().lowerCase().encode(memoXdr.getRetHash().getHash()));
         assertEquals("4142434445464748494a4b4c", memo.getTrimmedHexValue());
     }
 }
