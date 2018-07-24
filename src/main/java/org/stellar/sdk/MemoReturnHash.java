@@ -23,7 +23,7 @@ public class MemoReturnHash extends MemoHashAbstract {
     org.stellar.sdk.xdr.Hash hash = new org.stellar.sdk.xdr.Hash();
     hash.setHash(bytes);
 
-    memo.setHash(hash);
+    memo.setRetHash(hash);
     return memo;
   }
 }
