@@ -48,6 +48,15 @@ public class ServerTest extends TestCase {
             "  }\n" +
             "}";
 
+    private final String timeoutResponse =
+            "{\n" +
+            "  \"type\": \"https://stellar.org/horizon-errors/transaction_failed\",\n" +
+            "  \"title\": \"Timeout\",\n" +
+            "  \"status\": 403,\n" +
+            "  \"detail\": \"TODO\",\n" +
+            "  \"instance\": \"horizon-testnet-001.prd.stellar001.internal.stellar-ops.com/IxhaI70Tqo-112305\"\n" +
+            "}";
+
     private final String operationsPageResponse = "{\n" +
             "  \"_links\": {\n" +
             "    \"self\": {\n" +
@@ -155,6 +164,21 @@ public class ServerTest extends TestCase {
         assertNotNull(response.getExtras());
         assertEquals("tx_failed", response.getExtras().getResultCodes().getTransactionResultCode());
         assertEquals("op_no_destination", response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
+    }
+
+    @Test
+    public void testSubmitTransactionTimeout() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(403).setBody(timeoutResponse));
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
+        assertFalse(response.isSuccess());
+        assertNull(response.getLedger());
+        assertNull(response.getHash());
+        assertNull(response.getExtras());
     }
 
     @Test

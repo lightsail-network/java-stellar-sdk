@@ -52,7 +52,10 @@ public class SubmitTransactionResponse extends Response {
         if (this.isSuccess()) {
             return this.envelopeXdr;
         } else {
-            return this.getExtras().getEnvelopeXdr();
+            if (this.getExtras() != null) {
+                return this.getExtras().getEnvelopeXdr();
+            }
+            return null;
         }
     }
 
@@ -60,7 +63,10 @@ public class SubmitTransactionResponse extends Response {
         if (this.isSuccess()) {
             return this.resultXdr;
         } else {
-            return this.getExtras().getResultXdr();
+            if (this.getExtras() != null) {
+                return this.getExtras().getResultXdr();
+            }
+            return null;
         }
     }
 
