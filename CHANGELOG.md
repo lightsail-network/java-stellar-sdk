@@ -2,6 +2,16 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.2.2
+
+* Fixed `MemoReturnHash#toXdr()` method.
+* Patch for Horizon [Timeout](https://www.stellar.org/developers/horizon/reference/errors/timeout.html) responses (`SubmitTransactionResponse.getEnvelopeXdr()` and `SubmitTransactionResponse.getResultXdr()`).
+
+## 0.2.1
+
+* Full compatibility with Horizon 0.13.0 [API](https://github.com/stellar/go/blob/master/protocols/horizon/README.md).
+* Fixed `Page.getNextPage` #66.
+
 ## 0.2.0
 
 * Java SDK now works in Android!
