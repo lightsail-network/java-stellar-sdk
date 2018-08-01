@@ -41,6 +41,18 @@ public class TransactionTest {
     assertEquals(transaction.getSourceAccount(), source);
     assertEquals(transaction.getSequenceNumber(), sequenceNumber+1);
     assertEquals(transaction.getFee(), 100);
+
+    Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
+
+    assertEquals(transaction.getSourceAccount().getAccountId(), transaction2.getSourceAccount().getAccountId());
+    assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
+    assertEquals(transaction.getFee(), transaction2.getFee());
+    assertEquals(
+            ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
+            ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+    );
+
+    assertEquals(transaction.getSignatures(), transaction2.getSignatures());
   }
 
   @Test
@@ -60,6 +72,17 @@ public class TransactionTest {
     assertEquals(
             "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAEAAAAMSGVsbG8gd29ybGQhAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAxzofBhoayuUnz8t0T1UNWrTgmJ+lCh9KaeOGu2ppNOz9UGw0abGLhv+9oWQsstaHx6YjwWxL+8GBvwBUVWRlBQ==",
             transaction.toEnvelopeXdrBase64());
+
+    Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
+
+    assertEquals(transaction.getSourceAccount().getAccountId(), transaction2.getSourceAccount().getAccountId());
+    assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
+    assertEquals(transaction.getMemo(), transaction2.getMemo());
+    assertEquals(transaction.getFee(), transaction2.getFee());
+    assertEquals(
+            ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
+            ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+    );
   }
   
   @Test
@@ -72,6 +95,7 @@ public class TransactionTest {
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .addTimeBounds(new TimeBounds(42, 1337))
+            .addMemo(Memo.hash("abcdef"))
             .build();
 
     transaction.sign(source);
@@ -86,6 +110,18 @@ public class TransactionTest {
 
     assertEquals(decodedTransaction.getTimeBounds().getMinTime().getUint64().longValue(), 42);
     assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getUint64().longValue(), 1337);
+
+    Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
+
+    assertEquals(transaction.getSourceAccount().getAccountId(), transaction2.getSourceAccount().getAccountId());
+    assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
+    assertEquals(transaction.getMemo(), transaction2.getMemo());
+    assertEquals(transaction.getTimeBounds(), transaction2.getTimeBounds());
+    assertEquals(transaction.getFee(), transaction2.getFee());
+    assertEquals(
+            ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
+            ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+    );
   }
 
   @Test

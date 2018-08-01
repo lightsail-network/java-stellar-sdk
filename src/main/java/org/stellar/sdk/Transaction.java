@@ -1,11 +1,9 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
-import org.stellar.sdk.xdr.DecoratedSignature;
-import org.stellar.sdk.xdr.EnvelopeType;
-import org.stellar.sdk.xdr.SignatureHint;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.stellar.sdk.xdr.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -21,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction {
-  private final int BASE_FEE = 100;
+  private static final int BASE_FEE = 100;
 
   private final int mFee;
   private final KeyPair mSourceAccount;
@@ -31,13 +29,13 @@ public class Transaction {
   private final TimeBounds mTimeBounds;
   private List<DecoratedSignature> mSignatures;
 
-  Transaction(KeyPair sourceAccount, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds) {
+  Transaction(KeyPair sourceAccount, int fee, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds) {
     mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
     mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
     mOperations = checkNotNull(operations, "operations cannot be null");
     checkArgument(operations.length > 0, "At least one operation required");
 
-    mFee = operations.length * BASE_FEE;
+    mFee = fee;
     mSignatures = new ArrayList<DecoratedSignature>();
     mMemo = memo != null ? memo : Memo.none();
     mTimeBounds = timeBounds;
@@ -138,6 +136,13 @@ public class Transaction {
   }
 
   /**
+   * Returns operations in this transaction.
+   */
+  public Operation[] getOperations() {
+    return mOperations;
+  }
+
+  /**
    * Generates Transaction XDR object.
    */
   public org.stellar.sdk.xdr.Transaction toXdr() {
@@ -169,6 +174,36 @@ public class Transaction {
     transaction.setMemo(mMemo.toXdr());
     transaction.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
     transaction.setExt(ext);
+    return transaction;
+  }
+
+  public static Transaction fromEnvelopeXdr(String envelope) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(envelope);
+
+    TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+    return fromEnvelopeXdr(transactionEnvelope);
+  }
+
+  public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope) {
+    org.stellar.sdk.xdr.Transaction tx = envelope.getTx();
+    int mFee = tx.getFee().getUint32();
+    KeyPair mSourceAccount = KeyPair.fromXdrPublicKey(tx.getSourceAccount().getAccountID());
+    Long mSequenceNumber = tx.getSeqNum().getSequenceNumber().getUint64();
+    Memo mMemo = Memo.fromXdr(tx.getMemo());
+    TimeBounds mTimeBounds = TimeBounds.fromXdr(tx.getTimeBounds());
+
+    Operation[] mOperations = new Operation[tx.getOperations().length];
+    for (int i = 0; i < tx.getOperations().length; i++) {
+      mOperations[i] = Operation.fromXdr(tx.getOperations()[i]);
+    }
+
+    Transaction transaction = new Transaction(mSourceAccount, mFee, mSequenceNumber, mOperations, mMemo, mTimeBounds);
+
+    for (DecoratedSignature signature : envelope.getSignatures()) {
+      transaction.mSignatures.add(signature);
+    }
+
     return transaction;
   }
 
@@ -280,7 +315,7 @@ public class Transaction {
     public Transaction build() {
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
-      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
+      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * BASE_FEE, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
       // Increment sequence number when there were no exceptions when creating a transaction
       mSourceAccount.incrementSequenceNumber();
       return transaction;
