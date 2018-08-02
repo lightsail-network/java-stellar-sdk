@@ -2,12 +2,12 @@ package org.stellar.sdk;
 
 import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
+import okhttp3.Response;
 import org.stellar.sdk.requests.*;
-import org.stellar.sdk.responses.GsonSingleton;
-import org.stellar.sdk.responses.RootResponse;
-import org.stellar.sdk.responses.SubmitTransactionResponse;
+import org.stellar.sdk.responses.*;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,6 +16,16 @@ import java.util.concurrent.TimeUnit;
 public class Server {
     private HttpUrl serverURI;
     private OkHttpClient httpClient;
+    /**
+     * submitHttpClient is used only for submitting transactions. The read timeout is longer.
+     */
+    private OkHttpClient submitHttpClient;
+
+    /**
+     * HORIZON_SUBMIT_TIMEOUT is a time in seconds after Horizon sends a timeout response
+     * after internal txsub timeout.
+     */
+    private static final int HORIZON_SUBMIT_TIMEOUT = 60;
 
     public Server(String uri) {
         serverURI = HttpUrl.parse(uri);
@@ -24,14 +34,29 @@ public class Server {
                 .readTimeout(30, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(false)
                 .build();
+
+        submitHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(false)
+                .build();
     }
+
 
     public OkHttpClient getHttpClient() {
         return httpClient;
     }
 
+    public OkHttpClient getSubmitHttpClient() {
+        return submitHttpClient;
+    }
+
     public void setHttpClient(OkHttpClient httpClient) {
         this.httpClient = httpClient;
+    }
+
+    public void setSubmitHttpClient(OkHttpClient submitHttpClient) {
+        this.submitHttpClient = submitHttpClient;
     }
 
     /**
@@ -143,14 +168,27 @@ public class Server {
         Request submitTransactionRequest = new Request.Builder().url(transactionsURI).post(requestBody).build();
 
         Response response = null;
+        SubmitTransactionResponse submitTransactionResponse = null;
         try {
-            response = this.httpClient.newCall(submitTransactionRequest).execute();
-            SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(response.body().string(), SubmitTransactionResponse.class);
-            return submitTransactionResponse;
+            response = this.submitHttpClient.newCall(submitTransactionRequest).execute();
+            switch (response.code()) {
+                case 200:
+                case 400:
+                    submitTransactionResponse = GsonSingleton.getInstance().fromJson(response.body().string(), SubmitTransactionResponse.class);
+                    break;
+                case 504:
+                    throw new SubmitTransactionTimeoutResponseException();
+                default:
+                    throw new SubmitTransactionUnknownResponseException(response.code(), response.body().string());
+            }
+        } catch (SocketTimeoutException e) {
+            throw new SubmitTransactionTimeoutResponseException();
         } finally {
             if (response != null) {
                 response.close();
             }
         }
+
+        return submitTransactionResponse;
     }
 }

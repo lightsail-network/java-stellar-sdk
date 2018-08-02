@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
-import junit.framework.TestCase;
 import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
@@ -9,12 +9,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
+import org.stellar.sdk.responses.SubmitTransactionTimeoutResponseException;
+import org.stellar.sdk.responses.SubmitTransactionUnknownResponseException;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
-public class ServerTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class ServerTest {
     private final String successResponse =
             "{\n" +
             "  \"_links\": {\n" +
@@ -55,6 +60,14 @@ public class ServerTest extends TestCase {
             "  \"status\": 403,\n" +
             "  \"detail\": \"TODO\",\n" +
             "  \"instance\": \"horizon-testnet-001.prd.stellar001.internal.stellar-ops.com/IxhaI70Tqo-112305\"\n" +
+            "}";
+
+    private final String internalServerErrorResponse =
+            "{\n" +
+            "  \"type\":     \"https://www.stellar.org/docs/horizon/problems/server_error\",\n" +
+            "  \"title\":    \"Internal Server Error\",\n" +
+            "  \"status\":   500,\n" +
+            "  \"instance\": \"d3465740-ec3a-4a0b-9d4a-c9ea734ce58a\"\n" +
             "}";
 
     private final String operationsPageResponse = "{\n" +
@@ -144,6 +157,8 @@ public class ServerTest extends TestCase {
         assertTrue(response.isSuccess());
         assertEquals(response.getLedger(), new Long(826150L));
         assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
+        assertEquals(response.getEnvelopeXdr(), "AAAAAKu3N77S+cHLEDfVD2eW/CqRiN9yvAKH+qkeLjHQs1u+AAAAZAAMkoMAAAADAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAbYQq8ek1GitmNBUloGnetfWxSpxlsgK48Xi66dIL3MoAAAAAC+vCAAAAAAAAAAAB0LNbvgAAAEDadQ25SNHWTg0L+2wr/KNWd8/EwSNFkX/ncGmBGA3zkNGx7lAow78q8SQmnn2IsdkD9MwICirhsOYDNbaqShwO");
+        assertEquals(response.getResultXdr(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=");
         assertNull(response.getExtras());
     }
 
@@ -160,25 +175,74 @@ public class ServerTest extends TestCase {
         assertNull(response.getLedger());
         assertNull(response.getHash());
         assertEquals(response.getExtras().getEnvelopeXdr(), "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
+        assertEquals(response.getEnvelopeXdr(), "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
         assertEquals(response.getExtras().getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
+        assertEquals(response.getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
         assertNotNull(response.getExtras());
         assertEquals("tx_failed", response.getExtras().getResultCodes().getTransactionResultCode());
         assertEquals("op_no_destination", response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
     }
 
-    @Test
+    @Test(expected = SubmitTransactionTimeoutResponseException.class)
     public void testSubmitTransactionTimeout() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
-        mockWebServer.enqueue(new MockResponse().setResponseCode(403).setBody(timeoutResponse));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(504).setBody(timeoutResponse).setBodyDelay(5, TimeUnit.SECONDS));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
         Server server = new Server(baseUrl.toString());
 
-        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
-        assertFalse(response.isSuccess());
-        assertNull(response.getLedger());
-        assertNull(response.getHash());
-        assertNull(response.getExtras());
+        // We're creating a new OkHttpClient to make this test faster
+        OkHttpClient testSubmitHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(false)
+                .build();
+        server.setSubmitHttpClient(testSubmitHttpClient);
+
+        server.submitTransaction(this.buildTransaction());
+    }
+
+    @Test(expected = SubmitTransactionTimeoutResponseException.class)
+    public void testSubmitTransactionTimeoutWithoutResponse() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        // We're creating a new OkHttpClient to make this test faster
+        OkHttpClient testSubmitHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.SECONDS)
+                .readTimeout(1, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(false)
+                .build();
+        server.setSubmitHttpClient(testSubmitHttpClient);
+
+        server.submitTransaction(this.buildTransaction());
+    }
+
+    @Test
+    public void testSubmitTransactionInternalError() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(500).setBody(internalServerErrorResponse));
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+        // We're creating a new OkHttpClient to make this test faster
+        OkHttpClient testSubmitHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(false)
+                .build();;
+        server.setSubmitHttpClient(testSubmitHttpClient);
+
+        try {
+            server.submitTransaction(this.buildTransaction());
+            fail("submitTransaction didn't throw exception");
+        } catch (SubmitTransactionUnknownResponseException e) {
+            assertEquals(500, e.getCode());
+        } catch (Exception e) {
+            fail("submitTransaction thrown invalid exception");
+        }
     }
 
     @Test
