@@ -189,7 +189,7 @@ public class Transaction {
     org.stellar.sdk.xdr.Transaction tx = envelope.getTx();
     int mFee = tx.getFee().getUint32();
     KeyPair mSourceAccount = KeyPair.fromXdrPublicKey(tx.getSourceAccount().getAccountID());
-    Long mSequenceNumber = tx.getSeqNum().getSequenceNumber().getUint64();
+    Long mSequenceNumber = tx.getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(tx.getMemo());
     TimeBounds mTimeBounds = TimeBounds.fromXdr(tx.getTimeBounds());
 
