@@ -21,7 +21,7 @@ public class TransactionDecodeTest {
         byte[] bytes = base64Encoding.decode(txBody);
 
         TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-        assertEquals(new Long(2373025265623291L), transactionEnvelope.getTx().getSeqNum().getSequenceNumber().getUint64());
+        assertEquals(new Long(2373025265623291L), transactionEnvelope.getTx().getSeqNum().getSequenceNumber().getInt64());
     }
 
     @Test

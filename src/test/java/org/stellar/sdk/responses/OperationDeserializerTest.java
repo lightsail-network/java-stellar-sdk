@@ -4,21 +4,11 @@ import junit.framework.TestCase;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.BumpSequenceOperation;
 import org.stellar.sdk.KeyPair;
 
 import org.junit.Test;
-import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;
-import org.stellar.sdk.responses.operations.AllowTrustOperationResponse;
-import org.stellar.sdk.responses.operations.ChangeTrustOperationResponse;
-import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
-import org.stellar.sdk.responses.operations.CreatePassiveOfferOperationResponse;
-import org.stellar.sdk.responses.operations.InflationOperationResponse;
-import org.stellar.sdk.responses.operations.ManageDataOperationResponse;
-import org.stellar.sdk.responses.operations.ManageOfferOperationResponse;
-import org.stellar.sdk.responses.operations.OperationResponse;
-import org.stellar.sdk.responses.operations.PathPaymentOperationResponse;
-import org.stellar.sdk.responses.operations.PaymentOperationResponse;
-import org.stellar.sdk.responses.operations.SetOptionsOperationResponse;
+import org.stellar.sdk.responses.operations.*;
 
 public class OperationDeserializerTest extends TestCase {
   @Test
@@ -557,5 +547,39 @@ public class OperationDeserializerTest extends TestCase {
     ManageDataOperationResponse operation = (ManageDataOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getValue(), null);
+  }
+
+  @Test
+  public void testDeserializeBumpSequenceOperation() {
+    String json = "{\n" +
+            "  \"_links\": {\n" +
+            "    \"effects\": {\n" +
+            "      \"href\": \"/operations/12884914177/effects/{?cursor,limit,order}\",\n" +
+            "      \"templated\": true\n" +
+            "    },\n" +
+            "    \"precedes\": {\n" +
+            "      \"href\": \"/operations?cursor=12884914177\\u0026order=asc\"\n" +
+            "    },\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"/operations/12884914177\"\n" +
+            "    },\n" +
+            "    \"succeeds\": {\n" +
+            "      \"href\": \"/operations?cursor=12884914177\\u0026order=desc\"\n" +
+            "    },\n" +
+            "    \"transaction\": {\n" +
+            "      \"href\": \"/transactions/12884914176\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"id\": 12884914177,\n" +
+            "  \"paging_token\": \"12884914177\",\n" +
+            "  \"type_i\": 11,\n" +
+            "  \"type\": \"bump_sequence\",\n" +
+            "  \"bump_to\": \"79473726952833048\"\n" +
+            "}";
+
+    BumpSequenceOperationResponse operation = (BumpSequenceOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getBumpTo(), new Long(79473726952833048L));
   }
 }

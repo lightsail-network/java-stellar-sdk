@@ -8,14 +8,16 @@ import java.io.IOException;
 
 // === xdr source ============================================================
 
-//  struct TransactionSignaturePayload {
+//  struct TransactionSignaturePayload
+//  {
 //      Hash networkId;
 //      union switch (EnvelopeType type)
 //      {
 //      case ENVELOPE_TYPE_TX:
-//            Transaction tx;
-//      /* All other values of type are invalid */
-//      } taggedTransaction;
+//          Transaction tx;
+//          /* All other values of type are invalid */
+//      }
+//      taggedTransaction;
 //  };
 
 //  ===========================================================================

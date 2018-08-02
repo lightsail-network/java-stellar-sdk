@@ -13,10 +13,11 @@ import java.io.IOException;
 //      // codes considered as "success" for the operation
 //      ACCOUNT_MERGE_SUCCESS = 0,
 //      // codes considered as "failure" for the operation
-//      ACCOUNT_MERGE_MALFORMED = -1,      // can't merge onto itself
-//      ACCOUNT_MERGE_NO_ACCOUNT = -2,     // destination does not exist
-//      ACCOUNT_MERGE_IMMUTABLE_SET = -3,  // source account has AUTH_IMMUTABLE set
-//      ACCOUNT_MERGE_HAS_SUB_ENTRIES = -4 // account has trust lines/offers
+//      ACCOUNT_MERGE_MALFORMED = -1,       // can't merge onto itself
+//      ACCOUNT_MERGE_NO_ACCOUNT = -2,      // destination does not exist
+//      ACCOUNT_MERGE_IMMUTABLE_SET = -3,   // source account has AUTH_IMMUTABLE set
+//      ACCOUNT_MERGE_HAS_SUB_ENTRIES = -4, // account has trust lines/offers
+//      ACCOUNT_MERGE_SEQNUM_TOO_FAR = -5   // sequence number is over max allowed
 //  };
 
 //  ===========================================================================
@@ -26,6 +27,7 @@ public enum AccountMergeResultCode  {
   ACCOUNT_MERGE_NO_ACCOUNT(-2),
   ACCOUNT_MERGE_IMMUTABLE_SET(-3),
   ACCOUNT_MERGE_HAS_SUB_ENTRIES(-4),
+  ACCOUNT_MERGE_SEQNUM_TOO_FAR(-5),
   ;
   private int mValue;
 
@@ -45,6 +47,7 @@ public enum AccountMergeResultCode  {
       case -2: return ACCOUNT_MERGE_NO_ACCOUNT;
       case -3: return ACCOUNT_MERGE_IMMUTABLE_SET;
       case -4: return ACCOUNT_MERGE_HAS_SUB_ENTRIES;
+      case -5: return ACCOUNT_MERGE_SEQNUM_TOO_FAR;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

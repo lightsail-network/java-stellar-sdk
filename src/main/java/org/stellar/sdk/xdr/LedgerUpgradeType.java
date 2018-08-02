@@ -12,7 +12,8 @@ import java.io.IOException;
 //  {
 //      LEDGER_UPGRADE_VERSION = 1,
 //      LEDGER_UPGRADE_BASE_FEE = 2,
-//      LEDGER_UPGRADE_MAX_TX_SET_SIZE = 3
+//      LEDGER_UPGRADE_MAX_TX_SET_SIZE = 3,
+//      LEDGER_UPGRADE_BASE_RESERVE = 4
 //  };
 
 //  ===========================================================================
@@ -20,6 +21,7 @@ public enum LedgerUpgradeType  {
   LEDGER_UPGRADE_VERSION(1),
   LEDGER_UPGRADE_BASE_FEE(2),
   LEDGER_UPGRADE_MAX_TX_SET_SIZE(3),
+  LEDGER_UPGRADE_BASE_RESERVE(4),
   ;
   private int mValue;
 
@@ -37,6 +39,7 @@ public enum LedgerUpgradeType  {
       case 1: return LEDGER_UPGRADE_VERSION;
       case 2: return LEDGER_UPGRADE_BASE_FEE;
       case 3: return LEDGER_UPGRADE_MAX_TX_SET_SIZE;
+      case 4: return LEDGER_UPGRADE_BASE_RESERVE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

@@ -10,8 +10,8 @@ import java.io.IOException;
 
 //  struct ManageDataOp
 //  {
-//      string64 dataName; 
-//      DataValue* dataValue;   // set to null to clear
+//      string64 dataName;
+//      DataValue* dataValue; // set to null to clear
 //  };
 
 //  ===========================================================================

@@ -35,6 +35,8 @@ import java.io.IOException;
 //          InflationResult inflationResult;
 //      case MANAGE_DATA:
 //          ManageDataResult manageDataResult;
+//      case BUMP_SEQUENCE:
+//          BumpSequenceResult bumpSeqResult;
 //      }
 //      tr;
 //  default:
@@ -168,6 +170,13 @@ public class OperationResult  {
     public void setManageDataResult(ManageDataResult value) {
       this.manageDataResult = value;
     }
+    private BumpSequenceResult bumpSeqResult;
+    public BumpSequenceResult getBumpSeqResult() {
+      return this.bumpSeqResult;
+    }
+    public void setBumpSeqResult(BumpSequenceResult value) {
+      this.bumpSeqResult = value;
+    }
     public static void encode(XdrDataOutputStream stream, OperationResultTr encodedOperationResultTr) throws IOException {
     stream.writeInt(encodedOperationResultTr.getDiscriminant().getValue());
     switch (encodedOperationResultTr.getDiscriminant()) {
@@ -203,6 +212,9 @@ public class OperationResult  {
     break;
     case MANAGE_DATA:
     ManageDataResult.encode(stream, encodedOperationResultTr.manageDataResult);
+    break;
+    case BUMP_SEQUENCE:
+    BumpSequenceResult.encode(stream, encodedOperationResultTr.bumpSeqResult);
     break;
     }
     }
@@ -243,6 +255,9 @@ public class OperationResult  {
     break;
     case MANAGE_DATA:
     decodedOperationResultTr.manageDataResult = ManageDataResult.decode(stream);
+    break;
+    case BUMP_SEQUENCE:
+    decodedOperationResultTr.bumpSeqResult = BumpSequenceResult.decode(stream);
     break;
     }
       return decodedOperationResultTr;

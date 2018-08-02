@@ -16,6 +16,8 @@ import java.io.IOException;
 //      uint32 newBaseFee; // update baseFee
 //  case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
 //      uint32 newMaxTxSetSize; // update maxTxSetSize
+//  case LEDGER_UPGRADE_BASE_RESERVE:
+//      uint32 newBaseReserve; // update baseReserve
 //  };
 
 //  ===========================================================================
@@ -49,6 +51,13 @@ public class LedgerUpgrade  {
   public void setNewMaxTxSetSize(Uint32 value) {
     this.newMaxTxSetSize = value;
   }
+  private Uint32 newBaseReserve;
+  public Uint32 getNewBaseReserve() {
+    return this.newBaseReserve;
+  }
+  public void setNewBaseReserve(Uint32 value) {
+    this.newBaseReserve = value;
+  }
   public static void encode(XdrDataOutputStream stream, LedgerUpgrade encodedLedgerUpgrade) throws IOException {
   stream.writeInt(encodedLedgerUpgrade.getDiscriminant().getValue());
   switch (encodedLedgerUpgrade.getDiscriminant()) {
@@ -60,6 +69,9 @@ public class LedgerUpgrade  {
   break;
   case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
   Uint32.encode(stream, encodedLedgerUpgrade.newMaxTxSetSize);
+  break;
+  case LEDGER_UPGRADE_BASE_RESERVE:
+  Uint32.encode(stream, encodedLedgerUpgrade.newBaseReserve);
   break;
   }
   }
@@ -76,6 +88,9 @@ public class LedgerUpgrade  {
   break;
   case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
   decodedLedgerUpgrade.newMaxTxSetSize = Uint32.decode(stream);
+  break;
+  case LEDGER_UPGRADE_BASE_RESERVE:
+  decodedLedgerUpgrade.newBaseReserve = Uint32.decode(stream);
   break;
   }
     return decodedLedgerUpgrade;

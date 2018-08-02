@@ -73,6 +73,9 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         return gson.fromJson(json, DataRemovedEffectResponse.class);
       case 42:
         return gson.fromJson(json, DataUpdatedEffectResponse.class);
+      // Bump Sequence effects
+      case 43:
+        return gson.fromJson(json, SequenceBumpedEffectResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

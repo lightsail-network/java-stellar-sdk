@@ -13,8 +13,7 @@ import java.io.IOException;
 //      Transaction tx;
 //      /* Each decorated signature is a signature over the SHA256 hash of
 //       * a TransactionSignaturePayload */
-//      DecoratedSignature
-//      signatures<20>;
+//      DecoratedSignature signatures<20>;
 //  };
 
 //  ===========================================================================
