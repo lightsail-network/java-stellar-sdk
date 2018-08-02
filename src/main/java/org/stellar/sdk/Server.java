@@ -160,6 +160,8 @@ public class Server {
      * Submits transaction to the network.
      * @param transaction transaction to submit to the network.
      * @return {@link SubmitTransactionResponse}
+     * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code> or connection timeout occured.
+     * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
      * @throws IOException
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
