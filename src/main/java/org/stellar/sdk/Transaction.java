@@ -177,6 +177,12 @@ public class Transaction {
     return transaction;
   }
 
+  /**
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
+   * @return
+   * @throws IOException
+   */
   public static Transaction fromEnvelopeXdr(String envelope) throws IOException {
     BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] bytes = base64Encoding.decode(envelope);
@@ -185,6 +191,11 @@ public class Transaction {
     return fromEnvelopeXdr(transactionEnvelope);
   }
 
+  /**
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope
+   * @return
+   */
   public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope) {
     org.stellar.sdk.xdr.Transaction tx = envelope.getTx();
     int mFee = tx.getFee().getUint32();
