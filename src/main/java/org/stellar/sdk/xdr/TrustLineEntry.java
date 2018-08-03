@@ -23,6 +23,18 @@ import java.io.IOException;
 //      {
 //      case 0:
 //          void;
+//      case 1:
+//          struct
+//          {
+//              Liabilities liabilities;
+//  
+//              union switch (int v)
+//              {
+//              case 0:
+//                  void;
+//              }
+//              ext;
+//          } v1;
 //      }
 //      ext;
 //  };
@@ -100,10 +112,20 @@ public class TrustLineEntry  {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+    private TrustLineEntryV1 v1;
+    public TrustLineEntryV1 getV1() {
+      return this.v1;
+    }
+    public void setV1(TrustLineEntryV1 value) {
+      this.v1 = value;
+    }
     public static void encode(XdrDataOutputStream stream, TrustLineEntryExt encodedTrustLineEntryExt) throws IOException {
     stream.writeInt(encodedTrustLineEntryExt.getDiscriminant().intValue());
     switch (encodedTrustLineEntryExt.getDiscriminant()) {
     case 0:
+    break;
+    case 1:
+    TrustLineEntryV1.encode(stream, encodedTrustLineEntryExt.v1);
     break;
     }
     }
@@ -114,9 +136,68 @@ public class TrustLineEntry  {
     switch (decodedTrustLineEntryExt.getDiscriminant()) {
     case 0:
     break;
+    case 1:
+    decodedTrustLineEntryExt.v1 = TrustLineEntryV1.decode(stream);
+    break;
     }
       return decodedTrustLineEntryExt;
     }
 
+    public static class TrustLineEntryV1 {
+      public TrustLineEntryV1 () {}
+      private Liabilities liabilities;
+      public Liabilities getLiabilities() {
+        return this.liabilities;
+      }
+      public void setLiabilities(Liabilities value) {
+        this.liabilities = value;
+      }
+      private TrustLineEntryV1Ext ext;
+      public TrustLineEntryV1Ext getExt() {
+        return this.ext;
+      }
+      public void setExt(TrustLineEntryV1Ext value) {
+        this.ext = value;
+      }
+      public static void encode(XdrDataOutputStream stream, TrustLineEntryV1 encodedTrustLineEntryV1) throws IOException{
+        Liabilities.encode(stream, encodedTrustLineEntryV1.liabilities);
+        TrustLineEntryV1Ext.encode(stream, encodedTrustLineEntryV1.ext);
+      }
+      public static TrustLineEntryV1 decode(XdrDataInputStream stream) throws IOException {
+        TrustLineEntryV1 decodedTrustLineEntryV1 = new TrustLineEntryV1();
+        decodedTrustLineEntryV1.liabilities = Liabilities.decode(stream);
+        decodedTrustLineEntryV1.ext = TrustLineEntryV1Ext.decode(stream);
+        return decodedTrustLineEntryV1;
+      }
+
+      public static class TrustLineEntryV1Ext {
+        public TrustLineEntryV1Ext () {}
+        Integer v;
+        public Integer getDiscriminant() {
+          return this.v;
+        }
+        public void setDiscriminant(Integer value) {
+          this.v = value;
+        }
+        public static void encode(XdrDataOutputStream stream, TrustLineEntryV1Ext encodedTrustLineEntryV1Ext) throws IOException {
+        stream.writeInt(encodedTrustLineEntryV1Ext.getDiscriminant().intValue());
+        switch (encodedTrustLineEntryV1Ext.getDiscriminant()) {
+        case 0:
+        break;
+        }
+        }
+        public static TrustLineEntryV1Ext decode(XdrDataInputStream stream) throws IOException {
+        TrustLineEntryV1Ext decodedTrustLineEntryV1Ext = new TrustLineEntryV1Ext();
+        Integer discriminant = stream.readInt();
+        decodedTrustLineEntryV1Ext.setDiscriminant(discriminant);
+        switch (decodedTrustLineEntryV1Ext.getDiscriminant()) {
+        case 0:
+        break;
+        }
+          return decodedTrustLineEntryV1Ext;
+        }
+
+      }
+    }
   }
 }
