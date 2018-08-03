@@ -2,6 +2,16 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.3.0
+
+* Protocol V10 updates:
+    * `BumpSequence` operation support ([CAP-0001](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0001.md),
+    * Asset liabilities ([CAP-0003](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0003.md),
+    * New Horizon fields and effects.
+    * Updated XDR classes.
+* `Transaction` now has methods to create it from previously built `TransactionEnvelope`.
+* Improved `Server.submitTransaction` method, now throws exception for timeouts.
+
 ## 0.2.2
 
 * Fixed `MemoReturnHash#toXdr()` method.
