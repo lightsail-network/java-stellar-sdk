@@ -166,13 +166,19 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private final String limit;
     @SerializedName("balance")
     private final String balance;
+    @SerializedName("buying_liabilities")
+    private final String buyingLiabilities;
+    @SerializedName("selling_liabilities")
+    private final String sellingLiabilities;
 
-    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit) {
+    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit, String buyingLiabilities, String sellingLiabilities) {
       this.assetType = checkNotNull(assetType, "assertType cannot be null");
       this.balance = checkNotNull(balance, "balance cannot be null");
       this.limit = limit;
       this.assetCode = assetCode;
       this.assetIssuer = assetIssuer;
+      this.buyingLiabilities = checkNotNull(buyingLiabilities, "buyingLiabilities cannot be null");
+      this.sellingLiabilities = checkNotNull(sellingLiabilities, "sellingLiabilities cannot be null");
     }
 
     public Asset getAsset() {
@@ -197,6 +203,14 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
     public String getBalance() {
       return balance;
+    }
+
+    public String getBuyingLiabilities() {
+      return buyingLiabilities;
+    }
+
+    public String getSellingLiabilities() {
+      return sellingLiabilities;
     }
 
     public String getLimit() {
