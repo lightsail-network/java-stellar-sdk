@@ -22,7 +22,7 @@ public class SetOptionsOperationResponse extends OperationResponse {
   @SerializedName("home_domain")
   protected final String homeDomain;
   @SerializedName("signer_key")
-  protected final KeyPair signerKey;
+  protected final String signerKey;
   @SerializedName("signer_weight")
   protected final Integer signerWeight;
   @SerializedName("master_key_weight")
@@ -32,7 +32,7 @@ public class SetOptionsOperationResponse extends OperationResponse {
   @SerializedName("set_flags_s")
   protected final String[] setFlags;
 
-  SetOptionsOperationResponse(Integer lowThreshold, Integer medThreshold, Integer highThreshold, KeyPair inflationDestination, String homeDomain, KeyPair signerKey, Integer signerWeight, Integer masterKeyWeight, String[] clearFlags, String[] setFlags) {
+  SetOptionsOperationResponse(Integer lowThreshold, Integer medThreshold, Integer highThreshold, KeyPair inflationDestination, String homeDomain, String signerKey, Integer signerWeight, Integer masterKeyWeight, String[] clearFlags, String[] setFlags) {
     this.lowThreshold = lowThreshold;
     this.medThreshold = medThreshold;
     this.highThreshold = highThreshold;
@@ -65,8 +65,16 @@ public class SetOptionsOperationResponse extends OperationResponse {
     return homeDomain;
   }
 
-  public KeyPair getSigner() {
+  public String getSignerKey() {
     return signerKey;
+  }
+
+  /**
+   * @deprecated Use {@link SetOptionsOperationResponse#getSignerKey()}
+   * @return
+   */
+  public KeyPair getSigner() {
+    return KeyPair.fromAccountId(signerKey);
   }
 
   public Integer getSignerWeight() {
