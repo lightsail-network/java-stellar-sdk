@@ -403,6 +403,54 @@ public class OperationDeserializerTest extends TestCase {
   }
 
   @Test
+  public void testDeserializePathPaymentOperationSourceAssetNative() {
+    String json = "{\n" +
+            "  \"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/operations/75252830662840321\"\n" +
+            "    },\n" +
+            "    \"transaction\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/transactions/fb2f5655c70a459220ac09eb3d6870422b58dcf5c5ffb5e5b21817b4d248826e\"\n" +
+            "    },\n" +
+            "    \"effects\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/operations/75252830662840321/effects\"\n" +
+            "    },\n" +
+            "    \"succeeds\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/effects?order=desc\\u0026cursor=75252830662840321\"\n" +
+            "    },\n" +
+            "    \"precedes\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/effects?order=asc\\u0026cursor=75252830662840321\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"id\": \"75252830662840321\",\n" +
+            "  \"paging_token\": \"75252830662840321\",\n" +
+            "  \"source_account\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"type\": \"path_payment\",\n" +
+            "  \"type_i\": 2,\n" +
+            "  \"created_at\": \"2018-04-24T12:58:12Z\",\n" +
+            "  \"transaction_hash\": \"fb2f5655c70a459220ac09eb3d6870422b58dcf5c5ffb5e5b21817b4d248826e\",\n" +
+            "  \"asset_type\": \"credit_alphanum4\",\n" +
+            "  \"asset_code\": \"XRP\",\n" +
+            "  \"asset_issuer\": \"GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5\",\n" +
+            "  \"from\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"to\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"amount\": \"2.5000000\",\n" +
+            "  \"path\": [],\n" +
+            "  \"source_max\": \"1.1779523\",\n" +
+            "  \"source_asset_type\": \"native\"\n" +
+            "}";
+
+    PathPaymentOperationResponse operation = (PathPaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getFrom().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getTo().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getAmount(), "2.5000000");
+    assertEquals(operation.getSourceMax(), "1.1779523");
+    assertEquals(operation.getSourceAsset(), new AssetTypeNative());
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("XRP", KeyPair.fromAccountId("GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5")));
+  }
+
+  @Test
   public void testDeserializeCreatePassiveOfferOperation() {
     String json = "{\n" +
             "  \"_links\": {\n" +
