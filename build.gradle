@@ -65,8 +65,13 @@ shadowJar {
    relocate 'org.jvnet','shadow.org.jvnet'
    relocate 'org.objenesis','shadow.org.objenesis'
    relocate 'javassist','shadow.javassist'
-   relocate 'javax', 'shadow.javax'
+   relocate 'javax.validation', 'shadow.javax.validation'
+   relocate 'javax.annotation', 'shadow.javax.annotation'
+   relocate 'javax.inject', 'shadow.javax.inject'
+   relocate 'javax.ws', 'shadow.javax.inject'
    relocate 'commons-io', 'shadow.commons-io'
    relocate 'jersey', 'shadow.jersey'
    relocate 'okhttp3','shadow.okhttp3'
+   relocate 'okio','shadow.okio'
+
 }
