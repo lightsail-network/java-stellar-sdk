@@ -38,8 +38,10 @@ public class AccountDeserializerTest extends TestCase {
 
     assertEquals(account.getSigners()[0].getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSigners()[0].getWeight(), 0);
-    assertEquals(account.getSigners()[1].getAccountId(), "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
+    assertEquals(account.getSigners()[0].getType(), "ed25519_public_key");
+    assertEquals(account.getSigners()[1].getKey(), "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
     assertEquals(account.getSigners()[1].getWeight(), 1);
+    assertEquals(account.getSigners()[1].getType(), "ed25519_public_key");
 
     assertEquals(account.getLinks().getEffects().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/effects{?cursor,limit,order}");
     assertEquals(account.getLinks().getOffers().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/offers{?cursor,limit,order}");
@@ -125,11 +127,15 @@ public class AccountDeserializerTest extends TestCase {
           "  \"signers\": [\n" +
           "    {\n" +
           "      \"public_key\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
-          "      \"weight\": 0\n" +
+          "      \"key\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "      \"weight\": 0,\n" +
+          "      \"type\": \"ed25519_public_key\"\n" +
           "    },\n" +
           "    {\n" +
           "      \"public_key\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
-          "      \"weight\": 1\n" +
+          "      \"key\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
+          "      \"weight\": 1,\n" +
+          "      \"type\": \"ed25519_public_key\"\n" +
           "    }\n" +
           "  ]\n" +
           "}";
