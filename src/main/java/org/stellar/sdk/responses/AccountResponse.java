@@ -222,22 +222,37 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
    * Represents account signers.
    */
   public static class Signer {
-    @SerializedName("public_key")
-    private final String accountId;
+    @SerializedName("key")
+    private final String key;
+    @SerializedName("type")
+    private final String type;
     @SerializedName("weight")
     private final int weight;
 
-    Signer(String accountId, int weight) {
-      this.accountId = checkNotNull(accountId, "accountId cannot be null");
+    Signer(String key, String type, int weight) {
+      this.key = checkNotNull(key, "key cannot be null");
+      this.type = checkNotNull(type, "type cannot be null");
       this.weight = checkNotNull(weight, "weight cannot be null");
     }
 
+    /**
+     * @deprecated Use {@link Signer#getKey()}
+     * @return
+     */
     public String getAccountId() {
-      return accountId;
+      return key;
+    }
+
+    public String getKey() {
+      return key;
     }
 
     public int getWeight() {
       return weight;
+    }
+
+    public String getType() {
+      return type;
     }
   }
 

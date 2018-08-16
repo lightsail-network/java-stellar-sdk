@@ -2,10 +2,7 @@ package org.stellar.sdk.responses;
 
 import junit.framework.TestCase;
 
-import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.BumpSequenceOperation;
-import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.*;
 
 import org.junit.Test;
 import org.stellar.sdk.responses.operations.*;
@@ -267,6 +264,7 @@ public class OperationDeserializerTest extends TestCase {
     SetOptionsOperationResponse operation = (SetOptionsOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getSigner().getAccountId(), "GD3ZYXVC7C3ECD5I4E5NGPBFJJSULJ6HJI2FBHGKYFV34DSIWB4YEKJZ");
+    assertEquals(operation.getSignerKey(), "GD3ZYXVC7C3ECD5I4E5NGPBFJJSULJ6HJI2FBHGKYFV34DSIWB4YEKJZ");
     assertEquals(operation.getSignerWeight(), new Integer(1));
     assertEquals(operation.getHomeDomain(), "stellar.org");
     assertEquals(operation.getInflationDestination().getAccountId(), "GBYWSY4NPLLPTP22QYANGTT7PEHND64P4D4B6LFEUHGUZRVYJK2H4TBE");
@@ -276,6 +274,48 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getMasterKeyWeight(), new Integer(4));
     assertEquals(operation.getSetFlags()[0], "auth_required_flag");
     assertEquals(operation.getClearFlags()[0], "auth_revocable_flag");
+  }
+
+  @Test
+  public void testDeserializeSetOptionsOperationWithNonEd25519Key() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"self\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/operations/44921793093312513\"\n" +
+            "          },\n" +
+            "          \"transaction\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/transactions/d991075183f7740e1aa43700b824f2f404082632f1db9d8a54db00574f83393b\"\n" +
+            "          },\n" +
+            "          \"effects\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/operations/44921793093312513/effects\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=44921793093312513\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=44921793093312513\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"44921793093312513\",\n" +
+            "        \"paging_token\": \"44921793093312513\",\n" +
+            "        \"source_account\": \"GCWYUHCMWC2AATGAXXYZX7T45QZLTRCYNJDD3PC73NEMUXBOCO5F6T6Z\",\n" +
+            "        \"type\": \"set_options\",\n" +
+            "        \"type_i\": 5,\n" +
+            "        \"created_at\": \"2018-08-09T15:36:24Z\",\n" +
+            "        \"transaction_hash\": \"d991075183f7740e1aa43700b824f2f404082632f1db9d8a54db00574f83393b\",\n" +
+            "        \"signer_key\": \"TBGFYVCU76LJ7GZOCGR4X7DG2NV42JPG5CKRL42LA5FZOFI3U2WU7ZAL\",\n" +
+            "        \"signer_weight\": 1\n" +
+            "      }";
+
+    SetOptionsOperationResponse operation = (SetOptionsOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    try {
+      operation.getSigner();
+      fail();
+    } catch (FormatException e) {
+      assertEquals("Version byte is invalid", e.getMessage());
+    }
+    assertEquals(operation.getSignerKey(), "TBGFYVCU76LJ7GZOCGR4X7DG2NV42JPG5CKRL42LA5FZOFI3U2WU7ZAL");
   }
 
   @Test
@@ -400,6 +440,54 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getSourceMax(), "1.1779523");
     assertEquals(operation.getAsset(), new AssetTypeNative());
     assertEquals(operation.getSourceAsset(), Asset.createNonNativeAsset("XRP", KeyPair.fromAccountId("GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5")));
+  }
+
+  @Test
+  public void testDeserializePathPaymentOperationSourceAssetNative() {
+    String json = "{\n" +
+            "  \"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/operations/75252830662840321\"\n" +
+            "    },\n" +
+            "    \"transaction\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/transactions/fb2f5655c70a459220ac09eb3d6870422b58dcf5c5ffb5e5b21817b4d248826e\"\n" +
+            "    },\n" +
+            "    \"effects\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/operations/75252830662840321/effects\"\n" +
+            "    },\n" +
+            "    \"succeeds\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/effects?order=desc\\u0026cursor=75252830662840321\"\n" +
+            "    },\n" +
+            "    \"precedes\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/effects?order=asc\\u0026cursor=75252830662840321\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"id\": \"75252830662840321\",\n" +
+            "  \"paging_token\": \"75252830662840321\",\n" +
+            "  \"source_account\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"type\": \"path_payment\",\n" +
+            "  \"type_i\": 2,\n" +
+            "  \"created_at\": \"2018-04-24T12:58:12Z\",\n" +
+            "  \"transaction_hash\": \"fb2f5655c70a459220ac09eb3d6870422b58dcf5c5ffb5e5b21817b4d248826e\",\n" +
+            "  \"asset_type\": \"credit_alphanum4\",\n" +
+            "  \"asset_code\": \"XRP\",\n" +
+            "  \"asset_issuer\": \"GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5\",\n" +
+            "  \"from\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"to\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
+            "  \"amount\": \"2.5000000\",\n" +
+            "  \"path\": [],\n" +
+            "  \"source_max\": \"1.1779523\",\n" +
+            "  \"source_asset_type\": \"native\"\n" +
+            "}";
+
+    PathPaymentOperationResponse operation = (PathPaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getFrom().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getTo().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getAmount(), "2.5000000");
+    assertEquals(operation.getSourceMax(), "1.1779523");
+    assertEquals(operation.getSourceAsset(), new AssetTypeNative());
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("XRP", KeyPair.fromAccountId("GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5")));
   }
 
   @Test
