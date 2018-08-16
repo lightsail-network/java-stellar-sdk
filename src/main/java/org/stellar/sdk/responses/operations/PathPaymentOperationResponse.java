@@ -75,7 +75,7 @@ public class PathPaymentOperationResponse extends OperationResponse {
   }
 
   public Asset getSourceAsset() {
-    if (sourceAssetCode.equals("native")) {
+    if (sourceAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
       KeyPair issuer = KeyPair.fromAccountId(sourceAssetIssuer);
