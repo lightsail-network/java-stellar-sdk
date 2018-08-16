@@ -2,6 +2,17 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.3.2
+
+* Non `ed25519` keys are now supported in all responses (fixes #126):
+  * `SetOptionsOperationResponse.getSigner` is deprecated. Please use `SetOptionsOperationResponse.getSignerKey`.
+  * `AccountResponse.Signer.getAccountId` is deprecated. Please use `AccountResponse.Signer.getKey`.
+* Fixed `PathPaymentOperationResponse.getSourceAsset` method (#125).
+
+## 0.3.1
+
+* Fixed condition check in `TimeBounds` when `maxTime` is equal `0`.
+
 ## 0.3.0
 
 * Protocol V10 updates:
