@@ -53,9 +53,11 @@ dependencies {
 }
 
 jar.enabled = false
+
 assemble.dependsOn(shadowJar);
 
 shadowJar {
+   archiveName 'stellar-sdk.jar'
    relocate 'com','shadow.com'
    relocate 'net','shadow.net'
    relocate 'org.glassfish','shadow.org.glassfish'
