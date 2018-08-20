@@ -76,6 +76,8 @@ shadowJar {
    relocate 'org.apache','shadow.org.apache'
    relocate 'org.jvnet','shadow.org.jvnet'
    relocate 'org.objenesis','shadow.org.objenesis'
+   relocate 'org.codehaus','shadow.org.codehaus'
+   relocate 'org.checkerframework','shadow.org.checkerframework'
    relocate 'javassist','shadow.javassist'
    relocate 'javax.validation', 'shadow.javax.validation'
    relocate 'javax.annotation', 'shadow.javax.annotation'
