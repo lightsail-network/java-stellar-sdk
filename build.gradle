@@ -51,7 +51,7 @@ repositories {
 dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.11.0'
     compile 'com.moandjiezana.toml:toml4j:0.7.2'
-    compile 'com.google.guava:guava:26.0-android'
+    compile 'com.google.guava:guava:26.1-android'
     compile 'com.google.code.gson:gson:2.8.5'
     compile 'commons-io:commons-io:2.6'
     compile 'org.glassfish.jersey.core:jersey-client:2.27'
