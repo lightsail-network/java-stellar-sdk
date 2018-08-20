@@ -1,3 +1,11 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+  }
+}
 
 plugins {
   id "com.github.johnrengelman.shadow" version "2.0.4"
@@ -6,6 +14,8 @@ plugins {
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'java'
 apply plugin: 'ivy-publish'
+apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates -Drevision=release
+apply plugin: 'project-report' // gradle htmlDependencyReport
 
 sourceCompatibility = 1.6
 version = '0.3.2'
@@ -39,17 +49,17 @@ repositories {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.9.1'
-    compile 'com.moandjiezana.toml:toml4j:0.5.1'
+    compile 'com.squareup.okhttp3:okhttp:3.11.0'
+    compile 'com.moandjiezana.toml:toml4j:0.7.2'
     compile 'org.mockito:mockito-core:2.13.0'
-    compile 'com.google.guava:guava:18.0'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.glassfish.jersey.core:jersey-client:2.22.1'
-    compile 'org.glassfish.jersey.media:jersey-media-sse:2.22.1'
+    compile 'com.google.guava:guava:26.0-jre'
+    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'commons-io:commons-io:2.6'
+    compile 'org.glassfish.jersey.core:jersey-client:2.27'
+    compile 'org.glassfish.jersey.media:jersey-media-sse:2.27'
     compile fileTree(dir: 'libs', include: '*.jar')
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.9.1'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.11.0'
+    testCompile 'junit:junit:4.12'
 }
 
 jar.enabled = false
@@ -75,5 +85,4 @@ shadowJar {
    relocate 'jersey', 'shadow.jersey'
    relocate 'okhttp3','shadow.okhttp3'
    relocate 'okio','shadow.okio'
-
 }
