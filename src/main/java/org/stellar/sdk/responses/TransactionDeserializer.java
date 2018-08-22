@@ -43,7 +43,7 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
         String memoValue = json.getAsJsonObject().get("memo").getAsString();
         BaseEncoding base64Encoding = BaseEncoding.base64();
         if (memoType.equals("id")) {
-          memo = Memo.id(Long.parseLong(memoValue));
+          memo = Memo.id(Long.parseUnsignedLong(memoValue));
         } else if (memoType.equals("hash")) {
           memo = Memo.hash(base64Encoding.decode(memoValue));
         } else if (memoType.equals("return")) {
