@@ -10,6 +10,9 @@ public class MemoId extends Memo {
   private long id;
 
   public MemoId(long id) {
+    if (Long.compareUnsigned(id, 0) < 0) {
+      throw new IllegalArgumentException("id must be a positive number");
+    }
     this.id = id;
   }
 
