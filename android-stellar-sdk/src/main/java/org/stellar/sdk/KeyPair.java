@@ -143,6 +143,13 @@ public class KeyPair {
     return StrKey.encodeStellarSecretSeed(mPrivateKey.getSeed());
   }
 
+  /**
+   * Returns the raw 32 byte secret seed.
+   */
+  public byte[] getRawSecretSeed() {
+    return mPrivateKey.getSeed();
+  }
+
   public byte[] getPublicKey() {
     return mPublicKey.getAbyte();
   }
