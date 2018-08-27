@@ -14,6 +14,7 @@ plugins {
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'java'
 apply plugin: 'ivy-publish'
+apply plugin: 'maven' // needed to add the install task that jitpack executes
 apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates -Drevision=release
 apply plugin: 'project-report' // gradle htmlDependencyReport
 
@@ -65,6 +66,8 @@ dependencies {
 jar.enabled = false
 
 assemble.dependsOn(shadowJar);
+// make sure the install task creates the shadowjar
+install.dependsOn(shadowJar);
 
 shadowJar {
    archiveName 'stellar-sdk.jar'
