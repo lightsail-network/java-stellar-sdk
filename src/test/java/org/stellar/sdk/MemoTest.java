@@ -1,8 +1,13 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.junit.Test;
 import org.stellar.sdk.xdr.MemoType;
+import org.stellar.sdk.MemoId;
+import org.stellar.sdk.responses.TransactionDeserializer;
+import org.stellar.sdk.responses.TransactionResponse;
 
 import java.util.Arrays;
 
@@ -55,6 +60,15 @@ public class MemoTest {
         assertEquals(9223372036854775807L, memo.getId());
         assertEquals(MemoType.MEMO_ID, memo.toXdr().getDiscriminant());
         assertEquals(new Long(9223372036854775807L), memo.toXdr().getId().getUint64());
+    }
+
+    @Test
+    public void testParseMemoId() {
+        String longId = "10048071741004807174";
+        JsonElement element = new JsonParser().parse(String.format("{ \"memo_type\": \"id\", \"memo\": \"%s\" }", longId));
+        TransactionResponse transactionResponse = new TransactionDeserializer().deserialize(element, null, null);
+        MemoId memoId = (MemoId)transactionResponse.getMemo();
+        assertEquals(longId, Long.toUnsignedString(memoId.getId()));
     }
 
     @Test
