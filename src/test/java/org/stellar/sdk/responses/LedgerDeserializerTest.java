@@ -37,7 +37,8 @@ public class LedgerDeserializerTest extends TestCase {
             "  \"fee_pool\": \"1908.2248818\",\n" +
             "  \"base_fee\": 100,\n" +
             "  \"base_reserve\": \"10.0000000\",\n" +
-            "  \"max_tx_set_size\": 50\n" +
+            "  \"max_tx_set_size\": 50,\n" +
+            "  \"protocol_version\": 10\n" +
             "}";
 
     LedgerResponse ledger = GsonSingleton.getInstance().fromJson(json, LedgerResponse.class);
@@ -53,6 +54,7 @@ public class LedgerDeserializerTest extends TestCase {
     assertEquals(ledger.getBaseFee(), new Long(100));
     assertEquals(ledger.getBaseReserve(), "10.0000000");
     assertEquals(ledger.getMaxTxSetSize(), new Integer(50));
+    assertEquals(ledger.getProtocolVersion(), new Integer(10));
     assertEquals(ledger.getLinks().getEffects().getHref(), "/ledgers/898826/effects{?cursor,limit,order}");
     assertEquals(ledger.getLinks().getOperations().getHref(), "/ledgers/898826/operations{?cursor,limit,order}");
     assertEquals(ledger.getLinks().getSelf().getHref(), "/ledgers/898826");
