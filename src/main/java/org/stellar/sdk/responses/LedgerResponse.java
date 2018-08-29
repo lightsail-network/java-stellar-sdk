@@ -39,10 +39,12 @@ public class LedgerResponse extends Response {
   private final Integer maxTxSetSize;
   @SerializedName("protocol_version")
   private final Integer protocolVersion;
+  @SerializedName("header_xdr")
+  private final String headerXdr;
   @SerializedName("_links")
   private final Links links;
 
-  LedgerResponse(Long sequence, String hash, String pagingToken, String prevHash, Integer transactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, String baseFeeInStroops, String baseReserveInStroops, Integer maxTxSetSize, Integer protocolVersion, Links links) {
+  LedgerResponse(Long sequence, String hash, String pagingToken, String prevHash, Integer transactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, String baseFeeInStroops, String baseReserveInStroops, Integer maxTxSetSize, Integer protocolVersion, String headerXdr, Links links) {
     this.sequence = sequence;
     this.hash = hash;
     this.pagingToken = pagingToken;
@@ -58,6 +60,7 @@ public class LedgerResponse extends Response {
     this.baseReserveInStroops = baseReserveInStroops;
     this.maxTxSetSize = maxTxSetSize;
     this.protocolVersion = protocolVersion;
+    this.headerXdr = headerXdr;
     this.links = links;
   }
 
@@ -119,6 +122,10 @@ public class LedgerResponse extends Response {
 
   public Integer getProtocolVersion() {
     return protocolVersion;
+  }
+
+  public String getHeaderXdr() {
+    return headerXdr;
   }
 
   public Links getLinks() {
