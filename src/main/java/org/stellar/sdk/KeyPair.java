@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class KeyPair {
 
-  private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName("ed25519-sha-512");
+  private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.ED_25519_CURVE_SPEC;
 
   private final EdDSAPublicKey mPublicKey;
   private final EdDSAPrivateKey mPrivateKey;
