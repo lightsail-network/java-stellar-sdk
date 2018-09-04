@@ -83,7 +83,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
         private final String amount;
         private final String price;
 
-        private KeyPair mSourceAccount;
+        private String mSourceAccount;
 
         /**
          * Construct a new CreatePassiveOffer builder from a CreatePassiveOfferOp XDR.
@@ -119,7 +119,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
          * @param sourceAccount The operation's source account.
          * @return Builder object so you can chain methods.
          */
-        public CreatePassiveSellOfferOperation.Builder setSourceAccount(KeyPair sourceAccount) {
+        public CreatePassiveSellOfferOperation.Builder setSourceAccount(String sourceAccount) {
             mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
             return this;
         }

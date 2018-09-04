@@ -8,7 +8,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
@@ -22,13 +21,13 @@ public class PathsRequestBuilder extends RequestBuilder {
     super(httpClient, serverURI, "paths");
   }
 
-  public PathsRequestBuilder destinationAccount(KeyPair account) {
-    uriBuilder.setQueryParameter("destination_account", account.getAccountId());
+  public PathsRequestBuilder destinationAccount(String account) {
+    uriBuilder.setQueryParameter("destination_account", account);
     return this;
   }
 
-  public PathsRequestBuilder sourceAccount(KeyPair account) {
-    uriBuilder.setQueryParameter("source_account", account.getAccountId());
+  public PathsRequestBuilder sourceAccount(String account) {
+    uriBuilder.setQueryParameter("source_account", account);
     return this;
   }
 
@@ -42,7 +41,7 @@ public class PathsRequestBuilder extends RequestBuilder {
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.setQueryParameter("destination_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.setQueryParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
+      uriBuilder.setQueryParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer());
     }
     return this;
   }

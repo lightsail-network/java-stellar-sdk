@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SetOptionsOperation extends Operation {
 
-  private final KeyPair inflationDestination;
+  private final String inflationDestination;
   private final Integer clearFlags;
   private final Integer setFlags;
   private final Integer masterKeyWeight;
@@ -23,7 +23,7 @@ public class SetOptionsOperation extends Operation {
   private final SignerKey signer;
   private final Integer signerWeight;
 
-  private SetOptionsOperation(KeyPair inflationDestination, Integer clearFlags, Integer setFlags,
+  private SetOptionsOperation(String inflationDestination, Integer clearFlags, Integer setFlags,
                               Integer masterKeyWeight, Integer lowThreshold, Integer mediumThreshold,
                               Integer highThreshold, String homeDomain, SignerKey signer, Integer signerWeight) {
     this.inflationDestination = inflationDestination;
@@ -41,7 +41,7 @@ public class SetOptionsOperation extends Operation {
   /**
    * Account of the inflation destination.
    */
-  public KeyPair getInflationDestination() {
+  public String getInflationDestination() {
     return inflationDestination;
   }
 
@@ -114,9 +114,7 @@ public class SetOptionsOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     SetOptionsOp op = new SetOptionsOp();
     if (inflationDestination != null) {
-      AccountID inflationDestination = new AccountID();
-      inflationDestination.setAccountID(this.inflationDestination.getXdrPublicKey());
-      op.setInflationDest(inflationDestination);
+      op.setInflationDest(StrKey.encodeToXDRAccountId(this.inflationDestination));
     }
     if (clearFlags != null) {
       Uint32 clearFlags = new Uint32();
@@ -173,7 +171,7 @@ public class SetOptionsOperation extends Operation {
    * @see SetOptionsOperation
    */
   public static class Builder {
-    private KeyPair inflationDestination;
+    private String inflationDestination;
     private Integer clearFlags;
     private Integer setFlags;
     private Integer masterKeyWeight;
@@ -183,12 +181,11 @@ public class SetOptionsOperation extends Operation {
     private String homeDomain;
     private SignerKey signer;
     private Integer signerWeight;
-    private KeyPair sourceAccount;
+    private String sourceAccount;
 
     Builder(SetOptionsOp op) {
       if (op.getInflationDest() != null) {
-        inflationDestination = KeyPair.fromXdrPublicKey(
-                op.getInflationDest().getAccountID());
+        inflationDestination = StrKey.encodeStellarAccountId(op.getInflationDest().getAccountID().getEd25519().getUint256());
       }
       if (op.getClearFlags() != null) {
         clearFlags = op.getClearFlags().getUint32();
@@ -227,7 +224,7 @@ public class SetOptionsOperation extends Operation {
      * @param inflationDestination The inflation destination account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setInflationDestination(KeyPair inflationDestination) {
+    public Builder setInflationDestination(String inflationDestination) {
       this.inflationDestination = inflationDestination;
       return this;
     }
@@ -324,7 +321,7 @@ public class SetOptionsOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(KeyPair sourceAccount) {
+    public Builder setSourceAccount(String sourceAccount) {
       this.sourceAccount = sourceAccount;
       return this;
     }

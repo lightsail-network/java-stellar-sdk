@@ -11,11 +11,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AllowTrustOperation extends Operation {
 
-  private final KeyPair trustor;
+  private final String trustor;
   private final String assetCode;
   private final boolean authorize;
 
-  private AllowTrustOperation(KeyPair trustor, String assetCode, boolean authorize) {
+  private AllowTrustOperation(String trustor, String assetCode, boolean authorize) {
     this.trustor = checkNotNull(trustor, "trustor cannot be null");
     this.assetCode = checkNotNull(assetCode, "assetCode cannot be null");
     this.authorize = authorize;
@@ -24,7 +24,7 @@ public class AllowTrustOperation extends Operation {
   /**
    * The account of the recipient of the trustline.
    */
-  public KeyPair getTrustor() {
+  public String getTrustor() {
     return trustor;
   }
 
@@ -47,9 +47,7 @@ public class AllowTrustOperation extends Operation {
     AllowTrustOp op = new AllowTrustOp();
 
     // trustor
-    AccountID trustor = new AccountID();
-    trustor.setAccountID(this.trustor.getXdrPublicKey());
-    op.setTrustor(trustor);
+    op.setTrustor(StrKey.encodeToXDRAccountId(this.trustor));
     // asset
     AllowTrustOp.AllowTrustOpAsset asset = new AllowTrustOp.AllowTrustOpAsset();
     if (assetCode.length() <= 4) {
@@ -78,14 +76,14 @@ public class AllowTrustOperation extends Operation {
    * @see AllowTrustOperation
    */
   public static class Builder {
-    private final KeyPair trustor;
+    private final String trustor;
     private final String assetCode;
     private final boolean authorize;
 
-    private KeyPair mSourceAccount;
+    private String mSourceAccount;
 
     Builder(AllowTrustOp op) {
-      trustor = KeyPair.fromXdrPublicKey(op.getTrustor().getAccountID());
+      trustor = StrKey.encodeStellarAccountId(op.getTrustor().getAccountID().getEd25519().getUint256());
       switch (op.getAsset().getDiscriminant()) {
         case ASSET_TYPE_CREDIT_ALPHANUM4:
           assetCode = new String(op.getAsset().getAssetCode4().getAssetCode4()).trim();
@@ -105,7 +103,7 @@ public class AllowTrustOperation extends Operation {
      * @param assetCode The asset of the trustline the source account is authorizing. For example, if a gateway wants to allow another account to hold its USD credit, the type is USD.
      * @param authorize Flag indicating whether the trustline is authorized.
      */
-    public Builder(KeyPair trustor, String assetCode, boolean authorize) {
+    public Builder(String trustor, String assetCode, boolean authorize) {
       this.trustor = trustor;
       this.assetCode = assetCode;
       this.authorize = authorize;
@@ -116,7 +114,7 @@ public class AllowTrustOperation extends Operation {
      * @param sourceAccount Source account
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(KeyPair sourceAccount) {
+    public Builder setSourceAccount(String sourceAccount) {
       mSourceAccount = sourceAccount;
       return this;
     }

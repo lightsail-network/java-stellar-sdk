@@ -2,7 +2,6 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Link;
 import org.stellar.sdk.responses.Pageable;
 import org.stellar.sdk.responses.Response;
@@ -17,7 +16,7 @@ public abstract class OperationResponse extends Response implements Pageable {
   @SerializedName("id")
   protected Long id;
   @SerializedName("source_account")
-  protected KeyPair sourceAccount;
+  protected String sourceAccount;
   @SerializedName("paging_token")
   protected String pagingToken;
   @SerializedName("created_at")
@@ -35,7 +34,7 @@ public abstract class OperationResponse extends Response implements Pageable {
     return id;
   }
 
-  public KeyPair getSourceAccount() {
+  public String getSourceAccount() {
     return sourceAccount;
   }
 

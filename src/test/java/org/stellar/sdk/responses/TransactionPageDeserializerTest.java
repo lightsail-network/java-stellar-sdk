@@ -12,13 +12,13 @@ public class TransactionPageDeserializerTest extends TestCase {
   public void testDeserialize() {
     Page<TransactionResponse> transactionsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<TransactionResponse>>() {}.getType());
 
-    assertEquals(transactionsPage.getRecords().get(0).getSourceAccount().getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+    assertEquals(transactionsPage.getRecords().get(0).getSourceAccount(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(transactionsPage.getRecords().get(0).getPagingToken(), "12884905984");
     assertTrue(transactionsPage.getRecords().get(0).getMemo() instanceof MemoText);
     MemoText memoText = (MemoText) transactionsPage.getRecords().get(0).getMemo();
     assertEquals(memoText.getText(), "hello world");
     assertEquals(transactionsPage.getRecords().get(0).getLinks().getAccount().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
-    assertEquals(transactionsPage.getRecords().get(9).getSourceAccount().getAccountId(), "GAENIE5LBJIXLMJIAJ7225IUPA6CX7EGHUXRX5FLCZFFAQSG2ZUYSWFK");
+    assertEquals(transactionsPage.getRecords().get(9).getSourceAccount(), "GAENIE5LBJIXLMJIAJ7225IUPA6CX7EGHUXRX5FLCZFFAQSG2ZUYSWFK");
 
     // Empty memo_text
     assertTrue(transactionsPage.getRecords().get(2).getMemo() instanceof MemoText);

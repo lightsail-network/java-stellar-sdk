@@ -40,14 +40,14 @@ public class OperationDeserializerTest extends TestCase {
             "}";
     CreateAccountOperationResponse operation = (CreateAccountOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getSourceAccount().getAccountId(), "GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD");
+    assertEquals(operation.getSourceAccount(), "GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD");
     assertEquals(operation.getPagingToken(), "3936840037961729");
     assertEquals(operation.getId(), new Long(3936840037961729L));
     assertNull(operation.isTransactionSuccessful());
 
-    assertEquals(operation.getAccount().getAccountId(), "GAR4DDXYNSN2CORG3XQFLAPWYKTUMLZYHYWV4Y2YJJ4JO6ZJFXMJD7PT");
+    assertEquals(operation.getAccount(), "GAR4DDXYNSN2CORG3XQFLAPWYKTUMLZYHYWV4Y2YJJ4JO6ZJFXMJD7PT");
     assertEquals(operation.getStartingBalance(), "299454.904954");
-    assertEquals(operation.getFunder().getAccountId(), "GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD");
+    assertEquals(operation.getFunder(), "GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD");
 
     assertEquals(operation.getLinks().getEffects().getHref(), "/operations/3936840037961729/effects{?cursor,limit,order}");
     assertEquals(operation.getLinks().getPrecedes().getHref(), "/operations?cursor=3936840037961729&order=asc");
@@ -90,12 +90,12 @@ public class OperationDeserializerTest extends TestCase {
             "      }";
     PaymentOperationResponse operation = (PaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getSourceAccount().getAccountId(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
+    assertEquals(operation.getSourceAccount(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
     assertEquals(operation.getId(), new Long(3940808587743233L));
     assertEquals(operation.isTransactionSuccessful(), new Boolean(false));
 
-    assertEquals(operation.getFrom().getAccountId(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
-    assertEquals(operation.getTo().getAccountId(), "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
+    assertEquals(operation.getFrom(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
+    assertEquals(operation.getTo(), "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
     assertEquals(operation.getAmount(), "100.0");
     assertEquals(operation.getAsset(), new AssetTypeNative());
   }
@@ -138,10 +138,10 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.isTransactionSuccessful(), new Boolean(true));
 
-    assertEquals(operation.getFrom().getAccountId(), "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
-    assertEquals(operation.getTo().getAccountId(), "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
+    assertEquals(operation.getFrom(), "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
+    assertEquals(operation.getTo(), "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
     assertEquals(operation.getAmount(), "1000000000.0");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
   }
 
   @Test
@@ -179,10 +179,10 @@ public class OperationDeserializerTest extends TestCase {
 
     AllowTrustOperationResponse operation = (AllowTrustOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getTrustee().getAccountId(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
-    assertEquals(operation.getTrustor().getAccountId(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
+    assertEquals(operation.getTrustee(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
+    assertEquals(operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.isAuthorize(), true);
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM")));
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
   }
 
   @Test
@@ -220,10 +220,10 @@ public class OperationDeserializerTest extends TestCase {
 
     ChangeTrustOperationResponse operation = (ChangeTrustOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getTrustee().getAccountId(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
-    assertEquals(operation.getTrustor().getAccountId(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
+    assertEquals(operation.getTrustee(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
+    assertEquals(operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.getLimit(), "922337203685.4775807");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM")));
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
   }
 
   @Test
@@ -273,7 +273,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getSignerKey(), "GD3ZYXVC7C3ECD5I4E5NGPBFJJSULJ6HJI2FBHGKYFV34DSIWB4YEKJZ");
     assertEquals(operation.getSignerWeight(), new Integer(1));
     assertEquals(operation.getHomeDomain(), "stellar.org");
-    assertEquals(operation.getInflationDestination().getAccountId(), "GBYWSY4NPLLPTP22QYANGTT7PEHND64P4D4B6LFEUHGUZRVYJK2H4TBE");
+    assertEquals(operation.getInflationDestination(), "GBYWSY4NPLLPTP22QYANGTT7PEHND64P4D4B6LFEUHGUZRVYJK2H4TBE");
     assertEquals(operation.getLowThreshold(), new Integer(1));
     assertEquals(operation.getMedThreshold(), new Integer(2));
     assertEquals(operation.getHighThreshold(), new Integer(3));
@@ -355,8 +355,8 @@ public class OperationDeserializerTest extends TestCase {
 
     AccountMergeOperationResponse operation = (AccountMergeOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getAccount().getAccountId(), "GD6GKRABNDVYDETEZJQEPS7IBQMERCN44R5RCI4LJNX6BMYQM2KPGGZ2");
-    assertEquals(operation.getInto().getAccountId(), "GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN");
+    assertEquals(operation.getAccount(), "GD6GKRABNDVYDETEZJQEPS7IBQMERCN44R5RCI4LJNX6BMYQM2KPGGZ2");
+    assertEquals(operation.getInto(), "GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN");
   }
 
   @Test
@@ -396,7 +396,7 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getOfferId(), new Integer(0));
     assertEquals(operation.getAmount(), "100.0");
-    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("CNY", KeyPair.fromAccountId("GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN")));
+    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("CNY", "GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN"));
     assertEquals(operation.getSellingAsset(), new AssetTypeNative());
   }
 
@@ -441,13 +441,13 @@ public class OperationDeserializerTest extends TestCase {
 
     PathPaymentOperationResponse operation = (PathPaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getFrom().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
-    assertEquals(operation.getTo().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getFrom(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getTo(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
     assertEquals(operation.getAmount(), "2.5000000");
     assertEquals(operation.getSourceAmount(), "1.1777000");
     assertEquals(operation.getSourceMax(), "1.1779523");
     assertEquals(operation.getAsset(), new AssetTypeNative());
-    assertEquals(operation.getSourceAsset(), Asset.createNonNativeAsset("XRP", KeyPair.fromAccountId("GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5")));
+    assertEquals(operation.getSourceAsset(), Asset.createNonNativeAsset("XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
   }
 
   @Test
@@ -490,12 +490,12 @@ public class OperationDeserializerTest extends TestCase {
 
     PathPaymentOperationResponse operation = (PathPaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getFrom().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
-    assertEquals(operation.getTo().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getFrom(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
+    assertEquals(operation.getTo(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
     assertEquals(operation.getAmount(), "2.5000000");
     assertEquals(operation.getSourceMax(), "1.1779523");
     assertEquals(operation.getSourceAsset(), new AssetTypeNative());
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("XRP", KeyPair.fromAccountId("GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5")));
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
   }
 
   @Test

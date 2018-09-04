@@ -1,6 +1,10 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
+import org.stellar.sdk.xdr.AccountID;
+import org.stellar.sdk.xdr.PublicKey;
+import org.stellar.sdk.xdr.PublicKeyType;
+import org.stellar.sdk.xdr.Uint256;
 
 import java.io.*;
 import java.util.Arrays;
@@ -25,6 +29,17 @@ class StrKey {
     public static String encodeStellarAccountId(byte[] data) {
         char[] encoded = encodeCheck(VersionByte.ACCOUNT_ID, data);
         return String.valueOf(encoded);
+    }
+
+    public static AccountID encodeToXDRAccountId(String data) {
+        AccountID accountID = new AccountID();
+        PublicKey publicKey = new PublicKey();
+        publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
+        Uint256 uint256 = new Uint256();
+        uint256.setUint256(decodeStellarAccountId(data));
+        publicKey.setEd25519(uint256);
+        accountID.setAccountID(publicKey);
+        return accountID;
     }
 
     public static byte[] decodeStellarAccountId(String data) {

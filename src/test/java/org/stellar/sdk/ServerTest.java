@@ -166,9 +166,9 @@ public class ServerTest {
         KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
         KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-        Account account = new Account(source, 2908908335136768L);
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
         Transaction.Builder builder = new Transaction.Builder(account, network)
-                .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+                .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addMemo(Memo.text("Hello world!"))
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE);
 

@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Transaction {
   private final int mFee;
-  private final KeyPair mSourceAccount;
+  private final String mSourceAccount;
   private final long mSequenceNumber;
   private final Operation[] mOperations;
   private final Memo mMemo;
@@ -30,7 +30,7 @@ public class Transaction {
   private List<DecoratedSignature> mSignatures;
 
   Transaction(
-          KeyPair sourceAccount,
+          String sourceAccount,
           int fee,
           long sequenceNumber,
           Operation[] operations,
@@ -114,7 +114,7 @@ public class Transaction {
     return mNetwork;
   }
 
-  public KeyPair getSourceAccount() {
+  public String getSourceAccount() {
     return mSourceAccount;
   }
 
@@ -163,9 +163,6 @@ public class Transaction {
     sequenceNumberUint.setInt64(mSequenceNumber);
     org.stellar.sdk.xdr.SequenceNumber sequenceNumber = new org.stellar.sdk.xdr.SequenceNumber();
     sequenceNumber.setSequenceNumber(sequenceNumberUint);
-    // sourceAccount
-    org.stellar.sdk.xdr.AccountID sourceAccount = new org.stellar.sdk.xdr.AccountID();
-    sourceAccount.setAccountID(mSourceAccount.getXdrPublicKey());
     // operations
     org.stellar.sdk.xdr.Operation[] operations = new org.stellar.sdk.xdr.Operation[mOperations.length];
     for (int i = 0; i < mOperations.length; i++) {
@@ -178,7 +175,7 @@ public class Transaction {
     org.stellar.sdk.xdr.Transaction transaction = new org.stellar.sdk.xdr.Transaction();
     transaction.setFee(fee);
     transaction.setSeqNum(sequenceNumber);
-    transaction.setSourceAccount(sourceAccount);
+    transaction.setSourceAccount(StrKey.encodeToXDRAccountId(this.mSourceAccount));
     transaction.setOperations(operations);
     transaction.setMemo(mMemo.toXdr());
     transaction.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
@@ -208,7 +205,6 @@ public class Transaction {
   public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
     org.stellar.sdk.xdr.Transaction tx = envelope.getTx();
     int mFee = tx.getFee().getUint32();
-    KeyPair mSourceAccount = KeyPair.fromXdrPublicKey(tx.getSourceAccount().getAccountID());
     Long mSequenceNumber = tx.getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(tx.getMemo());
     TimeBounds mTimeBounds = TimeBounds.fromXdr(tx.getTimeBounds());
@@ -219,7 +215,7 @@ public class Transaction {
     }
 
     Transaction transaction = new Transaction(
-            mSourceAccount,
+            StrKey.encodeStellarAccountId(tx.getSourceAccount().getAccountID().getEd25519().getUint256()),
             mFee,
             mSequenceNumber,
             mOperations,
@@ -418,7 +414,7 @@ public class Transaction {
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
       Transaction transaction = new Transaction(
-              mSourceAccount.getKeypair(),
+              mSourceAccount.getAccountId(),
               operations.length * operationFee,
               mSourceAccount.getIncrementedSequenceNumber(),
               operations,

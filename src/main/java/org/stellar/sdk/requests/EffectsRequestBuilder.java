@@ -5,7 +5,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.effects.EffectResponse;
 
@@ -26,9 +25,9 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/effects-for-account.html">Effects for Account</a>
    * @param account Account for which to get effects
    */
-  public EffectsRequestBuilder forAccount(KeyPair account) {
+  public EffectsRequestBuilder forAccount(String account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account.getAccountId(), "effects");
+    this.setSegments("accounts", account, "effects");
     return this;
   }
 

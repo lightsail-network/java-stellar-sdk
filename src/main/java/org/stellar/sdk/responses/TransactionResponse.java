@@ -2,7 +2,6 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Memo;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,7 +20,7 @@ public class TransactionResponse extends Response implements Pageable {
   @SerializedName("created_at")
   private final String createdAt;
   @SerializedName("source_account")
-  private final KeyPair sourceAccount;
+  private final String sourceAccount;
   @SerializedName("successful")
   private final Boolean successful;
   @SerializedName("paging_token")
@@ -45,7 +44,7 @@ public class TransactionResponse extends Response implements Pageable {
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  TransactionResponse(String hash, Long ledger, String createdAt, KeyPair sourceAccount, Boolean successful, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
+  TransactionResponse(String hash, Long ledger, String createdAt, String sourceAccount, Boolean successful, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
     this.hash = hash;
     this.ledger = ledger;
     this.createdAt = createdAt;
@@ -74,7 +73,7 @@ public class TransactionResponse extends Response implements Pageable {
     return createdAt;
   }
 
-  public KeyPair getSourceAccount() {
+  public String getSourceAccount() {
     return sourceAccount;
   }
 

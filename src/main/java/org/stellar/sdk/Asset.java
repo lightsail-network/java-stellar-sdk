@@ -11,7 +11,7 @@ public abstract class Asset {
     if (type.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(code, KeyPair.fromAccountId(issuer));
+      return Asset.createNonNativeAsset(code, issuer);
     }
   }
 
@@ -20,7 +20,7 @@ public abstract class Asset {
    * @param code Asset code
    * @param issuer Asset issuer
    */
-  public static Asset createNonNativeAsset(String code, KeyPair issuer) {
+  public static Asset createNonNativeAsset(String code, String issuer) {
     if (code.length() >= 1 && code.length() <= 4) {
       return new AssetTypeCreditAlphaNum4(code, issuer);
     } else if (code.length() >= 5 && code.length() <= 12) {
@@ -35,18 +35,22 @@ public abstract class Asset {
    * @param xdr XDR object
    */
   public static Asset fromXdr(org.stellar.sdk.xdr.Asset xdr) {
+    String accountId;
     switch (xdr.getDiscriminant()) {
       case ASSET_TYPE_NATIVE:
         return new AssetTypeNative();
       case ASSET_TYPE_CREDIT_ALPHANUM4:
         String assetCode4 = Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode().getAssetCode4());
-        KeyPair issuer4 = KeyPair.fromXdrPublicKey(
-                xdr.getAlphaNum4().getIssuer().getAccountID());
-        return new AssetTypeCreditAlphaNum4(assetCode4, issuer4);
+        accountId = StrKey.encodeStellarAccountId(
+                xdr.getAlphaNum4().getIssuer().getAccountID().getEd25519().getUint256()
+        );
+        return new AssetTypeCreditAlphaNum4(assetCode4, accountId);
       case ASSET_TYPE_CREDIT_ALPHANUM12:
         String assetCode12 = Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode().getAssetCode12());
-        KeyPair issuer12 = KeyPair.fromXdrPublicKey(xdr.getAlphaNum12().getIssuer().getAccountID());
-        return new AssetTypeCreditAlphaNum12(assetCode12, issuer12);
+        accountId = StrKey.encodeStellarAccountId(
+                xdr.getAlphaNum12().getIssuer().getAccountID().getEd25519().getUint256()
+        );
+        return new AssetTypeCreditAlphaNum12(assetCode12, accountId);
       default:
         throw new IllegalArgumentException("Unknown asset type " + xdr.getDiscriminant());
     }

@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentOp;
@@ -20,12 +19,12 @@ public class PathPaymentOperation extends Operation {
 
   private final Asset sendAsset;
   private final String sendMax;
-  private final KeyPair destination;
+  private final String destination;
   private final Asset destAsset;
   private final String destAmount;
   private final Asset[] path;
 
-  private PathPaymentOperation(Asset sendAsset, String sendMax, KeyPair destination,
+  private PathPaymentOperation(Asset sendAsset, String sendMax, String destination,
       Asset destAsset, String destAmount, Asset[] path) {
     this.sendAsset = checkNotNull(sendAsset, "sendAsset cannot be null");
     this.sendMax = checkNotNull(sendMax, "sendMax cannot be null");
@@ -57,7 +56,7 @@ public class PathPaymentOperation extends Operation {
   /**
    * Account that receives the payment.
    */
-  public KeyPair getDestination() {
+  public String getDestination() {
     return destination;
   }
 
@@ -93,9 +92,7 @@ public class PathPaymentOperation extends Operation {
     sendMax.setInt64(Operation.toXdrAmount(this.sendMax));
     op.setSendMax(sendMax);
     // destination
-    AccountID destination = new AccountID();
-    destination.setAccountID(this.destination.getXdrPublicKey());
-    op.setDestination(destination);
+    op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
     // destAsset
     op.setDestAsset(destAsset.toXdr());
     // destAmount
@@ -122,17 +119,17 @@ public class PathPaymentOperation extends Operation {
   public static class Builder {
     private final Asset sendAsset;
     private final String sendMax;
-    private final KeyPair destination;
+    private final String destination;
     private final Asset destAsset;
     private final String destAmount;
     private Asset[] path;
 
-    private KeyPair mSourceAccount;
+    private String mSourceAccount;
 
     Builder(PathPaymentOp op) {
       sendAsset = Asset.fromXdr(op.getSendAsset());
       sendMax = Operation.fromXdrAmount(op.getSendMax().getInt64().longValue());
-      destination = KeyPair.fromXdrPublicKey(op.getDestination().getAccountID());
+      destination = StrKey.encodeStellarAccountId(op.getDestination().getAccountID().getEd25519().getUint256());
       destAsset = Asset.fromXdr(op.getDestAsset());
       destAmount = Operation.fromXdrAmount(op.getDestAmount().getInt64().longValue());
       path = new Asset[op.getPath().length];
@@ -150,7 +147,7 @@ public class PathPaymentOperation extends Operation {
      * @param destAmount The amount of destination asset the destination account receives.
      * @throws ArithmeticException when sendMax or destAmount has more than 7 decimal places.
      */
-    public Builder(Asset sendAsset, String sendMax, KeyPair destination,
+    public Builder(Asset sendAsset, String sendMax, String destination,
         Asset destAsset, String destAmount) {
       this.sendAsset = checkNotNull(sendAsset, "sendAsset cannot be null");
       this.sendMax = checkNotNull(sendMax, "sendMax cannot be null");
@@ -176,7 +173,7 @@ public class PathPaymentOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(KeyPair sourceAccount) {
+    public Builder setSourceAccount(String sourceAccount) {
       mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }

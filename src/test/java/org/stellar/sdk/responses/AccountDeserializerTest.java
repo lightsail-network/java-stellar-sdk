@@ -10,7 +10,7 @@ public class AccountDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
     AccountResponse account = GsonSingleton.getInstance().fromJson(json, AccountResponse.class);
-    assertEquals(account.getKeypair().getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+      assertEquals(account.getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSequenceNumber(), new Long(2319149195853854L));
     assertEquals(account.getSubentryCount(), new Integer(0));
     assertEquals(account.getInflationDestination(), "GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC");
@@ -26,7 +26,7 @@ public class AccountDeserializerTest extends TestCase {
 
     assertEquals(account.getBalances()[0].getAssetType(), "credit_alphanum4");
     assertEquals(account.getBalances()[0].getAssetCode(), "ABC");
-    assertEquals(account.getBalances()[0].getAssetIssuer().getAccountId(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    assertEquals(account.getBalances()[0].getAssetIssuer(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
     assertEquals(account.getBalances()[0].getBuyingLiabilities(), "100.1234567");
@@ -64,7 +64,7 @@ public class AccountDeserializerTest extends TestCase {
 
     assertEquals(account.getBalances()[0].getAssetType(), "credit_alphanum4");
     assertEquals(account.getBalances()[0].getAssetCode(), "ABC");
-    assertEquals(account.getBalances()[0].getAssetIssuer().getAccountId(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    assertEquals(account.getBalances()[0].getAssetIssuer(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
     assertEquals(account.getBalances()[0].getBuyingLiabilities(), null);
