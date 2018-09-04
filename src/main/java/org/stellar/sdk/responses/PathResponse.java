@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.KeyPair;
 
 import java.util.ArrayList;
 
@@ -68,8 +67,7 @@ public class PathResponse extends Response {
     if (destinationAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      KeyPair issuer = KeyPair.fromAccountId(destinationAssetIssuer);
-      return Asset.createNonNativeAsset(destinationAssetCode, issuer);
+      return Asset.createNonNativeAsset(destinationAssetCode, destinationAssetIssuer);
     }
   }
 
@@ -77,8 +75,7 @@ public class PathResponse extends Response {
     if (sourceAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      KeyPair issuer = KeyPair.fromAccountId(sourceAssetIssuer);
-      return Asset.createNonNativeAsset(sourceAssetCode, issuer);
+      return Asset.createNonNativeAsset(sourceAssetCode, sourceAssetIssuer);
     }
   }
 

@@ -8,22 +8,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see org.stellar.sdk.Transaction.Builder
  */
 public class Account implements TransactionBuilderAccount {
-  private final KeyPair mKeyPair;
+  private final String mAccountId;
   private Long mSequenceNumber;
 
   /**
    * Class constructor.
-   * @param keypair KeyPair associated with this Account
+   * @param accountId ID associated with this Account
    * @param sequenceNumber Current sequence number of the account (can be obtained using java-stellar-sdk or horizon server)
    */
-  public Account(KeyPair keypair, Long sequenceNumber) {
-    mKeyPair = checkNotNull(keypair, "keypair cannot be null");
+  public Account(String accountId, Long sequenceNumber) {
+    mAccountId = checkNotNull(accountId, "accountId cannot be null");
     mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
   }
 
   @Override
-  public KeyPair getKeypair() {
-    return mKeyPair;
+  public String getAccountId() {
+    return mAccountId;
+  }
+
+  @Override
+  public KeyPair getKeyPair() {
+    return KeyPair.fromAccountId(mAccountId);
   }
 
   @Override

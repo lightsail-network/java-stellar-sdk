@@ -81,9 +81,9 @@ public class OperationTest {
 
     Asset sendAsset = new AssetTypeNative();
     String sendMax = "0.0001";
-    Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer);
+    Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer.getAccountId());
     String destAmount = "0.0001";
-    Asset[] path = {new AssetTypeCreditAlphaNum4("USD", pathIssuer1), new AssetTypeCreditAlphaNum12("TESTTEST", pathIssuer2)};
+    Asset[] path = {new AssetTypeCreditAlphaNum4("USD", pathIssuer1.getAccountId()), new AssetTypeCreditAlphaNum12("TESTTEST", pathIssuer2.getAccountId())};
 
     PathPaymentOperation operation = new PathPaymentOperation.Builder(
         sendAsset, sendMax, destination, destAsset, destAmount)
@@ -118,14 +118,9 @@ public class OperationTest {
     // GCGZLB3X2B3UFOFSHHQ6ZGEPEX7XYPEH6SBFMIV74EUDOFZJA3VNL6X4
     KeyPair issuer = KeyPair.fromSecretSeed("SBOBVZUN6WKVMI6KIL2GHBBEETEV6XKQGILITNH6LO6ZA22DBMSDCPAG");
 
-    // GAVAQKT2M7B4V3NN7RNNXPU5CWNDKC27MYHKLF5UNYXH4FNLFVDXKRSV
-    KeyPair pathIssuer1 = KeyPair.fromSecretSeed("SALDLG5XU5AEJWUOHAJPSC4HJ2IK3Z6BXXP4GWRHFT7P7ILSCFFQ7TC5");
-    // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
-    KeyPair pathIssuer2 = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
-
     Asset sendAsset = new AssetTypeNative();
     String sendMax = "0.0001";
-    Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer);
+    Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer.getAccountId());
     String destAmount = "0.0001";
 
     PathPaymentOperation operation = new PathPaymentOperation.Builder(
@@ -349,7 +344,7 @@ public class OperationTest {
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
     long sequenceNumber = 2908908335136768L;
-    Account account = new Account(source, sequenceNumber);
+    Account account = new Account(source.getAccountId(), sequenceNumber);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .build();
@@ -390,7 +385,7 @@ public class OperationTest {
     KeyPair issuer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
 
     Asset selling = new AssetTypeNative();
-    Asset buying = Asset.createNonNativeAsset("USD", issuer);
+    Asset buying = Asset.createNonNativeAsset("USD", issuer.getAccountId());
     String amount = "0.00001";
     String price = "0.85334384"; // n=5333399 d=6250000
     Price priceObj = Price.fromString(price);
@@ -427,7 +422,7 @@ public class OperationTest {
     KeyPair issuer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
 
     Asset selling = new AssetTypeNative();
-    Asset buying = Asset.createNonNativeAsset("USD", issuer);
+    Asset buying = Asset.createNonNativeAsset("USD", issuer.getAccountId());
     String amount = "0.00001";
     String price = "2.93850088"; // n=36731261 d=12500000
     Price priceObj = Price.fromString(price);

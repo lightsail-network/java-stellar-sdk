@@ -10,13 +10,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class AssetTypeCreditAlphaNum extends Asset {
     protected final String mCode;
-    protected final KeyPair mIssuer;
+    protected final String mIssuer;
 
-    public AssetTypeCreditAlphaNum(String code, KeyPair issuer) {
+    public AssetTypeCreditAlphaNum(String code, String issuer) {
         checkNotNull(code, "code cannot be null");
         checkNotNull(issuer, "issuer cannot be null");
         mCode = new String(code);
-        mIssuer = KeyPair.fromAccountId(issuer.getAccountId());
+        mIssuer = new String(issuer);
     }
 
     /**
@@ -29,13 +29,13 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
     /**
      * Returns asset issuer
      */
-    public KeyPair getIssuer() {
-        return KeyPair.fromAccountId(mIssuer.getAccountId());
+    public String getIssuer() {
+        return new String(mIssuer);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new Object[]{this.getCode(), this.getIssuer().getAccountId()});
+        return Arrays.hashCode(new Object[]{this.getCode(), this.getIssuer()});
     }
 
     @Override
@@ -47,6 +47,6 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
         AssetTypeCreditAlphaNum o = (AssetTypeCreditAlphaNum) object;
 
         return this.getCode().equals(o.getCode()) &&
-                this.getIssuer().getAccountId().equals(o.getIssuer().getAccountId());
+                this.getIssuer().equals(o.getIssuer());
     }
 }

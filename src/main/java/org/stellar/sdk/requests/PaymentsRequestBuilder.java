@@ -9,7 +9,6 @@ import okhttp3.Response;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
@@ -35,9 +34,9 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/payments-for-account.html">Payments for Account</a>
    * @param account Account for which to get payments
    */
-  public PaymentsRequestBuilder forAccount(KeyPair account) {
+  public PaymentsRequestBuilder forAccount(String account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account.getAccountId(), "payments");
+    this.setSegments("accounts", account, "payments");
     return this;
   }
 

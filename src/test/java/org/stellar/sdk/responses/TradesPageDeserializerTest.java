@@ -21,11 +21,11 @@ public class TradesPageDeserializerTest extends TestCase {
         assertEquals(tradesPage.getRecords().get(0).getLedgerCloseTime(), "2015-11-18T03:47:47Z");
         assertEquals(tradesPage.getRecords().get(0).getOfferId(), "9");
         assertEquals(tradesPage.getRecords().get(0).getBaseAsset(), new AssetTypeNative());
-        assertEquals(tradesPage.getRecords().get(0).getCounterAsset(), Asset.createNonNativeAsset("JPY", KeyPair.fromAccountId("GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM")));
+        assertEquals(tradesPage.getRecords().get(0).getCounterAsset(), Asset.createNonNativeAsset("JPY", "GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM"));
         assertEquals(tradesPage.getRecords().get(0).getPrice().getNumerator(), 267);
         assertEquals(tradesPage.getRecords().get(0).getPrice().getDenominator(), 1000);
 
-        assertEquals(tradesPage.getRecords().get(1).getBaseAccount().getAccountId(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
+        assertEquals(tradesPage.getRecords().get(1).getBaseAccount(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     }
 
     String json = "{\n" +

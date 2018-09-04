@@ -9,7 +9,6 @@ import okhttp3.Response;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
@@ -49,8 +48,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @param account Account to fetch
    * @throws IOException
    */
-  public AccountResponse account(KeyPair account) throws IOException {
-    this.setSegments("accounts", account.getAccountId());
+  public AccountResponse account(String account) throws IOException {
+    this.setSegments("accounts", account);
     return this.account(this.buildUri());
   }
 
@@ -96,16 +95,6 @@ public class AccountsRequestBuilder extends RequestBuilder {
       }
     };
     return eventSource;
-  }
-
-  /**
-   * Build and execute request. <strong>Warning!</strong> {@link AccountResponse}s in {@link Page} will contain only <code>keypair</code> field.
-   * @return {@link Page} of {@link AccountResponse}
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
-   */
-  public Page<AccountResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
   }
 
   @Override

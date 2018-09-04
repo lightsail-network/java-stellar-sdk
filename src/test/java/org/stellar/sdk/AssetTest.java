@@ -24,28 +24,28 @@ public class AssetTest {
   public void testAssetTypeCreditAlphaNum4() {
     String code = "USDA";
     KeyPair issuer = KeyPair.random();
-    AssetTypeCreditAlphaNum4 asset = new AssetTypeCreditAlphaNum4(code, issuer);
+    AssetTypeCreditAlphaNum4 asset = new AssetTypeCreditAlphaNum4(code, issuer.getAccountId());
     org.stellar.sdk.xdr.Asset xdr = asset.toXdr();
     AssetTypeCreditAlphaNum4 parsedAsset = (AssetTypeCreditAlphaNum4) Asset.fromXdr(xdr);
     assertEquals(code, asset.getCode());
-    assertEquals(issuer.getAccountId(), parsedAsset.getIssuer().getAccountId());
+    assertEquals(issuer.getAccountId(), parsedAsset.getIssuer());
   }
 
   @Test
   public void testAssetTypeCreditAlphaNum12() {
     String code = "TESTTEST";
     KeyPair issuer = KeyPair.random();
-    AssetTypeCreditAlphaNum12 asset = new AssetTypeCreditAlphaNum12(code, issuer);
+    AssetTypeCreditAlphaNum12 asset = new AssetTypeCreditAlphaNum12(code, issuer.getAccountId());
     org.stellar.sdk.xdr.Asset xdr = asset.toXdr();
     AssetTypeCreditAlphaNum12 parsedAsset = (AssetTypeCreditAlphaNum12) Asset.fromXdr(xdr);
     assertEquals(code, asset.getCode());
-    assertEquals(issuer.getAccountId(), parsedAsset.getIssuer().getAccountId());
+    assertEquals(issuer.getAccountId(), parsedAsset.getIssuer());
   }
 
   @Test
   public void testHashCode() {
-    KeyPair issuer1 = KeyPair.random();
-    KeyPair issuer2 = KeyPair.random();
+    String issuer1 = KeyPair.random().getAccountId();
+    String issuer2 = KeyPair.random().getAccountId();
 
     // Equal
     assertEquals(new AssetTypeNative().hashCode(), new AssetTypeNative().hashCode());
@@ -65,8 +65,8 @@ public class AssetTest {
 
   @Test
   public void testAssetEquals() {
-    KeyPair issuer1 = KeyPair.random();
-    KeyPair issuer2 = KeyPair.random();
+    String issuer1 = KeyPair.random().getAccountId();
+    String issuer2 = KeyPair.random().getAccountId();
 
     assertTrue(new AssetTypeNative().equals(new AssetTypeNative()));
     assertTrue(new AssetTypeCreditAlphaNum4("USD", issuer1).equals(new AssetTypeCreditAlphaNum4("USD", issuer1)));
