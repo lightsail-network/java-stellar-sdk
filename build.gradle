@@ -1,14 +1,11 @@
 buildscript {
   repositories {
-    mavenCentral()
+    jcenter()
   }
   dependencies {
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+    classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
   }
-}
-
-plugins {
-  id "com.github.johnrengelman.shadow" version "2.0.4"
 }
 
 apply plugin: "com.github.johnrengelman.shadow" // provides shading 
