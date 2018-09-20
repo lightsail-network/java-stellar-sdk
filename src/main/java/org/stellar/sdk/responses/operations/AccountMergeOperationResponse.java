@@ -2,8 +2,6 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.sdk.KeyPair;
-
 /**
  * Represents AccountMerge operation response.
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html" target="_blank">Operation documentation</a>
@@ -12,20 +10,20 @@ import org.stellar.sdk.KeyPair;
  */
 public class AccountMergeOperationResponse extends OperationResponse {
   @SerializedName("account")
-  protected final KeyPair account;
+  protected final String account;
   @SerializedName("into")
-  protected final KeyPair into;
+  protected final String into;
 
-  AccountMergeOperationResponse(KeyPair account, KeyPair into) {
+  AccountMergeOperationResponse(String account, String into) {
     this.account = account;
     this.into = into;
   }
 
-  public KeyPair getAccount() {
+  public String getAccount() {
     return account;
   }
 
-  public KeyPair getInto() {
+  public String getInto() {
     return into;
   }
 }

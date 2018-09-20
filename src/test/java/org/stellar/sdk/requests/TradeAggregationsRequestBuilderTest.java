@@ -15,7 +15,7 @@ public class TradeAggregationsRequestBuilderTest {
         Server server = new Server("https://horizon-testnet.stellar.org");
         HttpUrl uri = server.tradeAggregations(
                 new AssetTypeNative(),
-                Asset.createNonNativeAsset("BTC", KeyPair.fromAccountId("GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH")),
+                Asset.createNonNativeAsset("BTC", "GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH"),
                 1512689100000L,
                 1512775500000L,
                 300000L

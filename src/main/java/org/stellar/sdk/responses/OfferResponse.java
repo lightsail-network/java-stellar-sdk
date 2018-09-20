@@ -3,7 +3,6 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.KeyPair;
 
 /**
  * Represents offer response.
@@ -17,7 +16,7 @@ public class OfferResponse extends Response {
   @SerializedName("paging_token")
   private final String pagingToken;
   @SerializedName("seller")
-  private final KeyPair seller;
+  private final String seller;
   @SerializedName("selling")
   private final Asset selling;
   @SerializedName("buying")
@@ -29,7 +28,7 @@ public class OfferResponse extends Response {
   @SerializedName("_links")
   private final Links links;
 
-  OfferResponse(Long id, String pagingToken, KeyPair seller, Asset selling, Asset buying, String amount, String price, Links links) {
+  OfferResponse(Long id, String pagingToken, String seller, Asset selling, Asset buying, String amount, String price, Links links) {
     this.id = id;
     this.pagingToken = pagingToken;
     this.seller = seller;
@@ -48,7 +47,7 @@ public class OfferResponse extends Response {
     return pagingToken;
   }
 
-  public KeyPair getSeller() {
+  public String getSeller() {
     return seller;
   }
 

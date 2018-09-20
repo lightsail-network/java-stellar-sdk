@@ -5,9 +5,14 @@ package org.stellar.sdk;
  */
 public interface TransactionBuilderAccount {
   /**
+   * Returns ID associated with this Account
+   */
+  String getAccountId();
+
+  /**
    * Returns keypair associated with this Account
    */
-  KeyPair getKeypair();
+  KeyPair getKeyPair();
 
   /**
    * Returns current sequence number ot this Account.

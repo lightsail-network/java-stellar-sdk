@@ -22,7 +22,7 @@ public class TransactionsRequestBuilderTest {
   public void testForAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.transactions()
-            .forAccount(KeyPair.fromAccountId("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
+            .forAccount("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
             .limit(200)
             .order(RequestBuilder.Order.DESC)
             .buildUri();

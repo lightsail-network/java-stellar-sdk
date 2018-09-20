@@ -27,7 +27,7 @@ public class TransactionTest {
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
     long sequenceNumber = 2908908335136768L;
-    Account account = new Account(source, sequenceNumber);
+    Account account = new Account(source.getAccountId(), sequenceNumber);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .build();
@@ -38,7 +38,7 @@ public class TransactionTest {
             "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDLki9Oi700N60Lo8gUmEFHbKvYG4QSqXiLIt9T0ru2O5BphVl/jR9tYtHAD+UeDYhgXNgwUxqTEu1WukvEyYcD",
             transaction.toEnvelopeXdrBase64());
 
-    assertEquals(transaction.getSourceAccount(), source);
+    assertEquals(transaction.getSourceAccount().getAccountId(), source.getAccountId());
     assertEquals(transaction.getSequenceNumber(), sequenceNumber+1);
     assertEquals(transaction.getFee(), 100);
 
@@ -61,7 +61,7 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-    Account account = new Account(source, 2908908335136768L);
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .addMemo(Memo.text("Hello world!"))
@@ -91,7 +91,7 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-    Account account = new Account(source, 2908908335136768L);
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .addTimeBounds(new TimeBounds(42, 1337))
@@ -130,7 +130,7 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-    Account account = new Account(source, 2908908335136768L);
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .addTimeBounds(new TimeBounds(42, 0))
@@ -159,7 +159,7 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-    Account account = new Account(source, 2908908335136768L);
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .build();
@@ -178,7 +178,7 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromAccountId("GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB");
     KeyPair destination = KeyPair.fromAccountId("GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2");
 
-    Account account = new Account(source, 0L);
+    Account account = new Account(source.getAccountId(), 0L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "2000").build())
             .build();
@@ -199,7 +199,7 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-    Account account = new Account(source, 2908908335136768L);
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .build();
@@ -217,7 +217,7 @@ public class TransactionTest {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
-    Account account = new Account(source, 2908908335136768L);
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
     try {
       Transaction transaction = new Transaction.Builder(account).build();
       fail();
@@ -234,7 +234,7 @@ public class TransactionTest {
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
     try {
-      Account account = new Account(source, 2908908335136768L);
+      Account account = new Account(source.getAccountId(), 2908908335136768L);
       new Transaction.Builder(account)
               .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
               .addMemo(Memo.none())
