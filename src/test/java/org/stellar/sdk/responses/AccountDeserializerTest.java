@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class AccountDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
@@ -42,6 +44,12 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getSigners()[1].getKey(), "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
     assertEquals(account.getSigners()[1].getWeight(), 1);
     assertEquals(account.getSigners()[1].getType(), "ed25519_public_key");
+
+    assertEquals(account.getData().size(), 2);
+    assertEquals(account.getData().get("entry1"), "dGVzdA==");
+    assertTrue(Arrays.equals(account.getData().getDecoded("entry1"), "test".getBytes()));
+    assertEquals(account.getData().get("entry2"), "dGVzdDI=");
+    assertTrue(Arrays.equals(account.getData().getDecoded("entry2"), "test2".getBytes()));
 
     assertEquals(account.getLinks().getEffects().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/effects{?cursor,limit,order}");
     assertEquals(account.getLinks().getOffers().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/offers{?cursor,limit,order}");
@@ -137,7 +145,11 @@ public class AccountDeserializerTest extends TestCase {
           "      \"weight\": 1,\n" +
           "      \"type\": \"ed25519_public_key\"\n" +
           "    }\n" +
-          "  ]\n" +
+          "  ],\n" +
+          "  \"data\": {\n" +
+          "    \"entry1\": \"dGVzdA==\",\n" +
+          "    \"entry2\": \"dGVzdDI=\"\n" +
+          "  }" +
           "}";
 
   String jsonV9 = "{\n" +

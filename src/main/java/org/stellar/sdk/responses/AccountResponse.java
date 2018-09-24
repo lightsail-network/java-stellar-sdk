@@ -1,10 +1,13 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
+
+import java.util.HashMap;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,6 +38,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private Balance[] balances;
   @SerializedName("signers")
   private Signer[] signers;
+  @SerializedName("data")
+  private Data data;
   @SerializedName("_links")
   private Links links;
 
@@ -97,6 +102,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
   public Signer[] getSigners() {
     return signers;
+  }
+
+  public Data getData() {
+    return data;
   }
 
   /**
@@ -258,6 +267,35 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
   public Links getLinks() {
     return links;
+  }
+
+  /**
+   * Data connected to account.
+   */
+  public static class Data extends HashMap<String,String> {
+    @Override
+    public int size() {
+      return super.size();
+    }
+
+    /**
+     * Gets base64-encoded value for a given key.
+     * @param key Data entry name
+     * @return base64-encoded value
+     */
+    public String get(String key) {
+      return super.get(key);
+    }
+
+    /**
+     * Gets raw value for a given key.
+     * @param key Data entry name
+     * @return raw value
+     */
+    public byte[] getDecoded(String key) {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.decode(this.get(key));
+    }
   }
 
   /**
