@@ -1,9 +1,3 @@
-
-plugins {
-  id "com.github.johnrengelman.shadow" version "2.0.4"
-}
-
-apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'java'
 apply plugin: 'ivy-publish'
 
@@ -50,30 +44,4 @@ dependencies {
     compile 'net.i2p.crypto:eddsa:0.3.0'
     testCompile 'com.squareup.okhttp3:mockwebserver:3.9.1'
     testCompile group: 'junit', name: 'junit', version: '4.11'
-}
-
-jar.enabled = false
-
-assemble.dependsOn(shadowJar);
-
-shadowJar {
-   archiveName 'stellar-sdk.jar'
-   relocate 'com','shadow.com'
-   relocate 'net','shadow.net'
-   relocate 'org.glassfish','shadow.org.glassfish'
-   relocate 'org.mockito','shadow.org.mockito'
-   relocate 'org.aopalliance','shadow.org.aopalliance'
-   relocate 'org.apache','shadow.org.apache'
-   relocate 'org.jvnet','shadow.org.jvnet'
-   relocate 'org.objenesis','shadow.org.objenesis'
-   relocate 'javassist','shadow.javassist'
-   relocate 'javax.validation', 'shadow.javax.validation'
-   relocate 'javax.annotation', 'shadow.javax.annotation'
-   relocate 'javax.inject', 'shadow.javax.inject'
-   relocate 'javax.ws', 'shadow.javax.inject'
-   relocate 'commons-io', 'shadow.commons-io'
-   relocate 'jersey', 'shadow.jersey'
-   relocate 'okhttp3','shadow.okhttp3'
-   relocate 'okio','shadow.okio'
-
 }
