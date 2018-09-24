@@ -2,6 +2,7 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Memo;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,7 +21,7 @@ public class TransactionResponse extends Response {
   @SerializedName("created_at")
   private final String createdAt;
   @SerializedName("source_account")
-  private final String sourceAccount;
+  private final KeyPair sourceAccount;
   @SerializedName("paging_token")
   private final String pagingToken;
   @SerializedName("source_account_sequence")
@@ -42,7 +43,7 @@ public class TransactionResponse extends Response {
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  TransactionResponse(String hash, Long ledger, String createdAt, String sourceAccount, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
+  TransactionResponse(String hash, Long ledger, String createdAt, KeyPair sourceAccount, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
     this.hash = hash;
     this.ledger = ledger;
     this.createdAt = createdAt;
@@ -70,7 +71,7 @@ public class TransactionResponse extends Response {
     return createdAt;
   }
 
-  public String getSourceAccount() {
+  public KeyPair getSourceAccount() {
     return sourceAccount;
   }
 

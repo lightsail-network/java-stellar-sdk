@@ -6,9 +6,18 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.glassfish.jersey.media.sse.EventSource;
+import org.glassfish.jersey.media.sse.InboundEvent;
+import org.glassfish.jersey.media.sse.SseFeature;
+import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
+import org.stellar.sdk.responses.operations.OperationResponse;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,9 +35,9 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/offers-for-account.html">Offers for Account</a>
    * @param account Account for which to get offers
    */
-  public OffersRequestBuilder forAccount(String account) {
+  public OffersRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account, "offers");
+    this.setSegments("accounts", account.getAccountId(), "offers");
     return this;
   }
 

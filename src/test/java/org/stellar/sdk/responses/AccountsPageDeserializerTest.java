@@ -11,9 +11,9 @@ public class AccountsPageDeserializerTest extends TestCase {
   public void testDeserialize() {
     Page<AccountResponse> accountsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<AccountResponse>>() {}.getType());
 
-    assertEquals(accountsPage.getRecords().get(0).getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+    assertEquals(accountsPage.getRecords().get(0).getKeypair().getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(accountsPage.getRecords().get(0).getPagingToken(), "1");
-    assertEquals(accountsPage.getRecords().get(9).getAccountId(), "GACFGMEV7A5H44O3K4EN6GRQ4SA543YJBZTKGNKPEMEQEAJFO4Q7ENG6");
+    assertEquals(accountsPage.getRecords().get(9).getKeypair().getAccountId(), "GACFGMEV7A5H44O3K4EN6GRQ4SA543YJBZTKGNKPEMEQEAJFO4Q7ENG6");
     assertEquals(accountsPage.getLinks().getNext().getHref(), "/accounts?order=asc&limit=10&cursor=86861418598401");
     assertEquals(accountsPage.getLinks().getPrev().getHref(), "/accounts?order=desc&limit=10&cursor=1");
     assertEquals(accountsPage.getLinks().getSelf().getHref(), "/accounts?order=asc&limit=10&cursor=");

@@ -9,6 +9,7 @@ import okhttp3.Response;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
@@ -60,9 +61,9 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-account.html">Transactions for Account</a>
    * @param account Account for which to get transactions
    */
-  public TransactionsRequestBuilder forAccount(String account) {
+  public TransactionsRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account, "transactions");
+    this.setSegments("accounts", account.getAccountId(), "transactions");
     return this;
   }
 

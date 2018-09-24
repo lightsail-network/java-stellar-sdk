@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.KeyPair;
 
 abstract class TrustlineCUDResponse extends EffectResponse {
   @SerializedName("limit")
@@ -30,7 +31,8 @@ abstract class TrustlineCUDResponse extends EffectResponse {
     if (assetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(assetCode, assetIssuer);
+      KeyPair issuer = KeyPair.fromAccountId(assetIssuer);
+      return Asset.createNonNativeAsset(assetCode, issuer);
     }
   }
 }

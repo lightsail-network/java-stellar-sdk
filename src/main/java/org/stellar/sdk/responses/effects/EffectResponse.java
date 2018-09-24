@@ -2,6 +2,7 @@ package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Link;
 import org.stellar.sdk.responses.Response;
 
@@ -15,7 +16,7 @@ public abstract class EffectResponse extends Response {
   @SerializedName("id")
   protected String id;
   @SerializedName("account")
-  protected String account;
+  protected KeyPair account;
   @SerializedName("type")
   protected String type;
   @SerializedName("created_at")
@@ -29,7 +30,7 @@ public abstract class EffectResponse extends Response {
     return id;
   }
 
-  public String getAccount() {
+  public KeyPair getAccount() {
     return account;
   }
 

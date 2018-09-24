@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.KeyPair;
 
 /**
  * Represents PathPayment operation response.
@@ -17,9 +18,9 @@ public class PathPaymentOperationResponse extends OperationResponse {
   @SerializedName("source_max")
   protected final String sourceMax;
   @SerializedName("from")
-  protected final String from;
+  protected final KeyPair from;
   @SerializedName("to")
-  protected final String to;
+  protected final KeyPair to;
 
   @SerializedName("asset_type")
   protected final String assetType;
@@ -35,7 +36,7 @@ public class PathPaymentOperationResponse extends OperationResponse {
   @SerializedName("source_asset_issuer")
   protected final String sourceAssetIssuer;
 
-  public PathPaymentOperationResponse(String amount, String sourceMax, String from, String to, String assetType, String assetCode, String assetIssuer, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer) {
+  public PathPaymentOperationResponse(String amount, String sourceMax, KeyPair from, KeyPair to, String assetType, String assetCode, String assetIssuer, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer) {
     this.amount = amount;
     this.sourceMax = sourceMax;
     this.from = from;
@@ -56,11 +57,11 @@ public class PathPaymentOperationResponse extends OperationResponse {
     return sourceMax;
   }
 
-  public String getFrom() {
+  public KeyPair getFrom() {
     return from;
   }
 
-  public String getTo() {
+  public KeyPair getTo() {
     return to;
   }
 
@@ -68,7 +69,8 @@ public class PathPaymentOperationResponse extends OperationResponse {
     if (assetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(assetCode, assetIssuer);
+      KeyPair issuer = KeyPair.fromAccountId(assetIssuer);
+      return Asset.createNonNativeAsset(assetCode, issuer);
     }
   }
 
@@ -76,7 +78,8 @@ public class PathPaymentOperationResponse extends OperationResponse {
     if (sourceAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(sourceAssetCode, sourceAssetIssuer);
+      KeyPair issuer = KeyPair.fromAccountId(sourceAssetIssuer);
+      return Asset.createNonNativeAsset(sourceAssetCode, issuer);
     }
   }
 }

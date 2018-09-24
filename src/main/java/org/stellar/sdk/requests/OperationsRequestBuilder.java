@@ -9,6 +9,7 @@ import okhttp3.Response;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
@@ -59,9 +60,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/operations-for-account.html">Operations for Account</a>
    * @param account Account for which to get operations
    */
-  public OperationsRequestBuilder forAccount(String account) {
+  public OperationsRequestBuilder forAccount(KeyPair account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account, "operations");
+    this.setSegments("accounts", account.getAccountId(), "operations");
     return this;
   }
 

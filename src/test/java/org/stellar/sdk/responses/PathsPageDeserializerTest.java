@@ -24,25 +24,25 @@ public class PathsPageDeserializerTest {
     assertNull(pathsPage.getNextPage(new OkHttpClient()));
 
     assertEquals(pathsPage.getRecords().get(0).getDestinationAmount(), "20.0000000");
-    Assert.assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN"));
+    Assert.assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
     assertEquals(pathsPage.getRecords().get(0).getPath().size(), 0);
     assertEquals(pathsPage.getRecords().get(0).getSourceAmount(), "30.0000000");
-    assertEquals(pathsPage.getRecords().get(0).getSourceAsset(), Asset.createNonNativeAsset("USD", "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN"));
+    assertEquals(pathsPage.getRecords().get(0).getSourceAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
 
     assertEquals(pathsPage.getRecords().get(1).getDestinationAmount(), "50.0000000");
-    assertEquals(pathsPage.getRecords().get(1).getDestinationAsset(), Asset.createNonNativeAsset("EUR", "GBFMFKDUFYYITWRQXL4775CVUV3A3WGGXNJUAP4KTXNEQ2HG7JRBITGH"));
+    assertEquals(pathsPage.getRecords().get(1).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GBFMFKDUFYYITWRQXL4775CVUV3A3WGGXNJUAP4KTXNEQ2HG7JRBITGH")));
     assertEquals(pathsPage.getRecords().get(1).getPath().size(), 1);
-    assertEquals(pathsPage.getRecords().get(1).getPath().get(0), Asset.createNonNativeAsset("GBP", "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN"));
+    assertEquals(pathsPage.getRecords().get(1).getPath().get(0), Asset.createNonNativeAsset("GBP", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
     assertEquals(pathsPage.getRecords().get(1).getSourceAmount(), "60.0000000");
-    assertEquals(pathsPage.getRecords().get(1).getSourceAsset(), Asset.createNonNativeAsset("USD", "GBRAOXQDNQZRDIOK64HZI4YRDTBFWNUYH3OIHQLY4VEK5AIGMQHCLGXI"));
+    assertEquals(pathsPage.getRecords().get(1).getSourceAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GBRAOXQDNQZRDIOK64HZI4YRDTBFWNUYH3OIHQLY4VEK5AIGMQHCLGXI")));
 
     assertEquals(pathsPage.getRecords().get(2).getDestinationAmount(), "200.0000000");
-    assertEquals(pathsPage.getRecords().get(2).getDestinationAsset(), Asset.createNonNativeAsset("EUR", "GBRCOBK7C7UE72PB5JCPQU3ZI45ZCEM7HKQ3KYV3YD3XB7EBOPBEDN2G"));
+    assertEquals(pathsPage.getRecords().get(2).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GBRCOBK7C7UE72PB5JCPQU3ZI45ZCEM7HKQ3KYV3YD3XB7EBOPBEDN2G")));
     assertEquals(pathsPage.getRecords().get(2).getPath().size(), 2);
-    assertEquals(pathsPage.getRecords().get(2).getPath().get(0), Asset.createNonNativeAsset("GBP", "GAX7B3ZT3EOZW5POAMV4NGPPKCYUOYW2QQDIAF23JAXF72NMGRYPYOPM"));
-    assertEquals(pathsPage.getRecords().get(2).getPath().get(1), Asset.createNonNativeAsset("PLN", "GACWIA2XGDFWWN3WKPX63JTK4S2J5NDPNOIVYMZY6RVTS7LWF2VHZLV3"));
+    assertEquals(pathsPage.getRecords().get(2).getPath().get(0), Asset.createNonNativeAsset("GBP", KeyPair.fromAccountId("GAX7B3ZT3EOZW5POAMV4NGPPKCYUOYW2QQDIAF23JAXF72NMGRYPYOPM")));
+    assertEquals(pathsPage.getRecords().get(2).getPath().get(1), Asset.createNonNativeAsset("PLN", KeyPair.fromAccountId("GACWIA2XGDFWWN3WKPX63JTK4S2J5NDPNOIVYMZY6RVTS7LWF2VHZLV3")));
     assertEquals(pathsPage.getRecords().get(2).getSourceAmount(), "300.0000000");
-    assertEquals(pathsPage.getRecords().get(2).getSourceAsset(), Asset.createNonNativeAsset("USD", "GC7J5IHS3GABSX7AZLRINXWLHFTL3WWXLU4QX2UGSDEAIAQW2Q72U3KH"));
+    assertEquals(pathsPage.getRecords().get(2).getSourceAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GC7J5IHS3GABSX7AZLRINXWLHFTL3WWXLU4QX2UGSDEAIAQW2Q72U3KH")));
   }
 
   String json = "{\n" +

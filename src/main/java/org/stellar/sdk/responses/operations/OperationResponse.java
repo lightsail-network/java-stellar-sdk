@@ -2,6 +2,7 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Link;
 import org.stellar.sdk.responses.Response;
 
@@ -15,7 +16,7 @@ public abstract class OperationResponse extends Response {
   @SerializedName("id")
   protected Long id;
   @SerializedName("source_account")
-  protected String sourceAccount;
+  protected KeyPair sourceAccount;
   @SerializedName("paging_token")
   protected String pagingToken;
   @SerializedName("created_at")
@@ -31,7 +32,7 @@ public abstract class OperationResponse extends Response {
     return id;
   }
 
-  public String getSourceAccount() {
+  public KeyPair getSourceAccount() {
     return sourceAccount;
   }
 

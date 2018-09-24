@@ -2,6 +2,8 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.stellar.sdk.KeyPair;
+
 /**
  * Represents CreateAccount operation response.
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html" target="_blank">Operation documentation</a>
@@ -10,19 +12,19 @@ import com.google.gson.annotations.SerializedName;
  */
 public class CreateAccountOperationResponse extends OperationResponse {
   @SerializedName("account")
-  protected final String account;
+  protected final KeyPair account;
   @SerializedName("funder")
-  protected final String funder;
+  protected final KeyPair funder;
   @SerializedName("starting_balance")
   protected final String startingBalance;
 
-  CreateAccountOperationResponse(String funder, String startingBalance, String account) {
+  CreateAccountOperationResponse(KeyPair funder, String startingBalance, KeyPair account) {
     this.funder = funder;
     this.startingBalance = startingBalance;
     this.account = account;
   }
 
-  public String getAccount() {
+  public KeyPair getAccount() {
     return account;
   }
 
@@ -30,7 +32,7 @@ public class CreateAccountOperationResponse extends OperationResponse {
     return startingBalance;
   }
 
-  public String getFunder() {
+  public KeyPair getFunder() {
     return funder;
   }
 }

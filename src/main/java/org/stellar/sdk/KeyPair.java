@@ -111,12 +111,7 @@ public class KeyPair {
    * @return {@link KeyPair}
    */
   public static KeyPair fromPublicKey(byte[] publicKey) {
-    EdDSAPublicKeySpec publicKeySpec;
-    try {
-      publicKeySpec = new EdDSAPublicKeySpec(publicKey, ed25519);
-    } catch (IllegalArgumentException e) {
-      throw new RuntimeException("Public key is invalid");
-    }
+    EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(publicKey, ed25519);
     return new KeyPair(new EdDSAPublicKey(publicKeySpec));
   }
 

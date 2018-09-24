@@ -12,7 +12,7 @@ public class OrderBookDeserializerTest extends TestCase {
         OrderBookResponse orderBook = GsonSingleton.getInstance().fromJson(json, OrderBookResponse.class);
 
         assertEquals(orderBook.getBase(), new AssetTypeNative());
-        assertEquals(orderBook.getCounter(), Asset.createNonNativeAsset("DEMO", "GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE"));
+        assertEquals(orderBook.getCounter(), Asset.createNonNativeAsset("DEMO", KeyPair.fromAccountId("GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE")));
 
         assertEquals(orderBook.getBids()[0].getAmount(), "31.4007644");
         assertEquals(orderBook.getBids()[0].getPrice(), "0.0024224");

@@ -18,16 +18,16 @@ public class OperationsPageDeserializerTest extends TestCase {
     CreateAccountOperationResponse createAccountOperation = (CreateAccountOperationResponse) operationsPage.getRecords().get(0);
     assertEquals(createAccountOperation.getStartingBalance(), "10000.0");
     assertEquals(createAccountOperation.getPagingToken(), "3717508943056897");
-    assertEquals(createAccountOperation.getAccount(), "GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE");
-    assertEquals(createAccountOperation.getFunder(), "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K");
+    assertEquals(createAccountOperation.getAccount().getAccountId(), "GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE");
+    assertEquals(createAccountOperation.getFunder().getAccountId(), "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K");
     assertEquals(createAccountOperation.getCreatedAt(), "2018-01-22T21:30:53Z");
     assertEquals(createAccountOperation.getTransactionHash(), "dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046");
 
     PaymentOperationResponse paymentOperation = (PaymentOperationResponse) operationsPage.getRecords().get(4);
     assertEquals(paymentOperation.getAmount(), "10.123");
     TestCase.assertEquals(paymentOperation.getAsset(), new AssetTypeNative());
-    assertEquals(paymentOperation.getFrom(), "GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R");
-    assertEquals(paymentOperation.getTo(), "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H");
+    assertEquals(paymentOperation.getFrom().getAccountId(), "GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R");
+    assertEquals(paymentOperation.getTo().getAccountId(), "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H");
   }
 
   String json = "{\n" +

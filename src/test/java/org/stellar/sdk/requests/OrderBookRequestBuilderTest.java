@@ -13,8 +13,8 @@ public class OrderBookRequestBuilderTest {
   public void testOrderBook() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.orderBook()
-            .buyingAsset(Asset.createNonNativeAsset("EUR", "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
-            .sellingAsset(Asset.createNonNativeAsset("USD", "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
+            .buyingAsset(Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W")))
+            .sellingAsset(Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ")))
             .buildUri();
 
     assertEquals(

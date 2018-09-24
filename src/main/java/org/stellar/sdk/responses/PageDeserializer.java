@@ -10,6 +10,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
@@ -39,6 +40,7 @@ class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
     // Create new Gson object with adapters needed in Page
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
+            .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
             .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
             .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())

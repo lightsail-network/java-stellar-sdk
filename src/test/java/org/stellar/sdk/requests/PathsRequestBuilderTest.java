@@ -13,10 +13,10 @@ public class PathsRequestBuilderTest {
   public void testAccounts() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.paths()
-            .destinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
-            .sourceAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN")
+            .destinationAccount(KeyPair.fromAccountId("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF"))
+            .sourceAccount(KeyPair.fromAccountId("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN"))
             .destinationAmount("20.50")
-            .destinationAsset(Asset.createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+            .destinationAsset(Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")))
             .cursor("13537736921089")
             .limit(200)
             .order(RequestBuilder.Order.ASC)

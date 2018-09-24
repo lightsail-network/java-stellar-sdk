@@ -24,6 +24,6 @@ public class AssetDeserializerTest extends TestCase {
         assertEquals(asset.getType(), "credit_alphanum4");
         AssetTypeCreditAlphaNum creditAsset = (AssetTypeCreditAlphaNum) asset;
         assertEquals(creditAsset.getCode(), "CNY");
-        assertEquals(creditAsset.getIssuer(), "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX");
+        assertEquals(creditAsset.getIssuer().getAccountId(), "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX");
     }
 }

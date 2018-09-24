@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.KeyPair;
 
 /**
  * Represents CreatePassiveOffer operation response.
@@ -63,7 +64,8 @@ public class CreatePassiveOfferOperationResponse extends OperationResponse {
     if (buyingAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(buyingAssetCode, buyingAssetIssuer);
+      KeyPair issuer = KeyPair.fromAccountId(buyingAssetIssuer);
+      return Asset.createNonNativeAsset(buyingAssetCode, issuer);
     }
   }
 
@@ -71,7 +73,8 @@ public class CreatePassiveOfferOperationResponse extends OperationResponse {
     if (sellingAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(sellingAssetCode, sellingAssetIssuer);
+      KeyPair issuer = KeyPair.fromAccountId(sellingAssetIssuer);
+      return Asset.createNonNativeAsset(sellingAssetCode, issuer);
     }
   }
 }

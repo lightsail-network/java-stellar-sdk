@@ -1,5 +1,7 @@
 package org.stellar.sdk.responses.effects;
 
+import org.stellar.sdk.KeyPair;
+
 /**
  * Represents trustline_authorized effect response.
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/effect.html" target="_blank">Effect documentation</a>
@@ -7,7 +9,7 @@ package org.stellar.sdk.responses.effects;
  * @see org.stellar.sdk.Server#effects()
  */
 public class TrustlineAuthorizedEffectResponse extends TrustlineAuthorizationResponse {
-  TrustlineAuthorizedEffectResponse(String trustor, String assetType, String assetCode) {
+  TrustlineAuthorizedEffectResponse(KeyPair trustor, String assetType, String assetCode) {
     super(trustor, assetType, assetCode);
   }
 }

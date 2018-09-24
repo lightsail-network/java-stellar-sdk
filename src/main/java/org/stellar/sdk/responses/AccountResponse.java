@@ -15,8 +15,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see org.stellar.sdk.Server#accounts()
  */
 public class AccountResponse extends Response implements org.stellar.sdk.TransactionBuilderAccount {
-  @SerializedName("account_id")
-  private String accountId;
+  @SerializedName("account_id") /* KeyPairTypeAdapter used */
+  private KeyPair keypair;
   @SerializedName("sequence")
   private Long sequenceNumber;
   @SerializedName("paging_token")
@@ -38,23 +38,18 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   @SerializedName("_links")
   private Links links;
 
-  AccountResponse(String accountId) {
-    this.accountId = accountId;
+  AccountResponse(KeyPair keypair) {
+    this.keypair = keypair;
   }
 
-  public AccountResponse(String accountId, Long sequenceNumber) {
-    this.accountId = accountId;
+  public AccountResponse(KeyPair keypair, Long sequenceNumber) {
+    this.keypair = keypair;
     this.sequenceNumber = sequenceNumber;
   }
 
   @Override
-  public String getAccountId() {
-    return accountId;
-  }
-
-  @Override
-  public KeyPair getKeyPair() {
-    return KeyPair.fromAccountId(accountId);
+  public KeyPair getKeypair() {
+    return keypair;
   }
 
   @Override
@@ -202,8 +197,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       return assetCode;
     }
 
-    public String getAssetIssuer() {
-      return assetIssuer;
+    public KeyPair getAssetIssuer() {
+      return KeyPair.fromAccountId(assetIssuer);
     }
 
     public String getBalance() {

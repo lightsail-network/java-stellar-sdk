@@ -8,6 +8,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Memo;
 
 import java.lang.reflect.Type;
@@ -17,6 +18,7 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
   public TransactionResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Transaction
     Gson gson = new GsonBuilder()
+            .registerTypeAdapter(KeyPair.class, new KeyPairTypeAdapter().nullSafe())
             .create();
 
     TransactionResponse transaction = gson.fromJson(json, TransactionResponse.class);

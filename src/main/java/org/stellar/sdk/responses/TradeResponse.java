@@ -2,6 +2,7 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Price;
 ;
 
@@ -26,7 +27,7 @@ public class TradeResponse extends Response {
     protected final boolean baseIsSeller;
 
     @SerializedName("base_account")
-    protected final String baseAccount;
+    protected final KeyPair baseAccount;
     @SerializedName("base_amount")
     protected final String baseAmount;
     @SerializedName("base_asset_type")
@@ -37,7 +38,7 @@ public class TradeResponse extends Response {
     protected final String baseAssetIssuer;
 
     @SerializedName("counter_account")
-    protected final String counterAccount;
+    protected final KeyPair counterAccount;
     @SerializedName("counter_amount")
     protected final String counterAmount;
     @SerializedName("counter_asset_type")
@@ -53,7 +54,7 @@ public class TradeResponse extends Response {
     @SerializedName("_links")
     private TradeResponse.Links links;
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, KeyPair baseAccount, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, KeyPair counterAccount, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
@@ -92,7 +93,7 @@ public class TradeResponse extends Response {
         return baseIsSeller;
     }
 
-    public String getBaseAccount() {
+    public KeyPair getBaseAccount() {
         return baseAccount;
     }
 
@@ -116,7 +117,7 @@ public class TradeResponse extends Response {
         return baseAssetIssuer;
     }
 
-    public String getCounterAccount() {
+    public KeyPair getCounterAccount() {
         return counterAccount;
     }
 

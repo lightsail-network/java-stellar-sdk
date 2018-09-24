@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.KeyPair;
 
 /**
  * Represents Payment operation response.
@@ -21,11 +22,11 @@ public class PaymentOperationResponse extends OperationResponse {
   @SerializedName("asset_issuer")
   protected final String assetIssuer;
   @SerializedName("from")
-  protected final String from;
+  protected final KeyPair from;
   @SerializedName("to")
-  protected final String to;
+  protected final KeyPair to;
 
-  PaymentOperationResponse(String amount, String assetType, String assetCode, String assetIssuer, String from, String to) {
+  PaymentOperationResponse(String amount, String assetType, String assetCode, String assetIssuer, KeyPair from, KeyPair to) {
     this.amount = amount;
     this.assetType = assetType;
     this.assetCode = assetCode;
@@ -42,15 +43,16 @@ public class PaymentOperationResponse extends OperationResponse {
     if (assetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(assetCode, assetIssuer);
+      KeyPair issuer = KeyPair.fromAccountId(assetIssuer);
+      return Asset.createNonNativeAsset(assetCode, issuer);
     }
   }
 
-  public String getFrom() {
+  public KeyPair getFrom() {
     return from;
   }
 
-  public String getTo() {
+  public KeyPair getTo() {
     return to;
   }
 }

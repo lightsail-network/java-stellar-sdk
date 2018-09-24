@@ -31,7 +31,7 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
         if (asset instanceof AssetTypeCreditAlphaNum) {
             AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
             uriBuilder.setQueryParameter("base_asset_code", creditAlphaNumAsset.getCode());
-            uriBuilder.setQueryParameter("base_asset_issuer", creditAlphaNumAsset.getIssuer());
+            uriBuilder.setQueryParameter("base_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
         }
     }
 
@@ -40,7 +40,7 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
         if (asset instanceof AssetTypeCreditAlphaNum) {
             AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
             uriBuilder.setQueryParameter("counter_asset_code", creditAlphaNumAsset.getCode());
-            uriBuilder.setQueryParameter("counter_asset_issuer", creditAlphaNumAsset.getIssuer());
+            uriBuilder.setQueryParameter("counter_asset_issuer", creditAlphaNumAsset.getIssuer().getAccountId());
         }
     }
 

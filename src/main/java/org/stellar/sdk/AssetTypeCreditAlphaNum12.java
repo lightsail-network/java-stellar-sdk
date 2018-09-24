@@ -14,7 +14,7 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
    * @param code Asset code
    * @param issuer Asset issuer
    */
-  public AssetTypeCreditAlphaNum12(String code, String issuer) {
+  public AssetTypeCreditAlphaNum12(String code, KeyPair issuer) {
     super(code, issuer);
     if (code.length() < 5 || code.length() > 12) {
       throw new AssetCodeLengthInvalidException();
@@ -33,7 +33,7 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
     org.stellar.sdk.xdr.Asset.AssetAlphaNum12 credit = new org.stellar.sdk.xdr.Asset.AssetAlphaNum12();
     credit.setAssetCode(Util.paddedByteArray(mCode, 12));
     AccountID accountID = new AccountID();
-    accountID.setAccountID(KeyPair.fromAccountId(mIssuer).getXdrPublicKey());
+    accountID.setAccountID(mIssuer.getXdrPublicKey());
     credit.setIssuer(accountID);
     xdr.setAlphaNum12(credit);
     return xdr;
