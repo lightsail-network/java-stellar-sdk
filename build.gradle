@@ -1,5 +1,18 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+    classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+  }
+}
+
+apply plugin: "com.github.johnrengelman.shadow" // provides shading 
 apply plugin: 'java'
-apply plugin: 'ivy-publish'
+apply plugin: 'maven' // needed to add the install task for jitpack.io
+apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates -Drevision=release
+apply plugin: 'project-report' // gradle htmlDependencyReport
 
 sourceCompatibility = 1.6
 version = '0.3.2'
@@ -15,17 +28,9 @@ jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
-publishing {
-    publications {
-        ivy(IvyPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        ivy {
-            url "$projectDir/repos"
-        }
-    }
+artifacts {
+    // make sure the non shaded jar is not 
+    archives shadowJar
 }
 
 repositories {
@@ -33,15 +38,61 @@ repositories {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.9.1'
-    compile 'com.moandjiezana.toml:toml4j:0.5.1'
-    compile 'org.mockito:mockito-core:2.13.0'
-    compile 'com.google.guava:guava:18.0'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.glassfish.jersey.core:jersey-client:2.22.1'
-    compile 'org.glassfish.jersey.media:jersey-media-sse:2.22.1'
+    compile 'com.squareup.okhttp3:okhttp:3.11.0'
+    compile 'com.moandjiezana.toml:toml4j:0.7.2'
+    // use the android version because we don't want java 8 stuff
+    compile 'com.google.guava:guava:26.0-android'
+    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'commons-io:commons-io:2.6'
+    compile 'org.glassfish.jersey.core:jersey-client:2.27'
+    compile 'org.glassfish.jersey.media:jersey-media-sse:2.27'
     compile 'net.i2p.crypto:eddsa:0.3.0'
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.9.1'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    testCompile 'org.mockito:mockito-core:2.21.0'
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.11.0'
+    testCompile 'junit:junit:4.12'
+}
+
+project.configurations.compile 
+jar.enabled = false
+
+// make sure the install task creates the shadowjar; this is called by jitpack.ios
+install.dependsOn(shadowJar);
+
+// we need this so we can get to the installer and deployer below so we can remove the dependencies
+uploadArchives {
+    repositories {
+        mavenDeployer {
+        }
+    }
+}
+
+def installer = install.repositories.mavenInstaller
+def deployer = uploadArchives.repositories.mavenDeployer
+[installer, deployer]*.pom*.whenConfigured {pom ->
+    // force pom dependencies to be empty because we are shading everything
+    pom.dependencies = []
+}
+
+shadowJar {
+   archiveName 'stellar-sdk.jar' 
+   relocate 'com','shadow.com'
+   relocate 'net','shadow.net'
+   relocate 'org.glassfish','shadow.org.glassfish'
+   relocate 'org.mockito','shadow.org.mockito'
+   relocate 'org.aopalliance','shadow.org.aopalliance'
+   relocate 'org.apache','shadow.org.apache'
+   relocate 'org.jvnet','shadow.org.jvnet'
+   relocate 'org.objenesis','shadow.org.objenesis'
+   relocate 'org.codehaus','shadow.org.codehaus'
+   relocate 'org.checkerframework','shadow.org.checkerframework'
+   relocate 'javassist','shadow.javassist'
+   relocate 'javax.validation', 'shadow.javax.validation'
+   relocate 'javax.annotation', 'shadow.javax.annotation'
+   relocate 'javax.inject', 'shadow.javax.inject'
+   relocate 'javax.ws', 'shadow.javax.inject'
+   relocate 'commons-io', 'shadow.commons-io'
+   relocate 'jersey', 'shadow.jersey'
+   relocate 'okhttp3','shadow.okhttp3'
+   relocate 'okio','shadow.okio'
 }
