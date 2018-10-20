@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.Price;
 
 /**
  * Represents offer response.
@@ -26,10 +27,13 @@ public class OfferResponse extends Response {
   private final String amount;
   @SerializedName("price")
   private final String price;
+  @SerializedName("price_r")
+  private final Price price_r;
   @SerializedName("_links")
   private final Links links;
 
-  OfferResponse(Long id, String pagingToken, KeyPair seller, Asset selling, Asset buying, String amount, String price, Links links) {
+  OfferResponse(Long id, String pagingToken, KeyPair seller, Asset selling, Asset buying,
+      String amount, String price, Price price_r, Links links) {
     this.id = id;
     this.pagingToken = pagingToken;
     this.seller = seller;
@@ -37,6 +41,7 @@ public class OfferResponse extends Response {
     this.buying = buying;
     this.amount = amount;
     this.price = price;
+    this.price_r = price_r;
     this.links = links;
   }
 
@@ -62,6 +67,10 @@ public class OfferResponse extends Response {
 
   public String getAmount() {
     return amount;
+  }
+
+  public Price getPrice_r() {
+    return price_r;
   }
 
   public String getPrice() {

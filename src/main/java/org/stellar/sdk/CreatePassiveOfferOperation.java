@@ -16,9 +16,9 @@ public class CreatePassiveOfferOperation extends Operation {
   private final Asset selling;
   private final Asset buying;
   private final String amount;
-  private final String price;
+  private final Price price;
 
-  private CreatePassiveOfferOperation(Asset selling, Asset buying, String amount, String price) {
+  private CreatePassiveOfferOperation(Asset selling, Asset buying, String amount, Price price) {
     this.selling = checkNotNull(selling, "selling cannot be null");
     this.buying = checkNotNull(buying, "buying cannot be null");
     this.amount = checkNotNull(amount, "amount cannot be null");
@@ -50,6 +50,13 @@ public class CreatePassiveOfferOperation extends Operation {
    * Price of 1 unit of selling in terms of buying.
    */
   public String getPrice() {
+    return new BigDecimal(price.getNumerator()).divide(new BigDecimal(price.getDenominator())).toString();
+  }
+
+  /**
+   * Price of 1 unit of selling in terms of buying.
+   */
+  public Price getPriceObject() {
     return price;
   }
 
@@ -61,8 +68,7 @@ public class CreatePassiveOfferOperation extends Operation {
     Int64 amount = new Int64();
     amount.setInt64(Operation.toXdrAmount(this.amount));
     op.setAmount(amount);
-    Price price = Price.fromString(this.price);
-    op.setPrice(price.toXdr());
+    op.setPrice(this.price.toXdr());
 
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.CREATE_PASSIVE_OFFER);
@@ -80,7 +86,7 @@ public class CreatePassiveOfferOperation extends Operation {
     private final Asset selling;
     private final Asset buying;
     private final String amount;
-    private final String price;
+    private final Price price;
 
     private KeyPair mSourceAccount;
 
@@ -94,7 +100,7 @@ public class CreatePassiveOfferOperation extends Operation {
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
       int n = op.getPrice().getN().getInt32().intValue();
       int d = op.getPrice().getD().getInt32().intValue();
-      price = new BigDecimal(n).divide(new BigDecimal(d)).toString();
+      price = new Price(n,d);
     }
 
     /**
@@ -106,6 +112,21 @@ public class CreatePassiveOfferOperation extends Operation {
      * @throws ArithmeticException when amount has more than 7 decimal places.
      */
     public Builder(Asset selling, Asset buying, String amount, String price) {
+      this.selling = checkNotNull(selling, "selling cannot be null");
+      this.buying = checkNotNull(buying, "buying cannot be null");
+      this.amount = checkNotNull(amount, "amount cannot be null");
+      this.price = Price.fromString(checkNotNull(price, "price cannot be null"));
+    }
+
+    /**
+     * Creates a new CreatePassiveOffer builder.
+     * @param selling The asset being sold in this operation
+     * @param buying The asset being bought in this operation
+     * @param amount Amount of selling being sold.
+     * @param price Price of 1 unit of selling in terms of buying.
+     * @throws ArithmeticException when amount has more than 7 decimal places.
+     */
+    public Builder(Asset selling, Asset buying, String amount, Price price) {
       this.selling = checkNotNull(selling, "selling cannot be null");
       this.buying = checkNotNull(buying, "buying cannot be null");
       this.amount = checkNotNull(amount, "amount cannot be null");

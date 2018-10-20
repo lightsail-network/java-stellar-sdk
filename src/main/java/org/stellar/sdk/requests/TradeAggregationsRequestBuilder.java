@@ -57,4 +57,16 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
     public Page<TradeAggregationResponse> execute() throws IOException, TooManyRequestsException {
         return this.execute(this.httpClient, this.buildUri());
     }
+
+    @Override
+    public TradeAggregationsRequestBuilder limit(int number) {
+         super.limit(number);
+        return this;
+    }
+
+    @Override
+    public TradeAggregationsRequestBuilder order(Order direction) {
+        super.order(direction);
+        return this;
+    }
 }
