@@ -3,6 +3,8 @@ package org.stellar.sdk.responses;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.stellar.sdk.xdr.OperationType;
+import org.stellar.sdk.xdr.TransactionResultCode;
 
 public class SubmitTransactionResponseTest extends TestCase {
   @Test
@@ -26,6 +28,8 @@ public class SubmitTransactionResponseTest extends TestCase {
     assertEquals(submitTransactionResponse.isSuccess(), false);
     assertEquals(submitTransactionResponse.getEnvelopeXdr(), "AAAAAKpmDL6Z4hvZmkTBkYpHftan4ogzTaO4XTB7joLgQnYYAAAAZAAAAAAABeoyAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAA=");
     assertEquals(submitTransactionResponse.getResultXdr(), "AAAAAAAAAAD////4AAAAAA==");
+    assertNull(submitTransactionResponse.getOfferIdFromResult(0));
+    assertNull(submitTransactionResponse.getResult());
     assertEquals(submitTransactionResponse.getExtras().getResultCodes().getTransactionResultCode(), "tx_no_source_account");
   }
 
@@ -53,6 +57,8 @@ public class SubmitTransactionResponseTest extends TestCase {
     assertEquals(submitTransactionResponse.isSuccess(), false);
     assertEquals(submitTransactionResponse.getEnvelopeXdr(), "AAAAAF2O0axA67+p2jMunG6G188kDSHIvqQ13d9l29YCSA/uAAAAZAAvvc0AAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAECSA/uAAAAQFuZVAjftHa+JZes1VxSk8naOfjjAz9V86mY1AZf8Ik6PtTsBpDsCfG57EYsq4jWyZcT+vhXyWsw5evF1ELqMw4=");
     assertEquals(submitTransactionResponse.getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
+    assertNull(submitTransactionResponse.getOfferIdFromResult(0));
+    assertNull(submitTransactionResponse.getResult());
     assertEquals(submitTransactionResponse.getExtras().getResultCodes().getTransactionResultCode(), "tx_failed");
     assertEquals(submitTransactionResponse.getExtras().getResultCodes().getOperationsResultCodes().get(0), "op_no_destination");
   }
@@ -79,6 +85,11 @@ public class SubmitTransactionResponseTest extends TestCase {
     assertEquals(submitTransactionResponse.getEnvelopeXdr(), "AAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAZAAT3TUAAAAwAAAAAAAAAAAAAAABAAAAAAAAAAMAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAAAAAAG/dhGXAAAAQLuStfImg0OeeGAQmvLkJSZ1MPSkCzCYNbGqX5oYNuuOqZ5SmWhEsC7uOD9ha4V7KengiwNlc0oMNqBVo22S7gk=");
     assertEquals(submitTransactionResponse.getResultXdr(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAAAAPEAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAA==");
     assertEquals(submitTransactionResponse.getOfferIdFromResult(0), new Long(241));
+    assertNotNull(submitTransactionResponse.getResult());
+    assertEquals(submitTransactionResponse.getResult().getResult().getDiscriminant(), TransactionResultCode.txSUCCESS);
+    assertEquals(submitTransactionResponse.getResult().getResult().getResults().length, 1);
+    assertEquals(submitTransactionResponse.getResult().getResult().getResults()[0].getTr().getDiscriminant(), OperationType.MANAGE_OFFER);
+    assertNotNull(submitTransactionResponse.getResult().getResult().getResults()[0].getTr().getManageOfferResult());
   }
 
   @Test
