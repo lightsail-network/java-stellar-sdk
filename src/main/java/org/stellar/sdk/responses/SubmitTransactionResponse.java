@@ -30,6 +30,8 @@ public class SubmitTransactionResponse extends Response {
     @SerializedName("extras")
     private final Extras extras;
 
+    private TransactionResult transactionResult;
+
     SubmitTransactionResponse(Extras extras, Long ledger, String hash, String envelopeXdr, String resultXdr) {
         this.extras = extras;
         this.ledger = ledger;
@@ -84,14 +86,9 @@ public class SubmitTransactionResponse extends Response {
             return null;
         }
 
-        BaseEncoding base64Encoding = BaseEncoding.base64();
-        byte[] bytes = base64Encoding.decode(this.getResultXdr());
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-        XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
         TransactionResult result;
-
         try {
-            result = TransactionResult.decode(xdrInputStream);
+            result = getDecodeTransactionResult();
         } catch (IOException e) {
             return null;
         }
@@ -122,10 +119,41 @@ public class SubmitTransactionResponse extends Response {
     }
 
     /**
+     * Helper method that decodes "TransactionResult" from "resultXdr".
+     * This will be <code>null</code> if transaction has failed or error occurred while decoding.
+     */
+    public TransactionResult getResult() {
+        try {
+            return getDecodeTransactionResult();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
      * Additional information returned by a server. This will be <code>null</code> if transaction succeeded.
      */
     public Extras getExtras() {
         return extras;
+    }
+
+    /**
+     * Decoding "TransactionResult" from "resultXdr".
+     */
+    private TransactionResult getDecodeTransactionResult() throws IOException {
+        if(!this.isSuccess()) {
+            return null;
+        }
+
+        if (this.transactionResult == null) {
+            BaseEncoding base64Encoding = BaseEncoding.base64();
+            byte[] bytes = base64Encoding.decode(this.getResultXdr());
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+            XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
+            this.transactionResult = TransactionResult.decode(xdrInputStream);
+        }
+
+        return this.transactionResult;
     }
 
     /**
