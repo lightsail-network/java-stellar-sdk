@@ -85,7 +85,7 @@ public class SubmitTransactionResponse extends Response {
 
         TransactionResult result;
         try {
-            result = getDecodeTransactionResult();
+            result = getDecodedTransactionResult();
         } catch (IOException e) {
             return null;
         }
@@ -106,28 +106,10 @@ public class SubmitTransactionResponse extends Response {
     }
 
     /**
-     * Helper method that decodes "TransactionResult" from "resultXdr".
-     * This will be <code>null</code> if transaction has failed or error occurred while decoding.
-     */
-    public TransactionResult getResult() {
-        try {
-            return getDecodeTransactionResult();
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Additional information returned by a server. This will be <code>null</code> if transaction succeeded.
-     */
-    public Extras getExtras() {
-        return extras;
-    }
-
-    /**
      * Decoding "TransactionResult" from "resultXdr".
+     * This will be <code>null</code> if transaction has failed.
      */
-    private TransactionResult getDecodeTransactionResult() throws IOException {
+    public TransactionResult getDecodedTransactionResult() throws IOException {
         if(!this.isSuccess()) {
             return null;
         }
@@ -141,6 +123,13 @@ public class SubmitTransactionResponse extends Response {
         }
 
         return this.transactionResult;
+    }
+
+    /**
+     * Additional information returned by a server. This will be <code>null</code> if transaction succeeded.
+     */
+    public Extras getExtras() {
+        return extras;
     }
 
     /**
