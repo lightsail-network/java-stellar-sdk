@@ -61,7 +61,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
   public EventSource streamAccounts(final EventListener<OrderBookResponse> listener) {
-    return SSEUtils.stream(httpClient,this.uriBuilder.build(),OrderBookResponse.class,listener);
+    return SSEUtils.stream(httpClient,this,OrderBookResponse.class,listener);
   }
 
   public OrderBookResponse execute() throws IOException, TooManyRequestsException {

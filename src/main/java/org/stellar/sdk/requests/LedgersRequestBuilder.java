@@ -74,7 +74,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    */
 
   public EventSource streamAccounts(final EventListener<LedgerResponse> listener) {
-    return SSEUtils.stream(httpClient,this.uriBuilder.build(),LedgerResponse.class,listener);
+    return SSEUtils.stream(httpClient,this,LedgerResponse.class,listener);
   }
 
   /**

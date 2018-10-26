@@ -10,26 +10,49 @@ import okhttp3.sse.EventSourceListener;
 import org.stellar.sdk.responses.GsonSingleton;
 
 import javax.annotation.Nullable;
+import java.net.URI;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SSEUtils {
-  public static <T> okhttp3.sse.EventSource stream(OkHttpClient okHttpClient, HttpUrl httpUrl, final Class<T> clazz, final EventListener<T> listener) {
-    Request request = new Request.Builder().url(httpUrl).build();
+  public static <T extends org.stellar.sdk.responses.Response> EventSource stream(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> clazz, final EventListener<T> listener) {
+    String url = requestBuilder.buildUri().toString();
+    Request request = new Request.Builder()
+            .url(url)
+            .header("Accept","text/event-stream")
+            .build();
 
+
+    return streamInternal(okHttpClient, requestBuilder, clazz, listener, url);
+  }
+
+  private static <T extends org.stellar.sdk.responses.Response> EventSource streamInternal(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> clazz, final EventListener<T> listener, String url) {
+
+    Request request = new Request.Builder()
+            .url(url)
+            .header("Accept","text/event-stream")
+            .build();
     RealEventSource eventSource = new RealEventSource(request, new EventSourceListener() {
+      private String cursor = null;
+
       @Override
       public void onClosed(EventSource eventSource) {
-        System.err.println("closed");
+        if(cursor!= null) {
+          requestBuilder.cursor(cursor);
+          streamInternal(okHttpClient,requestBuilder,clazz,listener,requestBuilder.uriBuilder.build().toString());
+        }
       }
 
       @Override
       public void onOpen(EventSource eventSource, Response response) {
-        System.err.println("opened with " + response.code());
       }
 
       @Override
       public void onFailure(EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
-        t.printStackTrace();
-        System.err.println("failed with " + response.code());
+        this.cursor = null;
+        if(t!=null)
+          throw new IllegalStateException("Failed " + response.code(),t);
+        else
+          throw new IllegalStateException("Failed " + response.code());
       }
 
       @Override
@@ -37,7 +60,9 @@ public class SSEUtils {
         if (data.equals("\"hello\"")) {
           return;
         }
-        listener.onEvent(GsonSingleton.getInstance().fromJson(data, clazz));
+        T event = GsonSingleton.getInstance().fromJson(data, clazz);
+        this.cursor = event.getPagingToken();
+        listener.onEvent(event);
       }
     });
 

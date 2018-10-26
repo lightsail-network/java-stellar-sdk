@@ -74,7 +74,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
   public EventSource streamAccounts(final EventListener<AccountResponse> listener) {
-    return SSEUtils.stream(httpClient,this.uriBuilder.build(),AccountResponse.class,listener);
+
+    return SSEUtils.stream(httpClient,this,AccountResponse.class,listener);
   }
 
   /**

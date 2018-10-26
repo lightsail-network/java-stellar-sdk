@@ -92,7 +92,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
   public EventSource streamAccounts(final EventListener<EffectResponse> listener) {
-    return SSEUtils.stream(httpClient,this.uriBuilder.build(),EffectResponse.class,listener);
+    return SSEUtils.stream(httpClient,this,EffectResponse.class,listener);
   }
 
   /**

@@ -108,7 +108,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
   public EventSource streamAccounts(final EventListener<OperationResponse> listener) {
-    return SSEUtils.stream(httpClient,this.uriBuilder.build(),OperationResponse.class,listener);
+    return SSEUtils.stream(httpClient,this,OperationResponse.class,listener);
   }
 
   /**

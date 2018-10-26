@@ -13,7 +13,7 @@ public class StreamingSmokeTest {
     Server server = new Server("https://horizon-testnet.stellar.org/");
     Network.useTestNetwork();
 
-    EventSource eventSource = server.payments().limit(1000).streamAccounts(new EventListener<OperationResponse>() {
+    EventSource eventSource = server.payments().limit(200).streamAccounts(new EventListener<OperationResponse>() {
       @Override
       public void onEvent(OperationResponse or) {
         System.err.println(or.getTransactionHash());
@@ -21,7 +21,7 @@ public class StreamingSmokeTest {
     });
 
     try {
-      Thread.sleep(10000);
+      Thread.sleep(5000);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }

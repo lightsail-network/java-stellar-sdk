@@ -97,7 +97,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
   public EventSource streamAccounts(final EventListener<TransactionResponse> listener) {
-    return SSEUtils.stream(httpClient,this.uriBuilder.build(),TransactionResponse.class,listener);
+    return SSEUtils.stream(httpClient,this,TransactionResponse.class,listener);
   }
 
   /**
