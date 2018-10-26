@@ -22,6 +22,7 @@ public class SSEManager<T extends org.stellar.sdk.responses.Response> implements
   private final AtomicBoolean serverSideClosed = new AtomicBoolean(true); // make sure we start correctly
 
   private ExecutorService executorService;
+  private EventSource eventSource = null;
 
   SSEManager(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> clazz, final EventListener<T> listener) {
     this.okHttpClient = okHttpClient;
@@ -34,21 +35,21 @@ public class SSEManager<T extends org.stellar.sdk.responses.Response> implements
   }
 
   public void start() {
-    if(isStopped.get()) {
+    if (isStopped.get()) {
       throw new IllegalStateException("Already stopped");
     }
     executorService.submit(new Runnable() {
       @Override
       public void run() {
-        while(!isStopped.get()) {
+        while (!isStopped.get()) {
           try {
             Thread.sleep(200);
-            if(serverSideClosed.get() && !isStopped.get()) {
+            if (serverSideClosed.get() && !isStopped.get()) {
               serverSideClosed.set(false); // don't restart until true again
               restart();
             }
           } catch (InterruptedException e) {
-            throw new IllegalStateException("interrupted",e);
+            throw new IllegalStateException("interrupted", e);
           }
         }
       }
@@ -57,7 +58,7 @@ public class SSEManager<T extends org.stellar.sdk.responses.Response> implements
   }
 
   private void restart() {
-    SSEUtils.streamInternal(okHttpClient, requestBuilder, clazz, listener, requestBuilder.uriBuilder.build().toString(), new CloseListener() {
+    eventSource = SSEUtils.streamInternal(okHttpClient, requestBuilder, clazz, listener, requestBuilder.uriBuilder.build().toString(), new CloseListener() {
       @Override
       public void closed(EventSource source) {
         serverSideClosed.set(true
@@ -68,9 +69,12 @@ public class SSEManager<T extends org.stellar.sdk.responses.Response> implements
 
   public void stop() {
     isStopped.set(true);
+    if (eventSource != null) {
+      eventSource.cancel();
+    }
   }
 
-  public void close()  {
+  public void close() {
     stop();
     executorService.shutdownNow();
   }

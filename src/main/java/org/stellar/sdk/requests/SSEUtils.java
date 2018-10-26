@@ -39,10 +39,15 @@ public class SSEUtils {
 
       @Override
       public void onFailure(EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
-        if(t!=null)
-          throw new IllegalStateException("Failed " + response.code(),t);
-        else
-          throw new IllegalStateException("Failed " + response.code());
+        int code = -1;
+        if(response != null) {
+          code = response.code();
+        }
+        if(t!=null) {
+          throw new IllegalStateException("Failed " + code, t);
+        } else {
+          throw new IllegalStateException("Failed " + code);
+        }
       }
 
       @Override
