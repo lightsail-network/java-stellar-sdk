@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.stellar.sdk.requests.EventListener;
 import org.stellar.sdk.requests.SSEManager;
 import org.stellar.sdk.responses.operations.OperationResponse;
-import sun.jvm.hotspot.utilities.Assert;
+import org.junit.Assert;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,14 +34,14 @@ public class StreamingSmokeTest {
         }
         manager.stop();
       int eventCount = events.get();
-      Assert.that(eventCount >0,"events should have been received");
+      Assert.assertTrue(eventCount >0);
 
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-      Assert.that(events.get() == eventCount, "no more events should have arrived after stopping");
+      Assert.assertTrue(events.get() == eventCount);
 
     } finally {
       if(manager != null) {
