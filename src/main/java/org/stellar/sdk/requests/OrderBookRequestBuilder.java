@@ -5,7 +5,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.sse.EventSource;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.OrderBookResponse;
@@ -60,7 +59,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    * @param listener {@link OrderBookResponse} implementation with {@link OrderBookResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource streamAccounts(final EventListener<OrderBookResponse> listener) {
+  public SSEManager<OrderBookResponse> streamAccounts(final EventListener<OrderBookResponse> listener) {
     return SSEUtils.stream(httpClient,this,OrderBookResponse.class,listener);
   }
 

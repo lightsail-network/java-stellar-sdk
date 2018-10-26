@@ -5,7 +5,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.sse.EventSource;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
@@ -73,7 +72,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link AccountResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource streamAccounts(final EventListener<AccountResponse> listener) {
+  public SSEManager<AccountResponse> streamAccounts(final EventListener<AccountResponse> listener) {
 
     return SSEUtils.stream(httpClient,this,AccountResponse.class,listener);
   }

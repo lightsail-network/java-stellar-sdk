@@ -5,7 +5,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.sse.EventSource;
 import org.stellar.sdk.responses.LedgerResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -73,7 +72,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
 
-  public EventSource streamAccounts(final EventListener<LedgerResponse> listener) {
+  public SSEManager<LedgerResponse> streamAccounts(final EventListener<LedgerResponse> listener) {
     return SSEUtils.stream(httpClient,this,LedgerResponse.class,listener);
   }
 

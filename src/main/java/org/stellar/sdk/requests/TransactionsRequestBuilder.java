@@ -5,7 +5,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.sse.EventSource;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
@@ -96,7 +95,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link TransactionResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource streamAccounts(final EventListener<TransactionResponse> listener) {
+  public SSEManager<TransactionResponse> streamAccounts(final EventListener<TransactionResponse> listener) {
     return SSEUtils.stream(httpClient,this,TransactionResponse.class,listener);
   }
 

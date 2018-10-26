@@ -1,6 +1,5 @@
 package org.stellar.sdk.requests;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -10,35 +9,27 @@ import okhttp3.sse.EventSourceListener;
 import org.stellar.sdk.responses.GsonSingleton;
 
 import javax.annotation.Nullable;
-import java.net.URI;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 
 public class SSEUtils {
-  public static <T extends org.stellar.sdk.responses.Response> EventSource stream(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> clazz, final EventListener<T> listener) {
-    String url = requestBuilder.buildUri().toString();
-    Request request = new Request.Builder()
-            .url(url)
-            .header("Accept","text/event-stream")
-            .build();
-
-
-    return streamInternal(okHttpClient, requestBuilder, clazz, listener, url);
+  public static <T extends org.stellar.sdk.responses.Response> SSEManager<T> stream(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> clazz, final EventListener<T> listener) {
+    SSEManager<T> sseManager = new SSEManager<T>(okHttpClient, requestBuilder, clazz, listener);
+    sseManager.start();
+    return sseManager;
   }
 
-  private static <T extends org.stellar.sdk.responses.Response> EventSource streamInternal(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> clazz, final EventListener<T> listener, String url) {
+  static <T extends org.stellar.sdk.responses.Response> EventSource streamInternal(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> clazz, final EventListener<T> listener, String url, final CloseListener closeListener ) {
 
     Request request = new Request.Builder()
             .url(url)
             .header("Accept","text/event-stream")
             .build();
     RealEventSource eventSource = new RealEventSource(request, new EventSourceListener() {
-      private String cursor = null;
 
       @Override
       public void onClosed(EventSource eventSource) {
-        if(cursor!= null) {
-          requestBuilder.cursor(cursor);
-          streamInternal(okHttpClient,requestBuilder,clazz,listener,requestBuilder.uriBuilder.build().toString());
+        if(closeListener!=null) {
+          closeListener.closed(eventSource);
         }
       }
 
@@ -48,7 +39,6 @@ public class SSEUtils {
 
       @Override
       public void onFailure(EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
-        this.cursor = null;
         if(t!=null)
           throw new IllegalStateException("Failed " + response.code(),t);
         else
@@ -61,7 +51,7 @@ public class SSEUtils {
           return;
         }
         T event = GsonSingleton.getInstance().fromJson(data, clazz);
-        this.cursor = event.getPagingToken();
+        requestBuilder.cursor(event.getPagingToken());
         listener.onEvent(event);
       }
     });
