@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.stellar.sdk.requests.EventListener;
 import org.stellar.sdk.requests.SSEManager;
-import org.stellar.sdk.responses.operations.OperationResponse;
-import org.junit.Assert;
+import org.stellar.sdk.responses.TradeResponse;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,18 +17,17 @@ public class StreamingSmokeTest {
     final AtomicInteger events = new AtomicInteger();
     Server server = new Server("https://horizon-testnet.stellar.org/");
     Network.useTestNetwork();
-    SSEManager<OperationResponse> manager = null;
+    SSEManager<TradeResponse> manager = null;
     try {
-        manager = server.payments().limit(100).streamAccounts(new EventListener<OperationResponse>() {
+        manager = server.trades().limit(100).stream(new EventListener<TradeResponse>() {
           @Override
-          public void onEvent(OperationResponse or) {
-//            System.err.println(or.getTransactionHash());
+          public void onEvent(TradeResponse r) {
             events.incrementAndGet();
           }
         });
 
         try {
-          Thread.sleep(5000);
+          Thread.sleep(30000);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }

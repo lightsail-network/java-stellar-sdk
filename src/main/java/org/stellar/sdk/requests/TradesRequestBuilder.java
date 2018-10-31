@@ -75,6 +75,18 @@ public class TradesRequestBuilder extends RequestBuilder {
         return this;
     }
 
+    @Override
+    public TradesRequestBuilder cursor(String token) {
+        super.cursor(token);
+        return this;
+    }
+
+    @Override
+    public TradesRequestBuilder limit(int number) {
+        super.limit(number);
+        return this;
+    }
+
     /**
      * Allows to stream SSE events from horizon.
      * Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
