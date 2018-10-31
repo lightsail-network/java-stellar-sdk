@@ -9,6 +9,7 @@ import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
 import org.stellar.sdk.responses.TransactionResponse;
@@ -72,5 +73,19 @@ public class TradesRequestBuilder extends RequestBuilder {
     public TradesRequestBuilder offerId(String offerId) {
         uriBuilder.setQueryParameter("offer_id", offerId);
         return this;
+    }
+
+    /**
+     * Allows to stream SSE events from horizon.
+     * Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
+     * This mode will keep the connection to horizon open and horizon will continue to return
+     * responses as ledgers close.
+     * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
+     * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+     * @param listener {@link EventListener} implementation with {@link TradeResponse} type
+     * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
+     */
+    public SSEManager<TradeResponse> stream(final EventListener<TradeResponse> listener) {
+        return SSEUtils.stream(httpClient,this,TradeResponse.class,listener);
     }
 }
