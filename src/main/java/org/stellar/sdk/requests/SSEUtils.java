@@ -9,6 +9,7 @@ import okhttp3.sse.EventSourceListener;
 import org.stellar.sdk.responses.GsonSingleton;
 
 import javax.annotation.Nullable;
+import java.net.SocketException;
 
 
 public class SSEUtils {
@@ -44,7 +45,11 @@ public class SSEUtils {
           code = response.code();
         }
         if(t!=null) {
-          throw new IllegalStateException("Failed " + code, t);
+          if(t instanceof SocketException) {
+            // not a failure, server disconnected
+          } else {
+            throw new IllegalStateException("Failed " + code, t);
+          }
         } else {
           throw new IllegalStateException("Failed " + code);
         }
