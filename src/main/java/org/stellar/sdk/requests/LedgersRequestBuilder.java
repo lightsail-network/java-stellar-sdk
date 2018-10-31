@@ -72,7 +72,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
 
-  public SSEManager<LedgerResponse> streamAccounts(final EventListener<LedgerResponse> listener) {
+  public SSEManager<LedgerResponse> stream(final EventListener<LedgerResponse> listener) {
     return SSEUtils.stream(httpClient,this,LedgerResponse.class,listener);
   }
 

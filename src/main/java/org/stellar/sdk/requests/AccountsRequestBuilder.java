@@ -72,7 +72,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link AccountResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public SSEManager<AccountResponse> streamAccounts(final EventListener<AccountResponse> listener) {
+  public SSEManager<AccountResponse> stream(final EventListener<AccountResponse> listener) {
 
     return SSEUtils.stream(httpClient,this,AccountResponse.class,listener);
   }

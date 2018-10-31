@@ -80,7 +80,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link OperationResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public SSEManager<OperationResponse> streamAccounts(final EventListener<OperationResponse> listener) {
+  public SSEManager<OperationResponse> stream(final EventListener<OperationResponse> listener) {
     return SSEUtils.stream(httpClient,this,OperationResponse.class,listener);
   }
 

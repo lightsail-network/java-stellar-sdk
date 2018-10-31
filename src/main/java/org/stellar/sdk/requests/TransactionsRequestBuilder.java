@@ -95,7 +95,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link TransactionResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public SSEManager<TransactionResponse> streamAccounts(final EventListener<TransactionResponse> listener) {
+  public SSEManager<TransactionResponse> stream(final EventListener<TransactionResponse> listener) {
     return SSEUtils.stream(httpClient,this,TransactionResponse.class,listener);
   }
 
