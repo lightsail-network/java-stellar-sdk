@@ -352,6 +352,7 @@ public class OperationTest {
     Account account = new Account(source, sequenceNumber);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
 
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF

@@ -135,7 +135,8 @@ public class ServerTest {
         Account account = new Account(source, 2908908335136768L);
         Transaction.Builder builder = new Transaction.Builder(account)
                 .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
-                .addMemo(Memo.text("Hello world!"));
+                .addMemo(Memo.text("Hello world!"))
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE);
 
         assertEquals(1, builder.getOperationsCount());
         Transaction transaction = builder.build();

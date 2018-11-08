@@ -261,6 +261,9 @@ public class Transaction {
     private Memo mMemo;
     private TimeBounds mTimeBounds;
     List<Operation> mOperations;
+    private boolean timeoutSet;
+
+    public static final long TIMEOUT_INFINITE = 0;
 
     /**
      * Construct a new transaction builder.
@@ -321,9 +324,48 @@ public class Transaction {
     }
 
     /**
+     * Because of the distributed nature of the Stellar network it is possible that the status of your transaction
+     * will be determined after a long time if the network is highly congested.
+     * If you want to be sure to receive the status of the transaction within a given period you should set the
+     * {@link TimeBounds} with <code>maxTime</code> on the transaction (this is what <code>setTimeout</code> does
+     * internally; if there's <code>minTime</code> set but no <code>maxTime</code> it will be added).
+     * Call to <code>Builder.setTimeout</code> is required if Transaction does not have <code>max_time</code> set.
+     * If you don't want to set timeout, use <code>TIMEOUT_INFINITE</code>. In general you should set
+     * <code>TIMEOUT_INFINITE</code> only in smart contracts.
+     * Please note that Horizon may still return <code>504 Gateway Timeout</code> error, even for short timeouts.
+     * In such case you need to resubmit the same transaction again without making any changes to receive a status.
+     * This method is using the machine system time (UTC), make sure it is set correctly.
+     * @param timeout Timeout in seconds.
+     * @see TimeBounds
+     * @return
+     */
+    public Builder setTimeout(long timeout) {
+      if (mTimeBounds != null && mTimeBounds.getMaxTime() > 0) {
+        throw new RuntimeException("TimeBounds.max_time has been already set - setting timeout would overwrite it.");
+      }
+
+      timeoutSet = true;
+      if (timeout > 0) {
+        long timeoutTimestamp = System.currentTimeMillis() / 1000L + timeout;
+        if (mTimeBounds == null) {
+          mTimeBounds = new TimeBounds(0, timeoutTimestamp);
+        } else {
+          mTimeBounds = new TimeBounds(mTimeBounds.getMinTime(), timeoutTimestamp);
+        }
+      }
+
+      return this;
+    }
+
+    /**
      * Builds a transaction. It will increment sequence number of the source account.
      */
     public Transaction build() {
+      // Ensure setTimeout called or maxTime is set
+      if ((mTimeBounds == null || mTimeBounds != null && mTimeBounds.getMaxTime() == 0) && !timeoutSet) {
+        throw new RuntimeException("TimeBounds has to be set or you must call setTimeout(TIMEOUT_INFINITE).");
+      }
+
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
       Transaction transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * BASE_FEE, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);

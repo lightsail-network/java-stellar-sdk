@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class TransactionTest {
 
@@ -30,6 +28,7 @@ public class TransactionTest {
     Account account = new Account(source, sequenceNumber);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
 
     transaction.sign(source);
@@ -65,6 +64,7 @@ public class TransactionTest {
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .addMemo(Memo.text("Hello world!"))
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
 
     transaction.sign(source);
@@ -125,6 +125,66 @@ public class TransactionTest {
   }
 
   @Test
+  public void testBuilderTimeoutNotCalled() throws IOException {
+    Account account = new Account(KeyPair.random(), 2908908335136768L);
+    try {
+      new Transaction.Builder(account)
+              .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+              .addTimeBounds(new TimeBounds(42, 1337))
+              .addMemo(Memo.hash("abcdef"))
+              .build();
+    } catch (RuntimeException exception) {
+      // Should not throw as max_time is set
+      fail();
+    }
+  }
+
+  @Test
+  public void testBuilderTimeoutSetsTimeBounds() throws IOException {
+    Account account = new Account(KeyPair.random(), 2908908335136768L);
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+            .setTimeout(10)
+            .build();
+
+    assertNotNull(transaction.getTimeBounds());
+    assertEquals(0, transaction.getTimeBounds().getMinTime());
+    long currentUnix = System.currentTimeMillis() / 1000L;
+    assertEquals(currentUnix + 10, transaction.getTimeBounds().getMaxTime());
+  }
+
+  @Test
+  public void testBuilderFailsWhenSettingTimeoutAndMaxTimeAlreadySet() throws IOException {
+    Account account = new Account(KeyPair.random(), 2908908335136768L);
+    try {
+      new Transaction.Builder(account)
+              .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+              .addTimeBounds(new TimeBounds(42, 1337))
+              .setTimeout(10)
+              .build();
+      fail();
+    } catch (RuntimeException exception) {
+      assertTrue(exception.getMessage().contains("TimeBounds.max_time has been already set"));
+      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
+    }
+  }
+
+  @Test
+  public void testBuilderFailsWhenSettingTimeoutAndMaxTimeNotSet() throws IOException {
+    Account account = new Account(KeyPair.random(), 2908908335136768L);
+    Transaction transaction = new Transaction.Builder(account)
+              .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+              .addTimeBounds(new TimeBounds(42, 0))
+              .setTimeout(10)
+              .build();
+
+    assertEquals(42, transaction.getTimeBounds().getMinTime());
+    // Should add max_time
+    long currentUnix = System.currentTimeMillis() / 1000L;
+    assertEquals(currentUnix + 10, transaction.getTimeBounds().getMaxTime());
+  }
+
+  @Test
   public void testBuilderTimeBoundsNoMaxTime() throws FormatException, IOException {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -134,6 +194,7 @@ public class TransactionTest {
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .addTimeBounds(new TimeBounds(42, 0))
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .addMemo(Memo.hash("abcdef"))
             .build();
 
@@ -162,6 +223,7 @@ public class TransactionTest {
     Account account = new Account(source, 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
 
     transaction.sign(source);
@@ -181,6 +243,7 @@ public class TransactionTest {
     Account account = new Account(source, 0L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new PaymentOperation.Builder(destination, new AssetTypeNative(), "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
 
     byte[] preimage = new byte[64];
@@ -202,6 +265,7 @@ public class TransactionTest {
     Account account = new Account(source, 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
 
     try {
@@ -219,7 +283,7 @@ public class TransactionTest {
 
     Account account = new Account(source, 2908908335136768L);
     try {
-      Transaction transaction = new Transaction.Builder(account).build();
+      Transaction transaction = new Transaction.Builder(account).setTimeout(Transaction.Builder.TIMEOUT_INFINITE).build();
       fail();
     } catch (RuntimeException exception) {
       assertTrue(exception.getMessage().contains("At least one operation required"));
