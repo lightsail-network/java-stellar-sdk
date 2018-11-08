@@ -115,6 +115,13 @@ public class Server {
     }
 
     /**
+     * Returns {@link OperationFeeStatsResponse} instance.
+     */
+    public OperationFeeStatsRequestBuilder operationFeeStats() {
+        return new OperationFeeStatsRequestBuilder(httpClient, serverURI);
+    }
+
+    /**
      * Returns {@link OrderBookRequestBuilder} instance.
      */
     public OrderBookRequestBuilder orderBook() {
@@ -131,8 +138,8 @@ public class Server {
     /**
      * Returns {@link TradeAggregationsRequestBuilder} instance.
      */
-    public TradeAggregationsRequestBuilder tradeAggregations(Asset baseAsset, Asset counterAsset, long startTime, long endTime, long resolution) {
-        return new TradeAggregationsRequestBuilder(httpClient, serverURI, baseAsset, counterAsset, startTime, endTime, resolution);
+    public TradeAggregationsRequestBuilder tradeAggregations(Asset baseAsset, Asset counterAsset, long startTime, long endTime, long resolution, long offset) {
+        return new TradeAggregationsRequestBuilder(httpClient, serverURI, baseAsset, counterAsset, startTime, endTime, resolution, offset);
     }
 
     /**

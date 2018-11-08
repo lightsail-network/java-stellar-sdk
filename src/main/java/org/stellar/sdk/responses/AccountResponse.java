@@ -146,10 +146,13 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private final boolean authRequired;
     @SerializedName("auth_revocable")
     private final boolean authRevocable;
+    @SerializedName("auth_immutable")
+    private final boolean authImmutable;
 
-    Flags(boolean authRequired, boolean authRevocable) {
+    Flags(boolean authRequired, boolean authRevocable, boolean authImmutable) {
       this.authRequired = authRequired;
       this.authRevocable = authRevocable;
+      this.authImmutable = authImmutable;
     }
 
     public boolean getAuthRequired() {
@@ -158,6 +161,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
     public boolean getAuthRevocable() {
       return authRevocable;
+    }
+
+    public boolean getAuthImmutable() {
+      return authImmutable;
     }
   }
 
