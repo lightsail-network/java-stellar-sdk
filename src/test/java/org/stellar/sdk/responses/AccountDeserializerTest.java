@@ -23,6 +23,7 @@ public class AccountDeserializerTest extends TestCase {
 
     assertEquals(account.getFlags().getAuthRequired(), false);
     assertEquals(account.getFlags().getAuthRevocable(), true);
+    assertEquals(account.getFlags().getAuthImmutable(), true);
 
     assertEquals(account.getBalances()[0].getAssetType(), "credit_alphanum4");
     assertEquals(account.getBalances()[0].getAssetCode(), "ABC");
@@ -113,7 +114,8 @@ public class AccountDeserializerTest extends TestCase {
           "  },\n" +
           "  \"flags\": {\n" +
           "    \"auth_required\": false,\n" +
-          "    \"auth_revocable\": true\n" +
+          "    \"auth_revocable\": true,\n" +
+          "    \"auth_immutable\": true\n" +
           "  },\n" +
           "  \"balances\": [\n" +
           "    {\n" +

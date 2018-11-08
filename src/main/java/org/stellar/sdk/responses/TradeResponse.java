@@ -28,6 +28,8 @@ public class TradeResponse extends Response {
 
     @SerializedName("base_account")
     protected final KeyPair baseAccount;
+    @SerializedName("base_offer_id")
+    private final String baseOfferId;
     @SerializedName("base_amount")
     protected final String baseAmount;
     @SerializedName("base_asset_type")
@@ -39,6 +41,8 @@ public class TradeResponse extends Response {
 
     @SerializedName("counter_account")
     protected final KeyPair counterAccount;
+    @SerializedName("counter_offer_id")
+    private final String counterOfferId;
     @SerializedName("counter_amount")
     protected final String counterAmount;
     @SerializedName("counter_asset_type")
@@ -54,18 +58,20 @@ public class TradeResponse extends Response {
     @SerializedName("_links")
     private TradeResponse.Links links;
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, KeyPair baseAccount, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, KeyPair counterAccount, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, KeyPair baseAccount, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, KeyPair counterAccount, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
         this.offerId = offerId;
         this.baseIsSeller = baseIsSeller;
         this.baseAccount = baseAccount;
+        this.baseOfferId = baseOfferId;
         this.baseAmount = baseAmount;
         this.baseAssetType = baseAssetType;
         this.baseAssetCode = baseAssetCode;
         this.baseAssetIssuer = baseAssetIssuer;
         this.counterAccount = counterAccount;
+        this.counterOfferId = counterOfferId;
         this.counterAmount = counterAmount;
         this.counterAssetType = counterAssetType;
         this.counterAssetCode = counterAssetCode;
@@ -91,6 +97,10 @@ public class TradeResponse extends Response {
 
     public boolean isBaseSeller() {
         return baseIsSeller;
+    }
+
+    public String getBaseOfferId() {
+        return baseOfferId;
     }
 
     public KeyPair getBaseAccount() {
@@ -119,6 +129,10 @@ public class TradeResponse extends Response {
 
     public KeyPair getCounterAccount() {
         return counterAccount;
+    }
+
+    public String getCounterOfferId() {
+        return counterOfferId;
     }
 
     public Asset getCounterAsset() {

@@ -20,6 +20,8 @@ public class TradesPageDeserializerTest extends TestCase {
         assertEquals(tradesPage.getRecords().get(0).getPagingToken(), "3697472920621057-0");
         assertEquals(tradesPage.getRecords().get(0).getLedgerCloseTime(), "2015-11-18T03:47:47Z");
         assertEquals(tradesPage.getRecords().get(0).getOfferId(), "9");
+        assertEquals(tradesPage.getRecords().get(0).getBaseOfferId(), "10");
+        assertEquals(tradesPage.getRecords().get(0).getCounterOfferId(), "11");
         assertEquals(tradesPage.getRecords().get(0).getBaseAsset(), new AssetTypeNative());
         assertEquals(tradesPage.getRecords().get(0).getCounterAsset(), Asset.createNonNativeAsset("JPY", KeyPair.fromAccountId("GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM")));
         assertEquals(tradesPage.getRecords().get(0).getPrice().getNumerator(), 267);
@@ -61,9 +63,11 @@ public class TradesPageDeserializerTest extends TestCase {
             "        \"paging_token\": \"3697472920621057-0\",\n" +
             "        \"ledger_close_time\": \"2015-11-18T03:47:47Z\",\n" +
             "        \"offer_id\": \"9\",\n" +
+            "        \"base_offer_id\": \"10\",\n" +
             "        \"base_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
             "        \"base_amount\": \"10.0000000\",\n" +
             "        \"base_asset_type\": \"native\",\n" +
+            "        \"counter_offer_id\": \"11\",\n" +
             "        \"counter_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
             "        \"counter_amount\": \"2.6700000\",\n" +
             "        \"counter_asset_type\": \"credit_alphanum4\",\n" +

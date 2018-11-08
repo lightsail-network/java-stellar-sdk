@@ -16,7 +16,7 @@ import java.io.IOException;
  * Builds requests connected to trades.
  */
 public class TradeAggregationsRequestBuilder extends RequestBuilder {
-    public TradeAggregationsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI, Asset baseAsset, Asset counterAsset, long startTime, long endTime, long resolution) {
+    public TradeAggregationsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI, Asset baseAsset, Asset counterAsset, long startTime, long endTime, long resolution, long offset) {
         super(httpClient, serverURI, "trade_aggregations");
 
         this.baseAsset(baseAsset);
@@ -24,6 +24,7 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
         uriBuilder.setQueryParameter("start_time", String.valueOf(startTime));
         uriBuilder.setQueryParameter("end_time", String.valueOf(endTime));
         uriBuilder.setQueryParameter("resolution", String.valueOf(resolution));
+        uriBuilder.setQueryParameter("offset", String.valueOf(offset));
     }
 
     private void baseAsset(Asset asset) {
