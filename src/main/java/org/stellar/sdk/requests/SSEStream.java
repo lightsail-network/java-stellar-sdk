@@ -26,6 +26,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   private final AtomicBoolean isStopped = new AtomicBoolean(false);
   private final AtomicBoolean serverSideClosed = new AtomicBoolean(true); // make sure we start correctly
   private final AtomicReference<String> pagingToken = new AtomicReference("0");
+  private final AtomicReference<String> lastEventId = new AtomicReference(null);
   private ExecutorService executorService;
   private EventSource eventSource = null;
 
@@ -101,9 +102,14 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
           String url,
           final CloseListener closeListener) {
 
-    Request request = new Request.Builder()
+    Request.Builder builder = new Request.Builder()
             .url(url)
-            .header("Accept", "text/event-stream")
+            .header("Accept", "text/event-stream");
+    String lastEventId = stream.lastEventId.get();
+    if(lastEventId != null) {
+      builder.header("Last-Event-ID", lastEventId);
+    }
+    Request request = builder
             .build();
     RealEventSource eventSource = new RealEventSource(request, new StellarEventSourceListener<T>(stream,closeListener, responseClass, requestBuilder, listener));
     eventSource.connect(okHttpClient);
@@ -167,6 +173,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
       String pagingToken = event.getPagingToken();
       requestBuilder.cursor(pagingToken);
       stream.pagingToken.set(pagingToken);
+      stream.lastEventId.set(id);
       listener.onEvent(event);
     }
   }
