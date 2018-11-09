@@ -90,8 +90,8 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link EffectResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public SSEManager<EffectResponse> stream(final EventListener<EffectResponse> listener) {
-    return SSEUtils.stream(httpClient,this,EffectResponse.class,listener);
+  public SSEStream<EffectResponse> stream(final EventListener<EffectResponse> listener) {
+    return SSEStream.create(httpClient,this,EffectResponse.class,listener);
   }
 
   /**

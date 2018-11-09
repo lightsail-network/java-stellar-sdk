@@ -9,10 +9,8 @@ import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
-import org.stellar.sdk.responses.TransactionResponse;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -97,7 +95,7 @@ public class TradesRequestBuilder extends RequestBuilder {
      * @param listener {@link EventListener} implementation with {@link TradeResponse} type
      * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
      */
-    public SSEManager<TradeResponse> stream(final EventListener<TradeResponse> listener) {
-        return SSEUtils.stream(httpClient,this,TradeResponse.class,listener);
+    public SSEStream<TradeResponse> stream(final EventListener<TradeResponse> listener) {
+        return SSEStream.create(httpClient,this,TradeResponse.class,listener);
     }
 }

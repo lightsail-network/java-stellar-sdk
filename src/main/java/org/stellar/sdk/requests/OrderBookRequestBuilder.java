@@ -59,8 +59,8 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    * @param listener {@link OrderBookResponse} implementation with {@link OrderBookResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public SSEManager<OrderBookResponse> stream(final EventListener<OrderBookResponse> listener) {
-    return SSEUtils.stream(httpClient,this,OrderBookResponse.class,listener);
+  public SSEStream<OrderBookResponse> stream(final EventListener<OrderBookResponse> listener) {
+    return SSEStream.create(httpClient,this,OrderBookResponse.class,listener);
   }
 
   public OrderBookResponse execute() throws IOException, TooManyRequestsException {
