@@ -15,6 +15,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class SSEStream<T extends org.stellar.sdk.responses.Response> implements Closeable {
@@ -25,16 +27,17 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
 
   private final AtomicBoolean isStopped = new AtomicBoolean(false);
   private final AtomicBoolean serverSideClosed = new AtomicBoolean(true); // make sure we start correctly
-  private final AtomicReference<String> pagingToken = new AtomicReference<String>("0");
   private final AtomicReference<String> lastEventId = new AtomicReference<String>(null);
   private ExecutorService executorService;
   private EventSource eventSource = null;
+  private final Lock lock = new ReentrantLock();
 
   private SSEStream(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> responseClass, final EventListener<T> listener) {
     this.okHttpClient = okHttpClient;
     this.requestBuilder = requestBuilder;
     this.responseClass = responseClass;
     this.listener = listener;
+
 
     executorService = Executors.newSingleThreadExecutor();
     requestBuilder.buildUri(); // call this once to add the segments
@@ -50,9 +53,20 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
         while (!isStopped.get()) {
           try {
             Thread.sleep(200);
-            if (serverSideClosed.get() && !isStopped.get()) {
-              serverSideClosed.set(false); // don't restart until true again
-              restart();
+            if (serverSideClosed.get()) {
+              // don't restart until true again
+              serverSideClosed.set(false);
+              if (!isStopped.get()) {
+                lock.lock();
+                try {
+                  // check again if somebody called close in between
+                  if (!isStopped.get()) {
+                    restart();
+                  }
+                } finally {
+                  lock.unlock();
+                }
+              }
             }
           } catch (InterruptedException e) {
             throw new IllegalStateException("interrupted", e);
@@ -63,7 +77,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   }
 
   public String lastPagingToken() {
-    return pagingToken.get();
+    return lastEventId.get();
   }
 
   private void restart() {
@@ -166,13 +180,12 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
 
     @Override
     public void onEvent(EventSource eventSource, @Nullable String id, @Nullable String type, String data) {
-      if (data.equals("\"hello\"")) {
+      if (data.equals("\"hello\"") || data.equals("\"goodbye\"")) {
         return;
       }
       T event = GsonSingleton.getInstance().fromJson(data, responseClass);
       String pagingToken = event.getPagingToken();
       requestBuilder.cursor(pagingToken);
-      stream.pagingToken.set(pagingToken);
       stream.lastEventId.set(id);
       listener.onEvent(event);
     }
