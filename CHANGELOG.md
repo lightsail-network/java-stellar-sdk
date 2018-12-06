@@ -2,6 +2,13 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.4.0
+
+* **Breaking change** `Transaction.Builder` requires `setTimeout` method to be called.
+* Added [Horizon 0.15.0](https://github.com/stellar/go/releases/tag/horizon-v0.15.0) features.
+* Improved streaming code and dependencies (thanks @jillesvangurp!).
+* SEP-0005 derivation (thanks @westonal!).
+
 ## 0.3.2
 
 * Non `ed25519` keys are now supported in all responses (fixes #126):
