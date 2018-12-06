@@ -344,6 +344,10 @@ public class Transaction {
         throw new RuntimeException("TimeBounds.max_time has been already set - setting timeout would overwrite it.");
       }
 
+      if (timeout < 0) {
+        throw new RuntimeException("timeout cannot be negative");
+      }
+
       timeoutSet = true;
       if (timeout > 0) {
         long timeoutTimestamp = System.currentTimeMillis() / 1000L + timeout;

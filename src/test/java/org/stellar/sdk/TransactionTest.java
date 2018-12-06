@@ -140,6 +140,22 @@ public class TransactionTest {
   }
 
   @Test
+  public void testBuilderTimeoutNegative() throws IOException {
+    Account account = new Account(KeyPair.random(), 2908908335136768L);
+    try {
+      new Transaction.Builder(account)
+              .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+              .addMemo(Memo.hash("abcdef"))
+              .setTimeout(-1)
+              .build();
+      fail();
+    } catch (RuntimeException exception) {
+      assertTrue(exception.getMessage().contains("timeout cannot be negative"));
+      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
+    }
+  }
+
+  @Test
   public void testBuilderTimeoutSetsTimeBounds() throws IOException {
     Account account = new Account(KeyPair.random(), 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
