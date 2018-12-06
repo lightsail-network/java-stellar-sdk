@@ -1,23 +1,14 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.glassfish.jersey.media.sse.EventSource;
-import org.glassfish.jersey.media.sse.InboundEvent;
-import org.glassfish.jersey.media.sse.SseFeature;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.responses.GsonSingleton;
-import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.OrderBookResponse;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
 
 /**
@@ -68,21 +59,8 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    * @param listener {@link OrderBookResponse} implementation with {@link OrderBookResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<OrderBookResponse> listener) {
-    Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-    WebTarget target = client.target(this.buildUri().uri());
-    EventSource eventSource = new EventSource(target) {
-      @Override
-      public void onEvent(InboundEvent inboundEvent) {
-        String data = inboundEvent.readData(String.class);
-        if (data.equals("\"hello\"")) {
-          return;
-        }
-        OrderBookResponse orderBook = GsonSingleton.getInstance().fromJson(data, OrderBookResponse.class);
-        listener.onEvent(orderBook);
-      }
-    };
-    return eventSource;
+  public SSEStream<OrderBookResponse> stream(final EventListener<OrderBookResponse> listener) {
+    return SSEStream.create(httpClient,this,OrderBookResponse.class,listener);
   }
 
   public OrderBookResponse execute() throws IOException, TooManyRequestsException {

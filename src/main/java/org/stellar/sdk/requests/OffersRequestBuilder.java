@@ -1,23 +1,14 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.glassfish.jersey.media.sse.EventSource;
-import org.glassfish.jersey.media.sse.InboundEvent;
-import org.glassfish.jersey.media.sse.SseFeature;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.responses.operations.OperationResponse;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -57,6 +48,8 @@ public class OffersRequestBuilder extends RequestBuilder {
 
     return responseHandler.handleResponse(response);
   }
+
+
 
   /**
    * Build and execute request.

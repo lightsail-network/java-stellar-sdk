@@ -1,22 +1,14 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.glassfish.jersey.media.sse.EventSource;
-import org.glassfish.jersey.media.sse.InboundEvent;
-import org.glassfish.jersey.media.sse.SseFeature;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -114,21 +106,8 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @param listener {@link OperationResponse} implementation with {@link OperationResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<OperationResponse> listener) {
-    Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-    WebTarget target = client.target(this.buildUri().uri());
-    EventSource eventSource = new EventSource(target) {
-      @Override
-      public void onEvent(InboundEvent inboundEvent) {
-        String data = inboundEvent.readData(String.class);
-        if (data.equals("\"hello\"")) {
-          return;
-        }
-        OperationResponse operation = GsonSingleton.getInstance().fromJson(data, OperationResponse.class);
-        listener.onEvent(operation);
-      }
-    };
-    return eventSource;
+  public SSEStream<OperationResponse> stream(final EventListener<OperationResponse> listener) {
+    return SSEStream.create(httpClient,this,OperationResponse.class,listener);
   }
 
   /**

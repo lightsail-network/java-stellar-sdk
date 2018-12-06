@@ -1,23 +1,14 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.glassfish.jersey.media.sse.EventSource;
-import org.glassfish.jersey.media.sse.InboundEvent;
-import org.glassfish.jersey.media.sse.SseFeature;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.LedgerResponse;
 import org.stellar.sdk.responses.Page;
 
 import java.io.IOException;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 
 /**
  * Builds requests connected to ledgers.
@@ -80,21 +71,9 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @param listener {@link EventListener} implementation with {@link LedgerResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
-  public EventSource stream(final EventListener<LedgerResponse> listener) {
-    Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-    WebTarget target = client.target(this.buildUri().uri());
-    EventSource eventSource = new EventSource(target) {
-      @Override
-      public void onEvent(InboundEvent inboundEvent) {
-        String data = inboundEvent.readData(String.class);
-        if (data.equals("\"hello\"")) {
-          return;
-        }
-        LedgerResponse ledger = GsonSingleton.getInstance().fromJson(data, LedgerResponse.class);
-        listener.onEvent(ledger);
-      }
-    };
-    return eventSource;
+
+  public SSEStream<LedgerResponse> stream(final EventListener<LedgerResponse> listener) {
+    return SSEStream.create(httpClient,this,LedgerResponse.class,listener);
   }
 
   /**

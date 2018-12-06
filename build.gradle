@@ -1,4 +1,5 @@
 buildscript {
+  ext.okhttpclientVersion="3.11.0"
   repositories {
     jcenter()
   }
@@ -38,18 +39,17 @@ repositories {
 }
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.11.0'
+    compile "com.squareup.okhttp3:okhttp:${okhttpclientVersion}"
+    compile "com.squareup.okhttp3:okhttp-sse:${okhttpclientVersion}"
     compile 'com.moandjiezana.toml:toml4j:0.7.2'
     // use the android version because we don't want java 8 stuff
     compile 'com.google.guava:guava:26.0-android'
     compile 'com.google.code.gson:gson:2.8.5'
     compile 'commons-io:commons-io:2.6'
-    compile 'org.glassfish.jersey.core:jersey-client:2.27'
-    compile 'org.glassfish.jersey.media:jersey-media-sse:2.27'
     compile 'net.i2p.crypto:eddsa:0.3.0'
 
     testCompile 'org.mockito:mockito-core:2.21.0'
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.11.0'
+    testCompile "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
     testCompile 'junit:junit:4.12'
 }
 
@@ -78,21 +78,11 @@ shadowJar {
    archiveName 'stellar-sdk.jar' 
    relocate 'com','shadow.com'
    relocate 'net','shadow.net'
-   relocate 'org.glassfish','shadow.org.glassfish'
-   relocate 'org.mockito','shadow.org.mockito'
-   relocate 'org.aopalliance','shadow.org.aopalliance'
+   relocate 'javax.annotation', 'shadow.javax.annotation'
    relocate 'org.apache','shadow.org.apache'
    relocate 'org.jvnet','shadow.org.jvnet'
-   relocate 'org.objenesis','shadow.org.objenesis'
    relocate 'org.codehaus','shadow.org.codehaus'
    relocate 'org.checkerframework','shadow.org.checkerframework'
-   relocate 'javassist','shadow.javassist'
-   relocate 'javax.validation', 'shadow.javax.validation'
-   relocate 'javax.annotation', 'shadow.javax.annotation'
-   relocate 'javax.inject', 'shadow.javax.inject'
-   relocate 'javax.ws', 'shadow.javax.inject'
-   relocate 'commons-io', 'shadow.commons-io'
-   relocate 'jersey', 'shadow.jersey'
    relocate 'okhttp3','shadow.okhttp3'
    relocate 'okio','shadow.okio'
 }
