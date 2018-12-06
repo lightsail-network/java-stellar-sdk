@@ -116,6 +116,22 @@ public class KeyPair {
   }
 
   /**
+   * Finds the KeyPair for the path m/44'/148'/accountNumber' using the method described in
+   * <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md">SEP-0005</a>.
+   *
+   * @param bip39Seed     The output of BIP0039
+   * @param accountNumber The number of the account
+   * @return KeyPair with secret
+   */
+  public static KeyPair fromBip39Seed(byte[] bip39Seed, int accountNumber) {
+    try {
+      return KeyPair.fromSecretSeed(SLIP10.deriveEd25519PrivateKey(bip39Seed, 44, 148, accountNumber));
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
    * Generates a random Stellar keypair.
    * @return a random Stellar keypair.
    */
