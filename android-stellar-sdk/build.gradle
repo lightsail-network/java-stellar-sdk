@@ -23,6 +23,7 @@ dependencies {
     implementation 'com.moandjiezana.toml:toml4j:0.5.1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'net.i2p.crypto:eddsa:0.3.0'
     api 'com.github.kinecosystem:oksse:93f4ef7445f9c3db3c3bc2d1ccb2691fc7246810'
 
     testImplementation 'org.mockito:mockito-core:2.13.0'
