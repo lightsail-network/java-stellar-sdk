@@ -31,7 +31,7 @@ import org.stellar.sdk.xdr.XdrDataOutputStream;
  */
 public class KeyPair {
 
-  private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName("ed25519-sha-512");
+  private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName("Ed25519");
 
   private final EdDSAPublicKey mPublicKey;
   private final EdDSAPrivateKey mPrivateKey;
