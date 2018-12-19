@@ -13,6 +13,7 @@ import java.io.Closeable;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -33,7 +34,8 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   private final Lock lock = new ReentrantLock();
 
   private SSEStream(final OkHttpClient okHttpClient, final RequestBuilder requestBuilder, final Class<T> responseClass, final EventListener<T> listener) {
-    this.okHttpClient = okHttpClient;
+    // Create a new client with no read timeout
+    this.okHttpClient = okHttpClient.newBuilder().readTimeout(0, TimeUnit.MILLISECONDS).build();
     this.requestBuilder = requestBuilder;
     this.responseClass = responseClass;
     this.listener = listener;
@@ -180,7 +182,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
 
     @Override
     public void onEvent(EventSource eventSource, @Nullable String id, @Nullable String type, String data) {
-      if (data.equals("\"hello\"") || data.equals("\"goodbye\"")) {
+      if (data.equals("\"hello\"") || data.equals("\"byebye\"")) {
         return;
       }
       T event = GsonSingleton.getInstance().fromJson(data, responseClass);
