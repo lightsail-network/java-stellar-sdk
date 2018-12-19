@@ -2,6 +2,10 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.4.1
+
+* Fixed streaming issues.
+
 ## 0.4.0
 
 * **Breaking change** `Transaction.Builder` requires `setTimeout` method to be called.
