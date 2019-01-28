@@ -284,12 +284,10 @@ public class TransactionTest {
             .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
 
-    try {
-      transaction.toEnvelopeXdrBase64();
-      fail();
-    } catch (RuntimeException exception) {
-      assertTrue(exception.getMessage().contains("Transaction must be signed by at least one signer."));
-    }
+    assertEquals(
+            "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAAA",
+            transaction.toEnvelopeXdrBase64()
+    );
   }
 
   @Test

@@ -219,13 +219,9 @@ public class Transaction {
   }
 
   /**
-   * Generates TransactionEnvelope XDR object. Transaction need to have at least one signature.
+   * Generates TransactionEnvelope XDR object.
    */
   public org.stellar.sdk.xdr.TransactionEnvelope toEnvelopeXdr() {
-    if (mSignatures.size() == 0) {
-      throw new NotEnoughSignaturesException("Transaction must be signed by at least one signer. Use transaction.sign().");
-    }
-
     org.stellar.sdk.xdr.TransactionEnvelope xdr = new org.stellar.sdk.xdr.TransactionEnvelope();
     org.stellar.sdk.xdr.Transaction transaction = this.toXdr();
     xdr.setTx(transaction);
