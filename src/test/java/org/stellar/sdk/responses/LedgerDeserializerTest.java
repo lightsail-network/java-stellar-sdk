@@ -30,8 +30,10 @@ public class LedgerDeserializerTest extends TestCase {
             "  \"hash\": \"686bb246db89b099cd3963a4633eb5e4315d89dfd3c00594c80b41a483847bfa\",\n" +
             "  \"prev_hash\": \"50c8695eb32171a19858413e397cc50b504ceacc819010bdf8ff873aff7858d7\",\n" +
             "  \"sequence\": 898826,\n" +
-            "  \"transaction_count\": 1,\n" +
-            "  \"operation_count\": 2,\n" +
+            "  \"transaction_count\": 5,\n" +
+            "  \"successful_transaction_count\": 3,\n" +
+            "  \"failed_transaction_count\": 2,\n" +
+            "  \"operation_count\": 10,\n" +
             "  \"closed_at\": \"2015-11-19T21:35:59Z\",\n" +
             "  \"total_coins\": \"101343867604.8975480\",\n" +
             "  \"fee_pool\": \"1908.2248818\",\n" +
@@ -50,8 +52,10 @@ public class LedgerDeserializerTest extends TestCase {
     assertEquals(ledger.getPagingToken(), "3860428274794496");
     assertEquals(ledger.getPrevHash(), "50c8695eb32171a19858413e397cc50b504ceacc819010bdf8ff873aff7858d7");
     assertEquals(ledger.getSequence(), new Long(898826));
-    assertEquals(ledger.getTransactionCount(), new Integer(1));
-    assertEquals(ledger.getOperationCount(), new Integer(2));
+    assertEquals(ledger.getTransactionCount(), new Integer(5));
+    assertEquals(ledger.getSuccessfulTransactionCount(), new Integer(3));
+    assertEquals(ledger.getFailedTransactionCount(), new Integer(2));
+    assertEquals(ledger.getOperationCount(), new Integer(10));
     assertEquals(ledger.getClosedAt(), "2015-11-19T21:35:59Z");
     assertEquals(ledger.getTotalCoins(), "101343867604.8975480");
     assertEquals(ledger.getFeePool(), "1908.2248818");

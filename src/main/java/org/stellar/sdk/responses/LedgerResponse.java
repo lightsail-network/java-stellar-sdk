@@ -19,6 +19,10 @@ public class LedgerResponse extends Response {
   private final String prevHash;
   @SerializedName("transaction_count")
   private final Integer transactionCount;
+  @SerializedName("successful_transaction_count")
+  private final Integer successfulTransactionCount;
+  @SerializedName("failed_transaction_count")
+  private final Integer failedTransactionCount;
   @SerializedName("operation_count")
   private final Integer operationCount;
   @SerializedName("closed_at")
@@ -44,12 +48,14 @@ public class LedgerResponse extends Response {
   @SerializedName("_links")
   private final Links links;
 
-  LedgerResponse(Long sequence, String hash, String pagingToken, String prevHash, Integer transactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, String baseFeeInStroops, String baseReserveInStroops, Integer maxTxSetSize, Integer protocolVersion, String headerXdr, Links links) {
+  LedgerResponse(Long sequence, String hash, String pagingToken, String prevHash, Integer transactionCount, Integer successfulTransactionCount, Integer failedTransactionCount, Integer operationCount, String closedAt, String totalCoins, String feePool, Long baseFee, String baseReserve, String baseFeeInStroops, String baseReserveInStroops, Integer maxTxSetSize, Integer protocolVersion, String headerXdr, Links links) {
     this.sequence = sequence;
     this.hash = hash;
     this.pagingToken = pagingToken;
     this.prevHash = prevHash;
     this.transactionCount = transactionCount;
+    this.successfulTransactionCount= successfulTransactionCount;
+    this.failedTransactionCount= failedTransactionCount;
     this.operationCount = operationCount;
     this.closedAt = closedAt;
     this.totalCoins = totalCoins;
@@ -80,8 +86,17 @@ public class LedgerResponse extends Response {
     return prevHash;
   }
 
+  // Will be removed in Horizon 0.17.0
   public Integer getTransactionCount() {
     return transactionCount;
+  }
+
+  public Integer getSuccessfulTransactionCount() {
+    return successfulTransactionCount;
+  }
+
+  public Integer getFailedTransactionCount() {
+    return failedTransactionCount;
   }
 
   public Integer getOperationCount() {

@@ -21,6 +21,10 @@ public class RootResponse extends Response {
     private final String networkPassphrase;
     @SerializedName("protocol_version")
     private final int protocolVersion;
+    @SerializedName("current_protocol_version")
+    private final int currentProtocolVersion;
+    @SerializedName("core_supported_protocol_version")
+    private final int coreSupportedProtocolVersion;
 
     public String getHorizonVersion() {
         return horizonVersion;
@@ -46,11 +50,20 @@ public class RootResponse extends Response {
         return networkPassphrase;
     }
 
+    // Will be removed in Horizon 0.17.0
     public int getProtocolVersion() {
         return protocolVersion;
     }
 
-    public RootResponse(String horizonVersion, String stellarCoreVersion, int historyLatestLedger, int historyElderLedger, int coreLatestLedger, String networkPassphrase, int protocolVersion) {
+    public int getCurrentProtocolVersion() {
+        return currentProtocolVersion;
+    }
+
+    public int getCoreSupportedProtocolVersion() {
+        return coreSupportedProtocolVersion;
+    }
+
+    public RootResponse(String horizonVersion, String stellarCoreVersion, int historyLatestLedger, int historyElderLedger, int coreLatestLedger, String networkPassphrase, int protocolVersion, int currentProtocolVersion, int coreSupportedProtocolVersion) {
         this.horizonVersion = horizonVersion;
         this.stellarCoreVersion = stellarCoreVersion;
         this.historyLatestLedger = historyLatestLedger;
@@ -58,5 +71,7 @@ public class RootResponse extends Response {
         this.coreLatestLedger = coreLatestLedger;
         this.networkPassphrase = networkPassphrase;
         this.protocolVersion = protocolVersion;
+        this.currentProtocolVersion = currentProtocolVersion;
+        this.coreSupportedProtocolVersion = coreSupportedProtocolVersion;
     }
 }
