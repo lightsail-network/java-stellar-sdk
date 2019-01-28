@@ -86,7 +86,9 @@ public class LedgerResponse extends Response {
     return prevHash;
   }
 
-  // Will be removed in Horizon 0.17.0
+  /**
+   * @deprecated Will be removed in Horizon 0.17.0
+   */
   public Integer getTransactionCount() {
     return transactionCount;
   }

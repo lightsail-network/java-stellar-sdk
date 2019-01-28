@@ -50,7 +50,9 @@ public class RootResponse extends Response {
         return networkPassphrase;
     }
 
-    // Will be removed in Horizon 0.17.0
+    /**
+     * @deprecated Will be removed in Horizon 0.17.0
+     */
     public int getProtocolVersion() {
         return protocolVersion;
     }
