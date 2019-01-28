@@ -76,8 +76,8 @@ def deployer = uploadArchives.repositories.mavenDeployer
 
 shadowJar {
    archiveName 'stellar-sdk.jar' 
-   relocate 'com','shadow.com'
-   relocate 'net','shadow.net'
+   relocate 'com.','shadow.com.'
+   relocate 'net.','shadow.net.'
    relocate 'javax.annotation', 'shadow.javax.annotation'
    relocate 'org.apache','shadow.org.apache'
    relocate 'org.jvnet','shadow.org.jvnet'
