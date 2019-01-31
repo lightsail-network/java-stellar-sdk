@@ -2,6 +2,12 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.5.0
+
+* Horizon 0.16.0 features (#172)
+* Allow no signatures in Transaction.toEnvelopeXdr (#164)
+* Fix dependencies shadowing (#173)
+
 ## 0.4.1
 
 * Fixed streaming issues.
