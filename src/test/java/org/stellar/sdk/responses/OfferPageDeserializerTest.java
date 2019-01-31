@@ -20,6 +20,8 @@ public class OfferPageDeserializerTest extends TestCase {
     assertEquals(transactionsPage.getRecords().get(0).getBuying(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD")));
     assertEquals(transactionsPage.getRecords().get(0).getAmount(), "10.0000000");
     assertEquals(transactionsPage.getRecords().get(0).getPrice(), "11.0000000");
+    assertEquals(transactionsPage.getRecords().get(0).getLastModifiedLedger(), new Integer(22200794));
+    assertEquals(transactionsPage.getRecords().get(0).getLastModifiedTime(), "2019-01-28T12:30:38Z");
 
     assertEquals(transactionsPage.getLinks().getNext().getHref(), "https://horizon-testnet.stellar.org/accounts/GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD/offers?order=asc&limit=10&cursor=241");
     assertEquals(transactionsPage.getLinks().getPrev().getHref(), "https://horizon-testnet.stellar.org/accounts/GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD/offers?order=desc&limit=10&cursor=241");
@@ -67,7 +69,9 @@ public class OfferPageDeserializerTest extends TestCase {
           "          \"n\": 10,\n" +
           "          \"d\": 1\n" +
           "        },\n" +
-          "        \"price\": \"11.0000000\"\n" +
+          "        \"price\": \"11.0000000\"\n," +
+          "        \"last_modified_ledger\": 22200794,\n" +
+          "        \"last_modified_time\": \"2019-01-28T12:30:38Z\"\n"+
           "      }\n" +
           "    ]\n" +
           "  }\n" +

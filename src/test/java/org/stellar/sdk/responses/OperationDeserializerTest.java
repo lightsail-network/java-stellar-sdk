@@ -426,6 +426,7 @@ public class OperationDeserializerTest extends TestCase {
             "  \"to\": \"GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD\",\n" +
             "  \"amount\": \"2.5000000\",\n" +
             "  \"path\": [],\n" +
+            "  \"source_amount\": \"1.1777000\",\n"+
             "  \"source_max\": \"1.1779523\",\n" +
             "  \"source_asset_type\": \"credit_alphanum4\",\n" +
             "  \"source_asset_code\": \"XRP\",\n" +
@@ -437,6 +438,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getFrom().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
     assertEquals(operation.getTo().getAccountId(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
     assertEquals(operation.getAmount(), "2.5000000");
+    assertEquals(operation.getSourceAmount(), "1.1777000");
     assertEquals(operation.getSourceMax(), "1.1779523");
     assertEquals(operation.getAsset(), new AssetTypeNative());
     assertEquals(operation.getSourceAsset(), Asset.createNonNativeAsset("XRP", KeyPair.fromAccountId("GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5")));

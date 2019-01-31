@@ -16,6 +16,8 @@ public class RootDeserializerTest extends TestCase {
         assertEquals(root.getCoreLatestLedger(), 18369117);
         assertEquals(root.getNetworkPassphrase(), "Public Global Stellar Network ; September 2015");
         assertEquals(root.getProtocolVersion(), 9);
+        assertEquals(root.getCurrentProtocolVersion(), 10);
+        assertEquals(root.getCoreSupportedProtocolVersion(), 11);
     }
 
     String json = "{\n" +
@@ -61,6 +63,8 @@ public class RootDeserializerTest extends TestCase {
             "  \"history_elder_ledger\": 1,\n" +
             "  \"core_latest_ledger\": 18369117,\n" +
             "  \"network_passphrase\": \"Public Global Stellar Network ; September 2015\",\n" +
-            "  \"protocol_version\": 9\n" +
+            "  \"protocol_version\": 9\n," +
+            "  \"current_protocol_version\": 10\n," +
+            "  \"core_supported_protocol_version\": 11\n" +
             "}";
 }

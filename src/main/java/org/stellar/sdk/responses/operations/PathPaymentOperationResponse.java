@@ -15,6 +15,8 @@ import org.stellar.sdk.KeyPair;
 public class PathPaymentOperationResponse extends OperationResponse {
   @SerializedName("amount")
   protected final String amount;
+  @SerializedName("source_amount")
+  protected final String sourceAmount;
   @SerializedName("source_max")
   protected final String sourceMax;
   @SerializedName("from")
@@ -36,8 +38,9 @@ public class PathPaymentOperationResponse extends OperationResponse {
   @SerializedName("source_asset_issuer")
   protected final String sourceAssetIssuer;
 
-  public PathPaymentOperationResponse(String amount, String sourceMax, KeyPair from, KeyPair to, String assetType, String assetCode, String assetIssuer, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer) {
+  public PathPaymentOperationResponse(String amount, String sourceAmount, String sourceMax, KeyPair from, KeyPair to, String assetType, String assetCode, String assetIssuer, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer) {
     this.amount = amount;
+    this.sourceAmount = sourceAmount;
     this.sourceMax = sourceMax;
     this.from = from;
     this.to = to;
@@ -51,6 +54,10 @@ public class PathPaymentOperationResponse extends OperationResponse {
 
   public String getAmount() {
     return amount;
+  }
+
+  public String getSourceAmount() {
+    return sourceAmount;
   }
 
   public String getSourceMax() {
