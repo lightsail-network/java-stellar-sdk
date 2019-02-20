@@ -19,7 +19,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction {
-  private static final int BASE_FEE = 100;
+  private static final int MINIMUM_BASE_FEE = 100;
+  private static int BASE_FEE = MINIMUM_BASE_FEE;
 
   private final int mFee;
   private final KeyPair mSourceAccount;
@@ -49,6 +50,14 @@ public class Transaction {
     checkNotNull(signer, "signer cannot be null");
     byte[] txHash = this.hash();
     mSignatures.add(signer.signDecorated(txHash));
+  }
+
+  public static void setDefaultBaseFee(int baseFee) {
+    if (baseFee < MINIMUM_BASE_FEE) {
+      throw new IllegalArgumentException("Invalid baseFee value: " + baseFee);
+    }
+
+    BASE_FEE = baseFee;
   }
 
   /**
@@ -258,6 +267,7 @@ public class Transaction {
     private TimeBounds mTimeBounds;
     List<Operation> mOperations;
     private boolean timeoutSet;
+    private int baseFee;
 
     public static final long TIMEOUT_INFINITE = 0;
 
@@ -271,6 +281,7 @@ public class Transaction {
       checkNotNull(sourceAccount, "sourceAccount cannot be null");
       mSourceAccount = sourceAccount;
       mOperations = Collections.synchronizedList(new ArrayList<Operation>());
+      baseFee = BASE_FEE;
     }
 
     public int getOperationsCount() {
@@ -357,6 +368,15 @@ public class Transaction {
       return this;
     }
 
+    public Builder setBaseFee(int baseFee) {
+      if (baseFee < MINIMUM_BASE_FEE) {
+        throw new IllegalArgumentException("Invalid baseFee value: " + baseFee);
+      }
+
+      this.baseFee = baseFee;
+      return this;
+    }
+
     /**
      * Builds a transaction. It will increment sequence number of the source account.
      */
@@ -368,7 +388,7 @@ public class Transaction {
 
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
-      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * BASE_FEE, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
+      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * baseFee, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
       // Increment sequence number when there were no exceptions when creating a transaction
       mSourceAccount.incrementSequenceNumber();
       return transaction;
