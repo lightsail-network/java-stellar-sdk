@@ -80,6 +80,16 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
+   * Adds a parameter defining whether to include operations of failed transactions. By default only operations of
+   * successful transactions are returned.
+   * @param value Set to <code>true</code> to include operations of failed transactions.
+   */
+  public OperationsRequestBuilder includeFailed(boolean value) {
+    uriBuilder.setQueryParameter("include_failed", String.valueOf(value));
+    return this;
+  }
+
+  /**
    * Requests specific <code>uri</code> and returns {@link Page} of {@link OperationResponse}.
    * This method is helpful for getting the next set of results.
    * @return {@link Page} of {@link OperationResponse}

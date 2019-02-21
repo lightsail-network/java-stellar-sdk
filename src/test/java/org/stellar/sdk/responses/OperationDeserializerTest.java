@@ -43,6 +43,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getSourceAccount().getAccountId(), "GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD");
     assertEquals(operation.getPagingToken(), "3936840037961729");
     assertEquals(operation.getId(), new Long(3936840037961729L));
+    assertNull(operation.isTransactionSuccessful());
 
     assertEquals(operation.getAccount().getAccountId(), "GAR4DDXYNSN2CORG3XQFLAPWYKTUMLZYHYWV4Y2YJJ4JO6ZJFXMJD7PT");
     assertEquals(operation.getStartingBalance(), "299454.904954");
@@ -78,6 +79,7 @@ public class OperationDeserializerTest extends TestCase {
             "        },\n" +
             "        \"amount\": \"100.0\",\n" +
             "        \"asset_type\": \"native\",\n" +
+            "        \"transaction_successful\": false,\n" +
             "        \"from\": \"GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ\",\n" +
             "        \"id\": 3940808587743233,\n" +
             "        \"paging_token\": \"3940808587743233\",\n" +
@@ -90,6 +92,7 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getSourceAccount().getAccountId(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
     assertEquals(operation.getId(), new Long(3940808587743233L));
+    assertEquals(operation.isTransactionSuccessful(), new Boolean(false));
 
     assertEquals(operation.getFrom().getAccountId(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
     assertEquals(operation.getTo().getAccountId(), "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
@@ -119,6 +122,7 @@ public class OperationDeserializerTest extends TestCase {
             "        },\n" +
             "        \"id\": \"3603043769651201\",\n" +
             "        \"paging_token\": \"3603043769651201\",\n" +
+            "        \"transaction_successful\": true,\n" +
             "        \"source_account\": \"GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA\",\n" +
             "        \"type\": \"payment\",\n" +
             "        \"type_i\": 1,\n" +
@@ -131,6 +135,8 @@ public class OperationDeserializerTest extends TestCase {
             "      }";
 
     PaymentOperationResponse operation = (PaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.isTransactionSuccessful(), new Boolean(true));
 
     assertEquals(operation.getFrom().getAccountId(), "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
     assertEquals(operation.getTo().getAccountId(), "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
