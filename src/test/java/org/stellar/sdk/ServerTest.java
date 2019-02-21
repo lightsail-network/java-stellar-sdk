@@ -7,10 +7,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.responses.SubmitTransactionResponse;
-import org.stellar.sdk.responses.SubmitTransactionTimeoutResponseException;
-import org.stellar.sdk.responses.SubmitTransactionUnknownResponseException;
+import org.stellar.sdk.responses.*;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
 import java.io.IOException;
@@ -260,5 +257,22 @@ public class ServerTest {
         assertEquals("dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046", page.getRecords().get(0).getTransactionHash());
         Page<OperationResponse> nextPage = page.getNextPage(server.getHttpClient());
         assertEquals(1, page.getRecords().size());
+    }
+
+    @Test
+    public void testOperationFeeStats() throws IOException {
+        Server server = new Server("https://horizon-testnet.stellar.org");
+        OperationFeeStatsResponse resp = server.operationFeeStats().execute();
+
+        assertTrue("should be at least 2337784", resp.getLastLedger().longValue() >= 2337784);
+
+        assertTrue("should be gte 100", resp.getLastLedgerBaseFee().longValue() >= 100);
+        assertTrue("should be lte 500000", resp.getLastLedgerBaseFee().longValue() <= 500000);
+
+        assertTrue("should be gte 100", resp.getMin().longValue() >= 100);
+        assertTrue("should be lte 500000", resp.getMin().longValue() <= 500000);
+
+        assertTrue("should be gte 100", resp.getMode().longValue() >= 100);
+        assertTrue("should be lte 500000", resp.getMode().longValue() <= 500000);
     }
 }
