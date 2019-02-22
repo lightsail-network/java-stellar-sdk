@@ -24,7 +24,7 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-    Transaction.setDefaultBaseFee(2345);
+    Transaction.setDefaultOperationFee(2345);
 
     Account account = new Account(source, 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
@@ -52,14 +52,14 @@ public class TransactionTest {
   @Test
   public void testDefaultBaseFeeThrows() {
     try {
-      Transaction.setDefaultBaseFee(99);
+      Transaction.setDefaultOperationFee(99);
       fail("expected IllegalArgumentException");
     } catch (IllegalArgumentException e) {
       // expected
     }
 
     // should succeed
-    Transaction.setDefaultBaseFee(100);
+    Transaction.setDefaultOperationFee(100);
   }
 
   @Test
@@ -177,7 +177,7 @@ public class TransactionTest {
     Account account = new Account(source, 2908908335136768L);
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
-            .setBaseFee(200)
+            .setOperationFee(200)
             .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
 
@@ -206,7 +206,7 @@ public class TransactionTest {
     Account account = new Account(source, 2908908335136768L);
     Transaction.Builder builder = new Transaction.Builder(account);
     try {
-      builder.setBaseFee(99);
+      builder.setOperationFee(99);
       fail("expected IllegalArgumentException");
     } catch (IllegalArgumentException e) {
       // expected

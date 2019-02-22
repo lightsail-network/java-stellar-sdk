@@ -19,8 +19,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction {
-  private static final int MINIMUM_BASE_FEE = 100;
-  private static int BASE_FEE = MINIMUM_BASE_FEE;
+  private static final int BASE_FEE = 100;
+  private static Integer defaultOperationFee;
 
   private final int mFee;
   private final KeyPair mSourceAccount;
@@ -52,12 +52,12 @@ public class Transaction {
     mSignatures.add(signer.signDecorated(txHash));
   }
 
-  public static void setDefaultBaseFee(int baseFee) {
-    if (baseFee < MINIMUM_BASE_FEE) {
-      throw new IllegalArgumentException("Invalid baseFee value: " + baseFee);
+  public static void setDefaultOperationFee(int opFee) {
+    if (opFee < BASE_FEE) {
+      throw new IllegalArgumentException("DefaultOperationFee cannot be smaller than the BASE_FEE (" + BASE_FEE + "): " + opFee);
     }
 
-    BASE_FEE = baseFee;
+    defaultOperationFee = opFee;
   }
 
   /**
@@ -267,7 +267,7 @@ public class Transaction {
     private TimeBounds mTimeBounds;
     List<Operation> mOperations;
     private boolean timeoutSet;
-    private int baseFee;
+    private Integer operationFee;
 
     public static final long TIMEOUT_INFINITE = 0;
 
@@ -281,7 +281,7 @@ public class Transaction {
       checkNotNull(sourceAccount, "sourceAccount cannot be null");
       mSourceAccount = sourceAccount;
       mOperations = Collections.synchronizedList(new ArrayList<Operation>());
-      baseFee = BASE_FEE;
+      operationFee = defaultOperationFee;
     }
 
     public int getOperationsCount() {
@@ -368,12 +368,12 @@ public class Transaction {
       return this;
     }
 
-    public Builder setBaseFee(int baseFee) {
-      if (baseFee < MINIMUM_BASE_FEE) {
-        throw new IllegalArgumentException("Invalid baseFee value: " + baseFee);
+    public Builder setOperationFee(int operationFee) {
+      if (operationFee < BASE_FEE) {
+        throw new IllegalArgumentException("OperationFee cannot be smaller than the BASE_FEE (" + BASE_FEE + "): " + operationFee);
       }
 
-      this.baseFee = baseFee;
+      this.operationFee = operationFee;
       return this;
     }
 
@@ -386,9 +386,14 @@ public class Transaction {
         throw new RuntimeException("TimeBounds has to be set or you must call setTimeout(TIMEOUT_INFINITE).");
       }
 
+      if (operationFee == null) {
+        System.out.println("[TransactionBuilder] The `operationFee` parameter of `Transaction` or `TransactionBuilder` is required. Setting to BASE_FEE=" + BASE_FEE + ". Future versions of this library will error if not provided.");
+        operationFee = BASE_FEE;
+      }
+
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
-      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * baseFee, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
+      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * operationFee, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
       // Increment sequence number when there were no exceptions when creating a transaction
       mSourceAccount.incrementSequenceNumber();
       return transaction;
