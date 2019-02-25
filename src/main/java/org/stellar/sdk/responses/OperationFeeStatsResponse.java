@@ -29,12 +29,14 @@ public class OperationFeeStatsResponse extends Response {
     private final Long p95;
     @SerializedName("p99_accepted_fee")
     private final Long p99;
+    @SerializedName("ledger_capacity_usage")
+    private final Float ledgerCapacityUsage;
     @SerializedName("last_ledger_base_fee")
     private final Long lastLedgerBaseFee;
     @SerializedName("last_ledger")
     private final Long lastLedger;
 
-    public OperationFeeStatsResponse(Long min, Long mode, Long p10, Long p20, Long p30, Long p40, Long p50, Long p60, Long p70, Long p80, Long p90, Long p95, Long p99, Long lastLedgerBaseFee, Long lastLedger) {
+    public OperationFeeStatsResponse(Long min, Long mode, Long p10, Long p20, Long p30, Long p40, Long p50, Long p60, Long p70, Long p80, Long p90, Long p95, Long p99, Float ledgerCapacityUsage, Long lastLedgerBaseFee, Long lastLedger) {
         this.min = min;
         this.mode = mode;
         this.p10 = p10;
@@ -48,6 +50,7 @@ public class OperationFeeStatsResponse extends Response {
         this.p90 = p90;
         this.p95 = p95;
         this.p99 = p99;
+        this.ledgerCapacityUsage = ledgerCapacityUsage;
         this.lastLedgerBaseFee = lastLedgerBaseFee;
         this.lastLedger = lastLedger;
     }
@@ -102,6 +105,10 @@ public class OperationFeeStatsResponse extends Response {
 
     public Long getP99() {
         return p99;
+    }
+
+    public Float getLedgerCapacityUsage() {
+        return ledgerCapacityUsage;
     }
 
     public Long getLastLedgerBaseFee() {

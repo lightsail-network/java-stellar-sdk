@@ -9,6 +9,7 @@ public class OperationFeeStatsDeserializerTest extends TestCase {
         String json = "{\n" +
                 "  \"last_ledger\": \"20882791\",\n" +
                 "  \"last_ledger_base_fee\": \"100\",\n" +
+                "  \"ledger_capacity_usage\": \"0.97\"," +
                 "  \"min_accepted_fee\": \"101\",\n" +
                 "  \"mode_accepted_fee\": \"102\",\n" +
                 "  \"p10_accepted_fee\": \"103\",\n" +
@@ -27,6 +28,7 @@ public class OperationFeeStatsDeserializerTest extends TestCase {
         OperationFeeStatsResponse stats = GsonSingleton.getInstance().fromJson(json, OperationFeeStatsResponse.class);
         assertEquals(new Long(20882791), stats.getLastLedger());
         assertEquals(new Long(100), stats.getLastLedgerBaseFee());
+        assertEquals(new Float(0.97), stats.getLedgerCapacityUsage());
         assertEquals(new Long(101), stats.getMin());
         assertEquals(new Long(102), stats.getMode());
         assertEquals(new Long(103), stats.getP10());
