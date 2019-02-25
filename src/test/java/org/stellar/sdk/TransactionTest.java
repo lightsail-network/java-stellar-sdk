@@ -19,6 +19,50 @@ public class TransactionTest {
   }
 
   @Test
+  public void testDefaultBaseFee() throws FormatException {
+    // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    Transaction.Builder.setDefaultOperationFee(2345);
+
+    Account account = new Account(source, 2908908335136768L);
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+            .build();
+
+    transaction.sign(source);
+
+    assertEquals(
+            "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAJKQAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDf8XAGz9uOmfL0KJBP29eSXz/CZqZtl0Mm8jHye3xwLgo2HJDfvCJdijGKsx34AfNl6hvX+Cq3IVk062sLSuoK",
+            transaction.toEnvelopeXdrBase64());
+
+    Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
+
+    assertEquals(transaction.getSourceAccount().getAccountId(), transaction2.getSourceAccount().getAccountId());
+    assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
+    assertEquals(transaction.getFee(), transaction2.getFee());
+    assertEquals(
+            ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
+            ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+    );
+  }
+
+  @Test
+  public void testDefaultBaseFeeThrows() {
+    try {
+      Transaction.Builder.setDefaultOperationFee(99);
+      fail("expected IllegalArgumentException");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should succeed
+    Transaction.Builder.setDefaultOperationFee(100);
+  }
+
+  @Test
   public void testBuilderSuccessTestnet() throws FormatException {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -122,6 +166,51 @@ public class TransactionTest {
             ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
             ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
     );
+  }
+
+  @Test
+  public void testBuilderBaseFee() throws FormatException {
+    // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    Account account = new Account(source, 2908908335136768L);
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setOperationFee(200)
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+            .build();
+
+    transaction.sign(source);
+
+    assertEquals(
+            "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAyAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAED1Mbd0oou0sfNFRuxsSqvrwJ9RzzTSnX8sTmlbMKcV0V3Kl1eDKoerD+xZ1pNQwOJZrAG2yapXyg60PQfDUcMN",
+            transaction.toEnvelopeXdrBase64());
+
+    Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
+
+    assertEquals(transaction.getSourceAccount().getAccountId(), transaction2.getSourceAccount().getAccountId());
+    assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
+    assertEquals(transaction.getFee(), transaction2.getFee());
+    assertEquals(
+            ((CreateAccountOperation)transaction.getOperations()[0]).getStartingBalance(),
+            ((CreateAccountOperation)transaction2.getOperations()[0]).getStartingBalance()
+    );
+  }
+
+  @Test
+  public void testBuilderBaseFeeThrows() throws FormatException {
+    // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+
+    Account account = new Account(source, 2908908335136768L);
+    Transaction.Builder builder = new Transaction.Builder(account);
+    try {
+      builder.setOperationFee(99);
+      fail("expected IllegalArgumentException");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
   }
 
   @Test
