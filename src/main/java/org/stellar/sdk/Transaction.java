@@ -19,9 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction {
-  private static final int BASE_FEE = 100;
-  private static Integer defaultOperationFee;
-
   private final int mFee;
   private final KeyPair mSourceAccount;
   private final long mSequenceNumber;
@@ -50,14 +47,6 @@ public class Transaction {
     checkNotNull(signer, "signer cannot be null");
     byte[] txHash = this.hash();
     mSignatures.add(signer.signDecorated(txHash));
-  }
-
-  public static void setDefaultOperationFee(int opFee) {
-    if (opFee < BASE_FEE) {
-      throw new IllegalArgumentException("DefaultOperationFee cannot be smaller than the BASE_FEE (" + BASE_FEE + "): " + opFee);
-    }
-
-    defaultOperationFee = opFee;
   }
 
   /**
@@ -262,14 +251,24 @@ public class Transaction {
    * Builds a new Transaction object.
    */
   public static class Builder {
+    private static final int BASE_FEE = 100;
     private final TransactionBuilderAccount mSourceAccount;
     private Memo mMemo;
     private TimeBounds mTimeBounds;
     List<Operation> mOperations;
     private boolean timeoutSet;
+    private static Integer defaultOperationFee;
     private Integer operationFee;
 
     public static final long TIMEOUT_INFINITE = 0;
+
+    public static void setDefaultOperationFee(int opFee) {
+      if (opFee < BASE_FEE) {
+        throw new IllegalArgumentException("DefaultOperationFee cannot be smaller than the BASE_FEE (" + BASE_FEE + "): " + opFee);
+      }
+
+      defaultOperationFee = opFee;
+    }
 
     /**
      * Construct a new transaction builder.
@@ -387,7 +386,7 @@ public class Transaction {
       }
 
       if (operationFee == null) {
-        System.out.println("[TransactionBuilder] The `operationFee` parameter of `Transaction` or `TransactionBuilder` is required. Setting to BASE_FEE=" + BASE_FEE + ". Future versions of this library will error if not provided.");
+        System.out.println("[TransactionBuilder] The `operationFee` parameter of `TransactionBuilder` is required. Setting to BASE_FEE=" + BASE_FEE + ". Future versions of this library will error if not provided.");
         operationFee = BASE_FEE;
       }
 
