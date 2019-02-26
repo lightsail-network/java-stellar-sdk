@@ -2,6 +2,11 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.6.0
+
+* Horizon 0.17.0 features (#180)
+* Enable setting custom base fee (#177)
+
 ## 0.5.0
 
 * Horizon 0.16.0 features (#172)
