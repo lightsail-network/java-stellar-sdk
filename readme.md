@@ -1,6 +1,7 @@
 # java-stellar-sdk
 
 [![Build Status](https://travis-ci.org/stellar/java-stellar-sdk.svg)](https://travis-ci.org/stellar/java-stellar-sdk)
+[![](https://jitpack.io/v/stellar/java-stellar-sdk.svg)](https://jitpack.io/#stellar/java-stellar-sdk)
 
 The Java Stellar Sdk library provides APIs to build transactions and connect to [Horizon](https://github.com/stellar/horizon).
 
