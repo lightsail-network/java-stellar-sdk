@@ -9,4 +9,6 @@ public interface EventListener<T> {
    * @param object object deserialized from the event data
    */
   void onEvent(T object);
+
+  void onError();
 }

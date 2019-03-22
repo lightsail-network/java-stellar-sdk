@@ -172,11 +172,14 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
       if (t != null) {
         if (t instanceof SocketException) {
           // not a failure, server disconnected
+          listener.onError();
         } else {
-          throw new IllegalStateException("Failed " + code, t);
+          listener.onError();
+          //throw new IllegalStateException("Failed " + code, t);
         }
       } else {
-        throw new IllegalStateException("Failed " + code);
+        listener.onError();
+        //throw new IllegalStateException("Failed " + code);
       }
     }
 
