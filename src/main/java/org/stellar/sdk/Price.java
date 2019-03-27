@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.xdr.Int32;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +84,14 @@ public class Price {
     }
 
     /**
+     * Generates a Price SDK object from the XDR representation.
+     */
+    public static Price fromXdr(org.stellar.sdk.xdr.Price price) {
+        return new Price(price.getN().getInt32().intValue(), price.getD().getInt32().intValue());
+    }
+
+      
+    /**
      * Generates Price XDR object.
      */
     public org.stellar.sdk.xdr.Price toXdr() {
@@ -93,6 +103,16 @@ public class Price {
         xdr.setN(n);
         xdr.setD(d);
         return xdr;
+    }
+
+    /**
+     * Returns price as a string.
+     */
+    public String toString() {
+        MathContext mc = MathContext.DECIMAL64;
+        BigDecimal result = new BigDecimal(this.n).divide(new BigDecimal(this.d), mc);
+
+        return result.toString();
     }
 
     @Override
