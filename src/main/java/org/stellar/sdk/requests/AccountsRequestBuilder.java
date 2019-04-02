@@ -45,6 +45,11 @@ public class AccountsRequestBuilder extends RequestBuilder {
     return this.account(this.buildUri());
   }
 
+  public AccountsRequestBuilder forAccount(KeyPair account) {
+    this.setSegments("accounts", account.getAccountId());
+    return this;
+  }
+
   /**
    * Requests specific <code>uri</code> and returns {@link Page} of {@link AccountResponse}.
    * This method is helpful for getting the next set of results.
