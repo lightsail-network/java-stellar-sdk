@@ -51,6 +51,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.21.0'
     testCompile "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
     testCompile 'junit:junit:4.12'
+    testCompile 'javax.xml.bind:jaxb-api:2.3.0'
 }
 
 project.configurations.compile 

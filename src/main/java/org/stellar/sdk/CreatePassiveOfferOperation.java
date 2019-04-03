@@ -5,6 +5,7 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -92,9 +93,7 @@ public class CreatePassiveOfferOperation extends Operation {
       selling = Asset.fromXdr(op.getSelling());
       buying = Asset.fromXdr(op.getBuying());
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
-      int n = op.getPrice().getN().getInt32().intValue();
-      int d = op.getPrice().getD().getInt32().intValue();
-      price = new BigDecimal(n).divide(new BigDecimal(d)).toString();
+      price = Price.fromXdr(op.getPrice()).toString();
     }
 
     /**

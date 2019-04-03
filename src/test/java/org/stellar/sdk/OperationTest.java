@@ -2,7 +2,11 @@ package org.stellar.sdk;
 
 import org.junit.Test;
 import org.stellar.sdk.xdr.SignerKey;
+import org.stellar.sdk.xdr.XdrDataInputStream;
 
+import com.google.common.io.BaseEncoding;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -419,6 +423,23 @@ public class OperationTest {
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAMAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
             operation.toXdrBase64());
   }
+
+  @Test
+  public void testManageOfferOperation_BadArithmeticRegression() throws IOException {
+      // from https://github.com/stellar/java-stellar-sdk/issues/183
+      
+      String transactionEnvelopeToDecode = "AAAAAButy5zasS3DLZ5uFpZHL25aiHUfKRwdv1+3Wp12Ce7XAAAAZAEyGwYAAAAOAAAAAAAAAAAAAAABAAAAAQAAAAAbrcuc2rEtwy2ebhaWRy9uWoh1HykcHb9ft1qddgnu1wAAAAMAAAAAAAAAAUtJTgAAAAAARkrT28ebM6YQyhVZi1ttlwq/dk6ijTpyTNuHIMgUp+EAAAAAAAARPSfDKZ0AAv7oAAAAAAAAAAAAAAAAAAAAAXYJ7tcAAABAbE8rEoFt0Hcv41iwVCl74C1Hyr+Lj8ZyaYn7zTJhezClbc+pTW1KgYFIZOJiGVth2xFnBT1pMXuQkVdTlB3FCw==";
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(transactionEnvelopeToDecode);
+
+      org.stellar.sdk.xdr.TransactionEnvelope transactionEnvelope = org.stellar.sdk.xdr.TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+      assertEquals(1, transactionEnvelope.getTx().getOperations().length);
+
+      ManageOfferOperation op = (ManageOfferOperation)Operation.fromXdr(transactionEnvelope.getTx().getOperations()[0]);
+
+      assertEquals("3397.893306099996", op.getPrice());
+  }
+
 
   @Test
   public void testCreatePassiveOfferOperation() throws IOException, FormatException {
