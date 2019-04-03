@@ -30,12 +30,14 @@ public class Server {
     public Server(String uri) {
         serverURI = HttpUrl.parse(uri);
         httpClient = new OkHttpClient.Builder()
+                .addInterceptor(new ClientIdentificationInterceptor())
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
         submitHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new ClientIdentificationInterceptor())
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)

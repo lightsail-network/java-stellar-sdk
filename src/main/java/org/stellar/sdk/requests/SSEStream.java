@@ -1,11 +1,13 @@
 package org.stellar.sdk.requests;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.internal.sse.RealEventSource;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
+import org.stellar.sdk.Util;
 import org.stellar.sdk.responses.GsonSingleton;
 
 import javax.annotation.Nullable;
@@ -109,6 +111,13 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     return stream;
   }
 
+  private static String addIdentificationQueryParameter(String url) {
+    HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder()
+              .addQueryParameter("X-Client-Name", "java-stellar-sdk")
+              .addQueryParameter("X-Client-Version", Util.getSdkVersion());
+    return urlBuilder.build().toString();
+  }
+
   private static <T extends org.stellar.sdk.responses.Response> EventSource doStreamRequest(
           final SSEStream<T> stream,
           final OkHttpClient okHttpClient,
@@ -119,7 +128,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
           final CloseListener closeListener) {
 
     Request.Builder builder = new Request.Builder()
-            .url(url)
+            .url(addIdentificationQueryParameter(url))
             .header("Accept", "text/event-stream");
     String lastEventId = stream.lastEventId.get();
     if(lastEventId != null) {
