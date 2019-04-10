@@ -22,6 +22,8 @@ public class TransactionResponse extends Response {
   private final String createdAt;
   @SerializedName("source_account")
   private final KeyPair sourceAccount;
+  @SerializedName("successful")
+  private final Boolean successful;
   @SerializedName("paging_token")
   private final String pagingToken;
   @SerializedName("source_account_sequence")
@@ -43,11 +45,12 @@ public class TransactionResponse extends Response {
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  TransactionResponse(String hash, Long ledger, String createdAt, KeyPair sourceAccount, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
+  TransactionResponse(String hash, Long ledger, String createdAt, KeyPair sourceAccount, Boolean successful, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
     this.hash = hash;
     this.ledger = ledger;
     this.createdAt = createdAt;
     this.sourceAccount = sourceAccount;
+    this.successful = successful;
     this.pagingToken = pagingToken;
     this.sourceAccountSequence = sourceAccountSequence;
     this.feePaid = feePaid;
@@ -77,6 +80,10 @@ public class TransactionResponse extends Response {
 
   public String getPagingToken() {
     return pagingToken;
+  }
+
+  public Boolean isSuccessful() {
+    return successful;
   }
 
   public Long getSourceAccountSequence() {

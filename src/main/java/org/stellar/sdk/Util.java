@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-class Util {
+public class Util {
 
   public static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
@@ -69,5 +69,18 @@ class Util {
    */
   static String paddedByteArrayToString(byte[] bytes) {
     return new String(bytes).split("\0")[0];
+  }
+
+  /**
+   * Get the version of the SDK
+   * @return version
+   */
+  public static String getSdkVersion() {
+    String clientVersion = "dev";
+    String implementationVersion = Util.class.getPackage().getImplementationVersion();
+    if (implementationVersion != null) {
+      clientVersion = implementationVersion;
+    }
+    return clientVersion;
   }
 }

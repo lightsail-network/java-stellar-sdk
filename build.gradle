@@ -16,7 +16,7 @@ apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates -Drevi
 apply plugin: 'project-report' // gradle htmlDependencyReport
 
 sourceCompatibility = 1.6
-version = '0.3.2'
+version = '0.5.0'
 group = 'stellar'
 
 jar {
@@ -51,6 +51,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.21.0'
     testCompile "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
     testCompile 'junit:junit:4.12'
+    testCompile 'javax.xml.bind:jaxb-api:2.3.0'
 }
 
 project.configurations.compile 
@@ -76,8 +77,8 @@ def deployer = uploadArchives.repositories.mavenDeployer
 
 shadowJar {
    archiveName 'stellar-sdk.jar' 
-   relocate 'com','shadow.com'
-   relocate 'net','shadow.net'
+   relocate 'com.','shadow.com.'
+   relocate 'net.','shadow.net.'
    relocate 'javax.annotation', 'shadow.javax.annotation'
    relocate 'org.apache','shadow.org.apache'
    relocate 'org.jvnet','shadow.org.jvnet'

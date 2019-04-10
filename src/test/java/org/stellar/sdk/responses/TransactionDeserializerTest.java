@@ -14,6 +14,7 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(transaction.getLedger(), new Long(915744));
     assertEquals(transaction.getCreatedAt(), "2015-11-20T17:01:28Z");
     assertEquals(transaction.getPagingToken(), "3933090531512320");
+    assertEquals(transaction.isSuccessful(), new Boolean(true));
     assertEquals(transaction.getSourceAccount().getAccountId(), "GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK");
     assertEquals(transaction.getSourceAccountSequence(), new Long(2373051035426646L));
     assertEquals(transaction.getFeePaid(), new Long(100));
@@ -39,6 +40,7 @@ public class TransactionDeserializerTest extends TestCase {
   public void testDeserializeWithoutMemo() {
     TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonMemoNone, TransactionResponse.class);
     assertTrue(transaction.getMemo() instanceof MemoNone);
+    assertEquals(transaction.isSuccessful(), new Boolean(false));
   }
 
   String json = "{\n" +
@@ -69,6 +71,7 @@ public class TransactionDeserializerTest extends TestCase {
           "  },\n" +
           "  \"id\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
           "  \"paging_token\": \"3933090531512320\",\n" +
+          "  \"successful\": true,\n" +
           "  \"hash\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
           "  \"ledger\": 915744,\n" +
           "  \"created_at\": \"2015-11-20T17:01:28Z\",\n" +
@@ -114,6 +117,7 @@ public class TransactionDeserializerTest extends TestCase {
           "  },\n" +
           "  \"id\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
           "  \"paging_token\": \"3933090531512320\",\n" +
+          "  \"successful\": false,\n" +
           "  \"hash\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
           "  \"ledger\": 915744,\n" +
           "  \"created_at\": \"2015-11-20T17:01:28Z\",\n" +

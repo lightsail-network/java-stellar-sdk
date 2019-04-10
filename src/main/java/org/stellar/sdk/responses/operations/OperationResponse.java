@@ -23,6 +23,8 @@ public abstract class OperationResponse extends Response {
   protected String createdAt;
   @SerializedName("transaction_hash")
   protected String transactionHash;
+  @SerializedName("transaction_successful")
+  protected Boolean transactionSuccessful;
   @SerializedName("type")
   protected String type;
   @SerializedName("_links")
@@ -69,6 +71,10 @@ public abstract class OperationResponse extends Response {
    */
   public String getTransactionHash() {
     return transactionHash;
+  }
+
+  public Boolean isTransactionSuccessful() {
+    return transactionSuccessful;
   }
 
   public Links getLinks() {

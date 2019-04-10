@@ -31,11 +31,13 @@ public class Server implements Closeable {
     public Server(String uri) {
         this(uri,
                 new OkHttpClient.Builder()
+                    .addInterceptor(new ClientIdentificationInterceptor())
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true)
                     .build(),
                 new OkHttpClient.Builder()
+                    .addInterceptor(new ClientIdentificationInterceptor())
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true)

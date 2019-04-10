@@ -39,4 +39,16 @@ public class TransactionsRequestBuilderTest {
             .buildUri();
     assertEquals("https://horizon-testnet.stellar.org/ledgers/200000000000/transactions?limit=50&order=asc", uri.toString());
   }
+
+  @Test
+  public void testIncludeFailed() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    HttpUrl uri = server.transactions()
+            .forLedger(200000000000L)
+            .includeFailed(true)
+            .limit(50)
+            .order(RequestBuilder.Order.ASC)
+            .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/ledgers/200000000000/transactions?include_failed=true&limit=50&order=asc", uri.toString());
+  }
 }

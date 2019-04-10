@@ -69,6 +69,16 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   }
 
   /**
+   * Adds a parameter defining whether to include failed transactions. By default only successful transactions are
+   * returned.
+   * @param value Set to <code>true</code> to include failed transactions.
+   */
+  public TransactionsRequestBuilder includeFailed(boolean value) {
+    uriBuilder.setQueryParameter("include_failed", String.valueOf(value));
+    return this;
+  }
+
+  /**
    * Requests specific <code>uri</code> and returns {@link Page} of {@link TransactionResponse}.
    * This method is helpful for getting the next set of results.
    * @return {@link Page} of {@link TransactionResponse}

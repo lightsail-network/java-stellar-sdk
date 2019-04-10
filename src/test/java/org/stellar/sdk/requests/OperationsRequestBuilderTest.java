@@ -48,4 +48,16 @@ public class OperationsRequestBuilderTest {
             .buildUri();
     assertEquals("https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3/operations", uri.toString());
   }
+
+  @Test
+  public void testIncludeFailed() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    HttpUrl uri = server.operations()
+            .forLedger(200000000000L)
+            .includeFailed(true)
+            .limit(50)
+            .order(RequestBuilder.Order.ASC)
+            .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/ledgers/200000000000/operations?include_failed=true&limit=50&order=asc", uri.toString());
+  }
 }
