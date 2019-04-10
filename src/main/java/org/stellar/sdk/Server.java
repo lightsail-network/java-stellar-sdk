@@ -6,6 +6,7 @@ import okhttp3.Response;
 import org.stellar.sdk.requests.*;
 import org.stellar.sdk.responses.*;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Main class used to connect to Horizon server.
  */
-public class Server {
+public class Server implements Closeable {
     private HttpUrl serverURI;
     private OkHttpClient httpClient;
     /**
@@ -28,20 +29,27 @@ public class Server {
     private static final int HORIZON_SUBMIT_TIMEOUT = 60;
 
     public Server(String uri) {
-        serverURI = HttpUrl.parse(uri);
-        httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new ClientIdentificationInterceptor())
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
-                .build();
+        this(uri,
+                new OkHttpClient.Builder()
+                    .addInterceptor(new ClientIdentificationInterceptor())
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
+                    .build(),
+                new OkHttpClient.Builder()
+                    .addInterceptor(new ClientIdentificationInterceptor())
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
+                    .build()
+        );
 
-        submitHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new ClientIdentificationInterceptor())
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
-                .build();
+    }
+
+    public Server(String serverURI, OkHttpClient httpClient, OkHttpClient submitHttpClient) {
+        this.serverURI = HttpUrl.parse(serverURI);
+        this.httpClient = httpClient;
+        this.submitHttpClient = submitHttpClient;
     }
 
 
@@ -201,5 +209,13 @@ public class Server {
         }
 
         return submitTransactionResponse;
+    }
+
+    @Override
+    public void close() {
+        // workaround for https://github.com/square/okhttp/issues/3372
+        // sometimes, the connection pool keeps running and this can prevent a clean shut down.
+        this.httpClient.connectionPool().evictAll();
+        this.submitHttpClient.connectionPool().evictAll();
     }
 }
