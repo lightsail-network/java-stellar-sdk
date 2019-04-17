@@ -595,4 +595,25 @@ public class OperationTest {
     assertEquals("101401671144.6800155", Operation.fromXdrAmount(1014016711446800155L));
     assertEquals("922337203685.4775807", Operation.fromXdrAmount(9223372036854775807L));
   }
+
+  @Test
+  public void testInflationOperation() {
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+
+    InflationOperation operation = new InflationOperation();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    InflationOperation parsedOperation = (InflationOperation) Operation.fromXdr(xdr);
+
+    assertEquals(
+            "AAAAAAAAAAk=",
+            operation.toXdrBase64());
+
+    operation.setSourceAccount(source);
+
+    assertEquals(
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAk=",
+            operation.toXdrBase64());
+  }
 }
