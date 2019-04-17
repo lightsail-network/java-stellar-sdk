@@ -4,6 +4,8 @@
 package org.stellar.sdk.xdr;
 
 
+import org.stellar.sdk.InflationOperation;
+
 import java.io.IOException;
 
 // === xdr source ============================================================
