@@ -101,11 +101,11 @@ public class SubmitTransactionResponse extends Response {
             return null;
         }
 
-        if (result.getResult().getResults()[0].getTr().getManageOfferResult().getSuccess().getOffer().getOffer() == null) {
+        if (result.getResult().getResults()[position].getTr().getManageOfferResult().getSuccess().getOffer().getOffer() == null) {
             return null;
         }
 
-        return result.getResult().getResults()[0].getTr().getManageOfferResult().getSuccess().getOffer().getOffer().getOfferID().getUint64();
+        return result.getResult().getResults()[position].getTr().getManageOfferResult().getSuccess().getOffer().getOffer().getOfferID().getUint64();
     }
 
     /**
