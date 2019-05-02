@@ -39,12 +39,12 @@ public abstract class Asset {
       case ASSET_TYPE_NATIVE:
         return new AssetTypeNative();
       case ASSET_TYPE_CREDIT_ALPHANUM4:
-        String assetCode4 = Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode());
+        String assetCode4 = Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode().getAssetCode4());
         KeyPair issuer4 = KeyPair.fromXdrPublicKey(
                 xdr.getAlphaNum4().getIssuer().getAccountID());
         return new AssetTypeCreditAlphaNum4(assetCode4, issuer4);
       case ASSET_TYPE_CREDIT_ALPHANUM12:
-        String assetCode12 = Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode());
+        String assetCode12 = Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode().getAssetCode12());
         KeyPair issuer12 = KeyPair.fromXdrPublicKey(xdr.getAlphaNum12().getIssuer().getAccountID());
         return new AssetTypeCreditAlphaNum12(assetCode12, issuer12);
       default:

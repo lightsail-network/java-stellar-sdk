@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import org.stellar.sdk.xdr.AccountID;
+import org.stellar.sdk.xdr.AssetCode4;
 import org.stellar.sdk.xdr.AssetType;
 
 /**
@@ -31,7 +32,9 @@ public final class AssetTypeCreditAlphaNum4 extends AssetTypeCreditAlphaNum {
     org.stellar.sdk.xdr.Asset xdr = new org.stellar.sdk.xdr.Asset();
     xdr.setDiscriminant(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4);
     org.stellar.sdk.xdr.Asset.AssetAlphaNum4 credit = new org.stellar.sdk.xdr.Asset.AssetAlphaNum4();
-    credit.setAssetCode(Util.paddedByteArray(mCode, 4));
+    AssetCode4 assetCode4 = new AssetCode4();
+    assetCode4.setAssetCode4(Util.paddedByteArray(mCode, 4));
+    credit.setAssetCode(assetCode4);
     AccountID accountID = new AccountID();
     accountID.setAccountID(mIssuer.getXdrPublicKey());
     credit.setIssuer(accountID);

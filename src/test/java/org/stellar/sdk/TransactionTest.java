@@ -152,8 +152,8 @@ public class TransactionTest {
     );
     org.stellar.sdk.xdr.Transaction decodedTransaction = org.stellar.sdk.xdr.Transaction.decode(is);
 
-    assertEquals(decodedTransaction.getTimeBounds().getMinTime().getUint64().longValue(), 42);
-    assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getUint64().longValue(), 1337);
+    assertEquals(decodedTransaction.getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
+    assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 1337);
 
     Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr());
 
@@ -301,6 +301,7 @@ public class TransactionTest {
             .addTimeBounds(new TimeBounds(42, 0))
             .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .addMemo(Memo.hash("abcdef"))
+            .setOperationFee(100)
             .build();
 
     transaction.sign(source);
@@ -313,8 +314,8 @@ public class TransactionTest {
     );
     org.stellar.sdk.xdr.Transaction decodedTransaction = org.stellar.sdk.xdr.Transaction.decode(is);
 
-    assertEquals(decodedTransaction.getTimeBounds().getMinTime().getUint64().longValue(), 42);
-    assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getUint64().longValue(), 0);
+    assertEquals(decodedTransaction.getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
+    assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 0);
   }
 
   @Test

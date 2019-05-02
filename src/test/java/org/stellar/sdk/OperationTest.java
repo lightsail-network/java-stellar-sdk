@@ -388,7 +388,7 @@ public class OperationTest {
   }
 
   @Test
-  public void testManageOfferOperation() throws IOException, FormatException {
+  public void testManageSellOfferOperation() throws IOException, FormatException {
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
     // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
@@ -401,15 +401,15 @@ public class OperationTest {
     Price priceObj = Price.fromString(price);
     long offerId = 1;
 
-    ManageOfferOperation operation = new ManageOfferOperation.Builder(selling, buying, amount, price)
+    ManageSellOfferOperation operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price)
         .setOfferId(offerId)
         .setSourceAccount(source)
         .build();
 
     org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-    ManageOfferOperation parsedOperation = (ManageOfferOperation) ManageOfferOperation.fromXdr(xdr);
+    ManageSellOfferOperation parsedOperation = (ManageSellOfferOperation) ManageSellOfferOperation.fromXdr(xdr);
 
-    assertEquals(100L, xdr.getBody().getManageOfferOp().getAmount().getInt64().longValue());
+    assertEquals(100L, xdr.getBody().getManageSellOfferOp().getAmount().getInt64().longValue());
     assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
     assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
     assertTrue(parsedOperation.getBuying().equals(buying));
@@ -425,7 +425,44 @@ public class OperationTest {
   }
 
   @Test
-  public void testManageOfferOperation_BadArithmeticRegression() throws IOException {
+  public void testManageBuyOfferOperation() throws IOException, FormatException {
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+    // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
+    KeyPair issuer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
+
+    Asset selling = new AssetTypeNative();
+    Asset buying = Asset.createNonNativeAsset("USD", issuer);
+    String amount = "0.00001";
+    String price = "0.85334384"; // n=5333399 d=6250000
+    Price priceObj = Price.fromString(price);
+    long offerId = 1;
+
+    ManageBuyOfferOperation operation = new ManageBuyOfferOperation.Builder(selling, buying, amount, price)
+            .setOfferId(offerId)
+            .setSourceAccount(source)
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    ManageBuyOfferOperation parsedOperation = (ManageBuyOfferOperation) ManageOfferOperation.fromXdr(xdr);
+
+    assertEquals(100L, xdr.getBody().getManageBuyOfferOp().getBuyAmount().getInt64().longValue());
+    assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
+    assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
+    assertTrue(parsedOperation.getBuying().equals(buying));
+    assertEquals(amount, parsedOperation.getAmount());
+    assertEquals(price, parsedOperation.getPrice());
+    assertEquals(priceObj.getNumerator(), 5333399);
+    assertEquals(priceObj.getDenominator(), 6250000);
+    assertEquals(offerId, parsedOperation.getOfferId());
+
+    assertEquals(
+            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAwAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
+            operation.toXdrBase64());
+  }
+
+  @Test
+  public void testManageSellOfferOperation_BadArithmeticRegression() throws IOException {
       // from https://github.com/stellar/java-stellar-sdk/issues/183
       
       String transactionEnvelopeToDecode = "AAAAAButy5zasS3DLZ5uFpZHL25aiHUfKRwdv1+3Wp12Ce7XAAAAZAEyGwYAAAAOAAAAAAAAAAAAAAABAAAAAQAAAAAbrcuc2rEtwy2ebhaWRy9uWoh1HykcHb9ft1qddgnu1wAAAAMAAAAAAAAAAUtJTgAAAAAARkrT28ebM6YQyhVZi1ttlwq/dk6ijTpyTNuHIMgUp+EAAAAAAAARPSfDKZ0AAv7oAAAAAAAAAAAAAAAAAAAAAXYJ7tcAAABAbE8rEoFt0Hcv41iwVCl74C1Hyr+Lj8ZyaYn7zTJhezClbc+pTW1KgYFIZOJiGVth2xFnBT1pMXuQkVdTlB3FCw==";
@@ -435,7 +472,7 @@ public class OperationTest {
       org.stellar.sdk.xdr.TransactionEnvelope transactionEnvelope = org.stellar.sdk.xdr.TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
       assertEquals(1, transactionEnvelope.getTx().getOperations().length);
 
-      ManageOfferOperation op = (ManageOfferOperation)Operation.fromXdr(transactionEnvelope.getTx().getOperations()[0]);
+      ManageSellOfferOperation op = (ManageSellOfferOperation)Operation.fromXdr(transactionEnvelope.getTx().getOperations()[0]);
 
       assertEquals("3397.893306099996", op.getPrice());
   }
@@ -454,14 +491,14 @@ public class OperationTest {
     String price = "2.93850088"; // n=36731261 d=12500000
     Price priceObj = Price.fromString(price);
 
-      CreatePassiveOfferOperation operation = new CreatePassiveOfferOperation.Builder(selling, buying, amount, price)
+      CreatePassiveSellOfferOperation operation = new CreatePassiveSellOfferOperation.Builder(selling, buying, amount, price)
             .setSourceAccount(source)
             .build();
 
     org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-    CreatePassiveOfferOperation parsedOperation = (CreatePassiveOfferOperation) CreatePassiveOfferOperation.fromXdr(xdr);
+    CreatePassiveSellOfferOperation parsedOperation = (CreatePassiveSellOfferOperation) CreatePassiveSellOfferOperation.fromXdr(xdr);
 
-    assertEquals(100L, xdr.getBody().getCreatePassiveOfferOp().getAmount().getInt64().longValue());
+    assertEquals(100L, xdr.getBody().getCreatePassiveSellOfferOp().getAmount().getInt64().longValue());
     assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
     assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
     assertTrue(parsedOperation.getBuying().equals(buying));

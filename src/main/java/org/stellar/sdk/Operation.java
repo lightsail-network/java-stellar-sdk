@@ -78,11 +78,14 @@ public abstract class Operation {
       case PATH_PAYMENT:
         operation = new PathPaymentOperation.Builder(body.getPathPaymentOp()).build();
         break;
-      case MANAGE_OFFER:
-        operation = new ManageOfferOperation.Builder(body.getManageOfferOp()).build();
+      case MANAGE_SELL_OFFER:
+        operation = new ManageSellOfferOperation.Builder(body.getManageSellOfferOp()).build();
         break;
-      case CREATE_PASSIVE_OFFER:
-        operation = new CreatePassiveOfferOperation.Builder(body.getCreatePassiveOfferOp()).build();
+      case MANAGE_BUY_OFFER:
+        operation = new ManageBuyOfferOperation.Builder(body.getManageBuyOfferOp()).build();
+        break;
+      case CREATE_PASSIVE_SELL_OFFER:
+        operation = new CreatePassiveSellOfferOperation.Builder(body.getCreatePassiveSellOfferOp()).build();
         break;
       case SET_OPTIONS:
         operation = new SetOptionsOperation.Builder(body.getSetOptionsOp()).build();

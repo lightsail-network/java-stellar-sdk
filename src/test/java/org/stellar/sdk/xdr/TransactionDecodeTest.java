@@ -56,7 +56,7 @@ public class TransactionDecodeTest {
 
         TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
         assertEquals(1, transactionEnvelope.getTx().getOperations().length);
-        assertTrue(Arrays.equals(new byte[]{'G', 'O', 'L', 'D'}, transactionEnvelope.getTx().getOperations()[0].getBody().getPaymentOp().getAsset().getAlphaNum4().getAssetCode()));
+        assertTrue(Arrays.equals(new byte[]{'G', 'O', 'L', 'D'}, transactionEnvelope.getTx().getOperations()[0].getBody().getPaymentOp().getAsset().getAlphaNum4().getAssetCode().getAssetCode4()));
     }
 
 }
