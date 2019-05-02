@@ -61,6 +61,8 @@ public class Memo  {
     this.retHash = value;
   }
   public static void encode(XdrDataOutputStream stream, Memo encodedMemo) throws IOException {
+  //Xdrgen::AST::Identifier
+  //MemoType
   stream.writeInt(encodedMemo.getDiscriminant().getValue());
   switch (encodedMemo.getDiscriminant()) {
   case MEMO_NONE:

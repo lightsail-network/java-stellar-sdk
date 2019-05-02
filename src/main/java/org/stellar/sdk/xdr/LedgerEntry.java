@@ -109,6 +109,8 @@ public class LedgerEntry  {
       this.data = value;
     }
     public static void encode(XdrDataOutputStream stream, LedgerEntryData encodedLedgerEntryData) throws IOException {
+    //Xdrgen::AST::Identifier
+    //LedgerEntryType
     stream.writeInt(encodedLedgerEntryData.getDiscriminant().getValue());
     switch (encodedLedgerEntryData.getDiscriminant()) {
     case ACCOUNT:
@@ -157,6 +159,8 @@ public class LedgerEntry  {
       this.v = value;
     }
     public static void encode(XdrDataOutputStream stream, LedgerEntryExt encodedLedgerEntryExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedLedgerEntryExt.getDiscriminant().intValue());
     switch (encodedLedgerEntryExt.getDiscriminant()) {
     case 0:

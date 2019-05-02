@@ -208,6 +208,8 @@ public class LedgerHeader  {
       this.v = value;
     }
     public static void encode(XdrDataOutputStream stream, LedgerHeaderExt encodedLedgerHeaderExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedLedgerHeaderExt.getDiscriminant().intValue());
     switch (encodedLedgerHeaderExt.getDiscriminant()) {
     case 0:

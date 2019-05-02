@@ -52,6 +52,8 @@ public class SignerKey  {
     this.hashX = value;
   }
   public static void encode(XdrDataOutputStream stream, SignerKey encodedSignerKey) throws IOException {
+  //Xdrgen::AST::Identifier
+  //SignerKeyType
   stream.writeInt(encodedSignerKey.getDiscriminant().getValue());
   switch (encodedSignerKey.getDiscriminant()) {
   case SIGNER_KEY_TYPE_ED25519:

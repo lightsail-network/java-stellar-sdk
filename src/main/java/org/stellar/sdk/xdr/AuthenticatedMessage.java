@@ -37,6 +37,8 @@ public class AuthenticatedMessage  {
     this.v0 = value;
   }
   public static void encode(XdrDataOutputStream stream, AuthenticatedMessage encodedAuthenticatedMessage) throws IOException {
+  //Xdrgen::AST::Identifier
+  //Uint32
   stream.writeInt(encodedAuthenticatedMessage.getDiscriminant().getUint32());
   switch (encodedAuthenticatedMessage.getDiscriminant().getUint32()) {
   case 0:

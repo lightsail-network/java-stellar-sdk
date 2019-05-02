@@ -11,10 +11,13 @@ import java.io.IOException;
 //  union BucketEntry switch (BucketEntryType type)
 //  {
 //  case LIVEENTRY:
+//  case INITENTRY:
 //      LedgerEntry liveEntry;
 //  
 //  case DEADENTRY:
 //      LedgerKey deadEntry;
+//  case METAENTRY:
+//      BucketMetadata metaEntry;
 //  };
 
 //  ===========================================================================
@@ -41,14 +44,27 @@ public class BucketEntry  {
   public void setDeadEntry(LedgerKey value) {
     this.deadEntry = value;
   }
+  private BucketMetadata metaEntry;
+  public BucketMetadata getMetaEntry() {
+    return this.metaEntry;
+  }
+  public void setMetaEntry(BucketMetadata value) {
+    this.metaEntry = value;
+  }
   public static void encode(XdrDataOutputStream stream, BucketEntry encodedBucketEntry) throws IOException {
+  //Xdrgen::AST::Identifier
+  //BucketEntryType
   stream.writeInt(encodedBucketEntry.getDiscriminant().getValue());
   switch (encodedBucketEntry.getDiscriminant()) {
   case LIVEENTRY:
+  case INITENTRY:
   LedgerEntry.encode(stream, encodedBucketEntry.liveEntry);
   break;
   case DEADENTRY:
   LedgerKey.encode(stream, encodedBucketEntry.deadEntry);
+  break;
+  case METAENTRY:
+  BucketMetadata.encode(stream, encodedBucketEntry.metaEntry);
   break;
   }
   }
@@ -58,10 +74,14 @@ public class BucketEntry  {
   decodedBucketEntry.setDiscriminant(discriminant);
   switch (decodedBucketEntry.getDiscriminant()) {
   case LIVEENTRY:
+  case INITENTRY:
   decodedBucketEntry.liveEntry = LedgerEntry.decode(stream);
   break;
   case DEADENTRY:
   decodedBucketEntry.deadEntry = LedgerKey.decode(stream);
+  break;
+  case METAENTRY:
+  decodedBucketEntry.metaEntry = BucketMetadata.decode(stream);
   break;
   }
     return decodedBucketEntry;

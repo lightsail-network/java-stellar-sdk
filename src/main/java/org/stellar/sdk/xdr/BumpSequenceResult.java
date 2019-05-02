@@ -27,6 +27,8 @@ public class BumpSequenceResult  {
     this.code = value;
   }
   public static void encode(XdrDataOutputStream stream, BumpSequenceResult encodedBumpSequenceResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //BumpSequenceResultCode
   stream.writeInt(encodedBumpSequenceResult.getDiscriminant().getValue());
   switch (encodedBumpSequenceResult.getDiscriminant()) {
   case BUMP_SEQUENCE_SUCCESS:

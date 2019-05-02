@@ -120,6 +120,8 @@ public class TrustLineEntry  {
       this.v1 = value;
     }
     public static void encode(XdrDataOutputStream stream, TrustLineEntryExt encodedTrustLineEntryExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedTrustLineEntryExt.getDiscriminant().intValue());
     switch (encodedTrustLineEntryExt.getDiscriminant()) {
     case 0:
@@ -180,6 +182,8 @@ public class TrustLineEntry  {
           this.v = value;
         }
         public static void encode(XdrDataOutputStream stream, TrustLineEntryV1Ext encodedTrustLineEntryV1Ext) throws IOException {
+        //Xdrgen::AST::Typespecs::Int
+        //Integer
         stream.writeInt(encodedTrustLineEntryV1Ext.getDiscriminant().intValue());
         switch (encodedTrustLineEntryV1Ext.getDiscriminant()) {
         case 0:

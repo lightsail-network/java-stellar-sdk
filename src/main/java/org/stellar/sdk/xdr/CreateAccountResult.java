@@ -27,6 +27,8 @@ public class CreateAccountResult  {
     this.code = value;
   }
   public static void encode(XdrDataOutputStream stream, CreateAccountResult encodedCreateAccountResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //CreateAccountResultCode
   stream.writeInt(encodedCreateAccountResult.getDiscriminant().getValue());
   switch (encodedCreateAccountResult.getDiscriminant()) {
   case CREATE_ACCOUNT_SUCCESS:

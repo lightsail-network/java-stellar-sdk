@@ -10,35 +10,35 @@ import java.io.IOException;
 
 //  struct TimeBounds
 //  {
-//      uint64 minTime;
-//      uint64 maxTime; // 0 here means no maxTime
+//      TimePoint minTime;
+//      TimePoint maxTime; // 0 here means no maxTime
 //  };
 
 //  ===========================================================================
 public class TimeBounds  {
   public TimeBounds () {}
-  private Uint64 minTime;
-  public Uint64 getMinTime() {
+  private TimePoint minTime;
+  public TimePoint getMinTime() {
     return this.minTime;
   }
-  public void setMinTime(Uint64 value) {
+  public void setMinTime(TimePoint value) {
     this.minTime = value;
   }
-  private Uint64 maxTime;
-  public Uint64 getMaxTime() {
+  private TimePoint maxTime;
+  public TimePoint getMaxTime() {
     return this.maxTime;
   }
-  public void setMaxTime(Uint64 value) {
+  public void setMaxTime(TimePoint value) {
     this.maxTime = value;
   }
   public static void encode(XdrDataOutputStream stream, TimeBounds encodedTimeBounds) throws IOException{
-    Uint64.encode(stream, encodedTimeBounds.minTime);
-    Uint64.encode(stream, encodedTimeBounds.maxTime);
+    TimePoint.encode(stream, encodedTimeBounds.minTime);
+    TimePoint.encode(stream, encodedTimeBounds.maxTime);
   }
   public static TimeBounds decode(XdrDataInputStream stream) throws IOException {
     TimeBounds decodedTimeBounds = new TimeBounds();
-    decodedTimeBounds.minTime = Uint64.decode(stream);
-    decodedTimeBounds.maxTime = Uint64.decode(stream);
+    decodedTimeBounds.minTime = TimePoint.decode(stream);
+    decodedTimeBounds.maxTime = TimePoint.decode(stream);
     return decodedTimeBounds;
   }
 }

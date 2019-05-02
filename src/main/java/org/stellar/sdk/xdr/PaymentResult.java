@@ -27,6 +27,8 @@ public class PaymentResult  {
     this.code = value;
   }
   public static void encode(XdrDataOutputStream stream, PaymentResult encodedPaymentResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //PaymentResultCode
   stream.writeInt(encodedPaymentResult.getDiscriminant().getValue());
   switch (encodedPaymentResult.getDiscriminant()) {
   case PAYMENT_SUCCESS:

@@ -27,6 +27,8 @@ public class AllowTrustResult  {
     this.code = value;
   }
   public static void encode(XdrDataOutputStream stream, AllowTrustResult encodedAllowTrustResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //AllowTrustResultCode
   stream.writeInt(encodedAllowTrustResult.getDiscriminant().getValue());
   switch (encodedAllowTrustResult.getDiscriminant()) {
   case ALLOW_TRUST_SUCCESS:

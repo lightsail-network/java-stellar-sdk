@@ -11,7 +11,7 @@ import java.io.IOException;
 //  struct OfferEntry
 //  {
 //      AccountID sellerID;
-//      uint64 offerID;
+//      int64 offerID;
 //      Asset selling; // A
 //      Asset buying;  // B
 //      int64 amount;  // amount of A
@@ -43,11 +43,11 @@ public class OfferEntry  {
   public void setSellerID(AccountID value) {
     this.sellerID = value;
   }
-  private Uint64 offerID;
-  public Uint64 getOfferID() {
+  private Int64 offerID;
+  public Int64 getOfferID() {
     return this.offerID;
   }
-  public void setOfferID(Uint64 value) {
+  public void setOfferID(Int64 value) {
     this.offerID = value;
   }
   private Asset selling;
@@ -94,7 +94,7 @@ public class OfferEntry  {
   }
   public static void encode(XdrDataOutputStream stream, OfferEntry encodedOfferEntry) throws IOException{
     AccountID.encode(stream, encodedOfferEntry.sellerID);
-    Uint64.encode(stream, encodedOfferEntry.offerID);
+    Int64.encode(stream, encodedOfferEntry.offerID);
     Asset.encode(stream, encodedOfferEntry.selling);
     Asset.encode(stream, encodedOfferEntry.buying);
     Int64.encode(stream, encodedOfferEntry.amount);
@@ -105,7 +105,7 @@ public class OfferEntry  {
   public static OfferEntry decode(XdrDataInputStream stream) throws IOException {
     OfferEntry decodedOfferEntry = new OfferEntry();
     decodedOfferEntry.sellerID = AccountID.decode(stream);
-    decodedOfferEntry.offerID = Uint64.decode(stream);
+    decodedOfferEntry.offerID = Int64.decode(stream);
     decodedOfferEntry.selling = Asset.decode(stream);
     decodedOfferEntry.buying = Asset.decode(stream);
     decodedOfferEntry.amount = Int64.decode(stream);
@@ -125,6 +125,8 @@ public class OfferEntry  {
       this.v = value;
     }
     public static void encode(XdrDataOutputStream stream, OfferEntryExt encodedOfferEntryExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedOfferEntryExt.getDiscriminant().intValue());
     switch (encodedOfferEntryExt.getDiscriminant()) {
     case 0:

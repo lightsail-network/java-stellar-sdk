@@ -79,6 +79,8 @@ public class DataEntry  {
       this.v = value;
     }
     public static void encode(XdrDataOutputStream stream, DataEntryExt encodedDataEntryExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedDataEntryExt.getDiscriminant().intValue());
     switch (encodedDataEntryExt.getDiscriminant()) {
     case 0:

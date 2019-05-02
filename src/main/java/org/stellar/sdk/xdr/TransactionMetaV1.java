@@ -11,7 +11,7 @@ import java.io.IOException;
 //  struct TransactionMetaV1
 //  {
 //      LedgerEntryChanges txChanges; // tx level changes if any
-//      OperationMeta operations<>; // meta for each operation
+//      OperationMeta operations<>;   // meta for each operation
 //  };
 
 //  ===========================================================================

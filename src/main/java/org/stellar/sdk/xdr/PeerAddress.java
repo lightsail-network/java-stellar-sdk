@@ -83,6 +83,8 @@ public class PeerAddress  {
       this.ipv6 = value;
     }
     public static void encode(XdrDataOutputStream stream, PeerAddressIp encodedPeerAddressIp) throws IOException {
+    //Xdrgen::AST::Identifier
+    //IPAddrType
     stream.writeInt(encodedPeerAddressIp.getDiscriminant().getValue());
     switch (encodedPeerAddressIp.getDiscriminant()) {
     case IPv4:

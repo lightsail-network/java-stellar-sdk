@@ -65,6 +65,8 @@ public class TransactionSignaturePayload  {
       this.tx = value;
     }
     public static void encode(XdrDataOutputStream stream, TransactionSignaturePayloadTaggedTransaction encodedTransactionSignaturePayloadTaggedTransaction) throws IOException {
+    //Xdrgen::AST::Identifier
+    //EnvelopeType
     stream.writeInt(encodedTransactionSignaturePayloadTaggedTransaction.getDiscriminant().getValue());
     switch (encodedTransactionSignaturePayloadTaggedTransaction.getDiscriminant()) {
     case ENVELOPE_TYPE_TX:

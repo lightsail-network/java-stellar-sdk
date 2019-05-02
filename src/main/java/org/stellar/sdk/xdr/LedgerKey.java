@@ -27,7 +27,7 @@ import java.io.IOException;
 //      struct
 //      {
 //          AccountID sellerID;
-//          uint64 offerID;
+//          int64 offerID;
 //      } offer;
 //  
 //  case DATA:
@@ -77,6 +77,8 @@ public class LedgerKey  {
     this.data = value;
   }
   public static void encode(XdrDataOutputStream stream, LedgerKey encodedLedgerKey) throws IOException {
+  //Xdrgen::AST::Identifier
+  //LedgerEntryType
   stream.writeInt(encodedLedgerKey.getDiscriminant().getValue());
   switch (encodedLedgerKey.getDiscriminant()) {
   case ACCOUNT:
@@ -170,21 +172,21 @@ public class LedgerKey  {
     public void setSellerID(AccountID value) {
       this.sellerID = value;
     }
-    private Uint64 offerID;
-    public Uint64 getOfferID() {
+    private Int64 offerID;
+    public Int64 getOfferID() {
       return this.offerID;
     }
-    public void setOfferID(Uint64 value) {
+    public void setOfferID(Int64 value) {
       this.offerID = value;
     }
     public static void encode(XdrDataOutputStream stream, LedgerKeyOffer encodedLedgerKeyOffer) throws IOException{
       AccountID.encode(stream, encodedLedgerKeyOffer.sellerID);
-      Uint64.encode(stream, encodedLedgerKeyOffer.offerID);
+      Int64.encode(stream, encodedLedgerKeyOffer.offerID);
     }
     public static LedgerKeyOffer decode(XdrDataInputStream stream) throws IOException {
       LedgerKeyOffer decodedLedgerKeyOffer = new LedgerKeyOffer();
       decodedLedgerKeyOffer.sellerID = AccountID.decode(stream);
-      decodedLedgerKeyOffer.offerID = Uint64.decode(stream);
+      decodedLedgerKeyOffer.offerID = Int64.decode(stream);
       return decodedLedgerKeyOffer;
     }
 

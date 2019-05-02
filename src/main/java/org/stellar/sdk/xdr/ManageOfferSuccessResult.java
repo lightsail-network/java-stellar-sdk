@@ -77,6 +77,8 @@ public class ManageOfferSuccessResult  {
       this.offer = value;
     }
     public static void encode(XdrDataOutputStream stream, ManageOfferSuccessResultOffer encodedManageOfferSuccessResultOffer) throws IOException {
+    //Xdrgen::AST::Identifier
+    //ManageOfferEffect
     stream.writeInt(encodedManageOfferSuccessResultOffer.getDiscriminant().getValue());
     switch (encodedManageOfferSuccessResultOffer.getDiscriminant()) {
     case MANAGE_OFFER_CREATED:

@@ -32,6 +32,8 @@ public class SCPHistoryEntry  {
     this.v0 = value;
   }
   public static void encode(XdrDataOutputStream stream, SCPHistoryEntry encodedSCPHistoryEntry) throws IOException {
+  //Xdrgen::AST::Typespecs::Int
+  //Integer
   stream.writeInt(encodedSCPHistoryEntry.getDiscriminant().intValue());
   switch (encodedSCPHistoryEntry.getDiscriminant()) {
   case 0:

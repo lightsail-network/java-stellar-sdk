@@ -23,10 +23,10 @@ import java.io.IOException;
 //          PaymentOp paymentOp;
 //      case PATH_PAYMENT:
 //          PathPaymentOp pathPaymentOp;
-//      case MANAGE_OFFER:
-//          ManageOfferOp manageOfferOp;
-//      case CREATE_PASSIVE_OFFER:
-//          CreatePassiveOfferOp createPassiveOfferOp;
+//      case MANAGE_SELL_OFFER:
+//          ManageSellOfferOp manageSellOfferOp;
+//      case CREATE_PASSIVE_SELL_OFFER:
+//          CreatePassiveSellOfferOp createPassiveSellOfferOp;
 //      case SET_OPTIONS:
 //          SetOptionsOp setOptionsOp;
 //      case CHANGE_TRUST:
@@ -41,6 +41,8 @@ import java.io.IOException;
 //          ManageDataOp manageDataOp;
 //      case BUMP_SEQUENCE:
 //          BumpSequenceOp bumpSequenceOp;
+//      case MANAGE_BUY_OFFER:
+//          ManageBuyOfferOp manageBuyOfferOp;
 //      }
 //      body;
 //  };
@@ -111,19 +113,19 @@ public class Operation  {
     public void setPathPaymentOp(PathPaymentOp value) {
       this.pathPaymentOp = value;
     }
-    private ManageOfferOp manageOfferOp;
-    public ManageOfferOp getManageOfferOp() {
-      return this.manageOfferOp;
+    private ManageSellOfferOp manageSellOfferOp;
+    public ManageSellOfferOp getManageSellOfferOp() {
+      return this.manageSellOfferOp;
     }
-    public void setManageOfferOp(ManageOfferOp value) {
-      this.manageOfferOp = value;
+    public void setManageSellOfferOp(ManageSellOfferOp value) {
+      this.manageSellOfferOp = value;
     }
-    private CreatePassiveOfferOp createPassiveOfferOp;
-    public CreatePassiveOfferOp getCreatePassiveOfferOp() {
-      return this.createPassiveOfferOp;
+    private CreatePassiveSellOfferOp createPassiveSellOfferOp;
+    public CreatePassiveSellOfferOp getCreatePassiveSellOfferOp() {
+      return this.createPassiveSellOfferOp;
     }
-    public void setCreatePassiveOfferOp(CreatePassiveOfferOp value) {
-      this.createPassiveOfferOp = value;
+    public void setCreatePassiveSellOfferOp(CreatePassiveSellOfferOp value) {
+      this.createPassiveSellOfferOp = value;
     }
     private SetOptionsOp setOptionsOp;
     public SetOptionsOp getSetOptionsOp() {
@@ -167,7 +169,16 @@ public class Operation  {
     public void setBumpSequenceOp(BumpSequenceOp value) {
       this.bumpSequenceOp = value;
     }
+    private ManageBuyOfferOp manageBuyOfferOp;
+    public ManageBuyOfferOp getManageBuyOfferOp() {
+      return this.manageBuyOfferOp;
+    }
+    public void setManageBuyOfferOp(ManageBuyOfferOp value) {
+      this.manageBuyOfferOp = value;
+    }
     public static void encode(XdrDataOutputStream stream, OperationBody encodedOperationBody) throws IOException {
+    //Xdrgen::AST::Identifier
+    //OperationType
     stream.writeInt(encodedOperationBody.getDiscriminant().getValue());
     switch (encodedOperationBody.getDiscriminant()) {
     case CREATE_ACCOUNT:
@@ -179,11 +190,11 @@ public class Operation  {
     case PATH_PAYMENT:
     PathPaymentOp.encode(stream, encodedOperationBody.pathPaymentOp);
     break;
-    case MANAGE_OFFER:
-    ManageOfferOp.encode(stream, encodedOperationBody.manageOfferOp);
+    case MANAGE_SELL_OFFER:
+    ManageSellOfferOp.encode(stream, encodedOperationBody.manageSellOfferOp);
     break;
-    case CREATE_PASSIVE_OFFER:
-    CreatePassiveOfferOp.encode(stream, encodedOperationBody.createPassiveOfferOp);
+    case CREATE_PASSIVE_SELL_OFFER:
+    CreatePassiveSellOfferOp.encode(stream, encodedOperationBody.createPassiveSellOfferOp);
     break;
     case SET_OPTIONS:
     SetOptionsOp.encode(stream, encodedOperationBody.setOptionsOp);
@@ -205,6 +216,9 @@ public class Operation  {
     case BUMP_SEQUENCE:
     BumpSequenceOp.encode(stream, encodedOperationBody.bumpSequenceOp);
     break;
+    case MANAGE_BUY_OFFER:
+    ManageBuyOfferOp.encode(stream, encodedOperationBody.manageBuyOfferOp);
+    break;
     }
     }
     public static OperationBody decode(XdrDataInputStream stream) throws IOException {
@@ -221,11 +235,11 @@ public class Operation  {
     case PATH_PAYMENT:
     decodedOperationBody.pathPaymentOp = PathPaymentOp.decode(stream);
     break;
-    case MANAGE_OFFER:
-    decodedOperationBody.manageOfferOp = ManageOfferOp.decode(stream);
+    case MANAGE_SELL_OFFER:
+    decodedOperationBody.manageSellOfferOp = ManageSellOfferOp.decode(stream);
     break;
-    case CREATE_PASSIVE_OFFER:
-    decodedOperationBody.createPassiveOfferOp = CreatePassiveOfferOp.decode(stream);
+    case CREATE_PASSIVE_SELL_OFFER:
+    decodedOperationBody.createPassiveSellOfferOp = CreatePassiveSellOfferOp.decode(stream);
     break;
     case SET_OPTIONS:
     decodedOperationBody.setOptionsOp = SetOptionsOp.decode(stream);
@@ -246,6 +260,9 @@ public class Operation  {
     break;
     case BUMP_SEQUENCE:
     decodedOperationBody.bumpSequenceOp = BumpSequenceOp.decode(stream);
+    break;
+    case MANAGE_BUY_OFFER:
+    decodedOperationBody.manageBuyOfferOp = ManageBuyOfferOp.decode(stream);
     break;
     }
       return decodedOperationBody;

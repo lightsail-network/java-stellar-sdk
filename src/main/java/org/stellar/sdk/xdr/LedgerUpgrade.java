@@ -59,6 +59,8 @@ public class LedgerUpgrade  {
     this.newBaseReserve = value;
   }
   public static void encode(XdrDataOutputStream stream, LedgerUpgrade encodedLedgerUpgrade) throws IOException {
+  //Xdrgen::AST::Identifier
+  //LedgerUpgradeType
   stream.writeInt(encodedLedgerUpgrade.getDiscriminant().getValue());
   switch (encodedLedgerUpgrade.getDiscriminant()) {
   case LEDGER_UPGRADE_VERSION:

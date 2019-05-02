@@ -12,7 +12,7 @@ import java.io.IOException;
 //  {
 //      // emitted to identify the offer
 //      AccountID sellerID; // Account that owns the offer
-//      uint64 offerID;
+//      int64 offerID;
 //  
 //      // amount and asset taken from the owner
 //      Asset assetSold;
@@ -33,11 +33,11 @@ public class ClaimOfferAtom  {
   public void setSellerID(AccountID value) {
     this.sellerID = value;
   }
-  private Uint64 offerID;
-  public Uint64 getOfferID() {
+  private Int64 offerID;
+  public Int64 getOfferID() {
     return this.offerID;
   }
-  public void setOfferID(Uint64 value) {
+  public void setOfferID(Int64 value) {
     this.offerID = value;
   }
   private Asset assetSold;
@@ -70,7 +70,7 @@ public class ClaimOfferAtom  {
   }
   public static void encode(XdrDataOutputStream stream, ClaimOfferAtom encodedClaimOfferAtom) throws IOException{
     AccountID.encode(stream, encodedClaimOfferAtom.sellerID);
-    Uint64.encode(stream, encodedClaimOfferAtom.offerID);
+    Int64.encode(stream, encodedClaimOfferAtom.offerID);
     Asset.encode(stream, encodedClaimOfferAtom.assetSold);
     Int64.encode(stream, encodedClaimOfferAtom.amountSold);
     Asset.encode(stream, encodedClaimOfferAtom.assetBought);
@@ -79,7 +79,7 @@ public class ClaimOfferAtom  {
   public static ClaimOfferAtom decode(XdrDataInputStream stream) throws IOException {
     ClaimOfferAtom decodedClaimOfferAtom = new ClaimOfferAtom();
     decodedClaimOfferAtom.sellerID = AccountID.decode(stream);
-    decodedClaimOfferAtom.offerID = Uint64.decode(stream);
+    decodedClaimOfferAtom.offerID = Int64.decode(stream);
     decodedClaimOfferAtom.assetSold = Asset.decode(stream);
     decodedClaimOfferAtom.amountSold = Int64.decode(stream);
     decodedClaimOfferAtom.assetBought = Asset.decode(stream);
