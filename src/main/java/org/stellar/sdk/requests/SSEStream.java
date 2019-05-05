@@ -195,8 +195,11 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
         return;
       }
       T event = GsonSingleton.getInstance().fromJson(data, responseClass);
-      String pagingToken = event.getPagingToken();
-      requestBuilder.cursor(pagingToken);
+      try {
+        String pagingToken = event.getPagingToken();
+        requestBuilder.cursor(pagingToken);
+      } catch (UnsupportedOperationException ignored) {
+      }
       stream.lastEventId.set(id);
       listener.onEvent(event);
     }
