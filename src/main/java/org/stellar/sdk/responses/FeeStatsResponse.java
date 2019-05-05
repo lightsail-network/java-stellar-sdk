@@ -2,11 +2,7 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * @deprecated Will be removed in version 0.8.0, use {@link FeeStatsResponse}
- */
-@Deprecated
-public class OperationFeeStatsResponse extends Response {
+public class FeeStatsResponse extends Response {
     @SerializedName("min_accepted_fee")
     private final Long min;
     @SerializedName("mode_accepted_fee")
@@ -40,7 +36,7 @@ public class OperationFeeStatsResponse extends Response {
     @SerializedName("last_ledger")
     private final Long lastLedger;
 
-    public OperationFeeStatsResponse(Long min, Long mode, Long p10, Long p20, Long p30, Long p40, Long p50, Long p60, Long p70, Long p80, Long p90, Long p95, Long p99, Float ledgerCapacityUsage, Long lastLedgerBaseFee, Long lastLedger) {
+    public FeeStatsResponse(Long min, Long mode, Long p10, Long p20, Long p30, Long p40, Long p50, Long p60, Long p70, Long p80, Long p90, Long p95, Long p99, Float ledgerCapacityUsage, Long lastLedgerBaseFee, Long lastLedger) {
         this.min = min;
         this.mode = mode;
         this.p10 = p10;
@@ -122,4 +118,5 @@ public class OperationFeeStatsResponse extends Response {
     public Long getLastLedger() {
         return lastLedger;
     }
+
 }

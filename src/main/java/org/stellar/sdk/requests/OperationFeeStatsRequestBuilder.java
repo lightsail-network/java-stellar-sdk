@@ -9,6 +9,10 @@ import org.stellar.sdk.responses.OperationFeeStatsResponse;
 
 import java.io.IOException;
 
+/**
+ * @deprecated Will be removed in version 0.8.0, use {@link FeeStatsRequestBuilder}
+ */
+@Deprecated
 public class OperationFeeStatsRequestBuilder extends RequestBuilder {
     public OperationFeeStatsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
         super(httpClient, serverURI, "operation_fee_stats");

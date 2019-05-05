@@ -125,10 +125,19 @@ public class Server implements Closeable {
     }
 
     /**
+     * @deprecated Will be removed in version 0.8.0, use {@link Server#feeStats}
      * Returns {@link OperationFeeStatsResponse} instance.
      */
+    @Deprecated
     public OperationFeeStatsRequestBuilder operationFeeStats() {
         return new OperationFeeStatsRequestBuilder(httpClient, serverURI);
+    }
+
+    /**
+     * Returns {@link FeeStatsResponse} instance.
+     */
+    public FeeStatsRequestBuilder feeStats() {
+        return new FeeStatsRequestBuilder(httpClient, serverURI);
     }
 
     /**
