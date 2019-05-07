@@ -37,7 +37,7 @@ public class Network {
      * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
      */
     public byte[] getNetworkId() {
-        return Util.hash(current.getNetworkPassphrase().getBytes(Charset.forName("UTF-8")));
+        return Util.hash(this.getNetworkPassphrase().getBytes(Charset.forName("UTF-8")));
     }
 
     /**
@@ -67,5 +67,19 @@ public class Network {
      */
     public static void useTestNetwork() {
         Network.use(new Network(TESTNET));
+    }
+
+    /**
+     * Creates a new Network object to represent test network
+     */
+    public static Network testNetwork() {
+        return new Network(TESTNET);
+    }
+
+    /**
+     * Creates a new Network object to represent public network
+     */
+    public static Network publicNetwork() {
+        return new Network(PUBLIC);
     }
 }

@@ -25,6 +25,7 @@ public class Transaction {
   private final Operation[] mOperations;
   private final Memo mMemo;
   private final TimeBounds mTimeBounds;
+  private Network mNetwork;
   private List<DecoratedSignature> mSignatures;
 
   Transaction(KeyPair sourceAccount, int fee, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds) {
@@ -39,7 +40,13 @@ public class Transaction {
     mTimeBounds = timeBounds;
   }
 
-  /**
+  Transaction(KeyPair sourceAccount, int fee, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds, Network network) {
+      this(sourceAccount, fee, sequenceNumber, operations, memo, timeBounds);
+
+      mNetwork = checkNotNull(network, "network cannot be null");
+  }
+
+    /**
    * Adds a new signature ed25519PublicKey to this transaction.
    * @param signer {@link KeyPair} object representing a signer
    */
@@ -81,14 +88,22 @@ public class Transaction {
    * Returns signature base.
    */
   public byte[] signatureBase() {
-    if (Network.current() == null) {
-      throw new NoNetworkSelectedException();
+    Network network = null;
+    if (Network.current() != null) {
+        network = Network.current();
+    }
+    // Networks configured through the constructor have a higher priority.
+    if (mNetwork != null) {
+        network = mNetwork;
+    }
+    if (network == null) {
+        throw new NoNetworkSelectedException();
     }
 
     try {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       // Hashed NetworkID
-      outputStream.write(Network.current().getNetworkId());
+      outputStream.write(network.getNetworkId());
       // Envelope Type - 4 bytes
       outputStream.write(ByteBuffer.allocate(4).putInt(EnvelopeType.ENVELOPE_TYPE_TX.getValue()).array());
       // Transaction XDR bytes
@@ -118,7 +133,6 @@ public class Transaction {
   public Memo getMemo() {
     return mMemo;
   }
-  
   /**
    * @return TimeBounds, or null (representing no time restrictions)
    */
@@ -182,11 +196,27 @@ public class Transaction {
    * @throws IOException
    */
   public static Transaction fromEnvelopeXdr(String envelope) throws IOException {
+    return fromEnvelopeXdr(envelope, null);
+  }
+
+  /**
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
+   * @return
+   * @throws IOException
+   */
+  public static Transaction fromEnvelopeXdr(String envelope, Network network) throws IOException {
     BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] bytes = base64Encoding.decode(envelope);
 
     TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-    return fromEnvelopeXdr(transactionEnvelope);
+    Transaction transaction;
+    if (network == null) {
+      transaction = fromEnvelopeXdr(transactionEnvelope);
+    } else {
+      transaction = fromEnvelopeXdr(transactionEnvelope, network);
+    }
+    return transaction;
   }
 
   /**
@@ -195,6 +225,15 @@ public class Transaction {
    * @return
    */
   public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope) {
+      return fromEnvelopeXdr(envelope, null);
+  }
+
+  /**
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope
+   * @return
+   */
+  public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
     org.stellar.sdk.xdr.Transaction tx = envelope.getTx();
     int mFee = tx.getFee().getUint32();
     KeyPair mSourceAccount = KeyPair.fromXdrPublicKey(tx.getSourceAccount().getAccountID());
@@ -206,11 +245,15 @@ public class Transaction {
     for (int i = 0; i < tx.getOperations().length; i++) {
       mOperations[i] = Operation.fromXdr(tx.getOperations()[i]);
     }
-
-    Transaction transaction = new Transaction(mSourceAccount, mFee, mSequenceNumber, mOperations, mMemo, mTimeBounds);
+    Transaction transaction;
+    if (network == null) {
+        transaction = new Transaction(mSourceAccount, mFee, mSequenceNumber, mOperations, mMemo, mTimeBounds);
+    } else {
+        transaction = new Transaction(mSourceAccount, mFee, mSequenceNumber, mOperations, mMemo, mTimeBounds, network);
+    }
 
     for (DecoratedSignature signature : envelope.getSignatures()) {
-      transaction.mSignatures.add(signature);
+       transaction.mSignatures.add(signature);
     }
 
     return transaction;
@@ -259,6 +302,7 @@ public class Transaction {
     private boolean timeoutSet;
     private static Integer defaultOperationFee;
     private Integer operationFee;
+    private Network mNetwork;
 
     public static final long TIMEOUT_INFINITE = 0;
 
@@ -313,7 +357,7 @@ public class Transaction {
       mMemo = memo;
       return this;
     }
-    
+
     /**
      * Adds a <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">time-bounds</a> to this transaction.
      * @param timeBounds
@@ -376,6 +420,11 @@ public class Transaction {
       return this;
     }
 
+    public Builder setNetwork(Network network) {
+      this.mNetwork = network;
+      return this;
+    }
+
     /**
      * Builds a transaction. It will increment sequence number of the source account.
      */
@@ -392,7 +441,12 @@ public class Transaction {
 
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
-      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * operationFee, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
+      Transaction transaction;
+      if (mNetwork == null) {
+          transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * operationFee, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
+      } else {
+          transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * operationFee, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds, mNetwork);
+      }
       // Increment sequence number when there were no exceptions when creating a transaction
       mSourceAccount.incrementSequenceNumber();
       return transaction;
