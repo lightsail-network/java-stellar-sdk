@@ -16,7 +16,7 @@ apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates -Drevi
 apply plugin: 'project-report' // gradle htmlDependencyReport
 
 sourceCompatibility = 1.6
-version = '0.5.0'
+version = '0.7.0'
 group = 'stellar'
 
 jar {

@@ -2,6 +2,21 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.7.0
+
+### Deprecations
+
+* `org.stellar.sdk.CreatePassiveOfferOperation` is deprecated. Will be removed in 0.8.0. Please switch to `org.stellar.sdk.CreatePassiveSellOfferOperation`.
+* `org.stellar.sdk.ManageOfferOperation` is deprecated. Will be removed in 0.8.0. Please switch to `org.stellar.sdk.ManageSellOfferOperation`.
+
+### Changes
+
+* Stellar Protocol 11 compatibility (#199).
+* Add Support for `InflationOperation` in `Operation.fromXdr` (#194).
+* Fixed exception thrown from ManageOfferOperation.fromXDR for certain offers (#188).
+* Send Horizon client fingerprint (#190).
+* `Server` now implements `Closeable` (#182).
+
 ## 0.6.0
 
 * Horizon 0.17.0 features (#180)
