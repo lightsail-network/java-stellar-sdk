@@ -11,7 +11,7 @@ import java.io.IOException;
 //  struct Signer
 //  {
 //      SignerKey key;
-//      uint32 weight; // really only need 1byte
+//      uint32 weight; // really only need 1 byte
 //  };
 
 //  ===========================================================================

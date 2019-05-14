@@ -19,10 +19,10 @@ import java.io.IOException;
 //          PaymentResult paymentResult;
 //      case PATH_PAYMENT:
 //          PathPaymentResult pathPaymentResult;
-//      case MANAGE_OFFER:
-//          ManageOfferResult manageOfferResult;
-//      case CREATE_PASSIVE_OFFER:
-//          ManageOfferResult createPassiveOfferResult;
+//      case MANAGE_SELL_OFFER:
+//          ManageSellOfferResult manageSellOfferResult;
+//      case CREATE_PASSIVE_SELL_OFFER:
+//          ManageSellOfferResult createPassiveSellOfferResult;
 //      case SET_OPTIONS:
 //          SetOptionsResult setOptionsResult;
 //      case CHANGE_TRUST:
@@ -37,6 +37,8 @@ import java.io.IOException;
 //          ManageDataResult manageDataResult;
 //      case BUMP_SEQUENCE:
 //          BumpSequenceResult bumpSeqResult;
+//      case MANAGE_BUY_OFFER:
+//  	ManageBuyOfferResult manageBuyOfferResult;
 //      }
 //      tr;
 //  default:
@@ -61,6 +63,8 @@ public class OperationResult  {
     this.tr = value;
   }
   public static void encode(XdrDataOutputStream stream, OperationResult encodedOperationResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //OperationResultCode
   stream.writeInt(encodedOperationResult.getDiscriminant().getValue());
   switch (encodedOperationResult.getDiscriminant()) {
   case opINNER:
@@ -114,19 +118,19 @@ public class OperationResult  {
     public void setPathPaymentResult(PathPaymentResult value) {
       this.pathPaymentResult = value;
     }
-    private ManageOfferResult manageOfferResult;
-    public ManageOfferResult getManageOfferResult() {
-      return this.manageOfferResult;
+    private ManageSellOfferResult manageSellOfferResult;
+    public ManageSellOfferResult getManageSellOfferResult() {
+      return this.manageSellOfferResult;
     }
-    public void setManageOfferResult(ManageOfferResult value) {
-      this.manageOfferResult = value;
+    public void setManageSellOfferResult(ManageSellOfferResult value) {
+      this.manageSellOfferResult = value;
     }
-    private ManageOfferResult createPassiveOfferResult;
-    public ManageOfferResult getCreatePassiveOfferResult() {
-      return this.createPassiveOfferResult;
+    private ManageSellOfferResult createPassiveSellOfferResult;
+    public ManageSellOfferResult getCreatePassiveSellOfferResult() {
+      return this.createPassiveSellOfferResult;
     }
-    public void setCreatePassiveOfferResult(ManageOfferResult value) {
-      this.createPassiveOfferResult = value;
+    public void setCreatePassiveSellOfferResult(ManageSellOfferResult value) {
+      this.createPassiveSellOfferResult = value;
     }
     private SetOptionsResult setOptionsResult;
     public SetOptionsResult getSetOptionsResult() {
@@ -177,7 +181,16 @@ public class OperationResult  {
     public void setBumpSeqResult(BumpSequenceResult value) {
       this.bumpSeqResult = value;
     }
+    private ManageBuyOfferResult manageBuyOfferResult;
+    public ManageBuyOfferResult getManageBuyOfferResult() {
+      return this.manageBuyOfferResult;
+    }
+    public void setManageBuyOfferResult(ManageBuyOfferResult value) {
+      this.manageBuyOfferResult = value;
+    }
     public static void encode(XdrDataOutputStream stream, OperationResultTr encodedOperationResultTr) throws IOException {
+    //Xdrgen::AST::Identifier
+    //OperationType
     stream.writeInt(encodedOperationResultTr.getDiscriminant().getValue());
     switch (encodedOperationResultTr.getDiscriminant()) {
     case CREATE_ACCOUNT:
@@ -189,11 +202,11 @@ public class OperationResult  {
     case PATH_PAYMENT:
     PathPaymentResult.encode(stream, encodedOperationResultTr.pathPaymentResult);
     break;
-    case MANAGE_OFFER:
-    ManageOfferResult.encode(stream, encodedOperationResultTr.manageOfferResult);
+    case MANAGE_SELL_OFFER:
+    ManageSellOfferResult.encode(stream, encodedOperationResultTr.manageSellOfferResult);
     break;
-    case CREATE_PASSIVE_OFFER:
-    ManageOfferResult.encode(stream, encodedOperationResultTr.createPassiveOfferResult);
+    case CREATE_PASSIVE_SELL_OFFER:
+    ManageSellOfferResult.encode(stream, encodedOperationResultTr.createPassiveSellOfferResult);
     break;
     case SET_OPTIONS:
     SetOptionsResult.encode(stream, encodedOperationResultTr.setOptionsResult);
@@ -216,6 +229,9 @@ public class OperationResult  {
     case BUMP_SEQUENCE:
     BumpSequenceResult.encode(stream, encodedOperationResultTr.bumpSeqResult);
     break;
+    case MANAGE_BUY_OFFER:
+    ManageBuyOfferResult.encode(stream, encodedOperationResultTr.manageBuyOfferResult);
+    break;
     }
     }
     public static OperationResultTr decode(XdrDataInputStream stream) throws IOException {
@@ -232,11 +248,11 @@ public class OperationResult  {
     case PATH_PAYMENT:
     decodedOperationResultTr.pathPaymentResult = PathPaymentResult.decode(stream);
     break;
-    case MANAGE_OFFER:
-    decodedOperationResultTr.manageOfferResult = ManageOfferResult.decode(stream);
+    case MANAGE_SELL_OFFER:
+    decodedOperationResultTr.manageSellOfferResult = ManageSellOfferResult.decode(stream);
     break;
-    case CREATE_PASSIVE_OFFER:
-    decodedOperationResultTr.createPassiveOfferResult = ManageOfferResult.decode(stream);
+    case CREATE_PASSIVE_SELL_OFFER:
+    decodedOperationResultTr.createPassiveSellOfferResult = ManageSellOfferResult.decode(stream);
     break;
     case SET_OPTIONS:
     decodedOperationResultTr.setOptionsResult = SetOptionsResult.decode(stream);
@@ -258,6 +274,9 @@ public class OperationResult  {
     break;
     case BUMP_SEQUENCE:
     decodedOperationResultTr.bumpSeqResult = BumpSequenceResult.decode(stream);
+    break;
+    case MANAGE_BUY_OFFER:
+    decodedOperationResultTr.manageBuyOfferResult = ManageBuyOfferResult.decode(stream);
     break;
     }
       return decodedOperationResultTr;

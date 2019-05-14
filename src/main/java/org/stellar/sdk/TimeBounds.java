@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 
 /**
@@ -37,17 +38,21 @@ final public class TimeBounds {
 		}
 
 		return new TimeBounds(
-				timeBounds.getMinTime().getUint64().longValue(),
-				timeBounds.getMaxTime().getUint64().longValue()
+				timeBounds.getMinTime().getTimePoint().getUint64().longValue(),
+				timeBounds.getMaxTime().getTimePoint().getUint64().longValue()
 		);
 	}
 
 	public org.stellar.sdk.xdr.TimeBounds toXdr() {
 		org.stellar.sdk.xdr.TimeBounds timeBounds = new org.stellar.sdk.xdr.TimeBounds();
-		Uint64 minTime = new Uint64();
-		Uint64 maxTime = new Uint64();
-		minTime.setUint64(mMinTime);
-		maxTime.setUint64(mMaxTime);
+		TimePoint minTime = new TimePoint();
+		TimePoint maxTime = new TimePoint();
+		Uint64 minTimeTemp = new Uint64();
+		Uint64 maxTimeTemp = new Uint64();
+		minTimeTemp.setUint64(mMinTime);
+		maxTimeTemp.setUint64(mMaxTime);
+		minTime.setTimePoint(minTimeTemp);
+		maxTime.setTimePoint(maxTimeTemp);
 		timeBounds.setMinTime(minTime);
 		timeBounds.setMaxTime(maxTime);
 		return timeBounds;

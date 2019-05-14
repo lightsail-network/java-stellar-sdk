@@ -24,7 +24,7 @@ import java.io.IOException;
 //  
 //      Memo memo;
 //  
-//      Operation operations<100>;
+//      Operation operations<MAX_OPS_PER_TX>;
 //  
 //      // reserved for future use
 //      union switch (int v)
@@ -134,6 +134,8 @@ public class Transaction  {
       this.v = value;
     }
     public static void encode(XdrDataOutputStream stream, TransactionExt encodedTransactionExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedTransactionExt.getDiscriminant().intValue());
     switch (encodedTransactionExt.getDiscriminant()) {
     case 0:

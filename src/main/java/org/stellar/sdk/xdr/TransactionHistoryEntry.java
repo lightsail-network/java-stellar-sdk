@@ -69,6 +69,8 @@ public class TransactionHistoryEntry  {
       this.v = value;
     }
     public static void encode(XdrDataOutputStream stream, TransactionHistoryEntryExt encodedTransactionHistoryEntryExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedTransactionHistoryEntryExt.getDiscriminant().intValue());
     switch (encodedTransactionHistoryEntryExt.getDiscriminant()) {
     case 0:

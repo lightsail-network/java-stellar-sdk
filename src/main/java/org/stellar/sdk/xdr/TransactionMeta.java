@@ -41,6 +41,8 @@ public class TransactionMeta  {
     this.v1 = value;
   }
   public static void encode(XdrDataOutputStream stream, TransactionMeta encodedTransactionMeta) throws IOException {
+  //Xdrgen::AST::Typespecs::Int
+  //Integer
   stream.writeInt(encodedTransactionMeta.getDiscriminant().intValue());
   switch (encodedTransactionMeta.getDiscriminant()) {
   case 0:

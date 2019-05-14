@@ -10,8 +10,8 @@ import java.io.IOException;
 
 //  struct StellarValue
 //  {
-//      Hash txSetHash;   // transaction set to apply to previous ledger
-//      uint64 closeTime; // network close time
+//      Hash txSetHash;      // transaction set to apply to previous ledger
+//      TimePoint closeTime; // network close time
 //  
 //      // upgrades to apply to the previous ledger (usually empty)
 //      // this is a vector of encoded 'LedgerUpgrade' so that nodes can drop
@@ -21,10 +21,12 @@ import java.io.IOException;
 //      UpgradeType upgrades<6>;
 //  
 //      // reserved for future use
-//      union switch (int v)
+//      union switch (StellarValueType v)
 //      {
-//      case 0:
+//      case STELLAR_VALUE_BASIC:
 //          void;
+//      case STELLAR_VALUE_SIGNED:
+//          LedgerCloseValueSignature lcValueSignature;
 //      }
 //      ext;
 //  };
@@ -39,11 +41,11 @@ public class StellarValue  {
   public void setTxSetHash(Hash value) {
     this.txSetHash = value;
   }
-  private Uint64 closeTime;
-  public Uint64 getCloseTime() {
+  private TimePoint closeTime;
+  public TimePoint getCloseTime() {
     return this.closeTime;
   }
-  public void setCloseTime(Uint64 value) {
+  public void setCloseTime(TimePoint value) {
     this.closeTime = value;
   }
   private UpgradeType[] upgrades;
@@ -62,7 +64,7 @@ public class StellarValue  {
   }
   public static void encode(XdrDataOutputStream stream, StellarValue encodedStellarValue) throws IOException{
     Hash.encode(stream, encodedStellarValue.txSetHash);
-    Uint64.encode(stream, encodedStellarValue.closeTime);
+    TimePoint.encode(stream, encodedStellarValue.closeTime);
     int upgradessize = encodedStellarValue.getUpgrades().length;
     stream.writeInt(upgradessize);
     for (int i = 0; i < upgradessize; i++) {
@@ -73,7 +75,7 @@ public class StellarValue  {
   public static StellarValue decode(XdrDataInputStream stream) throws IOException {
     StellarValue decodedStellarValue = new StellarValue();
     decodedStellarValue.txSetHash = Hash.decode(stream);
-    decodedStellarValue.closeTime = Uint64.decode(stream);
+    decodedStellarValue.closeTime = TimePoint.decode(stream);
     int upgradessize = stream.readInt();
     decodedStellarValue.upgrades = new UpgradeType[upgradessize];
     for (int i = 0; i < upgradessize; i++) {
@@ -85,26 +87,41 @@ public class StellarValue  {
 
   public static class StellarValueExt {
     public StellarValueExt () {}
-    Integer v;
-    public Integer getDiscriminant() {
+    StellarValueType v;
+    public StellarValueType getDiscriminant() {
       return this.v;
     }
-    public void setDiscriminant(Integer value) {
+    public void setDiscriminant(StellarValueType value) {
       this.v = value;
     }
+    private LedgerCloseValueSignature lcValueSignature;
+    public LedgerCloseValueSignature getLcValueSignature() {
+      return this.lcValueSignature;
+    }
+    public void setLcValueSignature(LedgerCloseValueSignature value) {
+      this.lcValueSignature = value;
+    }
     public static void encode(XdrDataOutputStream stream, StellarValueExt encodedStellarValueExt) throws IOException {
-    stream.writeInt(encodedStellarValueExt.getDiscriminant().intValue());
+    //Xdrgen::AST::Identifier
+    //StellarValueType
+    stream.writeInt(encodedStellarValueExt.getDiscriminant().getValue());
     switch (encodedStellarValueExt.getDiscriminant()) {
-    case 0:
+    case STELLAR_VALUE_BASIC:
+    break;
+    case STELLAR_VALUE_SIGNED:
+    LedgerCloseValueSignature.encode(stream, encodedStellarValueExt.lcValueSignature);
     break;
     }
     }
     public static StellarValueExt decode(XdrDataInputStream stream) throws IOException {
     StellarValueExt decodedStellarValueExt = new StellarValueExt();
-    Integer discriminant = stream.readInt();
+    StellarValueType discriminant = StellarValueType.decode(stream);
     decodedStellarValueExt.setDiscriminant(discriminant);
     switch (decodedStellarValueExt.getDiscriminant()) {
-    case 0:
+    case STELLAR_VALUE_BASIC:
+    break;
+    case STELLAR_VALUE_SIGNED:
+    decodedStellarValueExt.lcValueSignature = LedgerCloseValueSignature.decode(stream);
     break;
     }
       return decodedStellarValueExt;

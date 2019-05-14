@@ -12,7 +12,8 @@ import java.io.IOException;
 //  {
 //      ENVELOPE_TYPE_SCP = 1,
 //      ENVELOPE_TYPE_TX = 2,
-//      ENVELOPE_TYPE_AUTH = 3
+//      ENVELOPE_TYPE_AUTH = 3,
+//      ENVELOPE_TYPE_SCPVALUE = 4
 //  };
 
 //  ===========================================================================
@@ -20,6 +21,7 @@ public enum EnvelopeType  {
   ENVELOPE_TYPE_SCP(1),
   ENVELOPE_TYPE_TX(2),
   ENVELOPE_TYPE_AUTH(3),
+  ENVELOPE_TYPE_SCPVALUE(4),
   ;
   private int mValue;
 
@@ -37,6 +39,7 @@ public enum EnvelopeType  {
       case 1: return ENVELOPE_TYPE_SCP;
       case 2: return ENVELOPE_TYPE_TX;
       case 3: return ENVELOPE_TYPE_AUTH;
+      case 4: return ENVELOPE_TYPE_SCPVALUE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

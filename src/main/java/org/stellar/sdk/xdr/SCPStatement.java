@@ -122,6 +122,8 @@ public class SCPStatement  {
       this.nominate = value;
     }
     public static void encode(XdrDataOutputStream stream, SCPStatementPledges encodedSCPStatementPledges) throws IOException {
+    //Xdrgen::AST::Identifier
+    //SCPStatementType
     stream.writeInt(encodedSCPStatementPledges.getDiscriminant().getValue());
     switch (encodedSCPStatementPledges.getDiscriminant()) {
     case SCP_ST_PREPARE:

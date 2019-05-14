@@ -27,6 +27,8 @@ public class ManageDataResult  {
     this.code = value;
   }
   public static void encode(XdrDataOutputStream stream, ManageDataResult encodedManageDataResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //ManageDataResultCode
   stream.writeInt(encodedManageDataResult.getDiscriminant().getValue());
   switch (encodedManageDataResult.getDiscriminant()) {
   case MANAGE_DATA_SUCCESS:

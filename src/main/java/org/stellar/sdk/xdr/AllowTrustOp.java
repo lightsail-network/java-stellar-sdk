@@ -15,10 +15,10 @@ import java.io.IOException;
 //      {
 //      // ASSET_TYPE_NATIVE is not allowed
 //      case ASSET_TYPE_CREDIT_ALPHANUM4:
-//          opaque assetCode4[4];
+//          AssetCode4 assetCode4;
 //  
 //      case ASSET_TYPE_CREDIT_ALPHANUM12:
-//          opaque assetCode12[12];
+//          AssetCode12 assetCode12;
 //  
 //          // add other asset types here in the future
 //      }
@@ -73,30 +73,30 @@ public class AllowTrustOp  {
     public void setDiscriminant(AssetType value) {
       this.type = value;
     }
-    private byte[] assetCode4;
-    public byte[] getAssetCode4() {
+    private AssetCode4 assetCode4;
+    public AssetCode4 getAssetCode4() {
       return this.assetCode4;
     }
-    public void setAssetCode4(byte[] value) {
+    public void setAssetCode4(AssetCode4 value) {
       this.assetCode4 = value;
     }
-    private byte[] assetCode12;
-    public byte[] getAssetCode12() {
+    private AssetCode12 assetCode12;
+    public AssetCode12 getAssetCode12() {
       return this.assetCode12;
     }
-    public void setAssetCode12(byte[] value) {
+    public void setAssetCode12(AssetCode12 value) {
       this.assetCode12 = value;
     }
     public static void encode(XdrDataOutputStream stream, AllowTrustOpAsset encodedAllowTrustOpAsset) throws IOException {
+    //Xdrgen::AST::Identifier
+    //AssetType
     stream.writeInt(encodedAllowTrustOpAsset.getDiscriminant().getValue());
     switch (encodedAllowTrustOpAsset.getDiscriminant()) {
     case ASSET_TYPE_CREDIT_ALPHANUM4:
-    int assetCode4size = encodedAllowTrustOpAsset.assetCode4.length;
-    stream.write(encodedAllowTrustOpAsset.getAssetCode4(), 0, assetCode4size);
+    AssetCode4.encode(stream, encodedAllowTrustOpAsset.assetCode4);
     break;
     case ASSET_TYPE_CREDIT_ALPHANUM12:
-    int assetCode12size = encodedAllowTrustOpAsset.assetCode12.length;
-    stream.write(encodedAllowTrustOpAsset.getAssetCode12(), 0, assetCode12size);
+    AssetCode12.encode(stream, encodedAllowTrustOpAsset.assetCode12);
     break;
     }
     }
@@ -106,14 +106,10 @@ public class AllowTrustOp  {
     decodedAllowTrustOpAsset.setDiscriminant(discriminant);
     switch (decodedAllowTrustOpAsset.getDiscriminant()) {
     case ASSET_TYPE_CREDIT_ALPHANUM4:
-    int assetCode4size = 4;
-    decodedAllowTrustOpAsset.assetCode4 = new byte[assetCode4size];
-    stream.read(decodedAllowTrustOpAsset.assetCode4, 0, assetCode4size);
+    decodedAllowTrustOpAsset.assetCode4 = AssetCode4.decode(stream);
     break;
     case ASSET_TYPE_CREDIT_ALPHANUM12:
-    int assetCode12size = 12;
-    decodedAllowTrustOpAsset.assetCode12 = new byte[assetCode12size];
-    stream.read(decodedAllowTrustOpAsset.assetCode12, 0, assetCode12size);
+    decodedAllowTrustOpAsset.assetCode12 = AssetCode12.decode(stream);
     break;
     }
       return decodedAllowTrustOpAsset;

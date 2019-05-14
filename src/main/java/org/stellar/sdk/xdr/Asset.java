@@ -16,14 +16,14 @@ import java.io.IOException;
 //  case ASSET_TYPE_CREDIT_ALPHANUM4:
 //      struct
 //      {
-//          opaque assetCode[4]; // 1 to 4 characters
+//          AssetCode4 assetCode;
 //          AccountID issuer;
 //      } alphaNum4;
 //  
 //  case ASSET_TYPE_CREDIT_ALPHANUM12:
 //      struct
 //      {
-//          opaque assetCode[12]; // 5 to 12 characters
+//          AssetCode12 assetCode;
 //          AccountID issuer;
 //      } alphaNum12;
 //  
@@ -55,6 +55,8 @@ public class Asset  {
     this.alphaNum12 = value;
   }
   public static void encode(XdrDataOutputStream stream, Asset encodedAsset) throws IOException {
+  //Xdrgen::AST::Identifier
+  //AssetType
   stream.writeInt(encodedAsset.getDiscriminant().getValue());
   switch (encodedAsset.getDiscriminant()) {
   case ASSET_TYPE_NATIVE:
@@ -86,11 +88,11 @@ public class Asset  {
 
   public static class AssetAlphaNum4 {
     public AssetAlphaNum4 () {}
-    private byte[] assetCode;
-    public byte[] getAssetCode() {
+    private AssetCode4 assetCode;
+    public AssetCode4 getAssetCode() {
       return this.assetCode;
     }
-    public void setAssetCode(byte[] value) {
+    public void setAssetCode(AssetCode4 value) {
       this.assetCode = value;
     }
     private AccountID issuer;
@@ -101,15 +103,12 @@ public class Asset  {
       this.issuer = value;
     }
     public static void encode(XdrDataOutputStream stream, AssetAlphaNum4 encodedAssetAlphaNum4) throws IOException{
-      int assetCodesize = encodedAssetAlphaNum4.assetCode.length;
-      stream.write(encodedAssetAlphaNum4.getAssetCode(), 0, assetCodesize);
+      AssetCode4.encode(stream, encodedAssetAlphaNum4.assetCode);
       AccountID.encode(stream, encodedAssetAlphaNum4.issuer);
     }
     public static AssetAlphaNum4 decode(XdrDataInputStream stream) throws IOException {
       AssetAlphaNum4 decodedAssetAlphaNum4 = new AssetAlphaNum4();
-      int assetCodesize = 4;
-      decodedAssetAlphaNum4.assetCode = new byte[assetCodesize];
-      stream.read(decodedAssetAlphaNum4.assetCode, 0, assetCodesize);
+      decodedAssetAlphaNum4.assetCode = AssetCode4.decode(stream);
       decodedAssetAlphaNum4.issuer = AccountID.decode(stream);
       return decodedAssetAlphaNum4;
     }
@@ -117,11 +116,11 @@ public class Asset  {
   }
   public static class AssetAlphaNum12 {
     public AssetAlphaNum12 () {}
-    private byte[] assetCode;
-    public byte[] getAssetCode() {
+    private AssetCode12 assetCode;
+    public AssetCode12 getAssetCode() {
       return this.assetCode;
     }
-    public void setAssetCode(byte[] value) {
+    public void setAssetCode(AssetCode12 value) {
       this.assetCode = value;
     }
     private AccountID issuer;
@@ -132,15 +131,12 @@ public class Asset  {
       this.issuer = value;
     }
     public static void encode(XdrDataOutputStream stream, AssetAlphaNum12 encodedAssetAlphaNum12) throws IOException{
-      int assetCodesize = encodedAssetAlphaNum12.assetCode.length;
-      stream.write(encodedAssetAlphaNum12.getAssetCode(), 0, assetCodesize);
+      AssetCode12.encode(stream, encodedAssetAlphaNum12.assetCode);
       AccountID.encode(stream, encodedAssetAlphaNum12.issuer);
     }
     public static AssetAlphaNum12 decode(XdrDataInputStream stream) throws IOException {
       AssetAlphaNum12 decodedAssetAlphaNum12 = new AssetAlphaNum12();
-      int assetCodesize = 12;
-      decodedAssetAlphaNum12.assetCode = new byte[assetCodesize];
-      stream.read(decodedAssetAlphaNum12.assetCode, 0, assetCodesize);
+      decodedAssetAlphaNum12.assetCode = AssetCode12.decode(stream);
       decodedAssetAlphaNum12.issuer = AccountID.decode(stream);
       return decodedAssetAlphaNum12;
     }

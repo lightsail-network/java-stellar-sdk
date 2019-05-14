@@ -180,6 +180,8 @@ public class AccountEntry  {
       this.v1 = value;
     }
     public static void encode(XdrDataOutputStream stream, AccountEntryExt encodedAccountEntryExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedAccountEntryExt.getDiscriminant().intValue());
     switch (encodedAccountEntryExt.getDiscriminant()) {
     case 0:
@@ -240,6 +242,8 @@ public class AccountEntry  {
           this.v = value;
         }
         public static void encode(XdrDataOutputStream stream, AccountEntryV1Ext encodedAccountEntryV1Ext) throws IOException {
+        //Xdrgen::AST::Typespecs::Int
+        //Integer
         stream.writeInt(encodedAccountEntryV1Ext.getDiscriminant().intValue());
         switch (encodedAccountEntryV1Ext.getDiscriminant()) {
         case 0:

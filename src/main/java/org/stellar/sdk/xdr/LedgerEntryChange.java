@@ -59,6 +59,8 @@ public class LedgerEntryChange  {
     this.state = value;
   }
   public static void encode(XdrDataOutputStream stream, LedgerEntryChange encodedLedgerEntryChange) throws IOException {
+  //Xdrgen::AST::Identifier
+  //LedgerEntryChangeType
   stream.writeInt(encodedLedgerEntryChange.getDiscriminant().getValue());
   switch (encodedLedgerEntryChange.getDiscriminant()) {
   case LEDGER_ENTRY_CREATED:

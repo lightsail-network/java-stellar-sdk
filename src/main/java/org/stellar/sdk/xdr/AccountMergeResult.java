@@ -34,6 +34,8 @@ public class AccountMergeResult  {
     this.sourceAccountBalance = value;
   }
   public static void encode(XdrDataOutputStream stream, AccountMergeResult encodedAccountMergeResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //AccountMergeResultCode
   stream.writeInt(encodedAccountMergeResult.getDiscriminant().getValue());
   switch (encodedAccountMergeResult.getDiscriminant()) {
   case ACCOUNT_MERGE_SUCCESS:

@@ -4,6 +4,7 @@ import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Server;
+import org.stellar.sdk.xdr.OperationResult;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.TransactionResult;
 import org.stellar.sdk.xdr.XdrDataInputStream;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 
 /**
  * Represents server response after submitting transaction.
+ *
  * @see Server#submitTransaction(org.stellar.sdk.Transaction)
  */
 public class SubmitTransactionResponse extends Response {
@@ -73,8 +75,9 @@ public class SubmitTransactionResponse extends Response {
     /**
      * Helper method that returns Offer ID for ManageOffer from TransactionResult Xdr.
      * This is helpful when you need ID of an offer to update it later.
-     * @param position Position of ManageOffer operation. If ManageOffer is second operation in this transaction this should be equal <code>1</code>.
-     * @return Offer ID or <code>null</code> when operation at <code>position</code> is not a ManageOffer operation or error has occurred.
+     *
+     * @param position Position of ManageSellOffer/ManageBuyOffer operation. If it is second operation in this transaction this should be equal <code>1</code>.
+     * @return Offer ID or <code>null</code> when operation at <code>position</code> is not a ManageSellOffer/ManageBuyOffer operation or error has occurred.
      */
     public Long getOfferIdFromResult(int position) {
         if (!this.isSuccess()) {
@@ -97,15 +100,25 @@ public class SubmitTransactionResponse extends Response {
             return null;
         }
 
-        if (result.getResult().getResults()[position].getTr().getDiscriminant() != OperationType.MANAGE_OFFER) {
-            return null;
+        OperationResult operationResult = result.getResult().getResults()[position];
+        OperationType operationType = operationResult.getTr().getDiscriminant();
+        OperationResult.OperationResultTr operationResultTr = operationResult.getTr();
+
+        if (operationType == OperationType.MANAGE_SELL_OFFER) {
+            if (operationResultTr.getManageSellOfferResult().getSuccess().getOffer().getOffer() == null) {
+                return null;
+            }
+            return operationResultTr.getManageSellOfferResult().getSuccess().getOffer().getOffer().getOfferID().getInt64();
         }
 
-        if (result.getResult().getResults()[0].getTr().getManageOfferResult().getSuccess().getOffer().getOffer() == null) {
-            return null;
+        if (operationType == OperationType.MANAGE_BUY_OFFER) {
+            if (operationResultTr.getManageBuyOfferResult().getSuccess().getOffer().getOffer() == null) {
+                return null;
+            }
+            return operationResultTr.getManageBuyOfferResult().getSuccess().getOffer().getOffer().getOfferID().getInt64();
         }
 
-        return result.getResult().getResults()[0].getTr().getManageOfferResult().getSuccess().getOffer().getOffer().getOfferID().getUint64();
+        return null;
     }
 
     /**
@@ -157,6 +170,7 @@ public class SubmitTransactionResponse extends Response {
 
         /**
          * Contains result codes for this transaction.
+         *
          * @see <a href="https://github.com/stellar/horizon/blob/master/src/github.com/stellar/horizon/codes/main.go" target="_blank">Possible values</a>
          */
         public static class ResultCodes {

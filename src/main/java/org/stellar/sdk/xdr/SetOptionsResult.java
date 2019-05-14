@@ -27,6 +27,8 @@ public class SetOptionsResult  {
     this.code = value;
   }
   public static void encode(XdrDataOutputStream stream, SetOptionsResult encodedSetOptionsResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //SetOptionsResultCode
   stream.writeInt(encodedSetOptionsResult.getDiscriminant().getValue());
   switch (encodedSetOptionsResult.getDiscriminant()) {
   case SET_OPTIONS_SUCCESS:

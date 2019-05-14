@@ -32,6 +32,8 @@ public class PublicKey  {
     this.ed25519 = value;
   }
   public static void encode(XdrDataOutputStream stream, PublicKey encodedPublicKey) throws IOException {
+  //Xdrgen::AST::Identifier
+  //PublicKeyType
   stream.writeInt(encodedPublicKey.getDiscriminant().getValue());
   switch (encodedPublicKey.getDiscriminant()) {
   case PUBLIC_KEY_TYPE_ED25519:

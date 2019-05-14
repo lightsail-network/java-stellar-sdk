@@ -47,6 +47,8 @@ public class PathPaymentResult  {
     this.noIssuer = value;
   }
   public static void encode(XdrDataOutputStream stream, PathPaymentResult encodedPathPaymentResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //PathPaymentResultCode
   stream.writeInt(encodedPathPaymentResult.getDiscriminant().getValue());
   switch (encodedPathPaymentResult.getDiscriminant()) {
   case PATH_PAYMENT_SUCCESS:

@@ -13,15 +13,16 @@ import java.io.IOException;
 //      CREATE_ACCOUNT = 0,
 //      PAYMENT = 1,
 //      PATH_PAYMENT = 2,
-//      MANAGE_OFFER = 3,
-//      CREATE_PASSIVE_OFFER = 4,
+//      MANAGE_SELL_OFFER = 3,
+//      CREATE_PASSIVE_SELL_OFFER = 4,
 //      SET_OPTIONS = 5,
 //      CHANGE_TRUST = 6,
 //      ALLOW_TRUST = 7,
 //      ACCOUNT_MERGE = 8,
 //      INFLATION = 9,
 //      MANAGE_DATA = 10,
-//      BUMP_SEQUENCE = 11
+//      BUMP_SEQUENCE = 11,
+//      MANAGE_BUY_OFFER = 12
 //  };
 
 //  ===========================================================================
@@ -29,8 +30,8 @@ public enum OperationType  {
   CREATE_ACCOUNT(0),
   PAYMENT(1),
   PATH_PAYMENT(2),
-  MANAGE_OFFER(3),
-  CREATE_PASSIVE_OFFER(4),
+  MANAGE_SELL_OFFER(3),
+  CREATE_PASSIVE_SELL_OFFER(4),
   SET_OPTIONS(5),
   CHANGE_TRUST(6),
   ALLOW_TRUST(7),
@@ -38,6 +39,7 @@ public enum OperationType  {
   INFLATION(9),
   MANAGE_DATA(10),
   BUMP_SEQUENCE(11),
+  MANAGE_BUY_OFFER(12),
   ;
   private int mValue;
 
@@ -55,8 +57,8 @@ public enum OperationType  {
       case 0: return CREATE_ACCOUNT;
       case 1: return PAYMENT;
       case 2: return PATH_PAYMENT;
-      case 3: return MANAGE_OFFER;
-      case 4: return CREATE_PASSIVE_OFFER;
+      case 3: return MANAGE_SELL_OFFER;
+      case 4: return CREATE_PASSIVE_SELL_OFFER;
       case 5: return SET_OPTIONS;
       case 6: return CHANGE_TRUST;
       case 7: return ALLOW_TRUST;
@@ -64,6 +66,7 @@ public enum OperationType  {
       case 9: return INFLATION;
       case 10: return MANAGE_DATA;
       case 11: return BUMP_SEQUENCE;
+      case 12: return MANAGE_BUY_OFFER;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

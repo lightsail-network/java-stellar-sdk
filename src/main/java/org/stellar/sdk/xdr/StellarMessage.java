@@ -137,6 +137,8 @@ public class StellarMessage  {
     this.getSCPLedgerSeq = value;
   }
   public static void encode(XdrDataOutputStream stream, StellarMessage encodedStellarMessage) throws IOException {
+  //Xdrgen::AST::Identifier
+  //MessageType
   stream.writeInt(encodedStellarMessage.getDiscriminant().getValue());
   switch (encodedStellarMessage.getDiscriminant()) {
   case ERROR_MSG:

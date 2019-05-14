@@ -34,6 +34,8 @@ public class InflationResult  {
     this.payouts = value;
   }
   public static void encode(XdrDataOutputStream stream, InflationResult encodedInflationResult) throws IOException {
+  //Xdrgen::AST::Identifier
+  //InflationResultCode
   stream.writeInt(encodedInflationResult.getDiscriminant().getValue());
   switch (encodedInflationResult.getDiscriminant()) {
   case INFLATION_SUCCESS:

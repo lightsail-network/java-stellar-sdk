@@ -85,6 +85,8 @@ public class TransactionResult  {
       this.results = value;
     }
     public static void encode(XdrDataOutputStream stream, TransactionResultResult encodedTransactionResultResult) throws IOException {
+    //Xdrgen::AST::Identifier
+    //TransactionResultCode
     stream.writeInt(encodedTransactionResultResult.getDiscriminant().getValue());
     switch (encodedTransactionResultResult.getDiscriminant()) {
     case txSUCCESS:
@@ -129,6 +131,8 @@ public class TransactionResult  {
       this.v = value;
     }
     public static void encode(XdrDataOutputStream stream, TransactionResultExt encodedTransactionResultExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedTransactionResultExt.getDiscriminant().intValue());
     switch (encodedTransactionResultExt.getDiscriminant()) {
     case 0:

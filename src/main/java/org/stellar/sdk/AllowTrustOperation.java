@@ -1,9 +1,6 @@
 package org.stellar.sdk;
 
-import org.stellar.sdk.xdr.AccountID;
-import org.stellar.sdk.xdr.AllowTrustOp;
-import org.stellar.sdk.xdr.AssetType;
-import org.stellar.sdk.xdr.OperationType;
+import org.stellar.sdk.xdr.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,11 +52,15 @@ public class AllowTrustOperation extends Operation {
     // asset
     AllowTrustOp.AllowTrustOpAsset asset = new AllowTrustOp.AllowTrustOpAsset();
     if (assetCode.length() <= 4) {
+      AssetCode4 assetCode4 = new AssetCode4();
+      assetCode4.setAssetCode4(Util.paddedByteArray(assetCode, 4));
       asset.setDiscriminant(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4);
-      asset.setAssetCode4(Util.paddedByteArray(assetCode, 4));
+      asset.setAssetCode4(assetCode4);
     } else {
+      AssetCode12 assetCode12 = new AssetCode12();
+      assetCode12.setAssetCode12(Util.paddedByteArray(assetCode, 12));
       asset.setDiscriminant(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12);
-      asset.setAssetCode12(Util.paddedByteArray(assetCode, 12));
+      asset.setAssetCode12(assetCode12);
     }
     op.setAsset(asset);
     // authorize
@@ -86,10 +87,10 @@ public class AllowTrustOperation extends Operation {
       trustor = KeyPair.fromXdrPublicKey(op.getTrustor().getAccountID());
       switch (op.getAsset().getDiscriminant()) {
         case ASSET_TYPE_CREDIT_ALPHANUM4:
-          assetCode = new String(op.getAsset().getAssetCode4()).trim();
+          assetCode = new String(op.getAsset().getAssetCode4().getAssetCode4()).trim();
           break;
         case ASSET_TYPE_CREDIT_ALPHANUM12:
-          assetCode = new String(op.getAsset().getAssetCode12()).trim();
+          assetCode = new String(op.getAsset().getAssetCode12().getAssetCode12()).trim();
           break;
         default:
           throw new RuntimeException("Unknown asset code");

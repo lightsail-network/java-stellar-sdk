@@ -69,6 +69,8 @@ public class LedgerHeaderHistoryEntry  {
       this.v = value;
     }
     public static void encode(XdrDataOutputStream stream, LedgerHeaderHistoryEntryExt encodedLedgerHeaderHistoryEntryExt) throws IOException {
+    //Xdrgen::AST::Typespecs::Int
+    //Integer
     stream.writeInt(encodedLedgerHeaderHistoryEntryExt.getDiscriminant().intValue());
     switch (encodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
     case 0:
