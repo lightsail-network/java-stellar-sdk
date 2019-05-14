@@ -99,9 +99,9 @@ public class ManageBuyOfferOperation extends Operation {
         private KeyPair mSourceAccount;
 
         /**
-         * Construct a new CreateAccount builder from a CreateAccountOp XDR.
+         * Construct a new ManageBuyOffer builder from a ManageBuyOfferOp XDR.
          *
-         * @param op {@link CreateAccountOp}
+         * @param op {@link ManageBuyOfferOp}
          */
         Builder(ManageBuyOfferOp op) {
             selling = Asset.fromXdr(op.getSelling());
