@@ -11,7 +11,6 @@ public class AccountDeserializerTest extends TestCase {
   public void testDeserialize() {
     AccountResponse account = GsonSingleton.getInstance().fromJson(json, AccountResponse.class);
     assertEquals(account.getKeypair().getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
-    assertEquals(account.getPagingToken(), "1");
     assertEquals(account.getSequenceNumber(), new Long(2319149195853854L));
     assertEquals(account.getSubentryCount(), new Integer(0));
     assertEquals(account.getInflationDestination(), "GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC");

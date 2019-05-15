@@ -22,8 +22,6 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private KeyPair keypair;
   @SerializedName("sequence")
   private Long sequenceNumber;
-  @SerializedName("paging_token")
-  private String pagingToken;
   @SerializedName("subentry_count")
   private Integer subentryCount;
   @SerializedName("inflation_destination")
@@ -71,11 +69,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   public void incrementSequenceNumber() {
     sequenceNumber++;
   }
-
-  public String getPagingToken() {
-    return pagingToken;
-  }
-
+  
   public Integer getSubentryCount() {
     return subentryCount;
   }

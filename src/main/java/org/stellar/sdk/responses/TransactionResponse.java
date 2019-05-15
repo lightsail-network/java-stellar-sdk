@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see org.stellar.sdk.requests.TransactionsRequestBuilder
  * @see org.stellar.sdk.Server#transactions()
  */
-public class TransactionResponse extends Response {
+public class TransactionResponse extends Response implements Pageable {
   @SerializedName("hash")
   private final String hash;
   @SerializedName("ledger")

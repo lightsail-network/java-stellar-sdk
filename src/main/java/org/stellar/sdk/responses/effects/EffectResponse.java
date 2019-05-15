@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Link;
+import org.stellar.sdk.responses.Pageable;
 import org.stellar.sdk.responses.Response;
 
 /**
@@ -12,7 +13,7 @@ import org.stellar.sdk.responses.Response;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
-public abstract class EffectResponse extends Response {
+public abstract class EffectResponse extends Response implements Pageable {
   @SerializedName("id")
   protected String id;
   @SerializedName("account")
