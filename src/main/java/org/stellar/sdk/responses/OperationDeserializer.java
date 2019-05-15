@@ -29,9 +29,9 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
       case 2:
         return gson.fromJson(json, PathPaymentOperationResponse.class);
       case 3:
-        return gson.fromJson(json, ManageOfferOperationResponse.class);
+        return gson.fromJson(json, ManageSellOfferOperationResponse.class);
       case 4:
-        return gson.fromJson(json, CreatePassiveOfferOperationResponse.class);
+        return gson.fromJson(json, CreatePassiveSellOfferOperationResponse.class);
       case 5:
         return gson.fromJson(json, SetOptionsOperationResponse.class);
       case 6:
@@ -46,6 +46,8 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         return gson.fromJson(json, ManageDataOperationResponse.class);
       case 11:
         return gson.fromJson(json, BumpSequenceOperationResponse.class);
+      case 12:
+        return gson.fromJson(json, ManageBuyOfferOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

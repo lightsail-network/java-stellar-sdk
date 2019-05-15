@@ -1,18 +1,17 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
-
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 
 /**
- * Represents CreatePassiveOffer operation response.
+ * Represents ManageBuyOffer operation response.
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html" target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
-public class CreatePassiveOfferOperationResponse extends OperationResponse {
+public class ManageBuyOfferOperationResponse extends OperationResponse {
   @SerializedName("offer_id")
   protected final Integer offerId;
   @SerializedName("amount")
@@ -36,7 +35,7 @@ public class CreatePassiveOfferOperationResponse extends OperationResponse {
   @SerializedName("selling_asset_issuer")
   protected final String sellingAssetIssuer;
 
-  CreatePassiveOfferOperationResponse(Integer offerId, String amount, String price, String buyingAssetType, String buyingAssetCode, String buyingAssetIssuer, String sellingAssetType, String sellingAssetCode, String sellingAssetIssuer) {
+  ManageBuyOfferOperationResponse(Integer offerId, String amount, String price, String buyingAssetType, String buyingAssetCode, String buyingAssetIssuer, String sellingAssetType, String sellingAssetCode, String sellingAssetIssuer) {
     this.offerId = offerId;
     this.amount = amount;
     this.price = price;
@@ -59,7 +58,7 @@ public class CreatePassiveOfferOperationResponse extends OperationResponse {
   public String getPrice() {
     return price;
   }
-
+  
   public Asset getBuyingAsset() {
     if (buyingAssetType.equals("native")) {
       return new AssetTypeNative();
