@@ -392,7 +392,7 @@ public class OperationDeserializerTest extends TestCase {
             "        \"selling_asset_type\": \"native\"\n" +
             "      }";
 
-    ManageSellOfferOperationResponse operation = (ManageSellOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+    ManageOfferOperationResponse operation = (ManageOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getOfferId(), new Integer(0));
     assertEquals(operation.getAmount(), "100.0");
@@ -577,7 +577,7 @@ public class OperationDeserializerTest extends TestCase {
             "  \"type\": \"create_passive_offer\"\n" +
             "}";
 
-    CreatePassiveSellOfferOperationResponse operation = (CreatePassiveSellOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+    CreatePassiveOfferOperationResponse operation = (CreatePassiveOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getAmount(), "11.27827");
     assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GDS5JW5E6DRSSN5XK4LW7E6VUMFKKE2HU5WCOVFTO7P2RP7OXVCBLJ3Y")));
