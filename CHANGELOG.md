@@ -23,9 +23,9 @@ Deprecated | New method/class
 * Stellar Protocol 11 compatibility (#199).
 * Compatibility with Horizon API updates (#205).
 * Add Support for `InflationOperation` in `Operation.fromXdr` (#194).
-* Fixed exception thrown from ManageOfferOperation.fromXDR for certain offers (#188).
+* Fixed exception thrown from `ManageOfferOperation.fromXDR` for some offers (#188).
 * Send Horizon client fingerprint (#190).
-* `Server` now implements `Closeable` (#182).
+* `Server` now implements `Closeable` interface (#182).
 * Fixed `/order_book` endpoint streaming.
 
 ## 0.6.0
