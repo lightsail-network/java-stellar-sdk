@@ -9,6 +9,7 @@ import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.responses.GsonSingleton;
+import org.stellar.sdk.responses.Pageable;
 
 import javax.annotation.Nullable;
 import java.io.Closeable;
@@ -195,8 +196,10 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
         return;
       }
       T event = GsonSingleton.getInstance().fromJson(data, responseClass);
-      String pagingToken = event.getPagingToken();
-      requestBuilder.cursor(pagingToken);
+      if (event instanceof Pageable){
+        String pagingToken = ((Pageable)event).getPagingToken();
+        requestBuilder.cursor(pagingToken);
+      }
       stream.lastEventId.set(id);
       listener.onEvent(event);
     }

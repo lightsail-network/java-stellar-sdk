@@ -11,7 +11,7 @@ import org.stellar.sdk.KeyPair;
  * @see org.stellar.sdk.requests.OffersRequestBuilder
  * @see org.stellar.sdk.Server#offers()
  */
-public class OfferResponse extends Response {
+public class OfferResponse extends Response implements Pageable {
   @SerializedName("id")
   private final Long id;
   @SerializedName("paging_token")

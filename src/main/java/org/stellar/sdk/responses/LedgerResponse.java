@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.LedgersRequestBuilder
  * @see org.stellar.sdk.Server#ledgers()
  */
-public class LedgerResponse extends Response {
+public class LedgerResponse extends Response implements Pageable {
   @SerializedName("sequence")
   private final Long sequence;
   @SerializedName("hash")

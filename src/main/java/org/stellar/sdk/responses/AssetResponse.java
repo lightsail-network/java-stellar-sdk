@@ -3,7 +3,7 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 
-public class AssetResponse extends Response {
+public class AssetResponse extends Response implements Pageable {
     @SerializedName("asset_type")
     private final String assetType;
     @SerializedName("asset_code")

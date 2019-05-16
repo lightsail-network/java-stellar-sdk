@@ -12,7 +12,7 @@ import org.stellar.sdk.Price;
  * @see org.stellar.sdk.requests.TradesRequestBuilder
  * @see org.stellar.sdk.Server#trades()
  */
-public class TradeResponse extends Response {
+public class TradeResponse extends Response implements Pageable {
     @SerializedName("id")
     private final String id;
     @SerializedName("paging_token")

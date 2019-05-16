@@ -29,11 +29,6 @@ public abstract class Response {
     return rateLimitLimit;
   }
 
-
-  public String getPagingToken() {
-    throw new UnsupportedOperationException("this response does not have a paging token");
-  }
-
   /**
    * Returns X-RateLimit-Remaining header from the response.
    * The number of remaining requests for the current window.
