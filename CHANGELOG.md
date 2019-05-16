@@ -6,10 +6,17 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ### Deprecations
 
-* `org.stellar.sdk.Server#operationFeeStats`, `org.stellar.sdk.requests.OperationFeeStatsRequestBuilder` and `org.stellar.sdk.responses.OperationFeeStatsResponse` are deprecated. Will be removed in 0.8.0. Please switch to `org.stellar.sdk.Server#feeStats`, `org.stellar.sdk.requests.FeeStatsRequestBuilder` and `org.stellar.sdk.responses.FeeStatsResponse` respectively.
-* `org.stellar.sdk.responses.operations.CreatePassiveOfferOperationResponse` and `org.stellar.sdk.responses.operations.ManageOfferOperationResponse` are deprecated. Will be removed in 0.8.0. Please switch to `org.stellar.sdk.responses.operations.CreatePassiveSellOfferOperationResponse` and `org.stellar.sdk.responses.operations.ManageOfferSellOperationResponse` respectively.
-* `org.stellar.sdk.CreatePassiveOfferOperation` is deprecated. Will be removed in 0.8.0. Please switch to `org.stellar.sdk.CreatePassiveSellOfferOperation`.
-* `org.stellar.sdk.ManageOfferOperation` is deprecated. Will be removed in 0.8.0. Please switch to `org.stellar.sdk.ManageSellOfferOperation`.
+The following methods are deprecated and will be removed in 0.8.0. Please switch to new methods and classes.
+
+Deprecated | New method/class
+-|-
+`org.stellar.sdk.Server#operationFeeStats` | `org.stellar.sdk.Server#feeStats`
+`org.stellar.sdk.requests.OperationFeeStatsRequestBuilder` | `org.stellar.sdk.requests.FeeStatsRequestBuilder`
+`org.stellar.sdk.responses.OperationFeeStatsResponse` | `org.stellar.sdk.responses.FeeStatsResponse`
+`org.stellar.sdk.responses.operations.CreatePassiveOfferOperationResponse` | `org.stellar.sdk.responses.operations.CreatePassiveSellOfferOperationResponse`
+`org.stellar.sdk.responses.operations.ManageOfferOperationResponse` | `org.stellar.sdk.responses.operations.ManageOfferSellOperationResponse`
+`org.stellar.sdk.CreatePassiveOfferOperation` | `org.stellar.sdk.CreatePassiveSellOfferOperation`
+`org.stellar.sdk.ManageOfferOperation` | `org.stellar.sdk.ManageSellOfferOperation`
 
 ### Changes
 
