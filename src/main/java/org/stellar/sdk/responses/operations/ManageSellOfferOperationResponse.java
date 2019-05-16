@@ -1,18 +1,18 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 
 /**
- * Represents ManageOffer operation response.
- * @deprecated Will be removed in version 0.8.0, use {@link ManageSellOfferOperationResponse}
+ * Represents ManageSellOffer operation response.
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html" target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
-public class ManageOfferOperationResponse extends OperationResponse {
+public class ManageSellOfferOperationResponse extends OperationResponse {
   @SerializedName("offer_id")
   protected final Integer offerId;
   @SerializedName("amount")
@@ -36,7 +36,7 @@ public class ManageOfferOperationResponse extends OperationResponse {
   @SerializedName("selling_asset_issuer")
   protected final String sellingAssetIssuer;
 
-  ManageOfferOperationResponse(Integer offerId, String amount, String price, String buyingAssetType, String buyingAssetCode, String buyingAssetIssuer, String sellingAssetType, String sellingAssetCode, String sellingAssetIssuer) {
+  ManageSellOfferOperationResponse(Integer offerId, String amount, String price, String buyingAssetType, String buyingAssetCode, String buyingAssetIssuer, String sellingAssetType, String sellingAssetCode, String sellingAssetIssuer) {
     this.offerId = offerId;
     this.amount = amount;
     this.price = price;

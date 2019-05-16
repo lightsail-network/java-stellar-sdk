@@ -30,6 +30,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private String inflationDestination;
   @SerializedName("home_domain")
   private String homeDomain;
+  @SerializedName("last_modified_ledger")
+  private Integer lastModifiedLedger;
   @SerializedName("thresholds")
   private Thresholds thresholds;
   @SerializedName("flags")
@@ -86,6 +88,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
   public String getHomeDomain() {
     return homeDomain;
+  }
+
+  public Integer getLastModifiedLedger() {
+    return lastModifiedLedger;
   }
 
   public Thresholds getThresholds() {
@@ -186,8 +192,12 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private final String buyingLiabilities;
     @SerializedName("selling_liabilities")
     private final String sellingLiabilities;
+    @SerializedName("is_authorized")
+    private final Boolean isAuthorized;
+    @SerializedName("last_modified_ledger")
+    private final Integer lastModifiedLedger;
 
-    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit, String buyingLiabilities, String sellingLiabilities) {
+    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Integer lastModifiedLedger) {
       this.assetType = checkNotNull(assetType, "assertType cannot be null");
       this.balance = checkNotNull(balance, "balance cannot be null");
       this.limit = limit;
@@ -195,6 +205,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       this.assetIssuer = assetIssuer;
       this.buyingLiabilities = checkNotNull(buyingLiabilities, "buyingLiabilities cannot be null");
       this.sellingLiabilities = checkNotNull(sellingLiabilities, "sellingLiabilities cannot be null");
+      this.isAuthorized = isAuthorized;
+      this.lastModifiedLedger = lastModifiedLedger;
     }
 
     public Asset getAsset() {
@@ -231,6 +243,14 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
     public String getLimit() {
       return limit;
+    }
+
+    public Boolean getAuthorized() {
+      return isAuthorized;
+    }
+
+    public Integer getLastModifiedLedger() {
+      return lastModifiedLedger;
     }
   }
 
