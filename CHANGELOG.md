@@ -2,6 +2,32 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.7.0
+
+### Deprecations
+
+The following methods are deprecated and will be removed in 0.8.0. Please switch to new methods and classes.
+
+Deprecated | New method/class
+-|-
+`org.stellar.sdk.Server#operationFeeStats` | `org.stellar.sdk.Server#feeStats`
+`org.stellar.sdk.requests.OperationFeeStatsRequestBuilder` | `org.stellar.sdk.requests.FeeStatsRequestBuilder`
+`org.stellar.sdk.responses.OperationFeeStatsResponse` | `org.stellar.sdk.responses.FeeStatsResponse`
+`org.stellar.sdk.responses.operations.CreatePassiveOfferOperationResponse` | `org.stellar.sdk.responses.operations.CreatePassiveSellOfferOperationResponse`
+`org.stellar.sdk.responses.operations.ManageOfferOperationResponse` | `org.stellar.sdk.responses.operations.ManageOfferSellOperationResponse`
+`org.stellar.sdk.CreatePassiveOfferOperation` | `org.stellar.sdk.CreatePassiveSellOfferOperation`
+`org.stellar.sdk.ManageOfferOperation` | `org.stellar.sdk.ManageSellOfferOperation`
+
+### Changes
+
+* Stellar Protocol 11 compatibility (#199).
+* Compatibility with Horizon API updates (#205).
+* Add Support for `InflationOperation` in `Operation.fromXdr` (#194).
+* Fixed exception thrown from `ManageOfferOperation.fromXDR` for some offers (#188).
+* Send Horizon client fingerprint (#190).
+* `Server` now implements `Closeable` interface (#182).
+* Fixed `/order_book` endpoint streaming.
+
 ## 0.6.0
 
 * Horizon 0.17.0 features (#180)
