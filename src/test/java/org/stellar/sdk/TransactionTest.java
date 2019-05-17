@@ -411,4 +411,74 @@ public class TransactionTest {
       assertTrue(exception.getMessage().contains("Memo has been already added."));
     }
   }
+
+  @Test
+  public void testBuilderWithSetPublicNetwork() {
+    Network.use(null);
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    Account account = new Account(source, 2908908335136767L);
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+            .setOperationFee(100)
+            .setNetwork(Network.publicNetwork())
+            .build();
+    transaction.sign(source);
+
+    assertEquals(
+            "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEBCmMOBsCJf0il744cJNOxt5dxM5qeT5inhiqb2T7DpWegcKQINBbiH30dEXYuZaDB/L3T1UHWp1UZcRjYoSOIF",
+            transaction.toEnvelopeXdrBase64()
+    );
+  }
+
+  @Test
+  public void testBuilderWithSetTestNetwork() {
+    Network.use(null);
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    Account account = new Account(source, 2908908335136767L);
+    Transaction transaction = new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+            .setOperationFee(100)
+            .setNetwork(Network.testNetwork())
+            .build();
+    transaction.sign(source);
+
+    assertEquals(
+            "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAECBfm7dZ+SkwxUshvFUSGz36f2hPFbgPqypSKnObBUwndvgaH/RFgzgJgmk8lQjvTK9N5xUVq9nRFbegePc6s4O",
+            transaction.toEnvelopeXdrBase64()
+    );
+  }
+
+  @Test
+  public void testFromEnvelopeXdrWithSetPublicNetwork() throws IOException {
+    Network.useTestNetwork(); // Test priority.
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    String originXDR = "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAAA";
+    Transaction transaction = Transaction.fromEnvelopeXdr(originXDR, Network.publicNetwork());
+    transaction.sign(source);
+
+    assertEquals(
+            "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEBCmMOBsCJf0il744cJNOxt5dxM5qeT5inhiqb2T7DpWegcKQINBbiH30dEXYuZaDB/L3T1UHWp1UZcRjYoSOIF",
+            transaction.toEnvelopeXdrBase64()
+    );
+  }
+
+  @Test
+  public void testFromEnvelopeXdrWithSetTestNetwork() throws IOException {
+    Network.usePublicNetwork(); // Test priority.
+    KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    String originXDR = "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAAA";
+    Transaction transaction = Transaction.fromEnvelopeXdr(originXDR, Network.testNetwork());
+    transaction.sign(source);
+
+    assertEquals(
+            "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAECBfm7dZ+SkwxUshvFUSGz36f2hPFbgPqypSKnObBUwndvgaH/RFgzgJgmk8lQjvTK9N5xUVq9nRFbegePc6s4O",
+            transaction.toEnvelopeXdrBase64()
+    );
+  }
 }

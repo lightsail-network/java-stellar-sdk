@@ -28,4 +28,13 @@ public class NetworkTest {
         Network.usePublicNetwork();
         assertEquals("Public Global Stellar Network ; September 2015", Network.current().getNetworkPassphrase());
     }
+
+    @Test
+    public void testPublicNetwork() {
+        assertEquals("Public Global Stellar Network ; September 2015", Network.publicNetwork().getNetworkPassphrase());
+    }
+    @Test
+    public void testTestNetwork() {
+        assertEquals("Test SDF Network ; September 2015", Network.testNetwork().getNetworkPassphrase());
+    }
 }
