@@ -38,6 +38,10 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     compile "com.squareup.okhttp3:okhttp:${okhttpclientVersion}"
     compile "com.squareup.okhttp3:okhttp-sse:${okhttpclientVersion}"
@@ -51,7 +55,13 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.21.0'
     testCompile "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
     testCompile 'junit:junit:4.12'
+    testRuntime("org.junit.vintage:junit-vintage-engine:5.2.0")
     testCompile 'javax.xml.bind:jaxb-api:2.3.0'
+}
+
+dependencies {
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.4.2"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.4.2"
 }
 
 project.configurations.compile 
