@@ -2,6 +2,10 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.8.0
+
+* Upgraded from Java 6 to Java 8
+
 ## 0.7.0
 
 ### Deprecations
