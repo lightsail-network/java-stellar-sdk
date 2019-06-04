@@ -15,7 +15,7 @@ apply plugin: 'maven' // needed to add the install task for jitpack.io
 apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates -Drevision=release
 apply plugin: 'project-report' // gradle htmlDependencyReport
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 version = '0.7.0'
 group = 'stellar'
 
