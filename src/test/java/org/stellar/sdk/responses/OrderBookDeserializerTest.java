@@ -1,12 +1,13 @@
 package org.stellar.sdk.responses;
 
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 
-public class OrderBookDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class OrderBookDeserializerTest {
     @Test
     public void testDeserialize() {
         OrderBookResponse orderBook = GsonSingleton.getInstance().fromJson(json, OrderBookResponse.class);

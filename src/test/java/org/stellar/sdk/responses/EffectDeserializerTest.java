@@ -1,14 +1,16 @@
 package org.stellar.sdk.responses;
 
-import junit.framework.TestCase;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.effects.*;
 
-public class EffectDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class EffectDeserializerTest {
   @Test
   public void testDeserializeAccountCreatedEffect() {
     String json = "{\n" +
@@ -98,7 +100,7 @@ public class EffectDeserializerTest extends TestCase {
     AccountCreditedEffectResponse effect = (AccountCreditedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount().getAccountId(), "GDLGTRIBFH24364GPWPUS45GUFC2GU4ARPGWTXVCPLGTUHX3IOS3ON47");
-    TestCase.assertEquals(effect.getAsset(), new AssetTypeNative());
+    assertEquals(effect.getAsset(), new AssetTypeNative());
     assertEquals(effect.getAmount(), "1000.0");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/13563506724865");
@@ -400,7 +402,7 @@ public class EffectDeserializerTest extends TestCase {
     TrustlineCreatedEffectResponse effect = (TrustlineCreatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount().getAccountId(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    TestCase.assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
+    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
     assertEquals(effect.getLimit(), "1000.0");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");

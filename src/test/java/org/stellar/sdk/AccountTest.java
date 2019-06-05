@@ -1,22 +1,19 @@
 package org.stellar.sdk;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class AccountTest  {
   @Test
   public void testNullArguments() {
-    try {
-      new Account(null, 10L);
-      fail();
-    } catch (NullPointerException e) {}
+    assertThrows(NullPointerException.class, () -> new Account(null, 10L));
 
-    try {
-      new Account(KeyPair.random(), null);
-      fail();
-    } catch (NullPointerException e) {}
+    assertThrows(NullPointerException.class, () -> new Account(KeyPair.random(), null));
   }
 
   @Test

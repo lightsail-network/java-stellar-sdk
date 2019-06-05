@@ -1,7 +1,9 @@
 package org.stellar.sdk;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * Test cases from https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md
@@ -105,13 +107,13 @@ public final class SEP0005KeyPairForAccountFromBip39SeedTest {
     final byte[] seed = Util.hexToBytes(case1Bip39Seed);
     final KeyPair pair = KeyPair.fromBip39Seed(seed, 100);
     final KeyPair pairFromHardened = KeyPair.fromBip39Seed(seed, 100 | 0x80000000);
-    Assert.assertEquals(pair.getAccountId(), pairFromHardened.getAccountId());
+    assertEquals(pair.getAccountId(), pairFromHardened.getAccountId());
   }
 
   private static void testDerivedAccounts(final String bip39Seed, final String... testCases) {
     for (final String testLine : testCases) {
       final String[] testParts = testLine.split(" ");
-      Assert.assertEquals(3, testParts.length);
+      assertEquals(3, testParts.length);
       final int account = extractAccount(testParts[0]);
       testDerivedAccount(bip39Seed, account, testParts[1], testParts[2]);
     }
@@ -119,7 +121,7 @@ public final class SEP0005KeyPairForAccountFromBip39SeedTest {
 
   private static int extractAccount(final String path) {
     final String prefix = "m/44'/148'/";
-    Assert.assertTrue(path.startsWith(prefix));
+    assertTrue(path.startsWith(prefix));
     final int index = path.lastIndexOf('\'');
     return Integer.parseInt(path.substring(prefix.length(), index));
   }
@@ -127,7 +129,7 @@ public final class SEP0005KeyPairForAccountFromBip39SeedTest {
   private static void testDerivedAccount(final String bip39Seed, final int accountNumber, final String expectedAccountId, final String expectedSecret) {
     final byte[] seed = Util.hexToBytes(bip39Seed);
     final KeyPair pair = KeyPair.fromBip39Seed(seed, accountNumber);
-    Assert.assertEquals(expectedAccountId, pair.getAccountId());
-    Assert.assertEquals(expectedSecret, new String(pair.getSecretSeed()));
+    assertEquals(expectedAccountId, pair.getAccountId());
+    assertEquals(expectedSecret, new String(pair.getSecretSeed()));
   }
 }

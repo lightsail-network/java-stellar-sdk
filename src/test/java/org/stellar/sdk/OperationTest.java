@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 
@@ -10,9 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OperationTest {
 
@@ -695,19 +694,8 @@ public class OperationTest {
     assertEquals(1014016711446800155L, Operation.toXdrAmount("101401671144.6800155"));
     assertEquals(9223372036854775807L, Operation.toXdrAmount("922337203685.4775807"));
 
-    try {
-      Operation.toXdrAmount("0.00000001");
-      fail();
-    }
-    catch (ArithmeticException e) {}
-    catch (Exception e) { fail(); }
-
-    try {
-      Operation.toXdrAmount("72991284.30073811");
-      fail();
-    }
-    catch (ArithmeticException e) {}
-    catch (Exception e) { fail(); }
+    assertThrows(ArithmeticException.class, () -> Operation.toXdrAmount("0.00000001"));
+    assertThrows(ArithmeticException.class, () -> Operation.toXdrAmount("72991284.30073811"));
   }
 
   @Test

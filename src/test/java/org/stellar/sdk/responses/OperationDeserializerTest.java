@@ -1,13 +1,14 @@
 package org.stellar.sdk.responses;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import org.stellar.sdk.*;
 
-import org.junit.Test;
 import org.stellar.sdk.responses.operations.*;
 
-public class OperationDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class OperationDeserializerTest {
   @Test
   public void testDeserializeCreateAccountOperation() {
     String json = "{\n" +
@@ -315,12 +316,9 @@ public class OperationDeserializerTest extends TestCase {
 
     SetOptionsOperationResponse operation = (SetOptionsOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    try {
-      operation.getSigner();
-      fail();
-    } catch (FormatException e) {
-      assertEquals("Version byte is invalid", e.getMessage());
-    }
+    FormatException e = assertThrows(FormatException.class, () -> operation.getSigner());
+    assertEquals("Version byte is invalid", e.getMessage());
+
     assertEquals(operation.getSignerKey(), "TBGFYVCU76LJ7GZOCGR4X7DG2NV42JPG5CKRL42LA5FZOFI3U2WU7ZAL");
   }
 

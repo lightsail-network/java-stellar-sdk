@@ -1,18 +1,20 @@
 package org.stellar.sdk.federation;
 
-import junit.framework.TestCase;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-public class FederationServerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
+
+
+public class FederationServerTest {
   private final String successResponse =
           "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}";
   private final String successResponseWithMemo =
@@ -24,12 +26,12 @@ public class FederationServerTest extends TestCase {
   private final String stellarToml =
           "FEDERATION_SERVER = \"https://api.stellar.org/federation\"";
 
-  @Before
+  @BeforeEach
   public void setUp() throws IOException {
     FederationServer.httpsConnection = false;
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws IOException {
     FederationServer.httpsConnection = true;
   }
@@ -100,9 +102,6 @@ public class FederationServerTest extends TestCase {
             "stellar.org"
     );
 
-    try {
-      FederationResponse response = server.resolveAddress("bob*stellar.org");
-      fail("Expected exception");
-    } catch (NotFoundException e) {}
+    assertThrows(NotFoundException.class, () -> server.resolveAddress("bob*stellar.org"));
   }
 }

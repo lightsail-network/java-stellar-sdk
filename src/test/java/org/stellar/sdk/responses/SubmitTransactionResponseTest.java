@@ -1,10 +1,12 @@
 package org.stellar.sdk.responses;
 
-import junit.framework.TestCase;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SubmitTransactionResponseTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+public class SubmitTransactionResponseTest {
   @Test
   public void testDeserializeTransactionFailureResponse() {
     String json = "{\n" +

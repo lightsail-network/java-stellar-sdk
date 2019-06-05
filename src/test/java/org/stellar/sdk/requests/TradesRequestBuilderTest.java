@@ -1,12 +1,13 @@
 package org.stellar.sdk.requests;
 
 import okhttp3.HttpUrl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Server;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class TradesRequestBuilderTest {
     @Test

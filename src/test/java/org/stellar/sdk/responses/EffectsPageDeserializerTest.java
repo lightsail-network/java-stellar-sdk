@@ -2,14 +2,14 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.reflect.TypeToken;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.responses.effects.AccountCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.effects.SignerCreatedEffectResponse;
 
-public class EffectsPageDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class EffectsPageDeserializerTest {
   @Test
   public void testDeserialize() {
     Page<EffectResponse> effectsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<EffectResponse>>() {}.getType());

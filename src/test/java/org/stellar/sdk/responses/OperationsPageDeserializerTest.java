@@ -2,15 +2,16 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.reflect.TypeToken;
 
-import junit.framework.TestCase;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 import org.stellar.sdk.responses.operations.PaymentOperationResponse;
 
-public class OperationsPageDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class OperationsPageDeserializerTest {
   @Test
   public void testDeserialize() {
     Page<OperationResponse> operationsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<OperationResponse>>() {}.getType());
@@ -25,7 +26,7 @@ public class OperationsPageDeserializerTest extends TestCase {
 
     PaymentOperationResponse paymentOperation = (PaymentOperationResponse) operationsPage.getRecords().get(4);
     assertEquals(paymentOperation.getAmount(), "10.123");
-    TestCase.assertEquals(paymentOperation.getAsset(), new AssetTypeNative());
+    assertEquals(paymentOperation.getAsset(), new AssetTypeNative());
     assertEquals(paymentOperation.getFrom().getAccountId(), "GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R");
     assertEquals(paymentOperation.getTo().getAccountId(), "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H");
   }

@@ -3,15 +3,14 @@ package org.stellar.sdk;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.xdr.MemoType;
-import org.stellar.sdk.MemoId;
 import org.stellar.sdk.responses.TransactionDeserializer;
 import org.stellar.sdk.responses.TransactionResponse;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MemoTest {
     @Test
