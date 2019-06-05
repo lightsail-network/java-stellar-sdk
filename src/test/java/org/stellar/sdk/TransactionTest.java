@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import org.stellar.sdk.xdr.XdrDataInputStream;
 
 import java.io.ByteArrayInputStream;
@@ -9,11 +10,16 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
 
 public class TransactionTest {
 
-  @Before
+  @BeforeEach
   public void setupNetwork() {
     Network.useTestNetwork();
   }
@@ -51,12 +57,12 @@ public class TransactionTest {
 
   @Test
   public void testDefaultBaseFeeThrows() {
-    try {
-      Transaction.Builder.setDefaultOperationFee(99);
-      fail("expected IllegalArgumentException");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+    Exception e = assertThrows(RuntimeException.class, () -> Transaction.Builder.setDefaultOperationFee(99));
+    assertThat(
+            e.getMessage(),
+            containsString("DefaultOperationFee cannot be smaller than the BASE_FEE")
+    );
+
 
     // should succeed
     Transaction.Builder.setDefaultOperationFee(100);
@@ -204,44 +210,44 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source, 2908908335136768L);
-    Transaction.Builder builder = new Transaction.Builder(account);
-    try {
-      builder.setOperationFee(99);
-      fail("expected IllegalArgumentException");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+
+    Exception e = assertThrows(RuntimeException.class, () -> new Transaction.Builder(account).setOperationFee(99));
+    assertThat(
+            e.getMessage(),
+            containsString("OperationFee cannot be smaller than the BASE_FEE")
+    );
   }
 
   @Test
-  public void testBuilderTimeoutNotCalled() throws IOException {
+  public void testBuilderWithTimeBoundsButNoTimeout() throws IOException {
     Account account = new Account(KeyPair.random(), 2908908335136768L);
-    try {
-      new Transaction.Builder(account)
-              .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
-              .addTimeBounds(new TimeBounds(42, 1337))
-              .addMemo(Memo.hash("abcdef"))
-              .build();
-    } catch (RuntimeException exception) {
-      // Should not throw as max_time is set
-      fail();
-    }
+    new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+            .addTimeBounds(new TimeBounds(42, 1337))
+            .addMemo(Memo.hash("abcdef"))
+            .build();
   }
+
+  @Test
+  public void testBuilderRequiresTimeoutOrTimeBounds() throws IOException {
+    Account account = new Account(KeyPair.random(), 2908908335136768L);
+    Exception e = assertThrows(RuntimeException.class, () -> new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+            .addMemo(Memo.hash("abcdef"))
+            .build());
+    assertEquals(e.getMessage(), "TimeBounds has to be set or you must call setTimeout(TIMEOUT_INFINITE).");
+  }
+
 
   @Test
   public void testBuilderTimeoutNegative() throws IOException {
     Account account = new Account(KeyPair.random(), 2908908335136768L);
-    try {
-      new Transaction.Builder(account)
-              .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
-              .addMemo(Memo.hash("abcdef"))
-              .setTimeout(-1)
-              .build();
-      fail();
-    } catch (RuntimeException exception) {
-      assertTrue(exception.getMessage().contains("timeout cannot be negative"));
-      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
-    }
+    Exception e = assertThrows(RuntimeException.class, () -> new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+            .addMemo(Memo.hash("abcdef"))
+            .setTimeout(-1)
+            .build());
+    assertEquals(e.getMessage(), "timeout cannot be negative");
   }
 
   @Test
@@ -252,7 +258,6 @@ public class TransactionTest {
             .setTimeout(10)
             .build();
 
-    assertNotNull(transaction.getTimeBounds());
     assertEquals(0, transaction.getTimeBounds().getMinTime());
     long currentUnix = System.currentTimeMillis() / 1000L;
     assertEquals(currentUnix + 10, transaction.getTimeBounds().getMaxTime());
@@ -261,17 +266,15 @@ public class TransactionTest {
   @Test
   public void testBuilderFailsWhenSettingTimeoutAndMaxTimeAlreadySet() throws IOException {
     Account account = new Account(KeyPair.random(), 2908908335136768L);
-    try {
-      new Transaction.Builder(account)
-              .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
-              .addTimeBounds(new TimeBounds(42, 1337))
-              .setTimeout(10)
-              .build();
-      fail();
-    } catch (RuntimeException exception) {
-      assertTrue(exception.getMessage().contains("TimeBounds.max_time has been already set"));
-      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
-    }
+    Exception e = assertThrows(RuntimeException.class, () -> new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+            .addTimeBounds(new TimeBounds(42, 1337))
+            .setTimeout(10)
+            .build());
+    assertEquals(
+            e.getMessage(),
+            "TimeBounds.max_time has been already set - setting timeout would overwrite it."
+    );
   }
 
   @Test
@@ -358,8 +361,11 @@ public class TransactionTest {
 
     transaction.sign(preimage);
 
-    assertTrue(Arrays.equals(transaction.getSignatures().get(0).getSignature().getSignature(), preimage));
-    assertTrue(Arrays.equals(transaction.getSignatures().get(0).getHint().getSignatureHint(), Arrays.copyOfRange(hash, hash.length - 4, hash.length)));
+    assertArrayEquals(transaction.getSignatures().get(0).getSignature().getSignature(), preimage);
+    assertArrayEquals(
+            transaction.getSignatures().get(0).getHint().getSignatureHint(),
+            Arrays.copyOfRange(hash, hash.length - 4, hash.length)
+    );
   }
 
   @Test
@@ -386,13 +392,9 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source, 2908908335136768L);
-    try {
-      Transaction transaction = new Transaction.Builder(account).setTimeout(Transaction.Builder.TIMEOUT_INFINITE).build();
-      fail();
-    } catch (RuntimeException exception) {
-      assertTrue(exception.getMessage().contains("At least one operation required"));
-      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
-    }
+    Exception e = assertThrows(RuntimeException.class, () -> new Transaction.Builder(account).
+            setTimeout(Transaction.Builder.TIMEOUT_INFINITE).build());
+    assertEquals(e.getMessage(), "At least one operation required");
   }
 
   @Test
@@ -401,15 +403,12 @@ public class TransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
-    try {
-      Account account = new Account(source, 2908908335136768L);
-      new Transaction.Builder(account)
-              .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
-              .addMemo(Memo.none())
-              .addMemo(Memo.none());
-      fail();
-    } catch (RuntimeException exception) {
-      assertTrue(exception.getMessage().contains("Memo has been already added."));
-    }
+    Account account = new Account(source, 2908908335136768L);
+    Exception e = assertThrows(RuntimeException.class, () -> new Transaction.Builder(account)
+            .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
+            .addMemo(Memo.none())
+            .addMemo(Memo.none())
+            .build());
+    assertEquals(e.getMessage(), "Memo has been already added.");
   }
 }
