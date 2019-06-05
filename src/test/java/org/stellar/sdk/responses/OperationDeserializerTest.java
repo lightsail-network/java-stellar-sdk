@@ -360,47 +360,6 @@ public class OperationDeserializerTest extends TestCase {
   }
 
   @Test
-  public void testDeserializeManageSellOfferOperation() {
-    String json = "{\n" +
-            "        \"_links\": {\n" +
-            "          \"self\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/operations/3320426331639809\"\n" +
-            "          },\n" +
-            "          \"transaction\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/transactions/1f8fc03b26110e917d124381645d7dcf85927f17e46d8390d254a0bd99cfb0ad\"\n" +
-            "          },\n" +
-            "          \"effects\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/operations/3320426331639809/effects\"\n" +
-            "          },\n" +
-            "          \"succeeds\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=3320426331639809\"\n" +
-            "          },\n" +
-            "          \"precedes\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=3320426331639809\"\n" +
-            "          }\n" +
-            "        },\n" +
-            "        \"id\": \"3320426331639809\",\n" +
-            "        \"paging_token\": \"3320426331639809\",\n" +
-            "        \"source_account\": \"GCR6QXX7IRIJVIM5WA5ASQ6MWDOEJNBW3V6RTC5NJXEMOLVTUVKZ725X\",\n" +
-            "        \"type\": \"manage_offer\",\n" +
-            "        \"type_i\": 3,\n" +
-            "        \"offer_id\": 0,\n" +
-            "        \"amount\": \"100.0\",\n" +
-            "        \"buying_asset_type\": \"credit_alphanum4\",\n" +
-            "        \"buying_asset_code\": \"CNY\",\n" +
-            "        \"buying_asset_issuer\": \"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN\",\n" +
-            "        \"selling_asset_type\": \"native\"\n" +
-            "      }";
-
-    ManageOfferOperationResponse operation = (ManageOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
-
-    assertEquals(operation.getOfferId(), new Integer(0));
-    assertEquals(operation.getAmount(), "100.0");
-    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("CNY", KeyPair.fromAccountId("GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN")));
-    assertEquals(operation.getSellingAsset(), new AssetTypeNative());
-  }
-
-  @Test
   public void testDeserializeManageBuyOfferOperation() {
     String json = "{\n" +
             "        \"_links\": {\n" +
@@ -537,51 +496,6 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getSourceMax(), "1.1779523");
     assertEquals(operation.getSourceAsset(), new AssetTypeNative());
     assertEquals(operation.getAsset(), Asset.createNonNativeAsset("XRP", KeyPair.fromAccountId("GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5")));
-  }
-
-  @Test
-  public void testDeserializeCreatePassiveOfferOperation() {
-    String json = "{\n" +
-            "  \"_links\": {\n" +
-            "    \"effects\": {\n" +
-            "      \"href\": \"/operations/1127729562914817/effects{?cursor,limit,order}\",\n" +
-            "      \"templated\": true\n" +
-            "    },\n" +
-            "    \"precedes\": {\n" +
-            "      \"href\": \"/operations?cursor=1127729562914817\\u0026order=asc\"\n" +
-            "    },\n" +
-            "    \"self\": {\n" +
-            "      \"href\": \"/operations/1127729562914817\"\n" +
-            "    },\n" +
-            "    \"succeeds\": {\n" +
-            "      \"href\": \"/operations?cursor=1127729562914817\\u0026order=desc\"\n" +
-            "    },\n" +
-            "    \"transaction\": {\n" +
-            "      \"href\": \"/transactions/1127729562914816\"\n" +
-            "    }\n" +
-            "  },\n" +
-            "  \"amount\": \"11.27827\",\n" +
-            "  \"buying_asset_code\": \"USD\",\n" +
-            "  \"buying_asset_issuer\": \"GDS5JW5E6DRSSN5XK4LW7E6VUMFKKE2HU5WCOVFTO7P2RP7OXVCBLJ3Y\",\n" +
-            "  \"buying_asset_type\": \"credit_alphanum4\",\n" +
-            "  \"id\": 1127729562914817,\n" +
-            "  \"offer_id\": 9,\n" +
-            "  \"paging_token\": \"1127729562914817\",\n" +
-            "  \"price\": \"1.0\",\n" +
-            "  \"price_r\": {\n" +
-            "    \"d\": 1,\n" +
-            "    \"n\": 1\n" +
-            "  },\n" +
-            "  \"selling_asset_type\": \"native\",\n" +
-            "  \"type_i\": 4,\n" +
-            "  \"type\": \"create_passive_offer\"\n" +
-            "}";
-
-    CreatePassiveOfferOperationResponse operation = (CreatePassiveOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
-
-    assertEquals(operation.getAmount(), "11.27827");
-    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GDS5JW5E6DRSSN5XK4LW7E6VUMFKKE2HU5WCOVFTO7P2RP7OXVCBLJ3Y")));
-    assertEquals(operation.getSellingAsset(), new AssetTypeNative());
   }
 
   @Test
