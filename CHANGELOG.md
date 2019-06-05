@@ -5,6 +5,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## 0.8.0
 
 * Upgraded from Java 6 to Java 8
+* Removed deprecated methods and classes listed in the 0.7.0 changelog entry
 
 ## 0.7.0
 
