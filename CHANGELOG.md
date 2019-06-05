@@ -2,6 +2,10 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.8.0
+
+* Removed deprecated methods and classes listed in the 0.7.0 changelog entry
+
 ## 0.7.0
 
 ### Deprecations
