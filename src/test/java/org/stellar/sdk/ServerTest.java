@@ -4,9 +4,9 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
 import org.stellar.sdk.responses.SubmitTransactionTimeoutResponseException;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerTest {
     private final String successResponse =
@@ -117,12 +117,12 @@ public class ServerTest {
             "  }\n" +
             "}";
 
-    @Before
+    @BeforeEach
     public void setUp() throws URISyntaxException, IOException {
         Network.useTestNetwork();
     }
 
-    @After
+    @AfterEach
     public void resetNetwork() {
         Network.use(null);
     }
@@ -184,7 +184,7 @@ public class ServerTest {
         assertEquals("op_no_destination", response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
     }
 
-    @Test(expected = SubmitTransactionTimeoutResponseException.class)
+    @Test
     public void testSubmitTransactionTimeout() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.enqueue(new MockResponse().setResponseCode(504).setBody(timeoutResponse).setBodyDelay(5, TimeUnit.SECONDS));
@@ -200,10 +200,10 @@ public class ServerTest {
                 .build();
         server.setSubmitHttpClient(testSubmitHttpClient);
 
-        server.submitTransaction(this.buildTransaction());
+        assertThrows(SubmitTransactionTimeoutResponseException.class, () -> server.submitTransaction(this.buildTransaction()));
     }
 
-    @Test(expected = SubmitTransactionTimeoutResponseException.class)
+    @Test
     public void testSubmitTransactionTimeoutWithoutResponse() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.start();
@@ -218,7 +218,7 @@ public class ServerTest {
                 .build();
         server.setSubmitHttpClient(testSubmitHttpClient);
 
-        server.submitTransaction(this.buildTransaction());
+        assertThrows(SubmitTransactionTimeoutResponseException.class, () -> server.submitTransaction(this.buildTransaction()));
     }
 
     @Test

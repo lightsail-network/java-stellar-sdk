@@ -1,10 +1,11 @@
 package org.stellar.sdk.responses;
 
-import junit.framework.TestCase;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class RootDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class RootDeserializerTest {
     @Test
     public void testDeserialize() {
         RootResponse root = GsonSingleton.getInstance().fromJson(json, RootResponse.class);

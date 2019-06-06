@@ -1,23 +1,24 @@
 package org.stellar.sdk.federation;
 
-import junit.framework.TestCase;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-public class FederationTest extends TestCase {
-  @Before
+import static org.junit.jupiter.api.Assertions.*;
+
+public class FederationTest {
+  @BeforeEach
   public void setUp() throws IOException {
     FederationServer.httpsConnection = false;
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws IOException {
     FederationServer.httpsConnection = true;
   }
@@ -47,11 +48,6 @@ public class FederationTest extends TestCase {
 
   @Test
   public void testMalformedAddress() {
-    try {
-      FederationResponse response = Federation.resolve("bob*stellar.org*test");
-      fail("Expected exception");
-    } catch (MalformedAddressException e) {
-      //
-    }
+    assertThrows(MalformedAddressException.class, () -> Federation.resolve("bob*stellar.org*test"));
   }
 }

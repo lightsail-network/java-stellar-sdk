@@ -1,13 +1,14 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.reflect.TypeToken;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 
-public class TradesPageDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class TradesPageDeserializerTest {
     @Test
     public void testDeserialize() {
         Page<TradeResponse> tradesPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<TradeResponse>>() {}.getType());

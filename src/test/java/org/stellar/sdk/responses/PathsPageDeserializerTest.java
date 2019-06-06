@@ -3,16 +3,16 @@ package org.stellar.sdk.responses;
 import com.google.gson.reflect.TypeToken;
 
 import okhttp3.OkHttpClient;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 public class PathsPageDeserializerTest {
 
@@ -24,7 +24,7 @@ public class PathsPageDeserializerTest {
     assertNull(pathsPage.getNextPage(new OkHttpClient()));
 
     assertEquals(pathsPage.getRecords().get(0).getDestinationAmount(), "20.0000000");
-    Assert.assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
+    assertEquals(pathsPage.getRecords().get(0).getDestinationAsset(), Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));
     assertEquals(pathsPage.getRecords().get(0).getPath().size(), 0);
     assertEquals(pathsPage.getRecords().get(0).getSourceAmount(), "30.0000000");
     assertEquals(pathsPage.getRecords().get(0).getSourceAsset(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")));

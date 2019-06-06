@@ -1,13 +1,13 @@
 package org.stellar.sdk;
 
-import junit.framework.TestCase;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StrKeyTest {
     @Test
@@ -21,19 +21,13 @@ public class StrKeyTest {
     @Test()
     public void testDecodeInvalidVersionByte() {
         String address = "GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D";
-        try {
-            StrKey.decodeCheck(StrKey.VersionByte.SEED, address.toCharArray());
-            fail();
-        } catch (FormatException e) {}
+        assertThrows(FormatException.class, () -> StrKey.decodeCheck(StrKey.VersionByte.SEED, address.toCharArray()));
     }
 
     @Test()
     public void testDecodeInvalidSeed() {
         String seed = "SAA6NXOBOXP3RXGAXBW6PGFI5BPK4ODVAWITS4VDOMN5C2M4B66ZML";
-        try {
-            StrKey.decodeCheck(StrKey.VersionByte.SEED, seed.toCharArray());
-            fail();
-        } catch (Exception e) {}
+        assertThrows(IllegalArgumentException.class, () -> StrKey.decodeCheck(StrKey.VersionByte.SEED, seed.toCharArray()));
     }
 
     // TODO more tests

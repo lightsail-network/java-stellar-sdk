@@ -1,11 +1,12 @@
 package org.stellar.sdk.responses;
 
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 
-public class AssetDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class AssetDeserializerTest {
     @Test
     public void testDeserializeNative() {
         String json = "{\"asset_type\": \"native\"}";

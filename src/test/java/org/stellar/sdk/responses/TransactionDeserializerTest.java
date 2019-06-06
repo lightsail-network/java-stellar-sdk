@@ -1,12 +1,14 @@
 package org.stellar.sdk.responses;
 
-import junit.framework.TestCase;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.stellar.sdk.MemoHash;
 import org.stellar.sdk.MemoNone;
 
-public class TransactionDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class TransactionDeserializerTest {
   @Test
   public void testDeserialize() {
     TransactionResponse transaction = GsonSingleton.getInstance().fromJson(json, TransactionResponse.class);

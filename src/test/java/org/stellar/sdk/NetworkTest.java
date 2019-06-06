@@ -1,13 +1,13 @@
 package org.stellar.sdk;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class NetworkTest {
-    @After
+    @AfterEach
     public void resetNetwork() {
         Network.use(null);
     }

@@ -1,12 +1,13 @@
 package org.stellar.sdk.responses;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-public class AccountDeserializerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class AccountDeserializerTest {
   @Test
   public void testDeserialize() {
     AccountResponse account = GsonSingleton.getInstance().fromJson(json, AccountResponse.class);
