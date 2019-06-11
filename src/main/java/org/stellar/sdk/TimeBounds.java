@@ -3,6 +3,8 @@ package org.stellar.sdk;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 
+import java.util.Objects;
+
 /**
  * <p>TimeBounds represents the time interval that a transaction is valid.</p>
  * @see Transaction
@@ -67,5 +69,14 @@ final public class TimeBounds {
 
 		if (mMinTime != that.mMinTime) return false;
 		return mMaxTime == that.mMaxTime;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(
+				this.mMaxTime,
+				this.mMinTime
+		);
 	}
 }

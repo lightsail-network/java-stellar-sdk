@@ -5,9 +5,10 @@ import org.stellar.sdk.xdr.Int32;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -116,15 +117,19 @@ public class Price {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(this.getDenominator(), this.getDenominator());
+    }
+
+    @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Price)) {
+        if (object == null || !(object instanceof Price)) {
             return false;
         }
 
-        Price price = (Price) object;
-
-        return this.getNumerator() == price.getNumerator() &&
-                this.getDenominator() == price.getDenominator();
+        Price other = (Price) object;
+        return this.getNumerator() == other.getNumerator() &&
+                this.getDenominator() == other.getDenominator();
 
     }
 }

@@ -7,10 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -397,5 +394,34 @@ public class Transaction {
       mSourceAccount.incrementSequenceNumber();
       return transaction;
     }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+            this.mFee,
+            this.mSourceAccount,
+            this.mSequenceNumber,
+            Arrays.hashCode(this.mOperations),
+            this.mMemo,
+            this.mTimeBounds,
+            this.mSignatures
+    );
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof Transaction)) {
+      return false;
+    }
+
+    Transaction other = (Transaction) object;
+    return Objects.equals(this.mFee, other.mFee) &&
+            Objects.equals(this.mSourceAccount, other.mSourceAccount) &&
+            Objects.equals(this.mSequenceNumber, other.mSequenceNumber) &&
+            Arrays.equals(this.mOperations, other.mOperations) &&
+            Objects.equals(this.mMemo, other.mMemo) &&
+            Objects.equals(this.mTimeBounds, other.mTimeBounds) &&
+            Objects.equals(this.mSignatures, other.mSignatures);
   }
 }

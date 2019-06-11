@@ -5,6 +5,9 @@ import org.stellar.sdk.xdr.ManageDataOp;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.String64;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -103,5 +106,26 @@ public class ManageDataOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+            this.getSourceAccount(),
+            this.name,
+            Arrays.hashCode(this.value)
+    );
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof ManageBuyOfferOperation)) {
+      return false;
+    }
+
+    ManageDataOperation other = (ManageDataOperation) object;
+    return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
+            Objects.equals(this.name, other.name) &&
+            Arrays.equals(this.value, other.value);
   }
 }

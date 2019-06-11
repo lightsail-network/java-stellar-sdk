@@ -3,6 +3,8 @@ package org.stellar.sdk;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
 
+import java.util.Objects;
+
 /**
  * Represents MEMO_ID.
  */
@@ -28,6 +30,13 @@ public class MemoId extends Memo {
     idXdr.setUint64(id);
     memo.setId(idXdr);
     return memo;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+            this.id
+    );
   }
 
   @Override

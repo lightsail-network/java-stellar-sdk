@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 
 import java.io.IOException;
+import java.util.Arrays;
 
 // === xdr source ============================================================
 
@@ -30,5 +31,22 @@ public class Signature  {
   decodedSignature.Signature = new byte[Signaturesize];
   stream.read(decodedSignature.Signature, 0, Signaturesize);
     return decodedSignature;
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(
+            this.Signature
+    );
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof Signature)) {
+      return false;
+    }
+
+    Signature other = (Signature) object;
+    return Arrays.equals(this.Signature, other.Signature);
   }
 }

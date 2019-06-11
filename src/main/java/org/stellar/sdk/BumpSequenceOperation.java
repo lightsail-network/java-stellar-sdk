@@ -5,6 +5,8 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.SequenceNumber;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BumpSequenceOperation extends Operation  {
@@ -75,5 +77,21 @@ public class BumpSequenceOperation extends Operation  {
             }
             return operation;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.bumpTo, this.getSourceAccount());
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || !(object instanceof BumpSequenceOperation)) {
+            return false;
+        }
+
+        BumpSequenceOperation other = (BumpSequenceOperation) object;
+        return Objects.equals(this.bumpTo, other.bumpTo) &&
+                Objects.equals(this.getSourceAccount(), other.getSourceAccount());
     }
 }

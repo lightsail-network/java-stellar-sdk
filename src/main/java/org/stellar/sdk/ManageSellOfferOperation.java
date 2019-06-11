@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import org.stellar.sdk.xdr.*;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -154,4 +156,33 @@ public class ManageSellOfferOperation extends Operation {
             return operation;
         }
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                this.getSourceAccount(),
+                this.amount,
+                this.buying,
+                this.offerId,
+                this.price,
+                this.selling
+        );
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || !(object instanceof ManageSellOfferOperation)) {
+            return false;
+        }
+
+        ManageSellOfferOperation other = (ManageSellOfferOperation) object;
+        return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
+                Objects.equals(this.amount, other.amount) &&
+                Objects.equals(this.buying, other.buying) &&
+                Objects.equals(this.offerId, other.offerId) &&
+                Objects.equals(this.price, other.price) &&
+                Objects.equals(this.selling, other.selling);
+
+    }
+
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 
 import java.io.IOException;
+import java.util.Arrays;
 
 // === xdr source ============================================================
 
@@ -30,4 +31,20 @@ public class SignatureHint  {
   stream.read(decodedSignatureHint.SignatureHint, 0, SignatureHintsize);
     return decodedSignatureHint;
   }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(this.getSignatureHint());
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof SignatureHint) ) {
+      return false;
+    }
+
+    SignatureHint other = (SignatureHint) object;
+    return Arrays.equals(this.getSignatureHint(), other.getSignatureHint());
+  }
+
 }
