@@ -4,6 +4,8 @@ import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -76,5 +78,20 @@ public class AccountMergeOperation extends Operation {
             }
             return operation;
         }
+    }
+
+    public int hashCode() {
+        return Objects.hash(this.destination, this.getSourceAccount());
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || !(object instanceof AccountMergeOperation)) {
+            return false;
+        }
+
+        AccountMergeOperation other = (AccountMergeOperation) object;
+        return Objects.equals(this.destination, other.destination) &&
+                Objects.equals(this.getSourceAccount(), other.getSourceAccount());
     }
 }

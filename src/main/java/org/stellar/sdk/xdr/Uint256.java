@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 
 import java.io.IOException;
+import java.util.Arrays;
 
 // === xdr source ============================================================
 
@@ -30,4 +31,21 @@ public class Uint256  {
   stream.read(decodedUint256.uint256, 0, uint256size);
     return decodedUint256;
   }
+
+  public int hashCode() {
+    return Arrays.hashCode(
+            this.uint256
+    );
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof Uint256)) {
+      return false;
+    }
+
+    Uint256 other = (Uint256) object;
+    return Arrays.equals(this.uint256, other.uint256);
+  }
+
 }

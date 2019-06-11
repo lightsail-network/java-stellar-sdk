@@ -5,6 +5,8 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PaymentOp;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -119,5 +121,27 @@ public class PaymentOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  public int hashCode() {
+    return Objects.hash(
+            this.getSourceAccount(),
+            this.asset,
+            this.amount,
+            this.destination
+    );
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof PaymentOperation)) {
+      return false;
+    }
+
+    PaymentOperation other = (PaymentOperation) object;
+    return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
+            Objects.equals(this.amount, other.amount) &&
+            Objects.equals(this.destination, other.destination) &&
+            Objects.equals(this.asset, other.asset);
   }
 }
