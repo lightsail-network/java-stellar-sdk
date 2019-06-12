@@ -44,6 +44,6 @@ public class MemoText extends Memo {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MemoText memoText = (MemoText) o;
-    return Objects.equals(text, memoText.text);
+    return Objects.equals(this.text, memoText.text);
   }
 }

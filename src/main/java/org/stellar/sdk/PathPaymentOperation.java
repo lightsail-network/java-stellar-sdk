@@ -214,6 +214,7 @@ public class PathPaymentOperation extends Operation {
     PathPaymentOperation other = (PathPaymentOperation) object;
     return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
             Objects.equals(this.destAmount, other.destAmount) &&
+            Objects.equals(this.destAsset, other.destAsset) &&
             Objects.equals(this.destination, other.destination) &&
             Arrays.equals(this.path, other.path) &&
             Objects.equals(this.sendAsset, other.sendAsset) &&

@@ -140,8 +140,8 @@ public class PaymentOperation extends Operation {
 
     PaymentOperation other = (PaymentOperation) object;
     return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
+            Objects.equals(this.asset, other.asset) &&
             Objects.equals(this.amount, other.amount) &&
-            Objects.equals(this.destination, other.destination) &&
-            Objects.equals(this.asset, other.asset);
+            Objects.equals(this.destination, other.destination);
   }
 }

@@ -110,8 +110,8 @@ public class ChangeTrustOperation extends Operation {
     }
 
     ChangeTrustOperation other = (ChangeTrustOperation) object;
-    return Objects.equals(this.limit, other.limit) &&
-            Objects.equals(this.asset, other.asset) &&
+    return Objects.equals(this.asset, other.asset) &&
+            Objects.equals(this.limit, other.limit) &&
             Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

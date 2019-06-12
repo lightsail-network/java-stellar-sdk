@@ -167,7 +167,8 @@ public class ManageBuyOfferOperation extends Operation {
     public int hashCode() {
         return Objects.hash(
                 this.getSourceAccount(),
-                this.amount, this.buying,
+                this.amount,
+                this.buying,
                 this.offerId,
                 this.price,
                 this.selling
@@ -183,6 +184,7 @@ public class ManageBuyOfferOperation extends Operation {
         ManageBuyOfferOperation other = (ManageBuyOfferOperation) object;
         return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
                 Objects.equals(this.amount, other.amount) &&
+                Objects.equals(this.buying, other.buying) &&
                 Objects.equals(this.offerId, other.offerId) &&
                 Objects.equals(this.price, other.price) &&
                 Objects.equals(this.selling, other.selling);

@@ -34,9 +34,7 @@ public class MemoId extends Memo {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-            this.id
-    );
+    return Objects.hash(this.id);
   }
 
   @Override
