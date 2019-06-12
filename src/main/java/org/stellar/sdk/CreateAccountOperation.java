@@ -112,7 +112,7 @@ public class CreateAccountOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ChangeTrustOperation)) {
+    if (object == null || !(object instanceof CreateAccountOperation)) {
       return false;
     }
 

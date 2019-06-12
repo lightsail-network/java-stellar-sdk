@@ -119,7 +119,7 @@ public class ManageDataOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageBuyOfferOperation)) {
+    if (object == null || !(object instanceof ManageDataOperation)) {
       return false;
     }
 

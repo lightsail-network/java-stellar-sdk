@@ -62,9 +62,7 @@ abstract class MemoHashAbstract extends Memo {
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(
-            this.bytes
-    );
+    return Arrays.hashCode(this.bytes);
   }
 
   @Override
@@ -72,6 +70,6 @@ abstract class MemoHashAbstract extends Memo {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MemoHashAbstract that = (MemoHashAbstract) o;
-    return Arrays.equals(bytes, that.bytes);
+    return Arrays.equals(this.bytes, that.bytes);
   }
 }

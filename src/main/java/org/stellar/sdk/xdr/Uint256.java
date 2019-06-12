@@ -33,9 +33,7 @@ public class Uint256  {
   }
 
   public int hashCode() {
-    return Arrays.hashCode(
-            this.uint256
-    );
+    return Arrays.hashCode(this.uint256);
   }
 
   @Override
