@@ -132,12 +132,12 @@ public class SubmitTransactionResponse extends Response {
         }
 
         if (this.transactionResult == null) {
-            Optional<String> resultXR = this.getResultXdr();
-            if (!resultXR.isPresent()) {
+            Optional<String> resultXDR = this.getResultXdr();
+            if (!resultXDR.isPresent()) {
                 return Optional.absent();
             }
             BaseEncoding base64Encoding = BaseEncoding.base64();
-            byte[] bytes = base64Encoding.decode(resultXR.get());
+            byte[] bytes = base64Encoding.decode(resultXDR.get());
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
             XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
             this.transactionResult = TransactionResult.decode(xdrInputStream);
