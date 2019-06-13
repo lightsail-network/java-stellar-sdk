@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 
@@ -52,25 +53,25 @@ public class SubmitTransactionResponse extends Response {
         return ledger;
     }
 
-    public String getEnvelopeXdr() {
+    public Optional<String> getEnvelopeXdr() {
         if (this.isSuccess()) {
-            return this.envelopeXdr;
+            return Optional.of(this.envelopeXdr);
         } else {
             if (this.getExtras() != null) {
-                return this.getExtras().getEnvelopeXdr();
+                return Optional.of(this.getExtras().getEnvelopeXdr());
             }
-            return null;
+            return Optional.absent();
         }
     }
 
-    public String getResultXdr() {
+    public Optional<String> getResultXdr() {
         if (this.isSuccess()) {
-            return this.resultXdr;
+            return Optional.of(this.resultXdr);
         } else {
             if (this.getExtras() != null) {
-                return this.getExtras().getResultXdr();
+                return Optional.of(this.getExtras().getResultXdr());
             }
-            return null;
+            return Optional.absent();
         }
     }
 
@@ -81,20 +82,19 @@ public class SubmitTransactionResponse extends Response {
      * @param position Position of ManageSellOffer/ManageBuyOffer operation. If it is second operation in this transaction this should be equal <code>1</code>.
      * @return Offer ID or <code>null</code> when operation at <code>position</code> is not a ManageSellOffer/ManageBuyOffer operation or error has occurred.
      */
-    public Long getOfferIdFromResult(int position) {
+    public Optional<Long> getOfferIdFromResult(int position) throws IOException {
         if (!this.isSuccess()) {
-            return null;
+            return Optional.absent();
         }
 
-        TransactionResult result;
-        try {
-            result = getDecodedTransactionResult();
-        } catch (IOException e) {
-            return null;
+        Optional<TransactionResult> optionalResult = getDecodedTransactionResult();
+        if (!optionalResult.isPresent()) {
+            return Optional.absent();
         }
+        TransactionResult result = optionalResult.get();
 
         if (result.getResult().getResults()[position] == null) {
-            return null;
+            return Optional.absent();
         }
 
         OperationResult operationResult = result.getResult().getResults()[position];
@@ -103,39 +103,47 @@ public class SubmitTransactionResponse extends Response {
 
         if (operationType == OperationType.MANAGE_SELL_OFFER) {
             if (operationResultTr.getManageSellOfferResult().getSuccess().getOffer().getOffer() == null) {
-                return null;
+                return Optional.absent();
             }
-            return operationResultTr.getManageSellOfferResult().getSuccess().getOffer().getOffer().getOfferID().getInt64();
+            return Optional.of(
+                operationResultTr.getManageSellOfferResult().getSuccess().getOffer().getOffer().getOfferID().getInt64()
+            );
         }
 
         if (operationType == OperationType.MANAGE_BUY_OFFER) {
             if (operationResultTr.getManageBuyOfferResult().getSuccess().getOffer().getOffer() == null) {
-                return null;
+                return Optional.absent();
             }
-            return operationResultTr.getManageBuyOfferResult().getSuccess().getOffer().getOffer().getOfferID().getInt64();
+            return Optional.of(
+                operationResultTr.getManageBuyOfferResult().getSuccess().getOffer().getOffer().getOfferID().getInt64()
+            );
         }
 
-        return null;
+        return Optional.absent();
     }
 
     /**
      * Decoding "TransactionResult" from "resultXdr".
-     * This will be <code>null</code> if transaction has failed.
+     * This will be <code>Optional.absent()</code> if transaction has failed.
      */
-    public TransactionResult getDecodedTransactionResult() throws IOException {
+    public Optional<TransactionResult> getDecodedTransactionResult() throws IOException {
         if(!this.isSuccess()) {
-            return null;
+            return Optional.absent();
         }
 
         if (this.transactionResult == null) {
+            Optional<String> resultXR = this.getResultXdr();
+            if (!resultXR.isPresent()) {
+                return Optional.absent();
+            }
             BaseEncoding base64Encoding = BaseEncoding.base64();
-            byte[] bytes = base64Encoding.decode(this.getResultXdr());
+            byte[] bytes = base64Encoding.decode(resultXR.get());
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
             XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
             this.transactionResult = TransactionResult.decode(xdrInputStream);
         }
 
-        return this.transactionResult;
+        return Optional.of(this.transactionResult);
     }
 
     /**

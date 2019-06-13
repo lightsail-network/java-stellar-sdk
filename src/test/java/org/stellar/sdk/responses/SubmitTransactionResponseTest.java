@@ -29,10 +29,10 @@ public class SubmitTransactionResponseTest extends TestCase {
 
     SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(json, SubmitTransactionResponse.class);
     assertEquals(submitTransactionResponse.isSuccess(), false);
-    assertEquals(submitTransactionResponse.getEnvelopeXdr(), "AAAAAKpmDL6Z4hvZmkTBkYpHftan4ogzTaO4XTB7joLgQnYYAAAAZAAAAAAABeoyAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAA=");
-    assertEquals(submitTransactionResponse.getResultXdr(), "AAAAAAAAAAD////4AAAAAA==");
-    assertNull(submitTransactionResponse.getOfferIdFromResult(0));
-    assertNull(submitTransactionResponse.getDecodedTransactionResult());
+    assertEquals(submitTransactionResponse.getEnvelopeXdr().get(), "AAAAAKpmDL6Z4hvZmkTBkYpHftan4ogzTaO4XTB7joLgQnYYAAAAZAAAAAAABeoyAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAA=");
+    assertEquals(submitTransactionResponse.getResultXdr().get(), "AAAAAAAAAAD////4AAAAAA==");
+    assertFalse(submitTransactionResponse.getOfferIdFromResult(0).isPresent());
+    assertFalse(submitTransactionResponse.getDecodedTransactionResult().isPresent());
     assertEquals(submitTransactionResponse.getExtras().getResultCodes().getTransactionResultCode(), "tx_no_source_account");
   }
 
@@ -58,10 +58,10 @@ public class SubmitTransactionResponseTest extends TestCase {
 
     SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(json, SubmitTransactionResponse.class);
     assertEquals(submitTransactionResponse.isSuccess(), false);
-    assertEquals(submitTransactionResponse.getEnvelopeXdr(), "AAAAAF2O0axA67+p2jMunG6G188kDSHIvqQ13d9l29YCSA/uAAAAZAAvvc0AAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAECSA/uAAAAQFuZVAjftHa+JZes1VxSk8naOfjjAz9V86mY1AZf8Ik6PtTsBpDsCfG57EYsq4jWyZcT+vhXyWsw5evF1ELqMw4=");
-    assertEquals(submitTransactionResponse.getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
-    assertNull(submitTransactionResponse.getOfferIdFromResult(0));
-    assertNull(submitTransactionResponse.getDecodedTransactionResult());
+    assertEquals(submitTransactionResponse.getEnvelopeXdr().get(), "AAAAAF2O0axA67+p2jMunG6G188kDSHIvqQ13d9l29YCSA/uAAAAZAAvvc0AAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAECSA/uAAAAQFuZVAjftHa+JZes1VxSk8naOfjjAz9V86mY1AZf8Ik6PtTsBpDsCfG57EYsq4jWyZcT+vhXyWsw5evF1ELqMw4=");
+    assertEquals(submitTransactionResponse.getResultXdr().get(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
+    assertFalse(submitTransactionResponse.getOfferIdFromResult(0).isPresent());
+    assertFalse(submitTransactionResponse.getDecodedTransactionResult().isPresent());
     assertEquals(submitTransactionResponse.getExtras().getResultCodes().getTransactionResultCode(), "tx_failed");
     assertEquals(submitTransactionResponse.getExtras().getResultCodes().getOperationsResultCodes().get(0), "op_no_destination");
   }
@@ -85,10 +85,10 @@ public class SubmitTransactionResponseTest extends TestCase {
     assertEquals(submitTransactionResponse.isSuccess(), true);
     assertEquals(submitTransactionResponse.getHash(), "ee14b93fcd31d4cfe835b941a0a8744e23a6677097db1fafe0552d8657bed940");
     assertEquals(submitTransactionResponse.getLedger(), new Long(3128812));
-    assertEquals(submitTransactionResponse.getEnvelopeXdr(), "AAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAZAAT3TUAAAAwAAAAAAAAAAAAAAABAAAAAAAAAAMAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAAAAAAG/dhGXAAAAQLuStfImg0OeeGAQmvLkJSZ1MPSkCzCYNbGqX5oYNuuOqZ5SmWhEsC7uOD9ha4V7KengiwNlc0oMNqBVo22S7gk=");
-    assertEquals(submitTransactionResponse.getResultXdr(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAAAAPEAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAA==");
-    assertEquals(submitTransactionResponse.getOfferIdFromResult(0), new Long(241));
-    TransactionResult transactionResult = submitTransactionResponse.getDecodedTransactionResult();
+    assertEquals(submitTransactionResponse.getEnvelopeXdr().get(), "AAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAZAAT3TUAAAAwAAAAAAAAAAAAAAABAAAAAAAAAAMAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAAAAAAG/dhGXAAAAQLuStfImg0OeeGAQmvLkJSZ1MPSkCzCYNbGqX5oYNuuOqZ5SmWhEsC7uOD9ha4V7KengiwNlc0oMNqBVo22S7gk=");
+    assertEquals(submitTransactionResponse.getResultXdr().get(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAAAAPEAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAA==");
+    assertEquals(submitTransactionResponse.getOfferIdFromResult(0).get(), new Long(241));
+    TransactionResult transactionResult = submitTransactionResponse.getDecodedTransactionResult().get();
     assertEquals(transactionResult.getResult().getDiscriminant(), TransactionResultCode.txSUCCESS);
     assertEquals(transactionResult.getResult().getResults().length, 1);
     assertEquals(transactionResult.getResult().getResults()[0].getTr().getDiscriminant(), OperationType.MANAGE_SELL_OFFER);
@@ -96,7 +96,7 @@ public class SubmitTransactionResponseTest extends TestCase {
   }
 
   @Test
-  public void testDeserializeNoOfferID() {
+  public void testDeserializeNoOfferID() throws IOException {
     String json = "{\n" +
             "  \"_links\": {\n" +
             "    \"transaction\": {\n" +
@@ -112,6 +112,6 @@ public class SubmitTransactionResponseTest extends TestCase {
 
     SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(json, SubmitTransactionResponse.class);
     assertEquals(submitTransactionResponse.isSuccess(), true);
-    assertNull(submitTransactionResponse.getOfferIdFromResult(0));
+    assertFalse(submitTransactionResponse.getOfferIdFromResult(0).isPresent());
   }
 }
