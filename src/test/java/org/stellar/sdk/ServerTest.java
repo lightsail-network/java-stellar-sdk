@@ -4,8 +4,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
@@ -117,17 +115,11 @@ public class ServerTest {
             "  }\n" +
             "}";
 
-    @Before
-    public void setUp() throws URISyntaxException, IOException {
-        Network.useTestNetwork();
-    }
-
-    @After
-    public void resetNetwork() {
-        Network.use(null);
-    }
-
     Transaction buildTransaction() throws IOException {
+        return buildTransaction(Network.TESTNET);
+    }
+
+    Transaction buildTransaction(Network network) throws IOException {
         // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
         KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
         KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
@@ -136,7 +128,8 @@ public class ServerTest {
         Transaction.Builder builder = new Transaction.Builder(account)
                 .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
                 .addMemo(Memo.text("Hello world!"))
-                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE);
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setNetwork(network);
 
         assertEquals(1, builder.getOperationsCount());
         Transaction transaction = builder.build();
@@ -147,12 +140,28 @@ public class ServerTest {
     }
 
     @Test
+    public void testSubmitTransactionNetworkMisMatch() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString(), Network.TESTNET);
+
+        try {
+            server.submitTransaction(this.buildTransaction(Network.PUBLIC));
+            fail("expected NetworkMismatchException exception");
+        } catch (NetworkMismatchException e) {
+            // expect exception
+        }
+    }
+
+    @Test
     public void testSubmitTransactionSuccess() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
-        Server server = new Server(baseUrl.toString());
+        Server server = new Server(baseUrl.toString(), Network.TESTNET);
 
         SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
         assertTrue(response.isSuccess());
@@ -169,7 +178,7 @@ public class ServerTest {
         mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(failureResponse));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
-        Server server = new Server(baseUrl.toString());
+        Server server = new Server(baseUrl.toString(), Network.TESTNET);
 
         SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
         assertFalse(response.isSuccess());
@@ -190,7 +199,7 @@ public class ServerTest {
         mockWebServer.enqueue(new MockResponse().setResponseCode(504).setBody(timeoutResponse).setBodyDelay(5, TimeUnit.SECONDS));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
-        Server server = new Server(baseUrl.toString());
+        Server server = new Server(baseUrl.toString(), Network.TESTNET);
 
         // We're creating a new OkHttpClient to make this test faster
         OkHttpClient testSubmitHttpClient = new OkHttpClient.Builder()
@@ -208,7 +217,7 @@ public class ServerTest {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
-        Server server = new Server(baseUrl.toString());
+        Server server = new Server(baseUrl.toString(), Network.TESTNET);
 
         // We're creating a new OkHttpClient to make this test faster
         OkHttpClient testSubmitHttpClient = new OkHttpClient.Builder()
@@ -227,7 +236,7 @@ public class ServerTest {
         mockWebServer.enqueue(new MockResponse().setResponseCode(500).setBody(internalServerErrorResponse));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
-        Server server = new Server(baseUrl.toString());
+        Server server = new Server(baseUrl.toString(), Network.TESTNET);
         // We're creating a new OkHttpClient to make this test faster
         OkHttpClient testSubmitHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -253,7 +262,7 @@ public class ServerTest {
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(operationsPageResponse));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
-        Server server = new Server(baseUrl.toString());
+        Server server = new Server(baseUrl.toString(), Network.TESTNET);
 
         Page<OperationResponse> page = server.operations().execute();
         assertEquals(1, page.getRecords().size());

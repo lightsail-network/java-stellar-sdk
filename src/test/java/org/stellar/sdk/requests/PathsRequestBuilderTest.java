@@ -4,6 +4,7 @@ import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.Network;
 import org.stellar.sdk.Server;
 
 import static org.junit.Assert.assertEquals;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class PathsRequestBuilderTest {
   @Test
   public void testAccounts() {
-    Server server = new Server("https://horizon-testnet.stellar.org");
+    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
     HttpUrl uri = server.paths()
             .destinationAccount(KeyPair.fromAccountId("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF"))
             .sourceAccount(KeyPair.fromAccountId("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN"))

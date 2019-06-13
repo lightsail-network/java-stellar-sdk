@@ -346,8 +346,6 @@ public class OperationTest {
 
   @Test
   public void testSetOptionsOperationPreAuthTxSigner() {
-    Network.useTestNetwork();
-
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
@@ -357,6 +355,7 @@ public class OperationTest {
     Transaction transaction = new Transaction.Builder(account)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+            .setNetwork(Network.TESTNET)
             .build();
 
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF

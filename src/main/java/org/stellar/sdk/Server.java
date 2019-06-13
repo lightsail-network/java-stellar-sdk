@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class Server implements Closeable {
     private HttpUrl serverURI;
     private OkHttpClient httpClient;
+    private Network network;
     /**
      * submitHttpClient is used only for submitting transactions. The read timeout is longer.
      */
@@ -28,28 +29,36 @@ public class Server implements Closeable {
      */
     private static final int HORIZON_SUBMIT_TIMEOUT = 60;
 
-    public Server(String uri) {
-        this(uri,
-                new OkHttpClient.Builder()
-                    .addInterceptor(new ClientIdentificationInterceptor())
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .retryOnConnectionFailure(true)
-                    .build(),
-                new OkHttpClient.Builder()
-                    .addInterceptor(new ClientIdentificationInterceptor())
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
-                    .retryOnConnectionFailure(true)
-                    .build()
+    public Server(String uri, Network network) {
+        this(
+            uri,
+            new OkHttpClient.Builder()
+                .addInterceptor(new ClientIdentificationInterceptor())
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build(),
+            new OkHttpClient.Builder()
+                .addInterceptor(new ClientIdentificationInterceptor())
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build(),
+            network
         );
 
     }
 
-    public Server(String serverURI, OkHttpClient httpClient, OkHttpClient submitHttpClient) {
+    public Server(
+            String serverURI,
+            OkHttpClient httpClient,
+            OkHttpClient submitHttpClient,
+            Network network
+    ) {
         this.serverURI = HttpUrl.parse(serverURI);
         this.httpClient = httpClient;
         this.submitHttpClient = submitHttpClient;
+        this.network = network;
     }
 
 
@@ -182,6 +191,10 @@ public class Server implements Closeable {
      * @throws IOException
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
+        if (!this.network.equals(transaction.getNetwork())) {
+            throw new NetworkMismatchException(this.network, transaction.getNetwork());
+
+        }
         HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
         RequestBody requestBody = new FormBody.Builder().add("tx", transaction.toEnvelopeXdrBase64()).build();
         Request submitTransactionRequest = new Request.Builder().url(transactionsURI).post(requestBody).build();

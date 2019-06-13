@@ -2,6 +2,7 @@ package org.stellar.sdk.requests;
 
 import okhttp3.HttpUrl;
 import org.junit.Test;
+import org.stellar.sdk.Network;
 import org.stellar.sdk.Server;
 
 import static org.junit.Assert.assertEquals;
@@ -9,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class AccountsRequestBuilderTest {
   @Test
   public void testAccounts() {
-    Server server = new Server("https://horizon-testnet.stellar.org");
+    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
     HttpUrl uri = server.accounts()
             .cursor("13537736921089")
             .limit(200)

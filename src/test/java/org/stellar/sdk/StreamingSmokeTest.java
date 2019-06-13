@@ -15,8 +15,7 @@ public class StreamingSmokeTest {
   @Ignore // lets not run this by default for now
   public void shouldStreamPaymentsFromTestNet() {
     final AtomicInteger events = new AtomicInteger();
-    Server server = new Server("https://horizon-testnet.stellar.org/");
-    Network.useTestNetwork();
+    Server server = new Server("https://horizon-testnet.stellar.org/", Network.TESTNET);
     SSEStream<TradeResponse> manager = null;
     try {
         manager = server.trades().limit(100).stream(new EventListener<TradeResponse>() {

@@ -4,6 +4,7 @@ import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.Network;
 import org.stellar.sdk.Server;
 
 import static org.junit.Assert.assertEquals;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class OrderBookRequestBuilderTest {
   @Test
   public void testOrderBook() {
-    Server server = new Server("https://horizon-testnet.stellar.org");
+    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
     HttpUrl uri = server.orderBook()
             .buyingAsset(Asset.createNonNativeAsset("EUR", KeyPair.fromAccountId("GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W")))
             .sellingAsset(Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ")))

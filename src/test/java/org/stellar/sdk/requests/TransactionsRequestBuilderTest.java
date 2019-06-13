@@ -3,6 +3,7 @@ package org.stellar.sdk.requests;
 import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.Network;
 import org.stellar.sdk.Server;
 
 import static org.junit.Assert.assertEquals;
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class TransactionsRequestBuilderTest {
   @Test
   public void testTransactions() {
-    Server server = new Server("https://horizon-testnet.stellar.org");
+    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
     HttpUrl uri = server.transactions()
             .limit(200)
             .order(RequestBuilder.Order.DESC)
@@ -20,7 +21,7 @@ public class TransactionsRequestBuilderTest {
 
   @Test
   public void testForAccount() {
-    Server server = new Server("https://horizon-testnet.stellar.org");
+    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
     HttpUrl uri = server.transactions()
             .forAccount(KeyPair.fromAccountId("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
             .limit(200)
@@ -31,7 +32,7 @@ public class TransactionsRequestBuilderTest {
 
   @Test
   public void testForLedger() {
-    Server server = new Server("https://horizon-testnet.stellar.org");
+    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
     HttpUrl uri = server.transactions()
             .forLedger(200000000000L)
             .limit(50)
@@ -42,7 +43,7 @@ public class TransactionsRequestBuilderTest {
 
   @Test
   public void testIncludeFailed() {
-    Server server = new Server("https://horizon-testnet.stellar.org");
+    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
     HttpUrl uri = server.transactions()
             .forLedger(200000000000L)
             .includeFailed(true)

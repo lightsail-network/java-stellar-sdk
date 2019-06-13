@@ -2,17 +2,14 @@ package org.stellar.sdk.requests;
 
 import okhttp3.HttpUrl;
 import org.junit.Test;
-import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.Server;
+import org.stellar.sdk.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class TradeAggregationsRequestBuilderTest {
     @Test
     public void testTradeAggregations() {
-        Server server = new Server("https://horizon-testnet.stellar.org");
+        Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
         HttpUrl uri = server.tradeAggregations(
                 new AssetTypeNative(),
                 Asset.createNonNativeAsset("BTC", KeyPair.fromAccountId("GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH")),
