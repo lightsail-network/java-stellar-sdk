@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class AssetsRequestBuilderTest {
     @Test
     public void testAccounts() {
-        Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+        Server server = new Server("https://horizon-testnet.stellar.org");
         HttpUrl uri = server.assets()
                 .assetCode("USD")
                 .assetIssuer("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")

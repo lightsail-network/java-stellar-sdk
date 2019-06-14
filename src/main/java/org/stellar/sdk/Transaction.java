@@ -295,10 +295,11 @@ public class Transaction {
      * who will use a sequence number. When build() is called, the account object's sequence number
      * will be incremented.
      */
-    public Builder(TransactionBuilderAccount sourceAccount) {
+    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
       checkNotNull(sourceAccount, "sourceAccount cannot be null");
       mSourceAccount = sourceAccount;
       mOperations = Collections.synchronizedList(new ArrayList<Operation>());
+      mNetwork = checkNotNull(network, "Network cannot be null");
       operationFee = defaultOperationFee;
     }
 
@@ -392,14 +393,6 @@ public class Transaction {
       }
 
       this.operationFee = operationFee;
-      return this;
-    }
-
-    public Builder setNetwork(Network network) {
-      if (mNetwork != null) {
-        throw new RuntimeException("Network has already been configured.");
-      }
-      mNetwork = checkNotNull(network, "Network cannot be null");
       return this;
     }
 

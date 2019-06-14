@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class AccountsRequestBuilderTest {
   @Test
   public void testAccounts() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.accounts()
             .cursor("13537736921089")
             .limit(200)

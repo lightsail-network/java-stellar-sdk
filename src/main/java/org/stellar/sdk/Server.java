@@ -9,6 +9,7 @@ import org.stellar.sdk.responses.*;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class Server implements Closeable {
     private HttpUrl serverURI;
     private OkHttpClient httpClient;
-    private Network network;
+    private Optional<Network> network;
     /**
      * submitHttpClient is used only for submitting transactions. The read timeout is longer.
      */
@@ -29,7 +30,7 @@ public class Server implements Closeable {
      */
     private static final int HORIZON_SUBMIT_TIMEOUT = 60;
 
-    public Server(String uri, Network network) {
+    public Server(String uri) {
         this(
             uri,
             new OkHttpClient.Builder()
@@ -43,8 +44,7 @@ public class Server implements Closeable {
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
-                .build(),
-            network
+                .build()
         );
 
     }
@@ -52,13 +52,12 @@ public class Server implements Closeable {
     public Server(
             String serverURI,
             OkHttpClient httpClient,
-            OkHttpClient submitHttpClient,
-            Network network
+            OkHttpClient submitHttpClient
     ) {
         this.serverURI = HttpUrl.parse(serverURI);
         this.httpClient = httpClient;
         this.submitHttpClient = submitHttpClient;
-        this.network = network;
+        this.network = Optional.empty();
     }
 
 
@@ -88,7 +87,10 @@ public class Server implements Closeable {
         Request request = new Request.Builder().get().url(serverURI).build();
         Response response = httpClient.newCall(request).execute();
 
-        return responseHandler.handleResponse(response);
+        RootResponse parsedResponse = responseHandler.handleResponse(response);
+
+        this.network = Optional.of(new Network(parsedResponse.getNetworkPassphrase()));
+        return parsedResponse;
     }
 
     /**
@@ -191,8 +193,12 @@ public class Server implements Closeable {
      * @throws IOException
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
-        if (!this.network.equals(transaction.getNetwork())) {
-            throw new NetworkMismatchException(this.network, transaction.getNetwork());
+        if (!this.network.isPresent()) {
+            this.root();
+        }
+
+        if (!this.network.get().equals(transaction.getNetwork())) {
+            throw new NetworkMismatchException(this.network.get(), transaction.getNetwork());
 
         }
         HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();

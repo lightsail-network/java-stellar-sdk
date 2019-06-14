@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 public class TradeAggregationsRequestBuilderTest {
     @Test
     public void testTradeAggregations() {
-        Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+        Server server = new Server("https://horizon-testnet.stellar.org");
         HttpUrl uri = server.tradeAggregations(
                 new AssetTypeNative(),
                 Asset.createNonNativeAsset("BTC", KeyPair.fromAccountId("GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH")),

@@ -37,7 +37,7 @@ public class Network {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.networkPassphrase);
+        return Objects.hashCode(this.networkPassphrase);
     }
 
     @Override

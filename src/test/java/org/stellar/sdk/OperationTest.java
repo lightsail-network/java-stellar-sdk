@@ -352,10 +352,9 @@ public class OperationTest {
 
     long sequenceNumber = 2908908335136768L;
     Account account = new Account(source, sequenceNumber);
-    Transaction transaction = new Transaction.Builder(account)
+    Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-            .setNetwork(Network.TESTNET)
             .build();
 
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class LedgersRequestBuilderTest {
   @Test
   public void testAccounts() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.ledgers()
             .limit(200)
             .order(RequestBuilder.Order.ASC)

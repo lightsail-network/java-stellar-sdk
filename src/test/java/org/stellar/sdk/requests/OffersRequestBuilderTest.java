@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class OffersRequestBuilderTest {
   @Test
   public void testForAccount() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.offers()
             .forAccount(KeyPair.fromAccountId("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
             .limit(200)

@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class OperationsRequestBuilderTest {
   @Test
   public void testOperations() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.operations()
             .limit(200)
             .order(RequestBuilder.Order.DESC)
@@ -21,7 +21,7 @@ public class OperationsRequestBuilderTest {
 
   @Test
   public void testForAccount() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.operations()
             .forAccount(KeyPair.fromAccountId("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
             .limit(200)
@@ -32,7 +32,7 @@ public class OperationsRequestBuilderTest {
 
   @Test
   public void testForLedger() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.operations()
             .forLedger(200000000000L)
             .limit(50)
@@ -43,7 +43,7 @@ public class OperationsRequestBuilderTest {
 
   @Test
   public void testForTransaction() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.operations()
             .forTransaction("991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3")
             .buildUri();
@@ -52,7 +52,7 @@ public class OperationsRequestBuilderTest {
 
   @Test
   public void testIncludeFailed() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.operations()
             .forLedger(200000000000L)
             .includeFailed(true)

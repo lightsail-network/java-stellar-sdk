@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class TransactionsRequestBuilderTest {
   @Test
   public void testTransactions() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.transactions()
             .limit(200)
             .order(RequestBuilder.Order.DESC)
@@ -21,7 +21,7 @@ public class TransactionsRequestBuilderTest {
 
   @Test
   public void testForAccount() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.transactions()
             .forAccount(KeyPair.fromAccountId("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
             .limit(200)
@@ -32,7 +32,7 @@ public class TransactionsRequestBuilderTest {
 
   @Test
   public void testForLedger() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.transactions()
             .forLedger(200000000000L)
             .limit(50)
@@ -43,7 +43,7 @@ public class TransactionsRequestBuilderTest {
 
   @Test
   public void testIncludeFailed() {
-    Server server = new Server("https://horizon-testnet.stellar.org", Network.TESTNET);
+    Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.transactions()
             .forLedger(200000000000L)
             .includeFailed(true)
