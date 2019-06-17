@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Optional;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,6 +23,9 @@ public class StreamingSmokeTest {
           @Override
           public void onEvent(TradeResponse r) {
             events.incrementAndGet();
+          }
+          @Override
+          public void onFailure(Optional<Throwable> error, Optional<Integer> responseCode) {
           }
         });
 
