@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Main class used to connect to Horizon server.
@@ -19,6 +21,7 @@ public class Server implements Closeable {
     private HttpUrl serverURI;
     private OkHttpClient httpClient;
     private Optional<Network> network;
+    private ReentrantReadWriteLock networkLock;
     /**
      * submitHttpClient is used only for submitting transactions. The read timeout is longer.
      */
@@ -58,6 +61,7 @@ public class Server implements Closeable {
         this.httpClient = httpClient;
         this.submitHttpClient = submitHttpClient;
         this.network = Optional.empty();
+        this.networkLock = new ReentrantReadWriteLock();
     }
 
 
@@ -89,7 +93,7 @@ public class Server implements Closeable {
 
         RootResponse parsedResponse = responseHandler.handleResponse(response);
 
-        this.network = Optional.of(new Network(parsedResponse.getNetworkPassphrase()));
+        this.setNetwork(new Network(parsedResponse.getNetworkPassphrase()));
         return parsedResponse;
     }
 
@@ -184,6 +188,26 @@ public class Server implements Closeable {
         return new TransactionsRequestBuilder(httpClient, serverURI);
     }
 
+    private Optional<Network> getNetwork() {
+        Lock readLock = this.networkLock.readLock();
+        readLock.lock();
+        try {
+            return this.network;
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    private void setNetwork(Network network) {
+        Lock writeLock = this.networkLock.writeLock();
+        writeLock.lock();
+        try {
+            this.network = Optional.of(network);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
     /**
      * Submits transaction to the network.
      * @param transaction transaction to submit to the network.
@@ -193,12 +217,15 @@ public class Server implements Closeable {
      * @throws IOException
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
-        if (!this.network.isPresent()) {
+        Optional<Network> network = getNetwork();
+        if (!network.isPresent()) {
             this.root();
         }
 
-        if (!this.network.get().equals(transaction.getNetwork())) {
-            throw new NetworkMismatchException(this.network.get(), transaction.getNetwork());
+        network = getNetwork();
+
+        if (!network.get().equals(transaction.getNetwork())) {
+            throw new NetworkMismatchException(network.get(), transaction.getNetwork());
 
         }
         HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();

@@ -437,7 +437,7 @@ public class TransactionTest {
                     .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
                     .build();
         } catch (NullPointerException e) {
-            assertTrue(e.getMessage().contains("Network cannot be null."));
+            assertTrue(e.getMessage().contains("Network cannot be null"));
         }
     }
 }
