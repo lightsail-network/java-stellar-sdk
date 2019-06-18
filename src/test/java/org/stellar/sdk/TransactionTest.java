@@ -214,7 +214,7 @@ public class TransactionTest {
   }
 
   @Test
-  public void testBuilderTimeoutNotCalled() throws IOException {
+  public void testBuilderWithTimeBoundsButNoTimeout() throws IOException {
     Account account = new Account(KeyPair.random(), 2908908335136768L);
     try {
       new Transaction.Builder(account)
@@ -227,6 +227,23 @@ public class TransactionTest {
       fail();
     }
   }
+
+  @Test
+  public void testBuilderRequiresTimeoutOrTimeBounds() throws IOException {
+    Account account = new Account(KeyPair.random(), 2908908335136768L);
+    try {
+      new Transaction.Builder(account)
+              .addOperation(new CreateAccountOperation.Builder(KeyPair.random(), "2000").build())
+              .addMemo(Memo.hash("abcdef"))
+              .build();
+    } catch (RuntimeException exception) {
+      assertEquals(
+              exception.getMessage(),
+              "TimeBounds has to be set or you must call setTimeout(TIMEOUT_INFINITE)."
+      );
+    }
+  }
+
 
   @Test
   public void testBuilderTimeoutNegative() throws IOException {
