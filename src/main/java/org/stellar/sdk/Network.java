@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
+
 import java.nio.charset.Charset;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -8,13 +10,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Network class is used to specify which Stellar network you want to use.
  * Each network has a <code>networkPassphrase</code> which is hashed to
  * every transaction id.
- * There is no default network. You need to specify network when initializing your app by calling
- * {@link Network#use(Network)}, {@link Network#usePublicNetwork()} or {@link Network#useTestNetwork()}.
  */
 public class Network {
-    private final static String PUBLIC = "Public Global Stellar Network ; September 2015";
-    private final static String TESTNET = "Test SDF Network ; September 2015";
-    private static Network current;
+    public final static Network PUBLIC = new Network(
+            "Public Global Stellar Network ; September 2015"
+    );
+    public final static Network TESTNET = new Network(
+            "Test SDF Network ; September 2015"
+    );
 
     private final String networkPassphrase;
 
@@ -27,45 +30,29 @@ public class Network {
     }
 
     /**
-     * Returns network passphrase
-     */
-    public String getNetworkPassphrase() {
-        return networkPassphrase;
-    }
-
-    /**
      * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
      */
     public byte[] getNetworkId() {
-        return Util.hash(current.getNetworkPassphrase().getBytes(Charset.forName("UTF-8")));
+        return Util.hash(this.networkPassphrase.getBytes(Charset.forName("UTF-8")));
     }
 
-    /**
-     * Returns currently used Network object.
-     */
-    public static Network current() {
-        return current;
+    @Override
+    public int hashCode() {
+        return this.networkPassphrase.hashCode();
     }
 
-    /**
-     * Use <code>network</code> as a current network.
-     * @param network Network object to set as current network
-     */
-    public static void use(Network network) {
-        current = network;
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || !(object instanceof Network)) {
+            return false;
+        }
+
+        Network other = (Network) object;
+        return Objects.equal(this.networkPassphrase, other.networkPassphrase);
     }
 
-    /**
-     * Use Stellar Public Network
-     */
-    public static void usePublicNetwork() {
-        Network.use(new Network(PUBLIC));
-    }
-
-    /**
-     * Use Stellar Test Network.
-     */
-    public static void useTestNetwork() {
-        Network.use(new Network(TESTNET));
+    @Override
+    public String toString() {
+        return this.networkPassphrase;
     }
 }
