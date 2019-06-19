@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+
+import com.google.common.base.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,7 +36,7 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.mCode, this.mIssuer);
+        return Objects.hashCode(this.mCode, this.mIssuer);
     }
 
     @Override

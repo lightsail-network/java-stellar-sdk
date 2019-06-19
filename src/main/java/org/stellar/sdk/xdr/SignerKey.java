@@ -4,8 +4,9 @@
 package org.stellar.sdk.xdr;
 
 
+import com.google.common.base.Objects;
+
 import java.io.IOException;
-import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -102,7 +103,7 @@ public class SignerKey {
     }
 
     public int hashCode() {
-        return Objects.hash(
+        return Objects.hashCode(
                 this.type,
                 this.ed25519,
                 this.hashX,
@@ -117,9 +118,9 @@ public class SignerKey {
         }
 
         SignerKey other = (SignerKey) object;
-        return Objects.equals(this.type, other.type) &&
-                Objects.equals(this.ed25519, other.ed25519) &&
-                Objects.equals(this.hashX, other.hashX) &&
-                Objects.equals(this.preAuthTx, other.preAuthTx);
+        return Objects.equal(this.type, other.type) &&
+                Objects.equal(this.ed25519, other.ed25519) &&
+                Objects.equal(this.hashX, other.hashX) &&
+                Objects.equal(this.preAuthTx, other.preAuthTx);
     }
 }

@@ -1,9 +1,9 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 
 import java.nio.charset.Charset;
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,7 +36,7 @@ public class MemoText extends Memo {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.text);
+    return Objects.hashCode(this.text);
   }
 
   @Override
@@ -44,6 +44,6 @@ public class MemoText extends Memo {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MemoText memoText = (MemoText) o;
-    return Objects.equals(this.text, memoText.text);
+    return Objects.equal(this.text, memoText.text);
   }
 }

@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PaymentOp;
 
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -124,7 +124,7 @@ public class PaymentOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
             this.getSourceAccount(),
             this.asset,
             this.amount,
@@ -139,9 +139,9 @@ public class PaymentOperation extends Operation {
     }
 
     PaymentOperation other = (PaymentOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
-            Objects.equals(this.asset, other.asset) &&
-            Objects.equals(this.amount, other.amount) &&
-            Objects.equals(this.destination, other.destination);
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount()) &&
+            Objects.equal(this.asset, other.asset) &&
+            Objects.equal(this.amount, other.amount) &&
+            Objects.equal(this.destination, other.destination);
   }
 }

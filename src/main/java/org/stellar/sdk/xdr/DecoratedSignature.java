@@ -4,8 +4,9 @@
 package org.stellar.sdk.xdr;
 
 
+import com.google.common.base.Objects;
+
 import java.io.IOException;
-import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -45,7 +46,7 @@ public class DecoratedSignature  {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
             this.hint,
             this.signature
     );
@@ -58,7 +59,7 @@ public class DecoratedSignature  {
     }
 
     DecoratedSignature other = (DecoratedSignature) object;
-    return Objects.equals(this.hint, other.hint) &&
-            Objects.equals(this.signature, other.signature);
+    return Objects.equal(this.hint, other.hint) &&
+            Objects.equal(this.signature, other.signature);
   }
 }

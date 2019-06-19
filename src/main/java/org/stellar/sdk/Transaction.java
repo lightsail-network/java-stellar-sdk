@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.*;
 
@@ -7,7 +8,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -398,7 +402,7 @@ public class Transaction {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
             this.mFee,
             this.mSourceAccount,
             this.mSequenceNumber,
@@ -416,12 +420,12 @@ public class Transaction {
     }
 
     Transaction other = (Transaction) object;
-    return Objects.equals(this.mFee, other.mFee) &&
-            Objects.equals(this.mSourceAccount, other.mSourceAccount) &&
-            Objects.equals(this.mSequenceNumber, other.mSequenceNumber) &&
+    return Objects.equal(this.mFee, other.mFee) &&
+            Objects.equal(this.mSourceAccount, other.mSourceAccount) &&
+            Objects.equal(this.mSequenceNumber, other.mSequenceNumber) &&
             Arrays.equals(this.mOperations, other.mOperations) &&
-            Objects.equals(this.mMemo, other.mMemo) &&
-            Objects.equals(this.mTimeBounds, other.mTimeBounds) &&
-            Objects.equals(this.mSignatures, other.mSignatures);
+            Objects.equal(this.mMemo, other.mMemo) &&
+            Objects.equal(this.mTimeBounds, other.mTimeBounds) &&
+            Objects.equal(this.mSignatures, other.mSignatures);
   }
 }

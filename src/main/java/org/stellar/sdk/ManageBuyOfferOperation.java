@@ -1,8 +1,8 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -165,7 +165,7 @@ public class ManageBuyOfferOperation extends Operation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(
+        return Objects.hashCode(
                 this.getSourceAccount(),
                 this.amount,
                 this.buying,
@@ -182,11 +182,11 @@ public class ManageBuyOfferOperation extends Operation {
         }
 
         ManageBuyOfferOperation other = (ManageBuyOfferOperation) object;
-        return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
-                Objects.equals(this.amount, other.amount) &&
-                Objects.equals(this.buying, other.buying) &&
-                Objects.equals(this.offerId, other.offerId) &&
-                Objects.equals(this.price, other.price) &&
-                Objects.equals(this.selling, other.selling);
+        return Objects.equal(this.getSourceAccount(), other.getSourceAccount()) &&
+                Objects.equal(this.amount, other.amount) &&
+                Objects.equal(this.buying, other.buying) &&
+                Objects.equal(this.offerId, other.offerId) &&
+                Objects.equal(this.price, other.price) &&
+                Objects.equal(this.selling, other.selling);
     }
 }

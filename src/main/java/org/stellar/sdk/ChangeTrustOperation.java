@@ -1,10 +1,10 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.ChangeTrustOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -100,7 +100,7 @@ public class ChangeTrustOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.asset, this.limit, this.getSourceAccount());
+    return Objects.hashCode(this.asset, this.limit, this.getSourceAccount());
   }
 
   @Override
@@ -110,8 +110,8 @@ public class ChangeTrustOperation extends Operation {
     }
 
     ChangeTrustOperation other = (ChangeTrustOperation) object;
-    return Objects.equals(this.asset, other.asset) &&
-            Objects.equals(this.limit, other.limit) &&
-            Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.asset, other.asset) &&
+            Objects.equal(this.limit, other.limit) &&
+            Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

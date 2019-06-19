@@ -1,9 +1,8 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
-
-import java.util.Objects;
 
 /**
  * <p>TimeBounds represents the time interval that a transaction is valid.</p>
@@ -74,7 +73,7 @@ final public class TimeBounds {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(
+		return Objects.hashCode(
 				this.mMaxTime,
 				this.mMinTime
 		);

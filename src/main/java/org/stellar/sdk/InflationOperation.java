@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.OperationType;
-
-import java.util.Objects;
 
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#inflation" target="_blank">Inflation</a> operation.
@@ -18,7 +17,7 @@ public class InflationOperation extends Operation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getSourceAccount());
+        return Objects.hashCode(this.getSourceAccount());
     }
 
     @Override
@@ -28,6 +27,6 @@ public class InflationOperation extends Operation {
         }
 
         InflationOperation other = (InflationOperation) object;
-        return Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+        return Objects.equal(this.getSourceAccount(), other.getSourceAccount());
     }
 }

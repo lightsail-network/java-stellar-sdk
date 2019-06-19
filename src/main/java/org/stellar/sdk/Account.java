@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import com.google.common.base.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,7 +46,7 @@ public class Account implements TransactionBuilderAccount {
   }
 
   public int hashCode() {
-    return Objects.hash(this.mKeyPair, this.mSequenceNumber);
+    return Objects.hashCode(this.mKeyPair, this.mSequenceNumber);
   }
 
   @Override
@@ -56,8 +56,8 @@ public class Account implements TransactionBuilderAccount {
     }
 
     Account other = (Account) object;
-    return Objects.equals(this.mKeyPair, other.mKeyPair) &&
-            Objects.equals(this.mSequenceNumber, other.mSequenceNumber);
+    return Objects.equal(this.mKeyPair, other.mKeyPair) &&
+            Objects.equal(this.mSequenceNumber, other.mSequenceNumber);
 
   }
 }

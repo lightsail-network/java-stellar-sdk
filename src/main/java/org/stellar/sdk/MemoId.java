@@ -1,9 +1,9 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
 
-import java.util.Objects;
 
 /**
  * Represents MEMO_ID.
@@ -12,9 +12,6 @@ public class MemoId extends Memo {
   private long id;
 
   public MemoId(long id) {
-    if (Long.compareUnsigned(id, 0) < 0) {
-      throw new IllegalArgumentException("id must be a positive number");
-    }
     this.id = id;
   }
 
@@ -34,7 +31,7 @@ public class MemoId extends Memo {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.id);
+    return Objects.hashCode(this.id);
   }
 
   @Override

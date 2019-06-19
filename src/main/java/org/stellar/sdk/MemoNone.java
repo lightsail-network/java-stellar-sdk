@@ -2,7 +2,6 @@ package org.stellar.sdk;
 
 import org.stellar.sdk.xdr.MemoType;
 
-import java.util.Objects;
 
 /**
  * Represents MEMO_NONE.

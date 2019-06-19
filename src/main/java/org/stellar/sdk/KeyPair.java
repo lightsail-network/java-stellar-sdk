@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -18,7 +19,6 @@ import java.security.MessageDigest;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -257,7 +257,7 @@ public class KeyPair {
   }
 
   public int hashCode() {
-    return Objects.hash(this.mPrivateKey, this.mPublicKey);
+    return Objects.hashCode(this.mPrivateKey, this.mPublicKey);
   }
 
   @Override

@@ -1,12 +1,13 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentOp;
 
 import java.util.Arrays;
-import java.util.Objects;
+
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -194,7 +195,7 @@ public class PathPaymentOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
             this.getSourceAccount(),
             this.destAmount,
             this.destAsset,
@@ -212,12 +213,12 @@ public class PathPaymentOperation extends Operation {
     }
 
     PathPaymentOperation other = (PathPaymentOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount()) &&
-            Objects.equals(this.destAmount, other.destAmount) &&
-            Objects.equals(this.destAsset, other.destAsset) &&
-            Objects.equals(this.destination, other.destination) &&
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount()) &&
+            Objects.equal(this.destAmount, other.destAmount) &&
+            Objects.equal(this.destAsset, other.destAsset) &&
+            Objects.equal(this.destination, other.destination) &&
             Arrays.equals(this.path, other.path) &&
-            Objects.equals(this.sendAsset, other.sendAsset) &&
-            Objects.equals(this.sendMax, other.sendMax);
+            Objects.equal(this.sendAsset, other.sendAsset) &&
+            Objects.equal(this.sendMax, other.sendMax);
   }
 }
