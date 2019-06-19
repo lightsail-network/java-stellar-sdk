@@ -50,6 +50,20 @@ public class OffersRequestBuilder extends RequestBuilder {
   }
 
 
+  /**
+   * Allows to stream SSE events from horizon.
+   * Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
+   * This mode will keep the connection to horizon open and horizon will continue to return
+   * responses as ledgers close.
+   * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
+   * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+   * @param listener {@link EventListener} implementation with {@link OfferResponse} type
+   * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
+   */
+
+  public SSEStream<OfferResponse> stream(final EventListener<OfferResponse> listener) {
+      return SSEStream.create(httpClient, this, OfferResponse.class, listener);
+  }
 
   /**
    * Build and execute request.
