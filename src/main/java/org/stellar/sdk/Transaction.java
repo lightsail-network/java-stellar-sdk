@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.*;
 
@@ -429,5 +430,34 @@ public class Transaction {
       mSourceAccount.incrementSequenceNumber();
       return transaction;
     }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(
+            this.mFee,
+            this.mSourceAccount,
+            this.mSequenceNumber,
+            Arrays.hashCode(this.mOperations),
+            this.mMemo,
+            this.mTimeBounds,
+            this.mSignatures
+    );
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof Transaction)) {
+      return false;
+    }
+
+    Transaction other = (Transaction) object;
+    return Objects.equal(this.mFee, other.mFee) &&
+            Objects.equal(this.mSourceAccount, other.mSourceAccount) &&
+            Objects.equal(this.mSequenceNumber, other.mSequenceNumber) &&
+            Arrays.equals(this.mOperations, other.mOperations) &&
+            Objects.equal(this.mMemo, other.mMemo) &&
+            Objects.equal(this.mTimeBounds, other.mTimeBounds) &&
+            Objects.equal(this.mSignatures, other.mSignatures);
   }
 }

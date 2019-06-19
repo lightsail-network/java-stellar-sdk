@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -130,5 +131,23 @@ public class AllowTrustOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(this.getSourceAccount(), this.assetCode, this.authorize, this.trustor);
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof AllowTrustOperation)) {
+      return false;
+    }
+
+    AllowTrustOperation other = (AllowTrustOperation) object;
+    return Objects.equal(this.assetCode, other.assetCode) &&
+            Objects.equal(this.authorize, other.authorize) &&
+            Objects.equal(this.trustor, other.trustor) &&
+            Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

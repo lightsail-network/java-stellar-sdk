@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.BumpSequenceOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -75,5 +76,21 @@ public class BumpSequenceOperation extends Operation  {
             }
             return operation;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.bumpTo, this.getSourceAccount());
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || !(object instanceof BumpSequenceOperation)) {
+            return false;
+        }
+
+        BumpSequenceOperation other = (BumpSequenceOperation) object;
+        return Objects.equal(this.bumpTo, other.bumpTo) &&
+                Objects.equal(this.getSourceAccount(), other.getSourceAccount());
     }
 }
