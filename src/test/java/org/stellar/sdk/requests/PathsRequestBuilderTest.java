@@ -4,6 +4,7 @@ import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.Network;
 import org.stellar.sdk.Server;
 
 import static org.junit.Assert.assertEquals;
