@@ -25,18 +25,28 @@ public class Transaction {
   private final Operation[] mOperations;
   private final Memo mMemo;
   private final TimeBounds mTimeBounds;
+  private final Network mNetwork;
   private List<DecoratedSignature> mSignatures;
 
-  Transaction(KeyPair sourceAccount, int fee, long sequenceNumber, Operation[] operations, Memo memo, TimeBounds timeBounds) {
-    mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
-    mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
-    mOperations = checkNotNull(operations, "operations cannot be null");
+  Transaction(
+          KeyPair sourceAccount,
+          int fee,
+          long sequenceNumber,
+          Operation[] operations,
+          Memo memo,
+          TimeBounds timeBounds,
+          Network network
+  ) {
+    this.mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    this.mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
+    this.mOperations = checkNotNull(operations, "operations cannot be null");
     checkArgument(operations.length > 0, "At least one operation required");
 
-    mFee = fee;
-    mSignatures = new ArrayList<DecoratedSignature>();
-    mMemo = memo != null ? memo : Memo.none();
-    mTimeBounds = timeBounds;
+    this.mFee = fee;
+    this.mSignatures = new ArrayList<DecoratedSignature>();
+    this.mMemo = memo != null ? memo : Memo.none();
+    this.mTimeBounds = timeBounds;
+    this.mNetwork = checkNotNull(network, "network cannot be null");
   }
 
   /**
@@ -81,14 +91,10 @@ public class Transaction {
    * Returns signature base.
    */
   public byte[] signatureBase() {
-    if (Network.current() == null) {
-      throw new NoNetworkSelectedException();
-    }
-
     try {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       // Hashed NetworkID
-      outputStream.write(Network.current().getNetworkId());
+      outputStream.write(mNetwork.getNetworkId());
       // Envelope Type - 4 bytes
       outputStream.write(ByteBuffer.allocate(4).putInt(EnvelopeType.ENVELOPE_TYPE_TX.getValue()).array());
       // Transaction XDR bytes
@@ -101,6 +107,10 @@ public class Transaction {
     } catch (IOException exception) {
       return null;
     }
+  }
+
+  public Network getNetwork() {
+    return mNetwork;
   }
 
   public KeyPair getSourceAccount() {
@@ -181,12 +191,12 @@ public class Transaction {
    * @return
    * @throws IOException
    */
-  public static Transaction fromEnvelopeXdr(String envelope) throws IOException {
+  public static Transaction fromEnvelopeXdr(String envelope, Network network) throws IOException {
     BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] bytes = base64Encoding.decode(envelope);
 
     TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-    return fromEnvelopeXdr(transactionEnvelope);
+    return fromEnvelopeXdr(transactionEnvelope, network);
   }
 
   /**
@@ -194,7 +204,7 @@ public class Transaction {
    * @param envelope
    * @return
    */
-  public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope) {
+  public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
     org.stellar.sdk.xdr.Transaction tx = envelope.getTx();
     int mFee = tx.getFee().getUint32();
     KeyPair mSourceAccount = KeyPair.fromXdrPublicKey(tx.getSourceAccount().getAccountID());
@@ -207,7 +217,15 @@ public class Transaction {
       mOperations[i] = Operation.fromXdr(tx.getOperations()[i]);
     }
 
-    Transaction transaction = new Transaction(mSourceAccount, mFee, mSequenceNumber, mOperations, mMemo, mTimeBounds);
+    Transaction transaction = new Transaction(
+            mSourceAccount,
+            mFee,
+            mSequenceNumber,
+            mOperations,
+            mMemo,
+            mTimeBounds,
+            network
+    );
 
     for (DecoratedSignature signature : envelope.getSignatures()) {
       transaction.mSignatures.add(signature);
@@ -259,6 +277,7 @@ public class Transaction {
     private boolean timeoutSet;
     private static Integer defaultOperationFee;
     private Integer operationFee;
+    private Network mNetwork;
 
     public static final long TIMEOUT_INFINITE = 0;
 
@@ -276,10 +295,11 @@ public class Transaction {
      * who will use a sequence number. When build() is called, the account object's sequence number
      * will be incremented.
      */
-    public Builder(TransactionBuilderAccount sourceAccount) {
+    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
       checkNotNull(sourceAccount, "sourceAccount cannot be null");
       mSourceAccount = sourceAccount;
       mOperations = Collections.synchronizedList(new ArrayList<Operation>());
+      mNetwork = checkNotNull(network, "Network cannot be null");
       operationFee = defaultOperationFee;
     }
 
@@ -390,9 +410,21 @@ public class Transaction {
         operationFee = BASE_FEE;
       }
 
+      if (mNetwork == null) {
+        throw new NoNetworkSelectedException();
+      }
+
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
-      Transaction transaction = new Transaction(mSourceAccount.getKeypair(), operations.length * operationFee, mSourceAccount.getIncrementedSequenceNumber(), operations, mMemo, mTimeBounds);
+      Transaction transaction = new Transaction(
+              mSourceAccount.getKeypair(),
+              operations.length * operationFee,
+              mSourceAccount.getIncrementedSequenceNumber(),
+              operations,
+              mMemo,
+              mTimeBounds,
+              mNetwork
+      );
       // Increment sequence number when there were no exceptions when creating a transaction
       mSourceAccount.incrementSequenceNumber();
       return transaction;
