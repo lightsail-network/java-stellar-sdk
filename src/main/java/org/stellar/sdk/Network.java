@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
+
 import java.nio.charset.Charset;
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -37,7 +38,7 @@ public class Network {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.networkPassphrase);
+        return this.networkPassphrase.hashCode();
     }
 
     @Override
@@ -47,7 +48,7 @@ public class Network {
         }
 
         Network other = (Network) object;
-        return Objects.equals(this.networkPassphrase, other.networkPassphrase);
+        return Objects.equal(this.networkPassphrase, other.networkPassphrase);
     }
 
     @Override
