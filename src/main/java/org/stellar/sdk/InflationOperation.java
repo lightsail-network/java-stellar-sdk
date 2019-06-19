@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.OperationType;
 
 /**
@@ -12,5 +13,20 @@ public class InflationOperation extends Operation {
         org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
         body.setDiscriminant(OperationType.INFLATION);
         return body;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.getSourceAccount());
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || !(object instanceof InflationOperation)) {
+            return false;
+        }
+
+        InflationOperation other = (InflationOperation) object;
+        return Objects.equal(this.getSourceAccount(), other.getSourceAccount());
     }
 }

@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -255,8 +256,20 @@ public class KeyPair {
     }
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj);
+  public int hashCode() {
+    return Objects.hashCode(this.mPrivateKey, this.mPublicKey);
   }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof KeyPair)) {
+      return false;
+    }
+
+    KeyPair other = (KeyPair) object;
+    return this.mPrivateKey.equals(other.mPrivateKey) &&
+            this.mPublicKey.equals(other.mPublicKey);
+
+  }
+
 }
