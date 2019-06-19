@@ -1,6 +1,8 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
+
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -339,5 +341,42 @@ public class SetOptionsOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(
+            this.getSourceAccount(),
+            this.inflationDestination,
+            this.clearFlags,
+            this.setFlags,
+            this.masterKeyWeight,
+            this.lowThreshold,
+            this.mediumThreshold,
+            this.highThreshold,
+            this.homeDomain,
+            this.signer,
+            this.signerWeight
+    );
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof SetOptionsOperation)) {
+      return false;
+    }
+
+    SetOptionsOperation other = (SetOptionsOperation) object;
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount()) &&
+            Objects.equal(this.inflationDestination, other.inflationDestination) &&
+            Objects.equal(this.clearFlags, other.clearFlags) &&
+            Objects.equal(this.setFlags, other.setFlags) &&
+            Objects.equal(this.masterKeyWeight, other.masterKeyWeight) &&
+            Objects.equal(this.lowThreshold, other.lowThreshold) &&
+            Objects.equal(this.mediumThreshold, other.mediumThreshold) &&
+            Objects.equal(this.highThreshold, other.highThreshold) &&
+            Objects.equal(this.homeDomain, other.homeDomain) &&
+            Objects.equal(this.signer, other.signer) &&
+            Objects.equal(this.signerWeight, other.signerWeight);
   }
 }

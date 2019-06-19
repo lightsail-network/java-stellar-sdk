@@ -1,8 +1,10 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.CreatePassiveSellOfferOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
+
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -133,4 +135,30 @@ public class CreatePassiveSellOfferOperation extends Operation {
             return operation;
         }
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(
+                this.amount,
+                this.buying,
+                this.price,
+                this.selling,
+                this.getSourceAccount()
+        );
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || !(object instanceof CreatePassiveSellOfferOperation)) {
+            return false;
+        }
+
+        CreatePassiveSellOfferOperation other = (CreatePassiveSellOfferOperation) object;
+        return Objects.equal(this.amount, other.amount) &&
+                Objects.equal(this.buying, other.buying) &&
+                Objects.equal(this.price, other.price) &&
+                Objects.equal(this.selling, other.selling) &&
+                Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    }
+
 }
