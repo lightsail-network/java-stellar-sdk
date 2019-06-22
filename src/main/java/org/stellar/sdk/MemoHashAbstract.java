@@ -69,6 +69,6 @@ abstract class MemoHashAbstract extends Memo {
 
   @Override
   public String toString() {
-    return bytes == null ? "" : new String(bytes);
+    return bytes == null ? "" : Util.paddedByteArrayToString(bytes);
   }
 }

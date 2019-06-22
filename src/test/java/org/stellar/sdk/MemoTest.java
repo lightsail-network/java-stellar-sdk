@@ -18,6 +18,7 @@ public class MemoTest {
     public void testMemoNone() {
         MemoNone memo = Memo.none();
         assertEquals(MemoType.MEMO_NONE, memo.toXdr().getDiscriminant());
+        assertEquals("", memo.toString());
     }
 
     @Test
@@ -25,6 +26,7 @@ public class MemoTest {
         MemoText memo = Memo.text("test");
         assertEquals(MemoType.MEMO_TEXT, memo.toXdr().getDiscriminant());
         assertEquals("test", memo.getText());
+        assertEquals("test", memo.toString());
     }
 
     @Test
@@ -32,6 +34,7 @@ public class MemoTest {
         MemoText memo = Memo.text("三");
         assertEquals(MemoType.MEMO_TEXT, memo.toXdr().getDiscriminant());
         assertEquals("三", memo.getText());
+        assertEquals("三", memo.toString());
     }
 
     @Test
@@ -60,6 +63,7 @@ public class MemoTest {
         assertEquals(9223372036854775807L, memo.getId());
         assertEquals(MemoType.MEMO_ID, memo.toXdr().getDiscriminant());
         assertEquals(new Long(9223372036854775807L), memo.toXdr().getId().getUint64());
+        assertEquals("9223372036854775807", memo.toString());
     }
 
     @Test
@@ -78,6 +82,7 @@ public class MemoTest {
         String test = "ABCDEFGHIJKL";
         assertEquals(test, Util.paddedByteArrayToString(memo.getBytes()));
         assertEquals("4142434445464748494a4b4c", memo.getTrimmedHexValue());
+        assertEquals("ABCDEFGHIJKL", memo.toString());
     }
 
     @Test
