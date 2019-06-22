@@ -37,4 +37,9 @@ public class MemoId extends Memo {
     MemoId memoId = (MemoId) o;
     return id == memoId.id;
   }
+
+  @Override
+  public String toString() {
+    return Long.toString(id);
+  }
 }

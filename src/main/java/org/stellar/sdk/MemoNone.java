@@ -19,4 +19,9 @@ public class MemoNone extends Memo {
     if (o == null || getClass() != o.getClass()) return false;
     return true;
   }
+
+  @Override
+  public String toString() {
+    return "";
+  }
 }

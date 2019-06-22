@@ -66,4 +66,9 @@ abstract class MemoHashAbstract extends Memo {
     MemoHashAbstract that = (MemoHashAbstract) o;
     return Objects.equal(bytes, that.bytes);
   }
+
+  @Override
+  public String toString() {
+    return bytes == null ? "" : new String(bytes);
+  }
 }
