@@ -35,11 +35,16 @@ public class MemoText extends Memo {
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hashCode(this.text);
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MemoText memoText = (MemoText) o;
-    return Objects.equal(text, memoText.text);
+    return Objects.equal(this.text, memoText.text);
   }
 
   @Override

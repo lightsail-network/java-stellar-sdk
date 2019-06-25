@@ -4,8 +4,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
@@ -20,6 +18,48 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 public class ServerTest {
+    private final String publicRootResponse = "{\n" +
+            "  \"_links\": {\n" +
+            "    \"account\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/accounts/{account_id}\",\n" +
+            "      \"templated\": true\n" +
+            "    },\n" +
+            "    \"account_transactions\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/accounts/{account_id}/transactions{?cursor,limit,order}\",\n" +
+            "      \"templated\": true\n" +
+            "    },\n" +
+            "    \"assets\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/assets{?asset_code,asset_issuer,cursor,limit,order}\",\n" +
+            "      \"templated\": true\n" +
+            "    },\n" +
+            "    \"metrics\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/metrics\"\n" +
+            "    },\n" +
+            "    \"order_book\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer,limit}\",\n" +
+            "      \"templated\": true\n" +
+            "    },\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/\"\n" +
+            "    },\n" +
+            "    \"transaction\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/transactions/{hash}\",\n" +
+            "      \"templated\": true\n" +
+            "    },\n" +
+            "    \"transactions\": {\n" +
+            "      \"href\": \"https://horizon.stellar.org/transactions{?cursor,limit,order}\",\n" +
+            "      \"templated\": true\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"horizon_version\": \"0.18.0-92259749c681df66a8347f846e94681a24f2a920\",\n" +
+            "  \"core_version\": \"stellar-core 11.1.0 (324c1bd61b0e9bada63e0d696d799421b00a7950)\",\n" +
+            "  \"history_latest_ledger\": 24345129,\n" +
+            "  \"history_elder_ledger\": 1,\n" +
+            "  \"core_latest_ledger\": 24345130,\n" +
+            "  \"network_passphrase\": \"Public Global Stellar Network ; September 2015\",\n" +
+            "  \"current_protocol_version\": 11,\n" +
+            "  \"core_supported_protocol_version\": 11\n" +
+            "}";
     private final String successResponse =
             "{\n" +
             "  \"_links\": {\n" +
@@ -117,23 +157,17 @@ public class ServerTest {
             "  }\n" +
             "}";
 
-    @Before
-    public void setUp() throws URISyntaxException, IOException {
-        Network.useTestNetwork();
-    }
-
-    @After
-    public void resetNetwork() {
-        Network.use(null);
-    }
-
     Transaction buildTransaction() throws IOException {
+        return buildTransaction(Network.PUBLIC);
+    }
+
+    Transaction buildTransaction(Network network) throws IOException {
         // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
         KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
         KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
         Account account = new Account(source, 2908908335136768L);
-        Transaction.Builder builder = new Transaction.Builder(account)
+        Transaction.Builder builder = new Transaction.Builder(account, network)
                 .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
                 .addMemo(Memo.text("Hello world!"))
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE);
@@ -147,8 +181,26 @@ public class ServerTest {
     }
 
     @Test
+    public void testSubmitTransactionNetworkMisMatch() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        try {
+            server.submitTransaction(this.buildTransaction(Network.TESTNET));
+            fail("expected NetworkMismatchException exception");
+        } catch (NetworkMismatchException e) {
+            // expect exception
+        }
+    }
+
+    @Test
     public void testSubmitTransactionSuccess() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
@@ -158,14 +210,15 @@ public class ServerTest {
         assertTrue(response.isSuccess());
         assertEquals(response.getLedger(), new Long(826150L));
         assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
-        assertEquals(response.getEnvelopeXdr(), "AAAAAKu3N77S+cHLEDfVD2eW/CqRiN9yvAKH+qkeLjHQs1u+AAAAZAAMkoMAAAADAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAbYQq8ek1GitmNBUloGnetfWxSpxlsgK48Xi66dIL3MoAAAAAC+vCAAAAAAAAAAAB0LNbvgAAAEDadQ25SNHWTg0L+2wr/KNWd8/EwSNFkX/ncGmBGA3zkNGx7lAow78q8SQmnn2IsdkD9MwICirhsOYDNbaqShwO");
-        assertEquals(response.getResultXdr(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=");
+        assertEquals(response.getEnvelopeXdr().get(), "AAAAAKu3N77S+cHLEDfVD2eW/CqRiN9yvAKH+qkeLjHQs1u+AAAAZAAMkoMAAAADAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAbYQq8ek1GitmNBUloGnetfWxSpxlsgK48Xi66dIL3MoAAAAAC+vCAAAAAAAAAAAB0LNbvgAAAEDadQ25SNHWTg0L+2wr/KNWd8/EwSNFkX/ncGmBGA3zkNGx7lAow78q8SQmnn2IsdkD9MwICirhsOYDNbaqShwO");
+        assertEquals(response.getResultXdr().get(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=");
         assertNull(response.getExtras());
     }
 
     @Test
     public void testSubmitTransactionFail() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(failureResponse));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
@@ -176,9 +229,9 @@ public class ServerTest {
         assertNull(response.getLedger());
         assertNull(response.getHash());
         assertEquals(response.getExtras().getEnvelopeXdr(), "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
-        assertEquals(response.getEnvelopeXdr(), "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
+        assertEquals(response.getEnvelopeXdr().get(), "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
         assertEquals(response.getExtras().getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
-        assertEquals(response.getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
+        assertEquals(response.getResultXdr().get(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
         assertNotNull(response.getExtras());
         assertEquals("tx_failed", response.getExtras().getResultCodes().getTransactionResultCode());
         assertEquals("op_no_destination", response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
@@ -187,6 +240,7 @@ public class ServerTest {
     @Test(expected = SubmitTransactionTimeoutResponseException.class)
     public void testSubmitTransactionTimeout() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.enqueue(new MockResponse().setResponseCode(504).setBody(timeoutResponse).setBodyDelay(5, TimeUnit.SECONDS));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
@@ -206,6 +260,7 @@ public class ServerTest {
     @Test(expected = SubmitTransactionTimeoutResponseException.class)
     public void testSubmitTransactionTimeoutWithoutResponse() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
         Server server = new Server(baseUrl.toString());
@@ -224,6 +279,7 @@ public class ServerTest {
     @Test
     public void testSubmitTransactionInternalError() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.enqueue(new MockResponse().setResponseCode(500).setBody(internalServerErrorResponse));
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");

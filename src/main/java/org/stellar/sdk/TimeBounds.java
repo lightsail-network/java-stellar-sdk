@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 
@@ -67,5 +68,14 @@ final public class TimeBounds {
 
 		if (mMinTime != that.mMinTime) return false;
 		return mMaxTime == that.mMaxTime;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(
+				this.mMaxTime,
+				this.mMinTime
+		);
 	}
 }

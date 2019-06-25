@@ -2,6 +2,16 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.8.0
+
+* Removed deprecated methods and classes listed in the 0.7.0 changelog entry
+* Configure network at the transaction and server level rather than using a singleton to determine
+  which network to use globally.
+* Implement hashCode() and equals() on Stellar classes and XDR generated classes
+* Add streaming for account Offers
+* Add callback to handle SSE failures
+
+
 ## 0.7.0
 
 ### Deprecations

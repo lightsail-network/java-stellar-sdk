@@ -1,9 +1,13 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentOp;
+
+import java.util.Arrays;
+
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -188,5 +192,33 @@ public class PathPaymentOperation extends Operation {
       }
       return operation;
     }
+  }
+
+  public int hashCode() {
+    return Objects.hashCode(
+            this.getSourceAccount(),
+            this.destAmount,
+            this.destAsset,
+            this.destination,
+            Arrays.hashCode(this.path),
+            this.sendAsset,
+            this.sendMax
+    );
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null || !(object instanceof PathPaymentOperation)) {
+      return false;
+    }
+
+    PathPaymentOperation other = (PathPaymentOperation) object;
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount()) &&
+            Objects.equal(this.destAmount, other.destAmount) &&
+            Objects.equal(this.destAsset, other.destAsset) &&
+            Objects.equal(this.destination, other.destination) &&
+            Arrays.equals(this.path, other.path) &&
+            Objects.equal(this.sendAsset, other.sendAsset) &&
+            Objects.equal(this.sendMax, other.sendMax);
   }
 }

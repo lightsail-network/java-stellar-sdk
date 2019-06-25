@@ -1,5 +1,6 @@
 package org.stellar.sdk.requests;
 
+import com.google.common.base.Optional;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -175,18 +176,21 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
 
     @Override
     public void onFailure(EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
-      int code = -1;
+      Optional<Integer> code = Optional.absent();
       if (response != null) {
-        code = response.code();
+        code = Optional.of(response.code());
       }
       if (t != null) {
         if (t instanceof SocketException) {
-          // not a failure, server disconnected
+          if (closeListener != null) {
+            closeListener.closed(eventSource);
+          }
         } else {
-          throw new IllegalStateException("Failed " + code, t);
+          listener.onFailure(Optional.of(t), code);
         }
       } else {
-        throw new IllegalStateException("Failed " + code);
+        Optional<Throwable> absent = Optional.absent();
+        listener.onFailure(absent, code);
       }
     }
 

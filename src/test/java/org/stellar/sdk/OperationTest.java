@@ -346,15 +346,13 @@ public class OperationTest {
 
   @Test
   public void testSetOptionsOperationPreAuthTxSigner() {
-    Network.useTestNetwork();
-
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
     long sequenceNumber = 2908908335136768L;
     Account account = new Account(source, sequenceNumber);
-    Transaction transaction = new Transaction.Builder(account)
+    Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
             .addOperation(new CreateAccountOperation.Builder(destination, "2000").build())
             .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .build();
@@ -384,44 +382,6 @@ public class OperationTest {
 
     assertEquals(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAB1vRBIRC3w7ZH5rQa17hIBKUwZTvBP4kNmSP7jVyw1fQAAAAK",
-            operation.toXdrBase64());
-  }
-
-  // TODO: remove in 0.8.0
-  @Test
-  public void testManageOfferOperation() throws IOException, FormatException {
-    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
-    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
-    // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
-    KeyPair issuer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
-
-    Asset selling = new AssetTypeNative();
-    Asset buying = Asset.createNonNativeAsset("USD", issuer);
-    String amount = "0.00001";
-    String price = "0.85334384"; // n=5333399 d=6250000
-    Price priceObj = Price.fromString(price);
-    long offerId = 1;
-
-    ManageOfferOperation operation = new ManageOfferOperation.Builder(selling, buying, amount, price)
-            .setOfferId(offerId)
-            .setSourceAccount(source)
-            .build();
-
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-    ManageSellOfferOperation parsedOperation = (ManageSellOfferOperation) ManageOfferOperation.fromXdr(xdr);
-
-    assertEquals(100L, xdr.getBody().getManageSellOfferOp().getAmount().getInt64().longValue());
-    assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
-    assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
-    assertTrue(parsedOperation.getBuying().equals(buying));
-    assertEquals(amount, parsedOperation.getAmount());
-    assertEquals(price, parsedOperation.getPrice());
-    assertEquals(priceObj.getNumerator(), 5333399);
-    assertEquals(priceObj.getDenominator(), 6250000);
-    assertEquals(offerId, parsedOperation.getOfferId());
-
-    assertEquals(
-            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAMAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
             operation.toXdrBase64());
   }
 
@@ -545,41 +505,6 @@ public class OperationTest {
     Price priceObj = Price.fromString(price);
 
     CreatePassiveSellOfferOperation operation = new CreatePassiveSellOfferOperation.Builder(selling, buying, amount, price)
-            .setSourceAccount(source)
-            .build();
-
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-    CreatePassiveSellOfferOperation parsedOperation = (CreatePassiveSellOfferOperation) CreatePassiveSellOfferOperation.fromXdr(xdr);
-
-    assertEquals(100L, xdr.getBody().getCreatePassiveSellOfferOp().getAmount().getInt64().longValue());
-    assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
-    assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
-    assertTrue(parsedOperation.getBuying().equals(buying));
-    assertEquals(amount, parsedOperation.getAmount());
-    assertEquals(price, parsedOperation.getPrice());
-    assertEquals(priceObj.getNumerator(), 36731261);
-    assertEquals(priceObj.getDenominator(), 12500000);
-
-    assertEquals(
-            "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAQAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZAIweX0Avrwg",
-            operation.toXdrBase64());
-  }
-
-  // TODO: remove in 0.8.0
-  @Test
-  public void testCreatePassiveOfferOperation() throws IOException, FormatException {
-    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
-    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
-    // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
-    KeyPair issuer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
-
-    Asset selling = new AssetTypeNative();
-    Asset buying = Asset.createNonNativeAsset("USD", issuer);
-    String amount = "0.00001";
-    String price = "2.93850088"; // n=36731261 d=12500000
-    Price priceObj = Price.fromString(price);
-
-    CreatePassiveOfferOperation operation = new CreatePassiveOfferOperation.Builder(selling, buying, amount, price)
             .setSourceAccount(source)
             .build();
 

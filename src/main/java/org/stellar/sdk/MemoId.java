@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.primitives.UnsignedLongs;
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
 
@@ -11,9 +12,6 @@ public class MemoId extends Memo {
   private long id;
 
   public MemoId(long id) {
-    if (Long.compareUnsigned(id, 0) < 0) {
-      throw new IllegalArgumentException("id must be a positive number");
-    }
     this.id = id;
   }
 
@@ -29,6 +27,11 @@ public class MemoId extends Memo {
     idXdr.setUint64(id);
     memo.setId(idXdr);
     return memo;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(this.id);
   }
 
   @Override
