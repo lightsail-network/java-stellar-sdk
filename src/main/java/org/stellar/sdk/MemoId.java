@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.primitives.UnsignedLongs;
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
@@ -40,5 +41,10 @@ public class MemoId extends Memo {
     if (o == null || getClass() != o.getClass()) return false;
     MemoId memoId = (MemoId) o;
     return id == memoId.id;
+  }
+
+  @Override
+  public String toString() {
+    return UnsignedLongs.toString(this.id);
   }
 }

@@ -46,4 +46,9 @@ public class MemoText extends Memo {
     MemoText memoText = (MemoText) o;
     return Objects.equal(this.text, memoText.text);
   }
+
+    @Override
+    public String toString() {
+        return text == null ? "" : text;
+    }
 }
