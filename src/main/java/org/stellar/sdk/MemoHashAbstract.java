@@ -73,8 +73,8 @@ abstract class MemoHashAbstract extends Memo {
     return Arrays.equals(this.bytes, that.bytes);
   }
 
-  @Override
-  public String toString() {
-    return bytes == null ? "" : Util.paddedByteArrayToString(bytes);
-  }
+    @Override
+    public String toString() {
+        return bytes == null ? "" : Util.paddedByteArrayToString(bytes);
+    }
 }

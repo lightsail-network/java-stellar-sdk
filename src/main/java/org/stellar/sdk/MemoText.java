@@ -47,8 +47,8 @@ public class MemoText extends Memo {
     return Objects.equal(this.text, memoText.text);
   }
 
-  @Override
-  public String toString() {
-    return text == null ? "" : text;
-  }
+    @Override
+    public String toString() {
+        return text == null ? "" : text;
+    }
 }

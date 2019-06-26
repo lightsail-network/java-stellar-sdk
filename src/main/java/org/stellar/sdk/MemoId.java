@@ -5,6 +5,7 @@ import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
 
+
 /**
  * Represents MEMO_ID.
  */
