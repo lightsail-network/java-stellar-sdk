@@ -1,0 +1,64 @@
+jobs:
+  test:
+    docker:
+      - image: circleci/openjdk:8
+    steps:
+      - checkout
+      - run: ./gradlew check
+  shadow_jar:
+    docker:
+      - image: circleci/openjdk:8
+    steps:
+      - checkout
+      - run: ./gradlew shadowJar
+      - persist_to_workspace:
+          root: build
+          paths:
+            - libs/stellar-sdk.jar
+  deploy:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ./build
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./build/libs
+
+  after_deploy:
+    docker:
+      - image: circleci/openjdk:8
+    steps:
+      - checkout
+      - run: ./after_deploy.sh
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - test
+      - shadow_jar:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - deploy:
+          requires:
+            - shadow_jar
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - after_deploy:
+          requires:
+            - deploy
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
