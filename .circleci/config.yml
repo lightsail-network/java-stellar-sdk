@@ -37,7 +37,10 @@ workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - test
+      - test:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
       - shadow_jar:
           requires:
             - test
