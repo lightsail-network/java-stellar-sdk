@@ -9,6 +9,8 @@ fi
 rm -rf javadoc/* # Remove all files without hidden (.git)
 javadoc -public -splitindex -windowtitle "java-stellar-sdk documentation" -d ./javadoc -sourcepath ./src/main/java/ -subpackages org.stellar.sdk -exclude org.stellar.sdk.xdr
 cd javadoc
+git config user.name "post-release-script"
+git config user.email "post-release-script@stellar.org"
 git add .
 git commit -m $CIRCLE_TAG
 git push origin gh-pages
