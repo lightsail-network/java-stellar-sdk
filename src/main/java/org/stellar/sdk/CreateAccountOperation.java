@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CreateAccountOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -14,10 +13,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CreateAccountOperation extends Operation {
 
-  private final KeyPair destination;
+  private final String destination;
   private final String startingBalance;
 
-  private CreateAccountOperation(KeyPair destination, String startingBalance) {
+  private CreateAccountOperation(String destination, String startingBalance) {
     this.destination = checkNotNull(destination, "destination cannot be null");
     this.startingBalance = checkNotNull(startingBalance, "startingBalance cannot be null");
   }
@@ -32,16 +31,14 @@ public class CreateAccountOperation extends Operation {
   /**
    * Account that is created and funded
    */
-  public KeyPair getDestination() {
+  public String getDestination() {
     return destination;
   }
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     CreateAccountOp op = new CreateAccountOp();
-    AccountID destination = new AccountID();
-    destination.setAccountID(this.destination.getXdrPublicKey());
-    op.setDestination(destination);
+    op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
     Int64 startingBalance = new Int64();
     startingBalance.setInt64(Operation.toXdrAmount(this.startingBalance));
     op.setStartingBalance(startingBalance);
@@ -57,17 +54,17 @@ public class CreateAccountOperation extends Operation {
    * @see CreateAccountOperation
    */
   public static class Builder {
-    private final KeyPair destination;
+    private final String destination;
     private final String startingBalance;
 
-    private KeyPair mSourceAccount;
+    private String mSourceAccount;
 
     /**
      * Construct a new CreateAccount builder from a CreateAccountOp XDR.
      * @param op {@link CreateAccountOp}
      */
     Builder(CreateAccountOp op) {
-      destination = KeyPair.fromXdrPublicKey(op.getDestination().getAccountID());
+      destination = StrKey.encodeStellarAccountId(op.getDestination().getAccountID().getEd25519().getUint256());
       startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64().longValue());
     }
 
@@ -77,7 +74,7 @@ public class CreateAccountOperation extends Operation {
      * @param startingBalance The initial balance to start with in lumens.
      * @throws ArithmeticException when startingBalance has more than 7 decimal places.
      */
-    public Builder(KeyPair destination, String startingBalance) {
+    public Builder(String destination, String startingBalance) {
       this.destination = destination;
       this.startingBalance = startingBalance;
     }
@@ -87,7 +84,7 @@ public class CreateAccountOperation extends Operation {
      * @param account The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(KeyPair account) {
+    public Builder setSourceAccount(String account) {
       mSourceAccount = account;
       return this;
     }

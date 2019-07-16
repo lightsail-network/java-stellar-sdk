@@ -5,7 +5,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -26,9 +25,9 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/offers-for-account.html">Offers for Account</a>
    * @param account Account for which to get offers
    */
-  public OffersRequestBuilder forAccount(KeyPair account) {
+  public OffersRequestBuilder forAccount(String account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account.getAccountId(), "offers");
+    this.setSegments("accounts", account, "offers");
     return this;
   }
 

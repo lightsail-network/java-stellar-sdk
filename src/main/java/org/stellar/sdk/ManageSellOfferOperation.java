@@ -96,7 +96,7 @@ public class ManageSellOfferOperation extends Operation {
         private final String price;
         private long offerId = 0;
 
-        private KeyPair mSourceAccount;
+        private String mSourceAccount;
 
         /**
          * Construct a new ManageSellOffer builder from a ManageSellOfferOp XDR.
@@ -140,7 +140,7 @@ public class ManageSellOfferOperation extends Operation {
          * @param sourceAccount The operation's source account.
          * @return Builder object so you can chain methods.
          */
-        public Builder setSourceAccount(KeyPair sourceAccount) {
+        public Builder setSourceAccount(String sourceAccount) {
             mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
             return this;
         }

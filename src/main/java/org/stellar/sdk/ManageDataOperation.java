@@ -61,7 +61,7 @@ public class ManageDataOperation extends Operation {
     private final String name;
     private final byte[] value;
 
-    private KeyPair mSourceAccount;
+    private String mSourceAccount;
 
     /**
      * Construct a new ManageOffer builder from a ManageDataOp XDR.
@@ -91,7 +91,7 @@ public class ManageDataOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(KeyPair sourceAccount) {
+    public Builder setSourceAccount(String sourceAccount) {
       mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }

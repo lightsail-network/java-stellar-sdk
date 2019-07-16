@@ -5,7 +5,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
 
@@ -52,9 +51,9 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-account.html">Transactions for Account</a>
    * @param account Account for which to get transactions
    */
-  public TransactionsRequestBuilder forAccount(KeyPair account) {
+  public TransactionsRequestBuilder forAccount(String account) {
     account = checkNotNull(account, "account cannot be null");
-    this.setSegments("accounts", account.getAccountId(), "transactions");
+    this.setSegments("accounts", account, "transactions");
     return this;
   }
 

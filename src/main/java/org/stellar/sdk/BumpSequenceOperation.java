@@ -38,7 +38,7 @@ public class BumpSequenceOperation extends Operation  {
     public static class Builder {
         private final long bumpTo;
 
-        private KeyPair mSourceAccount;
+        private String mSourceAccount;
 
         /**
          * Construct a new BumpSequence builder from a BumpSequence XDR.
@@ -61,7 +61,7 @@ public class BumpSequenceOperation extends Operation  {
          * @param sourceAccount The operation's source account.
          * @return Builder object so you can chain methods.
          */
-        public BumpSequenceOperation.Builder setSourceAccount(KeyPair sourceAccount) {
+        public BumpSequenceOperation.Builder setSourceAccount(String sourceAccount) {
             mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
             return this;
         }

@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
-import org.stellar.sdk.xdr.AccountID;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.stellar.sdk.xdr.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class Operation {
   Operation() {}
 
-  private KeyPair mSourceAccount;
+  private String mSourceAccount;
 
   private static final BigDecimal ONE = new BigDecimal(10).pow(7);
 
@@ -37,9 +36,7 @@ public abstract class Operation {
   public org.stellar.sdk.xdr.Operation toXdr() {
     org.stellar.sdk.xdr.Operation xdr = new org.stellar.sdk.xdr.Operation();
     if (getSourceAccount() != null) {
-      AccountID sourceAccount = new AccountID();
-      sourceAccount.setAccountID(getSourceAccount().getXdrPublicKey());
-      xdr.setSourceAccount(sourceAccount);
+      xdr.setSourceAccount(StrKey.encodeToXDRAccountId(mSourceAccount));
     }
     xdr.setBody(toOperationBody());
     return xdr;
@@ -112,7 +109,9 @@ public abstract class Operation {
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }
     if (xdr.getSourceAccount() != null) {
-      operation.setSourceAccount(KeyPair.fromXdrPublicKey(xdr.getSourceAccount().getAccountID()));
+      operation.setSourceAccount(
+          StrKey.encodeStellarAccountId(xdr.getSourceAccount().getAccountID().getEd25519().getUint256())
+      );
     }
     return operation;
   }
@@ -120,16 +119,16 @@ public abstract class Operation {
   /**
    * Returns operation source account.
    */
-  public KeyPair getSourceAccount() {
+  public String getSourceAccount() {
     return mSourceAccount;
   }
 
   /**
    * Sets operation source account.
-   * @param keypair
+   * @param sourceAccount
    */
-  void setSourceAccount(KeyPair keypair) {
-    mSourceAccount = checkNotNull(keypair, "keypair cannot be null");
+  void setSourceAccount(String sourceAccount) {
+    mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
   }
 
   /**

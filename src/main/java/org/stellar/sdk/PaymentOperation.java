@@ -15,11 +15,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PaymentOperation extends Operation {
 
-  private final KeyPair destination;
+  private final String destination;
   private final Asset asset;
   private final String amount;
 
-  private PaymentOperation(KeyPair destination, Asset asset, String amount) {
+  private PaymentOperation(String destination, Asset asset, String amount) {
     this.destination = checkNotNull(destination, "destination cannot be null");
     this.asset = checkNotNull(asset, "asset cannot be null");
     this.amount = checkNotNull(amount, "amount cannot be null");
@@ -28,7 +28,7 @@ public class PaymentOperation extends Operation {
   /**
    * Account that receives the payment.
    */
-  public KeyPair getDestination() {
+  public String getDestination() {
     return destination;
   }
 
@@ -51,9 +51,7 @@ public class PaymentOperation extends Operation {
     PaymentOp op = new PaymentOp();
 
     // destination
-    AccountID destination = new AccountID();
-    destination.setAccountID(this.destination.getXdrPublicKey());
-    op.setDestination(destination);
+    op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
     // asset
     op.setAsset(asset.toXdr());
     // amount
@@ -72,30 +70,30 @@ public class PaymentOperation extends Operation {
    * @see PathPaymentOperation
    */
   public static class Builder {
-    private final KeyPair destination;
+    private final String destination;
     private final Asset asset;
     private final String amount;
 
-    private KeyPair mSourceAccount;
+    private String mSourceAccount;
 
     /**
      * Construct a new PaymentOperation builder from a PaymentOp XDR.
      * @param op {@link PaymentOp}
      */
     Builder(PaymentOp op) {
-      destination = KeyPair.fromXdrPublicKey(op.getDestination().getAccountID());
+      destination = StrKey.encodeStellarAccountId(op.getDestination().getAccountID().getEd25519().getUint256());
       asset = Asset.fromXdr(op.getAsset());
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
     }
 
     /**
      * Creates a new PaymentOperation builder.
-     * @param destination The destination keypair (uses only the public key).
+     * @param destination The destination account id
      * @param asset The asset to send.
      * @param amount The amount to send in lumens.
      * @throws ArithmeticException when amount has more than 7 decimal places.
      */
-    public Builder(KeyPair destination, Asset asset, String amount) {
+    public Builder(String destination, Asset asset, String amount) {
       this.destination = destination;
       this.asset = asset;
       this.amount = amount;
@@ -106,7 +104,7 @@ public class PaymentOperation extends Operation {
      * @param account The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(KeyPair account) {
+    public Builder setSourceAccount(String account) {
       mSourceAccount = account;
       return this;
     }

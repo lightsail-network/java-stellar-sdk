@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
 
@@ -13,25 +12,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AccountMergeOperation extends Operation {
 
-    private final KeyPair destination;
+    private final String destination;
 
-    private AccountMergeOperation(KeyPair destination) {
+    private AccountMergeOperation(String destination) {
         this.destination = checkNotNull(destination, "destination cannot be null");
     }
 
     /**
      * The account that receives the remaining XLM balance of the source account.
      */
-    public KeyPair getDestination() {
+    public String getDestination() {
         return destination;
     }
 
     @Override
     OperationBody toOperationBody() {
         OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
-        AccountID destination = new AccountID();
-        destination.setAccountID(this.destination.getXdrPublicKey());
-        body.setDestination(destination);
+        body.setDestination(StrKey.encodeToXDRAccountId(this.destination));
         body.setDiscriminant(OperationType.ACCOUNT_MERGE);
         return body;
     }
@@ -41,19 +38,21 @@ public class AccountMergeOperation extends Operation {
      * @see AccountMergeOperation
      */
     public static class Builder {
-        private final KeyPair destination;
+        private final String destination;
 
-        private KeyPair mSourceAccount;
+        private String mSourceAccount;
 
         Builder(OperationBody op) {
-            destination = KeyPair.fromXdrPublicKey(op.getDestination().getAccountID());
+            destination = StrKey.encodeStellarAccountId(
+                    op.getDestination().getAccountID().getEd25519().getUint256()
+            );
         }
 
         /**
          * Creates a new AccountMerge builder.
          * @param destination The account that receives the remaining XLM balance of the source account.
          */
-        public Builder(KeyPair destination) {
+        public Builder(String destination) {
             this.destination = destination;
         }
 
@@ -62,7 +61,7 @@ public class AccountMergeOperation extends Operation {
          * @param sourceAccount Source account
          * @return Builder object so you can chain methods.
          */
-        public Builder setSourceAccount(KeyPair sourceAccount) {
+        public Builder setSourceAccount(String sourceAccount) {
             mSourceAccount = sourceAccount;
             return this;
         }

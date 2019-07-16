@@ -14,10 +14,10 @@ public class OfferPageDeserializerTest extends TestCase {
     Page<OfferResponse> transactionsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<OfferResponse>>() {}.getType());
 
     assertEquals(transactionsPage.getRecords().get(0).getId(), new Long(241));
-    assertEquals(transactionsPage.getRecords().get(0).getSeller().getAccountId(), "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD");
+    assertEquals(transactionsPage.getRecords().get(0).getSeller(), "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD");
     assertEquals(transactionsPage.getRecords().get(0).getPagingToken(), "241");
-    assertEquals(transactionsPage.getRecords().get(0).getSelling(), Asset.createNonNativeAsset("INR", KeyPair.fromAccountId("GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD")));
-    assertEquals(transactionsPage.getRecords().get(0).getBuying(), Asset.createNonNativeAsset("USD", KeyPair.fromAccountId("GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD")));
+    assertEquals(transactionsPage.getRecords().get(0).getSelling(), Asset.createNonNativeAsset("INR", "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD"));
+    assertEquals(transactionsPage.getRecords().get(0).getBuying(), Asset.createNonNativeAsset("USD", "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD"));
     assertEquals(transactionsPage.getRecords().get(0).getAmount(), "10.0000000");
     assertEquals(transactionsPage.getRecords().get(0).getPrice(), "11.0000000");
     assertEquals(transactionsPage.getRecords().get(0).getLastModifiedLedger(), new Integer(22200794));

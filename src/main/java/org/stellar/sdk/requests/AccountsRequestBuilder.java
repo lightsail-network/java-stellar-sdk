@@ -5,7 +5,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -40,8 +39,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @param account Account to fetch
    * @throws IOException
    */
-  public AccountResponse account(KeyPair account) throws IOException {
-    this.setSegments("accounts", account.getAccountId());
+  public AccountResponse account(String account) throws IOException {
+    this.setSegments("accounts", account);
     return this.account(this.buildUri());
   }
 

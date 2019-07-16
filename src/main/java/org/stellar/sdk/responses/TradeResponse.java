@@ -2,7 +2,6 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Price;
 ;
 
@@ -27,7 +26,7 @@ public class TradeResponse extends Response implements Pageable {
     protected final boolean baseIsSeller;
 
     @SerializedName("base_account")
-    protected final KeyPair baseAccount;
+    protected final String baseAccount;
     @SerializedName("base_offer_id")
     private final String baseOfferId;
     @SerializedName("base_amount")
@@ -40,7 +39,7 @@ public class TradeResponse extends Response implements Pageable {
     protected final String baseAssetIssuer;
 
     @SerializedName("counter_account")
-    protected final KeyPair counterAccount;
+    protected final String counterAccount;
     @SerializedName("counter_offer_id")
     private final String counterOfferId;
     @SerializedName("counter_amount")
@@ -58,7 +57,7 @@ public class TradeResponse extends Response implements Pageable {
     @SerializedName("_links")
     private TradeResponse.Links links;
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, KeyPair baseAccount, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, KeyPair counterAccount, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
@@ -103,7 +102,7 @@ public class TradeResponse extends Response implements Pageable {
         return baseOfferId;
     }
 
-    public KeyPair getBaseAccount() {
+    public String getBaseAccount() {
         return baseAccount;
     }
 
@@ -127,7 +126,7 @@ public class TradeResponse extends Response implements Pageable {
         return baseAssetIssuer;
     }
 
-    public KeyPair getCounterAccount() {
+    public String getCounterAccount() {
         return counterAccount;
     }
 

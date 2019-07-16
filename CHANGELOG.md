@@ -2,6 +2,11 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.9.0
+* Use strings to represent account ids instead of KeyPair instances because account ids will not necessarily be valid
+  public keys. If you try to parse an invalid public key into a KeyPair you will encounter an exception. To prevent
+  exceptions when parsing horizon responses it is better to represent account ids as strings
+
 ## 0.8.0
 
 * Removed deprecated methods and classes listed in the 0.7.0 changelog entry

@@ -20,7 +20,7 @@ public class EffectsPageDeserializerTest extends TestCase {
 
     AccountCreatedEffectResponse accountCreatedEffect = (AccountCreatedEffectResponse) effectsPage.getRecords().get(8);
     assertEquals(accountCreatedEffect.getStartingBalance(), "10000.0");
-    assertEquals(accountCreatedEffect.getAccount().getAccountId(), "GDIQJ6G5AWSBRMHIZYWVWCFN64Q4BZ4TYEAQRO5GVR4EWR23RKBJ2A4R");
+    assertEquals(accountCreatedEffect.getAccount(), "GDIQJ6G5AWSBRMHIZYWVWCFN64Q4BZ4TYEAQRO5GVR4EWR23RKBJ2A4R");
 
     assertEquals(effectsPage.getLinks().getNext().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&limit=10&cursor=3962163165138945-3");
   }

@@ -58,7 +58,7 @@ public class ChangeTrustOperation extends Operation {
     private final Asset asset;
     private final String limit;
 
-    private KeyPair mSourceAccount;
+    private String mSourceAccount;
 
     Builder(ChangeTrustOp op) {
       asset = Asset.fromXdr(op.getLine());
@@ -81,7 +81,7 @@ public class ChangeTrustOperation extends Operation {
      * @param sourceAccount Source account
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(KeyPair sourceAccount) {
+    public Builder setSourceAccount(String sourceAccount) {
       mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }

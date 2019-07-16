@@ -13,6 +13,16 @@ public class KeyPairTest {
   private static final String SEED = "1123740522f11bfef6b3671f51e159ccf589ccf8965262dd5f97d1721d383dd4";
 
   @Test
+  public void testInvalidPublicKey() {
+    try {
+      KeyPair.fromAccountId("GAH6H2XPCZS27WMKPTZJPTDN7JMBCDHTLU5WQP7TUI2ORA2M5FY5DHNU");
+      fail();
+    } catch (RuntimeException e) {
+      assertEquals("Public key is invalid", e.getMessage());
+    }
+  }
+
+  @Test
   public void testSign() {
     String expectedSig = "587d4b472eeef7d07aafcd0b049640b0bb3f39784118c2e2b73a04fa2f64c9c538b4b2d0f5335e968a480021fdc23e98c0ddf424cb15d8131df8cb6c4bb58309";
     KeyPair keypair = KeyPair.fromSecretSeed(Util.hexToBytes(SEED));

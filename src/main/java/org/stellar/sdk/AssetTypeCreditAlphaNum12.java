@@ -1,8 +1,6 @@
 package org.stellar.sdk;
 
-import org.stellar.sdk.xdr.AccountID;
-import org.stellar.sdk.xdr.AssetCode12;
-import org.stellar.sdk.xdr.AssetType;
+import org.stellar.sdk.xdr.*;
 
 /**
  * Represents all assets with codes 5-12 characters long.
@@ -15,7 +13,7 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
    * @param code Asset code
    * @param issuer Asset issuer
    */
-  public AssetTypeCreditAlphaNum12(String code, KeyPair issuer) {
+  public AssetTypeCreditAlphaNum12(String code, String issuer) {
     super(code, issuer);
     if (code.length() < 5 || code.length() > 12) {
       throw new AssetCodeLengthInvalidException();
@@ -35,9 +33,7 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
     AssetCode12 assetCode12 = new AssetCode12();
     assetCode12.setAssetCode12(Util.paddedByteArray(mCode, 12));
     credit.setAssetCode(assetCode12);
-    AccountID accountID = new AccountID();
-    accountID.setAccountID(mIssuer.getXdrPublicKey());
-    credit.setIssuer(accountID);
+    credit.setIssuer(StrKey.encodeToXDRAccountId(mIssuer));
     xdr.setAlphaNum12(credit);
     return xdr;
   }

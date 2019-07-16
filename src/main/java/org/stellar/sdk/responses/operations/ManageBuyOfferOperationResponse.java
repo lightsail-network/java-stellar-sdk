@@ -3,7 +3,6 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.KeyPair;
 
 /**
  * Represents ManageBuyOffer operation response.
@@ -63,8 +62,7 @@ public class ManageBuyOfferOperationResponse extends OperationResponse {
     if (buyingAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      KeyPair issuer = KeyPair.fromAccountId(buyingAssetIssuer);
-      return Asset.createNonNativeAsset(buyingAssetCode, issuer);
+      return Asset.createNonNativeAsset(buyingAssetCode, buyingAssetIssuer);
     }
   }
 
@@ -72,8 +70,7 @@ public class ManageBuyOfferOperationResponse extends OperationResponse {
     if (sellingAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      KeyPair issuer = KeyPair.fromAccountId(sellingAssetIssuer);
-      return Asset.createNonNativeAsset(sellingAssetCode, issuer);
+      return Asset.createNonNativeAsset(sellingAssetCode, sellingAssetIssuer);
     }
   }
 }
