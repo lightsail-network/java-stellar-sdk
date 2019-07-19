@@ -37,12 +37,23 @@ public class FederationServer {
    * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
    */
   public FederationServer(URI serverUri, String domain) {
+    this(createHttpClient(),serverUri,domain);
+  }
+
+  /**
+   * Creates a new <code>FederationServer</code> instance.
+   * @param serverUri Federation Server URI
+   * @param domain Domain name this federation server is responsible for
+   * @param okHttpClient
+   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
+   */
+  public FederationServer(OkHttpClient okHttpClient, URI serverUri, String domain) {
+    this.httpClient = okHttpClient;
     this.serverUri = HttpUrl.get(serverUri);
     if (this.serverUri == null || (this.serverUri != null && this.httpsConnection && !this.serverUri.isHttps())) {
       throw new FederationServerInvalidException();
     }
     this.domain = domain;
-    this.httpClient = FederationServer.createHttpClient();
   }
 
   private static OkHttpClient createHttpClient() {
