@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class CreateAccountResult  {
+public class CreateAccountResult implements XdrElement {
   public CreateAccountResult () {}
   CreateAccountResultCode code;
   public CreateAccountResultCode getDiscriminant() {
@@ -38,6 +38,9 @@ public class CreateAccountResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static CreateAccountResult decode(XdrDataInputStream stream) throws IOException {
   CreateAccountResult decodedCreateAccountResult = new CreateAccountResult();

@@ -13,7 +13,7 @@ import java.io.IOException;
 //  {
 //      CREATE_ACCOUNT = 0,
 //      PAYMENT = 1,
-//      PATH_PAYMENT = 2,
+//      PATH_PAYMENT_STRICT_RECEIVE = 2,
 //      MANAGE_SELL_OFFER = 3,
 //      CREATE_PASSIVE_SELL_OFFER = 4,
 //      SET_OPTIONS = 5,
@@ -23,14 +23,15 @@ import java.io.IOException;
 //      INFLATION = 9,
 //      MANAGE_DATA = 10,
 //      BUMP_SEQUENCE = 11,
-//      MANAGE_BUY_OFFER = 12
+//      MANAGE_BUY_OFFER = 12,
+//      PATH_PAYMENT_STRICT_SEND = 13
 //  };
 
 //  ===========================================================================
-public enum OperationType  {
+public enum OperationType implements XdrElement {
   CREATE_ACCOUNT(0),
   PAYMENT(1),
-  PATH_PAYMENT(2),
+  PATH_PAYMENT_STRICT_RECEIVE(2),
   MANAGE_SELL_OFFER(3),
   CREATE_PASSIVE_SELL_OFFER(4),
   SET_OPTIONS(5),
@@ -41,6 +42,7 @@ public enum OperationType  {
   MANAGE_DATA(10),
   BUMP_SEQUENCE(11),
   MANAGE_BUY_OFFER(12),
+  PATH_PAYMENT_STRICT_SEND(13),
   ;
   private int mValue;
 
@@ -52,12 +54,12 @@ public enum OperationType  {
       return mValue;
   }
 
-  static OperationType decode(XdrDataInputStream stream) throws IOException {
+  public static OperationType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return CREATE_ACCOUNT;
       case 1: return PAYMENT;
-      case 2: return PATH_PAYMENT;
+      case 2: return PATH_PAYMENT_STRICT_RECEIVE;
       case 3: return MANAGE_SELL_OFFER;
       case 4: return CREATE_PASSIVE_SELL_OFFER;
       case 5: return SET_OPTIONS;
@@ -68,12 +70,17 @@ public enum OperationType  {
       case 10: return MANAGE_DATA;
       case 11: return BUMP_SEQUENCE;
       case 12: return MANAGE_BUY_OFFER;
+      case 13: return PATH_PAYMENT_STRICT_SEND;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  static void encode(XdrDataOutputStream stream, OperationType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, OperationType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

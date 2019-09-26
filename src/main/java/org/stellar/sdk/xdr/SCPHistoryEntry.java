@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SCPHistoryEntry  {
+public class SCPHistoryEntry implements XdrElement {
   public SCPHistoryEntry () {}
   Integer v;
   public Integer getDiscriminant() {
@@ -42,6 +42,9 @@ public class SCPHistoryEntry  {
   SCPHistoryEntryV0.encode(stream, encodedSCPHistoryEntry.v0);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SCPHistoryEntry decode(XdrDataInputStream stream) throws IOException {
   SCPHistoryEntry decodedSCPHistoryEntry = new SCPHistoryEntry();

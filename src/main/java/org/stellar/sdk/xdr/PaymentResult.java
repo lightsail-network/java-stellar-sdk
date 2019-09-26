@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class PaymentResult  {
+public class PaymentResult implements XdrElement {
   public PaymentResult () {}
   PaymentResultCode code;
   public PaymentResultCode getDiscriminant() {
@@ -38,6 +38,9 @@ public class PaymentResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static PaymentResult decode(XdrDataInputStream stream) throws IOException {
   PaymentResult decodedPaymentResult = new PaymentResult();

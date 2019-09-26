@@ -18,7 +18,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum LedgerUpgradeType  {
+public enum LedgerUpgradeType implements XdrElement {
   LEDGER_UPGRADE_VERSION(1),
   LEDGER_UPGRADE_BASE_FEE(2),
   LEDGER_UPGRADE_MAX_TX_SET_SIZE(3),
@@ -34,7 +34,7 @@ public enum LedgerUpgradeType  {
       return mValue;
   }
 
-  static LedgerUpgradeType decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerUpgradeType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 1: return LEDGER_UPGRADE_VERSION;
@@ -46,7 +46,11 @@ public enum LedgerUpgradeType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, LedgerUpgradeType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LedgerUpgradeType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

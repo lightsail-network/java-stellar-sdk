@@ -41,7 +41,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class LedgerKey  {
+public class LedgerKey implements XdrElement {
   public LedgerKey () {}
   LedgerEntryType type;
   public LedgerEntryType getDiscriminant() {
@@ -97,6 +97,9 @@ public class LedgerKey  {
   break;
   }
   }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
+  }
   public static LedgerKey decode(XdrDataInputStream stream) throws IOException {
   LedgerKey decodedLedgerKey = new LedgerKey();
   LedgerEntryType discriminant = LedgerEntryType.decode(stream);
@@ -143,6 +146,9 @@ public class LedgerKey  {
     public static void encode(XdrDataOutputStream stream, LedgerKeyAccount encodedLedgerKeyAccount) throws IOException{
       AccountID.encode(stream, encodedLedgerKeyAccount.accountID);
     }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
     public static LedgerKeyAccount decode(XdrDataInputStream stream) throws IOException {
       LedgerKeyAccount decodedLedgerKeyAccount = new LedgerKeyAccount();
       decodedLedgerKeyAccount.accountID = AccountID.decode(stream);
@@ -182,6 +188,9 @@ public class LedgerKey  {
     public static void encode(XdrDataOutputStream stream, LedgerKeyTrustLine encodedLedgerKeyTrustLine) throws IOException{
       AccountID.encode(stream, encodedLedgerKeyTrustLine.accountID);
       Asset.encode(stream, encodedLedgerKeyTrustLine.asset);
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static LedgerKeyTrustLine decode(XdrDataInputStream stream) throws IOException {
       LedgerKeyTrustLine decodedLedgerKeyTrustLine = new LedgerKeyTrustLine();
@@ -224,6 +233,9 @@ public class LedgerKey  {
       AccountID.encode(stream, encodedLedgerKeyOffer.sellerID);
       Int64.encode(stream, encodedLedgerKeyOffer.offerID);
     }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
     public static LedgerKeyOffer decode(XdrDataInputStream stream) throws IOException {
       LedgerKeyOffer decodedLedgerKeyOffer = new LedgerKeyOffer();
       decodedLedgerKeyOffer.sellerID = AccountID.decode(stream);
@@ -264,6 +276,9 @@ public class LedgerKey  {
     public static void encode(XdrDataOutputStream stream, LedgerKeyData encodedLedgerKeyData) throws IOException{
       AccountID.encode(stream, encodedLedgerKeyData.accountID);
       String64.encode(stream, encodedLedgerKeyData.dataName);
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static LedgerKeyData decode(XdrDataInputStream stream) throws IOException {
       LedgerKeyData decodedLedgerKeyData = new LedgerKeyData();

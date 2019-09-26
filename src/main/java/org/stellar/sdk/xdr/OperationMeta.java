@@ -16,7 +16,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class OperationMeta  {
+public class OperationMeta implements XdrElement {
   public OperationMeta () {}
   private LedgerEntryChanges changes;
   public LedgerEntryChanges getChanges() {
@@ -27,6 +27,9 @@ public class OperationMeta  {
   }
   public static void encode(XdrDataOutputStream stream, OperationMeta encodedOperationMeta) throws IOException{
     LedgerEntryChanges.encode(stream, encodedOperationMeta.changes);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static OperationMeta decode(XdrDataInputStream stream) throws IOException {
     OperationMeta decodedOperationMeta = new OperationMeta();

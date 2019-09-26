@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class TransactionResultPair  {
+public class TransactionResultPair implements XdrElement {
   public TransactionResultPair () {}
   private Hash transactionHash;
   public Hash getTransactionHash() {
@@ -36,6 +36,9 @@ public class TransactionResultPair  {
   public static void encode(XdrDataOutputStream stream, TransactionResultPair encodedTransactionResultPair) throws IOException{
     Hash.encode(stream, encodedTransactionResultPair.transactionHash);
     TransactionResult.encode(stream, encodedTransactionResultPair.result);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionResultPair decode(XdrDataInputStream stream) throws IOException {
     TransactionResultPair decodedTransactionResultPair = new TransactionResultPair();

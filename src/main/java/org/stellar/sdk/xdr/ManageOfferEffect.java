@@ -17,7 +17,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ManageOfferEffect  {
+public enum ManageOfferEffect implements XdrElement {
   MANAGE_OFFER_CREATED(0),
   MANAGE_OFFER_UPDATED(1),
   MANAGE_OFFER_DELETED(2),
@@ -32,7 +32,7 @@ public enum ManageOfferEffect  {
       return mValue;
   }
 
-  static ManageOfferEffect decode(XdrDataInputStream stream) throws IOException {
+  public static ManageOfferEffect decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return MANAGE_OFFER_CREATED;
@@ -43,7 +43,11 @@ public enum ManageOfferEffect  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, ManageOfferEffect value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ManageOfferEffect value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

@@ -18,7 +18,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class LedgerSCPMessages  {
+public class LedgerSCPMessages implements XdrElement {
   public LedgerSCPMessages () {}
   private Uint32 ledgerSeq;
   public Uint32 getLedgerSeq() {
@@ -41,6 +41,9 @@ public class LedgerSCPMessages  {
     for (int i = 0; i < messagessize; i++) {
       SCPEnvelope.encode(stream, encodedLedgerSCPMessages.messages[i]);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static LedgerSCPMessages decode(XdrDataInputStream stream) throws IOException {
     LedgerSCPMessages decodedLedgerSCPMessages = new LedgerSCPMessages();

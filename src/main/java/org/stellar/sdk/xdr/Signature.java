@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef opaque Signature<64>;
 
 //  ===========================================================================
-public class Signature  {
+public class Signature implements XdrElement {
   private byte[] Signature;
   public byte[] getSignature() {
     return this.Signature;
@@ -25,6 +25,9 @@ public class Signature  {
   int Signaturesize = encodedSignature.Signature.length;
   stream.writeInt(Signaturesize);
   stream.write(encodedSignature.getSignature(), 0, Signaturesize);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Signature decode(XdrDataInputStream stream) throws IOException {
     Signature decodedSignature = new Signature();

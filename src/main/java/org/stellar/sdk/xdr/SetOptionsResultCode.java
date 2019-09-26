@@ -26,7 +26,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum SetOptionsResultCode  {
+public enum SetOptionsResultCode implements XdrElement {
   SET_OPTIONS_SUCCESS(0),
   SET_OPTIONS_LOW_RESERVE(-1),
   SET_OPTIONS_TOO_MANY_SIGNERS(-2),
@@ -48,7 +48,7 @@ public enum SetOptionsResultCode  {
       return mValue;
   }
 
-  static SetOptionsResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static SetOptionsResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return SET_OPTIONS_SUCCESS;
@@ -66,7 +66,11 @@ public enum SetOptionsResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, SetOptionsResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, SetOptionsResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

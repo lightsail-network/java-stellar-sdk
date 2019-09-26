@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class Error  {
+public class Error implements XdrElement {
   public Error () {}
   private ErrorCode code;
   public ErrorCode getCode() {
@@ -36,6 +36,9 @@ public class Error  {
   public static void encode(XdrDataOutputStream stream, Error encodedError) throws IOException{
     ErrorCode.encode(stream, encodedError.code);
     stream.writeString(encodedError.msg);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Error decode(XdrDataInputStream stream) throws IOException {
     Error decodedError = new Error();

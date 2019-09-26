@@ -16,7 +16,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class HmacSha256Mac  {
+public class HmacSha256Mac implements XdrElement {
   public HmacSha256Mac () {}
   private byte[] mac;
   public byte[] getMac() {
@@ -28,6 +28,9 @@ public class HmacSha256Mac  {
   public static void encode(XdrDataOutputStream stream, HmacSha256Mac encodedHmacSha256Mac) throws IOException{
     int macsize = encodedHmacSha256Mac.mac.length;
     stream.write(encodedHmacSha256Mac.getMac(), 0, macsize);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static HmacSha256Mac decode(XdrDataInputStream stream) throws IOException {
     HmacSha256Mac decodedHmacSha256Mac = new HmacSha256Mac();

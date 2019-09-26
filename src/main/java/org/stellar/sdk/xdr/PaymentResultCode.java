@@ -27,7 +27,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum PaymentResultCode  {
+public enum PaymentResultCode implements XdrElement {
   PAYMENT_SUCCESS(0),
   PAYMENT_MALFORMED(-1),
   PAYMENT_UNDERFUNDED(-2),
@@ -49,7 +49,7 @@ public enum PaymentResultCode  {
       return mValue;
   }
 
-  static PaymentResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static PaymentResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return PAYMENT_SUCCESS;
@@ -67,7 +67,11 @@ public enum PaymentResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, PaymentResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, PaymentResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

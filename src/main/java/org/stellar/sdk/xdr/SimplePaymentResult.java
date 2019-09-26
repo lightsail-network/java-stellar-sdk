@@ -18,7 +18,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SimplePaymentResult  {
+public class SimplePaymentResult implements XdrElement {
   public SimplePaymentResult () {}
   private AccountID destination;
   public AccountID getDestination() {
@@ -45,6 +45,9 @@ public class SimplePaymentResult  {
     AccountID.encode(stream, encodedSimplePaymentResult.destination);
     Asset.encode(stream, encodedSimplePaymentResult.asset);
     Int64.encode(stream, encodedSimplePaymentResult.amount);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SimplePaymentResult decode(XdrDataInputStream stream) throws IOException {
     SimplePaymentResult decodedSimplePaymentResult = new SimplePaymentResult();

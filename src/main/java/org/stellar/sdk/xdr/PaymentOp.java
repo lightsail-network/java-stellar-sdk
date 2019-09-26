@@ -18,7 +18,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class PaymentOp  {
+public class PaymentOp implements XdrElement {
   public PaymentOp () {}
   private AccountID destination;
   public AccountID getDestination() {
@@ -45,6 +45,9 @@ public class PaymentOp  {
     AccountID.encode(stream, encodedPaymentOp.destination);
     Asset.encode(stream, encodedPaymentOp.asset);
     Int64.encode(stream, encodedPaymentOp.amount);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static PaymentOp decode(XdrDataInputStream stream) throws IOException {
     PaymentOp decodedPaymentOp = new PaymentOp();

@@ -17,7 +17,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum CryptoKeyType  {
+public enum CryptoKeyType implements XdrElement {
   KEY_TYPE_ED25519(0),
   KEY_TYPE_PRE_AUTH_TX(1),
   KEY_TYPE_HASH_X(2),
@@ -32,7 +32,7 @@ public enum CryptoKeyType  {
       return mValue;
   }
 
-  static CryptoKeyType decode(XdrDataInputStream stream) throws IOException {
+  public static CryptoKeyType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return KEY_TYPE_ED25519;
@@ -43,7 +43,11 @@ public enum CryptoKeyType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, CryptoKeyType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, CryptoKeyType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

@@ -19,7 +19,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum MemoType  {
+public enum MemoType implements XdrElement {
   MEMO_NONE(0),
   MEMO_TEXT(1),
   MEMO_ID(2),
@@ -36,7 +36,7 @@ public enum MemoType  {
       return mValue;
   }
 
-  static MemoType decode(XdrDataInputStream stream) throws IOException {
+  public static MemoType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return MEMO_NONE;
@@ -49,7 +49,11 @@ public enum MemoType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, MemoType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, MemoType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

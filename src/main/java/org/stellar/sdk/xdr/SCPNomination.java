@@ -19,7 +19,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class SCPNomination  {
+public class SCPNomination implements XdrElement {
   public SCPNomination () {}
   private Hash quorumSetHash;
   public Hash getQuorumSetHash() {
@@ -54,6 +54,9 @@ public class SCPNomination  {
     for (int i = 0; i < acceptedsize; i++) {
       Value.encode(stream, encodedSCPNomination.accepted[i]);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SCPNomination decode(XdrDataInputStream stream) throws IOException {
     SCPNomination decodedSCPNomination = new SCPNomination();

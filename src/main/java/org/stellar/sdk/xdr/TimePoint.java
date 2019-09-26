@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  typedef uint64 TimePoint;
 
 //  ===========================================================================
-public class TimePoint  {
+public class TimePoint implements XdrElement {
   private Uint64 TimePoint;
   public Uint64 getTimePoint() {
     return this.TimePoint;
@@ -23,6 +23,9 @@ public class TimePoint  {
   }
   public static void encode(XdrDataOutputStream stream, TimePoint  encodedTimePoint) throws IOException {
   Uint64.encode(stream, encodedTimePoint.TimePoint);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TimePoint decode(XdrDataInputStream stream) throws IOException {
     TimePoint decodedTimePoint = new TimePoint();

@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class ManageDataOp  {
+public class ManageDataOp implements XdrElement {
   public ManageDataOp () {}
   private String64 dataName;
   public String64 getDataName() {
@@ -41,6 +41,9 @@ public class ManageDataOp  {
     } else {
     stream.writeInt(0);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static ManageDataOp decode(XdrDataInputStream stream) throws IOException {
     ManageDataOp decodedManageDataOp = new ManageDataOp();

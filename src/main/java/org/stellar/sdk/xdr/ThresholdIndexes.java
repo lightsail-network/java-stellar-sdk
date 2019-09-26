@@ -18,7 +18,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ThresholdIndexes  {
+public enum ThresholdIndexes implements XdrElement {
   THRESHOLD_MASTER_WEIGHT(0),
   THRESHOLD_LOW(1),
   THRESHOLD_MED(2),
@@ -34,7 +34,7 @@ public enum ThresholdIndexes  {
       return mValue;
   }
 
-  static ThresholdIndexes decode(XdrDataInputStream stream) throws IOException {
+  public static ThresholdIndexes decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return THRESHOLD_MASTER_WEIGHT;
@@ -46,7 +46,11 @@ public enum ThresholdIndexes  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, ThresholdIndexes value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ThresholdIndexes value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

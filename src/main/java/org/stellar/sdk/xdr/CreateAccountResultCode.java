@@ -23,7 +23,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum CreateAccountResultCode  {
+public enum CreateAccountResultCode implements XdrElement {
   CREATE_ACCOUNT_SUCCESS(0),
   CREATE_ACCOUNT_MALFORMED(-1),
   CREATE_ACCOUNT_UNDERFUNDED(-2),
@@ -40,7 +40,7 @@ public enum CreateAccountResultCode  {
       return mValue;
   }
 
-  static CreateAccountResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static CreateAccountResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return CREATE_ACCOUNT_SUCCESS;
@@ -53,7 +53,11 @@ public enum CreateAccountResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, CreateAccountResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, CreateAccountResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

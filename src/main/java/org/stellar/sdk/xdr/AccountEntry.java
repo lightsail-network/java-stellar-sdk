@@ -51,7 +51,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class AccountEntry  {
+public class AccountEntry implements XdrElement {
   public AccountEntry () {}
   private AccountID accountID;
   public AccountID getAccountID() {
@@ -144,6 +144,9 @@ public class AccountEntry  {
     }
     AccountEntryExt.encode(stream, encodedAccountEntry.ext);
   }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
+  }
   public static AccountEntry decode(XdrDataInputStream stream) throws IOException {
     AccountEntry decodedAccountEntry = new AccountEntry();
     decodedAccountEntry.accountID = AccountID.decode(stream);
@@ -207,6 +210,9 @@ public class AccountEntry  {
     break;
     }
     }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
     public static AccountEntryExt decode(XdrDataInputStream stream) throws IOException {
     AccountEntryExt decodedAccountEntryExt = new AccountEntryExt();
     Integer discriminant = stream.readInt();
@@ -254,6 +260,9 @@ public class AccountEntry  {
         Liabilities.encode(stream, encodedAccountEntryV1.liabilities);
         AccountEntryV1Ext.encode(stream, encodedAccountEntryV1.ext);
       }
+      public void encode(XdrDataOutputStream stream) throws IOException {
+        encode(stream, this);
+      }
       public static AccountEntryV1 decode(XdrDataInputStream stream) throws IOException {
         AccountEntryV1 decodedAccountEntryV1 = new AccountEntryV1();
         decodedAccountEntryV1.liabilities = Liabilities.decode(stream);
@@ -291,6 +300,9 @@ public class AccountEntry  {
         case 0:
         break;
         }
+        }
+        public void encode(XdrDataOutputStream stream) throws IOException {
+          encode(stream, this);
         }
         public static AccountEntryV1Ext decode(XdrDataInputStream stream) throws IOException {
         AccountEntryV1Ext decodedAccountEntryV1Ext = new AccountEntryV1Ext();

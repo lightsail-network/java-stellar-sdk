@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef opaque uint256[32];
 
 //  ===========================================================================
-public class Uint256  {
+public class Uint256 implements XdrElement {
   private byte[] uint256;
   public byte[] getUint256() {
     return this.uint256;
@@ -24,6 +24,9 @@ public class Uint256  {
   public static void encode(XdrDataOutputStream stream, Uint256  encodedUint256) throws IOException {
   int uint256size = encodedUint256.uint256.length;
   stream.write(encodedUint256.getUint256(), 0, uint256size);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Uint256 decode(XdrDataInputStream stream) throws IOException {
     Uint256 decodedUint256 = new Uint256();

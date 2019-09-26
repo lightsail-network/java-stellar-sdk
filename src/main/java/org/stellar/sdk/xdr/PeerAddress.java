@@ -26,7 +26,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class PeerAddress  {
+public class PeerAddress implements XdrElement {
   public PeerAddress () {}
   private PeerAddressIp ip;
   public PeerAddressIp getIp() {
@@ -53,6 +53,9 @@ public class PeerAddress  {
     PeerAddressIp.encode(stream, encodedPeerAddress.ip);
     Uint32.encode(stream, encodedPeerAddress.port);
     Uint32.encode(stream, encodedPeerAddress.numFailures);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static PeerAddress decode(XdrDataInputStream stream) throws IOException {
     PeerAddress decodedPeerAddress = new PeerAddress();
@@ -112,6 +115,9 @@ public class PeerAddress  {
     stream.write(encodedPeerAddressIp.getIpv6(), 0, ipv6size);
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static PeerAddressIp decode(XdrDataInputStream stream) throws IOException {
     PeerAddressIp decodedPeerAddressIp = new PeerAddressIp();

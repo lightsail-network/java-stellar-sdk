@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef LedgerEntryChange LedgerEntryChanges<>;
 
 //  ===========================================================================
-public class LedgerEntryChanges  {
+public class LedgerEntryChanges implements XdrElement {
   private LedgerEntryChange[] LedgerEntryChanges;
   public LedgerEntryChange[] getLedgerEntryChanges() {
     return this.LedgerEntryChanges;
@@ -27,6 +27,9 @@ public class LedgerEntryChanges  {
   for (int i = 0; i < LedgerEntryChangessize; i++) {
     LedgerEntryChange.encode(stream, encodedLedgerEntryChanges.LedgerEntryChanges[i]);
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static LedgerEntryChanges decode(XdrDataInputStream stream) throws IOException {
     LedgerEntryChanges decodedLedgerEntryChanges = new LedgerEntryChanges();

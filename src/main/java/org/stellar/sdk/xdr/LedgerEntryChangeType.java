@@ -18,7 +18,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum LedgerEntryChangeType  {
+public enum LedgerEntryChangeType implements XdrElement {
   LEDGER_ENTRY_CREATED(0),
   LEDGER_ENTRY_UPDATED(1),
   LEDGER_ENTRY_REMOVED(2),
@@ -34,7 +34,7 @@ public enum LedgerEntryChangeType  {
       return mValue;
   }
 
-  static LedgerEntryChangeType decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerEntryChangeType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return LEDGER_ENTRY_CREATED;
@@ -46,7 +46,11 @@ public enum LedgerEntryChangeType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, LedgerEntryChangeType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LedgerEntryChangeType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

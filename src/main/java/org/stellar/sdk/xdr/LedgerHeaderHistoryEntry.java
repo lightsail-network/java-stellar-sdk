@@ -25,7 +25,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class LedgerHeaderHistoryEntry  {
+public class LedgerHeaderHistoryEntry implements XdrElement {
   public LedgerHeaderHistoryEntry () {}
   private Hash hash;
   public Hash getHash() {
@@ -52,6 +52,9 @@ public class LedgerHeaderHistoryEntry  {
     Hash.encode(stream, encodedLedgerHeaderHistoryEntry.hash);
     LedgerHeader.encode(stream, encodedLedgerHeaderHistoryEntry.header);
     LedgerHeaderHistoryEntryExt.encode(stream, encodedLedgerHeaderHistoryEntry.ext);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static LedgerHeaderHistoryEntry decode(XdrDataInputStream stream) throws IOException {
     LedgerHeaderHistoryEntry decodedLedgerHeaderHistoryEntry = new LedgerHeaderHistoryEntry();
@@ -91,6 +94,9 @@ public class LedgerHeaderHistoryEntry  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static LedgerHeaderHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
     LedgerHeaderHistoryEntryExt decodedLedgerHeaderHistoryEntryExt = new LedgerHeaderHistoryEntryExt();

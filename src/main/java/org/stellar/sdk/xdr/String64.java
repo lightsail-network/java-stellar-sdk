@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  typedef string string64<64>;
 
 //  ===========================================================================
-public class String64  {
+public class String64 implements XdrElement {
   private String string64;
   public String getString64() {
     return this.string64;
@@ -23,6 +23,9 @@ public class String64  {
   }
   public static void encode(XdrDataOutputStream stream, String64  encodedString64) throws IOException {
   stream.writeString(encodedString64.string64);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static String64 decode(XdrDataInputStream stream) throws IOException {
     String64 decodedString64 = new String64();

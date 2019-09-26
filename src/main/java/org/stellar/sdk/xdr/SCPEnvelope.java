@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SCPEnvelope  {
+public class SCPEnvelope implements XdrElement {
   public SCPEnvelope () {}
   private SCPStatement statement;
   public SCPStatement getStatement() {
@@ -36,6 +36,9 @@ public class SCPEnvelope  {
   public static void encode(XdrDataOutputStream stream, SCPEnvelope encodedSCPEnvelope) throws IOException{
     SCPStatement.encode(stream, encodedSCPEnvelope.statement);
     Signature.encode(stream, encodedSCPEnvelope.signature);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SCPEnvelope decode(XdrDataInputStream stream) throws IOException {
     SCPEnvelope decodedSCPEnvelope = new SCPEnvelope();

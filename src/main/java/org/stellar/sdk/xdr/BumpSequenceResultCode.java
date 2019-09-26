@@ -18,7 +18,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum BumpSequenceResultCode  {
+public enum BumpSequenceResultCode implements XdrElement {
   BUMP_SEQUENCE_SUCCESS(0),
   BUMP_SEQUENCE_BAD_SEQ(-1),
   ;
@@ -32,7 +32,7 @@ public enum BumpSequenceResultCode  {
       return mValue;
   }
 
-  static BumpSequenceResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static BumpSequenceResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return BUMP_SEQUENCE_SUCCESS;
@@ -42,7 +42,11 @@ public enum BumpSequenceResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, BumpSequenceResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, BumpSequenceResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

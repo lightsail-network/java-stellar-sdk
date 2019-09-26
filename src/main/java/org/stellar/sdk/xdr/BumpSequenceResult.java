@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class BumpSequenceResult  {
+public class BumpSequenceResult implements XdrElement {
   public BumpSequenceResult () {}
   BumpSequenceResultCode code;
   public BumpSequenceResultCode getDiscriminant() {
@@ -38,6 +38,9 @@ public class BumpSequenceResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static BumpSequenceResult decode(XdrDataInputStream stream) throws IOException {
   BumpSequenceResult decodedBumpSequenceResult = new BumpSequenceResult();

@@ -23,7 +23,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class LedgerUpgrade  {
+public class LedgerUpgrade implements XdrElement {
   public LedgerUpgrade () {}
   LedgerUpgradeType type;
   public LedgerUpgradeType getDiscriminant() {
@@ -78,6 +78,9 @@ public class LedgerUpgrade  {
   Uint32.encode(stream, encodedLedgerUpgrade.newBaseReserve);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static LedgerUpgrade decode(XdrDataInputStream stream) throws IOException {
   LedgerUpgrade decodedLedgerUpgrade = new LedgerUpgrade();

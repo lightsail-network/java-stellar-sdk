@@ -19,7 +19,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ErrorCode  {
+public enum ErrorCode implements XdrElement {
   ERR_MISC(0),
   ERR_DATA(1),
   ERR_CONF(2),
@@ -36,7 +36,7 @@ public enum ErrorCode  {
       return mValue;
   }
 
-  static ErrorCode decode(XdrDataInputStream stream) throws IOException {
+  public static ErrorCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return ERR_MISC;
@@ -49,7 +49,11 @@ public enum ErrorCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, ErrorCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ErrorCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

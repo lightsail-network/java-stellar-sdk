@@ -16,7 +16,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum IPAddrType  {
+public enum IPAddrType implements XdrElement {
   IPv4(0),
   IPv6(1),
   ;
@@ -30,7 +30,7 @@ public enum IPAddrType  {
       return mValue;
   }
 
-  static IPAddrType decode(XdrDataInputStream stream) throws IOException {
+  public static IPAddrType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return IPv4;
@@ -40,7 +40,11 @@ public enum IPAddrType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, IPAddrType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, IPAddrType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

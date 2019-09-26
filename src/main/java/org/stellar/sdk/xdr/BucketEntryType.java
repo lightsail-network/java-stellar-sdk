@@ -20,7 +20,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum BucketEntryType  {
+public enum BucketEntryType implements XdrElement {
   METAENTRY(-1),
   LIVEENTRY(0),
   DEADENTRY(1),
@@ -36,7 +36,7 @@ public enum BucketEntryType  {
       return mValue;
   }
 
-  static BucketEntryType decode(XdrDataInputStream stream) throws IOException {
+  public static BucketEntryType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case -1: return METAENTRY;
@@ -48,7 +48,11 @@ public enum BucketEntryType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, BucketEntryType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, BucketEntryType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

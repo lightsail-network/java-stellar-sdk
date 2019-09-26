@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  typedef string string32<32>;
 
 //  ===========================================================================
-public class String32  {
+public class String32 implements XdrElement {
   private String string32;
   public String getString32() {
     return this.string32;
@@ -23,6 +23,9 @@ public class String32  {
   }
   public static void encode(XdrDataOutputStream stream, String32  encodedString32) throws IOException {
   stream.writeString(encodedString32.string32);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static String32 decode(XdrDataInputStream stream) throws IOException {
     String32 decodedString32 = new String32();
