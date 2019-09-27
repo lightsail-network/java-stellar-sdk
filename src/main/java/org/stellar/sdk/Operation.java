@@ -13,7 +13,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Abstract class for operations.
  */
 public abstract class Operation {
-  Operation() {}
+  Operation() {
+  }
 
   private String mSourceAccount;
 
@@ -60,6 +61,7 @@ public abstract class Operation {
 
   /**
    * Returns new Operation object from Operation XDR object.
+   *
    * @param xdr XDR object
    */
   public static Operation fromXdr(org.stellar.sdk.xdr.Operation xdr) {
@@ -72,8 +74,9 @@ public abstract class Operation {
       case PAYMENT:
         operation = new PaymentOperation.Builder(body.getPaymentOp()).build();
         break;
-      case PATH_PAYMENT:
-        operation = new PathPaymentOperation.Builder(body.getPathPaymentOp()).build();
+      case PATH_PAYMENT_STRICT_RECEIVE:
+        // Will change to PathPaymentStrictReceiveOperation in 0.11.0
+        operation = new PathPaymentOperation.Builder(body.getPathPaymentStrictReceiveOp()).build();
         break;
       case MANAGE_SELL_OFFER:
         operation = new ManageSellOfferOperation.Builder(body.getManageSellOfferOp()).build();
@@ -105,6 +108,9 @@ public abstract class Operation {
       case BUMP_SEQUENCE:
         operation = new BumpSequenceOperation.Builder(body.getBumpSequenceOp()).build();
         break;
+      case PATH_PAYMENT_STRICT_SEND:
+        operation = new PathPaymentStrictSendOperation.Builder(body.getPathPaymentStrictSendOp()).build();
+        break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }
@@ -125,6 +131,7 @@ public abstract class Operation {
 
   /**
    * Sets operation source account.
+   *
    * @param sourceAccount
    */
   void setSourceAccount(String sourceAccount) {
@@ -133,6 +140,7 @@ public abstract class Operation {
 
   /**
    * Generates OperationBody XDR object
+   *
    * @return OperationBody XDR object
    */
   abstract org.stellar.sdk.xdr.Operation.OperationBody toOperationBody();

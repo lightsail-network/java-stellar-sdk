@@ -2,6 +2,22 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.10.0
+
+### Deprecations
+
+The following methods are deprecated and will be removed in 0.11.0. Please switch to new methods and classes.
+
+Deprecated | New method/class
+-|-
+`org.stellar.sdk.PathPaymentOperation`                              | `org.stellar.sdk.PathPaymentStrictReceiveOperation`
+`org.stellar.sdk.responses.operations.PathPaymentOperationResponse` | `org.stellar.sdk.responses.operations.PathPaymentStrictReceiveOperationResponse`
+
+### Changes
+
+* Stellar Protocol 12 compatibility.
+* Include `path` property in path payment operation responses.
+
 ## 0.9.0
 * Use strings to represent account ids instead of KeyPair instances because account ids will not necessarily be valid
   public keys. If you try to parse an invalid public key into a KeyPair you will encounter an exception. To prevent

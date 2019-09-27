@@ -3,33 +3,34 @@ package org.stellar.sdk;
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
-import org.stellar.sdk.xdr.PathPaymentStrictReceiveOp;
+import org.stellar.sdk.xdr.PathPaymentStrictSendOp;
 
 import java.util.Arrays;
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * @deprecated Will be removed in version 0.11.0, use {@link PathPaymentStrictReceiveOperation}
+ * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment" target="_blank">PathPaymentStrictSend</a> operation.
+ *
+ * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
  */
-public class PathPaymentOperation extends Operation {
+public class PathPaymentStrictSendOperation extends Operation {
 
   private final Asset sendAsset;
-  private final String sendMax;
+  private final String sendAmount;
   private final String destination;
   private final Asset destAsset;
-  private final String destAmount;
+  private final String destMin;
   private final Asset[] path;
 
-  private PathPaymentOperation(Asset sendAsset, String sendMax, String destination,
-      Asset destAsset, String destAmount, Asset[] path) {
+  private PathPaymentStrictSendOperation(Asset sendAsset, String sendAmount, String destination,
+                                         Asset destAsset, String destMin, Asset[] path) {
     this.sendAsset = checkNotNull(sendAsset, "sendAsset cannot be null");
-    this.sendMax = checkNotNull(sendMax, "sendMax cannot be null");
+    this.sendAmount = checkNotNull(sendAmount, "sendAmount cannot be null");
     this.destination = checkNotNull(destination, "destination cannot be null");
     this.destAsset = checkNotNull(destAsset, "destAsset cannot be null");
-    this.destAmount = checkNotNull(destAmount, "destAmount cannot be null");
+    this.destMin = checkNotNull(destMin, "destMin cannot be null");
     if (path == null) {
       this.path = new Asset[0];
     } else {
@@ -46,10 +47,10 @@ public class PathPaymentOperation extends Operation {
   }
 
   /**
-   * The maximum amount of send asset to deduct (excluding fees)
+   * The amount of send asset to deduct (excluding fees)
    */
-  public String getSendMax() {
-    return sendMax;
+  public String getSendAmount() {
+    return sendAmount;
   }
 
   /**
@@ -67,10 +68,10 @@ public class PathPaymentOperation extends Operation {
   }
 
   /**
-   * The amount of destination asset the destination account receives.
+   * The minimum amount of destination asset the destination account receives.
    */
-  public String getDestAmount() {
-    return destAmount;
+  public String getDestMin() {
+    return destMin;
   }
 
   /**
@@ -82,22 +83,22 @@ public class PathPaymentOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
-    PathPaymentStrictReceiveOp op = new PathPaymentStrictReceiveOp();
+    PathPaymentStrictSendOp op = new PathPaymentStrictSendOp();
 
     // sendAsset
     op.setSendAsset(sendAsset.toXdr());
-    // sendMax
-    Int64 sendMax = new Int64();
-    sendMax.setInt64(Operation.toXdrAmount(this.sendMax));
-    op.setSendMax(sendMax);
+    // sendAmount
+    Int64 sendAmount = new Int64();
+    sendAmount.setInt64(Operation.toXdrAmount(this.sendAmount));
+    op.setSendAmount(sendAmount);
     // destination
     op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
     // destAsset
     op.setDestAsset(destAsset.toXdr());
-    // destAmount
-    Int64 destAmount = new Int64();
-    destAmount.setInt64(Operation.toXdrAmount(this.destAmount));
-    op.setDestAmount(destAmount);
+    // destMin
+    Int64 destMin = new Int64();
+    destMin.setInt64(Operation.toXdrAmount(this.destMin));
+    op.setDestMin(destMin);
     // path
     org.stellar.sdk.xdr.Asset[] path = new org.stellar.sdk.xdr.Asset[this.path.length];
     for (int i = 0; i < this.path.length; i++) {
@@ -106,31 +107,32 @@ public class PathPaymentOperation extends Operation {
     op.setPath(path);
 
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
-    body.setDiscriminant(OperationType.PATH_PAYMENT_STRICT_RECEIVE);
-    body.setPathPaymentStrictReceiveOp(op);
+    body.setDiscriminant(OperationType.PATH_PAYMENT_STRICT_SEND);
+    body.setPathPaymentStrictSendOp(op);
     return body;
   }
 
   /**
    * Builds PathPayment operation.
-   * @see PathPaymentOperation
+   *
+   * @see PathPaymentStrictSendOperation
    */
   public static class Builder {
     private final Asset sendAsset;
-    private final String sendMax;
+    private final String sendAmount;
     private final String destination;
     private final Asset destAsset;
-    private final String destAmount;
+    private final String destMin;
     private Asset[] path;
 
     private String mSourceAccount;
 
-    Builder(PathPaymentStrictReceiveOp op) {
+    Builder(PathPaymentStrictSendOp op) {
       sendAsset = Asset.fromXdr(op.getSendAsset());
-      sendMax = Operation.fromXdrAmount(op.getSendMax().getInt64().longValue());
+      sendAmount = Operation.fromXdrAmount(op.getSendAmount().getInt64().longValue());
       destination = StrKey.encodeStellarAccountId(op.getDestination().getAccountID().getEd25519().getUint256());
       destAsset = Asset.fromXdr(op.getDestAsset());
-      destAmount = Operation.fromXdrAmount(op.getDestAmount().getInt64().longValue());
+      destMin = Operation.fromXdrAmount(op.getDestMin().getInt64().longValue());
       path = new Asset[op.getPath().length];
       for (int i = 0; i < op.getPath().length; i++) {
         path[i] = Asset.fromXdr(op.getPath()[i]);
@@ -138,29 +140,31 @@ public class PathPaymentOperation extends Operation {
     }
 
     /**
-     * Creates a new PathPaymentOperation builder.
-     * @param sendAsset The asset deducted from the sender's account.
-     * @param sendMax The asset deducted from the sender's account.
+     * Creates a new PathPaymentStrictSendOperation builder.
+     *
+     * @param sendAsset   The asset deducted from the sender's account.
+     * @param sendAmount  The asset deducted from the sender's account.
      * @param destination Payment destination
-     * @param destAsset The asset the destination account receives.
-     * @param destAmount The amount of destination asset the destination account receives.
-     * @throws ArithmeticException when sendMax or destAmount has more than 7 decimal places.
+     * @param destAsset   The asset the destination account receives.
+     * @param destMin     The minimum amount of destination asset the destination account receives.
+     * @throws ArithmeticException when sendAmount or destMin has more than 7 decimal places.
      */
-    public Builder(Asset sendAsset, String sendMax, String destination,
-        Asset destAsset, String destAmount) {
+    public Builder(Asset sendAsset, String sendAmount, String destination,
+                   Asset destAsset, String destMin) {
       this.sendAsset = checkNotNull(sendAsset, "sendAsset cannot be null");
-      this.sendMax = checkNotNull(sendMax, "sendMax cannot be null");
+      this.sendAmount = checkNotNull(sendAmount, "sendAmount cannot be null");
       this.destination = checkNotNull(destination, "destination cannot be null");
       this.destAsset = checkNotNull(destAsset, "destAsset cannot be null");
-      this.destAmount = checkNotNull(destAmount, "destAmount cannot be null");
+      this.destMin = checkNotNull(destMin, "destMin cannot be null");
     }
 
     /**
      * Sets path for this operation
+     *
      * @param path The assets (other than send asset and destination asset) involved in the offers the path takes. For example, if you can only find a path from USD to EUR through XLM and BTC, the path would be USD -&raquo; XLM -&raquo; BTC -&raquo; EUR and the path field would contain XLM and BTC.
      * @return Builder object so you can chain methods.
      */
-    public Builder setPath(Asset[] path) {
+    public PathPaymentStrictSendOperation.Builder setPath(Asset[] path) {
       checkNotNull(path, "path cannot be null");
       checkArgument(path.length <= 5, "The maximum number of assets in the path is 5");
       this.path = path;
@@ -169,10 +173,11 @@ public class PathPaymentOperation extends Operation {
 
     /**
      * Sets the source account for this operation.
+     *
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(String sourceAccount) {
+    public PathPaymentStrictSendOperation.Builder setSourceAccount(String sourceAccount) {
       mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
@@ -180,9 +185,9 @@ public class PathPaymentOperation extends Operation {
     /**
      * Builds an operation
      */
-    public PathPaymentOperation build() {
-      PathPaymentOperation operation = new PathPaymentOperation(sendAsset, sendMax, destination,
-              destAsset, destAmount, path);
+    public PathPaymentStrictSendOperation build() {
+      PathPaymentStrictSendOperation operation = new PathPaymentStrictSendOperation(sendAsset, sendAmount, destination,
+          destAsset, destMin, path);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -192,29 +197,29 @@ public class PathPaymentOperation extends Operation {
 
   public int hashCode() {
     return Objects.hashCode(
-            this.getSourceAccount(),
-            this.destAmount,
-            this.destAsset,
-            this.destination,
-            Arrays.hashCode(this.path),
-            this.sendAsset,
-            this.sendMax
+        this.getSourceAccount(),
+        this.destMin,
+        this.destAsset,
+        this.destination,
+        Arrays.hashCode(this.path),
+        this.sendAsset,
+        this.sendAmount
     );
   }
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PathPaymentOperation)) {
+    if (object == null || !(object instanceof PathPaymentStrictSendOperation)) {
       return false;
     }
 
-    PathPaymentOperation other = (PathPaymentOperation) object;
+    PathPaymentStrictSendOperation other = (PathPaymentStrictSendOperation) object;
     return Objects.equal(this.getSourceAccount(), other.getSourceAccount()) &&
-            Objects.equal(this.destAmount, other.destAmount) &&
-            Objects.equal(this.destAsset, other.destAsset) &&
-            Objects.equal(this.destination, other.destination) &&
-            Arrays.equals(this.path, other.path) &&
-            Objects.equal(this.sendAsset, other.sendAsset) &&
-            Objects.equal(this.sendMax, other.sendMax);
+        Objects.equal(this.destMin, other.destMin) &&
+        Objects.equal(this.destAsset, other.destAsset) &&
+        Objects.equal(this.destination, other.destination) &&
+        Arrays.equals(this.path, other.path) &&
+        Objects.equal(this.sendAsset, other.sendAsset) &&
+        Objects.equal(this.sendAmount, other.sendAmount);
   }
 }
