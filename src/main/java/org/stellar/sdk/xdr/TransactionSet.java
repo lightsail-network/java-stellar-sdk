@@ -18,7 +18,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class TransactionSet  {
+public class TransactionSet implements XdrElement {
   public TransactionSet () {}
   private Hash previousLedgerHash;
   public Hash getPreviousLedgerHash() {
@@ -41,6 +41,9 @@ public class TransactionSet  {
     for (int i = 0; i < txssize; i++) {
       TransactionEnvelope.encode(stream, encodedTransactionSet.txs[i]);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionSet decode(XdrDataInputStream stream) throws IOException {
     TransactionSet decodedTransactionSet = new TransactionSet();

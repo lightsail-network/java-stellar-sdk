@@ -28,7 +28,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class ManageOfferSuccessResult  {
+public class ManageOfferSuccessResult implements XdrElement {
   public ManageOfferSuccessResult () {}
   private ClaimOfferAtom[] offersClaimed;
   public ClaimOfferAtom[] getOffersClaimed() {
@@ -51,6 +51,9 @@ public class ManageOfferSuccessResult  {
       ClaimOfferAtom.encode(stream, encodedManageOfferSuccessResult.offersClaimed[i]);
     }
     ManageOfferSuccessResultOffer.encode(stream, encodedManageOfferSuccessResult.offer);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static ManageOfferSuccessResult decode(XdrDataInputStream stream) throws IOException {
     ManageOfferSuccessResult decodedManageOfferSuccessResult = new ManageOfferSuccessResult();
@@ -104,6 +107,9 @@ public class ManageOfferSuccessResult  {
     default:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static ManageOfferSuccessResultOffer decode(XdrDataInputStream stream) throws IOException {
     ManageOfferSuccessResultOffer decodedManageOfferSuccessResultOffer = new ManageOfferSuccessResultOffer();

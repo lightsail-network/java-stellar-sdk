@@ -20,7 +20,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class TransactionMeta  {
+public class TransactionMeta implements XdrElement {
   public TransactionMeta () {}
   Integer v;
   public Integer getDiscriminant() {
@@ -59,6 +59,9 @@ public class TransactionMeta  {
   TransactionMetaV1.encode(stream, encodedTransactionMeta.v1);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionMeta decode(XdrDataInputStream stream) throws IOException {
   TransactionMeta decodedTransactionMeta = new TransactionMeta();

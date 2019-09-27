@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef opaque SignatureHint[4];
 
 //  ===========================================================================
-public class SignatureHint  {
+public class SignatureHint implements XdrElement {
   private byte[] SignatureHint;
   public byte[] getSignatureHint() {
     return this.SignatureHint;
@@ -24,6 +24,9 @@ public class SignatureHint  {
   public static void encode(XdrDataOutputStream stream, SignatureHint  encodedSignatureHint) throws IOException {
   int SignatureHintsize = encodedSignatureHint.SignatureHint.length;
   stream.write(encodedSignatureHint.getSignatureHint(), 0, SignatureHintsize);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SignatureHint decode(XdrDataInputStream stream) throws IOException {
     SignatureHint decodedSignatureHint = new SignatureHint();

@@ -17,7 +17,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum SignerKeyType  {
+public enum SignerKeyType implements XdrElement {
   SIGNER_KEY_TYPE_ED25519(0),
   SIGNER_KEY_TYPE_PRE_AUTH_TX(1),
   SIGNER_KEY_TYPE_HASH_X(2),
@@ -32,7 +32,7 @@ public enum SignerKeyType  {
       return mValue;
   }
 
-  static SignerKeyType decode(XdrDataInputStream stream) throws IOException {
+  public static SignerKeyType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return SIGNER_KEY_TYPE_ED25519;
@@ -43,7 +43,11 @@ public enum SignerKeyType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, SignerKeyType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, SignerKeyType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

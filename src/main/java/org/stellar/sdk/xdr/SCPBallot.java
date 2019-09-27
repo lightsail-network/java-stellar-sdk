@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SCPBallot  {
+public class SCPBallot implements XdrElement {
   public SCPBallot () {}
   private Uint32 counter;
   public Uint32 getCounter() {
@@ -36,6 +36,9 @@ public class SCPBallot  {
   public static void encode(XdrDataOutputStream stream, SCPBallot encodedSCPBallot) throws IOException{
     Uint32.encode(stream, encodedSCPBallot.counter);
     Value.encode(stream, encodedSCPBallot.value);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SCPBallot decode(XdrDataInputStream stream) throws IOException {
     SCPBallot decodedSCPBallot = new SCPBallot();

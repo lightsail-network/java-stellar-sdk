@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class CreateAccountOp  {
+public class CreateAccountOp implements XdrElement {
   public CreateAccountOp () {}
   private AccountID destination;
   public AccountID getDestination() {
@@ -36,6 +36,9 @@ public class CreateAccountOp  {
   public static void encode(XdrDataOutputStream stream, CreateAccountOp encodedCreateAccountOp) throws IOException{
     AccountID.encode(stream, encodedCreateAccountOp.destination);
     Int64.encode(stream, encodedCreateAccountOp.startingBalance);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static CreateAccountOp decode(XdrDataInputStream stream) throws IOException {
     CreateAccountOp decodedCreateAccountOp = new CreateAccountOp();

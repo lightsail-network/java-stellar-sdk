@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class AllowTrustResult  {
+public class AllowTrustResult implements XdrElement {
   public AllowTrustResult () {}
   AllowTrustResultCode code;
   public AllowTrustResultCode getDiscriminant() {
@@ -38,6 +38,9 @@ public class AllowTrustResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static AllowTrustResult decode(XdrDataInputStream stream) throws IOException {
   AllowTrustResult decodedAllowTrustResult = new AllowTrustResult();

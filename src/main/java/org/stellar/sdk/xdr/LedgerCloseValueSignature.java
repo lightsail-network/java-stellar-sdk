@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class LedgerCloseValueSignature  {
+public class LedgerCloseValueSignature implements XdrElement {
   public LedgerCloseValueSignature () {}
   private NodeID nodeID;
   public NodeID getNodeID() {
@@ -36,6 +36,9 @@ public class LedgerCloseValueSignature  {
   public static void encode(XdrDataOutputStream stream, LedgerCloseValueSignature encodedLedgerCloseValueSignature) throws IOException{
     NodeID.encode(stream, encodedLedgerCloseValueSignature.nodeID);
     Signature.encode(stream, encodedLedgerCloseValueSignature.signature);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static LedgerCloseValueSignature decode(XdrDataInputStream stream) throws IOException {
     LedgerCloseValueSignature decodedLedgerCloseValueSignature = new LedgerCloseValueSignature();

@@ -16,7 +16,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class TransactionResultSet  {
+public class TransactionResultSet implements XdrElement {
   public TransactionResultSet () {}
   private TransactionResultPair[] results;
   public TransactionResultPair[] getResults() {
@@ -31,6 +31,9 @@ public class TransactionResultSet  {
     for (int i = 0; i < resultssize; i++) {
       TransactionResultPair.encode(stream, encodedTransactionResultSet.results[i]);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionResultSet decode(XdrDataInputStream stream) throws IOException {
     TransactionResultSet decodedTransactionResultSet = new TransactionResultSet();

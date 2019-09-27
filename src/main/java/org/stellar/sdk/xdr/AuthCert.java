@@ -18,7 +18,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class AuthCert  {
+public class AuthCert implements XdrElement {
   public AuthCert () {}
   private Curve25519Public pubkey;
   public Curve25519Public getPubkey() {
@@ -45,6 +45,9 @@ public class AuthCert  {
     Curve25519Public.encode(stream, encodedAuthCert.pubkey);
     Uint64.encode(stream, encodedAuthCert.expiration);
     Signature.encode(stream, encodedAuthCert.sig);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static AuthCert decode(XdrDataInputStream stream) throws IOException {
     AuthCert decodedAuthCert = new AuthCert();

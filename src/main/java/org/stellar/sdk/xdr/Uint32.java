@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  typedef unsigned int uint32;
 
 //  ===========================================================================
-public class Uint32  {
+public class Uint32 implements XdrElement {
   private Integer uint32;
   public Integer getUint32() {
     return this.uint32;
@@ -23,6 +23,9 @@ public class Uint32  {
   }
   public static void encode(XdrDataOutputStream stream, Uint32  encodedUint32) throws IOException {
   stream.writeInt(encodedUint32.uint32);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Uint32 decode(XdrDataInputStream stream) throws IOException {
     Uint32 decodedUint32 = new Uint32();

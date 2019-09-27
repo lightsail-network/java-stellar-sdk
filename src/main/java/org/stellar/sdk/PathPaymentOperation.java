@@ -3,7 +3,7 @@ package org.stellar.sdk;
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
-import org.stellar.sdk.xdr.PathPaymentOp;
+import org.stellar.sdk.xdr.PathPaymentStrictReceiveOp;
 
 import java.util.Arrays;
 
@@ -12,8 +12,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment" target="_blank">PathPayment</a> operation.
- * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
+ * @deprecated Will be removed in version 0.11.0, use {@link PathPaymentStrictReceiveOperation}
  */
 public class PathPaymentOperation extends Operation {
 
@@ -83,7 +82,7 @@ public class PathPaymentOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
-    PathPaymentOp op = new PathPaymentOp();
+    PathPaymentStrictReceiveOp op = new PathPaymentStrictReceiveOp();
 
     // sendAsset
     op.setSendAsset(sendAsset.toXdr());
@@ -107,8 +106,8 @@ public class PathPaymentOperation extends Operation {
     op.setPath(path);
 
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
-    body.setDiscriminant(OperationType.PATH_PAYMENT);
-    body.setPathPaymentOp(op);
+    body.setDiscriminant(OperationType.PATH_PAYMENT_STRICT_RECEIVE);
+    body.setPathPaymentStrictReceiveOp(op);
     return body;
   }
 
@@ -126,7 +125,7 @@ public class PathPaymentOperation extends Operation {
 
     private String mSourceAccount;
 
-    Builder(PathPaymentOp op) {
+    Builder(PathPaymentStrictReceiveOp op) {
       sendAsset = Asset.fromXdr(op.getSendAsset());
       sendMax = Operation.fromXdrAmount(op.getSendMax().getInt64().longValue());
       destination = StrKey.encodeStellarAccountId(op.getDestination().getAccountID().getEd25519().getUint256());

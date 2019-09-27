@@ -20,7 +20,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class InflationResult  {
+public class InflationResult implements XdrElement {
   public InflationResult () {}
   InflationResultCode code;
   public InflationResultCode getDiscriminant() {
@@ -51,6 +51,9 @@ public class InflationResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static InflationResult decode(XdrDataInputStream stream) throws IOException {
   InflationResult decodedInflationResult = new InflationResult();

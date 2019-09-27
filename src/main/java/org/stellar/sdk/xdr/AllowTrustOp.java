@@ -30,7 +30,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class AllowTrustOp  {
+public class AllowTrustOp implements XdrElement {
   public AllowTrustOp () {}
   private AccountID trustor;
   public AccountID getTrustor() {
@@ -57,6 +57,9 @@ public class AllowTrustOp  {
     AccountID.encode(stream, encodedAllowTrustOp.trustor);
     AllowTrustOpAsset.encode(stream, encodedAllowTrustOp.asset);
     stream.writeInt(encodedAllowTrustOp.authorize ? 1 : 0);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static AllowTrustOp decode(XdrDataInputStream stream) throws IOException {
     AllowTrustOp decodedAllowTrustOp = new AllowTrustOp();
@@ -114,6 +117,9 @@ public class AllowTrustOp  {
     AssetCode12.encode(stream, encodedAllowTrustOpAsset.assetCode12);
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static AllowTrustOpAsset decode(XdrDataInputStream stream) throws IOException {
     AllowTrustOpAsset decodedAllowTrustOpAsset = new AllowTrustOpAsset();

@@ -18,7 +18,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class TransactionMetaV1  {
+public class TransactionMetaV1 implements XdrElement {
   public TransactionMetaV1 () {}
   private LedgerEntryChanges txChanges;
   public LedgerEntryChanges getTxChanges() {
@@ -41,6 +41,9 @@ public class TransactionMetaV1  {
     for (int i = 0; i < operationssize; i++) {
       OperationMeta.encode(stream, encodedTransactionMetaV1.operations[i]);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionMetaV1 decode(XdrDataInputStream stream) throws IOException {
     TransactionMetaV1 decodedTransactionMetaV1 = new TransactionMetaV1();

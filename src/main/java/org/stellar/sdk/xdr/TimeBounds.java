@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class TimeBounds  {
+public class TimeBounds implements XdrElement {
   public TimeBounds () {}
   private TimePoint minTime;
   public TimePoint getMinTime() {
@@ -36,6 +36,9 @@ public class TimeBounds  {
   public static void encode(XdrDataOutputStream stream, TimeBounds encodedTimeBounds) throws IOException{
     TimePoint.encode(stream, encodedTimeBounds.minTime);
     TimePoint.encode(stream, encodedTimeBounds.maxTime);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TimeBounds decode(XdrDataInputStream stream) throws IOException {
     TimeBounds decodedTimeBounds = new TimeBounds();

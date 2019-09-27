@@ -50,7 +50,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class LedgerHeader  {
+public class LedgerHeader implements XdrElement {
   public LedgerHeader () {}
   private Uint32 ledgerVersion;
   public Uint32 getLedgerVersion() {
@@ -177,6 +177,9 @@ public class LedgerHeader  {
     }
     LedgerHeaderExt.encode(stream, encodedLedgerHeader.ext);
   }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
+  }
   public static LedgerHeader decode(XdrDataInputStream stream) throws IOException {
     LedgerHeader decodedLedgerHeader = new LedgerHeader();
     decodedLedgerHeader.ledgerVersion = Uint32.decode(stream);
@@ -231,6 +234,9 @@ public class LedgerHeader  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static LedgerHeaderExt decode(XdrDataInputStream stream) throws IOException {
     LedgerHeaderExt decodedLedgerHeaderExt = new LedgerHeaderExt();

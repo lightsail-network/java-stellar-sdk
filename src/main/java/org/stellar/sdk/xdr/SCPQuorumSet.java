@@ -19,7 +19,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class SCPQuorumSet  {
+public class SCPQuorumSet implements XdrElement {
   public SCPQuorumSet () {}
   private Uint32 threshold;
   public Uint32 getThreshold() {
@@ -54,6 +54,9 @@ public class SCPQuorumSet  {
     for (int i = 0; i < innerSetssize; i++) {
       SCPQuorumSet.encode(stream, encodedSCPQuorumSet.innerSets[i]);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SCPQuorumSet decode(XdrDataInputStream stream) throws IOException {
     SCPQuorumSet decodedSCPQuorumSet = new SCPQuorumSet();

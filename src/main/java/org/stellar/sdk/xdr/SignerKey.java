@@ -23,7 +23,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SignerKey  {
+public class SignerKey implements XdrElement {
   public SignerKey () {}
   SignerKeyType type;
   public SignerKeyType getDiscriminant() {
@@ -68,6 +68,9 @@ public class SignerKey  {
   Uint256.encode(stream, encodedSignerKey.hashX);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SignerKey decode(XdrDataInputStream stream) throws IOException {
   SignerKey decodedSignerKey = new SignerKey();

@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class Liabilities  {
+public class Liabilities implements XdrElement {
   public Liabilities () {}
   private Int64 buying;
   public Int64 getBuying() {
@@ -36,6 +36,9 @@ public class Liabilities  {
   public static void encode(XdrDataOutputStream stream, Liabilities encodedLiabilities) throws IOException{
     Int64.encode(stream, encodedLiabilities.buying);
     Int64.encode(stream, encodedLiabilities.selling);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Liabilities decode(XdrDataInputStream stream) throws IOException {
     Liabilities decodedLiabilities = new Liabilities();

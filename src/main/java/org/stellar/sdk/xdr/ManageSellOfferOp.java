@@ -22,7 +22,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class ManageSellOfferOp  {
+public class ManageSellOfferOp implements XdrElement {
   public ManageSellOfferOp () {}
   private Asset selling;
   public Asset getSelling() {
@@ -65,6 +65,9 @@ public class ManageSellOfferOp  {
     Int64.encode(stream, encodedManageSellOfferOp.amount);
     Price.encode(stream, encodedManageSellOfferOp.price);
     Int64.encode(stream, encodedManageSellOfferOp.offerID);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static ManageSellOfferOp decode(XdrDataInputStream stream) throws IOException {
     ManageSellOfferOp decodedManageSellOfferOp = new ManageSellOfferOp();

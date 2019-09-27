@@ -23,8 +23,8 @@ import com.google.common.base.Objects;
 //          CreateAccountOp createAccountOp;
 //      case PAYMENT:
 //          PaymentOp paymentOp;
-//      case PATH_PAYMENT:
-//          PathPaymentOp pathPaymentOp;
+//      case PATH_PAYMENT_STRICT_RECEIVE:
+//          PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
 //      case MANAGE_SELL_OFFER:
 //          ManageSellOfferOp manageSellOfferOp;
 //      case CREATE_PASSIVE_SELL_OFFER:
@@ -45,12 +45,14 @@ import com.google.common.base.Objects;
 //          BumpSequenceOp bumpSequenceOp;
 //      case MANAGE_BUY_OFFER:
 //          ManageBuyOfferOp manageBuyOfferOp;
+//      case PATH_PAYMENT_STRICT_SEND:
+//          PathPaymentStrictSendOp pathPaymentStrictSendOp;
 //      }
 //      body;
 //  };
 
 //  ===========================================================================
-public class Operation  {
+public class Operation implements XdrElement {
   public Operation () {}
   private AccountID sourceAccount;
   public AccountID getSourceAccount() {
@@ -74,6 +76,9 @@ public class Operation  {
     stream.writeInt(0);
     }
     OperationBody.encode(stream, encodedOperation.body);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Operation decode(XdrDataInputStream stream) throws IOException {
     Operation decodedOperation = new Operation();
@@ -121,12 +126,12 @@ public class Operation  {
     public void setPaymentOp(PaymentOp value) {
       this.paymentOp = value;
     }
-    private PathPaymentOp pathPaymentOp;
-    public PathPaymentOp getPathPaymentOp() {
-      return this.pathPaymentOp;
+    private PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
+    public PathPaymentStrictReceiveOp getPathPaymentStrictReceiveOp() {
+      return this.pathPaymentStrictReceiveOp;
     }
-    public void setPathPaymentOp(PathPaymentOp value) {
-      this.pathPaymentOp = value;
+    public void setPathPaymentStrictReceiveOp(PathPaymentStrictReceiveOp value) {
+      this.pathPaymentStrictReceiveOp = value;
     }
     private ManageSellOfferOp manageSellOfferOp;
     public ManageSellOfferOp getManageSellOfferOp() {
@@ -191,6 +196,13 @@ public class Operation  {
     public void setManageBuyOfferOp(ManageBuyOfferOp value) {
       this.manageBuyOfferOp = value;
     }
+    private PathPaymentStrictSendOp pathPaymentStrictSendOp;
+    public PathPaymentStrictSendOp getPathPaymentStrictSendOp() {
+      return this.pathPaymentStrictSendOp;
+    }
+    public void setPathPaymentStrictSendOp(PathPaymentStrictSendOp value) {
+      this.pathPaymentStrictSendOp = value;
+    }
     public static void encode(XdrDataOutputStream stream, OperationBody encodedOperationBody) throws IOException {
     //Xdrgen::AST::Identifier
     //OperationType
@@ -202,8 +214,8 @@ public class Operation  {
     case PAYMENT:
     PaymentOp.encode(stream, encodedOperationBody.paymentOp);
     break;
-    case PATH_PAYMENT:
-    PathPaymentOp.encode(stream, encodedOperationBody.pathPaymentOp);
+    case PATH_PAYMENT_STRICT_RECEIVE:
+    PathPaymentStrictReceiveOp.encode(stream, encodedOperationBody.pathPaymentStrictReceiveOp);
     break;
     case MANAGE_SELL_OFFER:
     ManageSellOfferOp.encode(stream, encodedOperationBody.manageSellOfferOp);
@@ -234,7 +246,13 @@ public class Operation  {
     case MANAGE_BUY_OFFER:
     ManageBuyOfferOp.encode(stream, encodedOperationBody.manageBuyOfferOp);
     break;
+    case PATH_PAYMENT_STRICT_SEND:
+    PathPaymentStrictSendOp.encode(stream, encodedOperationBody.pathPaymentStrictSendOp);
+    break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static OperationBody decode(XdrDataInputStream stream) throws IOException {
     OperationBody decodedOperationBody = new OperationBody();
@@ -247,8 +265,8 @@ public class Operation  {
     case PAYMENT:
     decodedOperationBody.paymentOp = PaymentOp.decode(stream);
     break;
-    case PATH_PAYMENT:
-    decodedOperationBody.pathPaymentOp = PathPaymentOp.decode(stream);
+    case PATH_PAYMENT_STRICT_RECEIVE:
+    decodedOperationBody.pathPaymentStrictReceiveOp = PathPaymentStrictReceiveOp.decode(stream);
     break;
     case MANAGE_SELL_OFFER:
     decodedOperationBody.manageSellOfferOp = ManageSellOfferOp.decode(stream);
@@ -279,12 +297,15 @@ public class Operation  {
     case MANAGE_BUY_OFFER:
     decodedOperationBody.manageBuyOfferOp = ManageBuyOfferOp.decode(stream);
     break;
+    case PATH_PAYMENT_STRICT_SEND:
+    decodedOperationBody.pathPaymentStrictSendOp = PathPaymentStrictSendOp.decode(stream);
+    break;
     }
       return decodedOperationBody;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.createAccountOp, this.paymentOp, this.pathPaymentOp, this.manageSellOfferOp, this.createPassiveSellOfferOp, this.setOptionsOp, this.changeTrustOp, this.allowTrustOp, this.destination, this.manageDataOp, this.bumpSequenceOp, this.manageBuyOfferOp, this.type);
+      return Objects.hashCode(this.createAccountOp, this.paymentOp, this.pathPaymentStrictReceiveOp, this.manageSellOfferOp, this.createPassiveSellOfferOp, this.setOptionsOp, this.changeTrustOp, this.allowTrustOp, this.destination, this.manageDataOp, this.bumpSequenceOp, this.manageBuyOfferOp, this.pathPaymentStrictSendOp, this.type);
     }
     @Override
     public boolean equals(Object object) {
@@ -293,7 +314,7 @@ public class Operation  {
       }
 
       OperationBody other = (OperationBody) object;
-      return Objects.equal(this.createAccountOp, other.createAccountOp) && Objects.equal(this.paymentOp, other.paymentOp) && Objects.equal(this.pathPaymentOp, other.pathPaymentOp) && Objects.equal(this.manageSellOfferOp, other.manageSellOfferOp) && Objects.equal(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp) && Objects.equal(this.setOptionsOp, other.setOptionsOp) && Objects.equal(this.changeTrustOp, other.changeTrustOp) && Objects.equal(this.allowTrustOp, other.allowTrustOp) && Objects.equal(this.destination, other.destination) && Objects.equal(this.manageDataOp, other.manageDataOp) && Objects.equal(this.bumpSequenceOp, other.bumpSequenceOp) && Objects.equal(this.manageBuyOfferOp, other.manageBuyOfferOp) && Objects.equal(this.type, other.type);
+      return Objects.equal(this.createAccountOp, other.createAccountOp) && Objects.equal(this.paymentOp, other.paymentOp) && Objects.equal(this.pathPaymentStrictReceiveOp, other.pathPaymentStrictReceiveOp) && Objects.equal(this.manageSellOfferOp, other.manageSellOfferOp) && Objects.equal(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp) && Objects.equal(this.setOptionsOp, other.setOptionsOp) && Objects.equal(this.changeTrustOp, other.changeTrustOp) && Objects.equal(this.allowTrustOp, other.allowTrustOp) && Objects.equal(this.destination, other.destination) && Objects.equal(this.manageDataOp, other.manageDataOp) && Objects.equal(this.bumpSequenceOp, other.bumpSequenceOp) && Objects.equal(this.manageBuyOfferOp, other.manageBuyOfferOp) && Objects.equal(this.pathPaymentStrictSendOp, other.pathPaymentStrictSendOp) && Objects.equal(this.type, other.type);
     }
 
   }

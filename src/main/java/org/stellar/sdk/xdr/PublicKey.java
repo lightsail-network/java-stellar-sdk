@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class PublicKey  {
+public class PublicKey implements XdrElement {
   public PublicKey () {}
   PublicKeyType type;
   public PublicKeyType getDiscriminant() {
@@ -42,6 +42,9 @@ public class PublicKey  {
   Uint256.encode(stream, encodedPublicKey.ed25519);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static PublicKey decode(XdrDataInputStream stream) throws IOException {
   PublicKey decodedPublicKey = new PublicKey();

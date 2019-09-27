@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef opaque Hash[32];
 
 //  ===========================================================================
-public class Hash  {
+public class Hash implements XdrElement {
   private byte[] Hash;
   public byte[] getHash() {
     return this.Hash;
@@ -24,6 +24,9 @@ public class Hash  {
   public static void encode(XdrDataOutputStream stream, Hash  encodedHash) throws IOException {
   int Hashsize = encodedHash.Hash.length;
   stream.write(encodedHash.getHash(), 0, Hashsize);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Hash decode(XdrDataInputStream stream) throws IOException {
     Hash decodedHash = new Hash();

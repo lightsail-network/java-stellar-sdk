@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 // === xdr source ============================================================
 
-//  struct PathPaymentOp
+//  struct PathPaymentStrictReceiveOp
 //  {
 //      Asset sendAsset; // asset we pay with
 //      int64 sendMax;   // the maximum amount of sendAsset to
@@ -26,8 +26,8 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class PathPaymentOp  {
-  public PathPaymentOp () {}
+public class PathPaymentStrictReceiveOp implements XdrElement {
+  public PathPaymentStrictReceiveOp () {}
   private Asset sendAsset;
   public Asset getSendAsset() {
     return this.sendAsset;
@@ -70,31 +70,34 @@ public class PathPaymentOp  {
   public void setPath(Asset[] value) {
     this.path = value;
   }
-  public static void encode(XdrDataOutputStream stream, PathPaymentOp encodedPathPaymentOp) throws IOException{
-    Asset.encode(stream, encodedPathPaymentOp.sendAsset);
-    Int64.encode(stream, encodedPathPaymentOp.sendMax);
-    AccountID.encode(stream, encodedPathPaymentOp.destination);
-    Asset.encode(stream, encodedPathPaymentOp.destAsset);
-    Int64.encode(stream, encodedPathPaymentOp.destAmount);
-    int pathsize = encodedPathPaymentOp.getPath().length;
+  public static void encode(XdrDataOutputStream stream, PathPaymentStrictReceiveOp encodedPathPaymentStrictReceiveOp) throws IOException{
+    Asset.encode(stream, encodedPathPaymentStrictReceiveOp.sendAsset);
+    Int64.encode(stream, encodedPathPaymentStrictReceiveOp.sendMax);
+    AccountID.encode(stream, encodedPathPaymentStrictReceiveOp.destination);
+    Asset.encode(stream, encodedPathPaymentStrictReceiveOp.destAsset);
+    Int64.encode(stream, encodedPathPaymentStrictReceiveOp.destAmount);
+    int pathsize = encodedPathPaymentStrictReceiveOp.getPath().length;
     stream.writeInt(pathsize);
     for (int i = 0; i < pathsize; i++) {
-      Asset.encode(stream, encodedPathPaymentOp.path[i]);
+      Asset.encode(stream, encodedPathPaymentStrictReceiveOp.path[i]);
     }
   }
-  public static PathPaymentOp decode(XdrDataInputStream stream) throws IOException {
-    PathPaymentOp decodedPathPaymentOp = new PathPaymentOp();
-    decodedPathPaymentOp.sendAsset = Asset.decode(stream);
-    decodedPathPaymentOp.sendMax = Int64.decode(stream);
-    decodedPathPaymentOp.destination = AccountID.decode(stream);
-    decodedPathPaymentOp.destAsset = Asset.decode(stream);
-    decodedPathPaymentOp.destAmount = Int64.decode(stream);
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
+  }
+  public static PathPaymentStrictReceiveOp decode(XdrDataInputStream stream) throws IOException {
+    PathPaymentStrictReceiveOp decodedPathPaymentStrictReceiveOp = new PathPaymentStrictReceiveOp();
+    decodedPathPaymentStrictReceiveOp.sendAsset = Asset.decode(stream);
+    decodedPathPaymentStrictReceiveOp.sendMax = Int64.decode(stream);
+    decodedPathPaymentStrictReceiveOp.destination = AccountID.decode(stream);
+    decodedPathPaymentStrictReceiveOp.destAsset = Asset.decode(stream);
+    decodedPathPaymentStrictReceiveOp.destAmount = Int64.decode(stream);
     int pathsize = stream.readInt();
-    decodedPathPaymentOp.path = new Asset[pathsize];
+    decodedPathPaymentStrictReceiveOp.path = new Asset[pathsize];
     for (int i = 0; i < pathsize; i++) {
-      decodedPathPaymentOp.path[i] = Asset.decode(stream);
+      decodedPathPaymentStrictReceiveOp.path[i] = Asset.decode(stream);
     }
-    return decodedPathPaymentOp;
+    return decodedPathPaymentStrictReceiveOp;
   }
   @Override
   public int hashCode() {
@@ -102,11 +105,11 @@ public class PathPaymentOp  {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PathPaymentOp)) {
+    if (object == null || !(object instanceof PathPaymentStrictReceiveOp)) {
       return false;
     }
 
-    PathPaymentOp other = (PathPaymentOp) object;
+    PathPaymentStrictReceiveOp other = (PathPaymentStrictReceiveOp) object;
     return Objects.equal(this.sendAsset, other.sendAsset) && Objects.equal(this.sendMax, other.sendMax) && Objects.equal(this.destination, other.destination) && Objects.equal(this.destAsset, other.destAsset) && Objects.equal(this.destAmount, other.destAmount) && Arrays.equals(this.path, other.path);
   }
 }

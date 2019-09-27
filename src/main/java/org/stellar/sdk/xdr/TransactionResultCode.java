@@ -29,7 +29,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum TransactionResultCode  {
+public enum TransactionResultCode implements XdrElement {
   txSUCCESS(0),
   txFAILED(-1),
   txTOO_EARLY(-2),
@@ -53,7 +53,7 @@ public enum TransactionResultCode  {
       return mValue;
   }
 
-  static TransactionResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return txSUCCESS;
@@ -73,7 +73,11 @@ public enum TransactionResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, TransactionResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, TransactionResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

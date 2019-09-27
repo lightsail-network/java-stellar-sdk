@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class ChangeTrustOp  {
+public class ChangeTrustOp implements XdrElement {
   public ChangeTrustOp () {}
   private Asset line;
   public Asset getLine() {
@@ -38,6 +38,9 @@ public class ChangeTrustOp  {
   public static void encode(XdrDataOutputStream stream, ChangeTrustOp encodedChangeTrustOp) throws IOException{
     Asset.encode(stream, encodedChangeTrustOp.line);
     Int64.encode(stream, encodedChangeTrustOp.limit);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static ChangeTrustOp decode(XdrDataInputStream stream) throws IOException {
     ChangeTrustOp decodedChangeTrustOp = new ChangeTrustOp();

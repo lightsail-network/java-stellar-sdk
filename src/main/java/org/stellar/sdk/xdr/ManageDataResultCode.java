@@ -23,7 +23,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ManageDataResultCode  {
+public enum ManageDataResultCode implements XdrElement {
   MANAGE_DATA_SUCCESS(0),
   MANAGE_DATA_NOT_SUPPORTED_YET(-1),
   MANAGE_DATA_NAME_NOT_FOUND(-2),
@@ -40,7 +40,7 @@ public enum ManageDataResultCode  {
       return mValue;
   }
 
-  static ManageDataResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static ManageDataResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return MANAGE_DATA_SUCCESS;
@@ -53,7 +53,11 @@ public enum ManageDataResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, ManageDataResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ManageDataResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

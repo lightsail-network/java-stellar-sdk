@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef opaque Thresholds[4];
 
 //  ===========================================================================
-public class Thresholds  {
+public class Thresholds implements XdrElement {
   private byte[] Thresholds;
   public byte[] getThresholds() {
     return this.Thresholds;
@@ -24,6 +24,9 @@ public class Thresholds  {
   public static void encode(XdrDataOutputStream stream, Thresholds  encodedThresholds) throws IOException {
   int Thresholdssize = encodedThresholds.Thresholds.length;
   stream.write(encodedThresholds.getThresholds(), 0, Thresholdssize);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Thresholds decode(XdrDataInputStream stream) throws IOException {
     Thresholds decodedThresholds = new Thresholds();

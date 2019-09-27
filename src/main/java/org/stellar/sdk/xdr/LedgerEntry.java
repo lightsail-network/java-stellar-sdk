@@ -37,7 +37,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class LedgerEntry  {
+public class LedgerEntry implements XdrElement {
   public LedgerEntry () {}
   private Uint32 lastModifiedLedgerSeq;
   public Uint32 getLastModifiedLedgerSeq() {
@@ -64,6 +64,9 @@ public class LedgerEntry  {
     Uint32.encode(stream, encodedLedgerEntry.lastModifiedLedgerSeq);
     LedgerEntryData.encode(stream, encodedLedgerEntry.data);
     LedgerEntryExt.encode(stream, encodedLedgerEntry.ext);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static LedgerEntry decode(XdrDataInputStream stream) throws IOException {
     LedgerEntry decodedLedgerEntry = new LedgerEntry();
@@ -142,6 +145,9 @@ public class LedgerEntry  {
     break;
     }
     }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
     public static LedgerEntryData decode(XdrDataInputStream stream) throws IOException {
     LedgerEntryData decodedLedgerEntryData = new LedgerEntryData();
     LedgerEntryType discriminant = LedgerEntryType.decode(stream);
@@ -194,6 +200,9 @@ public class LedgerEntry  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static LedgerEntryExt decode(XdrDataInputStream stream) throws IOException {
     LedgerEntryExt decodedLedgerEntryExt = new LedgerEntryExt();

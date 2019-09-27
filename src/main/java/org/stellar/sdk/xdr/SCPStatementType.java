@@ -18,7 +18,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum SCPStatementType  {
+public enum SCPStatementType implements XdrElement {
   SCP_ST_PREPARE(0),
   SCP_ST_CONFIRM(1),
   SCP_ST_EXTERNALIZE(2),
@@ -34,7 +34,7 @@ public enum SCPStatementType  {
       return mValue;
   }
 
-  static SCPStatementType decode(XdrDataInputStream stream) throws IOException {
+  public static SCPStatementType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return SCP_ST_PREPARE;
@@ -46,7 +46,11 @@ public enum SCPStatementType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, SCPStatementType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, SCPStatementType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

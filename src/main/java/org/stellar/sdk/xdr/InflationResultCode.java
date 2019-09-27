@@ -18,7 +18,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum InflationResultCode  {
+public enum InflationResultCode implements XdrElement {
   INFLATION_SUCCESS(0),
   INFLATION_NOT_TIME(-1),
   ;
@@ -32,7 +32,7 @@ public enum InflationResultCode  {
       return mValue;
   }
 
-  static InflationResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static InflationResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return INFLATION_SUCCESS;
@@ -42,7 +42,11 @@ public enum InflationResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, InflationResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, InflationResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

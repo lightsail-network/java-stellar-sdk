@@ -25,7 +25,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class TransactionHistoryEntry  {
+public class TransactionHistoryEntry implements XdrElement {
   public TransactionHistoryEntry () {}
   private Uint32 ledgerSeq;
   public Uint32 getLedgerSeq() {
@@ -52,6 +52,9 @@ public class TransactionHistoryEntry  {
     Uint32.encode(stream, encodedTransactionHistoryEntry.ledgerSeq);
     TransactionSet.encode(stream, encodedTransactionHistoryEntry.txSet);
     TransactionHistoryEntryExt.encode(stream, encodedTransactionHistoryEntry.ext);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionHistoryEntry decode(XdrDataInputStream stream) throws IOException {
     TransactionHistoryEntry decodedTransactionHistoryEntry = new TransactionHistoryEntry();
@@ -91,6 +94,9 @@ public class TransactionHistoryEntry  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static TransactionHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
     TransactionHistoryEntryExt decodedTransactionHistoryEntryExt = new TransactionHistoryEntryExt();

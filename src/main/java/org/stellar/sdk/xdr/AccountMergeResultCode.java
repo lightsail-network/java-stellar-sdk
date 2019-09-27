@@ -24,7 +24,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum AccountMergeResultCode  {
+public enum AccountMergeResultCode implements XdrElement {
   ACCOUNT_MERGE_SUCCESS(0),
   ACCOUNT_MERGE_MALFORMED(-1),
   ACCOUNT_MERGE_NO_ACCOUNT(-2),
@@ -43,7 +43,7 @@ public enum AccountMergeResultCode  {
       return mValue;
   }
 
-  static AccountMergeResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static AccountMergeResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return ACCOUNT_MERGE_SUCCESS;
@@ -58,7 +58,11 @@ public enum AccountMergeResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, AccountMergeResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, AccountMergeResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

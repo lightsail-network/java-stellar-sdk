@@ -23,7 +23,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class BucketEntry  {
+public class BucketEntry implements XdrElement {
   public BucketEntry () {}
   BucketEntryType type;
   public BucketEntryType getDiscriminant() {
@@ -69,6 +69,9 @@ public class BucketEntry  {
   BucketMetadata.encode(stream, encodedBucketEntry.metaEntry);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static BucketEntry decode(XdrDataInputStream stream) throws IOException {
   BucketEntry decodedBucketEntry = new BucketEntry();

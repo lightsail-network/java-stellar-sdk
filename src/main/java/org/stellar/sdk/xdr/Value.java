@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef opaque Value<>;
 
 //  ===========================================================================
-public class Value  {
+public class Value implements XdrElement {
   private byte[] Value;
   public byte[] getValue() {
     return this.Value;
@@ -25,6 +25,9 @@ public class Value  {
   int Valuesize = encodedValue.Value.length;
   stream.writeInt(Valuesize);
   stream.write(encodedValue.getValue(), 0, Valuesize);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Value decode(XdrDataInputStream stream) throws IOException {
     Value decodedValue = new Value();

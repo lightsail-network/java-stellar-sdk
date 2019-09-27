@@ -18,7 +18,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SCPHistoryEntryV0  {
+public class SCPHistoryEntryV0 implements XdrElement {
   public SCPHistoryEntryV0 () {}
   private SCPQuorumSet[] quorumSets;
   public SCPQuorumSet[] getQuorumSets() {
@@ -41,6 +41,9 @@ public class SCPHistoryEntryV0  {
       SCPQuorumSet.encode(stream, encodedSCPHistoryEntryV0.quorumSets[i]);
     }
     LedgerSCPMessages.encode(stream, encodedSCPHistoryEntryV0.ledgerMessages);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SCPHistoryEntryV0 decode(XdrDataInputStream stream) throws IOException {
     SCPHistoryEntryV0 decodedSCPHistoryEntryV0 = new SCPHistoryEntryV0();

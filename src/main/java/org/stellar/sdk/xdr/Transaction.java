@@ -39,7 +39,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class Transaction  {
+public class Transaction implements XdrElement {
   public Transaction () {}
   private AccountID sourceAccount;
   public AccountID getSourceAccount() {
@@ -108,6 +108,9 @@ public class Transaction  {
     }
     TransactionExt.encode(stream, encodedTransaction.ext);
   }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
+  }
   public static Transaction decode(XdrDataInputStream stream) throws IOException {
     Transaction decodedTransaction = new Transaction();
     decodedTransaction.sourceAccount = AccountID.decode(stream);
@@ -157,6 +160,9 @@ public class Transaction  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static TransactionExt decode(XdrDataInputStream stream) throws IOException {
     TransactionExt decodedTransactionExt = new TransactionExt();

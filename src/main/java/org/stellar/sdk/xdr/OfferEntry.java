@@ -36,7 +36,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class OfferEntry  {
+public class OfferEntry implements XdrElement {
   public OfferEntry () {}
   private AccountID sellerID;
   public AccountID getSellerID() {
@@ -104,6 +104,9 @@ public class OfferEntry  {
     Uint32.encode(stream, encodedOfferEntry.flags);
     OfferEntryExt.encode(stream, encodedOfferEntry.ext);
   }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
+  }
   public static OfferEntry decode(XdrDataInputStream stream) throws IOException {
     OfferEntry decodedOfferEntry = new OfferEntry();
     decodedOfferEntry.sellerID = AccountID.decode(stream);
@@ -147,6 +150,9 @@ public class OfferEntry  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static OfferEntryExt decode(XdrDataInputStream stream) throws IOException {
     OfferEntryExt decodedOfferEntryExt = new OfferEntryExt();

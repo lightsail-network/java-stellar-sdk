@@ -25,7 +25,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class BucketMetadata  {
+public class BucketMetadata implements XdrElement {
   public BucketMetadata () {}
   private Uint32 ledgerVersion;
   public Uint32 getLedgerVersion() {
@@ -44,6 +44,9 @@ public class BucketMetadata  {
   public static void encode(XdrDataOutputStream stream, BucketMetadata encodedBucketMetadata) throws IOException{
     Uint32.encode(stream, encodedBucketMetadata.ledgerVersion);
     BucketMetadataExt.encode(stream, encodedBucketMetadata.ext);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static BucketMetadata decode(XdrDataInputStream stream) throws IOException {
     BucketMetadata decodedBucketMetadata = new BucketMetadata();
@@ -82,6 +85,9 @@ public class BucketMetadata  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static BucketMetadataExt decode(XdrDataInputStream stream) throws IOException {
     BucketMetadataExt decodedBucketMetadataExt = new BucketMetadataExt();

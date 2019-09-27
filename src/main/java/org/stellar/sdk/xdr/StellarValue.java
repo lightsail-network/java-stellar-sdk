@@ -35,7 +35,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class StellarValue  {
+public class StellarValue implements XdrElement {
   public StellarValue () {}
   private Hash txSetHash;
   public Hash getTxSetHash() {
@@ -74,6 +74,9 @@ public class StellarValue  {
       UpgradeType.encode(stream, encodedStellarValue.upgrades[i]);
     }
     StellarValueExt.encode(stream, encodedStellarValue.ext);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static StellarValue decode(XdrDataInputStream stream) throws IOException {
     StellarValue decodedStellarValue = new StellarValue();
@@ -128,6 +131,9 @@ public class StellarValue  {
     LedgerCloseValueSignature.encode(stream, encodedStellarValueExt.lcValueSignature);
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static StellarValueExt decode(XdrDataInputStream stream) throws IOException {
     StellarValueExt decodedStellarValueExt = new StellarValueExt();

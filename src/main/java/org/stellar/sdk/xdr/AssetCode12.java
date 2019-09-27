@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef opaque AssetCode12[12];
 
 //  ===========================================================================
-public class AssetCode12  {
+public class AssetCode12 implements XdrElement {
   private byte[] AssetCode12;
   public byte[] getAssetCode12() {
     return this.AssetCode12;
@@ -24,6 +24,9 @@ public class AssetCode12  {
   public static void encode(XdrDataOutputStream stream, AssetCode12  encodedAssetCode12) throws IOException {
   int AssetCode12size = encodedAssetCode12.AssetCode12.length;
   stream.write(encodedAssetCode12.getAssetCode12(), 0, AssetCode12size);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static AssetCode12 decode(XdrDataInputStream stream) throws IOException {
     AssetCode12 decodedAssetCode12 = new AssetCode12();

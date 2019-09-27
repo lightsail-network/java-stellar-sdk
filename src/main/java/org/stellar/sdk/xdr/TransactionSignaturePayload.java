@@ -23,7 +23,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class TransactionSignaturePayload  {
+public class TransactionSignaturePayload implements XdrElement {
   public TransactionSignaturePayload () {}
   private Hash networkId;
   public Hash getNetworkId() {
@@ -42,6 +42,9 @@ public class TransactionSignaturePayload  {
   public static void encode(XdrDataOutputStream stream, TransactionSignaturePayload encodedTransactionSignaturePayload) throws IOException{
     Hash.encode(stream, encodedTransactionSignaturePayload.networkId);
     TransactionSignaturePayloadTaggedTransaction.encode(stream, encodedTransactionSignaturePayload.taggedTransaction);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionSignaturePayload decode(XdrDataInputStream stream) throws IOException {
     TransactionSignaturePayload decodedTransactionSignaturePayload = new TransactionSignaturePayload();
@@ -88,6 +91,9 @@ public class TransactionSignaturePayload  {
     Transaction.encode(stream, encodedTransactionSignaturePayloadTaggedTransaction.tx);
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static TransactionSignaturePayloadTaggedTransaction decode(XdrDataInputStream stream) throws IOException {
     TransactionSignaturePayloadTaggedTransaction decodedTransactionSignaturePayloadTaggedTransaction = new TransactionSignaturePayloadTaggedTransaction();
