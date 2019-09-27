@@ -11,7 +11,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment" target="_blank">PathPaymentStrictSend</a> operation.
+ * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment-strict-send" target="_blank">PathPaymentStrictSend</a> operation.
  *
  * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
  */
