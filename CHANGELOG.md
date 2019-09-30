@@ -15,6 +15,7 @@ Deprecated | New method/class
 
 ### Changes
 
+* Add helper method to generate SEP 10 challenge
 * Stellar Protocol 12 compatibility.
 * Include `path` property in path payment operation responses.
 
