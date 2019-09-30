@@ -61,4 +61,39 @@ public class OperationsRequestBuilderTest {
             .buildUri();
     assertEquals("https://horizon-testnet.stellar.org/ledgers/200000000000/operations?include_failed=true&limit=50&order=asc", uri.toString());
   }
+
+  @Test
+  public void testIncludeTransactions() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    HttpUrl uri = server.operations()
+        .forLedger(200000000000L)
+        .includeTransactions(true)
+        .limit(50)
+        .order(RequestBuilder.Order.ASC)
+        .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/ledgers/200000000000/operations?join=transactions&limit=50&order=asc", uri.toString());
+
+    uri = server.operations()
+        .forLedger(200000000000L)
+        .includeTransactions(true)
+        .limit(50)
+        .includeTransactions(false)
+        .order(RequestBuilder.Order.ASC)
+        .includeTransactions(true)
+        .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/ledgers/200000000000/operations?limit=50&order=asc&join=transactions", uri.toString());
+  }
+
+  @Test
+  public void testExcludeTransactions() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    HttpUrl uri = server.operations()
+        .forLedger(200000000000L)
+        .includeTransactions(true)
+        .limit(50)
+        .order(RequestBuilder.Order.ASC)
+        .includeTransactions(false)
+        .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/ledgers/200000000000/operations?limit=50&order=asc", uri.toString());
+  }
 }
