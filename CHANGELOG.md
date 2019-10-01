@@ -17,6 +17,8 @@ Deprecated | New method/class
 
 * Stellar Protocol 12 compatibility.
 * Include `path` property in path payment operation responses.
+* Provide `includeTransactions()` method for constructing operations requests which include transaction data in the operations response.
+* Provide `includeTransactions()` method for constructing payments requests which include transaction data in the payments response.
 
 ## 0.9.0
 * Use strings to represent account ids instead of KeyPair instances because account ids will not necessarily be valid

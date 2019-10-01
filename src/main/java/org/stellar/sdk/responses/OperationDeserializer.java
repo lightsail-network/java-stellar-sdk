@@ -20,6 +20,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
     // Create new Gson object with adapters needed in Operation
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
+            .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
             .create();
 
     int type = json.getAsJsonObject().get("type_i").getAsInt();
