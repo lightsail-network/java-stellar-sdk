@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import com.google.common.io.BaseEncoding;
+
 import java.security.SecureRandom;
 
 public class Sep10Challenge {
@@ -18,12 +20,14 @@ public class Sep10Challenge {
       String anchorName,
       TimeBounds timebounds
   ) {
-    byte[] nonce = new byte[64];
+    byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(signer.getAccountId(), -1L);
-    ManageDataOperation operation = new ManageDataOperation.Builder(anchorName + " auth", nonce)
+    ManageDataOperation operation = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
         .setSourceAccount(clientAccountId)
         .build();
     Transaction transaction = new Transaction.Builder(sourceAccount, network)

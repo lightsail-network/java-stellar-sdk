@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,7 +39,10 @@ public class Sep10ChallengeTest {
     ManageDataOperation op = (ManageDataOperation)transaction.getOperations()[0];
     assertEquals(client, op.getSourceAccount());
     assertEquals("angkor wat auth", op.getName());
+
     assertEquals(64, op.getValue().length);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    assertTrue(base64Encoding.canDecode(new String(op.getValue())));
 
     assertEquals(1, transaction.getSignatures().size());
     assertTrue(
