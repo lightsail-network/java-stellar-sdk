@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class InflationPayout  {
+public class InflationPayout implements XdrElement {
   public InflationPayout () {}
   private AccountID destination;
   public AccountID getDestination() {
@@ -36,6 +36,9 @@ public class InflationPayout  {
   public static void encode(XdrDataOutputStream stream, InflationPayout encodedInflationPayout) throws IOException{
     AccountID.encode(stream, encodedInflationPayout.destination);
     Int64.encode(stream, encodedInflationPayout.amount);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static InflationPayout decode(XdrDataInputStream stream) throws IOException {
     InflationPayout decodedInflationPayout = new InflationPayout();

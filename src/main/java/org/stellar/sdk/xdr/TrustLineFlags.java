@@ -16,7 +16,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum TrustLineFlags  {
+public enum TrustLineFlags implements XdrElement {
   AUTHORIZED_FLAG(1),
   ;
   private int mValue;
@@ -29,7 +29,7 @@ public enum TrustLineFlags  {
       return mValue;
   }
 
-  static TrustLineFlags decode(XdrDataInputStream stream) throws IOException {
+  public static TrustLineFlags decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 1: return AUTHORIZED_FLAG;
@@ -38,7 +38,11 @@ public enum TrustLineFlags  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, TrustLineFlags value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, TrustLineFlags value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

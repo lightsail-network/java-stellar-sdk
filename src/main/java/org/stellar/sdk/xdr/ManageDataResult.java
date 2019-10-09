@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class ManageDataResult  {
+public class ManageDataResult implements XdrElement {
   public ManageDataResult () {}
   ManageDataResultCode code;
   public ManageDataResultCode getDiscriminant() {
@@ -38,6 +38,9 @@ public class ManageDataResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static ManageDataResult decode(XdrDataInputStream stream) throws IOException {
   ManageDataResult decodedManageDataResult = new ManageDataResult();

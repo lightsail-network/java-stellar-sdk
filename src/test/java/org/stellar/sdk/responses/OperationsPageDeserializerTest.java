@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.Memo;
 import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 import org.stellar.sdk.responses.operations.PaymentOperationResponse;
@@ -22,13 +23,36 @@ public class OperationsPageDeserializerTest extends TestCase {
     assertEquals(createAccountOperation.getFunder(), "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K");
     assertEquals(createAccountOperation.getCreatedAt(), "2018-01-22T21:30:53Z");
     assertEquals(createAccountOperation.getTransactionHash(), "dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046");
+    assertFalse(createAccountOperation.getTransaction().isPresent());
 
     PaymentOperationResponse paymentOperation = (PaymentOperationResponse) operationsPage.getRecords().get(4);
     assertEquals(paymentOperation.getAmount(), "10.123");
     TestCase.assertEquals(paymentOperation.getAsset(), new AssetTypeNative());
     assertEquals(paymentOperation.getFrom(), "GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R");
     assertEquals(paymentOperation.getTo(), "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H");
+    assertFalse(paymentOperation.getTransaction().isPresent());
   }
+
+  @Test
+  public void testDeserializeWithTransactions() {
+    Page<OperationResponse> operationsPage = GsonSingleton.getInstance().fromJson(includeTransactionsJSON, new TypeToken<Page<OperationResponse>>() {}.getType());
+
+    assertEquals(operationsPage.getRecords().size(), 1);
+    CreateAccountOperationResponse createAccountOperation = (CreateAccountOperationResponse) operationsPage.getRecords().get(0);
+    assertEquals(createAccountOperation.getStartingBalance(), "10000000000.0000000");
+    assertEquals(createAccountOperation.getPagingToken(), "828928692225");
+    assertEquals(createAccountOperation.getAccount(), "GAIH3ULLFQ4DGSECF2AR555KZ4KNDGEKN4AFI4SU2M7B43MGK3QJZNSR");
+    assertEquals(createAccountOperation.getFunder(), "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H");
+    assertEquals(createAccountOperation.getCreatedAt(), "2019-07-31T09:30:47Z");
+    assertEquals(createAccountOperation.getTransactionHash(), "749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e");
+    assertTrue(createAccountOperation.getTransaction().isPresent());
+
+    TransactionResponse transaction = createAccountOperation.getTransaction().get();
+    assertEquals(transaction.getHash(), "749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e");
+    assertEquals(transaction.getLedger(), Long.valueOf(193));
+    assertEquals(transaction.getMemo(), Memo.none());
+  }
+
 
   String json = "{\n" +
           "  \"_links\": {\n" +
@@ -321,4 +345,102 @@ public class OperationsPageDeserializerTest extends TestCase {
           "    ]\n" +
           "  }\n" +
           "}";
+
+  String includeTransactionsJSON = "{\n" +
+      "  \"_links\": {\n" +
+      "    \"self\": {\n" +
+      "      \"href\": \"https://horizon-testnet.stellar.org/operations?cursor=\\u0026join=transactions\\u0026limit=1\\u0026order=asc\"\n" +
+      "    },\n" +
+      "    \"next\": {\n" +
+      "      \"href\": \"https://horizon-testnet.stellar.org/operations?cursor=828928692225\\u0026join=transactions\\u0026limit=1\\u0026order=asc\"\n" +
+      "    },\n" +
+      "    \"prev\": {\n" +
+      "      \"href\": \"https://horizon-testnet.stellar.org/operations?cursor=828928692225\\u0026join=transactions\\u0026limit=1\\u0026order=desc\"\n" +
+      "    }\n" +
+      "  },\n" +
+      "  \"_embedded\": {\n" +
+      "    \"records\": [\n" +
+      "      {\n" +
+      "        \"_links\": {\n" +
+      "          \"self\": {\n" +
+      "            \"href\": \"https://horizon-testnet.stellar.org/operations/828928692225\"\n" +
+      "          },\n" +
+      "          \"transaction\": {\n" +
+      "            \"href\": \"https://horizon-testnet.stellar.org/transactions/749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e\"\n" +
+      "          },\n" +
+      "          \"effects\": {\n" +
+      "            \"href\": \"https://horizon-testnet.stellar.org/operations/828928692225/effects\"\n" +
+      "          },\n" +
+      "          \"succeeds\": {\n" +
+      "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=828928692225\"\n" +
+      "          },\n" +
+      "          \"precedes\": {\n" +
+      "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=828928692225\"\n" +
+      "          }\n" +
+      "        },\n" +
+      "        \"id\": \"828928692225\",\n" +
+      "        \"paging_token\": \"828928692225\",\n" +
+      "        \"transaction_successful\": true,\n" +
+      "        \"source_account\": \"GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H\",\n" +
+      "        \"type\": \"create_account\",\n" +
+      "        \"type_i\": 0,\n" +
+      "        \"created_at\": \"2019-07-31T09:30:47Z\",\n" +
+      "        \"transaction_hash\": \"749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e\",\n" +
+      "        \"transaction\": {\n" +
+      "          \"_links\": {\n" +
+      "            \"self\": {\n" +
+      "              \"href\": \"https://horizon-testnet.stellar.org/transactions/749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e\"\n" +
+      "            },\n" +
+      "            \"account\": {\n" +
+      "              \"href\": \"https://horizon-testnet.stellar.org/accounts/GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H\"\n" +
+      "            },\n" +
+      "            \"ledger\": {\n" +
+      "              \"href\": \"https://horizon-testnet.stellar.org/ledgers/193\"\n" +
+      "            },\n" +
+      "            \"operations\": {\n" +
+      "              \"href\": \"https://horizon-testnet.stellar.org/transactions/749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e/operations{?cursor,limit,order}\",\n" +
+      "              \"templated\": true\n" +
+      "            },\n" +
+      "            \"effects\": {\n" +
+      "              \"href\": \"https://horizon-testnet.stellar.org/transactions/749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e/effects{?cursor,limit,order}\",\n" +
+      "              \"templated\": true\n" +
+      "            },\n" +
+      "            \"precedes\": {\n" +
+      "              \"href\": \"https://horizon-testnet.stellar.org/transactions?order=asc\\u0026cursor=828928692224\"\n" +
+      "            },\n" +
+      "            \"succeeds\": {\n" +
+      "              \"href\": \"https://horizon-testnet.stellar.org/transactions?order=desc\\u0026cursor=828928692224\"\n" +
+      "            }\n" +
+      "          },\n" +
+      "          \"id\": \"749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e\",\n" +
+      "          \"paging_token\": \"828928692224\",\n" +
+      "          \"successful\": true,\n" +
+      "          \"hash\": \"749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e\",\n" +
+      "          \"ledger\": 193,\n" +
+      "          \"created_at\": \"2019-07-31T09:30:47Z\",\n" +
+      "          \"source_account\": \"GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H\",\n" +
+      "          \"source_account_sequence\": \"1\",\n" +
+      "          \"fee_paid\": 1000,\n" +
+      "          \"fee_charged\": 1000,\n" +
+      "          \"max_fee\": 1000,\n" +
+      "          \"operation_count\": 10,\n" +
+      "          \"envelope_xdr\": \"AAAAAGL8HQvQkbK2HA3WVjRrKmjX00fG8sLI7m0ERwJW/AX3AAAD6AAAAAAAAAABAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAEH3Rayw4M0iCLoEe96rPFNGYim8AVHJU0z4ebYZW4JwBY0V4XYoAAAAAAAAAAAAAAAAAAN2+SherpNcNX0imC680fIBdpQfgBwIuqFOgmlobpwLJAAAAF0h26AAAAAAAAAAAAAAAAAAAlRt2go9sp7E1a5ZWvr7vin4UPrFQThpQax1lOFm33AAAABdIdugAAAAAAAAAAAAAAAAAmv+knlR6JR2VqWeU0k/4FgvZ/tSV5DEY4gu0iOTKgpUAAAAXSHboAAAAAAAAAAAAAAAAANpaWLojuOtfC0cmMh+DvQTfPDrkfXhblQTdFXrGYc0bAAAAF0h26AAAAAABAAAAAACVG3aCj2ynsTVrlla+vu+KfhQ+sVBOGlBrHWU4WbfcAAAABgAAAAFURVNUAAAAANpaWLojuOtfC0cmMh+DvQTfPDrkfXhblQTdFXrGYc0bf/////////8AAAABAAAAAJr/pJ5UeiUdlalnlNJP+BYL2f7UleQxGOILtIjkyoKVAAAABgAAAAFURVNUAAAAANpaWLojuOtfC0cmMh+DvQTfPDrkfXhblQTdFXrGYc0bf/////////8AAAABAAAAANpaWLojuOtfC0cmMh+DvQTfPDrkfXhblQTdFXrGYc0bAAAAAQAAAAAAlRt2go9sp7E1a5ZWvr7vin4UPrFQThpQax1lOFm33AAAAAFURVNUAAAAANpaWLojuOtfC0cmMh+DvQTfPDrkfXhblQTdFXrGYc0bAAAJGE5yoAAAAAABAAAAANpaWLojuOtfC0cmMh+DvQTfPDrkfXhblQTdFXrGYc0bAAAAAQAAAACa/6SeVHolHZWpZ5TST/gWC9n+1JXkMRjiC7SI5MqClQAAAAFURVNUAAAAANpaWLojuOtfC0cmMh+DvQTfPDrkfXhblQTdFXrGYc0bAAAJGE5yoAAAAAAAAAAAAAAAAABKBB+2UBMP/abwcm/M1TXO+/JQWhPwkalgqizKmXyRIQx9cN3sY5YAAAAAAAAAAARW/AX3AAAAQDX5vrTLWyUxzrvpeEghwlfZYjb8PhnV+vjXAQE+iCNotx2S0qDtnNppNy9p0qlsXtKKyZqn036kHMFGQ7RxBQ3GYc0bAAAAQOquRvJeUiQ8uDcNGUnIxXT0xaHe91JZHCVjPEm6j9Biii954p9o7Muer9B9ipn6O4Y+4oiF9NbUxyeqh1VJnQw4WbfcAAAAQG/GEctb+uefyEvdeP8V61fCvvdGCW7KoH7iLXxtvanGk9CyydtRGEIxu66hPdUKKbXpXPEKWvnAAp5V+XQqjQnkyoKVAAAAQNTyKwB94kyBjjczpFwMFVtbhHtugo+DYeQKN13jQUjWQDSgistLE+TDrxlxW0qiIhl/GkOdVLMtG6YhfZeVOQU=\",\n" +
+      "          \"result_xdr\": \"AAAAAAAAA+gAAAAAAAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=\",\n" +
+      "          \"result_meta_xdr\": \"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\",\n" +
+      "          \"fee_meta_xdr\": \"AAAAAgAAAAMAAAABAAAAAAAAAABi/B0L0JGythwN1lY0aypo19NHxvLCyO5tBEcCVvwF9w3gtrOnZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAADBAAAAAAAAAABi/B0L0JGythwN1lY0aypo19NHxvLCyO5tBEcCVvwF9w3gtrOnY/wYAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA==\",\n" +
+      "          \"memo_type\": \"none\",\n" +
+      "          \"signatures\": [\n" +
+      "            \"Nfm+tMtbJTHOu+l4SCHCV9liNvw+GdX6+NcBAT6II2i3HZLSoO2c2mk3L2nSqWxe0orJmqfTfqQcwUZDtHEFDQ==\",\n" +
+      "            \"6q5G8l5SJDy4Nw0ZScjFdPTFod73UlkcJWM8SbqP0GKKL3nin2jsy56v0H2Kmfo7hj7iiIX01tTHJ6qHVUmdDA==\",\n" +
+      "            \"b8YRy1v655/IS914/xXrV8K+90YJbsqgfuItfG29qcaT0LLJ21EYQjG7rqE91Qoptelc8Qpa+cACnlX5dCqNCQ==\",\n" +
+      "            \"1PIrAH3iTIGONzOkXAwVW1uEe26Cj4Nh5Ao3XeNBSNZANKCKy0sT5MOvGXFbSqIiGX8aQ51Usy0bpiF9l5U5BQ==\"\n" +
+      "          ]\n" +
+      "        },\n" +
+      "        \"starting_balance\": \"10000000000.0000000\",\n" +
+      "        \"funder\": \"GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H\",\n" +
+      "        \"account\": \"GAIH3ULLFQ4DGSECF2AR555KZ4KNDGEKN4AFI4SU2M7B43MGK3QJZNSR\"\n" +
+      "      }\n" +
+      "    ]\n" +
+      "  }\n" +
+      "}";
 }

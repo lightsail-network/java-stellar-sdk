@@ -16,7 +16,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class BumpSequenceOp  {
+public class BumpSequenceOp implements XdrElement {
   public BumpSequenceOp () {}
   private SequenceNumber bumpTo;
   public SequenceNumber getBumpTo() {
@@ -27,6 +27,9 @@ public class BumpSequenceOp  {
   }
   public static void encode(XdrDataOutputStream stream, BumpSequenceOp encodedBumpSequenceOp) throws IOException{
     SequenceNumber.encode(stream, encodedBumpSequenceOp.bumpTo);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static BumpSequenceOp decode(XdrDataInputStream stream) throws IOException {
     BumpSequenceOp decodedBumpSequenceOp = new BumpSequenceOp();

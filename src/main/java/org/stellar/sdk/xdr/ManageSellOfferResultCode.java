@@ -33,7 +33,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ManageSellOfferResultCode  {
+public enum ManageSellOfferResultCode implements XdrElement {
   MANAGE_SELL_OFFER_SUCCESS(0),
   MANAGE_SELL_OFFER_MALFORMED(-1),
   MANAGE_SELL_OFFER_SELL_NO_TRUST(-2),
@@ -58,7 +58,7 @@ public enum ManageSellOfferResultCode  {
       return mValue;
   }
 
-  static ManageSellOfferResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static ManageSellOfferResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return MANAGE_SELL_OFFER_SUCCESS;
@@ -79,7 +79,11 @@ public enum ManageSellOfferResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, ManageSellOfferResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ManageSellOfferResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

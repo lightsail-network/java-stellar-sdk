@@ -23,7 +23,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class LedgerEntryChange  {
+public class LedgerEntryChange implements XdrElement {
   public LedgerEntryChange () {}
   LedgerEntryChangeType type;
   public LedgerEntryChangeType getDiscriminant() {
@@ -78,6 +78,9 @@ public class LedgerEntryChange  {
   LedgerEntry.encode(stream, encodedLedgerEntryChange.state);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static LedgerEntryChange decode(XdrDataInputStream stream) throws IOException {
   LedgerEntryChange decodedLedgerEntryChange = new LedgerEntryChange();

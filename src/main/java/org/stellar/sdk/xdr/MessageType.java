@@ -34,7 +34,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum MessageType  {
+public enum MessageType implements XdrElement {
   ERROR_MSG(0),
   AUTH(2),
   DONT_HAVE(3),
@@ -59,7 +59,7 @@ public enum MessageType  {
       return mValue;
   }
 
-  static MessageType decode(XdrDataInputStream stream) throws IOException {
+  public static MessageType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return ERROR_MSG;
@@ -80,7 +80,11 @@ public enum MessageType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, MessageType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, MessageType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

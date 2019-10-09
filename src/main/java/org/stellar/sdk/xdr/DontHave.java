@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class DontHave  {
+public class DontHave implements XdrElement {
   public DontHave () {}
   private MessageType type;
   public MessageType getType() {
@@ -36,6 +36,9 @@ public class DontHave  {
   public static void encode(XdrDataOutputStream stream, DontHave encodedDontHave) throws IOException{
     MessageType.encode(stream, encodedDontHave.type);
     Uint256.encode(stream, encodedDontHave.reqHash);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static DontHave decode(XdrDataInputStream stream) throws IOException {
     DontHave decodedDontHave = new DontHave();

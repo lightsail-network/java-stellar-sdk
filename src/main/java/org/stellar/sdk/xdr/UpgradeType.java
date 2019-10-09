@@ -13,7 +13,7 @@ import java.util.Arrays;
 //  typedef opaque UpgradeType<128>;
 
 //  ===========================================================================
-public class UpgradeType  {
+public class UpgradeType implements XdrElement {
   private byte[] UpgradeType;
   public byte[] getUpgradeType() {
     return this.UpgradeType;
@@ -25,6 +25,9 @@ public class UpgradeType  {
   int UpgradeTypesize = encodedUpgradeType.UpgradeType.length;
   stream.writeInt(UpgradeTypesize);
   stream.write(encodedUpgradeType.getUpgradeType(), 0, UpgradeTypesize);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static UpgradeType decode(XdrDataInputStream stream) throws IOException {
     UpgradeType decodedUpgradeType = new UpgradeType();

@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  typedef int int32;
 
 //  ===========================================================================
-public class Int32  {
+public class Int32 implements XdrElement {
   private Integer int32;
   public Integer getInt32() {
     return this.int32;
@@ -23,6 +23,9 @@ public class Int32  {
   }
   public static void encode(XdrDataOutputStream stream, Int32  encodedInt32) throws IOException {
   stream.writeInt(encodedInt32.int32);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Int32 decode(XdrDataInputStream stream) throws IOException {
     Int32 decodedInt32 = new Int32();

@@ -21,7 +21,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum OperationResultCode  {
+public enum OperationResultCode implements XdrElement {
   opINNER(0),
   opBAD_AUTH(-1),
   opNO_ACCOUNT(-2),
@@ -39,7 +39,7 @@ public enum OperationResultCode  {
       return mValue;
   }
 
-  static OperationResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static OperationResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return opINNER;
@@ -53,7 +53,11 @@ public enum OperationResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, OperationResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, OperationResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

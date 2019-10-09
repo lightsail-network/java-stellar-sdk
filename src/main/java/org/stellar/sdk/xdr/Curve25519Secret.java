@@ -16,7 +16,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class Curve25519Secret  {
+public class Curve25519Secret implements XdrElement {
   public Curve25519Secret () {}
   private byte[] key;
   public byte[] getKey() {
@@ -28,6 +28,9 @@ public class Curve25519Secret  {
   public static void encode(XdrDataOutputStream stream, Curve25519Secret encodedCurve25519Secret) throws IOException{
     int keysize = encodedCurve25519Secret.key.length;
     stream.write(encodedCurve25519Secret.getKey(), 0, keysize);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Curve25519Secret decode(XdrDataInputStream stream) throws IOException {
     Curve25519Secret decodedCurve25519Secret = new Curve25519Secret();

@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  typedef int64 SequenceNumber;
 
 //  ===========================================================================
-public class SequenceNumber  {
+public class SequenceNumber implements XdrElement {
   private Int64 SequenceNumber;
   public Int64 getSequenceNumber() {
     return this.SequenceNumber;
@@ -23,6 +23,9 @@ public class SequenceNumber  {
   }
   public static void encode(XdrDataOutputStream stream, SequenceNumber  encodedSequenceNumber) throws IOException {
   Int64.encode(stream, encodedSequenceNumber.SequenceNumber);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SequenceNumber decode(XdrDataInputStream stream) throws IOException {
     SequenceNumber decodedSequenceNumber = new SequenceNumber();

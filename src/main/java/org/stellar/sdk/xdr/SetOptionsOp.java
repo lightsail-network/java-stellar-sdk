@@ -31,7 +31,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SetOptionsOp  {
+public class SetOptionsOp implements XdrElement {
   public SetOptionsOp () {}
   private AccountID inflationDest;
   public AccountID getInflationDest() {
@@ -151,6 +151,9 @@ public class SetOptionsOp  {
     } else {
     stream.writeInt(0);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SetOptionsOp decode(XdrDataInputStream stream) throws IOException {
     SetOptionsOp decodedSetOptionsOp = new SetOptionsOp();

@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  typedef unsigned hyper uint64;
 
 //  ===========================================================================
-public class Uint64  {
+public class Uint64 implements XdrElement {
   private Long uint64;
   public Long getUint64() {
     return this.uint64;
@@ -23,6 +23,9 @@ public class Uint64  {
   }
   public static void encode(XdrDataOutputStream stream, Uint64  encodedUint64) throws IOException {
   stream.writeLong(encodedUint64.uint64);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Uint64 decode(XdrDataInputStream stream) throws IOException {
     Uint64 decodedUint64 = new Uint64();

@@ -25,7 +25,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class Memo  {
+public class Memo implements XdrElement {
   public Memo () {}
   MemoType type;
   public MemoType getDiscriminant() {
@@ -82,6 +82,9 @@ public class Memo  {
   Hash.encode(stream, encodedMemo.retHash);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Memo decode(XdrDataInputStream stream) throws IOException {
   Memo decodedMemo = new Memo();

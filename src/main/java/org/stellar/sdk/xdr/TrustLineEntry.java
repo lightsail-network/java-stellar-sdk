@@ -42,7 +42,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class TrustLineEntry  {
+public class TrustLineEntry implements XdrElement {
   public TrustLineEntry () {}
   private AccountID accountID;
   public AccountID getAccountID() {
@@ -93,6 +93,9 @@ public class TrustLineEntry  {
     Int64.encode(stream, encodedTrustLineEntry.limit);
     Uint32.encode(stream, encodedTrustLineEntry.flags);
     TrustLineEntryExt.encode(stream, encodedTrustLineEntry.ext);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TrustLineEntry decode(XdrDataInputStream stream) throws IOException {
     TrustLineEntry decodedTrustLineEntry = new TrustLineEntry();
@@ -146,6 +149,9 @@ public class TrustLineEntry  {
     break;
     }
     }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
     public static TrustLineEntryExt decode(XdrDataInputStream stream) throws IOException {
     TrustLineEntryExt decodedTrustLineEntryExt = new TrustLineEntryExt();
     Integer discriminant = stream.readInt();
@@ -193,6 +199,9 @@ public class TrustLineEntry  {
         Liabilities.encode(stream, encodedTrustLineEntryV1.liabilities);
         TrustLineEntryV1Ext.encode(stream, encodedTrustLineEntryV1.ext);
       }
+      public void encode(XdrDataOutputStream stream) throws IOException {
+        encode(stream, this);
+      }
       public static TrustLineEntryV1 decode(XdrDataInputStream stream) throws IOException {
         TrustLineEntryV1 decodedTrustLineEntryV1 = new TrustLineEntryV1();
         decodedTrustLineEntryV1.liabilities = Liabilities.decode(stream);
@@ -230,6 +239,9 @@ public class TrustLineEntry  {
         case 0:
         break;
         }
+        }
+        public void encode(XdrDataOutputStream stream) throws IOException {
+          encode(stream, this);
         }
         public static TrustLineEntryV1Ext decode(XdrDataInputStream stream) throws IOException {
         TrustLineEntryV1Ext decodedTrustLineEntryV1Ext = new TrustLineEntryV1Ext();

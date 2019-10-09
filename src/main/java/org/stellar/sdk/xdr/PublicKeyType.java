@@ -15,7 +15,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum PublicKeyType  {
+public enum PublicKeyType implements XdrElement {
   PUBLIC_KEY_TYPE_ED25519(0),
   ;
   private int mValue;
@@ -28,7 +28,7 @@ public enum PublicKeyType  {
       return mValue;
   }
 
-  static PublicKeyType decode(XdrDataInputStream stream) throws IOException {
+  public static PublicKeyType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return PUBLIC_KEY_TYPE_ED25519;
@@ -37,7 +37,11 @@ public enum PublicKeyType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, PublicKeyType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, PublicKeyType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

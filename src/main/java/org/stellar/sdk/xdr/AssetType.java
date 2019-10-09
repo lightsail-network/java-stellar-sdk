@@ -17,7 +17,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum AssetType  {
+public enum AssetType implements XdrElement {
   ASSET_TYPE_NATIVE(0),
   ASSET_TYPE_CREDIT_ALPHANUM4(1),
   ASSET_TYPE_CREDIT_ALPHANUM12(2),
@@ -32,7 +32,7 @@ public enum AssetType  {
       return mValue;
   }
 
-  static AssetType decode(XdrDataInputStream stream) throws IOException {
+  public static AssetType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return ASSET_TYPE_NATIVE;
@@ -43,7 +43,11 @@ public enum AssetType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, AssetType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, AssetType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

@@ -33,7 +33,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class Asset  {
+public class Asset implements XdrElement {
   public Asset () {}
   AssetType type;
   public AssetType getDiscriminant() {
@@ -70,6 +70,9 @@ public class Asset  {
   AssetAlphaNum12.encode(stream, encodedAsset.alphaNum12);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Asset decode(XdrDataInputStream stream) throws IOException {
   Asset decodedAsset = new Asset();
@@ -121,6 +124,9 @@ public class Asset  {
       AssetCode4.encode(stream, encodedAssetAlphaNum4.assetCode);
       AccountID.encode(stream, encodedAssetAlphaNum4.issuer);
     }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
     public static AssetAlphaNum4 decode(XdrDataInputStream stream) throws IOException {
       AssetAlphaNum4 decodedAssetAlphaNum4 = new AssetAlphaNum4();
       decodedAssetAlphaNum4.assetCode = AssetCode4.decode(stream);
@@ -161,6 +167,9 @@ public class Asset  {
     public static void encode(XdrDataOutputStream stream, AssetAlphaNum12 encodedAssetAlphaNum12) throws IOException{
       AssetCode12.encode(stream, encodedAssetAlphaNum12.assetCode);
       AccountID.encode(stream, encodedAssetAlphaNum12.issuer);
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static AssetAlphaNum12 decode(XdrDataInputStream stream) throws IOException {
       AssetAlphaNum12 decodedAssetAlphaNum12 = new AssetAlphaNum12();

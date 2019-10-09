@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class ManageSellOfferResult  {
+public class ManageSellOfferResult implements XdrElement {
   public ManageSellOfferResult () {}
   ManageSellOfferResultCode code;
   public ManageSellOfferResultCode getDiscriminant() {
@@ -46,6 +46,9 @@ public class ManageSellOfferResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static ManageSellOfferResult decode(XdrDataInputStream stream) throws IOException {
   ManageSellOfferResult decodedManageSellOfferResult = new ManageSellOfferResult();

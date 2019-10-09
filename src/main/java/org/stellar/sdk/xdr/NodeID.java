@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  typedef PublicKey NodeID;
 
 //  ===========================================================================
-public class NodeID  {
+public class NodeID implements XdrElement {
   private PublicKey NodeID;
   public PublicKey getNodeID() {
     return this.NodeID;
@@ -23,6 +23,9 @@ public class NodeID  {
   }
   public static void encode(XdrDataOutputStream stream, NodeID  encodedNodeID) throws IOException {
   PublicKey.encode(stream, encodedNodeID.NodeID);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static NodeID decode(XdrDataInputStream stream) throws IOException {
     NodeID decodedNodeID = new NodeID();

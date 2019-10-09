@@ -50,7 +50,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SCPStatement  {
+public class SCPStatement implements XdrElement {
   public SCPStatement () {}
   private NodeID nodeID;
   public NodeID getNodeID() {
@@ -77,6 +77,9 @@ public class SCPStatement  {
     NodeID.encode(stream, encodedSCPStatement.nodeID);
     Uint64.encode(stream, encodedSCPStatement.slotIndex);
     SCPStatementPledges.encode(stream, encodedSCPStatement.pledges);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SCPStatement decode(XdrDataInputStream stream) throws IOException {
     SCPStatement decodedSCPStatement = new SCPStatement();
@@ -154,6 +157,9 @@ public class SCPStatement  {
     SCPNomination.encode(stream, encodedSCPStatementPledges.nominate);
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static SCPStatementPledges decode(XdrDataInputStream stream) throws IOException {
     SCPStatementPledges decodedSCPStatementPledges = new SCPStatementPledges();
@@ -251,6 +257,9 @@ public class SCPStatement  {
         Uint32.encode(stream, encodedSCPStatementPrepare.nC);
         Uint32.encode(stream, encodedSCPStatementPrepare.nH);
       }
+      public void encode(XdrDataOutputStream stream) throws IOException {
+        encode(stream, this);
+      }
       public static SCPStatementPrepare decode(XdrDataInputStream stream) throws IOException {
         SCPStatementPrepare decodedSCPStatementPrepare = new SCPStatementPrepare();
         decodedSCPStatementPrepare.quorumSetHash = Hash.decode(stream);
@@ -326,6 +335,9 @@ public class SCPStatement  {
         Uint32.encode(stream, encodedSCPStatementConfirm.nH);
         Hash.encode(stream, encodedSCPStatementConfirm.quorumSetHash);
       }
+      public void encode(XdrDataOutputStream stream) throws IOException {
+        encode(stream, this);
+      }
       public static SCPStatementConfirm decode(XdrDataInputStream stream) throws IOException {
         SCPStatementConfirm decodedSCPStatementConfirm = new SCPStatementConfirm();
         decodedSCPStatementConfirm.ballot = SCPBallot.decode(stream);
@@ -377,6 +389,9 @@ public class SCPStatement  {
         SCPBallot.encode(stream, encodedSCPStatementExternalize.commit);
         Uint32.encode(stream, encodedSCPStatementExternalize.nH);
         Hash.encode(stream, encodedSCPStatementExternalize.commitQuorumSetHash);
+      }
+      public void encode(XdrDataOutputStream stream) throws IOException {
+        encode(stream, this);
       }
       public static SCPStatementExternalize decode(XdrDataInputStream stream) throws IOException {
         SCPStatementExternalize decodedSCPStatementExternalize = new SCPStatementExternalize();

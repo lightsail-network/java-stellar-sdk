@@ -35,7 +35,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class TransactionResult  {
+public class TransactionResult implements XdrElement {
   public TransactionResult () {}
   private Int64 feeCharged;
   public Int64 getFeeCharged() {
@@ -62,6 +62,9 @@ public class TransactionResult  {
     Int64.encode(stream, encodedTransactionResult.feeCharged);
     TransactionResultResult.encode(stream, encodedTransactionResult.result);
     TransactionResultExt.encode(stream, encodedTransactionResult.ext);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionResult decode(XdrDataInputStream stream) throws IOException {
     TransactionResult decodedTransactionResult = new TransactionResult();
@@ -117,6 +120,9 @@ public class TransactionResult  {
     break;
     }
     }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
     public static TransactionResultResult decode(XdrDataInputStream stream) throws IOException {
     TransactionResultResult decodedTransactionResultResult = new TransactionResultResult();
     TransactionResultCode discriminant = TransactionResultCode.decode(stream);
@@ -167,6 +173,9 @@ public class TransactionResult  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static TransactionResultExt decode(XdrDataInputStream stream) throws IOException {
     TransactionResultExt decodedTransactionResultExt = new TransactionResultExt();

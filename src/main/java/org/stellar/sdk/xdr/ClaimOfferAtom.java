@@ -26,7 +26,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class ClaimOfferAtom  {
+public class ClaimOfferAtom implements XdrElement {
   public ClaimOfferAtom () {}
   private AccountID sellerID;
   public AccountID getSellerID() {
@@ -77,6 +77,9 @@ public class ClaimOfferAtom  {
     Int64.encode(stream, encodedClaimOfferAtom.amountSold);
     Asset.encode(stream, encodedClaimOfferAtom.assetBought);
     Int64.encode(stream, encodedClaimOfferAtom.amountBought);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static ClaimOfferAtom decode(XdrDataInputStream stream) throws IOException {
     ClaimOfferAtom decodedClaimOfferAtom = new ClaimOfferAtom();

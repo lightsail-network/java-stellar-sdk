@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class Signer  {
+public class Signer implements XdrElement {
   public Signer () {}
   private SignerKey key;
   public SignerKey getKey() {
@@ -36,6 +36,9 @@ public class Signer  {
   public static void encode(XdrDataOutputStream stream, Signer encodedSigner) throws IOException{
     SignerKey.encode(stream, encodedSigner.key);
     Uint32.encode(stream, encodedSigner.weight);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Signer decode(XdrDataInputStream stream) throws IOException {
     Signer decodedSigner = new Signer();

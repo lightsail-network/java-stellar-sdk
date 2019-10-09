@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class DecoratedSignature  {
+public class DecoratedSignature implements XdrElement {
   public DecoratedSignature () {}
   private SignatureHint hint;
   public SignatureHint getHint() {
@@ -36,6 +36,9 @@ public class DecoratedSignature  {
   public static void encode(XdrDataOutputStream stream, DecoratedSignature encodedDecoratedSignature) throws IOException{
     SignatureHint.encode(stream, encodedDecoratedSignature.hint);
     Signature.encode(stream, encodedDecoratedSignature.signature);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static DecoratedSignature decode(XdrDataInputStream stream) throws IOException {
     DecoratedSignature decodedDecoratedSignature = new DecoratedSignature();

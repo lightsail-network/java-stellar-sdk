@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class SetOptionsResult  {
+public class SetOptionsResult implements XdrElement {
   public SetOptionsResult () {}
   SetOptionsResultCode code;
   public SetOptionsResultCode getDiscriminant() {
@@ -38,6 +38,9 @@ public class SetOptionsResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static SetOptionsResult decode(XdrDataInputStream stream) throws IOException {
   SetOptionsResult decodedSetOptionsResult = new SetOptionsResult();

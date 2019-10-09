@@ -26,7 +26,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class DataEntry  {
+public class DataEntry implements XdrElement {
   public DataEntry () {}
   private AccountID accountID;
   public AccountID getAccountID() {
@@ -61,6 +61,9 @@ public class DataEntry  {
     String64.encode(stream, encodedDataEntry.dataName);
     DataValue.encode(stream, encodedDataEntry.dataValue);
     DataEntryExt.encode(stream, encodedDataEntry.ext);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static DataEntry decode(XdrDataInputStream stream) throws IOException {
     DataEntry decodedDataEntry = new DataEntry();
@@ -101,6 +104,9 @@ public class DataEntry  {
     case 0:
     break;
     }
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
     }
     public static DataEntryExt decode(XdrDataInputStream stream) throws IOException {
     DataEntryExt decodedDataEntryExt = new DataEntryExt();

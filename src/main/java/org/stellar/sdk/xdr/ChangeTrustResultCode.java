@@ -24,7 +24,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ChangeTrustResultCode  {
+public enum ChangeTrustResultCode implements XdrElement {
   CHANGE_TRUST_SUCCESS(0),
   CHANGE_TRUST_MALFORMED(-1),
   CHANGE_TRUST_NO_ISSUER(-2),
@@ -42,7 +42,7 @@ public enum ChangeTrustResultCode  {
       return mValue;
   }
 
-  static ChangeTrustResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static ChangeTrustResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return CHANGE_TRUST_SUCCESS;
@@ -56,7 +56,11 @@ public enum ChangeTrustResultCode  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, ChangeTrustResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ChangeTrustResultCode value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

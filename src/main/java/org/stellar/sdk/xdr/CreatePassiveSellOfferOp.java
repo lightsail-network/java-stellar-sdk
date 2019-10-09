@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class CreatePassiveSellOfferOp  {
+public class CreatePassiveSellOfferOp implements XdrElement {
   public CreatePassiveSellOfferOp () {}
   private Asset selling;
   public Asset getSelling() {
@@ -54,6 +54,9 @@ public class CreatePassiveSellOfferOp  {
     Asset.encode(stream, encodedCreatePassiveSellOfferOp.buying);
     Int64.encode(stream, encodedCreatePassiveSellOfferOp.amount);
     Price.encode(stream, encodedCreatePassiveSellOfferOp.price);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static CreatePassiveSellOfferOp decode(XdrDataInputStream stream) throws IOException {
     CreatePassiveSellOfferOp decodedCreatePassiveSellOfferOp = new CreatePassiveSellOfferOp();

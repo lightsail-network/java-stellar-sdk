@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class AccountMergeResult  {
+public class AccountMergeResult implements XdrElement {
   public AccountMergeResult () {}
   AccountMergeResultCode code;
   public AccountMergeResultCode getDiscriminant() {
@@ -46,6 +46,9 @@ public class AccountMergeResult  {
   default:
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static AccountMergeResult decode(XdrDataInputStream stream) throws IOException {
   AccountMergeResult decodedAccountMergeResult = new AccountMergeResult();

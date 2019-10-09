@@ -16,7 +16,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum OfferEntryFlags  {
+public enum OfferEntryFlags implements XdrElement {
   PASSIVE_FLAG(1),
   ;
   private int mValue;
@@ -29,7 +29,7 @@ public enum OfferEntryFlags  {
       return mValue;
   }
 
-  static OfferEntryFlags decode(XdrDataInputStream stream) throws IOException {
+  public static OfferEntryFlags decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 1: return PASSIVE_FLAG;
@@ -38,7 +38,11 @@ public enum OfferEntryFlags  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, OfferEntryFlags value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, OfferEntryFlags value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

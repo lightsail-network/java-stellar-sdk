@@ -16,7 +16,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum StellarValueType  {
+public enum StellarValueType implements XdrElement {
   STELLAR_VALUE_BASIC(0),
   STELLAR_VALUE_SIGNED(1),
   ;
@@ -30,7 +30,7 @@ public enum StellarValueType  {
       return mValue;
   }
 
-  static StellarValueType decode(XdrDataInputStream stream) throws IOException {
+  public static StellarValueType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0: return STELLAR_VALUE_BASIC;
@@ -40,7 +40,11 @@ public enum StellarValueType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, StellarValueType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, StellarValueType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

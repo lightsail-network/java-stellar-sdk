@@ -18,7 +18,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum EnvelopeType  {
+public enum EnvelopeType implements XdrElement {
   ENVELOPE_TYPE_SCP(1),
   ENVELOPE_TYPE_TX(2),
   ENVELOPE_TYPE_AUTH(3),
@@ -34,7 +34,7 @@ public enum EnvelopeType  {
       return mValue;
   }
 
-  static EnvelopeType decode(XdrDataInputStream stream) throws IOException {
+  public static EnvelopeType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 1: return ENVELOPE_TYPE_SCP;
@@ -46,7 +46,11 @@ public enum EnvelopeType  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, EnvelopeType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, EnvelopeType value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

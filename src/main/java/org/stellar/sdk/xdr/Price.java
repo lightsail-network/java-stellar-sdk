@@ -17,7 +17,7 @@ import com.google.common.base.Objects;
 //  };
 
 //  ===========================================================================
-public class Price  {
+public class Price implements XdrElement {
   public Price () {}
   private Int32 n;
   public Int32 getN() {
@@ -36,6 +36,9 @@ public class Price  {
   public static void encode(XdrDataOutputStream stream, Price encodedPrice) throws IOException{
     Int32.encode(stream, encodedPrice.n);
     Int32.encode(stream, encodedPrice.d);
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static Price decode(XdrDataInputStream stream) throws IOException {
     Price decodedPrice = new Price();

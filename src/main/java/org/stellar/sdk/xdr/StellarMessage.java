@@ -46,7 +46,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class StellarMessage  {
+public class StellarMessage implements XdrElement {
   public StellarMessage () {}
   MessageType type;
   public MessageType getDiscriminant() {
@@ -187,6 +187,9 @@ public class StellarMessage  {
   Uint32.encode(stream, encodedStellarMessage.getSCPLedgerSeq);
   break;
   }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static StellarMessage decode(XdrDataInputStream stream) throws IOException {
   StellarMessage decodedStellarMessage = new StellarMessage();

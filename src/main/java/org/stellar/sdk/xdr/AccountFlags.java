@@ -24,7 +24,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum AccountFlags  {
+public enum AccountFlags implements XdrElement {
   AUTH_REQUIRED_FLAG(1),
   AUTH_REVOCABLE_FLAG(2),
   AUTH_IMMUTABLE_FLAG(4),
@@ -39,7 +39,7 @@ public enum AccountFlags  {
       return mValue;
   }
 
-  static AccountFlags decode(XdrDataInputStream stream) throws IOException {
+  public static AccountFlags decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 1: return AUTH_REQUIRED_FLAG;
@@ -50,7 +50,11 @@ public enum AccountFlags  {
     }
   }
 
-  static void encode(XdrDataOutputStream stream, AccountFlags value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, AccountFlags value) throws IOException {
     stream.writeInt(value.getValue());
+  }
+
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
 }

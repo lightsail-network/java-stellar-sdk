@@ -20,7 +20,7 @@ import java.util.Arrays;
 //  };
 
 //  ===========================================================================
-public class TransactionEnvelope  {
+public class TransactionEnvelope implements XdrElement {
   public TransactionEnvelope () {}
   private Transaction tx;
   public Transaction getTx() {
@@ -43,6 +43,9 @@ public class TransactionEnvelope  {
     for (int i = 0; i < signaturessize; i++) {
       DecoratedSignature.encode(stream, encodedTransactionEnvelope.signatures[i]);
     }
+  }
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    encode(stream, this);
   }
   public static TransactionEnvelope decode(XdrDataInputStream stream) throws IOException {
     TransactionEnvelope decodedTransactionEnvelope = new TransactionEnvelope();
