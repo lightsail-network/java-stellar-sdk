@@ -1,5 +1,7 @@
 package org.stellar.sdk.requests;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.gson.reflect.TypeToken;
 
 import okhttp3.HttpUrl;
@@ -12,31 +14,38 @@ import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Builds requests connected to paths.
  */
-public class PathsRequestBuilder extends RequestBuilder {
-  public PathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "paths");
+public class StrictReceivePathsRequestBuilder extends RequestBuilder {
+  public StrictReceivePathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI,"");
+    this.setSegments("paths", "strict-receive");
   }
 
-  public PathsRequestBuilder destinationAccount(String account) {
+  public StrictReceivePathsRequestBuilder destinationAccount(String account) {
     uriBuilder.setQueryParameter("destination_account", account);
     return this;
   }
 
-  public PathsRequestBuilder sourceAccount(String account) {
+  public StrictReceivePathsRequestBuilder sourceAccount(String account) {
     uriBuilder.setQueryParameter("source_account", account);
     return this;
   }
 
-  public PathsRequestBuilder destinationAmount(String amount) {
+  public StrictReceivePathsRequestBuilder sourceAssets(List<Asset> assets) {
+    setAssetsParameter("source_assets", assets);
+    return this;
+  }
+
+  public StrictReceivePathsRequestBuilder destinationAmount(String amount) {
     uriBuilder.setQueryParameter("destination_amount", amount);
     return this;
   }
 
-  public PathsRequestBuilder destinationAsset(Asset asset) {
+  public StrictReceivePathsRequestBuilder destinationAsset(Asset asset) {
     uriBuilder.setQueryParameter("destination_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;

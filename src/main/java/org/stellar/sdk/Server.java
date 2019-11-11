@@ -168,10 +168,17 @@ public class Server implements Closeable {
     }
 
     /**
-     * Returns {@link PathsRequestBuilder} instance.
+     * Returns {@link StrictReceivePathsRequestBuilder} instance.
      */
-    public PathsRequestBuilder paths() {
-        return new PathsRequestBuilder(httpClient, serverURI);
+    public StrictReceivePathsRequestBuilder strictReceivePaths() {
+        return new StrictReceivePathsRequestBuilder(httpClient, serverURI);
+    }
+
+    /**
+     * Returns {@link StrictSendPathsRequestBuilder} instance.
+     */
+    public StrictSendPathsRequestBuilder strictSendPaths() {
+        return new StrictSendPathsRequestBuilder(httpClient, serverURI);
     }
 
     /**
