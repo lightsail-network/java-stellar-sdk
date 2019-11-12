@@ -31,11 +31,17 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
   }
 
   public StrictReceivePathsRequestBuilder sourceAccount(String account) {
+    if (uriBuilder.build().queryParameter("source_assets") != null) {
+      throw new RuntimeException("cannot set both source_assets and source_account");
+    }
     uriBuilder.setQueryParameter("source_account", account);
     return this;
   }
 
   public StrictReceivePathsRequestBuilder sourceAssets(List<Asset> assets) {
+    if (uriBuilder.build().queryParameter("source_account") != null) {
+      throw new RuntimeException("cannot set both source_assets and source_account");
+    }
     setAssetsParameter("source_assets", assets);
     return this;
   }

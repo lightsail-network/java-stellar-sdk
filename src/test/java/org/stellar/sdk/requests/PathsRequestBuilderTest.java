@@ -8,7 +8,7 @@ import org.stellar.sdk.Server;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class PathsRequestBuilderTest {
   @Test
@@ -67,6 +67,30 @@ public class PathsRequestBuilderTest {
   }
 
   @Test
+  public void testStrictReceiveWithSourceAccountAndSourceAssets() {
+    List<Asset> assets = Lists.newArrayList(
+        Asset.create("native", "", ""),
+        Asset.create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+        Asset.create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
+    );
+    Server server = new Server("https://horizon-testnet.stellar.org");
+
+    try {
+      server.strictReceivePaths().sourceAssets(assets).sourceAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN");
+      fail();
+    } catch (RuntimeException e) {
+      assertTrue(e.getMessage().contains("cannot set both source_assets and source_account"));
+    }
+
+    try {
+      server.strictReceivePaths().sourceAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN").sourceAssets(assets);
+      fail();
+    } catch (RuntimeException e) {
+      assertTrue(e.getMessage().contains("cannot set both source_assets and source_account"));
+    }
+  }
+
+  @Test
   public void testStrictSendWithDestinationAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.strictSendPaths()
@@ -115,5 +139,29 @@ public class PathsRequestBuilderTest {
         "cursor=13537736921089&" +
         "limit=3&" +
         "order=asc", uri.toString());
+  }
+
+  @Test
+  public void testStrictSendWithDestinationAccountAndDestinationAssets() {
+    List<Asset> assets = Lists.newArrayList(
+        Asset.create("native", "", ""),
+        Asset.create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+        Asset.create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
+    );
+    Server server = new Server("https://horizon-testnet.stellar.org");
+
+    try {
+      server.strictSendPaths().destinationAssets(assets).destinationAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN");
+      fail();
+    } catch (RuntimeException e) {
+      assertTrue(e.getMessage().contains("cannot set both destination_assets and destination_account"));
+    }
+
+    try {
+      server.strictSendPaths().destinationAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN").destinationAssets(assets);
+      fail();
+    } catch (RuntimeException e) {
+      assertTrue(e.getMessage().contains("cannot set both destination_assets and destination_account"));
+    }
   }
 }
