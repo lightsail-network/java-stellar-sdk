@@ -1,7 +1,6 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -12,36 +11,41 @@ import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
 import java.io.IOException;
+import java.util.List;
 
-/**
- * Builds requests connected to paths.
- */
-public class PathsRequestBuilder extends RequestBuilder {
-  public PathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "paths");
+public class StrictSendPathsRequestBuilder extends RequestBuilder {
+  public StrictSendPathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
+    super(httpClient, serverURI, "");
+    this.setSegments("paths", "strict-send");
   }
 
-  public PathsRequestBuilder destinationAccount(String account) {
+  public StrictSendPathsRequestBuilder destinationAccount(String account) {
+    if (uriBuilder.build().queryParameter("destination_assets") != null) {
+      throw new RuntimeException("cannot set both destination_assets and destination_account");
+    }
     uriBuilder.setQueryParameter("destination_account", account);
     return this;
   }
 
-  public PathsRequestBuilder sourceAccount(String account) {
-    uriBuilder.setQueryParameter("source_account", account);
+  public StrictSendPathsRequestBuilder destinationAssets(List<Asset> assets) {
+    if (uriBuilder.build().queryParameter("destination_account") != null) {
+      throw new RuntimeException("cannot set both destination_assets and destination_account");
+    }
+    setAssetsParameter("destination_assets", assets);
     return this;
   }
 
-  public PathsRequestBuilder destinationAmount(String amount) {
-    uriBuilder.setQueryParameter("destination_amount", amount);
+  public StrictSendPathsRequestBuilder sourceAmount(String amount) {
+    uriBuilder.setQueryParameter("source_amount", amount);
     return this;
   }
 
-  public PathsRequestBuilder destinationAsset(Asset asset) {
-    uriBuilder.setQueryParameter("destination_asset_type", asset.getType());
+  public StrictSendPathsRequestBuilder sourceAsset(Asset asset) {
+    uriBuilder.setQueryParameter("source_asset_type", asset.getType());
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.setQueryParameter("destination_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.setQueryParameter("destination_asset_issuer", creditAlphaNumAsset.getIssuer());
+      uriBuilder.setQueryParameter("source_asset_code", creditAlphaNumAsset.getCode());
+      uriBuilder.setQueryParameter("source_asset_issuer", creditAlphaNumAsset.getIssuer());
     }
     return this;
   }
