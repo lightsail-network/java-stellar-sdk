@@ -27,8 +27,10 @@ public class TransactionResponse extends Response implements Pageable {
   private final String pagingToken;
   @SerializedName("source_account_sequence")
   private final Long sourceAccountSequence;
-  @SerializedName("fee_paid")
-  private final Long feePaid;
+  @SerializedName("max_fee")
+  private final Long maxFee;
+  @SerializedName("fee_charged")
+  private final Long feeCharged;
   @SerializedName("operation_count")
   private final Integer operationCount;
   @SerializedName("envelope_xdr")
@@ -44,7 +46,23 @@ public class TransactionResponse extends Response implements Pageable {
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  TransactionResponse(String hash, Long ledger, String createdAt, String sourceAccount, Boolean successful, String pagingToken, Long sourceAccountSequence, Long feePaid, Integer operationCount, String envelopeXdr, String resultXdr, String resultMetaXdr, Memo memo, Links links) {
+  TransactionResponse(
+      String hash,
+      Long ledger,
+      String createdAt,
+      String sourceAccount,
+      Boolean successful,
+      String pagingToken,
+      Long sourceAccountSequence,
+      Long maxFee,
+      Long feeCharged,
+      Integer operationCount,
+      String envelopeXdr,
+      String resultXdr,
+      String resultMetaXdr,
+      Memo memo,
+      Links links
+  ) {
     this.hash = hash;
     this.ledger = ledger;
     this.createdAt = createdAt;
@@ -52,7 +70,8 @@ public class TransactionResponse extends Response implements Pageable {
     this.successful = successful;
     this.pagingToken = pagingToken;
     this.sourceAccountSequence = sourceAccountSequence;
-    this.feePaid = feePaid;
+    this.maxFee = maxFee;
+    this.feeCharged = feeCharged;
     this.operationCount = operationCount;
     this.envelopeXdr = envelopeXdr;
     this.resultXdr = resultXdr;
@@ -89,8 +108,12 @@ public class TransactionResponse extends Response implements Pageable {
     return sourceAccountSequence;
   }
 
-  public Long getFeePaid() {
-    return feePaid;
+  public Long getMaxFee() {
+    return maxFee;
+  }
+
+  public Long getFeeCharged() {
+    return feeCharged;
   }
 
   public Integer getOperationCount() {
