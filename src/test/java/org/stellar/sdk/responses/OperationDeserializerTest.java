@@ -440,7 +440,7 @@ public class OperationDeserializerTest extends TestCase {
             "  \"source_asset_issuer\": \"GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5\"\n" +
             "}";
 
-    PathPaymentOperationResponse operation = (PathPaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+    PathPaymentStrictReceiveOperationResponse operation = (PathPaymentStrictReceiveOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getFrom(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
     assertEquals(operation.getTo(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
@@ -549,7 +549,7 @@ public class OperationDeserializerTest extends TestCase {
             "  \"source_asset_type\": \"native\"\n" +
             "}";
 
-    PathPaymentOperationResponse operation = (PathPaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+    PathPaymentStrictReceiveOperationResponse operation = (PathPaymentStrictReceiveOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getFrom(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
     assertEquals(operation.getTo(), "GC45JH537XZD4DY4WTV5PCUJL4KPOIE4WMGX5OP5KSPS2OLGRUOVVIGD");
