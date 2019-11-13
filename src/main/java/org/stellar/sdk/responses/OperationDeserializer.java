@@ -34,8 +34,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
       case PAYMENT:
         return gson.fromJson(json, PaymentOperationResponse.class);
       case PATH_PAYMENT_STRICT_RECEIVE:
-        // Will change to PathPaymentStrictReceiveOperationResponse in 0.11.0
-        return gson.fromJson(json, PathPaymentOperationResponse.class);
+        return gson.fromJson(json, PathPaymentStrictReceiveOperationResponse.class);
       case MANAGE_SELL_OFFER:
         return gson.fromJson(json, ManageSellOfferOperationResponse.class);
       case CREATE_PASSIVE_SELL_OFFER:

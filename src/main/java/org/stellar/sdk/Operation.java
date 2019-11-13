@@ -75,8 +75,7 @@ public abstract class Operation {
         operation = new PaymentOperation.Builder(body.getPaymentOp()).build();
         break;
       case PATH_PAYMENT_STRICT_RECEIVE:
-        // Will change to PathPaymentStrictReceiveOperation in 0.11.0
-        operation = new PathPaymentOperation.Builder(body.getPathPaymentStrictReceiveOp()).build();
+        operation = new PathPaymentStrictReceiveOperation.Builder(body.getPathPaymentStrictReceiveOp()).build();
         break;
       case MANAGE_SELL_OFFER:
         operation = new ManageSellOfferOperation.Builder(body.getManageSellOfferOp()).build();

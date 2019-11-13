@@ -71,7 +71,7 @@ public class OperationTest {
     }
 
     @Test
-    public void testPathPaymentOperation() throws FormatException, IOException, AssetCodeLengthInvalidException {
+    public void testPathPaymentStrictReceiveOperation() throws FormatException, IOException, AssetCodeLengthInvalidException {
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -90,14 +90,14 @@ public class OperationTest {
         String destAmount = "0.0001";
         Asset[] path = {new AssetTypeCreditAlphaNum4("USD", pathIssuer1.getAccountId()), new AssetTypeCreditAlphaNum12("TESTTEST", pathIssuer2.getAccountId())};
 
-        PathPaymentOperation operation = new PathPaymentOperation.Builder(
+        PathPaymentStrictReceiveOperation operation = new PathPaymentStrictReceiveOperation.Builder(
                 sendAsset, sendMax, destination.getAccountId(), destAsset, destAmount)
                 .setPath(path)
                 .setSourceAccount(source.getAccountId())
                 .build();
 
         org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        PathPaymentOperation parsedOperation = (PathPaymentOperation) Operation.fromXdr(xdr);
+        PathPaymentStrictReceiveOperation parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(xdr);
 
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getSendMax().getInt64().longValue());
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getDestAmount().getInt64().longValue());
@@ -115,7 +115,7 @@ public class OperationTest {
     }
 
     @Test
-    public void testPathPaymentEmptyPathOperation() throws FormatException, IOException, AssetCodeLengthInvalidException {
+    public void testPathPaymentStrictReceiveEmptyPathOperation() throws FormatException, IOException, AssetCodeLengthInvalidException {
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -128,13 +128,13 @@ public class OperationTest {
         Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer.getAccountId());
         String destAmount = "0.0001";
 
-        PathPaymentOperation operation = new PathPaymentOperation.Builder(
+        PathPaymentStrictReceiveOperation operation = new PathPaymentStrictReceiveOperation.Builder(
                 sendAsset, sendMax, destination.getAccountId(), destAsset, destAmount)
                 .setSourceAccount(source.getAccountId())
                 .build();
 
         org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        PathPaymentOperation parsedOperation = (PathPaymentOperation) Operation.fromXdr(xdr);
+        PathPaymentStrictReceiveOperation parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(xdr);
 
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getSendMax().getInt64().longValue());
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getDestAmount().getInt64().longValue());
