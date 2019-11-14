@@ -48,7 +48,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public OperationResponse operation(long operationId) throws IOException {
-    this.setSegments("operation", String.valueOf(operationId));
+    this.setSegments("operations", String.valueOf(operationId));
     return this.operation(this.buildUri());
   }
 

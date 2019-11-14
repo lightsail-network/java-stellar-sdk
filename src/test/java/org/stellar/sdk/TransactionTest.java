@@ -228,6 +228,7 @@ public class TransactionTest {
                     .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                     .addMemo(Memo.hash("abcdef"))
                     .build();
+            fail();
         } catch (RuntimeException exception) {
             assertEquals(
                     exception.getMessage(),
@@ -436,6 +437,7 @@ public class TransactionTest {
                     .addMemo(Memo.none())
                     .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
                     .build();
+            fail();
         } catch (NullPointerException e) {
             assertTrue(e.getMessage().contains("Network cannot be null"));
         }
