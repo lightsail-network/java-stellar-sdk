@@ -33,7 +33,7 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
       if (memoType.equals("text")) {
         JsonElement memoField = json.getAsJsonObject().get("memo");
         if (memoField != null) {
-          memo = Memo.text(memoField.getAsString());
+          memo = Memo.textUnknownEncoding(memoField.getAsString());
         } else {
           memo = Memo.text("");
         }

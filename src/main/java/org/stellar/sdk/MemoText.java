@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 
+import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,12 +14,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class MemoText extends Memo {
   private String text;
 
-  public MemoText(String text) {
+  public MemoText(String text, @Nullable Charset encoding) {
     this.text = checkNotNull(text, "text cannot be null");
 
-    int length = text.getBytes((Charset.forName("UTF-8"))).length;
+    int length;
+    if (encoding != null) {
+      length = text.getBytes(encoding).length;
+    } else {
+      int lengthUtf8 = text.getBytes((Charset.forName("UTF-8"))).length;
+      int lengthAscii = text.getBytes((Charset.forName("ASCII"))).length;
+      length = Math.min(lengthUtf8, lengthAscii);
+    }
     if (length > 28) {
-      throw new MemoTooLongException("text must be <= 28 bytes. length=" + String.valueOf(length));
+      throw new MemoTooLongException("text must be <= 28 bytes. length=" + length);
     }
   }
 

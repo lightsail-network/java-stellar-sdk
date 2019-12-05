@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 
+import java.nio.charset.Charset;
+
 /**
  * <p>The memo contains optional extra information. It is the responsibility of the client to interpret this value. Memos can be one of the following types:</p>
  * <ul>
@@ -24,10 +26,18 @@ public abstract class Memo {
 
     /**
      * Creates new {@link MemoText} instance.
-     * @param text
+     * @param text test in utf8 encoding
      */
     public static MemoText text(String text) {
-        return new MemoText(text);
+        return new MemoText(text, Charset.forName("UTF8"));
+    }
+
+    /**
+     * Creates new {@link MemoText} instance.
+     * @param text test in unknown encoding
+     */
+    public static MemoText textUnknownEncoding(String text) {
+        return new MemoText(text,null);
     }
 
     /**

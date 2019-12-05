@@ -9,6 +9,7 @@ import org.stellar.sdk.MemoId;
 import org.stellar.sdk.responses.TransactionDeserializer;
 import org.stellar.sdk.responses.TransactionResponse;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -50,7 +51,7 @@ public class MemoTest {
     @Test
     public void testMemoTextTooLongUtf8() {
         try {
-            Memo.text("价值交易的开源协议!!");
+            new MemoText("价值交易的开源协议!!", Charset.forName("UTF8"));
             fail();
         } catch (RuntimeException exception) {
             assertTrue(exception.getMessage().contains("text must be <= 28 bytes."));
@@ -135,5 +136,25 @@ public class MemoTest {
         assertNull(memoXdr.getHash());
         assertEquals("4142434445464748494a4b4c0000000000000000000000000000000000000000", BaseEncoding.base16().lowerCase().encode(memoXdr.getRetHash().getHash()));
         assertEquals("4142434445464748494a4b4c", memo.getTrimmedHexValue());
+    }
+
+    @Test
+    public void testMemoTextAscii() {
+        String asciiStr = "\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u0020\u0021\u0222\u0023\u0024\u0025\u0026\u0027";
+        MemoText memo = Memo.text(asciiStr);
+        assertEquals(asciiStr, memo.getText());
+        assertEquals(asciiStr, memo.toString());
+    }
+
+    @Test
+    public void testMemoTextAsciiTooLong() {
+        String longStr = "\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u0020\u0021\u0222\u0023\u0024\u0025\u0026\u0027\u0028\u0029";
+
+        try {
+            Memo.text(longStr);
+            fail();
+        } catch (RuntimeException exception) {
+            assertTrue(exception.getMessage().contains("text must be <= 28 bytes."));
+        }
     }
 }
