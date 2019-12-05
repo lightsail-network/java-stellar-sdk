@@ -26,7 +26,7 @@ public abstract class Memo {
 
     /**
      * Creates new {@link MemoText} instance.
-     * @param text test in utf8 encoding
+     * @param text text in utf8 encoding
      */
     public static MemoText text(String text) {
         return new MemoText(text, Charset.forName("UTF8"));
@@ -34,7 +34,7 @@ public abstract class Memo {
 
     /**
      * Creates new {@link MemoText} instance.
-     * @param text test in unknown encoding
+     * @param text text in unknown encoding
      */
     public static MemoText textUnknownEncoding(String text) {
         return new MemoText(text,null);
