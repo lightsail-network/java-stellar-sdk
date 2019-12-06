@@ -140,20 +140,25 @@ public class MemoTest {
 
     @Test
     public void testMemoTextAscii() {
-        String asciiStr = "\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u0020\u0021\u0222\u0023\u0024\u0025\u0026\u0027";
-        MemoText memo = Memo.text(asciiStr);
+        String asciiStr = "\u0223\u0025\ufffd\u0060\ufffd\ufffd\ufffd\u006d\u005a\u0041\u0076\u000e\ufffd\ufffd\u0002\u0049\u0004\ufffd\ufffd\ufffd\ufffd\ufffd\u0062\ufffd\u0031\ufffd\u0010";
+        try {
+            Memo.text(asciiStr);
+            fail(); // More then 28 bytes in UTF8 encoding
+        } catch (MemoTooLongException e) {
+        }
+        MemoText memo = Memo.textUnknownEncoding(asciiStr);
         assertEquals(asciiStr, memo.getText());
         assertEquals(asciiStr, memo.toString());
     }
 
     @Test
     public void testMemoTextAsciiTooLong() {
-        String longStr = "\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u0020\u0021\u0222\u0023\u0024\u0025\u0026\u0027\u0028\u0029";
+        String longStr = "\u0223\u0025\ufffd\u0060\ufffd\ufffd\ufffd\u006d\u005a\u0041\u0076\u000e\ufffd\ufffd\u0002\u0049\u0004\ufffd\ufffd\ufffd\ufffd\ufffd\u0062\ufffd\u0031\ufffd\u0010\u0028\u0029";
 
         try {
-            Memo.text(longStr);
+            Memo.textUnknownEncoding(longStr);
             fail();
-        } catch (RuntimeException exception) {
+        } catch (MemoTooLongException exception) {
             assertTrue(exception.getMessage().contains("text must be <= 28 bytes."));
         }
     }
