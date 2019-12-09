@@ -26,7 +26,7 @@ public class MemoText extends Memo {
   }
 
   public String getText() {
-    return new String(text, Charset.forName("UTF-8"));
+    return new String(this.text, Charset.forName("UTF-8"));
   }
 
   public byte[] getBytes() {
