@@ -2,8 +2,11 @@ package org.stellar.sdk.xdr;
 
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
+import org.stellar.sdk.Memo;
+import org.stellar.sdk.MemoText;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -57,6 +60,21 @@ public class TransactionDecodeTest {
         TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
         assertEquals(1, transactionEnvelope.getTx().getOperations().length);
         assertTrue(Arrays.equals(new byte[]{'G', 'O', 'L', 'D'}, transactionEnvelope.getTx().getOperations()[0].getBody().getPaymentOp().getAsset().getAlphaNum4().getAssetCode().getAssetCode4()));
+    }
+
+    @Test
+    public void testRoundtrip() throws IOException {
+        String txBody = "AAAAAM6jLgjKjuXxWkir4M7v0NqoOfODXcFnn6AGlP+d4RxAAAAAZAAIiE4AAAABAAAAAAAAAAEAAAAcyKMl+WDSzuttWkF2DvzKAkkEqeSZ4cZihjGJEAAAAAEAAAAAAAAAAQAAAAAgECmBaDwiRPE1z2vAE36J+45toU/ZxdvpR38tc0HvmgAAAAAAAAAAAJiWgAAAAAAAAAABneEcQAAAAECeXDKebJoAbST1T2AbDBui9K0TbSM8sfbhXUAZ2ROAoCRs5cG1pRvY+ityyPWFEKPd7+3qEupavkAZ/+L7/28G";
+        BaseEncoding base64Encoding = BaseEncoding.base64();
+        byte[] bytes = base64Encoding.decode(txBody);
+
+        TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+
+        transactionEnvelope.encode(new XdrDataOutputStream(byteOutputStream));
+        String serialized = base64Encoding.encode(byteOutputStream.toByteArray());
+        // fails here
+        assertEquals(serialized, txBody);
     }
 
 }

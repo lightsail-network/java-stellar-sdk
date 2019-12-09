@@ -335,7 +335,7 @@ union Memo switch (MemoType type)
 case MEMO_NONE:
     void;
 case MEMO_TEXT:
-    string text<28>;
+    opaque text<28>;
 case MEMO_ID:
     uint64 id;
 case MEMO_HASH:

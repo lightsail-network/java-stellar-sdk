@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -11,19 +12,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents MEMO_TEXT.
  */
 public class MemoText extends Memo {
-  private String text;
+  private byte[] text;
 
   public MemoText(String text) {
-    this.text = checkNotNull(text, "text cannot be null");
+    this(checkNotNull(text, "text cannot be null").getBytes((Charset.forName("UTF-8"))));
+  }
 
-    int length = text.getBytes((Charset.forName("UTF-8"))).length;
-    if (length > 28) {
-      throw new MemoTooLongException("text must be <= 28 bytes. length=" + String.valueOf(length));
+  public MemoText(byte[] text) {
+    this.text = checkNotNull(text, "text cannot be null");
+    if (this.text.length > 28) {
+      throw new MemoTooLongException("text must be <= 28 bytes. length=" + String.valueOf(this.text.length));
     }
   }
 
   public String getText() {
-    return text;
+    return new String(text, Charset.forName("UTF-8"));
+  }
+
+  public byte[] getBytes() {
+    return this.text;
   }
 
   @Override
@@ -36,7 +43,7 @@ public class MemoText extends Memo {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.text);
+    return Arrays.hashCode(this.text);
   }
 
   @Override
@@ -44,11 +51,11 @@ public class MemoText extends Memo {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MemoText memoText = (MemoText) o;
-    return Objects.equal(this.text, memoText.text);
+    return Arrays.equals(this.text, memoText.text);
   }
 
     @Override
     public String toString() {
-        return text == null ? "" : text;
+        return text == null ? "" : this.getText();
     }
 }

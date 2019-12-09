@@ -9,7 +9,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.stellar.sdk.Memo;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.XdrDataInputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class TransactionDeserializer implements JsonDeserializer<TransactionResponse> {
@@ -31,12 +35,19 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
       // representation of a transaction. That's why we need to handle a special case
       // here.
       if (memoType.equals("text")) {
-        JsonElement memoField = json.getAsJsonObject().get("memo");
-        if (memoField != null) {
-          memo = Memo.text(memoField.getAsString());
-        } else {
-          memo = Memo.text("");
+        // we obtain the memo text from the xdr because the bytes may not be valid utf8
+        String envelopeXdr = json.getAsJsonObject().get("envelope_xdr").getAsString();
+        BaseEncoding base64Encoding = BaseEncoding.base64();
+        byte[] bytes = base64Encoding.decode(envelopeXdr);
+        TransactionEnvelope transactionEnvelope = null;
+        try {
+          transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+        } catch (IOException e) {
+          // JsonDeserializer<TransactionResponse> cannot throw IOExceptions
+          // so we must throw it as a runtime exception
+          throw new RuntimeException(e);
         }
+        memo = Memo.text(transactionEnvelope.getTx().getMemo().getText());
       } else {
         String memoValue = json.getAsJsonObject().get("memo").getAsString();
         BaseEncoding base64Encoding = BaseEncoding.base64();

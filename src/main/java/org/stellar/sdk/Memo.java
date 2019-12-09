@@ -31,6 +31,15 @@ public abstract class Memo {
     }
 
     /**
+     * Creates new {@link MemoText} instance.
+     * @param text
+     */
+    public static MemoText text(byte[] text) {
+        return new MemoText(text);
+    }
+
+
+    /**
      * Creates new {@link MemoId} instance.
      * @param id
      */
