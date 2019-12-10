@@ -6,6 +6,8 @@ import org.stellar.sdk.xdr.ManageDataOp;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.String64;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -41,7 +43,7 @@ public class ManageDataOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ManageDataOp op = new ManageDataOp();
     String64 name = new String64();
-    name.setString64(this.name);
+    name.setString64(this.name.getBytes(Charset.forName("UTF-8")));
     op.setDataName(name);
 
     if (value != null) {
@@ -68,7 +70,7 @@ public class ManageDataOperation extends Operation {
      * @param op {@link ManageDataOp}
      */
     Builder(ManageDataOp op) {
-      name = op.getDataName().getString64();
+      name = new String(op.getDataName().getString64(), Charset.forName("UTF-8"));
       if (op.getDataValue() != null) {
         value = op.getDataValue().getDataValue();
       } else {

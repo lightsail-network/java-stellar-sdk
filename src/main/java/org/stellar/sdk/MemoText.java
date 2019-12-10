@@ -15,7 +15,7 @@ public class MemoText extends Memo {
   private byte[] text;
 
   public MemoText(String text) {
-    this(checkNotNull(text, "text cannot be null").getBytes((Charset.forName("UTF-8"))));
+    this(checkNotNull(text, "text cannot be null").getBytes(Charset.forName("UTF-8")));
   }
 
   public MemoText(byte[] text) {

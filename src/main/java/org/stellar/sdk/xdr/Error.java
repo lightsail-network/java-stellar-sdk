@@ -7,6 +7,7 @@ package org.stellar.sdk.xdr;
 import java.io.IOException;
 
 import com.google.common.base.Objects;
+import java.util.Arrays;
 
 // === xdr source ============================================================
 
@@ -26,16 +27,18 @@ public class Error implements XdrElement {
   public void setCode(ErrorCode value) {
     this.code = value;
   }
-  private String msg;
-  public String getMsg() {
+  private byte[] msg;
+  public byte[] getMsg() {
     return this.msg;
   }
-  public void setMsg(String value) {
+  public void setMsg(byte[] value) {
     this.msg = value;
   }
   public static void encode(XdrDataOutputStream stream, Error encodedError) throws IOException{
     ErrorCode.encode(stream, encodedError.code);
-    stream.writeString(encodedError.msg);
+    int msgsize = encodedError.msg.length;
+    stream.writeInt(msgsize);
+    stream.write(encodedError.getMsg(), 0, msgsize);
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
@@ -43,12 +46,14 @@ public class Error implements XdrElement {
   public static Error decode(XdrDataInputStream stream) throws IOException {
     Error decodedError = new Error();
     decodedError.code = ErrorCode.decode(stream);
-    decodedError.msg = stream.readString();
+    int msgsize = stream.readInt();
+    decodedError.msg = new byte[msgsize];
+    stream.read(decodedError.msg, 0, msgsize);
     return decodedError;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.code, this.msg);
+    return Objects.hashCode(this.code, Arrays.hashCode(this.msg));
   }
   @Override
   public boolean equals(Object object) {
@@ -57,6 +62,6 @@ public class Error implements XdrElement {
     }
 
     Error other = (Error) object;
-    return Objects.equal(this.code, other.code) && Objects.equal(this.msg, other.msg);
+    return Objects.equal(this.code, other.code) && Arrays.equals(this.msg, other.msg);
   }
 }

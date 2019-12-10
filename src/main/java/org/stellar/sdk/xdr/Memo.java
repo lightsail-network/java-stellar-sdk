@@ -16,7 +16,7 @@ import java.util.Arrays;
 //  case MEMO_NONE:
 //      void;
 //  case MEMO_TEXT:
-//      opaque text<28>;
+//      string text<28>;
 //  case MEMO_ID:
 //      uint64 id;
 //  case MEMO_HASH:

@@ -6,7 +6,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.IOException;
 
-import com.google.common.base.Objects;
+import java.util.Arrays;
 
 // === xdr source ============================================================
 
@@ -14,27 +14,31 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class String64 implements XdrElement {
-  private String string64;
-  public String getString64() {
+  private byte[] string64;
+  public byte[] getString64() {
     return this.string64;
   }
-  public void setString64(String value) {
+  public void setString64(byte[] value) {
     this.string64 = value;
   }
   public static void encode(XdrDataOutputStream stream, String64  encodedString64) throws IOException {
-  stream.writeString(encodedString64.string64);
+  int string64size = encodedString64.string64.length;
+  stream.writeInt(string64size);
+  stream.write(encodedString64.getString64(), 0, string64size);
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static String64 decode(XdrDataInputStream stream) throws IOException {
     String64 decodedString64 = new String64();
-  decodedString64.string64 = stream.readString();
+  int string64size = stream.readInt();
+  decodedString64.string64 = new byte[string64size];
+  stream.read(decodedString64.string64, 0, string64size);
     return decodedString64;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.string64);
+    return Arrays.hashCode(this.string64);
   }
   @Override
   public boolean equals(Object object) {
@@ -43,6 +47,6 @@ public class String64 implements XdrElement {
     }
 
     String64 other = (String64) object;
-    return Objects.equal(this.string64, other.string64);
+    return Arrays.equals(this.string64, other.string64);
   }
 }
