@@ -73,7 +73,6 @@ public class TransactionDecodeTest {
 
         transactionEnvelope.encode(new XdrDataOutputStream(byteOutputStream));
         String serialized = base64Encoding.encode(byteOutputStream.toByteArray());
-        // fails here
         assertEquals(serialized, txBody);
     }
 
