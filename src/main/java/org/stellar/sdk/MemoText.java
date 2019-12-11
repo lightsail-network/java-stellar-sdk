@@ -1,11 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.XdrString;
-
-import java.nio.charset.Charset;
-import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -13,38 +9,43 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents MEMO_TEXT.
  */
 public class MemoText extends Memo {
-  private byte[] text;
+  private XdrString text;
 
   public MemoText(String text) {
-    this(checkNotNull(text, "text cannot be null").getBytes(Charset.forName("UTF-8")));
+    this(new XdrString(checkNotNull(text, "text cannot be null")));
   }
 
   public MemoText(byte[] text) {
+    this(new XdrString(checkNotNull(text, "text cannot be null")));
+  }
+
+  public MemoText(XdrString text) {
     this.text = checkNotNull(text, "text cannot be null");
-    if (this.text.length > 28) {
-      throw new MemoTooLongException("text must be <= 28 bytes. length=" + String.valueOf(this.text.length));
+    int length = this.text.getBytes().length;
+    if (length > 28) {
+      throw new MemoTooLongException("text must be <= 28 bytes. length=" + String.valueOf(length));
     }
   }
 
   public String getText() {
-    return new String(this.text, Charset.forName("UTF-8"));
+    return this.text.toString();
   }
 
   public byte[] getBytes() {
-    return this.text;
+    return this.text.getBytes();
   }
 
   @Override
   org.stellar.sdk.xdr.Memo toXdr() {
     org.stellar.sdk.xdr.Memo memo = new org.stellar.sdk.xdr.Memo();
     memo.setDiscriminant(MemoType.MEMO_TEXT);
-    memo.setText(new XdrString(text));
+    memo.setText(this.text);
     return memo;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(this.text);
+    return this.text.hashCode();
   }
 
   @Override
@@ -52,7 +53,7 @@ public class MemoText extends Memo {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MemoText memoText = (MemoText) o;
-    return Arrays.equals(this.text, memoText.text);
+    return this.text.equals(memoText.text);
   }
 
     @Override
