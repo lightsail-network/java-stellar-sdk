@@ -1,12 +1,13 @@
 
-package org.stellar.sdk.xdr;
+package org.stellar.sdk;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 
 public class XdrDataStreamTest {
@@ -16,15 +17,17 @@ public class XdrDataStreamTest {
         //String to XDR
         ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
         XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(byteOutputStream);
-        xdrOutputStream.writeString(inputString);
+
+        org.stellar.sdk.xdr.Memo xdrMemo = Memo.text(inputString).toXdr();
+        xdrMemo.encode(xdrOutputStream);
 
         byte[] xdrByteOutput = byteOutputStream.toByteArray();
 
         //XDR back to String
         XdrDataInputStream xdrInputStream = new XdrDataInputStream(new ByteArrayInputStream(xdrByteOutput));
-        String outputString = xdrInputStream.readString();
+        xdrMemo = org.stellar.sdk.xdr.Memo.decode(xdrInputStream);
 
-        return outputString;
+        return Memo.text(xdrMemo.getText()).getText();
 
     }
 
@@ -43,7 +46,7 @@ public class XdrDataStreamTest {
     
      @Test
     public void backAndForthXdrStreamingWithAllNonStandardAscii() throws IOException {
-        String memo = "øûý™€♠♣♥†‡µ¢£€";
+        String memo = "øûý™€♠♣♥†‡";
         assertEquals(memo, backAndForthXdrStreaming(memo));
     }
 }

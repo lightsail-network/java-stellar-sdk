@@ -14,12 +14,6 @@ public class XdrDataOutputStream extends DataOutputStream {
         mOut = (XdrOutputStream) super.out;
     }
 
-    public void writeString(String s) throws IOException {
-        byte[] chars = s.getBytes(Charset.forName("UTF-8"));
-        writeInt(chars.length);
-        write(chars);
-    }
-
     public void writeIntArray(int[] a) throws IOException {
         writeInt(a.length);
         writeIntArray(a, a.length);
