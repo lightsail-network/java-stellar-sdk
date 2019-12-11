@@ -5,6 +5,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## 0.12.0
 
 * Represent memo text contents as bytes because a memo text may not be valid UTF-8 string (https://github.com/stellar/java-stellar-sdk/issues/257).
+* Validate name length when constructing org.stellar.sdk.ManageDataOperation instances.
+* Validate home domain length when constructing org.stellar.sdk.SetOptionsOperation instances.
 
 ## 0.11.0
 

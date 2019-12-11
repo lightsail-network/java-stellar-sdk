@@ -3,8 +3,6 @@ package org.stellar.sdk;
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkNotNull;

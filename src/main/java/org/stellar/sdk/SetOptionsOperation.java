@@ -4,8 +4,6 @@ import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
 
-import java.nio.charset.Charset;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
