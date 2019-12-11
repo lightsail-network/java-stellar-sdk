@@ -38,6 +38,11 @@ public class SetOptionsOperation extends Operation {
     this.homeDomain = homeDomain;
     this.signer = signer;
     this.signerWeight = signerWeight;
+
+    if (new XdrString(this.homeDomain).getBytes().length > 32) {
+      throw new IllegalArgumentException("home domain cannot exceed 32 bytes");
+    }
+
   }
 
   /**

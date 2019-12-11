@@ -20,6 +20,10 @@ public class ManageDataOperation extends Operation {
   private ManageDataOperation(String name, byte[] value) {
     this.name = checkNotNull(name, "name cannot be null");
     this.value = value;
+
+    if (new XdrString(this.name).getBytes().length > 64) {
+      throw new IllegalArgumentException("name cannot exceed 64 bytes");
+    }
   }
 
   /**
