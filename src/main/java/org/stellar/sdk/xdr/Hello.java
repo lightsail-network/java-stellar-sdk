@@ -7,7 +7,6 @@ package org.stellar.sdk.xdr;
 import java.io.IOException;
 
 import com.google.common.base.Objects;
-import java.util.Arrays;
 
 // === xdr source ============================================================
 
@@ -55,11 +54,11 @@ public class Hello implements XdrElement {
   public void setNetworkID(Hash value) {
     this.networkID = value;
   }
-  private byte[] versionStr;
-  public byte[] getVersionStr() {
+  private XdrString versionStr;
+  public XdrString getVersionStr() {
     return this.versionStr;
   }
-  public void setVersionStr(byte[] value) {
+  public void setVersionStr(XdrString value) {
     this.versionStr = value;
   }
   private Integer listeningPort;
@@ -95,9 +94,7 @@ public class Hello implements XdrElement {
     Uint32.encode(stream, encodedHello.overlayVersion);
     Uint32.encode(stream, encodedHello.overlayMinVersion);
     Hash.encode(stream, encodedHello.networkID);
-    int versionStrsize = encodedHello.versionStr.length;
-    stream.writeInt(versionStrsize);
-    stream.write(encodedHello.getVersionStr(), 0, versionStrsize);
+    encodedHello.versionStr.encode(stream);
     stream.writeInt(encodedHello.listeningPort);
     NodeID.encode(stream, encodedHello.peerID);
     AuthCert.encode(stream, encodedHello.cert);
@@ -112,9 +109,7 @@ public class Hello implements XdrElement {
     decodedHello.overlayVersion = Uint32.decode(stream);
     decodedHello.overlayMinVersion = Uint32.decode(stream);
     decodedHello.networkID = Hash.decode(stream);
-    int versionStrsize = stream.readInt();
-    decodedHello.versionStr = new byte[versionStrsize];
-    stream.read(decodedHello.versionStr, 0, versionStrsize);
+    decodedHello.versionStr = XdrString.decode(stream);
     decodedHello.listeningPort = stream.readInt();
     decodedHello.peerID = NodeID.decode(stream);
     decodedHello.cert = AuthCert.decode(stream);
@@ -123,7 +118,7 @@ public class Hello implements XdrElement {
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ledgerVersion, this.overlayVersion, this.overlayMinVersion, this.networkID, Arrays.hashCode(this.versionStr), this.listeningPort, this.peerID, this.cert, this.nonce);
+    return Objects.hashCode(this.ledgerVersion, this.overlayVersion, this.overlayMinVersion, this.networkID, this.versionStr, this.listeningPort, this.peerID, this.cert, this.nonce);
   }
   @Override
   public boolean equals(Object object) {
@@ -132,6 +127,6 @@ public class Hello implements XdrElement {
     }
 
     Hello other = (Hello) object;
-    return Objects.equal(this.ledgerVersion, other.ledgerVersion) && Objects.equal(this.overlayVersion, other.overlayVersion) && Objects.equal(this.overlayMinVersion, other.overlayMinVersion) && Objects.equal(this.networkID, other.networkID) && Arrays.equals(this.versionStr, other.versionStr) && Objects.equal(this.listeningPort, other.listeningPort) && Objects.equal(this.peerID, other.peerID) && Objects.equal(this.cert, other.cert) && Objects.equal(this.nonce, other.nonce);
+    return Objects.equal(this.ledgerVersion, other.ledgerVersion) && Objects.equal(this.overlayVersion, other.overlayVersion) && Objects.equal(this.overlayMinVersion, other.overlayMinVersion) && Objects.equal(this.networkID, other.networkID) && Objects.equal(this.versionStr, other.versionStr) && Objects.equal(this.listeningPort, other.listeningPort) && Objects.equal(this.peerID, other.peerID) && Objects.equal(this.cert, other.cert) && Objects.equal(this.nonce, other.nonce);
   }
 }

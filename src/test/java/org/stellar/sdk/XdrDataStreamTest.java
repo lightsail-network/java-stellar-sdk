@@ -27,8 +27,7 @@ public class XdrDataStreamTest {
         XdrDataInputStream xdrInputStream = new XdrDataInputStream(new ByteArrayInputStream(xdrByteOutput));
         xdrMemo = org.stellar.sdk.xdr.Memo.decode(xdrInputStream);
 
-        return Memo.text(xdrMemo.getText()).getText();
-
+        return xdrMemo.getText().toString();
     }
 
     @Test

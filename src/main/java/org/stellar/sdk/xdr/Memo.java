@@ -7,7 +7,6 @@ package org.stellar.sdk.xdr;
 import java.io.IOException;
 
 import com.google.common.base.Objects;
-import java.util.Arrays;
 
 // === xdr source ============================================================
 
@@ -35,11 +34,11 @@ public class Memo implements XdrElement {
   public void setDiscriminant(MemoType value) {
     this.type = value;
   }
-  private byte[] text;
-  public byte[] getText() {
+  private XdrString text;
+  public XdrString getText() {
     return this.text;
   }
-  public void setText(byte[] value) {
+  public void setText(XdrString value) {
     this.text = value;
   }
   private Uint64 id;
@@ -71,9 +70,7 @@ public class Memo implements XdrElement {
   case MEMO_NONE:
   break;
   case MEMO_TEXT:
-  int textsize = encodedMemo.text.length;
-  stream.writeInt(textsize);
-  stream.write(encodedMemo.getText(), 0, textsize);
+  encodedMemo.text.encode(stream);
   break;
   case MEMO_ID:
   Uint64.encode(stream, encodedMemo.id);
@@ -97,9 +94,7 @@ public class Memo implements XdrElement {
   case MEMO_NONE:
   break;
   case MEMO_TEXT:
-  int textsize = stream.readInt();
-  decodedMemo.text = new byte[textsize];
-  stream.read(decodedMemo.text, 0, textsize);
+  decodedMemo.text = XdrString.decode(stream);
   break;
   case MEMO_ID:
   decodedMemo.id = Uint64.decode(stream);
@@ -115,7 +110,7 @@ public class Memo implements XdrElement {
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.hashCode(this.text), this.id, this.hash, this.retHash, this.type);
+    return Objects.hashCode(this.text, this.id, this.hash, this.retHash, this.type);
   }
   @Override
   public boolean equals(Object object) {
@@ -124,6 +119,6 @@ public class Memo implements XdrElement {
     }
 
     Memo other = (Memo) object;
-    return Arrays.equals(this.text, other.text) && Objects.equal(this.id, other.id) && Objects.equal(this.hash, other.hash) && Objects.equal(this.retHash, other.retHash) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.text, other.text) && Objects.equal(this.id, other.id) && Objects.equal(this.hash, other.hash) && Objects.equal(this.retHash, other.retHash) && Objects.equal(this.type, other.type);
   }
 }

@@ -87,7 +87,7 @@ public abstract class Memo {
             case MEMO_ID:
                 return id(memo.getId().getUint64().longValue());
             case MEMO_TEXT:
-                return text(memo.getText());
+                return text(memo.getText().getBytes());
             case MEMO_HASH:
                 return hash(memo.getHash().getHash());
             case MEMO_RETURN:

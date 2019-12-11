@@ -1,10 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.DataValue;
-import org.stellar.sdk.xdr.ManageDataOp;
-import org.stellar.sdk.xdr.OperationType;
-import org.stellar.sdk.xdr.String64;
+import org.stellar.sdk.xdr.*;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -43,7 +40,7 @@ public class ManageDataOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ManageDataOp op = new ManageDataOp();
     String64 name = new String64();
-    name.setString64(this.name.getBytes(Charset.forName("UTF-8")));
+    name.setString64(new XdrString(this.name));
     op.setDataName(name);
 
     if (value != null) {
@@ -70,7 +67,7 @@ public class ManageDataOperation extends Operation {
      * @param op {@link ManageDataOp}
      */
     Builder(ManageDataOp op) {
-      name = new String(op.getDataName().getString64(), Charset.forName("UTF-8"));
+      name = op.getDataName().getString64().toString();
       if (op.getDataValue() != null) {
         value = op.getDataValue().getDataValue();
       } else {

@@ -2,8 +2,6 @@ package org.stellar.sdk.xdr;
 
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
-import org.stellar.sdk.Memo;
-import org.stellar.sdk.MemoText;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

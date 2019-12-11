@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
+import org.stellar.sdk.xdr.XdrString;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -37,7 +38,7 @@ public class MemoText extends Memo {
   org.stellar.sdk.xdr.Memo toXdr() {
     org.stellar.sdk.xdr.Memo memo = new org.stellar.sdk.xdr.Memo();
     memo.setDiscriminant(MemoType.MEMO_TEXT);
-    memo.setText(text);
+    memo.setText(new XdrString(text));
     return memo;
   }
 

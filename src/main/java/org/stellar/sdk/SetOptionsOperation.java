@@ -150,7 +150,7 @@ public class SetOptionsOperation extends Operation {
     }
     if (homeDomain != null) {
       String32 homeDomain = new String32();
-      homeDomain.setString32(this.homeDomain.getBytes(Charset.forName("UTF-8")));
+      homeDomain.setString32(new XdrString(this.homeDomain));
       op.setHomeDomain(homeDomain);
     }
     if (signer != null) {
@@ -208,7 +208,7 @@ public class SetOptionsOperation extends Operation {
         highThreshold = op.getHighThreshold().getUint32().intValue();
       }
       if (op.getHomeDomain() != null) {
-        homeDomain = new String(op.getHomeDomain().getString32(), Charset.forName("UTF-8"));
+        homeDomain = op.getHomeDomain().getString32().toString();
       }
       if (op.getSigner() != null) {
         signer = op.getSigner().getKey();

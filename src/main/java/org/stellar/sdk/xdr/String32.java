@@ -6,7 +6,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.IOException;
 
-import java.util.Arrays;
+import com.google.common.base.Objects;
 
 // === xdr source ============================================================
 
@@ -14,31 +14,27 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class String32 implements XdrElement {
-  private byte[] string32;
-  public byte[] getString32() {
+  private XdrString string32;
+  public XdrString getString32() {
     return this.string32;
   }
-  public void setString32(byte[] value) {
+  public void setString32(XdrString value) {
     this.string32 = value;
   }
   public static void encode(XdrDataOutputStream stream, String32  encodedString32) throws IOException {
-  int string32size = encodedString32.string32.length;
-  stream.writeInt(string32size);
-  stream.write(encodedString32.getString32(), 0, string32size);
+  encodedString32.string32.encode(stream);
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static String32 decode(XdrDataInputStream stream) throws IOException {
     String32 decodedString32 = new String32();
-  int string32size = stream.readInt();
-  decodedString32.string32 = new byte[string32size];
-  stream.read(decodedString32.string32, 0, string32size);
+  decodedString32.string32 = XdrString.decode(stream);
     return decodedString32;
   }
   @Override
   public int hashCode() {
-    return Arrays.hashCode(this.string32);
+    return Objects.hashCode(this.string32);
   }
   @Override
   public boolean equals(Object object) {
@@ -47,6 +43,6 @@ public class String32 implements XdrElement {
     }
 
     String32 other = (String32) object;
-    return Arrays.equals(this.string32, other.string32);
+    return Objects.equal(this.string32, other.string32);
   }
 }

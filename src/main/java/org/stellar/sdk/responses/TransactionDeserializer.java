@@ -47,7 +47,7 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
           // so we must throw it as a runtime exception
           throw new RuntimeException(e);
         }
-        memo = Memo.text(transactionEnvelope.getTx().getMemo().getText());
+        memo = Memo.text(transactionEnvelope.getTx().getMemo().getText().getBytes());
       } else {
         String memoValue = json.getAsJsonObject().get("memo").getAsString();
         BaseEncoding base64Encoding = BaseEncoding.base64();
