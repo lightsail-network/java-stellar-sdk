@@ -94,7 +94,7 @@ public class Memo implements XdrElement {
   case MEMO_NONE:
   break;
   case MEMO_TEXT:
-  decodedMemo.text = XdrString.decode(stream);
+  decodedMemo.text = XdrString.decode(stream, 28);
   break;
   case MEMO_ID:
   decodedMemo.id = Uint64.decode(stream);

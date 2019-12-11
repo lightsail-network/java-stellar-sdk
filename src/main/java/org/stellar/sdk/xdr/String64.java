@@ -29,7 +29,7 @@ public class String64 implements XdrElement {
   }
   public static String64 decode(XdrDataInputStream stream) throws IOException {
     String64 decodedString64 = new String64();
-  decodedString64.string64 = XdrString.decode(stream);
+  decodedString64.string64 = XdrString.decode(stream, 64);
     return decodedString64;
   }
   @Override

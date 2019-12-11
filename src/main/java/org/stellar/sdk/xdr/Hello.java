@@ -109,7 +109,7 @@ public class Hello implements XdrElement {
     decodedHello.overlayVersion = Uint32.decode(stream);
     decodedHello.overlayMinVersion = Uint32.decode(stream);
     decodedHello.networkID = Hash.decode(stream);
-    decodedHello.versionStr = XdrString.decode(stream);
+    decodedHello.versionStr = XdrString.decode(stream, 100);
     decodedHello.listeningPort = stream.readInt();
     decodedHello.peerID = NodeID.decode(stream);
     decodedHello.cert = AuthCert.decode(stream);

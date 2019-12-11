@@ -43,7 +43,7 @@ public class Error implements XdrElement {
   public static Error decode(XdrDataInputStream stream) throws IOException {
     Error decodedError = new Error();
     decodedError.code = ErrorCode.decode(stream);
-    decodedError.msg = XdrString.decode(stream);
+    decodedError.msg = XdrString.decode(stream, 100);
     return decodedError;
   }
   @Override

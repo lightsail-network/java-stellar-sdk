@@ -29,7 +29,7 @@ public class String32 implements XdrElement {
   }
   public static String32 decode(XdrDataInputStream stream) throws IOException {
     String32 decodedString32 = new String32();
-  decodedString32.string32 = XdrString.decode(stream);
+  decodedString32.string32 = XdrString.decode(stream, 32);
     return decodedString32;
   }
   @Override
