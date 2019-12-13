@@ -14,22 +14,22 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class String32 implements XdrElement {
-  private String string32;
-  public String getString32() {
+  private XdrString string32;
+  public XdrString getString32() {
     return this.string32;
   }
-  public void setString32(String value) {
+  public void setString32(XdrString value) {
     this.string32 = value;
   }
   public static void encode(XdrDataOutputStream stream, String32  encodedString32) throws IOException {
-  stream.writeString(encodedString32.string32);
+  encodedString32.string32.encode(stream);
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static String32 decode(XdrDataInputStream stream) throws IOException {
     String32 decodedString32 = new String32();
-  decodedString32.string32 = stream.readString();
+  decodedString32.string32 = XdrString.decode(stream, 32);
     return decodedString32;
   }
   @Override

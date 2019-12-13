@@ -1,10 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.DataValue;
-import org.stellar.sdk.xdr.ManageDataOp;
-import org.stellar.sdk.xdr.OperationType;
-import org.stellar.sdk.xdr.String64;
+import org.stellar.sdk.xdr.*;
 
 import java.util.Arrays;
 
@@ -21,6 +18,10 @@ public class ManageDataOperation extends Operation {
   private ManageDataOperation(String name, byte[] value) {
     this.name = checkNotNull(name, "name cannot be null");
     this.value = value;
+
+    if (new XdrString(this.name).getBytes().length > 64) {
+      throw new IllegalArgumentException("name cannot exceed 64 bytes");
+    }
   }
 
   /**
@@ -41,7 +42,7 @@ public class ManageDataOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ManageDataOp op = new ManageDataOp();
     String64 name = new String64();
-    name.setString64(this.name);
+    name.setString64(new XdrString(this.name));
     op.setDataName(name);
 
     if (value != null) {
@@ -68,7 +69,7 @@ public class ManageDataOperation extends Operation {
      * @param op {@link ManageDataOp}
      */
     Builder(ManageDataOp op) {
-      name = op.getDataName().getString64();
+      name = op.getDataName().getString64().toString();
       if (op.getDataValue() != null) {
         value = op.getDataValue().getDataValue();
       } else {

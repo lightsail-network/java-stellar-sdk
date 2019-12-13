@@ -21,13 +21,6 @@ public class XdrDataInputStream extends DataInputStream {
         mIn = (XdrInputStream) super.in;
     }
 
-    public String readString() throws IOException {
-        int l = readInt();
-        byte[] bytes = new byte[l];
-        read(bytes);
-        return new String(bytes, Charset.forName("UTF-8"));
-    }
-
     public int[] readIntArray() throws IOException {
         int l = readInt();
         return readIntArray(l);

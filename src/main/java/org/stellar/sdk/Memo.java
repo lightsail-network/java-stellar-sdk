@@ -31,6 +31,15 @@ public abstract class Memo {
     }
 
     /**
+     * Creates new {@link MemoText} instance.
+     * @param text
+     */
+    public static MemoText text(byte[] text) {
+        return new MemoText(text);
+    }
+
+
+    /**
      * Creates new {@link MemoId} instance.
      * @param id
      */
@@ -78,7 +87,7 @@ public abstract class Memo {
             case MEMO_ID:
                 return id(memo.getId().getUint64().longValue());
             case MEMO_TEXT:
-                return text(memo.getText());
+                return text(memo.getText().getBytes());
             case MEMO_HASH:
                 return hash(memo.getHash().getHash());
             case MEMO_RETURN:

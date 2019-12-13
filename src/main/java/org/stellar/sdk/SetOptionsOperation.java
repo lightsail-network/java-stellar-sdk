@@ -36,6 +36,11 @@ public class SetOptionsOperation extends Operation {
     this.homeDomain = homeDomain;
     this.signer = signer;
     this.signerWeight = signerWeight;
+
+    if (this.homeDomain != null && new XdrString(this.homeDomain).getBytes().length > 32) {
+      throw new IllegalArgumentException("home domain cannot exceed 32 bytes");
+    }
+
   }
 
   /**
@@ -148,7 +153,7 @@ public class SetOptionsOperation extends Operation {
     }
     if (homeDomain != null) {
       String32 homeDomain = new String32();
-      homeDomain.setString32(this.homeDomain);
+      homeDomain.setString32(new XdrString(this.homeDomain));
       op.setHomeDomain(homeDomain);
     }
     if (signer != null) {
@@ -206,7 +211,7 @@ public class SetOptionsOperation extends Operation {
         highThreshold = op.getHighThreshold().getUint32().intValue();
       }
       if (op.getHomeDomain() != null) {
-        homeDomain = op.getHomeDomain().getString32();
+        homeDomain = op.getHomeDomain().getString32().toString();
       }
       if (op.getSigner() != null) {
         signer = op.getSigner().getKey();

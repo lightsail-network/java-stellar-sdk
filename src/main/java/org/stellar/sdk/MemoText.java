@@ -1,9 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.MemoType;
-
-import java.nio.charset.Charset;
+import org.stellar.sdk.xdr.XdrString;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -11,32 +9,43 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents MEMO_TEXT.
  */
 public class MemoText extends Memo {
-  private String text;
+  private XdrString text;
 
   public MemoText(String text) {
-    this.text = checkNotNull(text, "text cannot be null");
+    this(new XdrString(checkNotNull(text, "text cannot be null")));
+  }
 
-    int length = text.getBytes((Charset.forName("UTF-8"))).length;
+  public MemoText(byte[] text) {
+    this(new XdrString(checkNotNull(text, "text cannot be null")));
+  }
+
+  public MemoText(XdrString text) {
+    this.text = checkNotNull(text, "text cannot be null");
+    int length = this.text.getBytes().length;
     if (length > 28) {
       throw new MemoTooLongException("text must be <= 28 bytes. length=" + String.valueOf(length));
     }
   }
 
   public String getText() {
-    return text;
+    return this.text.toString();
+  }
+
+  public byte[] getBytes() {
+    return this.text.getBytes();
   }
 
   @Override
   org.stellar.sdk.xdr.Memo toXdr() {
     org.stellar.sdk.xdr.Memo memo = new org.stellar.sdk.xdr.Memo();
     memo.setDiscriminant(MemoType.MEMO_TEXT);
-    memo.setText(text);
+    memo.setText(this.text);
     return memo;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.text);
+    return this.text.hashCode();
   }
 
   @Override
@@ -44,11 +53,11 @@ public class MemoText extends Memo {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MemoText memoText = (MemoText) o;
-    return Objects.equal(this.text, memoText.text);
+    return this.text.equals(memoText.text);
   }
 
     @Override
     public String toString() {
-        return text == null ? "" : text;
+        return text == null ? "" : this.getText();
     }
 }

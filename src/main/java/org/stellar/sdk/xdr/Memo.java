@@ -34,11 +34,11 @@ public class Memo implements XdrElement {
   public void setDiscriminant(MemoType value) {
     this.type = value;
   }
-  private String text;
-  public String getText() {
+  private XdrString text;
+  public XdrString getText() {
     return this.text;
   }
-  public void setText(String value) {
+  public void setText(XdrString value) {
     this.text = value;
   }
   private Uint64 id;
@@ -70,7 +70,7 @@ public class Memo implements XdrElement {
   case MEMO_NONE:
   break;
   case MEMO_TEXT:
-  stream.writeString(encodedMemo.text);
+  encodedMemo.text.encode(stream);
   break;
   case MEMO_ID:
   Uint64.encode(stream, encodedMemo.id);
@@ -94,7 +94,7 @@ public class Memo implements XdrElement {
   case MEMO_NONE:
   break;
   case MEMO_TEXT:
-  decodedMemo.text = stream.readString();
+  decodedMemo.text = XdrString.decode(stream, 28);
   break;
   case MEMO_ID:
   decodedMemo.id = Uint64.decode(stream);
