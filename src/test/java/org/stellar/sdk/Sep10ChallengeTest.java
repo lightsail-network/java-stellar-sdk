@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -556,9 +557,9 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<String> signers = Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId());
-    List<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
-    assertEquals(signersFound, Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId()));
+    Set<String> signers = new LinkedHashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId()));
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    assertEquals(signersFound, new LinkedHashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId())));
   }
 
   @Test
@@ -586,7 +587,7 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<String> signers = Collections.emptyList();
+    Set<String> signers = Collections.emptySet();
     try {
       Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
       fail();
@@ -634,7 +635,7 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<String> signers = Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId());
+    Set<String> signers = new LinkedHashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId()));
     try {
       Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
       fail();
@@ -669,7 +670,7 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient2);
     transaction.sign(KeyPair.random());
 
-    List<String> signers = Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId());
+    Set<String> signers = new LinkedHashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId()));
     try {
       Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
       fail();
@@ -703,16 +704,16 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<String> signers = Arrays.asList(
+    Set<String> signers = new LinkedHashSet<String>(Arrays.asList(
             "TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4",
             "XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
             "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
             masterClient.getAccountId(),
             signerClient1.getAccountId(),
             signerClient2.getAccountId(),
-            KeyPair.random().getAccountId());
-    List<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
-    assertEquals(signersFound, Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId()));
+            KeyPair.random().getAccountId()));
+    LinkedHashSet<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    assertEquals(signersFound, new LinkedHashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId())));
   }
 
   @Test
@@ -740,10 +741,10 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<String> signers = Arrays.asList(
+    Set<String> signers = new LinkedHashSet<String>(Arrays.asList(
             "TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4",
             "XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
-            "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD");
+            "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD"));
     try {
       Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
       fail();
@@ -776,16 +777,16 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<Sep10Challenge.Signer> signers = Arrays.asList(
+    Set<Sep10Challenge.Signer> signers = new LinkedHashSet<Sep10Challenge.Signer>(Arrays.asList(
             new Sep10Challenge.Signer(masterClient.getAccountId(), 1),
             new Sep10Challenge.Signer(signerClient1.getAccountId(), 2),
             new Sep10Challenge.Signer(signerClient2.getAccountId(), 4),
             new Sep10Challenge.Signer(KeyPair.random().getAccountId(), 255)
-    );
+    ));
 
     int threshold = 6;
-    List<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
-    assertEquals(signersFound, Arrays.asList(signerClient1.getAccountId(), signerClient2.getAccountId()));
+    LinkedHashSet<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+    assertEquals(signersFound, new LinkedHashSet<String>(Arrays.asList(signerClient1.getAccountId(), signerClient2.getAccountId())));
   }
 
 
@@ -813,12 +814,12 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<Sep10Challenge.Signer> signers = Arrays.asList(
+    Set<Sep10Challenge.Signer> signers = new LinkedHashSet<Sep10Challenge.Signer>(Arrays.asList(
             new Sep10Challenge.Signer(masterClient.getAccountId(), 1),
             new Sep10Challenge.Signer(signerClient1.getAccountId(), 2),
             new Sep10Challenge.Signer(signerClient2.getAccountId(), 4),
             new Sep10Challenge.Signer(KeyPair.random().getAccountId(), 255)
-    );
+    ));
 
     int threshold = 7;
     try {
@@ -853,7 +854,7 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<Sep10Challenge.Signer> signers = Collections.emptyList();
+    Set<Sep10Challenge.Signer> signers = Collections.emptySet();
 
     int threshold = 6;
     try {
