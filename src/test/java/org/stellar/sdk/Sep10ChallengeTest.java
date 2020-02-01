@@ -23,53 +23,11 @@ public class Sep10ChallengeTest {
     TimeBounds timeBounds = new TimeBounds(now, end);
 
     String challenge = Sep10Challenge.newChallenge(
-        server,
-        Network.TESTNET,
-        client,
-        "angkor wat",
-        timeBounds
-    );
-
-    Transaction transaction = Transaction.fromEnvelopeXdr(challenge, Network.TESTNET);
-
-    assertEquals(Network.TESTNET, transaction.getNetwork());
-    assertEquals(100, transaction.getFee());
-    assertEquals(timeBounds, transaction.getTimeBounds());
-    assertEquals(server.getAccountId(), transaction.getSourceAccount());
-    assertEquals(0, transaction.getSequenceNumber());
-
-    assertEquals(1, transaction.getOperations().length);
-    ManageDataOperation op = (ManageDataOperation)transaction.getOperations()[0];
-    assertEquals(client, op.getSourceAccount());
-    assertEquals("angkor wat auth", op.getName());
-
-    assertEquals(64, op.getValue().length);
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    assertTrue(base64Encoding.canDecode(new String(op.getValue())));
-
-    assertEquals(1, transaction.getSignatures().size());
-    assertTrue(
-        server.verify(transaction.hash(), transaction.getSignatures().get(0).getSignature().getSignature())
-    );
-  }
-
-  @Test
-  public void testChallengeTimeout() throws IOException {
-    KeyPair server = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
-    String client = "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR";
-    String anchorName = "Stellar Test";
-    long timeout = 300L;
-    long now = System.currentTimeMillis() / 1000L;
-    long end = now + 300;
-    TimeBounds timeBounds = new TimeBounds(now, end);
-
-
-    String challenge = Sep10Challenge.newChallenge(
             server,
             Network.TESTNET,
             client,
-            anchorName,
-            timeout
+            "angkor wat",
+            timeBounds
     );
 
     Transaction transaction = Transaction.fromEnvelopeXdr(challenge, Network.TESTNET);
@@ -83,7 +41,7 @@ public class Sep10ChallengeTest {
     assertEquals(1, transaction.getOperations().length);
     ManageDataOperation op = (ManageDataOperation) transaction.getOperations()[0];
     assertEquals(client, op.getSourceAccount());
-    assertEquals(String.format("%s auth", anchorName), op.getName());
+    assertEquals("angkor wat auth", op.getName());
 
     assertEquals(64, op.getValue().length);
     BaseEncoding base64Encoding = BaseEncoding.base64();
@@ -440,7 +398,7 @@ public class Sep10ChallengeTest {
       Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
       fail();
     } catch (InvalidSep10ChallengeException e) {
-      assertEquals("Operation value should be a 64 bytes base64 random string.", e.getMessage());
+      assertEquals("Random nonce encoded as base64 should be 64 bytes long.", e.getMessage());
     }
   }
 
@@ -604,7 +562,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionNoSignerThrows() throws IOException {
+  public void testVerifyChallengeTransactionSignersNoSignerThrows() throws IOException {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair masterClient = KeyPair.random();
@@ -638,7 +596,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionNoServerSignatureThrows() throws IOException {
+  public void testVerifyChallengeTransactionSignersNoServerSignatureThrows() throws IOException {
     KeyPair server = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -656,7 +614,7 @@ public class Sep10ChallengeTest {
     BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
-    Account sourceAccount = new Account(server.getAccountId(), 100L);
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
             .setSourceAccount(masterClient.getAccountId())
             .build();
@@ -686,7 +644,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionUnrecognizedSignaturesThrows() throws IOException {
+  public void testVerifyChallengeTransactionSignersUnrecognizedSignaturesThrows() throws IOException {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair masterClient = KeyPair.random();
@@ -721,8 +679,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThreshold() throws IOException, InvalidSep10ChallengeException {
-    String ed25519PublicKeySignerType = "ed25519_public_key";
+  public void testVerifyChallengeTransactionSignerOtherSignerType() throws IOException, InvalidSep10ChallengeException {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair masterClient = KeyPair.random();
@@ -742,25 +699,61 @@ public class Sep10ChallengeTest {
     );
 
     Transaction transaction = Transaction.fromEnvelopeXdr(challenge, Network.TESTNET);
+    transaction.sign(masterClient);
     transaction.sign(signerClient1);
     transaction.sign(signerClient2);
 
-    List<Sep10Challenge.Signer> signers = Arrays.asList(
-            new Sep10Challenge.Signer(masterClient.getAccountId(), ed25519PublicKeySignerType, 1),
-            new Sep10Challenge.Signer(signerClient1.getAccountId(), ed25519PublicKeySignerType, 2),
-            new Sep10Challenge.Signer(signerClient2.getAccountId(), ed25519PublicKeySignerType, 4),
-            new Sep10Challenge.Signer(KeyPair.random().getAccountId(), ed25519PublicKeySignerType, 255)
-    );
-
-    int threshold = 6;
-    List<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
-    assertEquals(signersFound, Arrays.asList(signerClient1.getAccountId(), signerClient2.getAccountId()));
+    List<String> signers = Arrays.asList(
+            "TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4",
+            "XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
+            "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
+            masterClient.getAccountId(),
+            signerClient1.getAccountId(),
+            signerClient2.getAccountId(),
+            KeyPair.random().getAccountId());
+    List<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    assertEquals(signersFound, Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId()));
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdOtherSignerType() throws IOException, InvalidSep10ChallengeException {
-    String ed25519PublicKeySignerType = "ed25519_public_key";
-    String otherSignerType = "other_key";
+  public void testVerifyChallengeTransactionSignerNoPublicKeySignerThrows() throws IOException {
+    Network network = Network.TESTNET;
+    KeyPair server = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair masterClient = KeyPair.random();
+    KeyPair signerClient1 = KeyPair.random();
+    KeyPair signerClient2 = KeyPair.random();
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    String challenge = Sep10Challenge.newChallenge(
+            server,
+            network,
+            masterClient.getAccountId(),
+            "Stellar Test",
+            timeBounds
+    );
+
+    Transaction transaction = Transaction.fromEnvelopeXdr(challenge, Network.TESTNET);
+    transaction.sign(masterClient);
+    transaction.sign(signerClient1);
+    transaction.sign(signerClient2);
+
+    List<String> signers = Arrays.asList(
+            "TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4",
+            "XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
+            "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD");
+    try {
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testVerifyChallengeTransactionThreshold() throws IOException, InvalidSep10ChallengeException {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair masterClient = KeyPair.random();
@@ -784,21 +777,20 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient2);
 
     List<Sep10Challenge.Signer> signers = Arrays.asList(
-            new Sep10Challenge.Signer(signerClient2.getAccountId(), otherSignerType, 4),
-            new Sep10Challenge.Signer(masterClient.getAccountId(), ed25519PublicKeySignerType, 1),
-            new Sep10Challenge.Signer(signerClient1.getAccountId(), ed25519PublicKeySignerType, 2),
-            new Sep10Challenge.Signer(signerClient2.getAccountId(), ed25519PublicKeySignerType, 4),
-            new Sep10Challenge.Signer(KeyPair.random().getAccountId(), ed25519PublicKeySignerType, 255)
+            new Sep10Challenge.Signer(masterClient.getAccountId(), 1),
+            new Sep10Challenge.Signer(signerClient1.getAccountId(), 2),
+            new Sep10Challenge.Signer(signerClient2.getAccountId(), 4),
+            new Sep10Challenge.Signer(KeyPair.random().getAccountId(), 255)
     );
 
     int threshold = 6;
     List<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
     assertEquals(signersFound, Arrays.asList(signerClient1.getAccountId(), signerClient2.getAccountId()));
   }
+
 
   @Test
   public void testVerifyChallengeTransactionThresholdNotMeetThreshold() throws IOException {
-    String ed25519PublicKeySignerType = "ed25519_public_key";
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair masterClient = KeyPair.random();
@@ -822,10 +814,10 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient2);
 
     List<Sep10Challenge.Signer> signers = Arrays.asList(
-            new Sep10Challenge.Signer(masterClient.getAccountId(), ed25519PublicKeySignerType, 1),
-            new Sep10Challenge.Signer(signerClient1.getAccountId(), ed25519PublicKeySignerType, 2),
-            new Sep10Challenge.Signer(signerClient2.getAccountId(), ed25519PublicKeySignerType, 4),
-            new Sep10Challenge.Signer(KeyPair.random().getAccountId(), ed25519PublicKeySignerType, 255)
+            new Sep10Challenge.Signer(masterClient.getAccountId(), 1),
+            new Sep10Challenge.Signer(signerClient1.getAccountId(), 2),
+            new Sep10Challenge.Signer(signerClient2.getAccountId(), 4),
+            new Sep10Challenge.Signer(KeyPair.random().getAccountId(), 255)
     );
 
     int threshold = 7;

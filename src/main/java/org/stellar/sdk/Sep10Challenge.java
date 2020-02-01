@@ -6,9 +6,7 @@ import org.stellar.sdk.xdr.DecoratedSignature;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Sep10Challenge {
   /**
@@ -48,29 +46,6 @@ public class Sep10Challenge {
   }
 
   /**
-   * Returns a valid <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#response" target="_blank">SEP 10</a> challenge, for use in web authentication.
-   *
-   * @param signer          The server's signing account.
-   * @param network         The Stellar network used by the server.
-   * @param clientAccountId The stellar account belonging to the client.
-   * @param anchorName      The name of the anchor which will be included in the ManageData operation.
-   * @param timeout         Challenge duration in seconds.
-   * @return a valid <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#response" target="_blank">SEP 10</a> challenge.
-   */
-  public static String newChallenge(
-          KeyPair signer,
-          Network network,
-          String clientAccountId,
-          String anchorName,
-          long timeout
-  ) {
-    long now = System.currentTimeMillis() / 1000L;
-    long end = now + timeout;
-    TimeBounds timeBounds = new TimeBounds(now, end);
-    return newChallenge(signer, network, clientAccountId, anchorName, timeBounds);
-  }
-
-  /**
    * Reads a SEP 10 challenge transaction and returns the decoded transaction envelope and client account ID contained within.
    * <p>
    * It also verifies that transaction is signed by the server.
@@ -81,20 +56,25 @@ public class Sep10Challenge {
    * {@link Sep10Challenge#verifyChallengeTransactionSigners(String, String, Network, List)} or
    * {@link Sep10Challenge#verifyChallengeTransactionThreshold(String, String, Network, int, List)}
    *
-   * @param challengeTransaction SEP-0010 transaction challenge transaction in base64.
-   * @param serverAccountId      Account ID for server's account.
-   * @param network              The network to connect to for verifying and retrieving.
+   * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
+   * @param serverAccountId Account ID for server's account.
+   * @param network         The network to connect to for verifying and retrieving.
    * @return {@link ChallengeTransaction}, the decoded transaction envelope and client account ID contained within.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
-  public static ChallengeTransaction readChallengeTransaction(String challengeTransaction, String serverAccountId, Network network) throws InvalidSep10ChallengeException, IOException {
+  public static ChallengeTransaction readChallengeTransaction(String challengeXdr, String serverAccountId, Network network) throws InvalidSep10ChallengeException, IOException {
     // decode the received input as a base64-urlencoded XDR representation of Stellar transaction envelope
-    Transaction transaction = Transaction.fromEnvelopeXdr(challengeTransaction, network);
+    Transaction transaction = Transaction.fromEnvelopeXdr(challengeXdr, network);
 
     // verify that transaction source account is equal to the server's signing key
     if (!serverAccountId.equals(transaction.getSourceAccount())) {
       throw new InvalidSep10ChallengeException("Transaction source account is not equal to server's account.");
+    }
+
+    // verify that transaction sequenceNumber is equal to zero
+    if (transaction.getSequenceNumber() != 0L) {
+      throw new InvalidSep10ChallengeException("The transaction sequence number should be zero.");
     }
 
     // verify that transaction has time bounds set, and that current time is between the minimum and maximum bounds.
@@ -129,21 +109,19 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("Operation should have a source account.");
     }
 
+    // verify manage data value
     if (manageDataOperation.getValue().length != 64) {
-      throw new InvalidSep10ChallengeException("Operation value should be a 64 bytes base64 random string.");
+      throw new InvalidSep10ChallengeException("Random nonce encoded as base64 should be 64 bytes long.");
     }
 
-    if (transaction.getSignatures().isEmpty()) {
-      throw new InvalidSep10ChallengeException("Transaction has no signatures.");
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] nonce = base64Encoding.decode(new String(manageDataOperation.getValue()));
+    if (nonce.length != 48) {
+      throw new InvalidSep10ChallengeException("Random nonce before encoding as base64 should be 48 bytes long.");
     }
 
-    if (!verifyTransactionSignedByAccountId(transaction, serverAccountId)) {
+    if (!verifyTransactionSignature(transaction, serverAccountId)) {
       throw new InvalidSep10ChallengeException(String.format("Transaction not signed by server: %s.", serverAccountId));
-    }
-
-    // verify that transaction sequenceNumber is equal to zero
-    if (transaction.getSequenceNumber() != 0L) {
-      throw new InvalidSep10ChallengeException("The transaction sequence number should be zero.");
     }
 
     return new ChallengeTransaction(transaction, clientAccountId);
@@ -158,22 +136,22 @@ public class Sep10Challenge {
    * to a signer for verification to succeed. If verification succeeds a list of
    * signers that were found is returned, excluding the server account ID.
    *
-   * @param challengeTransaction SEP-0010 transaction challenge transaction in base64.
-   * @param serverAccountId      Account ID for server's account.
-   * @param network              The network to connect to for verifying and retrieving.
-   * @param signers              The signers of client account.
+   * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
+   * @param serverAccountId Account ID for server's account.
+   * @param network         The network to connect to for verifying and retrieving.
+   * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
-  public static List<String> verifyChallengeTransactionSigners(String challengeTransaction, String serverAccountId, Network network, List<String> signers) throws InvalidSep10ChallengeException, IOException {
+  public static List<String> verifyChallengeTransactionSigners(String challengeXdr, String serverAccountId, Network network, List<String> signers) throws InvalidSep10ChallengeException, IOException {
     if (signers == null || signers.isEmpty()) {
       throw new InvalidSep10ChallengeException("No signers provided.");
     }
 
     // Read the transaction which validates its structure.
-    ChallengeTransaction readableChallengeTransaction = readChallengeTransaction(challengeTransaction, serverAccountId, network);
-    Transaction transaction = readableChallengeTransaction.getTransaction();
+    ChallengeTransaction parsedChallengeTransaction = readChallengeTransaction(challengeXdr, serverAccountId, network);
+    Transaction transaction = parsedChallengeTransaction.getTransaction();
 
     // Ensure the server account ID is an address and not a seed.
     KeyPair serverKeyPair = KeyPair.fromAccountId(serverAccountId);
@@ -182,6 +160,18 @@ public class Sep10Challenge {
     // anywhere we check or output the list of signers.
     List<String> clientSigners = new ArrayList<String>();
     for (String signer : signers) {
+      // Ignore non-G... account/address signers.
+      StrKey.VersionByte versionByte;
+      try {
+        versionByte = StrKey.decodedVersionByte(signer);
+      } catch (Exception e) {
+        continue;
+      }
+
+      if (!StrKey.VersionByte.ACCOUNT_ID.equals(versionByte)) {
+        continue;
+      }
+
       // Ignore the server signer if it is in the signers list. It's
       // important when verifying signers of a challenge transaction that we
       // only verify and return client signers. If an account has the server
@@ -191,6 +181,11 @@ public class Sep10Challenge {
         continue;
       }
       clientSigners.add(signer);
+    }
+
+    // Don't continue if none of the signers provided are in the final list.
+    if (clientSigners.isEmpty()) {
+      throw new InvalidSep10ChallengeException("No verifiable signers provided, at least one G... address must be provided.");
     }
 
     // Verify all the transaction's signers (server and client) in one
@@ -217,6 +212,11 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException(String.format("Transaction not signed by server: %s.", serverAccountId));
     }
 
+    // Confirm we matched signatures to the client signers.
+    if (signersFound.isEmpty()) {
+      throw new InvalidSep10ChallengeException("Transaction not signed by any client signer.");
+    }
+
     // Confirm all signatures were consumed by a signer.
     if (allSignersFound.size() != transaction.getSignatures().size()) {
       throw new InvalidSep10ChallengeException("Transaction has unrecognized signatures.");
@@ -233,35 +233,31 @@ public class Sep10Challenge {
    * provided as an argument, and those signatures meet a threshold on the
    * account.
    *
-   * @param challengeTransaction SEP-0010 transaction challenge transaction in base64.
-   * @param serverAccountId      Account ID for server's account.
-   * @param network              The network to connect to for verifying and retrieving.
-   * @param threshold            The threshold on the client account.
-   * @param signers              The signers of client account.
+   * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
+   * @param serverAccountId Account ID for server's account.
+   * @param network         The network to connect to for verifying and retrieving.
+   * @param threshold       The threshold on the client account.
+   * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
-  public static List<String> verifyChallengeTransactionThreshold(String challengeTransaction, String serverAccountId, Network network, int threshold, List<Signer> signers) throws InvalidSep10ChallengeException, IOException {
-    String ed25519PublicKeySignerType = "ed25519_public_key";
-
+  public static List<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId, Network network, int threshold, List<Signer> signers) throws InvalidSep10ChallengeException, IOException {
     if (signers == null || signers.isEmpty()) {
       throw new InvalidSep10ChallengeException("No signers provided.");
     }
 
-    List<String> ed25519PublicKeySigners = new ArrayList<String>();
+    List<String> simpleSigners = new ArrayList<String>();
     for (Signer signer : signers) {
-      if (ed25519PublicKeySignerType.equals(signer.getType())) {
-        ed25519PublicKeySigners.add(signer.getKey());
-      }
+      simpleSigners.add(signer.getKey());
     }
 
-    List<String> signersFound = verifyChallengeTransactionSigners(challengeTransaction, serverAccountId, network, ed25519PublicKeySigners);
+    List<String> signersFound = verifyChallengeTransactionSigners(challengeXdr, serverAccountId, network, simpleSigners);
 
     int weight = 0;
     for (String signer : signersFound) {
       for (Signer signerWithWeight : signers) {
-        if (signer.equals(signerWithWeight.getKey()) && ed25519PublicKeySignerType.equals(signerWithWeight.getType())) {
+        if (signer.equals(signerWithWeight.getKey())) {
           weight += signerWithWeight.getWeight();
           break;
         }
@@ -280,32 +276,40 @@ public class Sep10Challenge {
     if (signatures.isEmpty()) {
       throw new InvalidSep10ChallengeException("Transaction has no signatures.");
     }
+
+    byte[] txHash = transaction.hash();
+
+    // find and verify signatures
+    Set<DecoratedSignature> signatureUsed = new HashSet<DecoratedSignature>();
     List<String> signersFound = new ArrayList<String>();
     for (String signer : signers) {
-      if (verifyTransactionSignedByAccountId(transaction, signer)) {
-        signersFound.add(signer);
+      KeyPair keyPair = KeyPair.fromAccountId(signer);
+      for (DecoratedSignature decoratedSignature : transaction.getSignatures()) {
+        // prevent a signature from being reused
+        if (signatureUsed.contains(decoratedSignature)) {
+          continue;
+        }
+
+        if (Arrays.equals(decoratedSignature.getHint().getSignatureHint(), keyPair.getSignatureHint().getSignatureHint()) && keyPair.verify(txHash, decoratedSignature.getSignature().getSignature())) {
+          signersFound.add(signer);
+          signatureUsed.add(decoratedSignature);
+          break;
+        }
       }
     }
     return signersFound;
   }
 
-  private static boolean verifyTransactionSignedByAccountId(Transaction transaction, String accountId) {
-    KeyPair keyPair = KeyPair.fromAccountId(accountId);
-    byte[] txHash = transaction.hash();
-    for (DecoratedSignature decoratedSignature : transaction.getSignatures()) {
-      if (Arrays.equals(decoratedSignature.getHint().getSignatureHint(), keyPair.getSignatureHint().getSignatureHint()) && keyPair.verify(txHash, decoratedSignature.getSignature().getSignature())) {
-        return true;
-      }
-    }
-    return false;
+  private static boolean verifyTransactionSignature(Transaction transaction, String accountId) throws InvalidSep10ChallengeException {
+    return !verifyTransactionSignatures(transaction, Collections.singletonList(accountId)).isEmpty();
   }
 
   /**
    * Used to store the results produced by {@link Sep10Challenge#readChallengeTransaction(String, String, Network)}.
    */
   public static class ChallengeTransaction {
-    private Transaction transaction;
-    private String clientAccountId;
+    private final Transaction transaction;
+    private final String clientAccountId;
 
     public ChallengeTransaction(Transaction transaction, String clientAccountId) {
       this.transaction = transaction;
@@ -316,16 +320,8 @@ public class Sep10Challenge {
       return transaction;
     }
 
-    public void setTransaction(Transaction transaction) {
-      this.transaction = transaction;
-    }
-
     public String getClientAccountId() {
       return clientAccountId;
-    }
-
-    public void setClientAccountId(String clientAccountId) {
-      this.clientAccountId = clientAccountId;
     }
 
     @Override
@@ -350,16 +346,14 @@ public class Sep10Challenge {
   }
 
   /**
-   * Represents signers.
+   * Represents a transaction signer.
    */
   public static class Signer {
-    private String key;
-    private String type;
-    private int weight;
+    private final String key;
+    private final int weight;
 
-    public Signer(String key, String type, int weight) {
+    public Signer(String key, int weight) {
       this.key = key;
-      this.type = type;
       this.weight = weight;
     }
 
@@ -367,29 +361,13 @@ public class Sep10Challenge {
       return key;
     }
 
-    public void setKey(String key) {
-      this.key = key;
-    }
-
-    public String getType() {
-      return type;
-    }
-
-    public void setType(String type) {
-      this.type = type;
-    }
-
     public int getWeight() {
       return weight;
     }
 
-    public void setWeight(int weight) {
-      this.weight = weight;
-    }
-
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.key, this.type, this.weight);
+      return Objects.hashCode(this.key, this.weight);
     }
 
     @Override
@@ -404,7 +382,6 @@ public class Sep10Challenge {
 
       Signer other = (Signer) object;
       return Objects.equal(this.key, other.key) &&
-              Objects.equal(this.type, other.type) &&
               Objects.equal(this.weight, other.weight);
     }
   }

@@ -22,6 +22,15 @@ class StrKey {
         public int getValue() {
             return value;
         }
+
+        public static VersionByte findByValue(byte value) {
+            for (VersionByte versionByte : values()) {
+                if (value == versionByte.value) {
+                    return versionByte;
+                }
+            }
+            throw new IllegalArgumentException("No matching versionByte found.");
+        }
     }
 
     private static BaseEncoding base32Encoding = BaseEncoding.base32().upperCase().omitPadding();
@@ -40,6 +49,12 @@ class StrKey {
         publicKey.setEd25519(uint256);
         accountID.setAccountID(publicKey);
         return accountID;
+    }
+
+    public static VersionByte decodedVersionByte(String data) {
+        byte[] decoded = StrKey.base32Encoding.decode(java.nio.CharBuffer.wrap(data.toCharArray()));
+        byte decodedVersionByte = decoded[0];
+        return VersionByte.findByValue(decodedVersionByte);
     }
 
     public static byte[] decodeStellarAccountId(String data) {
