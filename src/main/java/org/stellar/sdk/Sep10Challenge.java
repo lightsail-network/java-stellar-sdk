@@ -271,19 +271,21 @@ public class Sep10Challenge {
     byte[] txHash = transaction.hash();
 
     // find and verify signatures
-    Set<DecoratedSignature> signatureUsed = new HashSet<DecoratedSignature>();
+    Set<Integer> signatureUsed = new HashSet<Integer>();
     LinkedHashSet<String> signersFound = new LinkedHashSet<String>();
     for (String signer : signers) {
       KeyPair keyPair = KeyPair.fromAccountId(signer);
+      int index = -1;
       for (DecoratedSignature decoratedSignature : transaction.getSignatures()) {
+        index += 1;
         // prevent a signature from being reused
-        if (signatureUsed.contains(decoratedSignature)) {
+        if (signatureUsed.contains(index)) {
           continue;
         }
 
         if (Arrays.equals(decoratedSignature.getHint().getSignatureHint(), keyPair.getSignatureHint().getSignatureHint()) && keyPair.verify(txHash, decoratedSignature.getSignature().getSignature())) {
           signersFound.add(signer);
-          signatureUsed.add(decoratedSignature);
+          signatureUsed.add(index);
           break;
         }
       }
