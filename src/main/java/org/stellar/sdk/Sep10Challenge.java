@@ -145,7 +145,7 @@ public class Sep10Challenge {
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
-  public static LinkedHashSet<String> verifyChallengeTransactionSigners(String challengeXdr, String serverAccountId, Network network, Set<String> signers) throws InvalidSep10ChallengeException, IOException {
+  public static Set<String> verifyChallengeTransactionSigners(String challengeXdr, String serverAccountId, Network network, Set<String> signers) throws InvalidSep10ChallengeException, IOException {
     if (signers == null || signers.isEmpty()) {
       throw new InvalidSep10ChallengeException("No signers provided.");
     }
@@ -193,7 +193,7 @@ public class Sep10Challenge {
     // are consumed only once on the transaction.
     Set<String> allSigners = new HashSet<String>(clientSigners);
     allSigners.add(serverKeyPair.getAccountId());
-    LinkedHashSet<String> signersFound = verifyTransactionSignatures(transaction, allSigners);
+    Set<String> signersFound = verifyTransactionSignatures(transaction, allSigners);
 
     // Confirm the server is in the list of signers found and remove it.
     boolean serverSignerFound = signersFound.remove(serverKeyPair.getAccountId());
@@ -233,7 +233,7 @@ public class Sep10Challenge {
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
-  public static LinkedHashSet<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId, Network network, int threshold, Set<Signer> signers) throws InvalidSep10ChallengeException, IOException {
+  public static Set<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId, Network network, int threshold, Set<Signer> signers) throws InvalidSep10ChallengeException, IOException {
     if (signers == null || signers.isEmpty()) {
       throw new InvalidSep10ChallengeException("No signers provided.");
     }
@@ -243,7 +243,7 @@ public class Sep10Challenge {
       accountIdSignerMap.put(signer.getKey(), signer);
     }
 
-    LinkedHashSet<String> signersFound = verifyChallengeTransactionSigners(challengeXdr, serverAccountId, network, accountIdSignerMap.keySet());
+    Set<String> signersFound = verifyChallengeTransactionSigners(challengeXdr, serverAccountId, network, accountIdSignerMap.keySet());
 
     int weight = 0;
     for (String signer : signersFound) {
@@ -260,7 +260,7 @@ public class Sep10Challenge {
     return signersFound;
   }
 
-  private static LinkedHashSet<String> verifyTransactionSignatures(Transaction transaction, Set<String> signers) throws InvalidSep10ChallengeException {
+  private static Set<String> verifyTransactionSignatures(Transaction transaction, Set<String> signers) throws InvalidSep10ChallengeException {
     List<DecoratedSignature> signatures = transaction.getSignatures();
     if (signatures.isEmpty()) {
       throw new InvalidSep10ChallengeException("Transaction has no signatures.");
@@ -270,7 +270,7 @@ public class Sep10Challenge {
 
     // find and verify signatures
     Set<Integer> signatureUsed = new HashSet<Integer>();
-    LinkedHashSet<String> signersFound = new LinkedHashSet<String>();
+    Set<String> signersFound = new HashSet<String>();
     for (String signer : signers) {
       KeyPair keyPair = KeyPair.fromAccountId(signer);
       int index = -1;
