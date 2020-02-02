@@ -707,7 +707,7 @@ public class Sep10ChallengeTest {
     Set<String> signers = new LinkedHashSet<String>(Arrays.asList(
             "TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4",
             "XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
-            "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
+            "INVALIDNZR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
             masterClient.getAccountId(),
             signerClient1.getAccountId(),
             signerClient2.getAccountId(),
@@ -744,7 +744,7 @@ public class Sep10ChallengeTest {
     Set<String> signers = new LinkedHashSet<String>(Arrays.asList(
             "TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4",
             "XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD",
-            "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD"));
+            "INVALIDNZR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD"));
     try {
       Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
       fail();

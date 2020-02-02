@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.DecoratedSignature;
 
@@ -161,14 +162,12 @@ public class Sep10Challenge {
     Set<String> clientSigners = new HashSet<String>();
     for (String signer : signers) {
       // Ignore non-G... account/address signers.
-      StrKey.VersionByte versionByte;
-      try {
-        versionByte = StrKey.decodedVersionByte(signer);
-      } catch (Exception e) {
+      Optional<StrKey.VersionByte> versionByteOptional;
+      versionByteOptional = StrKey.decodedVersionByte(signer);
+      if (!versionByteOptional.isPresent()) {
         continue;
       }
-
-      if (!StrKey.VersionByte.ACCOUNT_ID.equals(versionByte)) {
+      if (!StrKey.VersionByte.ACCOUNT_ID.equals(versionByteOptional.get())) {
         continue;
       }
 
@@ -194,28 +193,27 @@ public class Sep10Challenge {
     // are consumed only once on the transaction.
     Set<String> allSigners = new HashSet<String>(clientSigners);
     allSigners.add(serverKeyPair.getAccountId());
-    LinkedHashSet<String> allSignersFound = verifyTransactionSignatures(transaction, allSigners);
+    LinkedHashSet<String> signersFound = verifyTransactionSignatures(transaction, allSigners);
 
     // Confirm the server is in the list of signers found and remove it.
-    boolean serverSignerFound = allSignersFound.remove(serverKeyPair.getAccountId());
-    // After removing the server signer we call it clientSignersFound
-    LinkedHashSet<String> clientSignersFound = allSignersFound;
+    boolean serverSignerFound = signersFound.remove(serverKeyPair.getAccountId());
+
     // Confirm we matched a signature to the server signer.
     if (!serverSignerFound) {
       throw new InvalidSep10ChallengeException(String.format("Transaction not signed by server: %s.", serverAccountId));
     }
 
     // Confirm we matched signatures to the client signers.
-    if (clientSignersFound.isEmpty()) {
+    if (signersFound.isEmpty()) {
       throw new InvalidSep10ChallengeException("Transaction not signed by any client signer.");
     }
 
     // Confirm all signatures were consumed by a signer.
-    if (clientSignersFound.size() != transaction.getSignatures().size() - 1) {
+    if (signersFound.size() != transaction.getSignatures().size() - 1) {
       throw new InvalidSep10ChallengeException("Transaction has unrecognized signatures.");
     }
 
-    return clientSignersFound;
+    return signersFound;
   }
 
   /**

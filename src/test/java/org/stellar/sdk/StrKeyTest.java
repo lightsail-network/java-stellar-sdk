@@ -6,8 +6,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class StrKeyTest {
     @Test
@@ -38,20 +37,11 @@ public class StrKeyTest {
 
     @Test()
     public void testDecodedVersionByte() {
-        assertEquals(StrKey.decodedVersionByte("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR"), StrKey.VersionByte.ACCOUNT_ID);
-        assertEquals(StrKey.decodedVersionByte("SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE"), StrKey.VersionByte.SEED);
-        assertEquals(StrKey.decodedVersionByte("TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4"), StrKey.VersionByte.PRE_AUTH_TX);
-        assertEquals(StrKey.decodedVersionByte("XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD"), StrKey.VersionByte.SHA256_HASH);
-    }
-
-    @Test()
-    public void testDecodedVersionByteThrows() {
-        try {
-            StrKey.decodedVersionByte("LDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6INVALID");
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("No matching versionByte found.", e.getMessage());
-        }
+        assertEquals(StrKey.decodedVersionByte("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR").get(), StrKey.VersionByte.ACCOUNT_ID);
+        assertEquals(StrKey.decodedVersionByte("SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE").get(), StrKey.VersionByte.SEED);
+        assertEquals(StrKey.decodedVersionByte("TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4").get(), StrKey.VersionByte.PRE_AUTH_TX);
+        assertEquals(StrKey.decodedVersionByte("XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD").get(), StrKey.VersionByte.SHA256_HASH);
+        assertFalse(StrKey.decodedVersionByte("LDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6INVALID").isPresent());
     }
 
     // TODO more tests
