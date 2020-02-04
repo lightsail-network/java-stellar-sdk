@@ -1,9 +1,12 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.DecoratedSignature;
+import org.stellar.sdk.xdr.Signature;
+import org.stellar.sdk.xdr.SignatureHint;
 
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -263,33 +266,34 @@ public class Sep10Challenge {
   }
 
   private static Set<String> verifyTransactionSignatures(Transaction transaction, Set<String> signers) throws InvalidSep10ChallengeException {
-    List<DecoratedSignature> signatures = transaction.getSignatures();
-    if (signatures.isEmpty()) {
+    if (transaction.getSignatures().isEmpty()) {
       throw new InvalidSep10ChallengeException("Transaction has no signatures.");
     }
 
     byte[] txHash = transaction.hash();
 
     // find and verify signatures
-    Set<Integer> signatureUsed = new HashSet<Integer>();
     Set<String> signersFound = new HashSet<String>();
+    Multimap<SignatureHint, Signature> signatures = HashMultimap.create();
+    for (DecoratedSignature decoratedSignature : transaction.getSignatures()) {
+      signatures.put(decoratedSignature.getHint(), decoratedSignature.getSignature());
+    }
+
     for (String signer : signers) {
       KeyPair keyPair = KeyPair.fromAccountId(signer);
-      int index = -1;
-      for (DecoratedSignature decoratedSignature : transaction.getSignatures()) {
-        index += 1;
-        // prevent a signature from being reused
-        if (signatureUsed.contains(index)) {
-          continue;
-        }
+      SignatureHint hint = keyPair.getSignatureHint();
 
-        if (Arrays.equals(decoratedSignature.getHint().getSignatureHint(), keyPair.getSignatureHint().getSignatureHint()) && keyPair.verify(txHash, decoratedSignature.getSignature().getSignature())) {
+      for (Signature signature : signatures.get(hint)) {
+        if (keyPair.verify(txHash, signature.getSignature())) {
           signersFound.add(signer);
-          signatureUsed.add(index);
+          // explicitly ensure that a transaction signature cannot be
+          // mapped to more than one signer
+          signatures.remove(hint, signature);
           break;
         }
       }
     }
+
     return signersFound;
   }
 
