@@ -240,23 +240,23 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("No signers provided.");
     }
 
-    Map<String, Signer> accountIdSignerMap = new HashMap<String, Signer>();
+    Map<String, Integer> weightsForSigner = new HashMap<String, Integer>();
     for (Signer signer : signers) {
-      accountIdSignerMap.put(signer.getKey(), signer);
+      weightsForSigner.put(signer.getKey(), signer.getWeight());
     }
 
-    Set<String> signersFound = verifyChallengeTransactionSigners(challengeXdr, serverAccountId, network, accountIdSignerMap.keySet());
+    Set<String> signersFound = verifyChallengeTransactionSigners(challengeXdr, serverAccountId, network, weightsForSigner.keySet());
 
-    int weight = 0;
+    int sum = 0;
     for (String signer : signersFound) {
-      if (!accountIdSignerMap.containsKey(signer)) {
-        continue;
+      Integer weight = weightsForSigner.get(signer);
+      if (weight != null) {
+        sum += weight;
       }
-      weight += accountIdSignerMap.get(signer).getWeight();
     }
 
-    if (weight < threshold) {
-      throw new InvalidSep10ChallengeException(String.format("Signers with weight %d do not meet threshold %d.", weight, threshold));
+    if (sum < threshold) {
+      throw new InvalidSep10ChallengeException(String.format("Signers with weight %d do not meet threshold %d.", sum, threshold));
     }
 
     return signersFound;
