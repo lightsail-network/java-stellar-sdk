@@ -52,10 +52,14 @@ class StrKey {
         return accountID;
     }
 
-    public static Optional<VersionByte> decodedVersionByte(String data) {
+    public static VersionByte decodeVersionByte(String data) {
         byte[] decoded = StrKey.base32Encoding.decode(java.nio.CharBuffer.wrap(data.toCharArray()));
         byte decodedVersionByte = decoded[0];
-        return VersionByte.findByValue(decodedVersionByte);
+        Optional<VersionByte> versionByteOptional = VersionByte.findByValue(decodedVersionByte);
+        if (!versionByteOptional.isPresent()) {
+            throw new FormatException("Version byte is invalid");
+        }
+        return versionByteOptional.get();
     }
 
     public static byte[] decodeStellarAccountId(String data) {

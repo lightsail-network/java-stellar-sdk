@@ -162,12 +162,14 @@ public class Sep10Challenge {
     Set<String> clientSigners = new HashSet<String>();
     for (String signer : signers) {
       // Ignore non-G... account/address signers.
-      Optional<StrKey.VersionByte> versionByteOptional;
-      versionByteOptional = StrKey.decodedVersionByte(signer);
-      if (!versionByteOptional.isPresent()) {
+      StrKey.VersionByte versionByte;
+      try {
+        versionByte = StrKey.decodeVersionByte(signer);
+      } catch (Exception e) {
         continue;
       }
-      if (!StrKey.VersionByte.ACCOUNT_ID.equals(versionByteOptional.get())) {
+
+      if (!StrKey.VersionByte.ACCOUNT_ID.equals(versionByte)) {
         continue;
       }
 
