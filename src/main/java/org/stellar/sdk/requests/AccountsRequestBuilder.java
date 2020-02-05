@@ -5,6 +5,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -14,6 +15,9 @@ import java.io.IOException;
  * Builds requests connected to accounts.
  */
 public class AccountsRequestBuilder extends RequestBuilder {
+  private static final String ASSET_PARAMETER_NAME = "asset";
+  private static final String SIGNER_PARAMETER_NAME = "signer";
+
   public AccountsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "accounts");
   }
@@ -42,6 +46,36 @@ public class AccountsRequestBuilder extends RequestBuilder {
   public AccountResponse account(String account) throws IOException {
     this.setSegments("accounts", account);
     return this.account(this.buildUri());
+  }
+
+  /**
+   * Returns all accounts that contain a specific signer.
+   *
+   * @param signer Account ID
+   * @return current {@link AccountsRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   */
+  public AccountsRequestBuilder forSigner(String signer) {
+    if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both signer and asset");
+    }
+    uriBuilder.setQueryParameter(SIGNER_PARAMETER_NAME, signer);
+    return this;
+  }
+
+  /**
+   * Returns all accounts who are trustees to a specific asset.
+   *
+   * @param asset An issued asset
+   * @return current {@link AccountsRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   */
+  public AccountsRequestBuilder forAsset(Asset asset) {
+    if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both signer and asset");
+    }
+    setAssetParameter(ASSET_PARAMETER_NAME, asset);
+    return this;
   }
 
   /**
