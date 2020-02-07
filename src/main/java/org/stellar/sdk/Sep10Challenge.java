@@ -150,7 +150,7 @@ public class Sep10Challenge {
    */
   public static Set<String> verifyChallengeTransactionSigners(String challengeXdr, String serverAccountId, Network network, Set<String> signers) throws InvalidSep10ChallengeException, IOException {
     if (signers == null || signers.isEmpty()) {
-      throw new InvalidSep10ChallengeException("No signers provided.");
+      throw new InvalidSep10ChallengeException("No verifiable signers provided, at least one G... address must be provided.");
     }
 
     // Read the transaction which validates its structure.
@@ -240,7 +240,7 @@ public class Sep10Challenge {
    */
   public static Set<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId, Network network, int threshold, Set<Signer> signers) throws InvalidSep10ChallengeException, IOException {
     if (signers == null || signers.isEmpty()) {
-      throw new InvalidSep10ChallengeException("No signers provided.");
+      throw new InvalidSep10ChallengeException("No verifiable signers provided, at least one G... address must be provided.");
     }
 
     Map<String, Integer> weightsForSigner = new HashMap<String, Integer>();
