@@ -905,6 +905,37 @@ public class Sep10ChallengeTest {
     }
   }
 
+  @Test
+  public void testVerifyChallengeTransactionThresholdWeightsAddToMoreThan8Bits() throws IOException, InvalidSep10ChallengeException {
+    Network network = Network.TESTNET;
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+    KeyPair signerClient1 = KeyPair.random();
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    String challenge = Sep10Challenge.newChallenge(
+            server,
+            network,
+            masterClient.getAccountId(),
+            "Stellar Test",
+            timeBounds
+    );
+
+    Transaction transaction = Transaction.fromEnvelopeXdr(challenge, Network.TESTNET);
+    transaction.sign(masterClient);
+    transaction.sign(signerClient1);
+
+    Set<Sep10Challenge.Signer> signers = new HashSet<Sep10Challenge.Signer>(Arrays.asList(
+            new Sep10Challenge.Signer(masterClient.getAccountId(), 255),
+            new Sep10Challenge.Signer(signerClient1.getAccountId(), 1)
+    ));
+
+    int threshold = 1;
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+    assertEquals(new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId())), signersFound);
+  }
 
   @Test
   public void testVerifyChallengeTransactionSignersInvalidServer() throws IOException {
