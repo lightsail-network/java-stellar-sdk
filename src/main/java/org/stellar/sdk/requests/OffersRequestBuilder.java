@@ -23,6 +23,32 @@ public class OffersRequestBuilder extends RequestBuilder {
   }
 
   /**
+   * Requests specific <code>uri</code> and returns {@link OfferResponse}.
+   * This method is helpful for getting the links.
+   * @throws IOException
+   */
+  public OfferResponse offer(HttpUrl uri) throws IOException {
+    TypeToken type = new TypeToken<OfferResponse>() {};
+    ResponseHandler<OfferResponse> responseHandler = new ResponseHandler<OfferResponse>(type);
+
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = httpClient.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
+  }
+
+  /**
+   * The offer details endpoint provides information on a single offer.
+   * @param offerId specifies which offer to load.
+   * @return The offer details.
+   * @throws IOException
+   */
+  public OfferResponse offer(long offerId) throws IOException {
+    this.setSegments("offers", String.valueOf(offerId));
+    return this.offer(this.buildUri());
+  }
+
+  /**
    * @param account Account for which to get offers
    * @see <a href="https://www.stellar.org/developers/horizon/reference/offers-for-account.html">Offers for Account</a>
    * @deprecated Use {@link OffersRequestBuilder#forSeller}
