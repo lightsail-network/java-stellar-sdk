@@ -119,7 +119,13 @@ public class Sep10Challenge {
     }
 
     BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] nonce = base64Encoding.decode(new String(manageDataOperation.getValue()));
+    byte[] nonce;
+    try {
+      nonce = base64Encoding.decode(new String(manageDataOperation.getValue()));
+    } catch (IllegalArgumentException e) {
+      throw new InvalidSep10ChallengeException("Failed to decode random nonce provided in ManageData operation.", e);
+    }
+
     if (nonce.length != 48) {
       throw new InvalidSep10ChallengeException("Random nonce before encoding as base64 should be 48 bytes long.");
     }

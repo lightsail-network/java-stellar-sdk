@@ -11,4 +11,8 @@ public class InvalidSep10ChallengeException extends Exception {
   public InvalidSep10ChallengeException(String message) {
     super(message);
   }
+
+  public InvalidSep10ChallengeException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

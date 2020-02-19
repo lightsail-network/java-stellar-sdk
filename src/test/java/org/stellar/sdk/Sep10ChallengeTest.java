@@ -144,6 +144,34 @@ public class Sep10ChallengeTest {
   }
 
   @Test
+  public void testReadChallengeTransactionInvalidCorrupted() throws InvalidSep10ChallengeException, IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    String challenge = Sep10Challenge.newChallenge(
+            server,
+            network,
+            client.getAccountId(),
+            "Stellar Test",
+            timeBounds
+    );
+
+    challenge = challenge.replace("A", "B");
+
+    try {
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      fail();
+    } catch (RuntimeException ignored) {
+      // TODO: I think we should add an exception signature about the failure to read XDR on Transaction.fromEnvelopeXdr.
+    }
+  }
+
+  @Test
   public void testReadChallengeTransactionInvalidServerAccountIDMismatch() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
@@ -508,6 +536,45 @@ public class Sep10ChallengeTest {
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Random nonce encoded as base64 should be 64 bytes long.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidDataValueCorruptBase64() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    String anchorName = "Stellar Test";
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] encodedNonce = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA?AAAAAAAAAAAAAAAAAAAAAAAAAA".getBytes("UTF-8");
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+            .setSourceAccount(client.getAccountId())
+            .build();
+
+    Operation[] operations = new Operation[]{manageDataOperation1};
+    Transaction transaction = new Transaction(
+            sourceAccount.getAccountId(),
+            100 * operations.length,
+            sourceAccount.getIncrementedSequenceNumber(),
+            operations,
+            Memo.none(),
+            timeBounds,
+            network
+    );
+    transaction.sign(server);
+    String challenge = transaction.toEnvelopeXdrBase64();
+
+    try {
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("Failed to decode random nonce provided in ManageData operation.", e.getMessage());
+      assertEquals("com.google.common.io.BaseEncoding$DecodingException: Unrecognized character: ?", e.getCause().getMessage());
     }
   }
 
