@@ -55,7 +55,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionValidSignedByServerAndClient() throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionValidSignedByServer() throws InvalidSep10ChallengeException, IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -73,11 +73,11 @@ public class Sep10ChallengeTest {
     );
 
     Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
-    assertEquals(challengeTransaction, new Sep10Challenge.ChallengeTransaction(Transaction.fromEnvelopeXdr(challenge, Network.TESTNET), client.getAccountId()));
+    assertEquals(new Sep10Challenge.ChallengeTransaction(Transaction.fromEnvelopeXdr(challenge, Network.TESTNET), client.getAccountId()), challengeTransaction);
   }
 
   @Test
-  public void testReadChallengeTransactionValidSignedByServer() throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionValidSignedByServerAndClient() throws InvalidSep10ChallengeException, IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -97,8 +97,8 @@ public class Sep10ChallengeTest {
     Transaction transaction = Transaction.fromEnvelopeXdr(challenge, network);
     transaction.sign(client);
 
-    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
-    assertEquals(challengeTransaction, new Sep10Challenge.ChallengeTransaction(Transaction.fromEnvelopeXdr(challenge, Network.TESTNET), client.getAccountId()));
+    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET);
+    assertEquals(new Sep10Challenge.ChallengeTransaction(Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), Network.TESTNET), client.getAccountId()), challengeTransaction);
   }
 
   @Test
@@ -1314,7 +1314,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersInvalidNoSigners() throws IOException {
+  public void testVerifyChallengeTransactionSignersInvalidNoSignersNull() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -1337,6 +1337,36 @@ public class Sep10ChallengeTest {
 
     try {
       Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, null);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testVerifyChallengeTransactionSignersInvalidNoSignersEmptySet() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+    KeyPair signerClient1 = KeyPair.random();
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    String challenge = Sep10Challenge.newChallenge(
+            server,
+            network,
+            masterClient.getAccountId(),
+            "Stellar Test",
+            timeBounds
+    );
+
+    Transaction transaction = Transaction.fromEnvelopeXdr(challenge, network);
+    transaction.sign(signerClient1);
+
+    try {
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, Collections.<String>emptySet());
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
