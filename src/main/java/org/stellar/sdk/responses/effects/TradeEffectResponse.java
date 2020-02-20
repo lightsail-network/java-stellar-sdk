@@ -15,7 +15,7 @@ public class TradeEffectResponse extends EffectResponse {
   @SerializedName("seller")
   protected final String seller;
   @SerializedName("offer_id")
-  protected final Long offerId;
+  protected final String offerId;
   
   @SerializedName("sold_amount")
   protected final String soldAmount;
@@ -35,7 +35,16 @@ public class TradeEffectResponse extends EffectResponse {
   @SerializedName("bought_asset_issuer")
   protected final String boughtAssetIssuer;
 
-  TradeEffectResponse(String seller, Long offerId, String soldAmount, String soldAssetType, String soldAssetCode, String soldAssetIssuer, String boughtAmount, String boughtAssetType, String boughtAssetCode, String boughtAssetIssuer) {
+  TradeEffectResponse(String seller,
+                      String offerId,
+                      String soldAmount,
+                      String soldAssetType,
+                      String soldAssetCode,
+                      String soldAssetIssuer,
+                      String boughtAmount,
+                      String boughtAssetType,
+                      String boughtAssetCode,
+                      String boughtAssetIssuer) {
     this.seller = seller;
     this.offerId = offerId;
     this.soldAmount = soldAmount;
@@ -52,7 +61,7 @@ public class TradeEffectResponse extends EffectResponse {
     return seller;
   }
 
-  public Long getOfferId() {
+  public String getOfferId() {
     return offerId;
   }
 

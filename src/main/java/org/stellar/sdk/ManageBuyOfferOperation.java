@@ -17,9 +17,9 @@ public class ManageBuyOfferOperation extends Operation {
     private final Asset buying;
     private final String amount;
     private final String price;
-    private final long offerId;
+    private final String offerId;
 
-    private ManageBuyOfferOperation(Asset selling, Asset buying, String amount, String price, long offerId) {
+    private ManageBuyOfferOperation(Asset selling, Asset buying, String amount, String price, String offerId) {
         this.selling = checkNotNull(selling, "selling cannot be null");
         this.buying = checkNotNull(buying, "buying cannot be null");
         this.amount = checkNotNull(amount, "amount cannot be null");
@@ -59,7 +59,7 @@ public class ManageBuyOfferOperation extends Operation {
     /**
      * The ID of the offer.
      */
-    public long getOfferId() {
+    public String getOfferId() {
         return offerId;
     }
 
@@ -73,8 +73,8 @@ public class ManageBuyOfferOperation extends Operation {
         op.setBuyAmount(amount);
         Price price = Price.fromString(this.price);
         op.setPrice(price.toXdr());
-        Int64 offerId = new Int64();
-        offerId.setInt64(Long.valueOf(this.offerId));
+        String64 offerId = new String64();
+        offerId.setString64(new XdrString(this.offerId));
         op.setOfferID(offerId);
 
         org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
@@ -86,7 +86,7 @@ public class ManageBuyOfferOperation extends Operation {
 
     /**
      * Builds ManageBuyOffer operation. If you want to update existing offer use
-     * {@link org.stellar.sdk.ManageBuyOfferOperation.Builder#setOfferId(long)}.
+     * {@link org.stellar.sdk.ManageBuyOfferOperation.Builder#setOfferId(String)}.
      *
      * @see ManageBuyOfferOperation
      */
@@ -96,7 +96,7 @@ public class ManageBuyOfferOperation extends Operation {
         private final Asset buying;
         private final String amount;
         private final String price;
-        private long offerId = 0;
+        private String offerId = "0";
 
         private String mSourceAccount;
 
@@ -108,14 +108,14 @@ public class ManageBuyOfferOperation extends Operation {
         Builder(ManageBuyOfferOp op) {
             selling = Asset.fromXdr(op.getSelling());
             buying = Asset.fromXdr(op.getBuying());
-            amount = Operation.fromXdrAmount(op.getBuyAmount().getInt64().longValue());
+            amount = Operation.fromXdrAmount(op.getBuyAmount().getInt64());
             price = Price.fromXdr(op.getPrice()).toString();
-            offerId = op.getOfferID().getInt64().longValue();
+            offerId = op.getOfferID().getString64().toString();
         }
 
         /**
          * Creates a new ManageBuyOffer builder. If you want to update existing offer use
-         * {@link org.stellar.sdk.ManageBuyOfferOperation.Builder#setOfferId(long)}.
+         * {@link org.stellar.sdk.ManageBuyOfferOperation.Builder#setOfferId(String)}.
          *
          * @param selling The asset being sold in this operation
          * @param buying  The asset being bought in this operation
@@ -135,7 +135,7 @@ public class ManageBuyOfferOperation extends Operation {
          *
          * @param offerId
          */
-        public Builder setOfferId(long offerId) {
+        public Builder setOfferId(String offerId) {
             this.offerId = offerId;
             return this;
         }

@@ -12,7 +12,7 @@ import org.stellar.sdk.Asset;
  */
 public class OfferResponse extends Response implements Pageable {
   @SerializedName("id")
-  private final Long id;
+  private final String id;
   @SerializedName("paging_token")
   private final String pagingToken;
   @SerializedName("seller")
@@ -32,7 +32,7 @@ public class OfferResponse extends Response implements Pageable {
   @SerializedName("_links")
   private final Links links;
 
-  public OfferResponse(Long id, String pagingToken, String seller, Asset selling, Asset buying, String amount, String price, Integer lastModifiedLedger, String lastModifiedTime, Links links) {
+  public OfferResponse(String id, String pagingToken, String seller, Asset selling, Asset buying, String amount, String price, Integer lastModifiedLedger, String lastModifiedTime, Links links) {
     this.id = id;
     this.pagingToken = pagingToken;
     this.seller = seller;
@@ -45,7 +45,7 @@ public class OfferResponse extends Response implements Pageable {
     this.links = links;
   }
 
-  public Long getId() {
+  public String getId() {
     return id;
   }
 
