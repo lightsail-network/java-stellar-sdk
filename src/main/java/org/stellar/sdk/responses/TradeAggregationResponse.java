@@ -6,9 +6,9 @@ import java.util.Date;
 
 public class TradeAggregationResponse extends Response {
     @SerializedName("timestamp")
-    private final long timestamp;
+    private final String timestamp;
     @SerializedName("trade_count")
-    private final int tradeCount;
+    private final String tradeCount;
     @SerializedName("base_volume")
     private final String baseVolume;
     @SerializedName("counter_volume")
@@ -24,7 +24,7 @@ public class TradeAggregationResponse extends Response {
     @SerializedName("close")
     private final String close;
 
-    public TradeAggregationResponse(long timestamp, int tradeCount, String baseVolume, String counterVolume, String avg, String high, String low, String open, String close) {
+    public TradeAggregationResponse(String timestamp, String tradeCount, String baseVolume, String counterVolume, String avg, String high, String low, String open, String close) {
         this.timestamp = timestamp;
         this.tradeCount = tradeCount;
         this.baseVolume = baseVolume;
@@ -36,15 +36,15 @@ public class TradeAggregationResponse extends Response {
         this.close = close;
     }
 
-    public long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
     public Date getDate() {
-        return new Date(Long.valueOf(this.timestamp));
+        return new Date(Long.parseLong(this.timestamp));
     }
 
-    public int getTradeCount() {
+    public String getTradeCount() {
         return tradeCount;
     }
 

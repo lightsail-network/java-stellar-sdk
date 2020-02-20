@@ -71,7 +71,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @throws IOException
    */
   public Page<OfferResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

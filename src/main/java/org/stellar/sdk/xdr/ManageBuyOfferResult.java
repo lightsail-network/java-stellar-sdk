@@ -69,7 +69,7 @@ public class ManageBuyOfferResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageBuyOfferResult)) {
+    if (!(object instanceof ManageBuyOfferResult)) {
       return false;
     }
 

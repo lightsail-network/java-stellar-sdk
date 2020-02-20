@@ -53,11 +53,11 @@ public class ManageBuyOfferOp implements XdrElement {
   public void setPrice(Price value) {
     this.price = value;
   }
-  private Int64 offerID;
-  public Int64 getOfferID() {
+  private String64 offerID;
+  public String64 getOfferID() {
     return this.offerID;
   }
-  public void setOfferID(Int64 value) {
+  public void setOfferID(String64 value) {
     this.offerID = value;
   }
   public static void encode(XdrDataOutputStream stream, ManageBuyOfferOp encodedManageBuyOfferOp) throws IOException{
@@ -65,7 +65,7 @@ public class ManageBuyOfferOp implements XdrElement {
     Asset.encode(stream, encodedManageBuyOfferOp.buying);
     Int64.encode(stream, encodedManageBuyOfferOp.buyAmount);
     Price.encode(stream, encodedManageBuyOfferOp.price);
-    Int64.encode(stream, encodedManageBuyOfferOp.offerID);
+    String64.encode(stream, encodedManageBuyOfferOp.offerID);
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
@@ -76,7 +76,7 @@ public class ManageBuyOfferOp implements XdrElement {
     decodedManageBuyOfferOp.buying = Asset.decode(stream);
     decodedManageBuyOfferOp.buyAmount = Int64.decode(stream);
     decodedManageBuyOfferOp.price = Price.decode(stream);
-    decodedManageBuyOfferOp.offerID = Int64.decode(stream);
+    decodedManageBuyOfferOp.offerID = String64.decode(stream);
     return decodedManageBuyOfferOp;
   }
   @Override
@@ -85,11 +85,15 @@ public class ManageBuyOfferOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageBuyOfferOp)) {
+    if (!(object instanceof ManageBuyOfferOp)) {
       return false;
     }
 
     ManageBuyOfferOp other = (ManageBuyOfferOp) object;
-    return Objects.equal(this.selling, other.selling) && Objects.equal(this.buying, other.buying) && Objects.equal(this.buyAmount, other.buyAmount) && Objects.equal(this.price, other.price) && Objects.equal(this.offerID, other.offerID);
+    return Objects.equal(this.selling, other.selling)
+            && Objects.equal(this.buying, other.buying)
+            && Objects.equal(this.buyAmount, other.buyAmount)
+            && Objects.equal(this.price, other.price)
+            && Objects.equal(this.offerID, other.offerID);
   }
 }
