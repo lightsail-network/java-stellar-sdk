@@ -13,7 +13,7 @@ public class OfferPageDeserializerTest extends TestCase {
   public void testDeserialize() {
     Page<OfferResponse> transactionsPage = GsonSingleton.getInstance().fromJson(json, new TypeToken<Page<OfferResponse>>() {}.getType());
 
-    assertEquals(transactionsPage.getRecords().get(0).getId(), new Long(241));
+    assertEquals(transactionsPage.getRecords().get(0).getId(), "241");
     assertEquals(transactionsPage.getRecords().get(0).getSeller(), "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD");
     assertEquals(transactionsPage.getRecords().get(0).getPagingToken(), "241");
     assertEquals(transactionsPage.getRecords().get(0).getSelling(), Asset.createNonNativeAsset("INR", "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD"));
