@@ -12,8 +12,8 @@ public class TradeAggregationsPageDeserializerTest extends TestCase {
         assertEquals(page.getLinks().getSelf().getHref(), "https://horizon.stellar.org/trade_aggregations?base_asset_type=native&start_time=1512689100000&counter_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH&limit=200&end_time=1512775500000&counter_asset_type=credit_alphanum4&resolution=300000&order=asc&counter_asset_code=BTC");
         assertEquals(page.getLinks().getNext().getHref(), "https://horizon.stellar.org/trade_aggregations?base_asset_type=native&counter_asset_code=BTC&counter_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH&counter_asset_type=credit_alphanum4&end_time=1512775500000&limit=200&order=asc&resolution=300000&start_time=1512765000000");
 
-        assertEquals(page.getRecords().get(0).getTimestamp(), 1512731100000L);
-        assertEquals(page.getRecords().get(0).getTradeCount(), 2);
+        assertEquals(page.getRecords().get(0).getTimestamp(), "1512731100000");
+        assertEquals(page.getRecords().get(0).getTradeCount(), "2");
         assertEquals(page.getRecords().get(0).getBaseVolume(), "341.8032786");
         assertEquals(page.getRecords().get(0).getCounterVolume(), "0.0041700");
         assertEquals(page.getRecords().get(0).getAvg(), "0.0000122");

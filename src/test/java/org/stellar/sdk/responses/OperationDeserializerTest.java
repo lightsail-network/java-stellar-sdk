@@ -395,7 +395,7 @@ public class OperationDeserializerTest extends TestCase {
 
     ManageBuyOfferOperationResponse operation = (ManageBuyOfferOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getOfferId(), new Integer(0));
+    assertEquals(operation.getOfferId(), "0");
     assertEquals(operation.getAmount(), "100.0");
     assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("CNY", "GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN"));
     assertEquals(operation.getSellingAsset(), new AssetTypeNative());

@@ -587,7 +587,7 @@ public class EffectDeserializerTest extends TestCase {
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
     assertEquals(effect.getSeller(), "GCVHDLN6EHZBYW2M3BQIY32C23E4GPIRZZDBNF2Q73DAZ5VJDRGSMYRB");
-    assertEquals(effect.getOfferId(), new Long(1));
+    assertEquals(effect.getOfferId(), "1");
     assertEquals(effect.getSoldAmount(), "1000.0");
     assertEquals(effect.getSoldAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
     assertEquals(effect.getBoughtAmount(), "60.0");
