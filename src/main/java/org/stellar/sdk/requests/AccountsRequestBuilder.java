@@ -5,7 +5,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -70,7 +70,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @return current {@link AccountsRequestBuilder} instance
    * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
    */
-  public AccountsRequestBuilder forAsset(Asset asset) {
+  public AccountsRequestBuilder forAsset(AssetTypeCreditAlphaNum asset) {
     if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
       throw new RuntimeException("cannot set both signer and asset");
     }

@@ -2,11 +2,10 @@ package org.stellar.sdk.requests;
 
 import okhttp3.HttpUrl;
 import org.junit.Test;
-import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeCreditAlphaNum4;
-import org.stellar.sdk.Server;
+import org.stellar.sdk.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class AccountsRequestBuilderTest {
   @Test
@@ -30,12 +29,37 @@ public class AccountsRequestBuilderTest {
   }
 
   @Test
-  public void testForAsset() {
+  public void testForCreditAlphanum4Asset() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    Asset asset = new AssetTypeCreditAlphaNum4("USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
+    AssetTypeCreditAlphaNum asset = new AssetTypeCreditAlphaNum4("USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
     HttpUrl uri = server.accounts()
             .forAsset(asset)
             .buildUri();
     assertEquals("https://horizon-testnet.stellar.org/accounts?asset=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG", uri.toString());
+  }
+
+  @Test
+  public void testForCreditAlphanum12Asset() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    AssetTypeCreditAlphaNum asset = new AssetTypeCreditAlphaNum12("STELLAR", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
+    HttpUrl uri = server.accounts()
+            .forAsset(asset)
+            .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/accounts?asset=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG", uri.toString());
+  }
+
+  @Test
+  public void testForSignerAndAssetInvalid() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    AssetTypeCreditAlphaNum asset = new AssetTypeCreditAlphaNum4("USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
+    try {
+      server.accounts()
+              .forSigner("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")
+              .forAsset(asset)
+              .buildUri();
+      fail();
+    } catch (RuntimeException e) {
+      assertEquals("cannot set both signer and asset", e.getMessage());
+    }
   }
 }

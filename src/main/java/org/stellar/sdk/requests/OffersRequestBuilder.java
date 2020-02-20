@@ -6,7 +6,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -81,12 +80,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
    */
   public OffersRequestBuilder forBuyingAsset(Asset asset) {
-    uriBuilder.setQueryParameter("buying_asset_type", asset.getType());
-    if (asset instanceof AssetTypeCreditAlphaNum) {
-      AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.setQueryParameter("buying_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.setQueryParameter("buying_asset_issuer", creditAlphaNumAsset.getIssuer());
-    }
+    setAssetParameter("buying", asset);
     return this;
   }
 
@@ -98,12 +92,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
    */
   public OffersRequestBuilder forSellingAsset(Asset asset) {
-    uriBuilder.setQueryParameter("selling_asset_type", asset.getType());
-    if (asset instanceof AssetTypeCreditAlphaNum) {
-      AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
-      uriBuilder.setQueryParameter("selling_asset_code", creditAlphaNumAsset.getCode());
-      uriBuilder.setQueryParameter("selling_asset_issuer", creditAlphaNumAsset.getIssuer());
-    }
+    setAssetParameter("selling", asset);
     return this;
   }
 

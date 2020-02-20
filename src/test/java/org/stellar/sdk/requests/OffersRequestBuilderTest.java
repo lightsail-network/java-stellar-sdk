@@ -5,9 +5,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
-import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeCreditAlphaNum4;
-import org.stellar.sdk.Server;
+import org.stellar.sdk.*;
 
 import java.io.IOException;
 
@@ -70,19 +68,60 @@ public class OffersRequestBuilderTest {
   }
 
   @Test
-  public void testForSellingAsset() {
+  public void testForSellingCreditAlphanum4Asset() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     Asset selling = new AssetTypeCreditAlphaNum4("USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
     HttpUrl uri = server.offers().forSellingAsset(selling).buildUri();
-    assertEquals("https://horizon-testnet.stellar.org/offers?selling_asset_type=credit_alphanum4&selling_asset_code=USD&selling_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG", uri.toString());
+    assertEquals("https://horizon-testnet.stellar.org/offers?selling=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG", uri.toString());
   }
 
   @Test
-  public void testForBuyingAsset() {
+  public void testForBuyingCreditAlphanum4Asset() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     Asset buying = new AssetTypeCreditAlphaNum4("XCN", "GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY");
     HttpUrl uri = server.offers().forBuyingAsset(buying).buildUri();
-    assertEquals("https://horizon-testnet.stellar.org/offers?buying_asset_type=credit_alphanum4&buying_asset_code=XCN&buying_asset_issuer=GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY", uri.toString());
+    assertEquals("https://horizon-testnet.stellar.org/offers?buying=XCN%3AGCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY", uri.toString());
+  }
+
+  @Test
+  public void testForSellingCreditAlphanum12Asset() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    Asset selling = new AssetTypeCreditAlphaNum12("STELLAR", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
+    HttpUrl uri = server.offers().forSellingAsset(selling).buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/offers?selling=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG", uri.toString());
+  }
+
+  @Test
+  public void testForBuyingCreditAlphanum12Asset() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    Asset buying = new AssetTypeCreditAlphaNum12("STELLAR", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
+    HttpUrl uri = server.offers().forBuyingAsset(buying).buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/offers?buying=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG", uri.toString());
+  }
+
+  @Test
+  public void testForSellingNativeAsset() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    Asset selling = new AssetTypeNative();
+    HttpUrl uri = server.offers().forSellingAsset(selling).buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/offers?selling=native", uri.toString());
+  }
+
+  @Test
+  public void testForBuyingNativeAsset() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    Asset buying = new AssetTypeNative();
+    HttpUrl uri = server.offers().forBuyingAsset(buying).buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/offers?buying=native", uri.toString());
+  }
+
+  @Test
+  public void testForSellingAssetAndBuyingAsset() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    Asset selling = new AssetTypeCreditAlphaNum4("USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
+    Asset buying = new AssetTypeCreditAlphaNum4("XCN", "GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY");
+    HttpUrl uri = server.offers().forSellingAsset(selling).forBuyingAsset(buying).buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/offers?selling=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&buying=XCN%3AGCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY", uri.toString());
   }
 
   @Test

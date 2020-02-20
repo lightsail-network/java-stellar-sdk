@@ -86,7 +86,7 @@ public abstract class RequestBuilder {
   public RequestBuilder setAssetsParameter(String name, List<Asset> assets) {
     List<String> assetStrings = Lists.newArrayList();
     for (Asset asset : assets) {
-      assetStrings.add(buildAssetParameter(asset));
+      assetStrings.add(encodeAsset(asset));
     }
     uriBuilder.setQueryParameter(name, Joiner.on(",").join(assetStrings));
     return this;
@@ -99,11 +99,11 @@ public abstract class RequestBuilder {
    * @param asset the asset to be serialized into the query parameter value
    */
   public RequestBuilder setAssetParameter(String name, Asset asset) {
-    uriBuilder.setQueryParameter(name, buildAssetParameter(asset));
+    uriBuilder.setQueryParameter(name, encodeAsset(asset));
     return this;
   }
 
-  private String buildAssetParameter(Asset asset) {
+  private String encodeAsset(Asset asset) {
     if (asset instanceof AssetTypeNative) {
       return "native";
     } else if (asset instanceof AssetTypeCreditAlphaNum) {
