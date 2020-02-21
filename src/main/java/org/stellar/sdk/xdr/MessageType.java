@@ -30,7 +30,10 @@ import java.io.IOException;
 //      GET_SCP_STATE = 12,
 //  
 //      // new messages
-//      HELLO = 13
+//      HELLO = 13,
+//  
+//      SURVEY_REQUEST = 14,
+//      SURVEY_RESPONSE = 15
 //  };
 
 //  ===========================================================================
@@ -48,6 +51,8 @@ public enum MessageType implements XdrElement {
   SCP_MESSAGE(11),
   GET_SCP_STATE(12),
   HELLO(13),
+  SURVEY_REQUEST(14),
+  SURVEY_RESPONSE(15),
   ;
   private int mValue;
 
@@ -75,6 +80,8 @@ public enum MessageType implements XdrElement {
       case 11: return SCP_MESSAGE;
       case 12: return GET_SCP_STATE;
       case 13: return HELLO;
+      case 14: return SURVEY_REQUEST;
+      case 15: return SURVEY_RESPONSE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

@@ -17,6 +17,8 @@ import java.util.Arrays;
 //      OperationMeta operations<>;
 //  case 1:
 //      TransactionMetaV1 v1;
+//  case 2:
+//      TransactionMetaV2 v2;
 //  };
 
 //  ===========================================================================
@@ -43,6 +45,13 @@ public class TransactionMeta implements XdrElement {
   public void setV1(TransactionMetaV1 value) {
     this.v1 = value;
   }
+  private TransactionMetaV2 v2;
+  public TransactionMetaV2 getV2() {
+    return this.v2;
+  }
+  public void setV2(TransactionMetaV2 value) {
+    this.v2 = value;
+  }
   public static void encode(XdrDataOutputStream stream, TransactionMeta encodedTransactionMeta) throws IOException {
   //Xdrgen::AST::Typespecs::Int
   //Integer
@@ -57,6 +66,9 @@ public class TransactionMeta implements XdrElement {
   break;
   case 1:
   TransactionMetaV1.encode(stream, encodedTransactionMeta.v1);
+  break;
+  case 2:
+  TransactionMetaV2.encode(stream, encodedTransactionMeta.v2);
   break;
   }
   }
@@ -78,12 +90,15 @@ public class TransactionMeta implements XdrElement {
   case 1:
   decodedTransactionMeta.v1 = TransactionMetaV1.decode(stream);
   break;
+  case 2:
+  decodedTransactionMeta.v2 = TransactionMetaV2.decode(stream);
+  break;
   }
     return decodedTransactionMeta;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.hashCode(this.operations), this.v1, this.v);
+    return Objects.hashCode(Arrays.hashCode(this.operations), this.v1, this.v2, this.v);
   }
   @Override
   public boolean equals(Object object) {
@@ -92,6 +107,6 @@ public class TransactionMeta implements XdrElement {
     }
 
     TransactionMeta other = (TransactionMeta) object;
-    return Arrays.equals(this.operations, other.operations) && Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
+    return Arrays.equals(this.operations, other.operations) && Objects.equal(this.v1, other.v1) && Objects.equal(this.v2, other.v2) && Objects.equal(this.v, other.v);
   }
 }
