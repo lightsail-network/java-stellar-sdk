@@ -79,23 +79,39 @@ public abstract class RequestBuilder {
 
   /**
    * Sets a parameter consisting of a comma separated list of assets on the request.
-   * @param name the name of the query parameter
+   *
+   * @param name   the name of the query parameter
    * @param assets the list of assets to be serialized into the query parameter value
    */
   public RequestBuilder setAssetsParameter(String name, List<Asset> assets) {
     List<String> assetStrings = Lists.newArrayList();
     for (Asset asset : assets) {
-      if (asset instanceof AssetTypeNative) {
-        assetStrings.add("native");
-      } else if (asset instanceof AssetTypeCreditAlphaNum) {
-        AssetTypeCreditAlphaNum creditAsset = (AssetTypeCreditAlphaNum) asset;
-        assetStrings.add(creditAsset.getCode()+":"+creditAsset.getIssuer());
-      } else {
-        throw new RuntimeException("unsupported asset "+ asset.getType());
-      }
+      assetStrings.add(encodeAsset(asset));
     }
     uriBuilder.setQueryParameter(name, Joiner.on(",").join(assetStrings));
     return this;
+  }
+
+  /**
+   * Sets a parameter consisting of an asset represented as "assetCode:assetIssue" on the request.
+   *
+   * @param name  the name of the query parameter
+   * @param asset the asset to be serialized into the query parameter value
+   */
+  public RequestBuilder setAssetParameter(String name, Asset asset) {
+    uriBuilder.setQueryParameter(name, encodeAsset(asset));
+    return this;
+  }
+
+  private String encodeAsset(Asset asset) {
+    if (asset instanceof AssetTypeNative) {
+      return "native";
+    } else if (asset instanceof AssetTypeCreditAlphaNum) {
+      AssetTypeCreditAlphaNum creditAsset = (AssetTypeCreditAlphaNum) asset;
+      return creditAsset.getCode() + ":" + creditAsset.getIssuer();
+    } else {
+      throw new RuntimeException("unsupported asset " + asset.getType());
+    }
   }
 
   HttpUrl buildUri() {
