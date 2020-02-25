@@ -5,6 +5,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -21,13 +22,77 @@ public class OffersRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Builds request to <code>GET /accounts/{account}/offers</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/offers-for-account.html">Offers for Account</a>
-   * @param account Account for which to get offers
+   * Requests specific <code>uri</code> and returns {@link OfferResponse}.
+   * This method is helpful for getting the links.
+   * @throws IOException
    */
+  public OfferResponse offer(HttpUrl uri) throws IOException {
+    TypeToken type = new TypeToken<OfferResponse>() {};
+    ResponseHandler<OfferResponse> responseHandler = new ResponseHandler<OfferResponse>(type);
+
+    Request request = new Request.Builder().get().url(uri).build();
+    Response response = httpClient.newCall(request).execute();
+
+    return responseHandler.handleResponse(response);
+  }
+
+  /**
+   * The offer details endpoint provides information on a single offer.
+   * @param offerId specifies which offer to load.
+   * @return The offer details.
+   * @throws IOException
+   */
+  public OfferResponse offer(long offerId) throws IOException {
+    this.setSegments("offers", String.valueOf(offerId));
+    return this.offer(this.buildUri());
+  }
+
+  /**
+   * @param account Account for which to get offers
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/offers-for-account.html">Offers for Account</a>
+   * @deprecated Use {@link OffersRequestBuilder#forSeller}
+   * Builds request to <code>GET /accounts/{account}/offers</code>
+   */
+  @Deprecated
   public OffersRequestBuilder forAccount(String account) {
     account = checkNotNull(account, "account cannot be null");
     this.setSegments("accounts", account, "offers");
+    return this;
+  }
+
+  /**
+   * Returns all offers where the given account is the seller.
+   *
+   * @param seller Account ID of the offer creator.
+   * @return current {@link OffersRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
+   */
+  public OffersRequestBuilder forSeller(String seller) {
+    uriBuilder.setQueryParameter("seller", seller);
+    return this;
+  }
+
+  /**
+   * Returns all offers buying an asset.
+   *
+   * @param asset The Asset being bought.
+   * @return current {@link OffersRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
+   */
+  public OffersRequestBuilder forBuyingAsset(Asset asset) {
+    setAssetParameter("buying", asset);
+    return this;
+  }
+
+  /**
+   * Returns all offers selling an asset.
+   *
+   * @param asset The Asset being sold.
+   * @return current {@link OffersRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
+   */
+  public OffersRequestBuilder forSellingAsset(Asset asset) {
+    setAssetParameter("selling", asset);
     return this;
   }
 
@@ -47,7 +112,6 @@ public class OffersRequestBuilder extends RequestBuilder {
 
     return responseHandler.handleResponse(response);
   }
-
 
   /**
    * Allows to stream SSE events from horizon.

@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
+import com.google.common.base.Optional;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
@@ -22,6 +23,15 @@ class StrKey {
         public int getValue() {
             return value;
         }
+
+        public static Optional<VersionByte> findByValue(byte value) {
+            for (VersionByte versionByte : values()) {
+                if (value == versionByte.value) {
+                    return Optional.of(versionByte);
+                }
+            }
+            return Optional.absent();
+        }
     }
 
     private static BaseEncoding base32Encoding = BaseEncoding.base32().upperCase().omitPadding();
@@ -40,6 +50,16 @@ class StrKey {
         publicKey.setEd25519(uint256);
         accountID.setAccountID(publicKey);
         return accountID;
+    }
+
+    public static VersionByte decodeVersionByte(String data) {
+        byte[] decoded = StrKey.base32Encoding.decode(java.nio.CharBuffer.wrap(data.toCharArray()));
+        byte decodedVersionByte = decoded[0];
+        Optional<VersionByte> versionByteOptional = VersionByte.findByValue(decodedVersionByte);
+        if (!versionByteOptional.isPresent()) {
+            throw new FormatException("Version byte is invalid");
+        }
+        return versionByteOptional.get();
     }
 
     public static byte[] decodeStellarAccountId(String data) {
