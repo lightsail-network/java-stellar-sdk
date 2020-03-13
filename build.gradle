@@ -1,5 +1,5 @@
 buildscript {
-  ext.okhttpclientVersion="3.11.0"
+  ext.okhttpclientVersion="4.4.1"
   repositories {
     jcenter()
   }
