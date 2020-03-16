@@ -32,7 +32,19 @@ final public class TimeBounds {
 		mMinTime = minTime;
 		mMaxTime = maxTime;
 	}
-	
+
+	/**
+	 * A factory method that sets maxTime to the specified second from now.
+	 *
+	 * @param timeout Timeout in seconds.
+	 * @return TimeBounds
+	 */
+	public static TimeBounds afterNow(long timeout) {
+		long now = System.currentTimeMillis() / 1000L;
+		long endTime = now + timeout;
+		return new TimeBounds(0, endTime);
+	}
+
 	public long getMinTime() {
 		return mMinTime;
 	}
