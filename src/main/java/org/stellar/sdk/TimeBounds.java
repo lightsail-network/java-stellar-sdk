@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.Uint64;
 final public class TimeBounds {
 	final private long mMinTime;
 	final private long mMaxTime;
-	
+
 	/**
 	 * @param minTime 64bit Unix timestamp
 	 * @param maxTime 64bit Unix timestamp
@@ -28,7 +28,7 @@ final public class TimeBounds {
 		if (maxTime != 0 && minTime > maxTime) {
 			throw new IllegalArgumentException("minTime must be >= maxTime");
 		}
-		
+
 		mMinTime = minTime;
 		mMaxTime = maxTime;
 	}
@@ -48,7 +48,7 @@ final public class TimeBounds {
 	public long getMinTime() {
 		return mMinTime;
 	}
-	
+
 	public long getMaxTime() {
 		return mMaxTime;
 	}
@@ -59,8 +59,8 @@ final public class TimeBounds {
 		}
 
 		return new TimeBounds(
-				timeBounds.getMinTime().getTimePoint().getUint64().longValue(),
-				timeBounds.getMaxTime().getTimePoint().getUint64().longValue()
+				timeBounds.getMinTime().getTimePoint().getUint64(),
+				timeBounds.getMaxTime().getTimePoint().getUint64()
 		);
 	}
 
@@ -81,13 +81,14 @@ final public class TimeBounds {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 		TimeBounds that = (TimeBounds) o;
-
-		if (mMinTime != that.mMinTime) return false;
-		return mMaxTime == that.mMaxTime;
+		return mMinTime == that.mMinTime && mMaxTime == that.mMaxTime;
 	}
 
 
