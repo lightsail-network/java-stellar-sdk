@@ -17,7 +17,15 @@ final public class TimeBounds {
 	 * @param maxTime 64bit Unix timestamp
 	 */
 	public TimeBounds(long minTime, long maxTime) {
-		if (maxTime > 0 && minTime >= maxTime) {
+		if (minTime < 0) {
+			throw new IllegalArgumentException("minTime cannot be negative");
+		}
+
+		if (maxTime < 0) {
+			throw new IllegalArgumentException("maxTime cannot be negative");
+		}
+
+		if (maxTime != 0 && minTime > maxTime) {
 			throw new IllegalArgumentException("minTime must be >= maxTime");
 		}
 		
