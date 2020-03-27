@@ -10,6 +10,8 @@ import org.stellar.sdk.responses.*;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -32,6 +34,17 @@ public class Server implements Closeable {
      * after internal txsub timeout.
      */
     private static final int HORIZON_SUBMIT_TIMEOUT = 60;
+
+    /**
+     * ACCOUNT_REQUIRES_MEMO_VALUE is the base64 encoding of "1".
+     * SEP 29 uses this value to define transaction memo requirements for incoming payments.
+     */
+    public static final String ACCOUNT_REQUIRES_MEMO_VALUE = "MQ==";
+
+    /**
+     * ACCOUNT_REQUIRES_MEMO_KEY is the data name described in SEP 29.
+     */
+    public static final String ACCOUNT_REQUIRES_MEMO_KEY = "config.memo_required";
 
     public Server(String uri) {
         this(
@@ -216,14 +229,20 @@ public class Server implements Closeable {
     }
 
     /**
-     * Submits transaction to the network.
-     * @param transaction transaction to submit to the network.
+     * Submits transaction to the network
+     *
+     * @param transaction transaction to submit to the network
+     * @param skipMemoRequiredCheck set to true to skip memoRequiredCheck
      * @return {@link SubmitTransactionResponse}
      * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code> or connection timeout occured.
      * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
      * @throws IOException
      */
-    public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException {
+    public SubmitTransactionResponse submitTransaction(Transaction transaction, boolean skipMemoRequiredCheck) throws IOException, AccountRequiresMemoException {
+        if (!skipMemoRequiredCheck) {
+            checkMemoRequired(transaction);
+        }
+
         Optional<Network> network = getNetwork();
         if (!network.isPresent()) {
             this.root();
@@ -262,6 +281,73 @@ public class Server implements Closeable {
         }
 
         return submitTransactionResponse;
+    }
+
+    /**
+     * Submits transaction to the network
+     *
+     * This function will always check if the destination account requires a memo in the transaction as
+     * defined in <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md" target="_blank">SEP-0029</a>
+     * If you want to skip this check, use {@link Server#submitTransaction(Transaction, boolean)}.
+     *
+     * @param transaction transaction to submit to the network.
+     * @return {@link SubmitTransactionResponse}
+     * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code> or connection timeout occured.
+     * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
+     * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+     * account which requires a memo.
+     * @throws IOException
+     */
+    public SubmitTransactionResponse submitTransaction(Transaction transaction) throws IOException, AccountRequiresMemoException {
+        return submitTransaction(transaction, false);
+    }
+
+    /**
+     * checkMemoRequired implements a memo required check as defined in
+     * <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md" target="_blank">SEP-0029</a>
+     *
+     * @param transaction transaction to submit to the network.
+     * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+     * account which requires a memo.
+     * @throws IOException
+     */
+    public void checkMemoRequired(Transaction transaction) throws IOException, AccountRequiresMemoException {
+        if (!(transaction.getMemo() == null || transaction.getMemo().equals(Memo.none()))) {
+            return;
+        }
+        Set<String> destinations = new HashSet<String>();
+        Operation[] operations = transaction.getOperations();
+        for (int i = 0; i < operations.length; i++) {
+            String destination;
+            Operation operation = operations[i];
+            if (operation instanceof PaymentOperation) {
+                destination = ((PaymentOperation) operation).getDestination();
+            } else if (operation instanceof PathPaymentStrictReceiveOperation) {
+                destination = ((PathPaymentStrictReceiveOperation) operation).getDestination();
+            } else if (operation instanceof PathPaymentStrictSendOperation) {
+                destination = ((PathPaymentStrictSendOperation) operation).getDestination();
+            } else if (operation instanceof AccountMergeOperation) {
+                destination = ((AccountMergeOperation) operation).getDestination();
+            } else {
+                continue;
+            }
+            if (destinations.contains(destination)) {
+                continue;
+            }
+            destinations.add(destination);
+            AccountResponse.Data data;
+            try {
+                data = this.accounts().account(destination).getData();
+            } catch (ErrorResponse e) {
+                if (e.getCode() == 404) {
+                    continue;
+                }
+                throw e;
+            }
+            if (ACCOUNT_REQUIRES_MEMO_VALUE.equals(data.get(ACCOUNT_REQUIRES_MEMO_KEY))) {
+                throw new AccountRequiresMemoException("Destination account requires a memo in the transaction.", destination, i);
+            }
+        }
     }
 
     @Override
