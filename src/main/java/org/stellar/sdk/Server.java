@@ -236,24 +236,25 @@ public class Server implements Closeable {
      * @return {@link SubmitTransactionResponse}
      * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code> or connection timeout occured.
      * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
+     * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+     * account which requires a memo.
      * @throws IOException
      */
     public SubmitTransactionResponse submitTransaction(Transaction transaction, boolean skipMemoRequiredCheck) throws IOException, AccountRequiresMemoException {
-        if (!skipMemoRequiredCheck) {
-            checkMemoRequired(transaction);
-        }
-
         Optional<Network> network = getNetwork();
         if (!network.isPresent()) {
             this.root();
         }
 
         network = getNetwork();
-
         if (!network.get().equals(transaction.getNetwork())) {
             throw new NetworkMismatchException(network.get(), transaction.getNetwork());
-
         }
+
+        if (!skipMemoRequiredCheck) {
+            checkMemoRequired(transaction);
+        }
+
         HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
         RequestBody requestBody = new FormBody.Builder().add("tx", transaction.toEnvelopeXdrBase64()).build();
         Request submitTransactionRequest = new Request.Builder().url(transactionsURI).post(requestBody).build();
