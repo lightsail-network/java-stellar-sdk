@@ -344,9 +344,9 @@ public class ServerTest {
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
         Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
-                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
-                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
                 .addMemo(new MemoText("Hello, Stellar."))
@@ -354,6 +354,28 @@ public class ServerTest {
                 .build();
         transaction.sign(source);
         server.submitTransaction(transaction);
+    }
+
+    @Test
+    public void testCheckMemoRequiredWithSkipCheck() throws IOException, AccountRequiresMemoException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        server.submitTransaction(transaction, true);
     }
 
     @Test
@@ -444,7 +466,7 @@ public class ServerTest {
     }
 
     @Test
-    public void testCheckMemoRequiredWithAccountMergeOperation() throws IOException {
+    public void testCheckMemoRequiredWithAccountMergeOperationNoMemo() throws IOException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
         mockWebServer.start();
