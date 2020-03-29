@@ -39,12 +39,12 @@ public class Server implements Closeable {
      * ACCOUNT_REQUIRES_MEMO_VALUE is the base64 encoding of "1".
      * SEP 29 uses this value to define transaction memo requirements for incoming payments.
      */
-    public static final String ACCOUNT_REQUIRES_MEMO_VALUE = "MQ==";
+    private static final String ACCOUNT_REQUIRES_MEMO_VALUE = "MQ==";
 
     /**
      * ACCOUNT_REQUIRES_MEMO_KEY is the data name described in SEP 29.
      */
-    public static final String ACCOUNT_REQUIRES_MEMO_KEY = "config.memo_required";
+    private static final String ACCOUNT_REQUIRES_MEMO_KEY = "config.memo_required";
 
     public Server(String uri) {
         this(
@@ -311,7 +311,7 @@ public class Server implements Closeable {
      * account which requires a memo.
      * @throws IOException
      */
-    public void checkMemoRequired(Transaction transaction) throws IOException, AccountRequiresMemoException {
+    private void checkMemoRequired(Transaction transaction) throws IOException, AccountRequiresMemoException {
         if (!(transaction.getMemo() == null || transaction.getMemo().equals(Memo.none()))) {
             return;
         }
