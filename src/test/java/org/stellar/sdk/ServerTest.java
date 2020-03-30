@@ -2,9 +2,12 @@ package org.stellar.sdk;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
+import org.stellar.sdk.requests.ErrorResponse;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
 import org.stellar.sdk.responses.SubmitTransactionTimeoutResponseException;
@@ -181,7 +184,7 @@ public class ServerTest {
     }
 
     @Test
-    public void testSubmitTransactionNetworkMisMatch() throws IOException {
+    public void testSubmitTransactionNetworkMisMatch() throws IOException, AccountRequiresMemoException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
@@ -190,7 +193,7 @@ public class ServerTest {
         Server server = new Server(baseUrl.toString());
 
         try {
-            server.submitTransaction(this.buildTransaction(Network.TESTNET));
+            server.submitTransaction(this.buildTransaction(Network.TESTNET), true);
             fail("expected NetworkMismatchException exception");
         } catch (NetworkMismatchException e) {
             // expect exception
@@ -198,7 +201,7 @@ public class ServerTest {
     }
 
     @Test
-    public void testSubmitTransactionSuccess() throws IOException {
+    public void testSubmitTransactionSuccess() throws IOException, AccountRequiresMemoException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
@@ -206,7 +209,7 @@ public class ServerTest {
         HttpUrl baseUrl = mockWebServer.url("");
         Server server = new Server(baseUrl.toString());
 
-        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
+        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction(), true);
         assertTrue(response.isSuccess());
         assertEquals(response.getLedger(), new Long(826150L));
         assertEquals(response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
@@ -216,7 +219,7 @@ public class ServerTest {
     }
 
     @Test
-    public void testSubmitTransactionFail() throws IOException {
+    public void testSubmitTransactionFail() throws IOException, AccountRequiresMemoException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(failureResponse));
@@ -224,7 +227,7 @@ public class ServerTest {
         HttpUrl baseUrl = mockWebServer.url("");
         Server server = new Server(baseUrl.toString());
 
-        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction());
+        SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction(), true);
         assertFalse(response.isSuccess());
         assertNull(response.getLedger());
         assertNull(response.getHash());
@@ -238,7 +241,7 @@ public class ServerTest {
     }
 
     @Test(expected = SubmitTransactionTimeoutResponseException.class)
-    public void testSubmitTransactionTimeout() throws IOException {
+    public void testSubmitTransactionTimeout() throws IOException, AccountRequiresMemoException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.enqueue(new MockResponse().setResponseCode(504).setBody(timeoutResponse).setBodyDelay(5, TimeUnit.SECONDS));
@@ -254,11 +257,11 @@ public class ServerTest {
                 .build();
         server.setSubmitHttpClient(testSubmitHttpClient);
 
-        server.submitTransaction(this.buildTransaction());
+        server.submitTransaction(this.buildTransaction(), true);
     }
 
     @Test(expected = SubmitTransactionTimeoutResponseException.class)
-    public void testSubmitTransactionTimeoutWithoutResponse() throws IOException {
+    public void testSubmitTransactionTimeoutWithoutResponse() throws IOException, AccountRequiresMemoException {
         MockWebServer mockWebServer = new MockWebServer();
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
         mockWebServer.start();
@@ -273,7 +276,7 @@ public class ServerTest {
                 .build();
         server.setSubmitHttpClient(testSubmitHttpClient);
 
-        server.submitTransaction(this.buildTransaction());
+        server.submitTransaction(this.buildTransaction(), true);
     }
 
     @Test
@@ -289,11 +292,11 @@ public class ServerTest {
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(false)
-                .build();;
+                .build();
         server.setSubmitHttpClient(testSubmitHttpClient);
 
         try {
-            server.submitTransaction(this.buildTransaction());
+            server.submitTransaction(this.buildTransaction(), true);
             fail("submitTransaction didn't throw exception");
         } catch (SubmitTransactionUnknownResponseException e) {
             assertEquals(500, e.getCode());
@@ -316,5 +319,382 @@ public class ServerTest {
         assertEquals("dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046", page.getRecords().get(0).getTransactionHash());
         Page<OperationResponse> nextPage = page.getNextPage(server.getHttpClient());
         assertEquals(1, page.getRecords().size());
+    }
+
+
+    /**
+     * The following tests are related to SEP-0029.
+     */
+    public static final String DESTINATION_ACCOUNT_MEMO_REQUIRED_A = "GCMDQXJJGQE6TJ5XUHJMJUUIWECC5S6VANRAOWIQMMV4ALW43JOY2SEB";
+    public static final String DESTINATION_ACCOUNT_MEMO_REQUIRED_B = "GDUR2DMT5AQ7DJUGBIBB45NKRNQXGRJTWTQ7DPRP37EKBELSMK57RMZK";
+    public static final String DESTINATION_ACCOUNT_MEMO_REQUIRED_C = "GCS36NBLT6OKYN5EUQOQ7ZZIM6WXXNX5ME4JGTCG3HVZOYXRRMNUHNMM";
+    public static final String DESTINATION_ACCOUNT_MEMO_REQUIRED_D = "GAKQNN6GNGNPLYBVEDCD5QAIEHAZVNCQET3HAUR4YWQAP5RPBLU2W7UG";
+    public static final String DESTINATION_ACCOUNT_NO_MEMO_REQUIRED = "GDYC2D4P2SRC5DCEDDK2OUFESSPCTZYLDOEF6NYHR2T7X5GUTEABCQC2";
+    public static final String DESTINATION_ACCOUNT_NO_FOUND = "GD2OVSQPGD5FBJPMW4YN3FGDJ7JDFKNOMJT35T4H52FLHXJK5MFSR5RA";
+    public static final String DESTINATION_ACCOUNT_FETCH_ERROR = "GB7WNQUTDLD6YJ4MR3KQN3Y6ZIDIGTA7GRKNH47HOGMP2ETFGRSLD6OG";
+
+    @Test
+    public void testCheckMemoRequiredWithMemo() throws IOException, AccountRequiresMemoException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .addMemo(new MemoText("Hello, Stellar."))
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        server.submitTransaction(transaction);
+    }
+
+    @Test
+    public void testCheckMemoRequiredWithSkipCheck() throws IOException, AccountRequiresMemoException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        server.submitTransaction(transaction, true);
+    }
+
+    @Test
+    public void testCheckMemoRequiredWithPaymentOperationNoMemo() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        try {
+            server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(0, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
+        }
+    }
+
+    @Test
+    public void testCheckMemoRequiredWithPathPaymentStrictReceiveOperationNoMemo() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        try {
+            server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(1, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_B, e.getAccountId());
+        }
+    }
+
+    @Test
+    public void testCheckMemoRequiredWithPathPaymentStrictSendOperationNoMemo() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        try {
+            server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(2, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
+        }
+    }
+
+    @Test
+    public void testCheckMemoRequiredWithAccountMergeOperationNoMemo() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        try {
+            server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(3, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_D, e.getAccountId());
+        }
+    }
+
+    @Test
+    public void testCheckMemoRequiredTwoOperationsWithSameDestination() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        try {
+            server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(2, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
+        }
+    }
+
+    @Test
+    public void testCheckMemoRequiredNoDestinationOperation() throws IOException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new ManageDataOperation.Builder("Hello", "Stellar".getBytes()).build())
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        try {
+            server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(1, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
+        }
+    }
+
+    @Test
+    public void testCheckMemoRequiredAccountNotFound() throws IOException, AccountRequiresMemoException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_FOUND, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_FOUND, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_FOUND, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_FOUND).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        server.submitTransaction(transaction);
+    }
+
+    @Test
+    public void testCheckMemoRequiredFetchAccountError() throws IOException, AccountRequiresMemoException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_FETCH_ERROR, new AssetTypeNative(), "10").build())
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
+                .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeNative(), "10").build())
+                .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_D, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+                .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setOperationFee(100)
+                .build();
+        transaction.sign(source);
+        try {
+            server.submitTransaction(transaction);
+            fail();
+        } catch (ErrorResponse e) {
+            assertEquals(400, e.getCode());
+        }
+    }
+
+    private Dispatcher buildTestCheckMemoRequiredMockDispatcher() {
+        final String memoRequiredResponse = "{\n" +
+                "    \"data\": {\n" +
+                "        \"config.memo_required\": \"MQ==\"\n" +
+                "    }\n" +
+                "}";
+        final String noMemoRequiredResponse = "{\n" +
+                "    \"data\": {\n" +
+                "    }\n" +
+                "}";
+        final String successTransactionResponse =
+                "{\n" +
+                        "  \"_links\": {\n" +
+                        "    \"transaction\": {\n" +
+                        "      \"href\": \"/transactions/2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42\"\n" +
+                        "    }\n" +
+                        "  },\n" +
+                        "  \"hash\": \"2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42\",\n" +
+                        "  \"ledger\": 826150,\n" +
+                        "  \"envelope_xdr\": \"AAAAAKu3N77S+cHLEDfVD2eW/CqRiN9yvAKH+qkeLjHQs1u+AAAAZAAMkoMAAAADAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAbYQq8ek1GitmNBUloGnetfWxSpxlsgK48Xi66dIL3MoAAAAAC+vCAAAAAAAAAAAB0LNbvgAAAEDadQ25SNHWTg0L+2wr/KNWd8/EwSNFkX/ncGmBGA3zkNGx7lAow78q8SQmnn2IsdkD9MwICirhsOYDNbaqShwO\",\n" +
+                        "  \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=\",\n" +
+                        "  \"result_meta_xdr\": \"AAAAAAAAAAEAAAACAAAAAAAMmyYAAAAAAAAAAG2EKvHpNRorZjQVJaBp3rX1sUqcZbICuPF4uunSC9zKAAAAAAvrwgAADJsmAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAMmyYAAAAAAAAAAKu3N77S+cHLEDfVD2eW/CqRiN9yvAKH+qkeLjHQs1u+AAAAFzCfYtQADJKDAAAAAwAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA\"\n" +
+                        "}";
+        final String rootResponse = "{\n" +
+                "  \"_links\": {\n" +
+                "    \"account\": {\n" +
+                "      \"href\": \"https://horizon.stellar.org/accounts/{account_id}\",\n" +
+                "      \"templated\": true\n" +
+                "    },\n" +
+                "    \"account_transactions\": {\n" +
+                "      \"href\": \"https://horizon.stellar.org/accounts/{account_id}/transactions{?cursor,limit,order}\",\n" +
+                "      \"templated\": true\n" +
+                "    },\n" +
+                "    \"assets\": {\n" +
+                "      \"href\": \"https://horizon.stellar.org/assets{?asset_code,asset_issuer,cursor,limit,order}\",\n" +
+                "      \"templated\": true\n" +
+                "    },\n" +
+                "    \"metrics\": {\n" +
+                "      \"href\": \"https://horizon.stellar.org/metrics\"\n" +
+                "    },\n" +
+                "    \"order_book\": {\n" +
+                "      \"href\": \"https://horizon.stellar.org/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer,limit}\",\n" +
+                "      \"templated\": true\n" +
+                "    },\n" +
+                "    \"self\": {\n" +
+                "      \"href\": \"https://horizon.stellar.org/\"\n" +
+                "    },\n" +
+                "    \"transaction\": {\n" +
+                "      \"href\": \"https://horizon.stellar.org/transactions/{hash}\",\n" +
+                "      \"templated\": true\n" +
+                "    },\n" +
+                "    \"transactions\": {\n" +
+                "      \"href\": \"https://horizon.stellar.org/transactions{?cursor,limit,order}\",\n" +
+                "      \"templated\": true\n" +
+                "    }\n" +
+                "  },\n" +
+                "  \"horizon_version\": \"0.18.0-92259749c681df66a8347f846e94681a24f2a920\",\n" +
+                "  \"core_version\": \"stellar-core 11.1.0 (324c1bd61b0e9bada63e0d696d799421b00a7950)\",\n" +
+                "  \"history_latest_ledger\": 24345129,\n" +
+                "  \"history_elder_ledger\": 1,\n" +
+                "  \"core_latest_ledger\": 24345130,\n" +
+                "  \"network_passphrase\": \"Public Global Stellar Network ; September 2015\",\n" +
+                "  \"current_protocol_version\": 11,\n" +
+                "  \"core_supported_protocol_version\": 11\n" +
+                "}";
+
+        Dispatcher dispatcher = new Dispatcher() {
+            @Override
+            public MockResponse dispatch(RecordedRequest request) {
+                String path = request.getPath();
+                if ("/".equals(path)) {
+                    return new MockResponse().setResponseCode(200).setBody(rootResponse);
+                }
+                if (String.format("/accounts/%s", DESTINATION_ACCOUNT_MEMO_REQUIRED_A).equals(path) ||
+                        String.format("/accounts/%s", DESTINATION_ACCOUNT_MEMO_REQUIRED_B).equals(path) ||
+                        String.format("/accounts/%s", DESTINATION_ACCOUNT_MEMO_REQUIRED_C).equals(path) ||
+                        String.format("/accounts/%s", DESTINATION_ACCOUNT_MEMO_REQUIRED_D).equals(path)) {
+                    return new MockResponse().setResponseCode(200).setBody(memoRequiredResponse);
+                } else if (String.format("/accounts/%s", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).equals(path)) {
+                    return new MockResponse().setResponseCode(200).setBody(noMemoRequiredResponse);
+                } else if (String.format("/accounts/%s", DESTINATION_ACCOUNT_NO_FOUND).equals(path)) {
+                    return new MockResponse().setResponseCode(404);
+                } else if (String.format("/accounts/%s", DESTINATION_ACCOUNT_FETCH_ERROR).equals(path)) {
+                    return new MockResponse().setResponseCode(400);
+                } else if ("/transactions".equals(path)) {
+                    return new MockResponse().setResponseCode(200).setBody(successTransactionResponse);
+                } else {
+                    return new MockResponse().setResponseCode(404);
+                }
+            }
+        };
+        return dispatcher;
     }
 }
