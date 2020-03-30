@@ -66,7 +66,7 @@ public class TimeBoundsTest {
     @Test
     public void TestTimeoutWithTimeout() {
         long timeout = 300;
-        TimeBounds timebounds = TimeBounds.afterNow(timeout);
+        TimeBounds timebounds = TimeBounds.expiresAfter(timeout);
         long now = System.currentTimeMillis() / 1000L;
         assertEquals(0, timebounds.getMinTime());
         assertTrue(timebounds.getMaxTime() - timeout <= now && timebounds.getMaxTime() - timeout >= now - 1);

@@ -39,7 +39,7 @@ final public class TimeBounds {
 	 * @param timeout Timeout in seconds.
 	 * @return TimeBounds
 	 */
-	public static TimeBounds afterNow(long timeout) {
+	public static TimeBounds expiresAfter(long timeout) {
 		long now = System.currentTimeMillis() / 1000L;
 		long endTime = now + timeout;
 		return new TimeBounds(0, endTime);
