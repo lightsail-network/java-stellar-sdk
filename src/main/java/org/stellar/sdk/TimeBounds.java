@@ -11,24 +11,44 @@ import org.stellar.sdk.xdr.Uint64;
 final public class TimeBounds {
 	final private long mMinTime;
 	final private long mMaxTime;
-	
+
 	/**
 	 * @param minTime 64bit Unix timestamp
 	 * @param maxTime 64bit Unix timestamp
 	 */
 	public TimeBounds(long minTime, long maxTime) {
-		if (maxTime > 0 && minTime >= maxTime) {
+		if (minTime < 0) {
+			throw new IllegalArgumentException("minTime cannot be negative");
+		}
+
+		if (maxTime < 0) {
+			throw new IllegalArgumentException("maxTime cannot be negative");
+		}
+
+		if (maxTime != 0 && minTime > maxTime) {
 			throw new IllegalArgumentException("minTime must be >= maxTime");
 		}
-		
+
 		mMinTime = minTime;
 		mMaxTime = maxTime;
 	}
-	
+
+	/**
+	 * A factory method that sets maxTime to the specified second from now.
+	 *
+	 * @param timeout Timeout in seconds.
+	 * @return TimeBounds
+	 */
+	public static TimeBounds expiresAfter(long timeout) {
+		long now = System.currentTimeMillis() / 1000L;
+		long endTime = now + timeout;
+		return new TimeBounds(0, endTime);
+	}
+
 	public long getMinTime() {
 		return mMinTime;
 	}
-	
+
 	public long getMaxTime() {
 		return mMaxTime;
 	}
@@ -39,8 +59,8 @@ final public class TimeBounds {
 		}
 
 		return new TimeBounds(
-				timeBounds.getMinTime().getTimePoint().getUint64().longValue(),
-				timeBounds.getMaxTime().getTimePoint().getUint64().longValue()
+				timeBounds.getMinTime().getTimePoint().getUint64(),
+				timeBounds.getMaxTime().getTimePoint().getUint64()
 		);
 	}
 
@@ -61,13 +81,14 @@ final public class TimeBounds {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 		TimeBounds that = (TimeBounds) o;
-
-		if (mMinTime != that.mMinTime) return false;
-		return mMaxTime == that.mMaxTime;
+		return mMinTime == that.mMinTime && mMaxTime == that.mMaxTime;
 	}
 
 
