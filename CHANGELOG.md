@@ -2,6 +2,30 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.15.0
+
+- Add SEP0029 (memo required) support. (https://github.com/stellar/java-stellar-sdk/issues/272)
+
+  Extends `Server.submitTransaction` to always run a memo required check before
+  sending the transaction.  If any of the destinations require a memo and the
+  transaction doesn't include one, then an `AccountRequiresMemoError` will be thrown.
+
+  You can skip this check by passing a true `skipMemoRequiredCheck` value to `Server.submitTransaction`:
+
+  ```
+  server.submitTransaction(tx, true)
+  ```
+
+  The check runs for each operation of type:
+   - `payment`
+   - `pathPaymentStrictReceive`
+   - `pathPaymentStrictSend`
+   - `mergeAccount`
+
+  If the transaction includes a memo, then memo required checking is skipped.
+
+  See [SEP0029](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md) for more information about memo required check.
+
 ## 0.14.0
 
 * Update challenge transaction helpers for SEP-10 v1.3.0 (https://github.com/stellar/java-stellar-sdk/issues/263).
