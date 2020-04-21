@@ -16,11 +16,11 @@ import java.util.Arrays;
 //      Asset sendAsset;  // asset we pay with
 //      int64 sendAmount; // amount of sendAsset to send (excluding fees)
 //  
-//      AccountID destination; // recipient of the payment
-//      Asset destAsset;       // what they end up with
-//      int64 destMin;         // the minimum amount of dest asset to
-//                             // be received
-//                             // The operation will fail if it can't be met
+//      MuxedAccount destination; // recipient of the payment
+//      Asset destAsset;          // what they end up with
+//      int64 destMin;            // the minimum amount of dest asset to
+//                                // be received
+//                                // The operation will fail if it can't be met
 //  
 //      Asset path<5>; // additional hops it must go through to get there
 //  };
@@ -42,11 +42,11 @@ public class PathPaymentStrictSendOp implements XdrElement {
   public void setSendAmount(Int64 value) {
     this.sendAmount = value;
   }
-  private AccountID destination;
-  public AccountID getDestination() {
+  private MuxedAccount destination;
+  public MuxedAccount getDestination() {
     return this.destination;
   }
-  public void setDestination(AccountID value) {
+  public void setDestination(MuxedAccount value) {
     this.destination = value;
   }
   private Asset destAsset;
@@ -73,7 +73,7 @@ public class PathPaymentStrictSendOp implements XdrElement {
   public static void encode(XdrDataOutputStream stream, PathPaymentStrictSendOp encodedPathPaymentStrictSendOp) throws IOException{
     Asset.encode(stream, encodedPathPaymentStrictSendOp.sendAsset);
     Int64.encode(stream, encodedPathPaymentStrictSendOp.sendAmount);
-    AccountID.encode(stream, encodedPathPaymentStrictSendOp.destination);
+    MuxedAccount.encode(stream, encodedPathPaymentStrictSendOp.destination);
     Asset.encode(stream, encodedPathPaymentStrictSendOp.destAsset);
     Int64.encode(stream, encodedPathPaymentStrictSendOp.destMin);
     int pathsize = encodedPathPaymentStrictSendOp.getPath().length;
@@ -89,7 +89,7 @@ public class PathPaymentStrictSendOp implements XdrElement {
     PathPaymentStrictSendOp decodedPathPaymentStrictSendOp = new PathPaymentStrictSendOp();
     decodedPathPaymentStrictSendOp.sendAsset = Asset.decode(stream);
     decodedPathPaymentStrictSendOp.sendAmount = Int64.decode(stream);
-    decodedPathPaymentStrictSendOp.destination = AccountID.decode(stream);
+    decodedPathPaymentStrictSendOp.destination = MuxedAccount.decode(stream);
     decodedPathPaymentStrictSendOp.destAsset = Asset.decode(stream);
     decodedPathPaymentStrictSendOp.destMin = Int64.decode(stream);
     int pathsize = stream.readInt();

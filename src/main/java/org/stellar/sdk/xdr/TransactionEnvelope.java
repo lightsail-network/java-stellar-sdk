@@ -7,59 +7,89 @@ package org.stellar.sdk.xdr;
 import java.io.IOException;
 
 import com.google.common.base.Objects;
-import java.util.Arrays;
 
 // === xdr source ============================================================
 
-//  struct TransactionEnvelope
+//  union TransactionEnvelope switch (EnvelopeType type)
 //  {
-//      Transaction tx;
-//      /* Each decorated signature is a signature over the SHA256 hash of
-//       * a TransactionSignaturePayload */
-//      DecoratedSignature signatures<20>;
+//  case ENVELOPE_TYPE_TX_V0:
+//      TransactionV0Envelope v0;
+//  case ENVELOPE_TYPE_TX:
+//      TransactionV1Envelope v1;
+//  case ENVELOPE_TYPE_TX_FEE_BUMP:
+//      FeeBumpTransactionEnvelope feeBump;
 //  };
 
 //  ===========================================================================
 public class TransactionEnvelope implements XdrElement {
   public TransactionEnvelope () {}
-  private Transaction tx;
-  public Transaction getTx() {
-    return this.tx;
+  EnvelopeType type;
+  public EnvelopeType getDiscriminant() {
+    return this.type;
   }
-  public void setTx(Transaction value) {
-    this.tx = value;
+  public void setDiscriminant(EnvelopeType value) {
+    this.type = value;
   }
-  private DecoratedSignature[] signatures;
-  public DecoratedSignature[] getSignatures() {
-    return this.signatures;
+  private TransactionV0Envelope v0;
+  public TransactionV0Envelope getV0() {
+    return this.v0;
   }
-  public void setSignatures(DecoratedSignature[] value) {
-    this.signatures = value;
+  public void setV0(TransactionV0Envelope value) {
+    this.v0 = value;
   }
-  public static void encode(XdrDataOutputStream stream, TransactionEnvelope encodedTransactionEnvelope) throws IOException{
-    Transaction.encode(stream, encodedTransactionEnvelope.tx);
-    int signaturessize = encodedTransactionEnvelope.getSignatures().length;
-    stream.writeInt(signaturessize);
-    for (int i = 0; i < signaturessize; i++) {
-      DecoratedSignature.encode(stream, encodedTransactionEnvelope.signatures[i]);
-    }
+  private TransactionV1Envelope v1;
+  public TransactionV1Envelope getV1() {
+    return this.v1;
+  }
+  public void setV1(TransactionV1Envelope value) {
+    this.v1 = value;
+  }
+  private FeeBumpTransactionEnvelope feeBump;
+  public FeeBumpTransactionEnvelope getFeeBump() {
+    return this.feeBump;
+  }
+  public void setFeeBump(FeeBumpTransactionEnvelope value) {
+    this.feeBump = value;
+  }
+  public static void encode(XdrDataOutputStream stream, TransactionEnvelope encodedTransactionEnvelope) throws IOException {
+  //Xdrgen::AST::Identifier
+  //EnvelopeType
+  stream.writeInt(encodedTransactionEnvelope.getDiscriminant().getValue());
+  switch (encodedTransactionEnvelope.getDiscriminant()) {
+  case ENVELOPE_TYPE_TX_V0:
+  TransactionV0Envelope.encode(stream, encodedTransactionEnvelope.v0);
+  break;
+  case ENVELOPE_TYPE_TX:
+  TransactionV1Envelope.encode(stream, encodedTransactionEnvelope.v1);
+  break;
+  case ENVELOPE_TYPE_TX_FEE_BUMP:
+  FeeBumpTransactionEnvelope.encode(stream, encodedTransactionEnvelope.feeBump);
+  break;
+  }
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static TransactionEnvelope decode(XdrDataInputStream stream) throws IOException {
-    TransactionEnvelope decodedTransactionEnvelope = new TransactionEnvelope();
-    decodedTransactionEnvelope.tx = Transaction.decode(stream);
-    int signaturessize = stream.readInt();
-    decodedTransactionEnvelope.signatures = new DecoratedSignature[signaturessize];
-    for (int i = 0; i < signaturessize; i++) {
-      decodedTransactionEnvelope.signatures[i] = DecoratedSignature.decode(stream);
-    }
+  TransactionEnvelope decodedTransactionEnvelope = new TransactionEnvelope();
+  EnvelopeType discriminant = EnvelopeType.decode(stream);
+  decodedTransactionEnvelope.setDiscriminant(discriminant);
+  switch (decodedTransactionEnvelope.getDiscriminant()) {
+  case ENVELOPE_TYPE_TX_V0:
+  decodedTransactionEnvelope.v0 = TransactionV0Envelope.decode(stream);
+  break;
+  case ENVELOPE_TYPE_TX:
+  decodedTransactionEnvelope.v1 = TransactionV1Envelope.decode(stream);
+  break;
+  case ENVELOPE_TYPE_TX_FEE_BUMP:
+  decodedTransactionEnvelope.feeBump = FeeBumpTransactionEnvelope.decode(stream);
+  break;
+  }
     return decodedTransactionEnvelope;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.tx, Arrays.hashCode(this.signatures));
+    return Objects.hashCode(this.v0, this.v1, this.feeBump, this.type);
   }
   @Override
   public boolean equals(Object object) {
@@ -68,6 +98,6 @@ public class TransactionEnvelope implements XdrElement {
     }
 
     TransactionEnvelope other = (TransactionEnvelope) object;
-    return Objects.equal(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
+    return Objects.equal(this.v0, other.v0) && Objects.equal(this.v1, other.v1) && Objects.equal(this.feeBump, other.feeBump) && Objects.equal(this.type, other.type);
   }
 }

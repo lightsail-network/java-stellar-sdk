@@ -40,7 +40,7 @@ import com.google.common.base.Objects;
 //      case BUMP_SEQUENCE:
 //          BumpSequenceResult bumpSeqResult;
 //      case MANAGE_BUY_OFFER:
-//  	ManageBuyOfferResult manageBuyOfferResult;
+//          ManageBuyOfferResult manageBuyOfferResult;
 //      case PATH_PAYMENT_STRICT_SEND:
 //          PathPaymentStrictSendResult pathPaymentStrictSendResult;
 //      }
