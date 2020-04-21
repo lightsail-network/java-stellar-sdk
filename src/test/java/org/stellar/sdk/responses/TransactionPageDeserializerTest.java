@@ -20,6 +20,12 @@ public class TransactionPageDeserializerTest extends TestCase {
     assertEquals(transactionsPage.getRecords().get(0).getLinks().getAccount().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(transactionsPage.getRecords().get(9).getSourceAccount(), "GAENIE5LBJIXLMJIAJ7225IUPA6CX7EGHUXRX5FLCZFFAQSG2ZUYSWFK");
 
+    // Transaction without memo_bytes field
+    assertTrue(transactionsPage.getRecords().get(7).getMemo() instanceof MemoText);
+    memoText = (MemoText) transactionsPage.getRecords().get(7).getMemo();
+    assertEquals(memoText.getText(), "helpsdf");
+
+
     // Empty memo_text
     assertTrue(transactionsPage.getRecords().get(2).getMemo() instanceof MemoText);
     memoText = (MemoText) transactionsPage.getRecords().get(2).getMemo();
@@ -382,8 +388,7 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_xdr\": \"AAAAAAAAAMgAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=\",\n" +
           "        \"result_meta_xdr\": \"AAAAAAAAAAIAAAACAAAAAAAAIeoAAAAAAAAAAAjUE6sKUXWxKAJ/rXUUeDwr/IY9Lxv0qxZKUEJG1mmJAAAAAAvrwgAAACHqAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAIeoAAAAAAAAAAB+lHtRjj4+h2/0Tj8iBQiaUDzLo4oRCLyUnytFHzAyIAAIIaYufPjcAAB6hAAAAAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAEAACHqAAAAAAAAAAAI1BOrClF1sSgCf611FHg8K/yGPS8b9KsWSlBCRtZpiQACCGT7Xvr/AAAh6gAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAACHqAAAAAAAAAAAfpR7UY4+Podv9E4/IgUImlA8y6OKEQi8lJ8rRR8wMiAAAAAScLAU4AAAeoQAAAAEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA==\",\n" +
           "        \"memo_type\": \"text\",\n" +
-          "        \"memo\": \"aGVscHNkZg==\",\n" +
-          "        \"memo_bytes\": \"dGVzdHBvb2wsZmF1Y2V0LHNkZg==\",\n" +
+          "        \"memo\": \"helpsdf\",\n" +
           "        \"signatures\": [\n" +
           "          \"zkTeVJnyYHOmkdKGzlXLkH4yxRUJc2DmppUwLsbJVMk5gGFwDI2UXhfTeucZl11HeLp9R8UvKbvsuvKHjWkBCA==\"\n" +
           "        ]\n" +
