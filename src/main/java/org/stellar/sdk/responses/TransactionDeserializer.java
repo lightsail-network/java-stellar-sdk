@@ -12,6 +12,23 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class TransactionDeserializer implements JsonDeserializer<TransactionResponse> {
+
+  private Memo extractTextMemo(TransactionEnvelope transactionEnvelope) {
+    switch (transactionEnvelope.getDiscriminant()) {
+      case ENVELOPE_TYPE_TX:
+        return Memo.text(transactionEnvelope.getV1().getTx().getMemo().getText().getBytes());
+      case ENVELOPE_TYPE_TX_V0:
+        return Memo.text(transactionEnvelope.getV0().getTx().getMemo().getText().getBytes());
+      case ENVELOPE_TYPE_TX_FEE_BUMP:
+        return Memo.text(
+            transactionEnvelope.getFeeBump().getTx().getInnerTx()
+            .getV1().getTx().getMemo().getText().getBytes()
+        );
+        default:
+          throw new IllegalArgumentException("invalid transaction type: "+transactionEnvelope.getDiscriminant());
+    }
+  }
+
   @Override
   public TransactionResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Transaction
@@ -50,7 +67,7 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
             // so we must throw it as a runtime exception
             throw new RuntimeException(e);
           }
-          memo = Memo.text(transactionEnvelope.getTx().getMemo().getText().getBytes());
+          memo = extractTextMemo(transactionEnvelope);
         }
       } else {
         String memoValue = json.getAsJsonObject().get("memo").getAsString();

@@ -37,7 +37,7 @@ public abstract class Operation {
   public org.stellar.sdk.xdr.Operation toXdr() {
     org.stellar.sdk.xdr.Operation xdr = new org.stellar.sdk.xdr.Operation();
     if (getSourceAccount() != null) {
-      xdr.setSourceAccount(StrKey.encodeToXDRAccountId(mSourceAccount));
+      xdr.setSourceAccount(StrKey.encodeToXDRMuxedAccount(mSourceAccount));
     }
     xdr.setBody(toOperationBody());
     return xdr;
@@ -115,7 +115,7 @@ public abstract class Operation {
     }
     if (xdr.getSourceAccount() != null) {
       operation.setSourceAccount(
-          StrKey.encodeStellarAccountId(xdr.getSourceAccount().getAccountID().getEd25519().getUint256())
+          StrKey.encodeStellarMuxedAccount(xdr.getSourceAccount())
       );
     }
     return operation;

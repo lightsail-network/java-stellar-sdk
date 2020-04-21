@@ -22,7 +22,7 @@ public class TransactionDecodeTest {
         byte[] bytes = base64Encoding.decode(txBody);
 
         TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-        assertEquals(new Long(2373025265623291L), transactionEnvelope.getTx().getSeqNum().getSequenceNumber().getInt64());
+        assertEquals(new Long(2373025265623291L), transactionEnvelope.getV0().getTx().getSeqNum().getSequenceNumber().getInt64());
     }
 
     @Test
@@ -56,8 +56,8 @@ public class TransactionDecodeTest {
         byte[] bytes = base64Encoding.decode(transactionEnvelopeToDecode);
 
         TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-        assertEquals(1, transactionEnvelope.getTx().getOperations().length);
-        assertTrue(Arrays.equals(new byte[]{'G', 'O', 'L', 'D'}, transactionEnvelope.getTx().getOperations()[0].getBody().getPaymentOp().getAsset().getAlphaNum4().getAssetCode().getAssetCode4()));
+        assertEquals(1, transactionEnvelope.getV0().getTx().getOperations().length);
+        assertTrue(Arrays.equals(new byte[]{'G', 'O', 'L', 'D'}, transactionEnvelope.getV0().getTx().getOperations()[0].getBody().getPaymentOp().getAsset().getAlphaNum4().getAssetCode().getAssetCode4()));
     }
 
     @Test

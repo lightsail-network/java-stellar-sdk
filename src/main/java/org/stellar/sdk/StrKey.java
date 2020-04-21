@@ -2,17 +2,20 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 import com.google.common.base.Optional;
-import org.stellar.sdk.xdr.AccountID;
-import org.stellar.sdk.xdr.PublicKey;
-import org.stellar.sdk.xdr.PublicKeyType;
-import org.stellar.sdk.xdr.Uint256;
+import com.google.common.primitives.Bytes;
+import org.stellar.sdk.xdr.*;
 
 import java.io.*;
 import java.util.Arrays;
 
 class StrKey {
+
+    public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
+    public static final int MUXED_ACCOUNT_ADDRESS_LENGTH = 69;
+
     public enum VersionByte {
         ACCOUNT_ID((byte)(6 << 3)), // G
+        MUXED_ACCOUNT((byte)(12 << 3)), // M
         SEED((byte)(18 << 3)), // S
         PRE_AUTH_TX((byte)(19 << 3)), // T
         SHA256_HASH((byte)(23 << 3)); // X
@@ -41,6 +44,32 @@ class StrKey {
         return String.valueOf(encoded);
     }
 
+    public static String encodeStellarAccountId(AccountID accountID) {
+        char[] encoded = encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
+        return String.valueOf(encoded);
+    }
+
+
+    public static String encodeStellarMuxedAccount(MuxedAccount account) {
+        if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_ED25519)) {
+            return encodeStellarAccountId(account.getEd25519().getUint256());
+        } else if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_MUXED_ED25519)) {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+
+            try {
+                account.getMed25519().getId().encode(new XdrDataOutputStream(byteStream));
+                byteStream.write(account.getMed25519().getEd25519().getUint256());
+            } catch (IOException e) {
+                throw new IllegalArgumentException("invalid muxed account", e);
+            }
+
+            char[] encoded = encodeCheck(VersionByte.MUXED_ACCOUNT, byteStream.toByteArray());
+            return String.valueOf(encoded);
+        }
+        throw new IllegalArgumentException("invalid muxed account type: "+account.getDiscriminant());
+    }
+
+
     public static AccountID encodeToXDRAccountId(String data) {
         AccountID accountID = new AccountID();
         PublicKey publicKey = new PublicKey();
@@ -51,6 +80,37 @@ class StrKey {
         accountID.setAccountID(publicKey);
         return accountID;
     }
+
+    public static MuxedAccount encodeToXDRMuxedAccount(String data) {
+        if (data.length() == ACCOUNT_ID_ADDRESS_LENGTH) {
+            MuxedAccount accountID = new MuxedAccount();
+            accountID.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
+            Uint256 uint256 = new Uint256();
+            uint256.setUint256(decodeStellarAccountId(data));
+            accountID.setEd25519(uint256);
+            return accountID;
+        } else if (data.length() == MUXED_ACCOUNT_ADDRESS_LENGTH) {
+            byte[] decoded = decodeStellarMuxedAccount(data);
+
+            MuxedAccount muxedAccount = new MuxedAccount();
+            muxedAccount.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
+            MuxedAccount.MuxedAccountMed25519 m = new MuxedAccount.MuxedAccountMed25519();
+            try {
+                m.setId(Uint64.decode(
+                    new XdrDataInputStream(new ByteArrayInputStream(decoded, 0, 8))
+                ));
+                m.setEd25519(Uint256.decode(
+                    new XdrDataInputStream(new ByteArrayInputStream(decoded, 8, decoded.length - 8))
+                ));
+            } catch (IOException e) {
+                throw new IllegalArgumentException("invalid address: "+data, e);
+            }
+            muxedAccount.setMed25519(m);
+            return muxedAccount;
+        }
+        throw new IllegalArgumentException("invalid address length: "+data);
+    }
+
 
     public static VersionByte decodeVersionByte(String data) {
         byte[] decoded = StrKey.base32Encoding.decode(java.nio.CharBuffer.wrap(data.toCharArray()));
@@ -65,6 +125,11 @@ class StrKey {
     public static byte[] decodeStellarAccountId(String data) {
         return decodeCheck(VersionByte.ACCOUNT_ID, data.toCharArray());
     }
+
+    public static byte[] decodeStellarMuxedAccount(String data) {
+        return decodeCheck(VersionByte.MUXED_ACCOUNT, data.toCharArray());
+    }
+
 
     public static char[] encodeStellarSecretSeed(byte[] data) {
         return encodeCheck(VersionByte.SEED, data);

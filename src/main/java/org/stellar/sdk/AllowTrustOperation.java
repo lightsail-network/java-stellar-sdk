@@ -14,11 +14,13 @@ public class AllowTrustOperation extends Operation {
   private final String trustor;
   private final String assetCode;
   private final boolean authorize;
+  private final boolean authorizeToMaintainLiabilities;
 
-  private AllowTrustOperation(String trustor, String assetCode, boolean authorize) {
+  private AllowTrustOperation(String trustor, String assetCode, boolean authorize, boolean authorizeToMaintainLiabilities) {
     this.trustor = checkNotNull(trustor, "trustor cannot be null");
     this.assetCode = checkNotNull(assetCode, "assetCode cannot be null");
     this.authorize = authorize;
+    this.authorizeToMaintainLiabilities = authorizeToMaintainLiabilities;
   }
 
   /**
@@ -62,8 +64,16 @@ public class AllowTrustOperation extends Operation {
       asset.setAssetCode12(assetCode12);
     }
     op.setAsset(asset);
+    Uint32 flag = new Uint32();
     // authorize
-    op.setAuthorize(authorize);
+    if (authorize) {
+      flag.setUint32(TrustLineFlags.AUTHORIZED_FLAG.getValue());
+    } else if (authorizeToMaintainLiabilities) {
+      flag.setUint32(TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue());
+    } else {
+      flag.setUint32(0);
+    }
+    op.setAuthorize(flag);
 
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.ALLOW_TRUST);
@@ -79,11 +89,12 @@ public class AllowTrustOperation extends Operation {
     private final String trustor;
     private final String assetCode;
     private final boolean authorize;
+    private boolean authorizeToMaintainLiabilities;
 
     private String mSourceAccount;
 
     Builder(AllowTrustOp op) {
-      trustor = StrKey.encodeStellarAccountId(op.getTrustor().getAccountID().getEd25519().getUint256());
+      trustor = StrKey.encodeStellarAccountId(op.getTrustor());
       switch (op.getAsset().getDiscriminant()) {
         case ASSET_TYPE_CREDIT_ALPHANUM4:
           assetCode = new String(op.getAsset().getAssetCode4().getAssetCode4()).trim();
@@ -94,7 +105,18 @@ public class AllowTrustOperation extends Operation {
         default:
           throw new RuntimeException("Unknown asset code");
       }
-      authorize = op.getAuthorize();
+
+      int flag = op.getAuthorize().getUint32().intValue();
+      if (flag == TrustLineFlags.AUTHORIZED_FLAG.getValue()) {
+        authorize = true;
+        authorizeToMaintainLiabilities = false;
+      } else if (flag == TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue()) {
+        authorize = false;
+        authorizeToMaintainLiabilities = true;
+      } else {
+        authorize = false;
+        authorizeToMaintainLiabilities = false;
+      }
     }
 
     /**
@@ -123,7 +145,9 @@ public class AllowTrustOperation extends Operation {
      * Builds an operation
      */
     public AllowTrustOperation build() {
-      AllowTrustOperation operation = new AllowTrustOperation(trustor, assetCode, authorize);
+      AllowTrustOperation operation = new AllowTrustOperation(
+          trustor, assetCode, authorize, authorizeToMaintainLiabilities
+      );
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -133,7 +157,13 @@ public class AllowTrustOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.getSourceAccount(), this.assetCode, this.authorize, this.trustor);
+    return Objects.hashCode(
+        this.getSourceAccount(),
+        this.assetCode,
+        this.authorize,
+        this.authorizeToMaintainLiabilities,
+        this.trustor
+    );
   }
 
   @Override
@@ -145,6 +175,7 @@ public class AllowTrustOperation extends Operation {
     AllowTrustOperation other = (AllowTrustOperation) object;
     return Objects.equal(this.assetCode, other.assetCode) &&
             Objects.equal(this.authorize, other.authorize) &&
+            Objects.equal(this.authorizeToMaintainLiabilities, other.authorizeToMaintainLiabilities) &&
             Objects.equal(this.trustor, other.trustor) &&
             Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }

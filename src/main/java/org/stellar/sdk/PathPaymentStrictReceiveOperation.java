@@ -92,7 +92,7 @@ public class PathPaymentStrictReceiveOperation extends Operation {
     sendMax.setInt64(Operation.toXdrAmount(this.sendMax));
     op.setSendMax(sendMax);
     // destination
-    op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
+    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
     // destAsset
     op.setDestAsset(destAsset.toXdr());
     // destAmount
@@ -130,7 +130,7 @@ public class PathPaymentStrictReceiveOperation extends Operation {
     Builder(PathPaymentStrictReceiveOp op) {
       sendAsset = Asset.fromXdr(op.getSendAsset());
       sendMax = Operation.fromXdrAmount(op.getSendMax().getInt64().longValue());
-      destination = StrKey.encodeStellarAccountId(op.getDestination().getAccountID().getEd25519().getUint256());
+      destination = StrKey.encodeStellarMuxedAccount(op.getDestination());
       destAsset = Asset.fromXdr(op.getDestAsset());
       destAmount = Operation.fromXdrAmount(op.getDestAmount().getInt64().longValue());
       path = new Asset[op.getPath().length];

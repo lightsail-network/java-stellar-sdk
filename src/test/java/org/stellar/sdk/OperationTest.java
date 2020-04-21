@@ -551,9 +551,9 @@ public class OperationTest {
         byte[] bytes = base64Encoding.decode(transactionEnvelopeToDecode);
 
         org.stellar.sdk.xdr.TransactionEnvelope transactionEnvelope = org.stellar.sdk.xdr.TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-        assertEquals(1, transactionEnvelope.getTx().getOperations().length);
+        assertEquals(1, transactionEnvelope.getV0().getTx().getOperations().length);
 
-        ManageSellOfferOperation op = (ManageSellOfferOperation) Operation.fromXdr(transactionEnvelope.getTx().getOperations()[0]);
+        ManageSellOfferOperation op = (ManageSellOfferOperation) Operation.fromXdr(transactionEnvelope.getV0().getTx().getOperations()[0]);
 
         assertEquals("3397.893306099996", op.getPrice());
     }
@@ -567,9 +567,9 @@ public class OperationTest {
         byte[] bytes = base64Encoding.decode(transactionEnvelopeToDecode);
 
         org.stellar.sdk.xdr.TransactionEnvelope transactionEnvelope = org.stellar.sdk.xdr.TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-        assertEquals(1, transactionEnvelope.getTx().getOperations().length);
+        assertEquals(1, transactionEnvelope.getV0().getTx().getOperations().length);
 
-        ManageBuyOfferOperation op = (ManageBuyOfferOperation) Operation.fromXdr(transactionEnvelope.getTx().getOperations()[0]);
+        ManageBuyOfferOperation op = (ManageBuyOfferOperation) Operation.fromXdr(transactionEnvelope.getV0().getTx().getOperations()[0]);
 
         assertEquals("3397.893306099996", op.getPrice());
     }
