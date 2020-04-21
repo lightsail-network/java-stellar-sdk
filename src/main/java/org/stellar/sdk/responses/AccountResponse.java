@@ -193,10 +193,12 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private final String sellingLiabilities;
     @SerializedName("is_authorized")
     private final Boolean isAuthorized;
+    @SerializedName("is_authorized_to_maintain_liabilities")
+    private final Boolean isAuthorizedToMaintainLiabilities;
     @SerializedName("last_modified_ledger")
     private final Integer lastModifiedLedger;
 
-    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Integer lastModifiedLedger) {
+    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger) {
       this.assetType = checkNotNull(assetType, "assertType cannot be null");
       this.balance = checkNotNull(balance, "balance cannot be null");
       this.limit = limit;
@@ -205,6 +207,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       this.buyingLiabilities = checkNotNull(buyingLiabilities, "buyingLiabilities cannot be null");
       this.sellingLiabilities = checkNotNull(sellingLiabilities, "sellingLiabilities cannot be null");
       this.isAuthorized = isAuthorized;
+      this.isAuthorizedToMaintainLiabilities = isAuthorizedToMaintainLiabilities;
       this.lastModifiedLedger = lastModifiedLedger;
     }
 
@@ -246,6 +249,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
     public Boolean getAuthorized() {
       return isAuthorized;
+    }
+
+    public Boolean getAuthorizedToMaintainLiabilities() {
+      return isAuthorizedToMaintainLiabilities;
     }
 
     public Integer getLastModifiedLedger() {
