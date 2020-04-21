@@ -35,19 +35,10 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
       // representation of a transaction. That's why we need to handle a special case
       // here.
       if (memoType.equals("text")) {
-        // we obtain the memo text from the xdr because the bytes may not be valid utf8
-        String envelopeXdr = json.getAsJsonObject().get("envelope_xdr").getAsString();
+        // we obtain the memo text from the "memo_bytes" field because the original byte sequence may not be valid utf8
+        String memoBase64 = json.getAsJsonObject().get("memo_bytes").getAsString();
         BaseEncoding base64Encoding = BaseEncoding.base64();
-        byte[] bytes = base64Encoding.decode(envelopeXdr);
-        TransactionEnvelope transactionEnvelope = null;
-        try {
-          transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-        } catch (IOException e) {
-          // JsonDeserializer<TransactionResponse> cannot throw IOExceptions
-          // so we must throw it as a runtime exception
-          throw new RuntimeException(e);
-        }
-        memo = Memo.text(transactionEnvelope.getTx().getMemo().getText().getBytes());
+        memo = Memo.text(base64Encoding.decode(memoBase64));
       } else {
         String memoValue = json.getAsJsonObject().get("memo").getAsString();
         BaseEncoding base64Encoding = BaseEncoding.base64();

@@ -73,6 +73,7 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_meta_xdr\": \"AAAAAAAAAAMAAAACAAAAAAAAAAMAAAAAAAAAABbxCy3mLg3hiTqX4VUEEp60pFOrJNxYM1JtxXTwXhY2AAAAAAvrwgAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAMAAAAAAAAAAAGUcmKO5465JxTSLQOQljwk2SfqAJmZSG6JH6wtqpwhDeC2s5t4PNQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAEAAAADAAAAAAAAAAABlHJijueOuScU0i0DkJY8JNkn6gCZmUhuiR+sLaqcIQAAAAAL68IAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAADAAAAAAAAAAAW8Qst5i4N4Yk6l+FVBBKetKRTqyTcWDNSbcV08F4WNg3gtrObeDzUAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAwAAAAAAAAAAAZRyYo7njrknFNItA5CWPCTZJ+oAmZlIbokfrC2qnCEAAAAAC+vCAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\",\n" +
           "        \"memo_type\": \"text\",\n" +
           "        \"memo\": \"hello world\",\n" +
+          "        \"memo_bytes\": \"aGVsbG8gd29ybGQ=\",\n" +
           "        \"signatures\": [\n" +
           "          \"SsKlst02jsaBp35vXlI300Qbz39+HbwwNDX/gfM+MwaG/dFF7bgqpkKsDAsh/qJDiN3NOW695IZB9Mj+JAsHBA==\"\n" +
           "        ]\n" +
@@ -117,6 +118,7 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_meta_xdr\": \"AAAAAAAAAAMAAAACAAAAAAAAHqEAAAAAAAAAAB+lHtRjj4+h2/0Tj8iBQiaUDzLo4oRCLyUnytFHzAyIAAAAAAvrwgAAAB6hAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAHqEAAAAAAAAAABbxCy3mLg3hiTqX4VUEEp60pFOrJNxYM1JtxXTwXhY2DeC2s4+MeHwAAAADAAAAAgAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAB6hAAAAAAAAAACzMOD+8iU8qo+qbTYewT8lxKE/s1cE3FOCVWxsqJ74GwAAAAAL68IAAAAeoQAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAB6hAAAAAAAAAAAW8Qst5i4N4Yk6l+FVBBKetKRTqyTcWDNSbcV08F4WNg3gtrODoLZ8AAAAAwAAAAIAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAeoQAAAAAAAAAASZcLtOTqf+cdbsq8HmLMkeqU06LN94UTWXuSBem5Z88AAAAAC+vCAAAAHqEAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAAAeoQAAAAAAAAAAFvELLeYuDeGJOpfhVQQSnrSkU6sk3FgzUm3FdPBeFjYN4Lazd7T0fAAAAAMAAAACAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=\",\n" +
           "        \"memo_type\": \"text\",\n" +
           "        \"memo\": \"testpool,faucet,sdf\",\n" +
+          "        \"memo_bytes\": \"dGVzdHBvb2wsZmF1Y2V0LHNkZg==\",\n" +
           "        \"signatures\": [\n" +
           "          \"NIEHl40QqRYihBtnVhBpsm4TmZb8AqGsdPHD0feb+xqL3RhxpmWwB7e5472MTGNJkXbz1lxHi9zTAXDWn9bIBw==\"\n" +
           "        ]\n" +
@@ -160,6 +162,7 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAFAAAAAAAAAAA=\",\n" +
           "        \"result_meta_xdr\": \"AAAAAAAAAAEAAAABAAAAAQAAHq8AAAAAAAAAABbxCy3mLg3hiTqX4VUEEp60pFOrJNxYM1JtxXTwXhY2DeC2s3e09BgAAAADAAAAAwAAAAAAAAABAAAAAB+lHtRjj4+h2/0Tj8iBQiaUDzLo4oRCLyUnytFHzAyIAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA\",\n" +
           "        \"memo_type\": \"text\",\n" +
+          "        \"memo_bytes\": \"\",\n" +
           "        \"signatures\": [\n" +
           "          \"1sNxaxHezfPxDOpq1x1z+TYvgtdYkwDp5dpzx1teQB1zimkfbmKwYLk7C8bTpXC9zcJ7f+vathwE/e/GHHXwDw==\"\n" +
           "        ]\n" +
@@ -203,6 +206,7 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAJAAAAAAAAAAEAAAAAH6Ue1GOPj6Hb/ROPyIFCJpQPMujihEIvJSfK0UfMDIgAAK11sXJ6SgAAAAA=\",\n" +
           "        \"result_meta_xdr\": \"AAAAAAAAAAEAAAABAAAAAQAAHrcAAAAAAAAAAB+lHtRjj4+h2/0Tj8iBQiaUDzLo4oRCLyUnytFHzAyIAACtdb1ePEoAAB6hAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA\",\n" +
           "        \"memo_type\": \"text\",\n" +
+          "        \"memo_bytes\": \"\",\n" +
           "        \"signatures\": [\n" +
           "          \"UQc3yHhlEA5DbWt8xu8R9EqujHH2uSvHeErZdfWPqY3uooA0qbPA8yVxFxvnLOyQ+qhYKy6pf8yRRgt8Nl7tBg==\"\n" +
           "        ]\n" +
@@ -246,6 +250,7 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAJAAAAAAAAAAEAAAAAH6Ue1GOPj6Hb/ROPyIFCJpQPMujihEIvJSfK0UfMDIgAAK11sXTKRwAAAAA=\",\n" +
           "        \"result_meta_xdr\": \"AAAAAAAAAAEAAAABAAAAAQAAHr8AAAAAAAAAAB+lHtRjj4+h2/0Tj8iBQiaUDzLo4oRCLyUnytFHzAyIAAFa627TBpEAAB6hAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA\",\n" +
           "        \"memo_type\": \"text\",\n" +
+          "        \"memo_bytes\": \"\",\n" +
           "        \"signatures\": [\n" +
           "          \"YLL32xpSbpqVchHKnQ02HY4VILJunUkY8M3alv/4XDTv9fvLiU8Sn8HpYhXXfRr7Z5j7lPe6NuIprpMhxRo3BA==\"\n" +
           "        ]\n" +
@@ -289,6 +294,7 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAJAAAAAAAAAAEAAAAAH6Ue1GOPj6Hb/ROPyIFCJpQPMujihEIvJSfK0UfMDIgAAK1+KLf6bgAAAAA=\",\n" +
           "        \"result_meta_xdr\": \"AAAAAAAAAAEAAAABAAAAAQAAHsIAAAAAAAAAAB+lHtRjj4+h2/0Tj8iBQiaUDzLo4oRCLyUnytFHzAyIAAIIaZeLAP8AAB6hAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA\",\n" +
           "        \"memo_type\": \"text\",\n" +
+          "        \"memo_bytes\": \"\",\n" +
           "        \"signatures\": [\n" +
           "          \"I8CjxDCxl70UDSzP914x2GW7r/OuTtKCQEbbYCm+2kRMGGcaRfi2tIUPPyxWUqq/B6oZRWC+NTIzQBwfHJdlDA==\"\n" +
           "        ]\n" +
@@ -332,6 +338,7 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAA=\",\n" +
           "        \"result_meta_xdr\": \"AAAAAAAAAAEAAAACAAAAAQAAHzYAAAAAAAAAABbxCy3mLg3hiTqX4VUEEp60pFOrJNxYM1JtxXTwXhY2AAAABJwsBgAAAAADAAAABwAAAAAAAAABAAAAAB+lHtRjj4+h2/0Tj8iBQiaUDzLo4oRCLyUnytFHzAyIAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAHzYAAAAAAAAAAEmXC7Tk6n/nHW7KvB5izJHqlNOizfeFE1l7kgXpuWfPDeC2rud0rogAAB6hAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA\",\n" +
           "        \"memo_type\": \"text\",\n" +
+          "        \"memo_bytes\": \"\",\n" +
           "        \"signatures\": [\n" +
           "          \"NkV853/bo6msX7/TKL1m1+4de4vhO7fp4Ci4ZwBLuIerqX5ozLbPf0il3/JEBBQd1HtpyS5ZMHhvbqEQTLXHAA==\"\n" +
           "        ]\n" +
@@ -375,7 +382,8 @@ public class TransactionPageDeserializerTest extends TestCase {
           "        \"result_xdr\": \"AAAAAAAAAMgAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=\",\n" +
           "        \"result_meta_xdr\": \"AAAAAAAAAAIAAAACAAAAAAAAIeoAAAAAAAAAAAjUE6sKUXWxKAJ/rXUUeDwr/IY9Lxv0qxZKUEJG1mmJAAAAAAvrwgAAACHqAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAIeoAAAAAAAAAAB+lHtRjj4+h2/0Tj8iBQiaUDzLo4oRCLyUnytFHzAyIAAIIaYufPjcAAB6hAAAAAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAEAACHqAAAAAAAAAAAI1BOrClF1sSgCf611FHg8K/yGPS8b9KsWSlBCRtZpiQACCGT7Xvr/AAAh6gAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAACHqAAAAAAAAAAAfpR7UY4+Podv9E4/IgUImlA8y6OKEQi8lJ8rRR8wMiAAAAAScLAU4AAAeoQAAAAEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA==\",\n" +
           "        \"memo_type\": \"text\",\n" +
-          "        \"memo\": \"helpsdf\",\n" +
+          "        \"memo\": \"aGVscHNkZg==\",\n" +
+          "        \"memo_bytes\": \"dGVzdHBvb2wsZmF1Y2V0LHNkZg==\",\n" +
           "        \"signatures\": [\n" +
           "          \"zkTeVJnyYHOmkdKGzlXLkH4yxRUJc2DmppUwLsbJVMk5gGFwDI2UXhfTeucZl11HeLp9R8UvKbvsuvKHjWkBCA==\"\n" +
           "        ]\n" +

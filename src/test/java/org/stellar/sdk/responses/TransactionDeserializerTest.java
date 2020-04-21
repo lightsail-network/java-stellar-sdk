@@ -1,5 +1,7 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -7,6 +9,30 @@ import org.stellar.sdk.MemoHash;
 import org.stellar.sdk.MemoNone;
 
 public class TransactionDeserializerTest extends TestCase {
+  @Test
+  public void testDeserializeFeeBump() {
+    TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonFeeBump, TransactionResponse.class);
+    assertEquals(transaction.getHash(), "3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352");
+    assertEquals(transaction.getLedger(), Long.valueOf(123));
+    assertEquals(transaction.isSuccessful(), Boolean.TRUE);
+    assertEquals(transaction.getSourceAccount(), "GABQGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2MX");
+    assertEquals(transaction.getFeeAccount(), "GABAEAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGKJ");
+    assertEquals(transaction.getSourceAccountSequence(), Long.valueOf(97));
+    assertEquals(transaction.getMaxFee(), Long.valueOf(776));
+    assertEquals(transaction.getFeeCharged(), Long.valueOf(123));
+    assertEquals(transaction.getOperationCount(), Integer.valueOf(1));
+    assertEquals(transaction.getSignatures(), ImmutableList.of("Hh4e"));
+
+    TransactionResponse.FeeBumpTransaction feeBumpTransaction = transaction.getFeeBump().get();
+    assertEquals(feeBumpTransaction.getHash(), "3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352");
+    assertEquals(feeBumpTransaction.getSignatures(), ImmutableList.of("Hh4e"));
+
+    TransactionResponse.InnerTransaction innerTransaction = transaction.getInner().get();
+    assertEquals(innerTransaction.getHash(), "e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526");
+    assertEquals(innerTransaction.getMaxFee(), Long.valueOf(99));
+    assertEquals(innerTransaction.getSignatures(), ImmutableList.of("FBQU"));
+  }
+
   @Test
   public void testDeserialize() {
     TransactionResponse transaction = GsonSingleton.getInstance().fromJson(json, TransactionResponse.class);
@@ -23,7 +49,9 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(transaction.getEnvelopeXdr(), "AAAAAKgfpXwD1fWpPmZL+GkzWcBmhRQH7ouPsoTN3RoaGCfrAAAAZAAIbkcAAB9WAAAAAAAAAANRBBZE6D1qyGjISUGLY5Ldvp31PwAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAAAAAAAAADA7RnarSzCwj3OT+M2btCMFpVBdqxJS+Sr00qBjtFv7gAAAABLCs/QAAAAAAAAAAEaGCfrAAAAQG/56Cj2J8W/KCZr+oC4sWND1CTGWfaccHNtuibQH8kZIb+qBSDY94g7hiaAXrlIeg9b7oz/XuP3x9MWYw2jtwM=");
     assertEquals(transaction.getResultXdr(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=");
     assertEquals(transaction.getResultMetaXdr(), "AAAAAAAAAAEAAAACAAAAAAAN+SAAAAAAAAAAAMDtGdqtLMLCPc5P4zZu0IwWlUF2rElL5KvTSoGO0W/uAAAAAEsKz9AADfkgAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAN+SAAAAAAAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAHp6WMr55YACD1BAAAAHgAAAAoAAAAAAAAAAAAAAAABAAAAAAAACgAAAAARC07BokpLTOF+/vVKBwiAlop7hHGJTNeGGlY4MoPykwAAAAEAAAAAK+Lzfd3yDD+Ov0GbYu1g7SaIBrKZeBUxoCunkLuI7aoAAAABAAAAAERmsKL73CyLV/HvjyQCERDXXpWE70Xhyb6MR5qPO3yQAAAAAQAAAABSORGwAdyuanN3sNOHqNSpACyYdkUM3L8VafUu69EvEgAAAAEAAAAAeCzqJNkMM/jLvyuMIfyFHljBlLCtDyj17RMycPuNtRMAAAABAAAAAIEi4R7juq15ymL00DNlAddunyFT4FyUD4muC4t3bobdAAAAAQAAAACaNpLL5YMfjOTdXVEqrAh99LM12sN6He6pHgCRAa1f1QAAAAEAAAAAqB+lfAPV9ak+Zkv4aTNZwGaFFAfui4+yhM3dGhoYJ+sAAAABAAAAAMNJrEvdMg6M+M+n4BDIdzsVSj/ZI9SvAp7mOOsvAD/WAAAAAQAAAADbHA6xiKB1+G79mVqpsHMOleOqKa5mxDpP5KEp/Xdz9wAAAAEAAAAAAAAAAA==");
-
+    assertEquals(transaction.getSignatures(), ImmutableList.of("b/noKPYnxb8oJmv6gLixY0PUJMZZ9pxwc226JtAfyRkhv6oFINj3iDuGJoBeuUh6D1vujP9e4/fH0xZjDaO3Aw=="));
+    assertEquals(transaction.getFeeBump(), Optional.<TransactionResponse.FeeBumpTransaction>absent());
+    assertEquals(transaction.getInner(), Optional.<TransactionResponse.InnerTransaction>absent());
     assertTrue(transaction.getMemo() instanceof MemoHash);
     MemoHash memo = (MemoHash) transaction.getMemo();
     assertEquals("51041644e83d6ac868c849418b6392ddbe9df53f000000000000000000000000", memo.getHexValue());
@@ -136,4 +164,70 @@ public class TransactionDeserializerTest extends TestCase {
           "    \"b/noKPYnxb8oJmv6gLixY0PUJMZZ9pxwc226JtAfyRkhv6oFINj3iDuGJoBeuUh6D1vujP9e4/fH0xZjDaO3Aw==\"\n" +
           "  ]\n" +
           "}";
+
+  String jsonFeeBump = "{\n" +
+      "  \"_links\": {\n" +
+      "    \"self\": {\n" +
+      "      \"href\": \"http://localhost/transactions/3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\"\n" +
+      "    },\n" +
+      "    \"account\": {\n" +
+      "      \"href\": \"http://localhost/accounts/GABQGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2MX\"\n" +
+      "    },\n" +
+      "    \"ledger\": {\n" +
+      "      \"href\": \"http://localhost/ledgers/123\"\n" +
+      "    },\n" +
+      "    \"operations\": {\n" +
+      "      \"href\": \"http://localhost/transactions/3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352/operations{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"effects\": {\n" +
+      "      \"href\": \"http://localhost/transactions/3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352/effects{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"precedes\": {\n" +
+      "      \"href\": \"http://localhost/transactions?order=asc\\u0026cursor=528280981504\"\n" +
+      "    },\n" +
+      "    \"succeeds\": {\n" +
+      "      \"href\": \"http://localhost/transactions?order=desc\\u0026cursor=528280981504\"\n" +
+      "    },\n" +
+      "    \"transaction\": {\n" +
+      "      \"href\": \"http://localhost/transactions/3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\"\n" +
+      "    }\n" +
+      "  },\n" +
+      "  \"id\": \"3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\",\n" +
+      "  \"paging_token\": \"528280981504\",\n" +
+      "  \"successful\": true,\n" +
+      "  \"hash\": \"3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\",\n" +
+      "  \"ledger\": 123,\n" +
+      "  \"created_at\": \"2020-04-21T10:21:26Z\",\n" +
+      "  \"source_account\": \"GABQGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2MX\",\n" +
+      "  \"source_account_sequence\": \"97\",\n" +
+      "  \"fee_account\": \"GABAEAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGKJ\",\n" +
+      "  \"fee_charged\": 123,\n" +
+      "  \"max_fee\": 776,\n" +
+      "  \"operation_count\": 1,\n" +
+      "  \"envelope_xdr\": \"AAAABQAAAAACAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMIAAAAAgAAAAADAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGMAAAAAAAAAYQAAAAEAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAEAAAAAAAAACwAAAAAAAABiAAAAAAAAAAECAgICAAAAAxQUFAAAAAAAAAAAAQMDAwMAAAADHh4eAA==\",\n" +
+      "  \"result_xdr\": \"AAAAAAAAAHsAAAAB6Yhpu6i84IwQt4QGICEn84iMJUVM03sCYAhiRSdR9SYAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAsAAAAAAAAAAAAAAAA=\",\n" +
+      "  \"result_meta_xdr\": \"AAAAAQAAAAAAAAAA\",\n" +
+      "  \"fee_meta_xdr\": \"AAAAAA==\",\n" +
+      "  \"memo_type\": \"none\",\n" +
+      "  \"signatures\": [\n" +
+      "    \"Hh4e\"\n" +
+      "  ],\n" +
+      "  \"valid_after\": \"1970-01-01T00:00:02Z\",\n" +
+      "  \"valid_before\": \"1970-01-01T00:00:04Z\",\n" +
+      "  \"fee_bump_transaction\": {\n" +
+      "    \"hash\": \"3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\",\n" +
+      "    \"signatures\": [\n" +
+      "      \"Hh4e\"\n" +
+      "    ]\n" +
+      "  },\n" +
+      "  \"inner_transaction\": {\n" +
+      "    \"hash\": \"e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526\",\n" +
+      "    \"signatures\": [\n" +
+      "      \"FBQU\"\n" +
+      "    ],\n" +
+      "    \"max_fee\": \"99\"\n" +
+      "  }\n" +
+      "}";
 }
