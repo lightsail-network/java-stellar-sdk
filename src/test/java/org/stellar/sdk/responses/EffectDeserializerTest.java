@@ -517,6 +517,43 @@ public class EffectDeserializerTest extends TestCase {
   }
 
   @Test
+  public void testDeserializeTrustlineAuthorizedToMaintainLiabilitiesEffect() {
+    String json = "{\n" +
+        "        \"_links\": {\n" +
+        "          \"operation\": {\n" +
+        "            \"href\": \"http://horizon-testnet.stellar.org/operations/33788507721730\"\n" +
+        "          },\n" +
+        "          \"succeeds\": {\n" +
+        "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=33788507721730-2\"\n" +
+        "          },\n" +
+        "          \"precedes\": {\n" +
+        "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=33788507721730-2\"\n" +
+        "          }\n" +
+        "        },\n" +
+        "        \"id\": \"0000033788507721730-0000000002\",\n" +
+        "        \"paging_token\": \"33788507721730-2\",\n" +
+        "        \"account\": \"GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO\",\n" +
+        "        \"type\": \"trustline_authorized_to_maintain_liabilities\",\n" +
+        "        \"type_i\": 25,\n" +
+        "        \"asset_type\": \"credit_alphanum12\",\n" +
+        "        \"asset_code\": \"TESTTEST\",\n" +
+        "        \"trustor\": \"GB3E4AB4VWXJDUVN4Z3CPBU5HTMWVEQXONZYVDFMHQD6333KHCOL3UBR\"\n" +
+        "      }";
+
+    TrustlineAuthorizedToMaintainLiabilitiesEffectResponse effect = (TrustlineAuthorizedToMaintainLiabilitiesEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
+    assertEquals(effect.getAssetType(), "credit_alphanum12");
+    assertEquals(effect.getAssetCode(), "TESTTEST");
+    assertEquals(effect.getTrustor(), "GB3E4AB4VWXJDUVN4Z3CPBU5HTMWVEQXONZYVDFMHQD6333KHCOL3UBR");
+
+    assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
+    assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");
+    assertEquals(effect.getLinks().getPrecedes().getHref(), "http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2");
+  }
+
+
+  @Test
   public void testDeserializeTrustlineDeauthorizedEffect() {
     String json = "{\n" +
             "        \"_links\": {\n" +

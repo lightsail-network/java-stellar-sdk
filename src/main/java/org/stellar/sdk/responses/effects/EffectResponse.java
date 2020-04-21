@@ -52,6 +52,7 @@ public abstract class EffectResponse extends Response implements Pageable {
    *   <li>trustline_removed</li>
    *   <li>trustline_updated</li>
    *   <li>trustline_authorized</li>
+   *   <li>trustline_authorized_to_maintain_liabilities</li>
    *   <li>trustline_deauthorized</li>
    *   <li>offer_created</li>
    *   <li>offer_removed</li>

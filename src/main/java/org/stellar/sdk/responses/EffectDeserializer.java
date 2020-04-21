@@ -55,6 +55,8 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         return gson.fromJson(json, TrustlineAuthorizedEffectResponse.class);
       case 24:
         return gson.fromJson(json, TrustlineDeauthorizedEffectResponse.class);
+      case 25:
+        return gson.fromJson(json, TrustlineAuthorizedToMaintainLiabilitiesEffectResponse.class);
       // Trading effects
       case 30:
         return gson.fromJson(json, OfferCreatedEffectResponse.class);
