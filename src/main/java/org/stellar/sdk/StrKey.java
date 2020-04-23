@@ -2,7 +2,6 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 import com.google.common.base.Optional;
-import com.google.common.primitives.Bytes;
 import org.stellar.sdk.xdr.*;
 
 import java.io.*;
@@ -167,6 +166,10 @@ class StrKey {
             outputStream.write(checksum);
             byte unencoded[] = outputStream.toByteArray();
 
+            if (VersionByte.SEED != versionByte) {
+                return StrKey.base32Encoding.encode(unencoded).toCharArray();
+            }
+
             // Why not use base32Encoding.encode here?
             // We don't want secret seed to be stored as String in memory because of security reasons. It's impossible
             // to erase it from memory when we want it to be erased (ASAP).
@@ -195,12 +198,29 @@ class StrKey {
     }
 
     protected static byte[] decodeCheck(VersionByte versionByte, char[] encoded) {
+        if (encoded.length == 0) {
+            throw new IllegalArgumentException("Encoded char array cannot be empty.");
+        }
+
         byte[] bytes = new byte[encoded.length];
         for (int i = 0; i < encoded.length; i++) {
             if (encoded[i] > 127) {
                 throw new IllegalArgumentException("Illegal characters in encoded char array.");
             }
             bytes[i] = (byte) encoded[i];
+        }
+
+        int leftoverBits = (bytes.length * 5) % 8;
+        if (leftoverBits > 0) {
+            byte lastChar = bytes[bytes.length-1];
+            byte decodedLastChar = b32Table[lastChar];
+
+
+
+            byte leftoverBitsMask = (byte)(0x0f >> (4 - leftoverBits));
+            if ((decodedLastChar & leftoverBitsMask) != 0) {
+                throw new IllegalArgumentException("Unused bits should be set to 0.");
+            }
         }
 
         byte[] decoded = StrKey.base32Encoding.decode(java.nio.CharBuffer.wrap(encoded));
@@ -253,5 +273,18 @@ class StrKey {
         return new byte[] {
             (byte)crc,
             (byte)(crc >>> 8)};
+    }
+
+    private static final byte[] b32Table = decodingTable();
+    private static byte[] decodingTable() {
+        byte[] table = new byte[256];
+        for (int i=0; i <256; i++) {
+            table[i] = (byte)0xff;
+        }
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        for(int i=0; i < alphabet.length(); i++) {
+            table[(int)alphabet.charAt(i)] = (byte)i;
+        }
+        return table;
     }
 }
