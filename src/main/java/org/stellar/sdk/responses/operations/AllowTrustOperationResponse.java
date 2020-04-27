@@ -24,9 +24,12 @@ public class AllowTrustOperationResponse extends OperationResponse {
   protected final String assetIssuer;
   @SerializedName("authorize")
   protected final boolean authorize;
+  @SerializedName("authorize_to_maintain_liabilities")
+  protected final boolean authorizeToMaintainLiabilities;
 
-  AllowTrustOperationResponse(boolean authorize, String assetIssuer, String assetCode, String assetType, String trustee, String trustor) {
+  AllowTrustOperationResponse(boolean authorize, boolean authorizeToMaintainLiabilities, String assetIssuer, String assetCode, String assetType, String trustee, String trustor) {
     this.authorize = authorize;
+    this.authorizeToMaintainLiabilities = authorizeToMaintainLiabilities;
     this.assetIssuer = assetIssuer;
     this.assetCode = assetCode;
     this.assetType = assetType;
@@ -45,6 +48,11 @@ public class AllowTrustOperationResponse extends OperationResponse {
   public boolean isAuthorize() {
     return authorize;
   }
+
+  public boolean isAuthorizedToMaintainLiabilities() {
+    return authorizeToMaintainLiabilities;
+  }
+
 
   public Asset getAsset() {
     if (assetType.equals("native")) {
