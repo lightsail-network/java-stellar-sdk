@@ -56,8 +56,7 @@ class StrKey {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 
             try {
-                account.getMed25519().getId().encode(new XdrDataOutputStream(byteStream));
-                byteStream.write(account.getMed25519().getEd25519().getUint256());
+                account.getMed25519().encode(new XdrDataOutputStream(byteStream));
             } catch (IOException e) {
                 throw new IllegalArgumentException("invalid muxed account", e);
             }
@@ -73,9 +72,13 @@ class StrKey {
         AccountID accountID = new AccountID();
         PublicKey publicKey = new PublicKey();
         publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
-        Uint256 uint256 = new Uint256();
-        uint256.setUint256(decodeStellarAccountId(data));
-        publicKey.setEd25519(uint256);
+        try {
+            publicKey.setEd25519(Uint256.decode(
+                new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))
+            ));
+        } catch (IOException e) {
+            throw new IllegalArgumentException("invalid address: "+data, e);
+        }
         accountID.setAccountID(publicKey);
         return accountID;
     }
@@ -84,27 +87,24 @@ class StrKey {
         if (data.length() == ACCOUNT_ID_ADDRESS_LENGTH) {
             MuxedAccount accountID = new MuxedAccount();
             accountID.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
-            Uint256 uint256 = new Uint256();
-            uint256.setUint256(decodeStellarAccountId(data));
-            accountID.setEd25519(uint256);
-            return accountID;
-        } else if (data.length() == MUXED_ACCOUNT_ADDRESS_LENGTH) {
-            byte[] decoded = decodeStellarMuxedAccount(data);
-
-            MuxedAccount muxedAccount = new MuxedAccount();
-            muxedAccount.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
-            MuxedAccount.MuxedAccountMed25519 m = new MuxedAccount.MuxedAccountMed25519();
             try {
-                m.setId(Uint64.decode(
-                    new XdrDataInputStream(new ByteArrayInputStream(decoded, 0, 8))
-                ));
-                m.setEd25519(Uint256.decode(
-                    new XdrDataInputStream(new ByteArrayInputStream(decoded, 8, decoded.length - 8))
+                accountID.setEd25519(Uint256.decode(
+                    new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))
                 ));
             } catch (IOException e) {
                 throw new IllegalArgumentException("invalid address: "+data, e);
             }
-            muxedAccount.setMed25519(m);
+            return accountID;
+        } else if (data.length() == MUXED_ACCOUNT_ADDRESS_LENGTH) {
+            MuxedAccount muxedAccount = new MuxedAccount();
+            muxedAccount.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
+            try {
+                muxedAccount.setMed25519(MuxedAccount.MuxedAccountMed25519.decode(
+                    new XdrDataInputStream(new ByteArrayInputStream(decodeStellarMuxedAccount(data)))
+                ));
+            } catch (IOException e) {
+                throw new IllegalArgumentException("invalid address: "+data, e);
+            }
             return muxedAccount;
         }
         throw new IllegalArgumentException("invalid address length: "+data);
@@ -178,18 +178,16 @@ class StrKey {
             charOutputStream.write(unencoded);
             char[] charsEncoded = charArrayWriter.toCharArray();
 
-            if (VersionByte.SEED == versionByte) {
-                Arrays.fill(unencoded, (byte) 0);
-                Arrays.fill(payload, (byte) 0);
-                Arrays.fill(checksum, (byte) 0);
+            Arrays.fill(unencoded, (byte) 0);
+            Arrays.fill(payload, (byte) 0);
+            Arrays.fill(checksum, (byte) 0);
 
-                // Clean charArrayWriter internal buffer
-                int bufferSize = charArrayWriter.size();
-                char[] zeros = new char[bufferSize];
-                Arrays.fill(zeros, '0');
-                charArrayWriter.reset();
-                charArrayWriter.write(zeros);
-            }
+            // Clean charArrayWriter internal buffer
+            int bufferSize = charArrayWriter.size();
+            char[] zeros = new char[bufferSize];
+            Arrays.fill(zeros, '0');
+            charArrayWriter.reset();
+            charArrayWriter.write(zeros);
 
             return charsEncoded;
         } catch (IOException e) {

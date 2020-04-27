@@ -113,9 +113,11 @@ public class AllowTrustOperation extends Operation {
       } else if (flag == TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue()) {
         authorize = false;
         authorizeToMaintainLiabilities = true;
+      } else if (flag != 0) {
+        throw new IllegalArgumentException("invalid authorize flag "+flag);
       } else {
-        authorize = false;
-        authorizeToMaintainLiabilities = false;
+          authorize = false;
+          authorizeToMaintainLiabilities = false;
       }
     }
 

@@ -175,7 +175,7 @@ public class Transaction {
   /**
    * Generates Transaction XDR object.
    */
-  public TransactionV0 toXdr() {
+  private TransactionV0 toXdr() {
     // fee
     Uint32 fee = new Uint32();
     fee.setUint32(mFee);
