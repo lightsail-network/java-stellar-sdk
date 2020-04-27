@@ -154,7 +154,7 @@ public class StrKeyTest {
       StrKey.decodeCheck(StrKey.VersionByte.ACCOUNT_ID, "".toCharArray());
       fail();
     } catch (Exception e) {
-      assertEquals("Encoded char array cannot be empty.", e.getMessage());
+      assertEquals("Encoded char array must have a length of at least 5.", e.getMessage());
     }
   }
 
@@ -189,7 +189,7 @@ public class StrKeyTest {
       );
       fail();
     } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Invalid input length"));
+      assertTrue(e.getMessage().contains("Encoded char array has leftover character."));
 
     }
 

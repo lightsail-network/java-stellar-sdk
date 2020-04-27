@@ -196,19 +196,24 @@ class StrKey {
     }
 
     protected static byte[] decodeCheck(VersionByte versionByte, char[] encoded) {
-        if (encoded.length == 0) {
-            throw new IllegalArgumentException("Encoded char array cannot be empty.");
-        }
-
         byte[] bytes = new byte[encoded.length];
         for (int i = 0; i < encoded.length; i++) {
-            if (encoded[i] > 127) {
-                throw new IllegalArgumentException("Illegal characters in encoded char array.");
-            }
             bytes[i] = (byte) encoded[i];
         }
 
+        // The minimal binary decoded length is 3 bytes (version byte and 2-byte CRC) which,
+        // in unpadded base32 (since each character provides 5 bits) corresponds to ceiling(8*3/5) = 5
+        if (bytes.length < 5) {
+            throw new IllegalArgumentException("Encoded char array must have a length of at least 5.");
+        }
+
         int leftoverBits = (bytes.length * 5) % 8;
+        // 1. Make sure there is no full unused leftover byte at the end
+        //   (i.e. there shouldn't be 5 or more leftover bits)
+        if (leftoverBits >= 5) {
+            throw new IllegalArgumentException("Encoded char array has leftover character.");
+        }
+
         if (leftoverBits > 0) {
             byte lastChar = bytes[bytes.length-1];
             byte decodedLastChar = b32Table[lastChar];
