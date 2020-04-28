@@ -12,19 +12,19 @@ import com.google.common.base.Objects;
 
 //  struct PaymentOp
 //  {
-//      AccountID destination; // recipient of the payment
-//      Asset asset;           // what they end up with
-//      int64 amount;          // amount they end up with
+//      MuxedAccount destination; // recipient of the payment
+//      Asset asset;              // what they end up with
+//      int64 amount;             // amount they end up with
 //  };
 
 //  ===========================================================================
 public class PaymentOp implements XdrElement {
   public PaymentOp () {}
-  private AccountID destination;
-  public AccountID getDestination() {
+  private MuxedAccount destination;
+  public MuxedAccount getDestination() {
     return this.destination;
   }
-  public void setDestination(AccountID value) {
+  public void setDestination(MuxedAccount value) {
     this.destination = value;
   }
   private Asset asset;
@@ -42,7 +42,7 @@ public class PaymentOp implements XdrElement {
     this.amount = value;
   }
   public static void encode(XdrDataOutputStream stream, PaymentOp encodedPaymentOp) throws IOException{
-    AccountID.encode(stream, encodedPaymentOp.destination);
+    MuxedAccount.encode(stream, encodedPaymentOp.destination);
     Asset.encode(stream, encodedPaymentOp.asset);
     Int64.encode(stream, encodedPaymentOp.amount);
   }
@@ -51,7 +51,7 @@ public class PaymentOp implements XdrElement {
   }
   public static PaymentOp decode(XdrDataInputStream stream) throws IOException {
     PaymentOp decodedPaymentOp = new PaymentOp();
-    decodedPaymentOp.destination = AccountID.decode(stream);
+    decodedPaymentOp.destination = MuxedAccount.decode(stream);
     decodedPaymentOp.asset = Asset.decode(stream);
     decodedPaymentOp.amount = Int64.decode(stream);
     return decodedPaymentOp;

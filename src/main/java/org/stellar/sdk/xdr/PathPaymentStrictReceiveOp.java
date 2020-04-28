@@ -18,9 +18,9 @@ import java.util.Arrays;
 //                       // send (excluding fees).
 //                       // The operation will fail if can't be met
 //  
-//      AccountID destination; // recipient of the payment
-//      Asset destAsset;       // what they end up with
-//      int64 destAmount;      // amount they end up with
+//      MuxedAccount destination; // recipient of the payment
+//      Asset destAsset;          // what they end up with
+//      int64 destAmount;         // amount they end up with
 //  
 //      Asset path<5>; // additional hops it must go through to get there
 //  };
@@ -42,11 +42,11 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
   public void setSendMax(Int64 value) {
     this.sendMax = value;
   }
-  private AccountID destination;
-  public AccountID getDestination() {
+  private MuxedAccount destination;
+  public MuxedAccount getDestination() {
     return this.destination;
   }
-  public void setDestination(AccountID value) {
+  public void setDestination(MuxedAccount value) {
     this.destination = value;
   }
   private Asset destAsset;
@@ -73,7 +73,7 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
   public static void encode(XdrDataOutputStream stream, PathPaymentStrictReceiveOp encodedPathPaymentStrictReceiveOp) throws IOException{
     Asset.encode(stream, encodedPathPaymentStrictReceiveOp.sendAsset);
     Int64.encode(stream, encodedPathPaymentStrictReceiveOp.sendMax);
-    AccountID.encode(stream, encodedPathPaymentStrictReceiveOp.destination);
+    MuxedAccount.encode(stream, encodedPathPaymentStrictReceiveOp.destination);
     Asset.encode(stream, encodedPathPaymentStrictReceiveOp.destAsset);
     Int64.encode(stream, encodedPathPaymentStrictReceiveOp.destAmount);
     int pathsize = encodedPathPaymentStrictReceiveOp.getPath().length;
@@ -89,7 +89,7 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
     PathPaymentStrictReceiveOp decodedPathPaymentStrictReceiveOp = new PathPaymentStrictReceiveOp();
     decodedPathPaymentStrictReceiveOp.sendAsset = Asset.decode(stream);
     decodedPathPaymentStrictReceiveOp.sendMax = Int64.decode(stream);
-    decodedPathPaymentStrictReceiveOp.destination = AccountID.decode(stream);
+    decodedPathPaymentStrictReceiveOp.destination = MuxedAccount.decode(stream);
     decodedPathPaymentStrictReceiveOp.destAsset = Asset.decode(stream);
     decodedPathPaymentStrictReceiveOp.destAmount = Int64.decode(stream);
     int pathsize = stream.readInt();

@@ -17,6 +17,9 @@ import java.util.Arrays;
 //  
 //      union switch (TransactionResultCode code)
 //      {
+//      case txFEE_BUMP_INNER_SUCCESS:
+//      case txFEE_BUMP_INNER_FAILED:
+//          InnerTransactionResultPair innerResultPair;
 //      case txSUCCESS:
 //      case txFAILED:
 //          OperationResult results<>;
@@ -96,6 +99,13 @@ public class TransactionResult implements XdrElement {
     public void setDiscriminant(TransactionResultCode value) {
       this.code = value;
     }
+    private InnerTransactionResultPair innerResultPair;
+    public InnerTransactionResultPair getInnerResultPair() {
+      return this.innerResultPair;
+    }
+    public void setInnerResultPair(InnerTransactionResultPair value) {
+      this.innerResultPair = value;
+    }
     private OperationResult[] results;
     public OperationResult[] getResults() {
       return this.results;
@@ -108,6 +118,10 @@ public class TransactionResult implements XdrElement {
     //TransactionResultCode
     stream.writeInt(encodedTransactionResultResult.getDiscriminant().getValue());
     switch (encodedTransactionResultResult.getDiscriminant()) {
+    case txFEE_BUMP_INNER_SUCCESS:
+    case txFEE_BUMP_INNER_FAILED:
+    InnerTransactionResultPair.encode(stream, encodedTransactionResultResult.innerResultPair);
+    break;
     case txSUCCESS:
     case txFAILED:
     int resultssize = encodedTransactionResultResult.getResults().length;
@@ -128,6 +142,10 @@ public class TransactionResult implements XdrElement {
     TransactionResultCode discriminant = TransactionResultCode.decode(stream);
     decodedTransactionResultResult.setDiscriminant(discriminant);
     switch (decodedTransactionResultResult.getDiscriminant()) {
+    case txFEE_BUMP_INNER_SUCCESS:
+    case txFEE_BUMP_INNER_FAILED:
+    decodedTransactionResultResult.innerResultPair = InnerTransactionResultPair.decode(stream);
+    break;
     case txSUCCESS:
     case txFAILED:
     int resultssize = stream.readInt();
@@ -143,7 +161,7 @@ public class TransactionResult implements XdrElement {
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(Arrays.hashCode(this.results), this.code);
+      return Objects.hashCode(this.innerResultPair, Arrays.hashCode(this.results), this.code);
     }
     @Override
     public boolean equals(Object object) {
@@ -152,7 +170,7 @@ public class TransactionResult implements XdrElement {
       }
 
       TransactionResultResult other = (TransactionResultResult) object;
-      return Arrays.equals(this.results, other.results) && Objects.equal(this.code, other.code);
+      return Objects.equal(this.innerResultPair, other.innerResultPair) && Arrays.equals(this.results, other.results) && Objects.equal(this.code, other.code);
     }
 
   }

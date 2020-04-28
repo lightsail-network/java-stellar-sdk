@@ -14,10 +14,10 @@ import com.google.common.base.Objects;
 //  {
 //  case 0:
 //      struct
-//  {
-//     uint64 sequence;
-//     StellarMessage message;
-//     HmacSha256Mac mac;
+//      {
+//          uint64 sequence;
+//          StellarMessage message;
+//          HmacSha256Mac mac;
 //      } v0;
 //  };
 

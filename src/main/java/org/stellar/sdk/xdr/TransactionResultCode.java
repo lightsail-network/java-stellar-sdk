@@ -11,7 +11,8 @@ import java.io.IOException;
 
 //  enum TransactionResultCode
 //  {
-//      txSUCCESS = 0, // all operations succeeded
+//      txFEE_BUMP_INNER_SUCCESS = 1, // fee bump inner transaction succeeded
+//      txSUCCESS = 0,                // all operations succeeded
 //  
 //      txFAILED = -1, // one of the operations failed (none were applied)
 //  
@@ -25,11 +26,15 @@ import java.io.IOException;
 //      txNO_ACCOUNT = -8,           // source account not found
 //      txINSUFFICIENT_FEE = -9,     // fee is too small
 //      txBAD_AUTH_EXTRA = -10,      // unused signatures attached to transaction
-//      txINTERNAL_ERROR = -11       // an unknown error occured
+//      txINTERNAL_ERROR = -11,      // an unknown error occured
+//  
+//      txNOT_SUPPORTED = -12,        // transaction type not supported
+//      txFEE_BUMP_INNER_FAILED = -13 // fee bump inner transaction failed
 //  };
 
 //  ===========================================================================
 public enum TransactionResultCode implements XdrElement {
+  txFEE_BUMP_INNER_SUCCESS(1),
   txSUCCESS(0),
   txFAILED(-1),
   txTOO_EARLY(-2),
@@ -42,6 +47,8 @@ public enum TransactionResultCode implements XdrElement {
   txINSUFFICIENT_FEE(-9),
   txBAD_AUTH_EXTRA(-10),
   txINTERNAL_ERROR(-11),
+  txNOT_SUPPORTED(-12),
+  txFEE_BUMP_INNER_FAILED(-13),
   ;
   private int mValue;
 
@@ -56,6 +63,7 @@ public enum TransactionResultCode implements XdrElement {
   public static TransactionResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
+      case 1: return txFEE_BUMP_INNER_SUCCESS;
       case 0: return txSUCCESS;
       case -1: return txFAILED;
       case -2: return txTOO_EARLY;
@@ -68,6 +76,8 @@ public enum TransactionResultCode implements XdrElement {
       case -9: return txINSUFFICIENT_FEE;
       case -10: return txBAD_AUTH_EXTRA;
       case -11: return txINTERNAL_ERROR;
+      case -12: return txNOT_SUPPORTED;
+      case -13: return txFEE_BUMP_INNER_FAILED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

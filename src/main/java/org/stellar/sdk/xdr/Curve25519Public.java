@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 //  struct Curve25519Public
 //  {
-//          opaque key[32];
+//      opaque key[32];
 //  };
 
 //  ===========================================================================

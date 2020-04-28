@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 //  struct HmacSha256Key
 //  {
-//          opaque key[32];
+//      opaque key[32];
 //  };
 
 //  ===========================================================================

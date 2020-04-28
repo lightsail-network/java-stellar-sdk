@@ -51,7 +51,7 @@ public class PaymentOperation extends Operation {
     PaymentOp op = new PaymentOp();
 
     // destination
-    op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
+    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
     // asset
     op.setAsset(asset.toXdr());
     // amount
@@ -81,7 +81,7 @@ public class PaymentOperation extends Operation {
      * @param op {@link PaymentOp}
      */
     Builder(PaymentOp op) {
-      destination = StrKey.encodeStellarAccountId(op.getDestination().getAccountID().getEd25519().getUint256());
+      destination = StrKey.encodeStellarMuxedAccount(op.getDestination());
       asset = Asset.fromXdr(op.getAsset());
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
     }
