@@ -21,18 +21,23 @@ public class Sep10Challenge {
    * @param anchorName       The name of the anchor which will be included in the ManageData operation.
    * @param timebounds       The lifetime of the challenge token.
    */
-  public static String newChallenge(
+  public static Transaction newChallenge(
       KeyPair signer,
       Network network,
       String clientAccountId,
       String anchorName,
       TimeBounds timebounds
-  ) {
+  ) throws InvalidSep10ChallengeException {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
     BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+
+    if (StrKey.decodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID) {
+      throw new InvalidSep10ChallengeException(clientAccountId+" is not a valid account id");
+    }
 
     Account sourceAccount = new Account(signer.getAccountId(), -1L);
     ManageDataOperation operation = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
@@ -40,13 +45,13 @@ public class Sep10Challenge {
         .build();
     Transaction transaction = new Transaction.Builder(sourceAccount, network)
         .addTimeBounds(timebounds)
-        .setOperationFee(100)
+        .setBaseFee(100)
         .addOperation(operation)
         .build();
 
     transaction.sign(signer);
 
-    return transaction.toEnvelopeXdrBase64();
+    return transaction;
   }
 
   /**
@@ -69,7 +74,15 @@ public class Sep10Challenge {
    */
   public static ChallengeTransaction readChallengeTransaction(String challengeXdr, String serverAccountId, Network network) throws InvalidSep10ChallengeException, IOException {
     // decode the received input as a base64-urlencoded XDR representation of Stellar transaction envelope
-    Transaction transaction = Transaction.fromEnvelopeXdr(challengeXdr, network);
+    AbstractTransaction parsed = Transaction.fromEnvelopeXdr(challengeXdr, network);
+    if (!(parsed instanceof Transaction)) {
+      throw new InvalidSep10ChallengeException("Transaction cannot be a fee bump transaction");
+    }
+    Transaction transaction = (Transaction)parsed;
+
+    if (StrKey.decodeVersionByte(serverAccountId) != StrKey.VersionByte.ACCOUNT_ID) {
+      throw new InvalidSep10ChallengeException("serverAccountId: "+serverAccountId+" is not a valid account id");
+    }
 
     // verify that transaction source account is equal to the server's signing key
     if (!serverAccountId.equals(transaction.getSourceAccount())) {
@@ -111,6 +124,10 @@ public class Sep10Challenge {
     String clientAccountId = manageDataOperation.getSourceAccount();
     if (clientAccountId == null) {
       throw new InvalidSep10ChallengeException("Operation should have a source account.");
+    }
+
+    if (StrKey.decodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID) {
+      throw new InvalidSep10ChallengeException("clientAccountId: "+clientAccountId+" is not a valid account id");
     }
 
     // verify manage data value

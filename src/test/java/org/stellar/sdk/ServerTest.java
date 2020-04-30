@@ -13,6 +13,7 @@ import org.stellar.sdk.responses.SubmitTransactionResponse;
 import org.stellar.sdk.responses.SubmitTransactionTimeoutResponseException;
 import org.stellar.sdk.responses.SubmitTransactionUnknownResponseException;
 import org.stellar.sdk.responses.operations.OperationResponse;
+import org.stellar.sdk.xdr.EnvelopeType;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -173,6 +174,7 @@ public class ServerTest {
         Transaction.Builder builder = new Transaction.Builder(account, network)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addMemo(Memo.text("Hello world!"))
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE);
 
         assertEquals(1, builder.getOperationsCount());
@@ -332,6 +334,18 @@ public class ServerTest {
     public static final String DESTINATION_ACCOUNT_NO_MEMO_REQUIRED = "GDYC2D4P2SRC5DCEDDK2OUFESSPCTZYLDOEF6NYHR2T7X5GUTEABCQC2";
     public static final String DESTINATION_ACCOUNT_NO_FOUND = "GD2OVSQPGD5FBJPMW4YN3FGDJ7JDFKNOMJT35T4H52FLHXJK5MFSR5RA";
     public static final String DESTINATION_ACCOUNT_FETCH_ERROR = "GB7WNQUTDLD6YJ4MR3KQN3Y6ZIDIGTA7GRKNH47HOGMP2ETFGRSLD6OG";
+    public static final String DESTINATION_ACCOUNT_MEMO_ID = "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG";
+
+    private FeeBumpTransaction feeBump(Transaction inner) {
+        inner.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX);
+        KeyPair signer = KeyPair.fromSecretSeed("SA5ZEFDVFZ52GRU7YUGR6EDPBNRU2WLA6IQFQ7S2IH2DG3VFV3DOMV2Q");
+        FeeBumpTransaction tx = new FeeBumpTransaction.Builder(inner)
+            .setFeeAccount(signer.getAccountId())
+            .setBaseFee(FeeBumpTransaction.MIN_BASE_FEE*10)
+            .build();
+        tx.sign(signer);
+        return tx;
+    }
 
     @Test
     public void testCheckMemoRequiredWithMemo() throws IOException, AccountRequiresMemoException {
@@ -350,10 +364,34 @@ public class ServerTest {
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
                 .addMemo(new MemoText("Hello, Stellar."))
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         server.submitTransaction(transaction);
+        server.submitTransaction(feeBump(transaction));
+    }
+
+    @Test
+    public void testCheckMemoRequiredWithMemoIdAddress() throws IOException, AccountRequiresMemoException {
+        MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(buildTestCheckMemoRequiredMockDispatcher());
+        mockWebServer.start();
+        HttpUrl baseUrl = mockWebServer.url("");
+        Server server = new Server(baseUrl.toString());
+
+        KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
+        Account account = new Account(source.getAccountId(), 1L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+            .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_ID, new AssetTypeNative(), "10").build())
+            .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_ID, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+            .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_ID, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
+            .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_ID).build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+            .setBaseFee(100)
+            .build();
+        transaction.sign(source);
+        server.submitTransaction(transaction);
+        server.submitTransaction(feeBump(transaction));
     }
 
     @Test
@@ -372,10 +410,11 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         server.submitTransaction(transaction, true);
+        server.submitTransaction(feeBump(transaction), true);
     }
 
     @Test
@@ -394,11 +433,20 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         try {
             server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(0, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
+        }
+
+        try {
+            server.submitTransaction(feeBump(transaction));
             fail();
         } catch (AccountRequiresMemoException e) {
             assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -423,11 +471,20 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         try {
             server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(1, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_B, e.getAccountId());
+        }
+
+        try {
+            server.submitTransaction(feeBump(transaction));
             fail();
         } catch (AccountRequiresMemoException e) {
             assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -452,11 +509,20 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         try {
             server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(2, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
+        }
+
+        try {
+            server.submitTransaction(feeBump(transaction));
             fail();
         } catch (AccountRequiresMemoException e) {
             assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -481,11 +547,20 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         try {
             server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(3, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_D, e.getAccountId());
+        }
+
+        try {
+            server.submitTransaction(feeBump(transaction));
             fail();
         } catch (AccountRequiresMemoException e) {
             assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -510,11 +585,20 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         try {
             server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(2, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
+        }
+
+        try {
+            server.submitTransaction(feeBump(transaction));
             fail();
         } catch (AccountRequiresMemoException e) {
             assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -540,11 +624,20 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         try {
             server.submitTransaction(transaction);
+            fail();
+        } catch (AccountRequiresMemoException e) {
+            assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+            assertEquals(1, e.getOperationIndex());
+            assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
+        }
+
+        try {
+            server.submitTransaction(feeBump(transaction));
             fail();
         } catch (AccountRequiresMemoException e) {
             assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -569,10 +662,11 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_FOUND, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_FOUND).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         server.submitTransaction(transaction);
+        server.submitTransaction(feeBump(transaction));
     }
 
     @Test
@@ -593,11 +687,18 @@ public class ServerTest {
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_D, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
         transaction.sign(source);
         try {
             server.submitTransaction(transaction);
+            fail();
+        } catch (ErrorResponse e) {
+            assertEquals(400, e.getCode());
+        }
+
+        try {
+            server.submitTransaction(feeBump(transaction));
             fail();
         } catch (ErrorResponse e) {
             assertEquals(400, e.getCode());
