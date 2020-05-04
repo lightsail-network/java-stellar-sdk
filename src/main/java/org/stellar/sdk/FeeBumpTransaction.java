@@ -83,8 +83,8 @@ public class FeeBumpTransaction extends AbstractTransaction {
       XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
       payload.encode(xdrOutputStream);
       return txOutputStream.toByteArray();
-    } catch (IOException exception) {
-      return null;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -125,7 +125,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
       this.mInner = checkNotNull(inner, "inner cannot be null");
       EnvelopeType txType = this.mInner.toEnvelopeXdr().getDiscriminant();
       if (this.mInner.toEnvelopeXdr().getDiscriminant() != EnvelopeType.ENVELOPE_TYPE_TX) {
-        throw new IllegalArgumentException("invalid transaction type: "+txType);
+        throw new IllegalArgumentException("invalid transaction type: " + txType);
       }
     }
 
@@ -140,7 +140,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
       long innerBaseFee = this.mInner.getFee();
       long numOperations = this.mInner.getOperations().length;
-      if (numOperations > 0 ) {
+      if (numOperations > 0) {
         innerBaseFee = innerBaseFee / numOperations;
       }
 
@@ -148,7 +148,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
         throw new IllegalArgumentException("base fee cannot be lower than provided inner transaction base fee");
       }
 
-      long maxFee = baseFee*(numOperations+1);
+      long maxFee = baseFee * (numOperations + 1);
       if (maxFee < 0) {
         throw new IllegalArgumentException("fee overflows 64 bit int");
       }
@@ -166,16 +166,12 @@ public class FeeBumpTransaction extends AbstractTransaction {
       return this;
     }
 
-      public FeeBumpTransaction build() {
-      if (mBaseFee == null) {
-        throw new RuntimeException("base fee has to be set. you must call setBaseFee().");
-      }
-
-      if (mFeeAccount == null) {
-        throw new RuntimeException("fee account has to be set. you must call setFeeAccount().");
-      }
-
-      return new FeeBumpTransaction(this.mFeeAccount, this.mBaseFee, this.mInner);
+    public FeeBumpTransaction build() {
+      return new FeeBumpTransaction(
+          checkNotNull(this.mFeeAccount, "fee account has to be set. you must call setFeeAccount()."),
+          checkNotNull(this.mBaseFee, "base fee has to be set. you must call setBaseFee()."),
+          this.mInner
+      );
     }
 
   }

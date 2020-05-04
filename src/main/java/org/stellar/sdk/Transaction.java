@@ -66,8 +66,8 @@ public class Transaction extends AbstractTransaction {
       XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
       payload.encode(xdrOutputStream);
       return txOutputStream.toByteArray();
-    } catch (IOException exception) {
-      return null;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 
