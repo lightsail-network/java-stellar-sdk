@@ -2,6 +2,18 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.16.0
+
+* Update XDR definitions and auto-generated classes to support upcoming protocol 13 release. (https://github.com/stellar/java-stellar-sdk/pull/276)
+* Extend StrKey implementation to handle [CAP 27 Muxed Accounts](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0027.md). (https://github.com/stellar/java-stellar-sdk/pull/276)
+* Update `TransactionResponse` to include new fields which are relevant to [CAP 15 Fee-Bump Transactions](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0015.md). (https://github.com/stellar/java-stellar-sdk/pull/275)
+* Update `AccountResponse.Balance`, `AllowTrustOperationResponse`, and create `TrustlineAuthorizedToMaintainLiabilitiesEffectResponse` to support [CAP 18 Fine-Grained Control of Authorization](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0018.md). (https://github.com/stellar/java-stellar-sdk/pull/274)
+* Add `FeeBumpTransaction` and `FeeBumpTransaction.Builder` for parsing and creating [CAP 15 Fee-Bump Transactions](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0015.md). (https://github.com/stellar/java-stellar-sdk/pull/278)
+* Add methods to `Server` for submitting [CAP 15 Fee-Bump Transactions](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0015.md). (https://github.com/stellar/java-stellar-sdk/pull/278)
+* Update SEP 10 implementation to reject fee-bump transactions and transactions with multiplexed addresses. (https://github.com/stellar/java-stellar-sdk/pull/278)
+* Update SEP 29 implementation to handle bump transactions. (https://github.com/stellar/java-stellar-sdk/pull/278)
+
+
 ## 0.15.0
 
 - Add SEP0029 (memo required) support. (https://github.com/stellar/java-stellar-sdk/issues/272)
