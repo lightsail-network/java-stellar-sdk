@@ -4,7 +4,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## 0.16.0
 
-* Update XDR definitions and auto-generated classes to support upcoming protocol 13 release. (https://github.com/stellar/java-stellar-sdk/pull/276)
+* Update XDR definitions and auto-generated classes to support upcoming protocol 13 release ([#276](https://github.com/stellar/java-stellar-sdk/pull/276)).
 * Extend StrKey implementation to handle [CAP 27 Muxed Accounts](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0027.md) ([#276](https://github.com/stellar/java-stellar-sdk/pull/276)).
 * Update `TransactionResponse` to include new fields which are relevant to [CAP 15 Fee-Bump Transactions](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0015.md) ([#275](https://github.com/stellar/java-stellar-sdk/pull/275)).
 * Update `AccountResponse.Balance`, `AllowTrustOperationResponse`, and create `TrustlineAuthorizedToMaintainLiabilitiesEffectResponse` to support [CAP 18 Fine-Grained Control of Authorization](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0018.md) ([#274](https://github.com/stellar/java-stellar-sdk/pull/274)).
