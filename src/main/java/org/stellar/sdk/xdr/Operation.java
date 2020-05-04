@@ -15,7 +15,7 @@ import com.google.common.base.Objects;
 //      // sourceAccount is the account used to run the operation
 //      // if not set, the runtime defaults to "sourceAccount" specified at
 //      // the transaction level
-//      AccountID* sourceAccount;
+//      MuxedAccount* sourceAccount;
 //  
 //      union switch (OperationType type)
 //      {
@@ -36,7 +36,7 @@ import com.google.common.base.Objects;
 //      case ALLOW_TRUST:
 //          AllowTrustOp allowTrustOp;
 //      case ACCOUNT_MERGE:
-//          AccountID destination;
+//          MuxedAccount destination;
 //      case INFLATION:
 //          void;
 //      case MANAGE_DATA:
@@ -54,11 +54,11 @@ import com.google.common.base.Objects;
 //  ===========================================================================
 public class Operation implements XdrElement {
   public Operation () {}
-  private AccountID sourceAccount;
-  public AccountID getSourceAccount() {
+  private MuxedAccount sourceAccount;
+  public MuxedAccount getSourceAccount() {
     return this.sourceAccount;
   }
-  public void setSourceAccount(AccountID value) {
+  public void setSourceAccount(MuxedAccount value) {
     this.sourceAccount = value;
   }
   private OperationBody body;
@@ -71,7 +71,7 @@ public class Operation implements XdrElement {
   public static void encode(XdrDataOutputStream stream, Operation encodedOperation) throws IOException{
     if (encodedOperation.sourceAccount != null) {
     stream.writeInt(1);
-    AccountID.encode(stream, encodedOperation.sourceAccount);
+    MuxedAccount.encode(stream, encodedOperation.sourceAccount);
     } else {
     stream.writeInt(0);
     }
@@ -84,7 +84,7 @@ public class Operation implements XdrElement {
     Operation decodedOperation = new Operation();
     int sourceAccountPresent = stream.readInt();
     if (sourceAccountPresent != 0) {
-    decodedOperation.sourceAccount = AccountID.decode(stream);
+    decodedOperation.sourceAccount = MuxedAccount.decode(stream);
     }
     decodedOperation.body = OperationBody.decode(stream);
     return decodedOperation;
@@ -168,11 +168,11 @@ public class Operation implements XdrElement {
     public void setAllowTrustOp(AllowTrustOp value) {
       this.allowTrustOp = value;
     }
-    private AccountID destination;
-    public AccountID getDestination() {
+    private MuxedAccount destination;
+    public MuxedAccount getDestination() {
       return this.destination;
     }
-    public void setDestination(AccountID value) {
+    public void setDestination(MuxedAccount value) {
       this.destination = value;
     }
     private ManageDataOp manageDataOp;
@@ -233,7 +233,7 @@ public class Operation implements XdrElement {
     AllowTrustOp.encode(stream, encodedOperationBody.allowTrustOp);
     break;
     case ACCOUNT_MERGE:
-    AccountID.encode(stream, encodedOperationBody.destination);
+    MuxedAccount.encode(stream, encodedOperationBody.destination);
     break;
     case INFLATION:
     break;
@@ -284,7 +284,7 @@ public class Operation implements XdrElement {
     decodedOperationBody.allowTrustOp = AllowTrustOp.decode(stream);
     break;
     case ACCOUNT_MERGE:
-    decodedOperationBody.destination = AccountID.decode(stream);
+    decodedOperationBody.destination = MuxedAccount.decode(stream);
     break;
     case INFLATION:
     break;

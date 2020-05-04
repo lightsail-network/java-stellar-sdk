@@ -1,12 +1,7 @@
 package org.stellar.sdk.responses;
 
 import com.google.common.io.BaseEncoding;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 
 import org.stellar.sdk.Memo;
 import org.stellar.sdk.xdr.TransactionEnvelope;
@@ -17,6 +12,23 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class TransactionDeserializer implements JsonDeserializer<TransactionResponse> {
+
+  private Memo extractTextMemo(TransactionEnvelope transactionEnvelope) {
+    switch (transactionEnvelope.getDiscriminant()) {
+      case ENVELOPE_TYPE_TX:
+        return Memo.text(transactionEnvelope.getV1().getTx().getMemo().getText().getBytes());
+      case ENVELOPE_TYPE_TX_V0:
+        return Memo.text(transactionEnvelope.getV0().getTx().getMemo().getText().getBytes());
+      case ENVELOPE_TYPE_TX_FEE_BUMP:
+        return Memo.text(
+            transactionEnvelope.getFeeBump().getTx().getInnerTx()
+            .getV1().getTx().getMemo().getText().getBytes()
+        );
+        default:
+          throw new IllegalArgumentException("invalid transaction type: "+transactionEnvelope.getDiscriminant());
+    }
+  }
+
   @Override
   public TransactionResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Transaction
@@ -35,19 +47,28 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
       // representation of a transaction. That's why we need to handle a special case
       // here.
       if (memoType.equals("text")) {
-        // we obtain the memo text from the xdr because the bytes may not be valid utf8
-        String envelopeXdr = json.getAsJsonObject().get("envelope_xdr").getAsString();
         BaseEncoding base64Encoding = BaseEncoding.base64();
-        byte[] bytes = base64Encoding.decode(envelopeXdr);
-        TransactionEnvelope transactionEnvelope = null;
-        try {
-          transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-        } catch (IOException e) {
-          // JsonDeserializer<TransactionResponse> cannot throw IOExceptions
-          // so we must throw it as a runtime exception
-          throw new RuntimeException(e);
+        JsonObject jsonResponse = json.getAsJsonObject();
+
+        if (jsonResponse.has("memo_bytes")) {
+          // we obtain the memo text from the "memo_bytes" field because the original byte sequence may not be valid utf8
+          String memoBase64 = json.getAsJsonObject().get("memo_bytes").getAsString();
+          memo = Memo.text(base64Encoding.decode(memoBase64));
+        } else {
+          // memo_bytes is not available because horizon is running a version older than 1.2.0
+          // so we will recover the bytes from the xdr
+          String envelopeXdr = json.getAsJsonObject().get("envelope_xdr").getAsString();
+          byte[] bytes = base64Encoding.decode(envelopeXdr);
+          TransactionEnvelope transactionEnvelope = null;
+          try {
+            transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+          } catch (IOException e) {
+            // JsonDeserializer<TransactionResponse> cannot throw IOExceptions
+            // so we must throw it as a runtime exception
+            throw new RuntimeException(e);
+          }
+          memo = extractTextMemo(transactionEnvelope);
         }
-        memo = Memo.text(transactionEnvelope.getTx().getMemo().getText().getBytes());
       } else {
         String memoValue = json.getAsJsonObject().get("memo").getAsString();
         BaseEncoding base64Encoding = BaseEncoding.base64();

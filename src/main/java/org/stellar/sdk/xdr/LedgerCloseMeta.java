@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  union LedgerCloseMeta switch (int v)
 //  {
 //  case 0:
-//       LedgerCloseMetaV0 v0;
+//      LedgerCloseMetaV0 v0;
 //  };
 
 //  ===========================================================================

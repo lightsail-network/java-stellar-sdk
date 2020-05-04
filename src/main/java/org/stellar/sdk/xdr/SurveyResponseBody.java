@@ -12,8 +12,8 @@ import com.google.common.base.Objects;
 
 //  union SurveyResponseBody switch (SurveyMessageCommandType type)
 //  {
-//      case SURVEY_TOPOLOGY:
-//          TopologyResponseBody topologyResponseBody;
+//  case SURVEY_TOPOLOGY:
+//      TopologyResponseBody topologyResponseBody;
 //  };
 
 //  ===========================================================================

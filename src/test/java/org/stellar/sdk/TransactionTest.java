@@ -13,53 +13,21 @@ import static org.junit.Assert.*;
 public class TransactionTest {
 
     @Test
-    public void testDefaultBaseFee() throws FormatException {
-        // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
-        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
-        KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
-
-        Transaction.Builder.setDefaultOperationFee(2345);
-
-        Account account = new Account(source.getAccountId(), 2908908335136768L);
-        Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
-                .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+    public void testMissingOperationFee() {
+        long sequenceNumber = 2908908335136768L;
+        Account account = new Account("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR", sequenceNumber);
+        try {
+            new Transaction.Builder(account, Network.TESTNET)
+                .addOperation(new CreateAccountOperation.Builder("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR", "2000").build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
                 .build();
-
-        transaction.sign(source);
-
-        assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAJKQAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDf8XAGz9uOmfL0KJBP29eSXz/CZqZtl0Mm8jHye3xwLgo2HJDfvCJdijGKsx34AfNl6hvX+Cq3IVk062sLSuoK",
-                transaction.toEnvelopeXdrBase64());
-
-        Transaction transaction2 = Transaction.fromEnvelopeXdr(
-                transaction.toEnvelopeXdr(),
-                Network.TESTNET
-        );
-
-        assertEquals(transaction.getSourceAccount(), transaction2.getSourceAccount());
-        assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
-        assertEquals(transaction.getFee(), transaction2.getFee());
-        assertEquals(
-                ((CreateAccountOperation) transaction.getOperations()[0]).getStartingBalance(),
-                ((CreateAccountOperation) transaction2.getOperations()[0]).getStartingBalance()
-        );
-    }
-
-    @Test
-    public void testDefaultBaseFeeThrows() {
-        try {
-            Transaction.Builder.setDefaultOperationFee(99);
-            fail("expected IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
+            fail("expected RuntimeException");
+        } catch (RuntimeException e) {
             // expected
         }
-
-        // should succeed
-        Transaction.Builder.setDefaultOperationFee(100);
     }
 
-    @Test
+        @Test
     public void testBuilderSuccessTestnet() throws FormatException {
         // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
         KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -70,6 +38,7 @@ public class TransactionTest {
         Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         transaction.sign(source);
@@ -82,7 +51,7 @@ public class TransactionTest {
         assertEquals(transaction.getSequenceNumber(), sequenceNumber + 1);
         assertEquals(transaction.getFee(), 100);
 
-        Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
+        Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
 
         assertEquals(transaction.getSourceAccount(), transaction2.getSourceAccount());
         assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
@@ -106,6 +75,7 @@ public class TransactionTest {
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addMemo(Memo.text("Hello world!"))
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         transaction.sign(source);
@@ -114,7 +84,7 @@ public class TransactionTest {
                 "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAEAAAAMSGVsbG8gd29ybGQhAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAxzofBhoayuUnz8t0T1UNWrTgmJ+lCh9KaeOGu2ppNOz9UGw0abGLhv+9oWQsstaHx6YjwWxL+8GBvwBUVWRlBQ==",
                 transaction.toEnvelopeXdrBase64());
 
-        Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
+        Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
 
         assertEquals(transaction.getSourceAccount(), transaction2.getSourceAccount());
         assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
@@ -137,6 +107,7 @@ public class TransactionTest {
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addTimeBounds(new TimeBounds(42, 1337))
                 .addMemo(Memo.hash("abcdef"))
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         transaction.sign(source);
@@ -152,7 +123,7 @@ public class TransactionTest {
         assertEquals(decodedTransaction.getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
         assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 1337);
 
-        Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
+        Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
 
         assertEquals(transaction.getSourceAccount(), transaction2.getSourceAccount());
         assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
@@ -174,7 +145,7 @@ public class TransactionTest {
         Account account = new Account(source.getAccountId(), 2908908335136768L);
         Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-                .setOperationFee(200)
+                .setBaseFee(200)
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
                 .build();
 
@@ -184,7 +155,7 @@ public class TransactionTest {
                 "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAyAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAED1Mbd0oou0sfNFRuxsSqvrwJ9RzzTSnX8sTmlbMKcV0V3Kl1eDKoerD+xZ1pNQwOJZrAG2yapXyg60PQfDUcMN",
                 transaction.toEnvelopeXdrBase64());
 
-        Transaction transaction2 = Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
+        Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
 
         assertEquals(transaction.getSourceAccount(), transaction2.getSourceAccount());
         assertEquals(transaction.getSequenceNumber(), transaction2.getSequenceNumber());
@@ -203,7 +174,7 @@ public class TransactionTest {
         Account account = new Account(source.getAccountId(), 2908908335136768L);
         Transaction.Builder builder = new Transaction.Builder(account, Network.TESTNET);
         try {
-            builder.setOperationFee(99);
+            builder.setBaseFee(99);
             fail("expected IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // expected
@@ -217,6 +188,7 @@ public class TransactionTest {
                 .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                 .addTimeBounds(new TimeBounds(42, 1337))
                 .addMemo(Memo.hash("abcdef"))
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
     }
 
@@ -227,6 +199,7 @@ public class TransactionTest {
             new Transaction.Builder(account, Network.TESTNET)
                     .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                     .addMemo(Memo.hash("abcdef"))
+                    .setBaseFee(Transaction.MIN_BASE_FEE)
                     .build();
             fail();
         } catch (RuntimeException exception) {
@@ -260,6 +233,7 @@ public class TransactionTest {
         Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                 .setTimeout(10)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         assertEquals(0, transaction.getTimeBounds().getMinTime());
@@ -290,6 +264,7 @@ public class TransactionTest {
                 .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                 .addTimeBounds(new TimeBounds(42, 0))
                 .setTimeout(10)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         assertEquals(42, transaction.getTimeBounds().getMinTime());
@@ -310,7 +285,7 @@ public class TransactionTest {
                 .addTimeBounds(new TimeBounds(42, 0))
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
                 .addMemo(Memo.hash("abcdef"))
-                .setOperationFee(100)
+                .setBaseFee(100)
                 .build();
 
         transaction.sign(source);
@@ -338,6 +313,7 @@ public class TransactionTest {
         Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         transaction.sign(source);
@@ -356,6 +332,7 @@ public class TransactionTest {
         Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(destination.getAccountId(), new AssetTypeNative(), "2000").build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         byte[] preimage = new byte[64];
@@ -381,6 +358,7 @@ public class TransactionTest {
         Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         assertEquals(
@@ -396,9 +374,10 @@ public class TransactionTest {
 
         Account account = new Account(source.getAccountId(), 2908908335136768L);
         try {
-            Transaction transaction = new Transaction.Builder(account, Network.TESTNET).setTimeout(
-                    Transaction.Builder.TIMEOUT_INFINITE
-            ).build();
+            Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
+                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
+                .build();
             fail();
         } catch (RuntimeException exception) {
             assertTrue(exception.getMessage().contains("At least one operation required"));

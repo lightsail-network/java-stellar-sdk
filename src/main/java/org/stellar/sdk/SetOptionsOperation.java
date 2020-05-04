@@ -190,7 +190,7 @@ public class SetOptionsOperation extends Operation {
 
     Builder(SetOptionsOp op) {
       if (op.getInflationDest() != null) {
-        inflationDestination = StrKey.encodeStellarAccountId(op.getInflationDest().getAccountID().getEd25519().getUint256());
+        inflationDestination = StrKey.encodeStellarAccountId(op.getInflationDest());
       }
       if (op.getClearFlags() != null) {
         clearFlags = op.getClearFlags().getUint32();

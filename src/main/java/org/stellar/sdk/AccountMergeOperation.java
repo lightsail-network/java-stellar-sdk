@@ -28,7 +28,7 @@ public class AccountMergeOperation extends Operation {
     @Override
     OperationBody toOperationBody() {
         OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
-        body.setDestination(StrKey.encodeToXDRAccountId(this.destination));
+        body.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
         body.setDiscriminant(OperationType.ACCOUNT_MERGE);
         return body;
     }
@@ -43,8 +43,8 @@ public class AccountMergeOperation extends Operation {
         private String mSourceAccount;
 
         Builder(OperationBody op) {
-            destination = StrKey.encodeStellarAccountId(
-                    op.getDestination().getAccountID().getEd25519().getUint256()
+            destination = StrKey.encodeStellarMuxedAccount(
+                    op.getDestination()
             );
         }
 

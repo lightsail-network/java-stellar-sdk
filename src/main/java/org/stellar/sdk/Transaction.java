@@ -1,10 +1,8 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.*;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,100 +17,60 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
  */
-public class Transaction {
-  private final int mFee;
+public class Transaction extends AbstractTransaction {
+  private final long mFee;
   private final String mSourceAccount;
   private final long mSequenceNumber;
   private final Operation[] mOperations;
   private final Memo mMemo;
   private final TimeBounds mTimeBounds;
-  private final Network mNetwork;
-  private List<DecoratedSignature> mSignatures;
+  private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX_V0;
 
   Transaction(
           String sourceAccount,
-          int fee,
+          long fee,
           long sequenceNumber,
           Operation[] operations,
           Memo memo,
           TimeBounds timeBounds,
           Network network
   ) {
+    super(network);
     this.mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
     this.mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
     this.mOperations = checkNotNull(operations, "operations cannot be null");
     checkArgument(operations.length > 0, "At least one operation required");
 
     this.mFee = fee;
-    this.mSignatures = new ArrayList<DecoratedSignature>();
     this.mMemo = memo != null ? memo : Memo.none();
     this.mTimeBounds = timeBounds;
-    this.mNetwork = checkNotNull(network, "network cannot be null");
   }
 
-  /**
-   * Adds a new signature ed25519PublicKey to this transaction.
-   * @param signer {@link KeyPair} object representing a signer
-   */
-  public void sign(KeyPair signer) {
-    checkNotNull(signer, "signer cannot be null");
-    byte[] txHash = this.hash();
-    mSignatures.add(signer.signDecorated(txHash));
+  // setEnvelopeType is only used in tests which is why this method is package protected
+  void setEnvelopeType(EnvelopeType envelopeType) {
+    this.envelopeType = envelopeType;
   }
 
-  /**
-   * Adds a new sha256Hash signature to this transaction by revealing preimage.
-   * @param preimage the sha256 hash of preimage should be equal to signer hash
-   */
-  public void sign(byte[] preimage) {
-    checkNotNull(preimage, "preimage cannot be null");
-    org.stellar.sdk.xdr.Signature signature = new org.stellar.sdk.xdr.Signature();
-    signature.setSignature(preimage);
-
-    byte[] hash = Util.hash(preimage);
-    byte[] signatureHintBytes = Arrays.copyOfRange(hash, hash.length - 4, hash.length);
-    SignatureHint signatureHint = new SignatureHint();
-    signatureHint.setSignatureHint(signatureHintBytes);
-
-    DecoratedSignature decoratedSignature = new DecoratedSignature();
-    decoratedSignature.setHint(signatureHint);
-    decoratedSignature.setSignature(signature);
-
-    mSignatures.add(decoratedSignature);
-  }
-
-  /**
-   * Returns transaction hash.
-   */
-  public byte[] hash() {
-    return Util.hash(this.signatureBase());
-  }
-
-  /**
-   * Returns signature base.
-   */
+  @Override
   public byte[] signatureBase() {
     try {
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      // Hashed NetworkID
-      outputStream.write(mNetwork.getNetworkId());
-      // Envelope Type - 4 bytes
-      outputStream.write(ByteBuffer.allocate(4).putInt(EnvelopeType.ENVELOPE_TYPE_TX.getValue()).array());
-      // Transaction XDR bytes
+      TransactionSignaturePayload payload = new TransactionSignaturePayload();
+      TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
+      taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
+      taggedTransaction.setTx(this.toV1Xdr());
+      Hash hash = new Hash();
+      hash.setHash(mNetwork.getNetworkId());
+      payload.setNetworkId(hash);
+      payload.setTaggedTransaction(taggedTransaction);
       ByteArrayOutputStream txOutputStream = new ByteArrayOutputStream();
       XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
-      org.stellar.sdk.xdr.Transaction.encode(xdrOutputStream, this.toXdr());
-      outputStream.write(txOutputStream.toByteArray());
-
-      return outputStream.toByteArray();
-    } catch (IOException exception) {
-      return null;
+      payload.encode(xdrOutputStream);
+      return txOutputStream.toByteArray();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 
-  public Network getNetwork() {
-    return mNetwork;
-  }
 
   public String getSourceAccount() {
     return mSourceAccount;
@@ -120,10 +78,6 @@ public class Transaction {
 
   public long getSequenceNumber() {
     return mSequenceNumber;
-  }
-
-  public List<DecoratedSignature> getSignatures() {
-    return mSignatures;
   }
 
   public Memo getMemo() {
@@ -140,7 +94,7 @@ public class Transaction {
   /**
    * Returns fee paid for transaction in stroops (1 stroop = 0.0000001 XLM).
    */
-  public int getFee() {
+  public long getFee() {
     return mFee;
   }
 
@@ -154,14 +108,44 @@ public class Transaction {
   /**
    * Generates Transaction XDR object.
    */
-  public org.stellar.sdk.xdr.Transaction toXdr() {
+  private TransactionV0 toXdr() {
     // fee
-    org.stellar.sdk.xdr.Uint32 fee = new org.stellar.sdk.xdr.Uint32();
-    fee.setUint32(mFee);
+    Uint32 fee = new Uint32();
+    fee.setUint32((int)mFee);
     // sequenceNumber
-    org.stellar.sdk.xdr.Int64 sequenceNumberUint = new org.stellar.sdk.xdr.Int64();
+    Int64 sequenceNumberUint = new Int64();
     sequenceNumberUint.setInt64(mSequenceNumber);
-    org.stellar.sdk.xdr.SequenceNumber sequenceNumber = new org.stellar.sdk.xdr.SequenceNumber();
+    SequenceNumber sequenceNumber = new SequenceNumber();
+    sequenceNumber.setSequenceNumber(sequenceNumberUint);
+    // operations
+    org.stellar.sdk.xdr.Operation[] operations = new org.stellar.sdk.xdr.Operation[mOperations.length];
+    for (int i = 0; i < mOperations.length; i++) {
+      operations[i] = mOperations[i].toXdr();
+    }
+    // ext
+    TransactionV0.TransactionV0Ext ext = new TransactionV0.TransactionV0Ext();
+    ext.setDiscriminant(0);
+
+    TransactionV0 transaction = new TransactionV0();
+    transaction.setFee(fee);
+    transaction.setSeqNum(sequenceNumber);
+    transaction.setSourceAccountEd25519(StrKey.encodeToXDRAccountId(this.mSourceAccount).getAccountID().getEd25519());
+    transaction.setOperations(operations);
+    transaction.setMemo(mMemo.toXdr());
+    transaction.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
+    transaction.setExt(ext);
+    return transaction;
+  }
+
+  private org.stellar.sdk.xdr.Transaction toV1Xdr() {
+
+    // fee
+    Uint32 fee = new Uint32();
+    fee.setUint32((int)mFee);
+    // sequenceNumber
+    Int64 sequenceNumberUint = new Int64();
+    sequenceNumberUint.setInt64(mSequenceNumber);
+    SequenceNumber sequenceNumber = new SequenceNumber();
     sequenceNumber.setSequenceNumber(sequenceNumberUint);
     // operations
     org.stellar.sdk.xdr.Operation[] operations = new org.stellar.sdk.xdr.Operation[mOperations.length];
@@ -172,56 +156,66 @@ public class Transaction {
     org.stellar.sdk.xdr.Transaction.TransactionExt ext = new org.stellar.sdk.xdr.Transaction.TransactionExt();
     ext.setDiscriminant(0);
 
-    org.stellar.sdk.xdr.Transaction transaction = new org.stellar.sdk.xdr.Transaction();
-    transaction.setFee(fee);
-    transaction.setSeqNum(sequenceNumber);
-    transaction.setSourceAccount(StrKey.encodeToXDRAccountId(this.mSourceAccount));
-    transaction.setOperations(operations);
-    transaction.setMemo(mMemo.toXdr());
-    transaction.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
-    transaction.setExt(ext);
-    return transaction;
+
+    org.stellar.sdk.xdr.Transaction v1Tx = new org.stellar.sdk.xdr.Transaction();
+    v1Tx.setFee(fee);
+    v1Tx.setSeqNum(sequenceNumber);
+    v1Tx.setSourceAccount(StrKey.encodeToXDRMuxedAccount(mSourceAccount));
+    v1Tx.setOperations(operations);
+    v1Tx.setMemo(mMemo.toXdr());
+    v1Tx.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
+    v1Tx.setExt(ext);
+
+    return v1Tx;
   }
 
-  /**
-   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
-   * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
-   * @return
-   * @throws IOException
-   */
-  public static Transaction fromEnvelopeXdr(String envelope, Network network) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(envelope);
+  public static Transaction fromV0EnvelopeXdr(TransactionV0Envelope envelope, Network network) {
+    int mFee = envelope.getTx().getFee().getUint32();
+    Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
+    Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
+    TimeBounds mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getTimeBounds());
 
-    TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-    return fromEnvelopeXdr(transactionEnvelope, network);
-  }
-
-  /**
-   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
-   * @param envelope
-   * @return
-   */
-  public static Transaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
-    org.stellar.sdk.xdr.Transaction tx = envelope.getTx();
-    int mFee = tx.getFee().getUint32();
-    Long mSequenceNumber = tx.getSeqNum().getSequenceNumber().getInt64();
-    Memo mMemo = Memo.fromXdr(tx.getMemo());
-    TimeBounds mTimeBounds = TimeBounds.fromXdr(tx.getTimeBounds());
-
-    Operation[] mOperations = new Operation[tx.getOperations().length];
-    for (int i = 0; i < tx.getOperations().length; i++) {
-      mOperations[i] = Operation.fromXdr(tx.getOperations()[i]);
+    Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
+    for (int i = 0; i < envelope.getTx().getOperations().length; i++) {
+      mOperations[i] = Operation.fromXdr(envelope.getTx().getOperations()[i]);
     }
 
     Transaction transaction = new Transaction(
-            StrKey.encodeStellarAccountId(tx.getSourceAccount().getAccountID().getEd25519().getUint256()),
-            mFee,
-            mSequenceNumber,
-            mOperations,
-            mMemo,
-            mTimeBounds,
-            network
+        StrKey.encodeStellarAccountId(envelope.getTx().getSourceAccountEd25519().getUint256()),
+        mFee,
+        mSequenceNumber,
+        mOperations,
+        mMemo,
+        mTimeBounds,
+        network
+    );
+
+    for (DecoratedSignature signature : envelope.getSignatures()) {
+      transaction.mSignatures.add(signature);
+    }
+
+    return transaction;
+  }
+
+  public static Transaction fromV1EnvelopeXdr(TransactionV1Envelope envelope, Network network) {
+    int mFee = envelope.getTx().getFee().getUint32();
+    Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
+    Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
+    TimeBounds mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getTimeBounds());
+
+    Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
+    for (int i = 0; i < envelope.getTx().getOperations().length; i++) {
+      mOperations[i] = Operation.fromXdr(envelope.getTx().getOperations()[i]);
+    }
+
+    Transaction transaction = new Transaction(
+        StrKey.encodeStellarMuxedAccount(envelope.getTx().getSourceAccount()),
+        mFee,
+        mSequenceNumber,
+        mOperations,
+        mMemo,
+        mTimeBounds,
+        network
     );
 
     for (DecoratedSignature signature : envelope.getSignatures()) {
@@ -234,57 +228,44 @@ public class Transaction {
   /**
    * Generates TransactionEnvelope XDR object.
    */
-  public org.stellar.sdk.xdr.TransactionEnvelope toEnvelopeXdr() {
-    org.stellar.sdk.xdr.TransactionEnvelope xdr = new org.stellar.sdk.xdr.TransactionEnvelope();
-    org.stellar.sdk.xdr.Transaction transaction = this.toXdr();
-    xdr.setTx(transaction);
-
+  @Override
+  public TransactionEnvelope toEnvelopeXdr() {
+    TransactionEnvelope xdr = new TransactionEnvelope();
     DecoratedSignature[] signatures = new DecoratedSignature[mSignatures.size()];
     signatures = mSignatures.toArray(signatures);
-    xdr.setSignatures(signatures);
-    return xdr;
-  }
 
-  /**
-   * Returns base64-encoded TransactionEnvelope XDR object. Transaction need to have at least one signature.
-   */
-  public String toEnvelopeXdrBase64() {
-    try {
-      org.stellar.sdk.xdr.TransactionEnvelope envelope = this.toEnvelopeXdr();
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
-      org.stellar.sdk.xdr.TransactionEnvelope.encode(xdrOutputStream, envelope);
-
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(outputStream.toByteArray());
-    } catch (IOException e) {
-      throw new AssertionError(e);
+    if (this.envelopeType == EnvelopeType.ENVELOPE_TYPE_TX) {
+      TransactionV1Envelope v1Envelope = new TransactionV1Envelope();
+      xdr.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
+      v1Envelope.setTx(this.toV1Xdr());
+      v1Envelope.setSignatures(signatures);
+      xdr.setV1(v1Envelope);
+    } else if (this.envelopeType == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
+      TransactionV0Envelope v0Envelope = new TransactionV0Envelope();
+      xdr.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX_V0);
+      v0Envelope.setTx(this.toXdr());
+      v0Envelope.setSignatures(signatures);
+      xdr.setV0(v0Envelope);
+    } else {
+      throw new RuntimeException("invalid envelope type: "+this.envelopeType);
     }
+
+    return xdr;
   }
 
   /**
    * Builds a new Transaction object.
    */
   public static class Builder {
-    private static final int BASE_FEE = 100;
     private final TransactionBuilderAccount mSourceAccount;
     private Memo mMemo;
     private TimeBounds mTimeBounds;
     List<Operation> mOperations;
     private boolean timeoutSet;
-    private static Integer defaultOperationFee;
-    private Integer operationFee;
+    private Integer mBaseFee;
     private Network mNetwork;
 
     public static final long TIMEOUT_INFINITE = 0;
-
-    public static void setDefaultOperationFee(int opFee) {
-      if (opFee < BASE_FEE) {
-        throw new IllegalArgumentException("DefaultOperationFee cannot be smaller than the BASE_FEE (" + BASE_FEE + "): " + opFee);
-      }
-
-      defaultOperationFee = opFee;
-    }
 
     /**
      * Construct a new transaction builder.
@@ -297,7 +278,6 @@ public class Transaction {
       mSourceAccount = sourceAccount;
       mOperations = Collections.synchronizedList(new ArrayList<Operation>());
       mNetwork = checkNotNull(network, "Network cannot be null");
-      operationFee = defaultOperationFee;
     }
 
     public int getOperationsCount() {
@@ -384,12 +364,12 @@ public class Transaction {
       return this;
     }
 
-    public Builder setOperationFee(int operationFee) {
-      if (operationFee < BASE_FEE) {
-        throw new IllegalArgumentException("OperationFee cannot be smaller than the BASE_FEE (" + BASE_FEE + "): " + operationFee);
+    public Builder setBaseFee(int baseFee) {
+      if (baseFee < MIN_BASE_FEE) {
+        throw new IllegalArgumentException("baseFee cannot be smaller than the BASE_FEE (" + MIN_BASE_FEE + "): " + baseFee);
       }
 
-      this.operationFee = operationFee;
+      this.mBaseFee = baseFee;
       return this;
     }
 
@@ -402,9 +382,8 @@ public class Transaction {
         throw new RuntimeException("TimeBounds has to be set or you must call setTimeout(TIMEOUT_INFINITE).");
       }
 
-      if (operationFee == null) {
-        System.out.println("[TransactionBuilder] The `operationFee` parameter of `TransactionBuilder` is required. Setting to BASE_FEE=" + BASE_FEE + ". Future versions of this library will error if not provided.");
-        operationFee = BASE_FEE;
+      if (mBaseFee == null) {
+        throw new RuntimeException("mBaseFee has to be set. you must call setBaseFee().");
       }
 
       if (mNetwork == null) {
@@ -415,7 +394,7 @@ public class Transaction {
       operations = mOperations.toArray(operations);
       Transaction transaction = new Transaction(
               mSourceAccount.getAccountId(),
-              operations.length * operationFee,
+              operations.length * mBaseFee,
               mSourceAccount.getIncrementedSequenceNumber(),
               operations,
               mMemo,
@@ -437,7 +416,8 @@ public class Transaction {
             Arrays.hashCode(this.mOperations),
             this.mMemo,
             this.mTimeBounds,
-            this.mSignatures
+            this.mSignatures,
+            this.mNetwork
     );
   }
 
@@ -454,6 +434,7 @@ public class Transaction {
             Arrays.equals(this.mOperations, other.mOperations) &&
             Objects.equal(this.mMemo, other.mMemo) &&
             Objects.equal(this.mTimeBounds, other.mTimeBounds) &&
+            Objects.equal(this.mNetwork, other.mNetwork) &&
             Objects.equal(this.mSignatures, other.mSignatures);
   }
 }
