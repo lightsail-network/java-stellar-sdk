@@ -11,7 +11,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 * Add `FeeBumpTransaction` and `FeeBumpTransaction.Builder` for parsing and creating [CAP 15 Fee-Bump Transactions](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0015.md). (https://github.com/stellar/java-stellar-sdk/pull/278)
 * Add methods to `Server` for submitting [CAP 15 Fee-Bump Transactions](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0015.md). (https://github.com/stellar/java-stellar-sdk/pull/278)
 * Update SEP 10 implementation to reject fee-bump transactions and transactions with multiplexed addresses. (https://github.com/stellar/java-stellar-sdk/pull/278)
-* Update SEP 29 implementation to handle bump transactions. (https://github.com/stellar/java-stellar-sdk/pull/278)
+* Update SEP 29 implementation to handle bump transactions ([#278](https://github.com/stellar/java-stellar-sdk/pull/278)).
 
 
 ## 0.15.0
