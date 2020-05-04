@@ -438,6 +438,7 @@ public class OperationTest {
         Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
