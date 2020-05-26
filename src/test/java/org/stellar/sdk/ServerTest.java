@@ -389,9 +389,27 @@ public class ServerTest {
             .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
-        transaction.sign(source);
-        server.submitTransaction(transaction);
-        server.submitTransaction(feeBump(transaction));
+
+        try {
+            transaction.sign(source);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
+        }
+
+        try {
+            server.submitTransaction(transaction);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
+        }
+
+        try {
+            server.submitTransaction(feeBump(transaction));
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
+        }
     }
 
     @Test

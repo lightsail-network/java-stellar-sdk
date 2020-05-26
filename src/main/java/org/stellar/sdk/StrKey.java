@@ -10,11 +10,9 @@ import java.util.Arrays;
 class StrKey {
 
     public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
-    public static final int MUXED_ACCOUNT_ADDRESS_LENGTH = 69;
 
     public enum VersionByte {
         ACCOUNT_ID((byte)(6 << 3)), // G
-        MUXED_ACCOUNT((byte)(12 << 3)), // M
         SEED((byte)(18 << 3)), // S
         PRE_AUTH_TX((byte)(19 << 3)), // T
         SHA256_HASH((byte)(23 << 3)); // X
@@ -53,16 +51,7 @@ class StrKey {
         if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_ED25519)) {
             return encodeStellarAccountId(account.getEd25519().getUint256());
         } else if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_MUXED_ED25519)) {
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-
-            try {
-                account.getMed25519().encode(new XdrDataOutputStream(byteStream));
-            } catch (IOException e) {
-                throw new IllegalArgumentException("invalid muxed account", e);
-            }
-
-            char[] encoded = encodeCheck(VersionByte.MUXED_ACCOUNT, byteStream.toByteArray());
-            return String.valueOf(encoded);
+            return encodeStellarAccountId(account.getMed25519().getEd25519().getUint256());
         }
         throw new IllegalArgumentException("invalid muxed account type: "+account.getDiscriminant());
     }
@@ -95,17 +84,6 @@ class StrKey {
                 throw new IllegalArgumentException("invalid address: "+data, e);
             }
             return accountID;
-        } else if (data.length() == MUXED_ACCOUNT_ADDRESS_LENGTH) {
-            MuxedAccount muxedAccount = new MuxedAccount();
-            muxedAccount.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
-            try {
-                muxedAccount.setMed25519(MuxedAccount.MuxedAccountMed25519.decode(
-                    new XdrDataInputStream(new ByteArrayInputStream(decodeStellarMuxedAccount(data)))
-                ));
-            } catch (IOException e) {
-                throw new IllegalArgumentException("invalid address: "+data, e);
-            }
-            return muxedAccount;
         }
         throw new IllegalArgumentException("invalid address length: "+data);
     }
@@ -124,11 +102,6 @@ class StrKey {
     public static byte[] decodeStellarAccountId(String data) {
         return decodeCheck(VersionByte.ACCOUNT_ID, data.toCharArray());
     }
-
-    public static byte[] decodeStellarMuxedAccount(String data) {
-        return decodeCheck(VersionByte.MUXED_ACCOUNT, data.toCharArray());
-    }
-
 
     public static char[] encodeStellarSecretSeed(byte[] data) {
         return encodeCheck(VersionByte.SEED, data);
