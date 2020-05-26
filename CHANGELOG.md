@@ -2,6 +2,10 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.17.0
+
+* Rollback support for SEP23 (Muxed Account StrKey) ([#282](https://github.com/stellar/java-stellar-sdk/pull/282)).
+
 ## 0.16.0
 
 * Update XDR definitions and auto-generated classes to support upcoming protocol 13 release ([#276](https://github.com/stellar/java-stellar-sdk/pull/276)).
