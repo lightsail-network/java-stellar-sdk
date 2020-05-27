@@ -183,7 +183,7 @@ public class StrKeyTest {
     MuxedAccount muxedAccount = StrKey.encodeToXDRMuxedAccount(address);
     assertEquals(CryptoKeyType.KEY_TYPE_ED25519, muxedAccount.getDiscriminant());
     assertArrayEquals(ed25519, muxedAccount.getEd25519().getUint256());
-    assertEquals(address, StrKey.encodeStellarMuxedAccount(muxedAccount));
+    assertEquals(address, StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(muxedAccount)));
   }
 
   @Test

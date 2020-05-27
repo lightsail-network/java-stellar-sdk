@@ -130,7 +130,7 @@ public class PathPaymentStrictSendOperation extends Operation {
     Builder(PathPaymentStrictSendOp op) {
       sendAsset = Asset.fromXdr(op.getSendAsset());
       sendAmount = Operation.fromXdrAmount(op.getSendAmount().getInt64().longValue());
-      destination = StrKey.encodeStellarMuxedAccount(op.getDestination());
+      destination = StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(op.getDestination()));
       destAsset = Asset.fromXdr(op.getDestAsset());
       destMin = Operation.fromXdrAmount(op.getDestMin().getInt64().longValue());
       path = new Asset[op.getPath().length];

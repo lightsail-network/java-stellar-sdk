@@ -47,13 +47,21 @@ class StrKey {
     }
 
 
-    public static String encodeStellarMuxedAccount(MuxedAccount account) {
+    public static AccountID muxedAccountToAccountId(MuxedAccount account) {
+        AccountID aid = new AccountID();
+        PublicKey key = new PublicKey();
+        key.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
+
         if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_ED25519)) {
-            return encodeStellarAccountId(account.getEd25519().getUint256());
+            key.setEd25519(account.getEd25519());
         } else if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_MUXED_ED25519)) {
-            return encodeStellarAccountId(account.getMed25519().getEd25519().getUint256());
+            key.setEd25519(account.getMed25519().getEd25519());
+        } else {
+            throw new IllegalArgumentException("invalid muxed account type: "+account.getDiscriminant());
         }
-        throw new IllegalArgumentException("invalid muxed account type: "+account.getDiscriminant());
+
+        aid.setAccountID(key);
+        return aid;
     }
 
 

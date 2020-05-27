@@ -81,7 +81,7 @@ public class PaymentOperation extends Operation {
      * @param op {@link PaymentOp}
      */
     Builder(PaymentOp op) {
-      destination = StrKey.encodeStellarMuxedAccount(op.getDestination());
+      destination = StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(op.getDestination()));
       asset = Asset.fromXdr(op.getAsset());
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
     }
