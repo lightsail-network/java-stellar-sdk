@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.common.primitives.UnsignedLongs;
 import org.junit.Test;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
@@ -41,11 +40,20 @@ public class StrKeyTest {
 
   @Test()
   public void testDecodedVersionByte() {
-    assertEquals(StrKey.decodeVersionByte("MBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG"), StrKey.VersionByte.MUXED_ACCOUNT);
     assertEquals(StrKey.decodeVersionByte("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR"), StrKey.VersionByte.ACCOUNT_ID);
     assertEquals(StrKey.decodeVersionByte("SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE"), StrKey.VersionByte.SEED);
     assertEquals(StrKey.decodeVersionByte("TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4"), StrKey.VersionByte.PRE_AUTH_TX);
     assertEquals(StrKey.decodeVersionByte("XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD"), StrKey.VersionByte.SHA256_HASH);
+  }
+
+  @Test()
+  public void testDecodedVersionByteMAddress() {
+    try {
+      StrKey.decodeVersionByte("MBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG");
+      fail();
+    } catch (FormatException e) {
+      assertEquals("Version byte is invalid", e.getMessage());
+    }
   }
 
   @Test()
@@ -131,24 +139,6 @@ public class StrKeyTest {
   }
 
   @Test
-  public void testRoundTripMuxedFromBytes() {
-    byte[] data = rawBytes(
-        0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x3f, 0x0c, 0x34, 0xbf, 0x93, 0xad, 0x0d, 0x99,
-        0x71, 0xd0, 0x4c, 0xcc, 0x90, 0xf7, 0x05, 0x51,
-        0x1c, 0x83, 0x8a, 0xad, 0x97, 0x34, 0xa4, 0xa2,
-        0xfb, 0x0d, 0x7a, 0x03, 0xfc, 0x7f, 0xe8, 0x9a
-    );
-    String muxed = "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG";
-    assertEquals(
-        muxed,
-        String.valueOf(StrKey.encodeCheck(StrKey.VersionByte.MUXED_ACCOUNT, data))
-    );
-    assertArrayEquals(data, StrKey.decodeCheck(StrKey.VersionByte.MUXED_ACCOUNT, muxed.toCharArray()));
-  }
-
-
-  @Test
   public void testDecodeEmpty() {
     try {
       StrKey.decodeCheck(StrKey.VersionByte.ACCOUNT_ID, "".toCharArray());
@@ -178,147 +168,6 @@ public class StrKeyTest {
     }
   }
 
-
-  @Test
-  public void testMuxedDecodeErrors() {
-    // non-canonical representation due to extra character
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOGA".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Encoded char array has leftover character."));
-
-    }
-
-    // non-canonical representation due to leftover bits set to 1 (some of the test strkeys are too short for a muxed account
-
-    // 1 unused bit (length 69)
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOH".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-
-    // 4 unused bits (length 68)
-
-    // 'B' is equivalent to 0b00001
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNB".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-    // 'C' is equivalent to 0b00010
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNC".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-    // 'E' is equivalent to 0b00100
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNE".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-    // 'I' is equivalent to 0b01000
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNI".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-    // '7' is equivalent to 0b11111
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKN7".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-    // '6' is equivalent to 0b11110
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKN6".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-    // '4' is equivalent to 0b11100
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKN4".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-    // 'Y' is equivalent to 0b11000
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNY".toCharArray()
-      );
-      fail();
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unused bits should be set to 0."));
-
-    }
-
-
-    // 'Q' is equivalent to 0b10000, so there should be no unused bits error
-    // However, there will be a checksum error
-    try {
-      StrKey.decodeCheck(
-          StrKey.VersionByte.MUXED_ACCOUNT,
-          "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNQ".toCharArray()
-      );
-    } catch (Exception e) {
-      assertEquals("Checksum invalid", e.getMessage());
-    }
-  }
-
   @Test
   public void testEncodeToXdrRoundTrip() {
     String address = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
@@ -334,22 +183,18 @@ public class StrKeyTest {
     MuxedAccount muxedAccount = StrKey.encodeToXDRMuxedAccount(address);
     assertEquals(CryptoKeyType.KEY_TYPE_ED25519, muxedAccount.getDiscriminant());
     assertArrayEquals(ed25519, muxedAccount.getEd25519().getUint256());
-    assertEquals(address, StrKey.encodeStellarMuxedAccount(muxedAccount));
+    assertEquals(address, StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(muxedAccount)));
+  }
 
-    String muxedAddress = "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG";
-    muxedAccount = StrKey.encodeToXDRMuxedAccount(muxedAddress);
-    assertEquals(CryptoKeyType.KEY_TYPE_MUXED_ED25519, muxedAccount.getDiscriminant());
-    assertArrayEquals(ed25519, muxedAccount.getMed25519().getEd25519().getUint256());
-    long memoId = UnsignedLongs.parseUnsignedLong("9223372036854775808");
-    assertEquals(memoId, muxedAccount.getMed25519().getId().getUint64().longValue());
-    assertEquals(muxedAddress, StrKey.encodeStellarMuxedAccount(muxedAccount));
-
-    muxedAddress = "MAAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITLVL6";
-    muxedAccount = StrKey.encodeToXDRMuxedAccount(muxedAddress);
-    assertEquals(CryptoKeyType.KEY_TYPE_MUXED_ED25519, muxedAccount.getDiscriminant());
-    assertArrayEquals(ed25519, muxedAccount.getMed25519().getEd25519().getUint256());
-    assertEquals(0, muxedAccount.getMed25519().getId().getUint64().longValue());
-    assertEquals(muxedAddress, StrKey.encodeStellarMuxedAccount(muxedAccount));
+  @Test
+  public void testEncodeToXDRMuxedAccountMAddress() {
+    try {
+      String muxedAddress = "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG";
+      StrKey.encodeToXDRMuxedAccount(muxedAddress);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
+    }
   }
 
 }

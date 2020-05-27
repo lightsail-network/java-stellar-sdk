@@ -39,7 +39,8 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
   public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(FeeBumpTransactionEnvelope envelope, Network network) {
     Transaction inner = Transaction.fromV1EnvelopeXdr(envelope.getTx().getInnerTx().getV1(), network);
-    String feeAccount = StrKey.encodeStellarMuxedAccount(envelope.getTx().getFeeSource());
+    String feeAccount = StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(envelope.getTx().getFeeSource()));
+
     long fee = envelope.getTx().getFee().getInt64();
 
     FeeBumpTransaction feeBump = new FeeBumpTransaction(feeAccount, fee, inner);

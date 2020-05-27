@@ -209,7 +209,7 @@ public class Transaction extends AbstractTransaction {
     }
 
     Transaction transaction = new Transaction(
-        StrKey.encodeStellarMuxedAccount(envelope.getTx().getSourceAccount()),
+        StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(envelope.getTx().getSourceAccount())),
         mFee,
         mSequenceNumber,
         mOperations,

@@ -15,7 +15,7 @@ public class FeeBumpTransactionTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction inner = new Transaction.Builder(account, Network.TESTNET)
         .addOperation(new PaymentOperation.Builder(
-            "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG",
+            "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ",
             new AssetTypeNative(),
             "200"
         ).build())
@@ -153,14 +153,14 @@ public class FeeBumpTransactionTest {
   @Test
   public void testHash() {
     Transaction inner = createInnerTransaction();
-    assertEquals("95dcf35a43a1a05bcd50f3eb148b31127829a9460dc32a17c4a7f7c4677409d4", inner.hashHex());
+    assertEquals("2a8ead3351faa7797b284f59027355ddd69c21adb8e4da0b9bb95531f7f32681", inner.hashHex());
 
     FeeBumpTransaction feeBump = new FeeBumpTransaction.Builder(inner)
         .setBaseFee(Transaction.MIN_BASE_FEE * 2)
         .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
         .build();
 
-    assertEquals("382b1588ee8b315177a34ae96ebcaeb81c0ad3e04fee7c6b5a583b826517e1e4", feeBump.hashHex());
+    assertEquals("58266712c0c1d1cd98faa0e0159605a361cf2a5ca44ad69650eeb1d27ee62334", feeBump.hashHex());
   }
 
   @Test
