@@ -43,9 +43,7 @@ public class AccountMergeOperation extends Operation {
         private String mSourceAccount;
 
         Builder(OperationBody op) {
-            destination = StrKey.encodeStellarMuxedAccount(
-                    op.getDestination()
-            );
+            destination = StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(op.getDestination()));
         }
 
         /**

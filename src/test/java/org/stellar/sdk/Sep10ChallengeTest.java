@@ -73,8 +73,8 @@ public class Sep10ChallengeTest {
           timeBounds
       );
       fail();
-    } catch (InvalidSep10ChallengeException e) {
-      assertEquals("MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG is not a valid account id", e.getMessage());
+    } catch (FormatException e) {
+      assertEquals("Version byte is invalid", e.getMessage());
     }
 
   }
@@ -164,8 +164,8 @@ public class Sep10ChallengeTest {
           Network.TESTNET
       );
       fail();
-    } catch (InvalidSep10ChallengeException e) {
-      assertEquals("serverAccountId: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG is not a valid account id", e.getMessage());
+    } catch (FormatException e) {
+      assertEquals("Version byte is invalid", e.getMessage());
     }
   }
 
@@ -206,8 +206,8 @@ public class Sep10ChallengeTest {
           Network.TESTNET
       );
       fail();
-    } catch (InvalidSep10ChallengeException e) {
-      assertEquals("serverAccountId: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG is not a valid account id", e.getMessage());
+    } catch (IllegalArgumentException e) {
+      assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
     }
   }
 

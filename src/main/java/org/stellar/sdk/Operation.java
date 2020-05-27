@@ -115,7 +115,7 @@ public abstract class Operation {
     }
     if (xdr.getSourceAccount() != null) {
       operation.setSourceAccount(
-          StrKey.encodeStellarMuxedAccount(xdr.getSourceAccount())
+          StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(xdr.getSourceAccount()))
       );
     }
     return operation;
