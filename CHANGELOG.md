@@ -2,6 +2,11 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.18.0
+
+* Generate V1 transaction envelopes when constructing new Transaction instances ([#285](https://github.com/stellar/java-stellar-sdk/pull/285/files)).
+* Allow FeeBumpTransaction instances to wrap V0 transactions ([#285](https://github.com/stellar/java-stellar-sdk/pull/285/files)).
+
 ## 0.17.0
 
 * Rollback support for SEP23 (Muxed Account StrKey) ([#282](https://github.com/stellar/java-stellar-sdk/pull/282)).
