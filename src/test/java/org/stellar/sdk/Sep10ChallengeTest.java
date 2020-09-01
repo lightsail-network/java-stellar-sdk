@@ -25,12 +25,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         Network.TESTNET,
         client.getAccountId(),
-        "angkor wat",
+        domainName,
         timeBounds
     );
 
@@ -44,7 +45,7 @@ public class Sep10ChallengeTest {
     assertEquals(1, transaction.getOperations().length);
     ManageDataOperation op = (ManageDataOperation) transaction.getOperations()[0];
     assertEquals(client.getAccountId(), op.getSourceAccount());
-    assertEquals("angkor wat auth", op.getName());
+    assertEquals(domainName + " auth", op.getName());
 
     assertEquals(64, op.getValue().length);
     BaseEncoding base64Encoding = BaseEncoding.base64();
@@ -64,12 +65,13 @@ public class Sep10ChallengeTest {
       long now = System.currentTimeMillis() / 1000L;
       long end = now + 300;
       TimeBounds timeBounds = new TimeBounds(now, end);
+      String domainName = "example.com";
 
       Sep10Challenge.newChallenge(
           server,
           Network.TESTNET,
           "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG",
-          "angkor wat",
+          domainName,
           timeBounds
       );
       fail();
@@ -84,6 +86,7 @@ public class Sep10ChallengeTest {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
+    String domainName = "example.com";
 
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
@@ -93,11 +96,11 @@ public class Sep10ChallengeTest {
         server,
         network,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
-    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET);
+    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName);
     assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
   }
 
@@ -106,6 +109,7 @@ public class Sep10ChallengeTest {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
+    String domainName = "example.com";
 
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
@@ -115,7 +119,7 @@ public class Sep10ChallengeTest {
         server,
         network,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -133,7 +137,7 @@ public class Sep10ChallengeTest {
       Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(
           envelopeBase64,
           server.getAccountId(),
-          Network.TESTNET
+          Network.TESTNET, domainName
       );
       assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
     }
@@ -148,12 +152,14 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -161,7 +167,7 @@ public class Sep10ChallengeTest {
       Sep10Challenge.readChallengeTransaction(
           transaction.toEnvelopeXdrBase64(),
           "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG",
-          Network.TESTNET
+          Network.TESTNET, domainName
       );
       fail();
     } catch (FormatException e) {
@@ -174,6 +180,7 @@ public class Sep10ChallengeTest {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
+    String domainName = "example.com";
 
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
@@ -183,7 +190,7 @@ public class Sep10ChallengeTest {
         server,
         network,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
     Operation[] operations = transaction.getOperations();
@@ -203,7 +210,7 @@ public class Sep10ChallengeTest {
       Sep10Challenge.readChallengeTransaction(
           withMuxedClient.toEnvelopeXdrBase64(),
           "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG",
-          Network.TESTNET
+          Network.TESTNET, domainName
       );
       fail();
     } catch (IllegalArgumentException e) {
@@ -220,18 +227,20 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     transaction.sign(client);
 
-    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET);
+    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName);
     assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
   }
 
@@ -239,7 +248,7 @@ public class Sep10ChallengeTest {
   public void testReadChallengeTransactionInvalidNotSignedByServer() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -253,7 +262,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
 
@@ -270,7 +279,7 @@ public class Sep10ChallengeTest {
 
     transaction.sign(client);
     try {
-      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network);
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals(String.format("Transaction not signed by server: %s.", server.getAccountId()), e.getMessage());
@@ -286,19 +295,20 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     String challenge = transaction.toEnvelopeXdrBase64().replace("A", "B");
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (RuntimeException ignored) {
       // TODO: I think we should add an exception signature about the failure to read XDR on Transaction.fromEnvelopeXdr.
@@ -313,18 +323,19 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         Network.TESTNET,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     // assertThrows requires Java 8+
     try {
-      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), KeyPair.random().getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), KeyPair.random().getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction source account is not equal to server's account.", e.getMessage());
@@ -335,7 +346,8 @@ public class Sep10ChallengeTest {
   public void testReadChallengeTransactionInvalidSeqNoNotZero() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -349,7 +361,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), 100L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
 
@@ -367,7 +379,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("The transaction sequence number should be zero.", e.getMessage());
@@ -378,7 +390,8 @@ public class Sep10ChallengeTest {
   public void testReadChallengeTransactionInvalidTimeboundsInfinite() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -392,7 +405,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation operation = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation operation = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation};
@@ -409,7 +422,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction requires non-infinite timebounds.", e.getMessage());
@@ -420,7 +433,8 @@ public class Sep10ChallengeTest {
   public void testReadChallengeTransactionInvalidNoTimeBounds() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     byte[] nonce = new byte[48];
@@ -430,7 +444,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation operation = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation operation = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation};
@@ -447,7 +461,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction requires timebounds.", e.getMessage());
@@ -463,17 +477,18 @@ public class Sep10ChallengeTest {
     long start = current + 300;
     long end = current + 600;
     TimeBounds timeBounds = new TimeBounds(start, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         Network.TESTNET,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     try {
-      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction is not within range of the specified timebounds.", e.getMessage());
@@ -489,17 +504,18 @@ public class Sep10ChallengeTest {
     long start = current - 600;
     long end = current - 300;
     TimeBounds timeBounds = new TimeBounds(start, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         Network.TESTNET,
         client.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     try {
-      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction is not within range of the specified timebounds.", e.getMessage());
@@ -510,7 +526,8 @@ public class Sep10ChallengeTest {
   public void testReadChallengeTransactionInvalidTooManyOperations() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -524,11 +541,11 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
 
-    ManageDataOperation manageDataOperation2 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation2 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
 
@@ -546,7 +563,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction requires a single ManageData operation.", e.getMessage());
@@ -562,6 +579,7 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     SetOptionsOperation setOptionsOperation = new SetOptionsOperation.Builder()
@@ -582,7 +600,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Operation type should be ManageData.", e.getMessage());
@@ -592,7 +610,8 @@ public class Sep10ChallengeTest {
   @Test
   public void testReadChallengeTransactionInvalidOperationNoSourceAccount() throws IOException {
     KeyPair server = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -606,7 +625,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
@@ -623,7 +642,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Operation should have a source account.", e.getMessage());
@@ -634,7 +653,8 @@ public class Sep10ChallengeTest {
   public void testReadChallengeTransactionInvalidDataValueWrongEncodedLength() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -648,7 +668,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
 
@@ -666,7 +686,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Random nonce encoded as base64 should be 64 bytes long.", e.getMessage());
@@ -677,7 +697,8 @@ public class Sep10ChallengeTest {
   public void testReadChallengeTransactionInvalidDataValueCorruptBase64() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -686,7 +707,7 @@ public class Sep10ChallengeTest {
 
     byte[] encodedNonce = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA?AAAAAAAAAAAAAAAAAAAAAAAAAA".getBytes("UTF-8");
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
 
@@ -704,7 +725,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Failed to decode random nonce provided in ManageData operation.", e.getMessage());
@@ -716,7 +737,8 @@ public class Sep10ChallengeTest {
   public void testReadChallengeTransactionInvalidDataValueWrongByteLength() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -730,7 +752,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(client.getAccountId())
         .build();
 
@@ -748,10 +770,43 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Random nonce before encoding as base64 should be 48 bytes long.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidDomainNameMismatch() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+    String mismatchDomainName = "mismatch_example.com";
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    Transaction transaction = null;
+    try {
+      transaction = Sep10Challenge.newChallenge(
+          server,
+          network,
+          client.getAccountId(),
+          domainName,
+          timeBounds
+      );
+    } catch (InvalidSep10ChallengeException e) {
+      fail("Should not have thrown any exception.");
+    }
+
+    try {
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, mismatchDomainName);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("The transaction's operation key name does not include the expected home domain.", e.getMessage());
     }
   }
 
@@ -762,7 +817,7 @@ public class Sep10ChallengeTest {
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
     KeyPair signerClient2 = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
 
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
@@ -775,7 +830,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(masterClient.getAccountId())
         .build();
 
@@ -800,7 +855,7 @@ public class Sep10ChallengeTest {
 
     int threshold = 6;
     try {
-      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals(String.format("Transaction not signed by server: %s.", server.getAccountId()), e.getMessage());
@@ -817,12 +872,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -833,7 +889,7 @@ public class Sep10ChallengeTest {
     ));
 
     int threshold = 255;
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
     assertEquals(new HashSet<String>(Collections.singletonList(masterClient.getAccountId())), signersFound);
   }
 
@@ -847,12 +903,14 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -867,7 +925,7 @@ public class Sep10ChallengeTest {
     ));
 
     int threshold = 7;
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
     assertEquals(new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId())), signersFound);
   }
 
@@ -881,12 +939,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -900,7 +959,7 @@ public class Sep10ChallengeTest {
     ));
 
     int threshold = 3;
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
     assertEquals(new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId())), signersFound);
   }
 
@@ -915,12 +974,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -940,7 +1000,7 @@ public class Sep10ChallengeTest {
     ));
 
     int threshold = 3;
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
     assertEquals(new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId())), signersFound);
   }
 
@@ -955,12 +1015,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -975,7 +1036,7 @@ public class Sep10ChallengeTest {
 
     int threshold = 7;
     try {
-      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Signers with weight 3 do not meet threshold 7.", e.getMessage());
@@ -993,12 +1054,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1015,7 +1077,7 @@ public class Sep10ChallengeTest {
 
     int threshold = 7;
     try {
-      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction has unrecognized signatures.", e.getMessage());
@@ -1033,12 +1095,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1049,7 +1112,7 @@ public class Sep10ChallengeTest {
     Set<Sep10Challenge.Signer> signers = Collections.emptySet();
     int threshold = 3;
     try {
-      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
@@ -1067,12 +1130,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1091,7 +1155,7 @@ public class Sep10ChallengeTest {
     int threshold = 3;
 
     try {
-      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+      Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
@@ -1107,12 +1171,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1125,7 +1190,7 @@ public class Sep10ChallengeTest {
     ));
 
     int threshold = 1;
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, threshold, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
     assertEquals(new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId())), signersFound);
   }
 
@@ -1135,7 +1200,8 @@ public class Sep10ChallengeTest {
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
     KeyPair signerClient2 = KeyPair.random();
-    String anchorName = "Stellar Test";
+    String domainName = "example.com";
+
     Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
@@ -1149,7 +1215,7 @@ public class Sep10ChallengeTest {
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(anchorName + " auth", encodedNonce)
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
         .setSourceAccount(masterClient.getAccountId())
         .build();
 
@@ -1170,7 +1236,7 @@ public class Sep10ChallengeTest {
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId()));
     try {
-      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals(String.format("Transaction not signed by server: %s.", server.getAccountId()), e.getMessage());
@@ -1186,19 +1252,20 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     transaction.sign(masterClient);
 
     Set<String> signers = new HashSet<String>(Collections.singletonList(masterClient.getAccountId()));
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
     assertEquals(signers, signersFound);
   }
 
@@ -1213,18 +1280,19 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId()));
     try {
-      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction not signed by any client signer.", e.getMessage());
@@ -1242,12 +1310,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1258,7 +1327,7 @@ public class Sep10ChallengeTest {
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId()));
     try {
-      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction has unrecognized signatures.", e.getMessage());
@@ -1276,12 +1345,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1289,7 +1359,7 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient2);
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId()));
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
     assertEquals(new HashSet<String>(Arrays.asList(signerClient1.getAccountId(), signerClient2.getAccountId())), signersFound);
   }
 
@@ -1304,12 +1374,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1317,7 +1388,7 @@ public class Sep10ChallengeTest {
     transaction.sign(signerClient1);
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), signerClient2.getAccountId(), KeyPair.random().getAccountId()));
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
     assertEquals(new HashSet<String>(Arrays.asList(signerClient1.getAccountId(), signerClient2.getAccountId())), signersFound);
   }
 
@@ -1332,19 +1403,20 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     transaction.sign(signerClient1);
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId()));
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
     assertEquals(new HashSet<String>(Collections.singletonList(signerClient1.getAccountId())), signersFound);
   }
 
@@ -1358,19 +1430,20 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     transaction.sign(signerClient1);
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), server.getAccountId()));
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
     assertEquals(new HashSet<String>(Collections.singletonList(signerClient1.getAccountId())), signersFound);
   }
 
@@ -1385,18 +1458,19 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId(), server.getAccountId()));
     try {
-      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction not signed by any client signer.", e.getMessage());
@@ -1414,12 +1488,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1430,7 +1505,7 @@ public class Sep10ChallengeTest {
     String unknownSignerType = "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD";
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(),
         signerClient1.getAccountId(), preauthTxHash, xHash, unknownSignerType));
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
     assertEquals(new HashSet<String>(Collections.singletonList(signerClient1.getAccountId())), signersFound);
   }
 
@@ -1444,12 +1519,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1458,7 +1534,7 @@ public class Sep10ChallengeTest {
 
     Set<String> signers = new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId()));
     try {
-      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction has unrecognized signatures.", e.getMessage());
@@ -1475,12 +1551,13 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
@@ -1488,7 +1565,7 @@ public class Sep10ChallengeTest {
 
     Set<String> signers = new HashSet<String>(Collections.singletonList(new String(signerClient1.getSecretSeed())));
     try {
-      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, signers);
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
@@ -1501,6 +1578,7 @@ public class Sep10ChallengeTest {
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
     Network network = Network.TESTNET;
+    String domainName = "example.com";
 
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
@@ -1510,14 +1588,14 @@ public class Sep10ChallengeTest {
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     transaction.sign(signerClient1);
 
     try {
-      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, null);
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, null);
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
@@ -1534,19 +1612,20 @@ public class Sep10ChallengeTest {
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         masterClient.getAccountId(),
-        "Stellar Test",
+        domainName,
         timeBounds
     );
 
     transaction.sign(signerClient1);
 
     try {
-      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, Collections.<String>emptySet());
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, Collections.<String>emptySet());
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
