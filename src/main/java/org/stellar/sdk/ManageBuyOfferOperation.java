@@ -16,10 +16,10 @@ public class ManageBuyOfferOperation extends Operation {
     private final Asset selling;
     private final Asset buying;
     private final String amount;
-    private final String price;
+    private final Price price;
     private final long offerId;
 
-    private ManageBuyOfferOperation(Asset selling, Asset buying, String amount, String price, long offerId) {
+    private ManageBuyOfferOperation(Asset selling, Asset buying, String amount, Price price, long offerId) {
         this.selling = checkNotNull(selling, "selling cannot be null");
         this.buying = checkNotNull(buying, "buying cannot be null");
         this.amount = checkNotNull(amount, "amount cannot be null");
@@ -52,7 +52,7 @@ public class ManageBuyOfferOperation extends Operation {
     /**
      * Price of thing being bought in terms of what you are selling.
      */
-    public String getPrice() {
+    public Price getPrice() {
         return price;
     }
 
@@ -71,7 +71,7 @@ public class ManageBuyOfferOperation extends Operation {
         Int64 amount = new Int64();
         amount.setInt64(Operation.toXdrAmount(this.amount));
         op.setBuyAmount(amount);
-        Price price = Price.fromString(this.price);
+        Price price = this.price;
         op.setPrice(price.toXdr());
         Int64 offerId = new Int64();
         offerId.setInt64(Long.valueOf(this.offerId));
@@ -95,7 +95,7 @@ public class ManageBuyOfferOperation extends Operation {
         private final Asset selling;
         private final Asset buying;
         private final String amount;
-        private final String price;
+        private final Price price;
         private long offerId = 0;
 
         private String mSourceAccount;
@@ -109,7 +109,7 @@ public class ManageBuyOfferOperation extends Operation {
             selling = Asset.fromXdr(op.getSelling());
             buying = Asset.fromXdr(op.getBuying());
             amount = Operation.fromXdrAmount(op.getBuyAmount().getInt64().longValue());
-            price = Price.fromXdr(op.getPrice()).toString();
+            price = Price.fromXdr(op.getPrice());
             offerId = op.getOfferID().getInt64().longValue();
         }
 
@@ -123,7 +123,7 @@ public class ManageBuyOfferOperation extends Operation {
          * @param price   Price of thing being bought in terms of what you are selling.
          * @throws ArithmeticException when amount has more than 7 decimal places.
          */
-        public Builder(Asset selling, Asset buying, String amount, String price) {
+        public Builder(Asset selling, Asset buying, String amount, Price price) {
             this.selling = checkNotNull(selling, "selling cannot be null");
             this.buying = checkNotNull(buying, "buying cannot be null");
             this.amount = checkNotNull(amount, "amount cannot be null");

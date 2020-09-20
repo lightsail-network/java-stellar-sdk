@@ -483,7 +483,7 @@ public class OperationTest {
         Price priceObj = Price.fromString(price);
         long offerId = 1;
 
-        ManageSellOfferOperation operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price)
+        ManageSellOfferOperation operation = new ManageSellOfferOperation.Builder(selling, buying, amount, priceObj)
                 .setOfferId(offerId)
                 .setSourceAccount(source.getAccountId())
                 .build();
@@ -496,7 +496,7 @@ public class OperationTest {
         assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
         assertTrue(parsedOperation.getBuying().equals(buying));
         assertEquals(amount, parsedOperation.getAmount());
-        assertEquals(price, parsedOperation.getPrice());
+        assertEquals(price, parsedOperation.getPrice().toString());
         assertEquals(priceObj.getNumerator(), 5333399);
         assertEquals(priceObj.getDenominator(), 6250000);
         assertEquals(offerId, parsedOperation.getOfferId());
@@ -520,7 +520,7 @@ public class OperationTest {
         Price priceObj = Price.fromString(price);
         long offerId = 1;
 
-        ManageBuyOfferOperation operation = new ManageBuyOfferOperation.Builder(selling, buying, amount, price)
+        ManageBuyOfferOperation operation = new ManageBuyOfferOperation.Builder(selling, buying, amount, priceObj)
                 .setOfferId(offerId)
                 .setSourceAccount(source.getAccountId())
                 .build();
@@ -533,7 +533,7 @@ public class OperationTest {
         assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
         assertTrue(parsedOperation.getBuying().equals(buying));
         assertEquals(amount, parsedOperation.getAmount());
-        assertEquals(price, parsedOperation.getPrice());
+        assertEquals(price, parsedOperation.getPrice().toString());
         assertEquals(priceObj.getNumerator(), 5333399);
         assertEquals(priceObj.getDenominator(), 6250000);
         assertEquals(offerId, parsedOperation.getOfferId());
@@ -556,7 +556,8 @@ public class OperationTest {
 
         ManageSellOfferOperation op = (ManageSellOfferOperation) Operation.fromXdr(transactionEnvelope.getV0().getTx().getOperations()[0]);
 
-        assertEquals("3397.893306099996", op.getPrice());
+        assertEquals(667101597, op.getPrice().getNumerator());
+        assertEquals(196328, op.getPrice().getDenominator());
     }
 
     @Test
@@ -572,7 +573,8 @@ public class OperationTest {
 
         ManageBuyOfferOperation op = (ManageBuyOfferOperation) Operation.fromXdr(transactionEnvelope.getV0().getTx().getOperations()[0]);
 
-        assertEquals("3397.893306099996", op.getPrice());
+        assertEquals(667101597, op.getPrice().getNumerator());
+        assertEquals(196328, op.getPrice().getDenominator());
     }
 
     @Test

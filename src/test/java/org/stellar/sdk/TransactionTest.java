@@ -464,4 +464,20 @@ public class TransactionTest {
             assertTrue(e.getMessage().contains("Network cannot be null"));
         }
     }
+
+    @Test
+    public void offerWithPriceFractionsNotInLowestTerms() throws IOException {
+
+        //numerator is 10000000
+        //denominator is 50
+        //decode transaction should maintain same values without attempting to reduce fraction to its lowest terms.
+        String envelope = "AAAAAgAAAADyfFnjmoCWKyzSBOiKQzP3K8l5z5/uF+pQ2ruXEh9+qAAAAGQADM4dAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAK0KBx2qoQ+o9JNLweoxVw6UYcRUzyKQH/ExRjJ63HEBAAAAAwAAAAFCVEMAAAAAAC8/6Fx60RqPg0dQCYSIhede3rzDSAWgvrFAsTn0LiI8AAAAAAAAAAAAAAAzAJiWgAAAADIAAAAAAAAAAAAAAAAAAAAA";
+
+        AbstractTransaction txn = org.stellar.sdk.Transaction.fromEnvelopeXdr(envelope, Network.TESTNET);
+
+        String returnedEnvelope = txn.toEnvelopeXdrBase64();
+
+        assertEquals(envelope, returnedEnvelope);
+
+    }
 }
