@@ -28,8 +28,9 @@ import java.io.IOException;
 //      txBAD_AUTH_EXTRA = -10,      // unused signatures attached to transaction
 //      txINTERNAL_ERROR = -11,      // an unknown error occured
 //  
-//      txNOT_SUPPORTED = -12,        // transaction type not supported
-//      txFEE_BUMP_INNER_FAILED = -13 // fee bump inner transaction failed
+//      txNOT_SUPPORTED = -12,         // transaction type not supported
+//      txFEE_BUMP_INNER_FAILED = -13, // fee bump inner transaction failed
+//      txBAD_SPONSORSHIP = -14        // sponsorship not confirmed
 //  };
 
 //  ===========================================================================
@@ -49,6 +50,7 @@ public enum TransactionResultCode implements XdrElement {
   txINTERNAL_ERROR(-11),
   txNOT_SUPPORTED(-12),
   txFEE_BUMP_INNER_FAILED(-13),
+  txBAD_SPONSORSHIP(-14),
   ;
   private int mValue;
 
@@ -78,6 +80,7 @@ public enum TransactionResultCode implements XdrElement {
       case -11: return txINTERNAL_ERROR;
       case -12: return txNOT_SUPPORTED;
       case -13: return txFEE_BUMP_INNER_FAILED;
+      case -14: return txBAD_SPONSORSHIP;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

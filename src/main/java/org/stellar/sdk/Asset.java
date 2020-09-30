@@ -7,6 +7,17 @@ package org.stellar.sdk;
 public abstract class Asset {
   Asset() {}
 
+  public static Asset create(String canonicalForm) {
+    if (canonicalForm.equals("native")) {
+      return new AssetTypeNative();
+    }
+    String [] parts = canonicalForm.split(":");
+    if (parts.length != 2) {
+      throw new IllegalArgumentException("invalid asset "+ canonicalForm);
+    }
+    return Asset.createNonNativeAsset(parts[0], parts[1]);
+  }
+
   public static Asset create(String type, String code, String issuer) {
     if (type.equals("native")) {
       return new AssetTypeNative();

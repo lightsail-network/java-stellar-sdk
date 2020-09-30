@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
@@ -31,8 +32,10 @@ public class OfferResponse extends Response implements Pageable {
   private final String lastModifiedTime;
   @SerializedName("_links")
   private final Links links;
+  @SerializedName("sponsor")
+  private String sponsor;
 
-  public OfferResponse(Long id, String pagingToken, String seller, Asset selling, Asset buying, String amount, String price, Integer lastModifiedLedger, String lastModifiedTime, Links links) {
+  public OfferResponse(Long id, String pagingToken, String seller, Asset selling, Asset buying, String amount, String price, Integer lastModifiedLedger, String lastModifiedTime, String sponsor, Links links) {
     this.id = id;
     this.pagingToken = pagingToken;
     this.seller = seller;
@@ -42,6 +45,7 @@ public class OfferResponse extends Response implements Pageable {
     this.price = price;
     this.lastModifiedLedger = lastModifiedLedger;
     this.lastModifiedTime = lastModifiedTime;
+    this.sponsor = sponsor;
     this.links = links;
   }
 
@@ -80,6 +84,10 @@ public class OfferResponse extends Response implements Pageable {
   // Can be null if ledger adding an offer has not been ingested yet.
   public String getLastModifiedTime() {
     return lastModifiedTime;
+  }
+
+  public Optional<String> getSponsor() {
+    return Optional.fromNullable(this.sponsor);
   }
 
   public Links getLinks() {

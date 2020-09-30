@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
@@ -25,9 +26,11 @@ public class GsonSingleton {
       TypeToken tradePageType = new TypeToken<Page<TradeResponse>>() {};
       TypeToken tradeAggregationPageType = new TypeToken<Page<TradeAggregationResponse>>() {};
       TypeToken transactionPageType = new TypeToken<Page<TransactionResponse>>() {};
+      TypeToken claimableBalancePageType = new TypeToken<Page<ClaimableBalanceResponse>>() {};
 
       instance = new GsonBuilder()
                       .registerTypeAdapter(Asset.class, new AssetDeserializer())
+                      .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
                       .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
                       .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
                       .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
@@ -41,6 +44,7 @@ public class GsonSingleton {
                       .registerTypeAdapter(tradePageType.getType(), new PageDeserializer<TradeResponse>(tradePageType))
                       .registerTypeAdapter(tradeAggregationPageType.getType(), new PageDeserializer<TradeAggregationResponse>(tradeAggregationPageType))
                       .registerTypeAdapter(transactionPageType.getType(), new PageDeserializer<TransactionResponse>(transactionPageType))
+                      .registerTypeAdapter(claimableBalancePageType.getType(), new PageDeserializer<ClaimableBalanceResponse>(claimableBalancePageType))
                       .create();
     }
     return instance;

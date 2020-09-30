@@ -47,7 +47,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.5'
     compile 'commons-io:commons-io:2.6'
     compile 'net.i2p.crypto:eddsa:0.3.0'
-
+    compile 'org.threeten:threetenbp:1.4.4'
+    
     testCompile 'org.mockito:mockito-core:2.21.0'
     testCompile "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
     testCompile 'junit:junit:4.12'

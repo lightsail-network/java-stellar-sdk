@@ -17,6 +17,7 @@ import java.io.IOException;
 public class AccountsRequestBuilder extends RequestBuilder {
   private static final String ASSET_PARAMETER_NAME = "asset";
   private static final String SIGNER_PARAMETER_NAME = "signer";
+  private static final String SPONSOR_PARAMETER_NAME = "sponsor";
 
   public AccountsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "accounts");
@@ -59,6 +60,9 @@ public class AccountsRequestBuilder extends RequestBuilder {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
       throw new RuntimeException("cannot set both signer and asset");
     }
+    if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both signer and sponsor");
+    }
     uriBuilder.setQueryParameter(SIGNER_PARAMETER_NAME, signer);
     return this;
   }
@@ -74,7 +78,28 @@ public class AccountsRequestBuilder extends RequestBuilder {
     if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
       throw new RuntimeException("cannot set both signer and asset");
     }
+    if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both sponsor and asset");
+    }
     setAssetParameter(ASSET_PARAMETER_NAME, asset);
+    return this;
+  }
+
+  /**
+   * Returns all accounts who are sponsored by a given account or have subentries which are sponsored by a given account.
+   *
+   * @param sponsor Account ID
+   * @return current {@link AccountsRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   */
+  public AccountsRequestBuilder forSponsor(String sponsor) {
+    if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both signer and sponsor");
+    }
+    if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both asset and sponsor");
+    }
+    uriBuilder.setQueryParameter(SPONSOR_PARAMETER_NAME, sponsor);
     return this;
   }
 

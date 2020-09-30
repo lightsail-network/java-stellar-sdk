@@ -68,6 +68,14 @@ public class OffersRequestBuilderTest {
   }
 
   @Test
+  public void testForSponsor() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    HttpUrl uri = server.offers().forSponsor("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H").buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/offers?sponsor=GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H", uri.toString());
+  }
+
+
+  @Test
   public void testForSellingCreditAlphanum4Asset() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     Asset selling = new AssetTypeCreditAlphaNum4("USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
