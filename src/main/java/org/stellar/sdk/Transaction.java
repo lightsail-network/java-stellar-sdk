@@ -5,7 +5,6 @@ import org.stellar.sdk.xdr.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +23,7 @@ public class Transaction extends AbstractTransaction {
   private final Operation[] mOperations;
   private final Memo mMemo;
   private final TimeBounds mTimeBounds;
-  private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX_V0;
+  private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;
 
   Transaction(
           String sourceAccount,
@@ -189,6 +188,7 @@ public class Transaction extends AbstractTransaction {
         mTimeBounds,
         network
     );
+    transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
 
     for (DecoratedSignature signature : envelope.getSignatures()) {
       transaction.mSignatures.add(signature);
@@ -410,6 +410,7 @@ public class Transaction extends AbstractTransaction {
   @Override
   public int hashCode() {
     return Objects.hashCode(
+            this.envelopeType,
             this.mFee,
             this.mSourceAccount,
             this.mSequenceNumber,
@@ -428,7 +429,8 @@ public class Transaction extends AbstractTransaction {
     }
 
     Transaction other = (Transaction) object;
-    return Objects.equal(this.mFee, other.mFee) &&
+    return  Objects.equal(this.envelopeType, other.envelopeType) &&
+            Objects.equal(this.mFee, other.mFee) &&
             Objects.equal(this.mSourceAccount, other.mSourceAccount) &&
             Objects.equal(this.mSequenceNumber, other.mSequenceNumber) &&
             Arrays.equals(this.mOperations, other.mOperations) &&

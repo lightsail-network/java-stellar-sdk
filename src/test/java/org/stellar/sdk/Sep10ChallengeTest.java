@@ -123,20 +123,23 @@ public class Sep10ChallengeTest {
     TransactionEnvelope v0 = transaction.toEnvelopeXdr();
     String v0Base64 = transaction.toEnvelopeXdrBase64();
     assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, v0.getDiscriminant());
+    Sep10Challenge.ChallengeTransaction v0ChallengeTransaction = Sep10Challenge.readChallengeTransaction(
+        v0Base64,
+        server.getAccountId(),
+        Network.TESTNET
+    );
 
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX);
     TransactionEnvelope v1 = transaction.toEnvelopeXdr();
     String v1Base64 = transaction.toEnvelopeXdrBase64();
     assertEquals(EnvelopeType.ENVELOPE_TYPE_TX, v1.getDiscriminant());
+    Sep10Challenge.ChallengeTransaction v1ChallengeTransaction = Sep10Challenge.readChallengeTransaction(
+        v1Base64,
+        server.getAccountId(),
+        Network.TESTNET
+    );
 
-    for (String envelopeBase64 : ImmutableList.of(v0Base64, v1Base64)) {
-      Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(
-          envelopeBase64,
-          server.getAccountId(),
-          Network.TESTNET
-      );
-      assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
-    }
+    assertEquals(v0ChallengeTransaction, v1ChallengeTransaction);
   }
 
   @Test

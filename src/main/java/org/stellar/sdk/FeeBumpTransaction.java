@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import org.stellar.sdk.xdr.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -123,10 +123,21 @@ public class FeeBumpTransaction extends AbstractTransaction {
      * @param inner The inner transaction which will be fee bumped.
      */
     public Builder(Transaction inner) {
-      this.mInner = checkNotNull(inner, "inner cannot be null");
-      EnvelopeType txType = this.mInner.toEnvelopeXdr().getDiscriminant();
-      if (this.mInner.toEnvelopeXdr().getDiscriminant() != EnvelopeType.ENVELOPE_TYPE_TX) {
-        throw new IllegalArgumentException("invalid transaction type: " + txType);
+      inner = checkNotNull(inner, "inner cannot be null");
+      EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
+      if (inner.toEnvelopeXdr().getDiscriminant() == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
+        this.mInner = new Transaction(
+            inner.getSourceAccount(),
+            inner.getFee(),
+            inner.getSequenceNumber(),
+            inner.getOperations(),
+            inner.getMemo(),
+            inner.getTimeBounds(),
+            inner.getNetwork()
+        );
+        this.mInner.mSignatures = Lists.newArrayList(inner.mSignatures);
+      } else {
+        this.mInner = inner;
       }
     }
 
