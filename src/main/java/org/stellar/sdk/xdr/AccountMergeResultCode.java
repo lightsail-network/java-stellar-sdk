@@ -19,8 +19,9 @@ import java.io.IOException;
 //      ACCOUNT_MERGE_IMMUTABLE_SET = -3,   // source account has AUTH_IMMUTABLE set
 //      ACCOUNT_MERGE_HAS_SUB_ENTRIES = -4, // account has trust lines/offers
 //      ACCOUNT_MERGE_SEQNUM_TOO_FAR = -5,  // sequence number is over max allowed
-//      ACCOUNT_MERGE_DEST_FULL = -6        // can't add source balance to
+//      ACCOUNT_MERGE_DEST_FULL = -6,       // can't add source balance to
 //                                          // destination balance
+//      ACCOUNT_MERGE_IS_SPONSOR = -7       // can't merge account that is a sponsor
 //  };
 
 //  ===========================================================================
@@ -32,6 +33,7 @@ public enum AccountMergeResultCode implements XdrElement {
   ACCOUNT_MERGE_HAS_SUB_ENTRIES(-4),
   ACCOUNT_MERGE_SEQNUM_TOO_FAR(-5),
   ACCOUNT_MERGE_DEST_FULL(-6),
+  ACCOUNT_MERGE_IS_SPONSOR(-7),
   ;
   private int mValue;
 
@@ -53,6 +55,7 @@ public enum AccountMergeResultCode implements XdrElement {
       case -4: return ACCOUNT_MERGE_HAS_SUB_ENTRIES;
       case -5: return ACCOUNT_MERGE_SEQNUM_TOO_FAR;
       case -6: return ACCOUNT_MERGE_DEST_FULL;
+      case -7: return ACCOUNT_MERGE_IS_SPONSOR;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

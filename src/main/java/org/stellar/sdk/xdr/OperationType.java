@@ -24,7 +24,12 @@ import java.io.IOException;
 //      MANAGE_DATA = 10,
 //      BUMP_SEQUENCE = 11,
 //      MANAGE_BUY_OFFER = 12,
-//      PATH_PAYMENT_STRICT_SEND = 13
+//      PATH_PAYMENT_STRICT_SEND = 13,
+//      CREATE_CLAIMABLE_BALANCE = 14,
+//      CLAIM_CLAIMABLE_BALANCE = 15,
+//      BEGIN_SPONSORING_FUTURE_RESERVES = 16,
+//      END_SPONSORING_FUTURE_RESERVES = 17,
+//      REVOKE_SPONSORSHIP = 18
 //  };
 
 //  ===========================================================================
@@ -43,6 +48,11 @@ public enum OperationType implements XdrElement {
   BUMP_SEQUENCE(11),
   MANAGE_BUY_OFFER(12),
   PATH_PAYMENT_STRICT_SEND(13),
+  CREATE_CLAIMABLE_BALANCE(14),
+  CLAIM_CLAIMABLE_BALANCE(15),
+  BEGIN_SPONSORING_FUTURE_RESERVES(16),
+  END_SPONSORING_FUTURE_RESERVES(17),
+  REVOKE_SPONSORSHIP(18),
   ;
   private int mValue;
 
@@ -71,6 +81,11 @@ public enum OperationType implements XdrElement {
       case 11: return BUMP_SEQUENCE;
       case 12: return MANAGE_BUY_OFFER;
       case 13: return PATH_PAYMENT_STRICT_SEND;
+      case 14: return CREATE_CLAIMABLE_BALANCE;
+      case 15: return CLAIM_CLAIMABLE_BALANCE;
+      case 16: return BEGIN_SPONSORING_FUTURE_RESERVES;
+      case 17: return END_SPONSORING_FUTURE_RESERVES;
+      case 18: return REVOKE_SPONSORSHIP;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

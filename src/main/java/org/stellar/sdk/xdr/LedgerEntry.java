@@ -24,6 +24,8 @@ import com.google.common.base.Objects;
 //          OfferEntry offer;
 //      case DATA:
 //          DataEntry data;
+//      case CLAIMABLE_BALANCE:
+//          ClaimableBalanceEntry claimableBalance;
 //      }
 //      data;
 //  
@@ -32,6 +34,8 @@ import com.google.common.base.Objects;
 //      {
 //      case 0:
 //          void;
+//      case 1:
+//          LedgerEntryExtensionV1 v1;
 //      }
 //      ext;
 //  };
@@ -126,6 +130,13 @@ public class LedgerEntry implements XdrElement {
     public void setData(DataEntry value) {
       this.data = value;
     }
+    private ClaimableBalanceEntry claimableBalance;
+    public ClaimableBalanceEntry getClaimableBalance() {
+      return this.claimableBalance;
+    }
+    public void setClaimableBalance(ClaimableBalanceEntry value) {
+      this.claimableBalance = value;
+    }
     public static void encode(XdrDataOutputStream stream, LedgerEntryData encodedLedgerEntryData) throws IOException {
     //Xdrgen::AST::Identifier
     //LedgerEntryType
@@ -142,6 +153,9 @@ public class LedgerEntry implements XdrElement {
     break;
     case DATA:
     DataEntry.encode(stream, encodedLedgerEntryData.data);
+    break;
+    case CLAIMABLE_BALANCE:
+    ClaimableBalanceEntry.encode(stream, encodedLedgerEntryData.claimableBalance);
     break;
     }
     }
@@ -165,12 +179,15 @@ public class LedgerEntry implements XdrElement {
     case DATA:
     decodedLedgerEntryData.data = DataEntry.decode(stream);
     break;
+    case CLAIMABLE_BALANCE:
+    decodedLedgerEntryData.claimableBalance = ClaimableBalanceEntry.decode(stream);
+    break;
     }
       return decodedLedgerEntryData;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.account, this.trustLine, this.offer, this.data, this.type);
+      return Objects.hashCode(this.account, this.trustLine, this.offer, this.data, this.claimableBalance, this.type);
     }
     @Override
     public boolean equals(Object object) {
@@ -179,7 +196,7 @@ public class LedgerEntry implements XdrElement {
       }
 
       LedgerEntryData other = (LedgerEntryData) object;
-      return Objects.equal(this.account, other.account) && Objects.equal(this.trustLine, other.trustLine) && Objects.equal(this.offer, other.offer) && Objects.equal(this.data, other.data) && Objects.equal(this.type, other.type);
+      return Objects.equal(this.account, other.account) && Objects.equal(this.trustLine, other.trustLine) && Objects.equal(this.offer, other.offer) && Objects.equal(this.data, other.data) && Objects.equal(this.claimableBalance, other.claimableBalance) && Objects.equal(this.type, other.type);
     }
 
   }
@@ -192,12 +209,22 @@ public class LedgerEntry implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+    private LedgerEntryExtensionV1 v1;
+    public LedgerEntryExtensionV1 getV1() {
+      return this.v1;
+    }
+    public void setV1(LedgerEntryExtensionV1 value) {
+      this.v1 = value;
+    }
     public static void encode(XdrDataOutputStream stream, LedgerEntryExt encodedLedgerEntryExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
     stream.writeInt(encodedLedgerEntryExt.getDiscriminant().intValue());
     switch (encodedLedgerEntryExt.getDiscriminant()) {
     case 0:
+    break;
+    case 1:
+    LedgerEntryExtensionV1.encode(stream, encodedLedgerEntryExt.v1);
     break;
     }
     }
@@ -211,12 +238,15 @@ public class LedgerEntry implements XdrElement {
     switch (decodedLedgerEntryExt.getDiscriminant()) {
     case 0:
     break;
+    case 1:
+    decodedLedgerEntryExt.v1 = LedgerEntryExtensionV1.decode(stream);
+    break;
     }
       return decodedLedgerEntryExt;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hashCode(this.v1, this.v);
     }
     @Override
     public boolean equals(Object object) {
@@ -225,7 +255,7 @@ public class LedgerEntry implements XdrElement {
       }
 
       LedgerEntryExt other = (LedgerEntryExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
     }
 
   }

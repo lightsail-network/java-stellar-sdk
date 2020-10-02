@@ -23,7 +23,6 @@ public class FeeBumpTransactionTest {
         .addTimeBounds(new TimeBounds(10, 11))
         .build();
 
-    inner.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX);
     inner.sign(source);
     return inner;
   }
@@ -190,6 +189,45 @@ public class FeeBumpTransactionTest {
         feeBump.toEnvelopeXdrBase64(), Network.TESTNET
     );
     assertEquals(feeBump, fromXdr);
+    assertEquals(inner, fromXdr.getInnerTransaction());
+
+    assertEquals(1, feeBump.getSignatures().size());
+    signer.verify(feeBump.hash(), feeBump.getSignatures().get(0).getSignature().getSignature());
+  }
+
+  @Test
+  public void testFeeBumpUpgradesInnerToV1() throws IOException {
+    Transaction innerV0 = createInnerTransaction();
+    innerV0.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
+
+    FeeBumpTransaction feeBump = new FeeBumpTransaction.Builder(innerV0)
+        .setBaseFee(Transaction.MIN_BASE_FEE * 2)
+        .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
+        .build();
+
+    assertEquals(Transaction.MIN_BASE_FEE * 4, feeBump.getFee());
+    assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", feeBump.getFeeAccount());
+    assertEquals(0, feeBump.getSignatures().size());
+
+    assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, innerV0.toEnvelopeXdr().getDiscriminant());
+    assertNotEquals(innerV0, feeBump.getInnerTransaction());
+    innerV0.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX);
+    assertEquals(innerV0, feeBump.getInnerTransaction());
+
+    FeeBumpTransaction fromXdr = (FeeBumpTransaction) AbstractTransaction.fromEnvelopeXdr(
+        feeBump.toEnvelopeXdrBase64(), Network.TESTNET
+    );
+
+    assertEquals(feeBump, fromXdr);
+
+
+    KeyPair signer = KeyPair.random();
+    feeBump.sign(signer);
+    fromXdr = (FeeBumpTransaction) AbstractTransaction.fromEnvelopeXdr(
+        feeBump.toEnvelopeXdrBase64(), Network.TESTNET
+    );
+    assertEquals(feeBump, fromXdr);
+    assertEquals(feeBump.getInnerTransaction(), fromXdr.getInnerTransaction());
 
     assertEquals(1, feeBump.getSignatures().size());
     signer.verify(feeBump.hash(), feeBump.getSignatures().get(0).getSignature().getSignature());

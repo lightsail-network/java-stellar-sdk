@@ -127,6 +127,13 @@ public class Server implements Closeable {
     }
 
     /**
+     * Returns {@link ClaimableBalancesRequestBuilder} instance.
+     */
+    public ClaimableBalancesRequestBuilder claimableBalances() {
+        return new ClaimableBalancesRequestBuilder(httpClient, serverURI);
+    }
+
+    /**
      * Returns {@link EffectsRequestBuilder} instance.
      */
     public EffectsRequestBuilder effects() {

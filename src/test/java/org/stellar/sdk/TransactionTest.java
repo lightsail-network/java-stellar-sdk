@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import org.junit.Test;
+import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 
 import java.io.ByteArrayInputStream;
@@ -44,7 +45,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDLki9Oi700N60Lo8gUmEFHbKvYG4QSqXiLIt9T0ru2O5BphVl/jR9tYtHAD+UeDYhgXNgwUxqTEu1WukvEyYcD",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAy5IvTou9NDetC6PIFJhBR2yr2BuEEql4iyLfU9K7tjuQaYVZf40fbWLRwA/lHg2IYFzYMFMakxLtVrpLxMmHAw==",
                 transaction.toEnvelopeXdrBase64());
 
         assertEquals(transaction.getSourceAccount(), source.getAccountId());
@@ -81,7 +82,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAEAAAAMSGVsbG8gd29ybGQhAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAxzofBhoayuUnz8t0T1UNWrTgmJ+lCh9KaeOGu2ppNOz9UGw0abGLhv+9oWQsstaHx6YjwWxL+8GBvwBUVWRlBQ==",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAABAAAADEhlbGxvIHdvcmxkIQAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQMc6HwYaGsrlJ8/LdE9VDVq04JifpQofSmnjhrtqaTTs/VBsNGmxi4b/vaFkLLLWh8emI8FsS/vBgb8AVFVkZQU=",
                 transaction.toEnvelopeXdrBase64());
 
         Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
@@ -118,10 +119,10 @@ public class TransactionTest {
                         javax.xml.bind.DatatypeConverter.parseBase64Binary(transaction.toEnvelopeXdrBase64())
                 )
         );
-        org.stellar.sdk.xdr.Transaction decodedTransaction = org.stellar.sdk.xdr.Transaction.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
 
-        assertEquals(decodedTransaction.getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
-        assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 1337);
+        assertEquals(decodedTransaction.getV1().getTx().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
+        assertEquals(decodedTransaction.getV1().getTx().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 1337);
 
         Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
 
@@ -152,7 +153,7 @@ public class TransactionTest {
         transaction.sign(source);
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAyAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAED1Mbd0oou0sfNFRuxsSqvrwJ9RzzTSnX8sTmlbMKcV0V3Kl1eDKoerD+xZ1pNQwOJZrAG2yapXyg60PQfDUcMN",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAMgAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABA9TG3dKKLtLHzRUbsbEqr68CfUc800p1/LE5pWzCnFdFdypdXgyqHqw/sWdaTUMDiWawBtsmqV8oOtD0Hw1HDDQ==",
                 transaction.toEnvelopeXdrBase64());
 
         Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdr(), Network.TESTNET);
@@ -296,14 +297,14 @@ public class TransactionTest {
                         javax.xml.bind.DatatypeConverter.parseBase64Binary(transaction.toEnvelopeXdrBase64())
                 )
         );
-        org.stellar.sdk.xdr.Transaction decodedTransaction = org.stellar.sdk.xdr.Transaction.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
 
-        assertEquals(decodedTransaction.getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
-        assertEquals(decodedTransaction.getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 0);
+        assertEquals(decodedTransaction.getV1().getTx().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
+        assertEquals(decodedTransaction.getV1().getTx().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 0);
     }
 
     @Test
-    public void testBuilderSuccessPublic() throws FormatException {
+    public void testBuilderSuccessPublic() throws FormatException, IOException {
 
         // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
         KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -318,9 +319,51 @@ public class TransactionTest {
 
         transaction.sign(source);
 
+        XdrDataInputStream is = new XdrDataInputStream(
+            new ByteArrayInputStream(
+                javax.xml.bind.DatatypeConverter.parseBase64Binary(transaction.toEnvelopeXdrBase64())
+            )
+        );
+        org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        assertEquals(EnvelopeType.ENVELOPE_TYPE_TX, decodedTransaction.getDiscriminant());
+
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDzfR5PgRFim5Wdvq9ImdZNWGBxBWwYkQPa9l5iiBdtPLzAZv6qj+iOfSrqinsoF0XrLkwdIcZQVtp3VRHhRoUE",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABA830eT4ERYpuVnb6vSJnWTVhgcQVsGJED2vZeYogXbTy8wGb+qo/ojn0q6op7KBdF6y5MHSHGUFbad1UR4UaFBA==",
                 transaction.toEnvelopeXdrBase64());
+    }
+
+    @Test
+    public void testParseV0Transaction() throws FormatException, IOException {
+
+        // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
+        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+            .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+            .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+            .setBaseFee(Transaction.MIN_BASE_FEE)
+            .build();
+        transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
+        transaction.sign(source);
+
+        XdrDataInputStream is = new XdrDataInputStream(
+            new ByteArrayInputStream(
+                javax.xml.bind.DatatypeConverter.parseBase64Binary(transaction.toEnvelopeXdrBase64())
+            )
+        );
+        org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, decodedTransaction.getDiscriminant());
+
+        Transaction parsed = (Transaction) Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), Network.PUBLIC);
+        assertTrue(parsed.equals(transaction));
+        assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, parsed.toEnvelopeXdr().getDiscriminant());
+
+        assertEquals(
+            "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDzfR5PgRFim5Wdvq9ImdZNWGBxBWwYkQPa9l5iiBdtPLzAZv6qj+iOfSrqinsoF0XrLkwdIcZQVtp3VRHhRoUE",
+            transaction.toEnvelopeXdrBase64());
+        assertEquals(transaction.toEnvelopeXdrBase64(), parsed.toEnvelopeXdrBase64());
     }
 
     @Test
@@ -362,7 +405,7 @@ public class TransactionTest {
                 .build();
 
         assertEquals(
-                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAAA",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAA==",
                 transaction.toEnvelopeXdrBase64()
         );
     }

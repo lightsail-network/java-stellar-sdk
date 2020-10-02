@@ -354,7 +354,7 @@ public class Sep10Challenge {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.transaction, this.clientAccountId);
+      return Objects.hashCode(this.transaction.hashHex(), this.clientAccountId);
     }
 
     @Override
@@ -368,7 +368,7 @@ public class Sep10Challenge {
       }
 
       ChallengeTransaction other = (ChallengeTransaction) object;
-      return Objects.equal(this.transaction, other.transaction) &&
+      return Objects.equal(this.transaction.hashHex(), other.transaction.hashHex()) &&
               Objects.equal(this.clientAccountId, other.clientAccountId);
     }
   }

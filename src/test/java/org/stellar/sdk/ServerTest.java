@@ -13,7 +13,6 @@ import org.stellar.sdk.responses.SubmitTransactionResponse;
 import org.stellar.sdk.responses.SubmitTransactionTimeoutResponseException;
 import org.stellar.sdk.responses.SubmitTransactionUnknownResponseException;
 import org.stellar.sdk.responses.operations.OperationResponse;
-import org.stellar.sdk.xdr.EnvelopeType;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -337,7 +336,6 @@ public class ServerTest {
     public static final String DESTINATION_ACCOUNT_MEMO_ID = "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG";
 
     private FeeBumpTransaction feeBump(Transaction inner) {
-        inner.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX);
         KeyPair signer = KeyPair.fromSecretSeed("SA5ZEFDVFZ52GRU7YUGR6EDPBNRU2WLA6IQFQ7S2IH2DG3VFV3DOMV2Q");
         FeeBumpTransaction tx = new FeeBumpTransaction.Builder(inner)
             .setFeeAccount(signer.getAccountId())

@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 
@@ -42,6 +43,12 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private Data data;
   @SerializedName("_links")
   private Links links;
+  @SerializedName("num_sponsoring")
+  private Integer numSponsoring;
+  @SerializedName("num_sponsored")
+  private Integer numSponsored;
+  @SerializedName("sponsor")
+  private String sponsor;
 
   AccountResponse(String accountId) {
     this.accountId = accountId;
@@ -111,6 +118,18 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
   public Data getData() {
     return data;
+  }
+
+  public Integer getNumSponsoring() {
+    return numSponsoring;
+  }
+
+  public Integer getNumSponsored() {
+    return numSponsored;
+  }
+
+  public Optional<String> getSponsor() {
+    return Optional.fromNullable(this.sponsor);
   }
 
   /**
@@ -197,8 +216,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private final Boolean isAuthorizedToMaintainLiabilities;
     @SerializedName("last_modified_ledger")
     private final Integer lastModifiedLedger;
+    @SerializedName("sponsor")
+    private String sponsor;
 
-    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger) {
+    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger, String sponsor) {
       this.assetType = checkNotNull(assetType, "assertType cannot be null");
       this.balance = checkNotNull(balance, "balance cannot be null");
       this.limit = limit;
@@ -209,6 +230,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       this.isAuthorized = isAuthorized;
       this.isAuthorizedToMaintainLiabilities = isAuthorizedToMaintainLiabilities;
       this.lastModifiedLedger = lastModifiedLedger;
+      // sponsor is an optional field
+      this.sponsor = sponsor;
     }
 
     public Asset getAsset() {
@@ -258,6 +281,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     public Integer getLastModifiedLedger() {
       return lastModifiedLedger;
     }
+
+    public Optional<String> getSponsor() {
+      return Optional.fromNullable(this.sponsor);
+    }
   }
 
   /**
@@ -270,11 +297,15 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private final String type;
     @SerializedName("weight")
     private final int weight;
+    @SerializedName("sponsor")
+    private String sponsor;
 
-    Signer(String key, String type, int weight) {
+    Signer(String key, String type, int weight, String sponsor) {
       this.key = checkNotNull(key, "key cannot be null");
       this.type = checkNotNull(type, "type cannot be null");
       this.weight = checkNotNull(weight, "weight cannot be null");
+      // sponsor is an optional field
+      this.sponsor = sponsor;
     }
 
     /**
@@ -295,6 +326,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
     public String getType() {
       return type;
+    }
+
+    public Optional<String> getSponsor() {
+      return Optional.fromNullable(this.sponsor);
     }
   }
 

@@ -7,6 +7,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import org.stellar.sdk.Asset;
+import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.effects.*;
 
 import java.lang.reflect.Type;
@@ -16,7 +18,10 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
   public EffectResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Operation
     Gson gson = new GsonBuilder()
-            .create();
+        .registerTypeAdapter(Asset.class, new AssetDeserializer())
+        .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
+        .create();
+
 
     int type = json.getAsJsonObject().get("type_i").getAsInt();
     switch (type) {
@@ -76,8 +81,46 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
       // Bump Sequence effects
       case 43:
         return gson.fromJson(json, SequenceBumpedEffectResponse.class);
+      // claimable balance effects
+      case 50:
+        return gson.fromJson(json, ClaimableBalanceCreatedEffectResponse.class);
+      case 51:
+        return gson.fromJson(json, ClaimableBalanceClaimantCreatedEffectResponse.class);
+      case 52:
+        return gson.fromJson(json, ClaimableBalanceClaimedEffectResponse.class);
+      // sponsorship effects
+      case 60:
+        return gson.fromJson(json, AccountSponsorshipCreatedEffectResponse.class);
+      case 61:
+        return gson.fromJson(json, AccountSponsorshipUpdatedEffectResponse.class);
+      case 62:
+        return gson.fromJson(json, AccountSponsorshipRemovedEffectResponse.class);
+      case 63:
+        return gson.fromJson(json, TrustlineSponsorshipCreatedEffectResponse.class);
+      case 64:
+        return gson.fromJson(json, TrustlineSponsorshipUpdatedEffectResponse.class);
+      case 65:
+        return gson.fromJson(json, TrustlineSponsorshipRemovedEffectResponse.class);
+      case 66:
+        return gson.fromJson(json, DataSponsorshipCreatedEffectResponse.class);
+      case 67:
+        return gson.fromJson(json, DataSponsorshipUpdatedEffectResponse.class);
+      case 68:
+        return gson.fromJson(json, DataSponsorshipRemovedEffectResponse.class);
+      case 69:
+        return gson.fromJson(json, ClaimableBalanceSponsorshipCreatedEffectResponse.class);
+      case 70:
+        return gson.fromJson(json, ClaimableBalanceSponsorshipUpdatedEffectResponse.class);
+      case 71:
+        return gson.fromJson(json, ClaimableBalanceSponsorshipRemovedEffectResponse.class);
+      case 72:
+        return gson.fromJson(json, SignerSponsorshipCreatedEffectResponse.class);
+      case 73:
+        return gson.fromJson(json, SignerSponsorshipUpdatedEffectResponse.class);
+      case 74:
+        return gson.fromJson(json, SignerSponsorshipRemovedEffectResponse.class);
       default:
-        throw new RuntimeException("Invalid operation type");
+        throw new RuntimeException("Invalid effect type");
     }
   }
 }

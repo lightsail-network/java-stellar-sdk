@@ -14,7 +14,8 @@ import java.io.IOException;
 //      ACCOUNT = 0,
 //      TRUSTLINE = 1,
 //      OFFER = 2,
-//      DATA = 3
+//      DATA = 3,
+//      CLAIMABLE_BALANCE = 4
 //  };
 
 //  ===========================================================================
@@ -23,6 +24,7 @@ public enum LedgerEntryType implements XdrElement {
   TRUSTLINE(1),
   OFFER(2),
   DATA(3),
+  CLAIMABLE_BALANCE(4),
   ;
   private int mValue;
 
@@ -41,6 +43,7 @@ public enum LedgerEntryType implements XdrElement {
       case 1: return TRUSTLINE;
       case 2: return OFFER;
       case 3: return DATA;
+      case 4: return CLAIMABLE_BALANCE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
