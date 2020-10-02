@@ -36,13 +36,13 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
       return new Predicate.Or(inner);
     }
 
-    if (obj.has("absBefore")) {
-      String formattedDate = obj.get("absBefore").getAsString();
+    if (obj.has("abs_before")) {
+      String formattedDate = obj.get("abs_before").getAsString();
       return new Predicate.AbsBefore(Instant.parse(formattedDate).getEpochSecond());
     }
 
-    if (obj.has("relBefore")) {
-      Long relBefore = obj.get("relBefore").getAsLong();
+    if (obj.has("rel_before")) {
+      Long relBefore = obj.get("rel_before").getAsLong();
       return new Predicate.RelBefore(relBefore);
     }
 
