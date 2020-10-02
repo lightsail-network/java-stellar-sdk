@@ -35,6 +35,11 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
     }
 
     @Override
+    public String toString() {
+        return getCode() + ":" + getIssuer();
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hashCode(this.mCode, this.mIssuer);
     }

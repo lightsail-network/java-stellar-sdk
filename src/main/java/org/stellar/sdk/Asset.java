@@ -7,6 +7,12 @@ package org.stellar.sdk;
 public abstract class Asset {
   Asset() {}
 
+  /**
+   * Parses an asset string and returns the equivalent Asset instance.
+   * The asset string is expected to either be "native" or a string of the form "CODE:ISSUER"
+   *
+   * @param canonicalForm Canonical string representation of an asset
+   */
   public static Asset create(String canonicalForm) {
     if (canonicalForm.equals("native")) {
       return new AssetTypeNative();

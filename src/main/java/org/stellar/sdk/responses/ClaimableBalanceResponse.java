@@ -4,6 +4,7 @@ package org.stellar.sdk.responses;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.Claimant;
 
 import java.util.List;
 

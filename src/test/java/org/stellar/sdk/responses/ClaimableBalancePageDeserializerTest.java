@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.Claimant;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.xdr.ClaimPredicate;
 

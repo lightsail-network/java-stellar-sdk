@@ -1,4 +1,4 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Predicate;
