@@ -130,7 +130,8 @@ public class Sep10ChallengeTest {
     Sep10Challenge.ChallengeTransaction v0ChallengeTransaction = Sep10Challenge.readChallengeTransaction(
         v0Base64,
         server.getAccountId(),
-        Network.TESTNET
+        Network.TESTNET,
+        domainName
     );
 
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX);
@@ -140,7 +141,8 @@ public class Sep10ChallengeTest {
     Sep10Challenge.ChallengeTransaction v1ChallengeTransaction = Sep10Challenge.readChallengeTransaction(
         v1Base64,
         server.getAccountId(),
-        Network.TESTNET
+        Network.TESTNET,
+        domainName
     );
 
     assertEquals(v0ChallengeTransaction, v1ChallengeTransaction);
