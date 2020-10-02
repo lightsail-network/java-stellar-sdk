@@ -21,7 +21,7 @@ public abstract class Predicate {
   }
 
   /**
-   * Generates Asset object from a given XDR object
+   * Generates Predicate object from a given XDR object
    * @param xdr XDR object
    */
   public static Predicate fromXdr(org.stellar.sdk.xdr.ClaimPredicate xdr) {
