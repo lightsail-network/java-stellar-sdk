@@ -27,7 +27,7 @@ import java.util.Arrays;
 //      // thresholds stores unsigned bytes: [weight of master|low|medium|high]
 //      Thresholds thresholds;
 //  
-//      Signer signers<20>; // possible signers for this account
+//      Signer signers<MAX_SIGNERS>; // possible signers for this account
 //  
 //      // reserved for future use
 //      union switch (int v)
@@ -35,17 +35,7 @@ import java.util.Arrays;
 //      case 0:
 //          void;
 //      case 1:
-//          struct
-//          {
-//              Liabilities liabilities;
-//  
-//              union switch (int v)
-//              {
-//              case 0:
-//                  void;
-//              }
-//              ext;
-//          } v1;
+//          AccountEntryExtensionV1 v1;
 //      }
 //      ext;
 //  };
@@ -191,11 +181,11 @@ public class AccountEntry implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
-    private AccountEntryV1 v1;
-    public AccountEntryV1 getV1() {
+    private AccountEntryExtensionV1 v1;
+    public AccountEntryExtensionV1 getV1() {
       return this.v1;
     }
-    public void setV1(AccountEntryV1 value) {
+    public void setV1(AccountEntryExtensionV1 value) {
       this.v1 = value;
     }
     public static void encode(XdrDataOutputStream stream, AccountEntryExt encodedAccountEntryExt) throws IOException {
@@ -206,7 +196,7 @@ public class AccountEntry implements XdrElement {
     case 0:
     break;
     case 1:
-    AccountEntryV1.encode(stream, encodedAccountEntryExt.v1);
+    AccountEntryExtensionV1.encode(stream, encodedAccountEntryExt.v1);
     break;
     }
     }
@@ -221,7 +211,7 @@ public class AccountEntry implements XdrElement {
     case 0:
     break;
     case 1:
-    decodedAccountEntryExt.v1 = AccountEntryV1.decode(stream);
+    decodedAccountEntryExt.v1 = AccountEntryExtensionV1.decode(stream);
     break;
     }
       return decodedAccountEntryExt;
@@ -240,95 +230,5 @@ public class AccountEntry implements XdrElement {
       return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
     }
 
-    public static class AccountEntryV1 {
-      public AccountEntryV1 () {}
-      private Liabilities liabilities;
-      public Liabilities getLiabilities() {
-        return this.liabilities;
-      }
-      public void setLiabilities(Liabilities value) {
-        this.liabilities = value;
-      }
-      private AccountEntryV1Ext ext;
-      public AccountEntryV1Ext getExt() {
-        return this.ext;
-      }
-      public void setExt(AccountEntryV1Ext value) {
-        this.ext = value;
-      }
-      public static void encode(XdrDataOutputStream stream, AccountEntryV1 encodedAccountEntryV1) throws IOException{
-        Liabilities.encode(stream, encodedAccountEntryV1.liabilities);
-        AccountEntryV1Ext.encode(stream, encodedAccountEntryV1.ext);
-      }
-      public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
-      }
-      public static AccountEntryV1 decode(XdrDataInputStream stream) throws IOException {
-        AccountEntryV1 decodedAccountEntryV1 = new AccountEntryV1();
-        decodedAccountEntryV1.liabilities = Liabilities.decode(stream);
-        decodedAccountEntryV1.ext = AccountEntryV1Ext.decode(stream);
-        return decodedAccountEntryV1;
-      }
-      @Override
-      public int hashCode() {
-        return Objects.hashCode(this.liabilities, this.ext);
-      }
-      @Override
-      public boolean equals(Object object) {
-        if (object == null || !(object instanceof AccountEntryV1)) {
-          return false;
-        }
-
-        AccountEntryV1 other = (AccountEntryV1) object;
-        return Objects.equal(this.liabilities, other.liabilities) && Objects.equal(this.ext, other.ext);
-      }
-
-      public static class AccountEntryV1Ext {
-        public AccountEntryV1Ext () {}
-        Integer v;
-        public Integer getDiscriminant() {
-          return this.v;
-        }
-        public void setDiscriminant(Integer value) {
-          this.v = value;
-        }
-        public static void encode(XdrDataOutputStream stream, AccountEntryV1Ext encodedAccountEntryV1Ext) throws IOException {
-        //Xdrgen::AST::Typespecs::Int
-        //Integer
-        stream.writeInt(encodedAccountEntryV1Ext.getDiscriminant().intValue());
-        switch (encodedAccountEntryV1Ext.getDiscriminant()) {
-        case 0:
-        break;
-        }
-        }
-        public void encode(XdrDataOutputStream stream) throws IOException {
-          encode(stream, this);
-        }
-        public static AccountEntryV1Ext decode(XdrDataInputStream stream) throws IOException {
-        AccountEntryV1Ext decodedAccountEntryV1Ext = new AccountEntryV1Ext();
-        Integer discriminant = stream.readInt();
-        decodedAccountEntryV1Ext.setDiscriminant(discriminant);
-        switch (decodedAccountEntryV1Ext.getDiscriminant()) {
-        case 0:
-        break;
-        }
-          return decodedAccountEntryV1Ext;
-        }
-        @Override
-        public int hashCode() {
-          return Objects.hashCode(this.v);
-        }
-        @Override
-        public boolean equals(Object object) {
-          if (object == null || !(object instanceof AccountEntryV1Ext)) {
-            return false;
-          }
-
-          AccountEntryV1Ext other = (AccountEntryV1Ext) object;
-          return Objects.equal(this.v, other.v);
-        }
-
-      }
-    }
   }
 }

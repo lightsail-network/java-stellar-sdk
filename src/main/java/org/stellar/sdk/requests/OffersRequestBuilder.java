@@ -61,6 +61,18 @@ public class OffersRequestBuilder extends RequestBuilder {
   }
 
   /**
+   * Returns all offers sponsored by a given account.
+   *
+   * @param sponsor Account ID of the sponsor.
+   * @return current {@link OffersRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
+   */
+  public OffersRequestBuilder forSponsor(String sponsor) {
+    uriBuilder.setQueryParameter("sponsor", sponsor);
+    return this;
+  }
+
+  /**
    * Returns all offers where the given account is the seller.
    *
    * @param seller Account ID of the offer creator.

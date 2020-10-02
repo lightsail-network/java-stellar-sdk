@@ -11,6 +11,11 @@ public final class AssetTypeNative extends Asset {
   public AssetTypeNative() {}
 
   @Override
+  public String toString() {
+    return "native";
+  }
+
+  @Override
   public String getType() {
     return "native";
   }
