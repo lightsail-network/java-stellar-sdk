@@ -153,7 +153,7 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("Random nonce before encoding as base64 should be 48 bytes long.");
     }
 
-    if (!verifyTransactionSignature(transaction, serverAccountId, domainName)) {
+    if (!verifyTransactionSignature(transaction, serverAccountId)) {
       throw new InvalidSep10ChallengeException(String.format("Transaction not signed by server: %s.", serverAccountId));
     }
 
@@ -228,7 +228,7 @@ public class Sep10Challenge {
     // are consumed only once on the transaction.
     Set<String> allSigners = new HashSet<String>(clientSigners);
     allSigners.add(serverKeyPair.getAccountId());
-    Set<String> signersFound = verifyTransactionSignatures(transaction, domainName, allSigners);
+    Set<String> signersFound = verifyTransactionSignatures(transaction, allSigners);
 
     // Confirm the server is in the list of signers found and remove it.
     boolean serverSignerFound = signersFound.remove(serverKeyPair.getAccountId());
@@ -296,7 +296,7 @@ public class Sep10Challenge {
     return signersFound;
   }
 
-  private static Set<String> verifyTransactionSignatures(Transaction transaction, String domainName, Set<String> signers) throws InvalidSep10ChallengeException {
+  private static Set<String> verifyTransactionSignatures(Transaction transaction, Set<String> signers) throws InvalidSep10ChallengeException {
     if (transaction.getSignatures().isEmpty()) {
       throw new InvalidSep10ChallengeException("Transaction has no signatures.");
     }
@@ -328,8 +328,8 @@ public class Sep10Challenge {
     return signersFound;
   }
 
-  private static boolean verifyTransactionSignature(Transaction transaction, String accountId, String domainName) throws InvalidSep10ChallengeException {
-    return !verifyTransactionSignatures(transaction, domainName, Collections.singleton(accountId)).isEmpty();
+  private static boolean verifyTransactionSignature(Transaction transaction, String accountId) throws InvalidSep10ChallengeException {
+    return !verifyTransactionSignatures(transaction, Collections.singleton(accountId)).isEmpty();
   }
 
   /**
