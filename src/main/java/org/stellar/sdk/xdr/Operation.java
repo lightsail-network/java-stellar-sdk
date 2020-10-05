@@ -47,6 +47,16 @@ import com.google.common.base.Objects;
 //          ManageBuyOfferOp manageBuyOfferOp;
 //      case PATH_PAYMENT_STRICT_SEND:
 //          PathPaymentStrictSendOp pathPaymentStrictSendOp;
+//      case CREATE_CLAIMABLE_BALANCE:
+//          CreateClaimableBalanceOp createClaimableBalanceOp;
+//      case CLAIM_CLAIMABLE_BALANCE:
+//          ClaimClaimableBalanceOp claimClaimableBalanceOp;
+//      case BEGIN_SPONSORING_FUTURE_RESERVES:
+//          BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
+//      case END_SPONSORING_FUTURE_RESERVES:
+//          void;
+//      case REVOKE_SPONSORSHIP:
+//          RevokeSponsorshipOp revokeSponsorshipOp;
 //      }
 //      body;
 //  };
@@ -203,6 +213,34 @@ public class Operation implements XdrElement {
     public void setPathPaymentStrictSendOp(PathPaymentStrictSendOp value) {
       this.pathPaymentStrictSendOp = value;
     }
+    private CreateClaimableBalanceOp createClaimableBalanceOp;
+    public CreateClaimableBalanceOp getCreateClaimableBalanceOp() {
+      return this.createClaimableBalanceOp;
+    }
+    public void setCreateClaimableBalanceOp(CreateClaimableBalanceOp value) {
+      this.createClaimableBalanceOp = value;
+    }
+    private ClaimClaimableBalanceOp claimClaimableBalanceOp;
+    public ClaimClaimableBalanceOp getClaimClaimableBalanceOp() {
+      return this.claimClaimableBalanceOp;
+    }
+    public void setClaimClaimableBalanceOp(ClaimClaimableBalanceOp value) {
+      this.claimClaimableBalanceOp = value;
+    }
+    private BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
+    public BeginSponsoringFutureReservesOp getBeginSponsoringFutureReservesOp() {
+      return this.beginSponsoringFutureReservesOp;
+    }
+    public void setBeginSponsoringFutureReservesOp(BeginSponsoringFutureReservesOp value) {
+      this.beginSponsoringFutureReservesOp = value;
+    }
+    private RevokeSponsorshipOp revokeSponsorshipOp;
+    public RevokeSponsorshipOp getRevokeSponsorshipOp() {
+      return this.revokeSponsorshipOp;
+    }
+    public void setRevokeSponsorshipOp(RevokeSponsorshipOp value) {
+      this.revokeSponsorshipOp = value;
+    }
     public static void encode(XdrDataOutputStream stream, OperationBody encodedOperationBody) throws IOException {
     //Xdrgen::AST::Identifier
     //OperationType
@@ -248,6 +286,20 @@ public class Operation implements XdrElement {
     break;
     case PATH_PAYMENT_STRICT_SEND:
     PathPaymentStrictSendOp.encode(stream, encodedOperationBody.pathPaymentStrictSendOp);
+    break;
+    case CREATE_CLAIMABLE_BALANCE:
+    CreateClaimableBalanceOp.encode(stream, encodedOperationBody.createClaimableBalanceOp);
+    break;
+    case CLAIM_CLAIMABLE_BALANCE:
+    ClaimClaimableBalanceOp.encode(stream, encodedOperationBody.claimClaimableBalanceOp);
+    break;
+    case BEGIN_SPONSORING_FUTURE_RESERVES:
+    BeginSponsoringFutureReservesOp.encode(stream, encodedOperationBody.beginSponsoringFutureReservesOp);
+    break;
+    case END_SPONSORING_FUTURE_RESERVES:
+    break;
+    case REVOKE_SPONSORSHIP:
+    RevokeSponsorshipOp.encode(stream, encodedOperationBody.revokeSponsorshipOp);
     break;
     }
     }
@@ -300,12 +352,26 @@ public class Operation implements XdrElement {
     case PATH_PAYMENT_STRICT_SEND:
     decodedOperationBody.pathPaymentStrictSendOp = PathPaymentStrictSendOp.decode(stream);
     break;
+    case CREATE_CLAIMABLE_BALANCE:
+    decodedOperationBody.createClaimableBalanceOp = CreateClaimableBalanceOp.decode(stream);
+    break;
+    case CLAIM_CLAIMABLE_BALANCE:
+    decodedOperationBody.claimClaimableBalanceOp = ClaimClaimableBalanceOp.decode(stream);
+    break;
+    case BEGIN_SPONSORING_FUTURE_RESERVES:
+    decodedOperationBody.beginSponsoringFutureReservesOp = BeginSponsoringFutureReservesOp.decode(stream);
+    break;
+    case END_SPONSORING_FUTURE_RESERVES:
+    break;
+    case REVOKE_SPONSORSHIP:
+    decodedOperationBody.revokeSponsorshipOp = RevokeSponsorshipOp.decode(stream);
+    break;
     }
       return decodedOperationBody;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.createAccountOp, this.paymentOp, this.pathPaymentStrictReceiveOp, this.manageSellOfferOp, this.createPassiveSellOfferOp, this.setOptionsOp, this.changeTrustOp, this.allowTrustOp, this.destination, this.manageDataOp, this.bumpSequenceOp, this.manageBuyOfferOp, this.pathPaymentStrictSendOp, this.type);
+      return Objects.hashCode(this.createAccountOp, this.paymentOp, this.pathPaymentStrictReceiveOp, this.manageSellOfferOp, this.createPassiveSellOfferOp, this.setOptionsOp, this.changeTrustOp, this.allowTrustOp, this.destination, this.manageDataOp, this.bumpSequenceOp, this.manageBuyOfferOp, this.pathPaymentStrictSendOp, this.createClaimableBalanceOp, this.claimClaimableBalanceOp, this.beginSponsoringFutureReservesOp, this.revokeSponsorshipOp, this.type);
     }
     @Override
     public boolean equals(Object object) {
@@ -314,7 +380,7 @@ public class Operation implements XdrElement {
       }
 
       OperationBody other = (OperationBody) object;
-      return Objects.equal(this.createAccountOp, other.createAccountOp) && Objects.equal(this.paymentOp, other.paymentOp) && Objects.equal(this.pathPaymentStrictReceiveOp, other.pathPaymentStrictReceiveOp) && Objects.equal(this.manageSellOfferOp, other.manageSellOfferOp) && Objects.equal(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp) && Objects.equal(this.setOptionsOp, other.setOptionsOp) && Objects.equal(this.changeTrustOp, other.changeTrustOp) && Objects.equal(this.allowTrustOp, other.allowTrustOp) && Objects.equal(this.destination, other.destination) && Objects.equal(this.manageDataOp, other.manageDataOp) && Objects.equal(this.bumpSequenceOp, other.bumpSequenceOp) && Objects.equal(this.manageBuyOfferOp, other.manageBuyOfferOp) && Objects.equal(this.pathPaymentStrictSendOp, other.pathPaymentStrictSendOp) && Objects.equal(this.type, other.type);
+      return Objects.equal(this.createAccountOp, other.createAccountOp) && Objects.equal(this.paymentOp, other.paymentOp) && Objects.equal(this.pathPaymentStrictReceiveOp, other.pathPaymentStrictReceiveOp) && Objects.equal(this.manageSellOfferOp, other.manageSellOfferOp) && Objects.equal(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp) && Objects.equal(this.setOptionsOp, other.setOptionsOp) && Objects.equal(this.changeTrustOp, other.changeTrustOp) && Objects.equal(this.allowTrustOp, other.allowTrustOp) && Objects.equal(this.destination, other.destination) && Objects.equal(this.manageDataOp, other.manageDataOp) && Objects.equal(this.bumpSequenceOp, other.bumpSequenceOp) && Objects.equal(this.manageBuyOfferOp, other.manageBuyOfferOp) && Objects.equal(this.pathPaymentStrictSendOp, other.pathPaymentStrictSendOp) && Objects.equal(this.createClaimableBalanceOp, other.createClaimableBalanceOp) && Objects.equal(this.claimClaimableBalanceOp, other.claimClaimableBalanceOp) && Objects.equal(this.beginSponsoringFutureReservesOp, other.beginSponsoringFutureReservesOp) && Objects.equal(this.revokeSponsorshipOp, other.revokeSponsorshipOp) && Objects.equal(this.type, other.type);
     }
 
   }

@@ -38,6 +38,12 @@ import com.google.common.base.Objects;
 //          AccountID accountID;
 //          string64 dataName;
 //      } data;
+//  
+//  case CLAIMABLE_BALANCE:
+//      struct
+//      {
+//          ClaimableBalanceID balanceID;
+//      } claimableBalance;
 //  };
 
 //  ===========================================================================
@@ -78,6 +84,13 @@ public class LedgerKey implements XdrElement {
   public void setData(LedgerKeyData value) {
     this.data = value;
   }
+  private LedgerKeyClaimableBalance claimableBalance;
+  public LedgerKeyClaimableBalance getClaimableBalance() {
+    return this.claimableBalance;
+  }
+  public void setClaimableBalance(LedgerKeyClaimableBalance value) {
+    this.claimableBalance = value;
+  }
   public static void encode(XdrDataOutputStream stream, LedgerKey encodedLedgerKey) throws IOException {
   //Xdrgen::AST::Identifier
   //LedgerEntryType
@@ -94,6 +107,9 @@ public class LedgerKey implements XdrElement {
   break;
   case DATA:
   LedgerKeyData.encode(stream, encodedLedgerKey.data);
+  break;
+  case CLAIMABLE_BALANCE:
+  LedgerKeyClaimableBalance.encode(stream, encodedLedgerKey.claimableBalance);
   break;
   }
   }
@@ -117,12 +133,15 @@ public class LedgerKey implements XdrElement {
   case DATA:
   decodedLedgerKey.data = LedgerKeyData.decode(stream);
   break;
+  case CLAIMABLE_BALANCE:
+  decodedLedgerKey.claimableBalance = LedgerKeyClaimableBalance.decode(stream);
+  break;
   }
     return decodedLedgerKey;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.account, this.trustLine, this.offer, this.data, this.type);
+    return Objects.hashCode(this.account, this.trustLine, this.offer, this.data, this.claimableBalance, this.type);
   }
   @Override
   public boolean equals(Object object) {
@@ -131,7 +150,7 @@ public class LedgerKey implements XdrElement {
     }
 
     LedgerKey other = (LedgerKey) object;
-    return Objects.equal(this.account, other.account) && Objects.equal(this.trustLine, other.trustLine) && Objects.equal(this.offer, other.offer) && Objects.equal(this.data, other.data) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.account, other.account) && Objects.equal(this.trustLine, other.trustLine) && Objects.equal(this.offer, other.offer) && Objects.equal(this.data, other.data) && Objects.equal(this.claimableBalance, other.claimableBalance) && Objects.equal(this.type, other.type);
   }
 
   public static class LedgerKeyAccount {
@@ -298,6 +317,41 @@ public class LedgerKey implements XdrElement {
 
       LedgerKeyData other = (LedgerKeyData) object;
       return Objects.equal(this.accountID, other.accountID) && Objects.equal(this.dataName, other.dataName);
+    }
+
+  }
+  public static class LedgerKeyClaimableBalance {
+    public LedgerKeyClaimableBalance () {}
+    private ClaimableBalanceID balanceID;
+    public ClaimableBalanceID getBalanceID() {
+      return this.balanceID;
+    }
+    public void setBalanceID(ClaimableBalanceID value) {
+      this.balanceID = value;
+    }
+    public static void encode(XdrDataOutputStream stream, LedgerKeyClaimableBalance encodedLedgerKeyClaimableBalance) throws IOException{
+      ClaimableBalanceID.encode(stream, encodedLedgerKeyClaimableBalance.balanceID);
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
+    public static LedgerKeyClaimableBalance decode(XdrDataInputStream stream) throws IOException {
+      LedgerKeyClaimableBalance decodedLedgerKeyClaimableBalance = new LedgerKeyClaimableBalance();
+      decodedLedgerKeyClaimableBalance.balanceID = ClaimableBalanceID.decode(stream);
+      return decodedLedgerKeyClaimableBalance;
+    }
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(this.balanceID);
+    }
+    @Override
+    public boolean equals(Object object) {
+      if (object == null || !(object instanceof LedgerKeyClaimableBalance)) {
+        return false;
+      }
+
+      LedgerKeyClaimableBalance other = (LedgerKeyClaimableBalance) object;
+      return Objects.equal(this.balanceID, other.balanceID);
     }
 
   }

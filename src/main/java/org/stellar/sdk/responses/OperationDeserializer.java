@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.operations.*;
 import org.stellar.sdk.xdr.OperationType;
 
@@ -20,6 +21,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
     // Create new Gson object with adapters needed in Operation
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
+            .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
             .create();
 
@@ -57,6 +59,16 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         return gson.fromJson(json, ManageBuyOfferOperationResponse.class);
       case PATH_PAYMENT_STRICT_SEND:
         return gson.fromJson(json, PathPaymentStrictSendOperationResponse.class);
+      case CREATE_CLAIMABLE_BALANCE:
+        return gson.fromJson(json, CreateClaimableBalanceOperationResponse.class);
+      case CLAIM_CLAIMABLE_BALANCE:
+        return gson.fromJson(json, ClaimClaimableBalanceOperationResponse.class);
+      case BEGIN_SPONSORING_FUTURE_RESERVES:
+        return gson.fromJson(json, BeginSponsoringFutureReservesOperationResponse.class);
+      case END_SPONSORING_FUTURE_RESERVES:
+        return gson.fromJson(json, EndSponsoringFutureReservesOperationResponse.class);
+      case REVOKE_SPONSORSHIP:
+        return gson.fromJson(json, RevokeSponsorshipOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

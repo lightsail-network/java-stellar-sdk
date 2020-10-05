@@ -36,6 +36,7 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getSubentryCount(), new Integer(0));
     assertEquals(account.getInflationDestination(), "GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC");
     assertEquals(account.getHomeDomain(), "stellar.org");
+    assertFalse(account.getSponsor().isPresent());
 
     assertEquals(account.getThresholds().getLowThreshold(), 10);
     assertEquals(account.getThresholds().getMedThreshold(), 20);
@@ -52,19 +53,24 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
     assertEquals(account.getBalances()[0].getBuyingLiabilities(), "100.1234567");
     assertEquals(account.getBalances()[0].getSellingLiabilities(), "100.7654321");
+    assertFalse(account.getBalances()[0].getSponsor().isPresent());
 
     assertEquals(account.getBalances()[1].getAssetType(), "native");
     assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
     assertEquals(account.getBalances()[1].getBuyingLiabilities(), "5.1234567");
     assertEquals(account.getBalances()[1].getSellingLiabilities(), "1.7654321");
     assertEquals(account.getBalances()[1].getLimit(), null);
+    assertFalse(account.getBalances()[1].getSponsor().isPresent());
 
     assertEquals(account.getSigners()[0].getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSigners()[0].getWeight(), 0);
     assertEquals(account.getSigners()[0].getType(), "ed25519_public_key");
+    assertFalse(account.getSigners()[0].getSponsor().isPresent());
+
     assertEquals(account.getSigners()[1].getKey(), "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
     assertEquals(account.getSigners()[1].getWeight(), 1);
     assertEquals(account.getSigners()[1].getType(), "ed25519_public_key");
+    assertFalse(account.getSigners()[1].getSponsor().isPresent());
 
     assertEquals(account.getData().size(), 2);
     assertEquals(account.getData().get("entry1"), "dGVzdA==");
@@ -77,6 +83,17 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getLinks().getOperations().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}");
     assertEquals(account.getLinks().getSelf().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getLinks().getTransactions().getHref(), "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}");
+  }
+
+
+  @Test
+  public void testDeserializeSponsor() {
+    AccountResponse account = GsonSingleton.getInstance().fromJson(withSponsor, AccountResponse.class);
+    assertEquals(account.getSponsor().get(), "GCA7RXNKN7FGBLJVETJCUUXGXTCR6L2SJQFXDGMQCDET5YUE6KFNHQHO");
+    assertEquals(account.getBalances()[0].getSponsor().get(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+    assertEquals(account.getSigners()[0].getSponsor().get(), "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
+    assertEquals(account.getNumSponsored().intValue(), 3);
+    assertEquals(account.getNumSponsoring().intValue(), 2);
   }
 
   @Test
@@ -314,4 +331,80 @@ public class AccountDeserializerTest extends TestCase {
           "    }\n" +
           "  ]\n" +
           "}";
+
+  String withSponsor = "{\n" +
+      "  \"_links\": {\n" +
+      "    \"self\": {\n" +
+      "      \"href\": \"https://horizon-protocol14.stellar.org/accounts/GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO\"\n" +
+      "    },\n" +
+      "    \"transactions\": {\n" +
+      "      \"href\": \"https://horizon-protocol14.stellar.org/accounts/GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO/transactions{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"operations\": {\n" +
+      "      \"href\": \"https://horizon-protocol14.stellar.org/accounts/GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO/operations{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"payments\": {\n" +
+      "      \"href\": \"https://horizon-protocol14.stellar.org/accounts/GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO/payments{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"effects\": {\n" +
+      "      \"href\": \"https://horizon-protocol14.stellar.org/accounts/GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO/effects{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"offers\": {\n" +
+      "      \"href\": \"https://horizon-protocol14.stellar.org/accounts/GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO/offers{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"trades\": {\n" +
+      "      \"href\": \"https://horizon-protocol14.stellar.org/accounts/GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO/trades{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"data\": {\n" +
+      "      \"href\": \"https://horizon-protocol14.stellar.org/accounts/GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO/data/{key}\",\n" +
+      "      \"templated\": true\n" +
+      "    }\n" +
+      "  },\n" +
+      "  \"id\": \"GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO\",\n" +
+      "  \"account_id\": \"GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO\",\n" +
+      "  \"sequence\": \"504211980681218\",\n" +
+      "  \"subentry_count\": 1,\n" +
+      "  \"last_modified_ledger\": 117663,\n" +
+      "  \"last_modified_time\": \"2020-09-28T17:56:04Z\",\n" +
+      "  \"thresholds\": {\n" +
+      "    \"low_threshold\": 0,\n" +
+      "    \"med_threshold\": 0,\n" +
+      "    \"high_threshold\": 0\n" +
+      "  },\n" +
+      "  \"flags\": {\n" +
+      "    \"auth_required\": false,\n" +
+      "    \"auth_revocable\": false,\n" +
+      "    \"auth_immutable\": false\n" +
+      "  },\n" +
+      "  \"balances\": [\n" +
+      "    {\n" +
+      "      \"sponsor\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+      "      \"balance\": \"9999.9999800\",\n" +
+      "      \"buying_liabilities\": \"0.0000000\",\n" +
+      "      \"selling_liabilities\": \"0.0000000\",\n" +
+      "      \"asset_type\": \"native\"\n" +
+      "    }\n" +
+      "  ],\n" +
+      "  \"signers\": [\n" +
+      "    {\n" +
+      "      \"sponsor\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
+      "      \"weight\": 1,\n" +
+      "      \"key\": \"GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO\",\n" +
+      "      \"type\": \"ed25519_public_key\"\n" +
+      "    }\n" +
+      "  ],\n" +
+      "  \"data\": {\n" +
+      "    \"welcome-friend\": \"aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ==\"\n" +
+      "  },\n" +
+      "  \"num_sponsoring\": 2,\n" +
+      "  \"num_sponsored\": 3,\n" +
+      "  \"sponsor\": \"GCA7RXNKN7FGBLJVETJCUUXGXTCR6L2SJQFXDGMQCDET5YUE6KFNHQHO\",\n" +
+      "  \"paging_token\": \"GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO\"\n" +
+      "}";
 }

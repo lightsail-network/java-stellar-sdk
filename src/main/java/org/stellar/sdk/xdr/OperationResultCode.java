@@ -17,7 +17,8 @@ import java.io.IOException;
 //      opNO_ACCOUNT = -2,          // source account was not found
 //      opNOT_SUPPORTED = -3,       // operation not supported at this time
 //      opTOO_MANY_SUBENTRIES = -4, // max number of subentries already reached
-//      opEXCEEDED_WORK_LIMIT = -5  // operation did too much work
+//      opEXCEEDED_WORK_LIMIT = -5, // operation did too much work
+//      opTOO_MANY_SPONSORING = -6  // account is sponsoring too many entries
 //  };
 
 //  ===========================================================================
@@ -28,6 +29,7 @@ public enum OperationResultCode implements XdrElement {
   opNOT_SUPPORTED(-3),
   opTOO_MANY_SUBENTRIES(-4),
   opEXCEEDED_WORK_LIMIT(-5),
+  opTOO_MANY_SPONSORING(-6),
   ;
   private int mValue;
 
@@ -48,6 +50,7 @@ public enum OperationResultCode implements XdrElement {
       case -3: return opNOT_SUPPORTED;
       case -4: return opTOO_MANY_SUBENTRIES;
       case -5: return opEXCEEDED_WORK_LIMIT;
+      case -6: return opTOO_MANY_SPONSORING;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
