@@ -110,6 +110,48 @@ public abstract class Operation {
       case PATH_PAYMENT_STRICT_SEND:
         operation = new PathPaymentStrictSendOperation.Builder(body.getPathPaymentStrictSendOp()).build();
         break;
+      case CREATE_CLAIMABLE_BALANCE:
+        operation = new CreateClaimableBalanceOperation.Builder(body.getCreateClaimableBalanceOp()).build();
+        break;
+      case CLAIM_CLAIMABLE_BALANCE:
+        operation = new ClaimClaimableBalanceOperation.Builder(body.getClaimClaimableBalanceOp()).build();
+        break;
+      case BEGIN_SPONSORING_FUTURE_RESERVES:
+        operation = new BeginSponsoringFutureReservesOperation.Builder(body.getBeginSponsoringFutureReservesOp()).build();
+        break;
+      case END_SPONSORING_FUTURE_RESERVES:
+        operation = new EndSponsoringFutureReservesOperation();
+        break;
+      case REVOKE_SPONSORSHIP:
+        switch (body.getRevokeSponsorshipOp().getDiscriminant()) {
+          case REVOKE_SPONSORSHIP_SIGNER:
+            operation = new RevokeSignerSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+            break;
+          case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
+            switch (body.getRevokeSponsorshipOp().getLedgerKey().getDiscriminant()) {
+              case DATA:
+                operation = new RevokeDataSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                break;
+              case OFFER:
+                operation = new RevokeOfferSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                break;
+              case ACCOUNT:
+                operation = new RevokeAccountSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                break;
+              case TRUSTLINE:
+                operation = new RevokeTrustlineSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                break;
+              case CLAIMABLE_BALANCE:
+                operation = new RevokeClaimableBalanceSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                break;
+              default:
+                throw new RuntimeException("Unknown revoke sponsorship ledger entry type " + body.getRevokeSponsorshipOp().getLedgerKey().getDiscriminant());
+            }
+            break;
+          default:
+            throw new RuntimeException("Unknown revoke sponsorship body " + body.getRevokeSponsorshipOp().getDiscriminant());
+        }
+        break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }

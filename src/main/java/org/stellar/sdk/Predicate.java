@@ -7,7 +7,6 @@ import org.stellar.sdk.xdr.ClaimPredicateType;
 import org.stellar.sdk.xdr.Int64;
 import org.threeten.bp.Instant;
 
-import java.util.Date;
 import java.util.List;
 
 public abstract class Predicate {

@@ -91,7 +91,7 @@ public class ClaimableBalancesRequestBuilderTest {
       "    {\n" +
       "      \"destination\": \"GD3W2FFQQ2WTJTBHXYBLMQS664XCT3LYSRKUBWNU7K4KXBZDBLPY3RAU\",\n" +
       "      \"predicate\": {\n" +
-      "        \"absBefore\": \"2020-09-29T23:56:04Z\"\n" +
+      "        \"abs_before\": \"2020-09-29T23:56:04Z\"\n" +
       "      }\n" +
       "    },\n" +
       "    {\n" +
@@ -99,11 +99,11 @@ public class ClaimableBalancesRequestBuilderTest {
       "      \"predicate\": {\n" +
       "        \"or\": [\n" +
       "          {\n" +
-      "            \"absBefore\": \"2020-09-28T17:57:04Z\"\n" +
+      "            \"abs_before\": \"2020-09-28T17:57:04Z\"\n" +
       "          },\n" +
       "          {\n" +
       "            \"not\": {\n" +
-      "              \"absBefore\": \"2020-09-29T23:56:04Z\"\n" +
+      "              \"abs_before\": \"2020-09-29T23:56:04Z\"\n" +
       "            }\n" +
       "          }\n" +
       "        ]\n" +

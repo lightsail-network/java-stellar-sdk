@@ -90,10 +90,10 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
       "            \"predicate\": {\n" +
       "              \"or\": [\n" +
       "                {\n" +
-      "                  \"absBefore\": \"2020-09-28T17:57:04Z\"\n" +
+      "                  \"abs_before\": \"2020-09-28T17:57:04Z\"\n" +
       "                },\n" +
       "                {\n" +
-    "                    \"relBefore\": \"12\"\n" +
+    "                    \"rel_before\": \"12\"\n" +
       "                }\n" +
       "              ]\n" +
       "            }\n" +
@@ -117,7 +117,7 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
       "            \"predicate\": {\n" +
       "              \"and\": [\n" +
       "                {\n" +
-      "                  \"absBefore\": \"2020-09-28T17:57:04Z\"\n" +
+      "                  \"abs_before\": \"2020-09-28T17:57:04Z\"\n" +
       "                },\n" +
       "                {\n" +
       "                  \"not\": {\n" +
