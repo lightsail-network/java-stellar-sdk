@@ -97,6 +97,15 @@ server.claimableBalances().claimableBalance(balanceId);
     * `signer_sponsorship_removed` with the following fields:
         * `former_sponsor` - former sponsor of a signer.
 
+### Breaking changes
+
+* Replace `Sep10Challenge.newChallenge()`'s `String anchorName` parameter with `String domainName` 
+* Add `String domainName` parameter to `Sep10Challenge.readChallengeTransaction()`, `Sep10Challenge.verifyChallengeTransactionSigners()`, and `Sep10Challenge.verifyChallengeTransactionThreshold()`
+
+SEP-10 now requires clients to verify the `SIGNING_KEY` included in the TOML file of the service requiring authentication is used to sign the challenge and that the challenge's Manage Data operation key includes the requested service's home domain. These checks ensure the challenge cannot be used in a relay attack.
+
+The breaking changes described above support the added SEP-10 2.0 requirements for both servers and clients.
+
 ## 0.18.0
 
 * Generate V1 transaction envelopes when constructing new Transaction instances ([#285](https://github.com/stellar/java-stellar-sdk/pull/285/files)).
