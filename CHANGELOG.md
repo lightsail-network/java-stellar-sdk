@@ -2,6 +2,11 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.20.0
+* Update challenge transaction helpers for SEP-0010 v2.1.0. ([#300](https://github.com/stellar/java-stellar-sdk/pull/300)).
+    - Remove verification of domain name.
+    - Allow additional manage data operations that have the source account set as the server key.
+
 ## 0.19.0
 
 ### Add

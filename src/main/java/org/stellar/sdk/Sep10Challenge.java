@@ -19,7 +19,7 @@ public class Sep10Challenge {
    * @param signer           The server's signing account.
    * @param network          The Stellar network used by the server.
    * @param clientAccountId  The stellar account belonging to the client.
-   * @param domainName       The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param domainName       The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication (The domainName field is reserved for future use and not used).
    * @param timebounds       The lifetime of the challenge token.
    */
   public static Transaction newChallenge(
@@ -69,7 +69,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication (The domainName field is reserved for future use and not used).
    * @return {@link ChallengeTransaction}, the decoded transaction envelope and client account ID contained within.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
@@ -112,10 +112,12 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("Transaction is not within range of the specified timebounds.");
     }
 
-    // verify that transaction contains a single Manage Data operation and its source account is not null
-    if (transaction.getOperations().length != 1) {
-      throw new InvalidSep10ChallengeException("Transaction requires a single ManageData operation.");
+    if (transaction.getOperations().length < 1) {
+      throw new InvalidSep10ChallengeException("Transaction requires at least one ManageData operation.");
     }
+
+    // verify that the first operation in the transaction is a Manage Data operation
+    // and its source account is not null
     Operation operation = transaction.getOperations()[0];
     if (!(operation instanceof ManageDataOperation)) {
       throw new InvalidSep10ChallengeException("Operation type should be ManageData.");
@@ -126,10 +128,6 @@ public class Sep10Challenge {
     String clientAccountId = manageDataOperation.getSourceAccount();
     if (clientAccountId == null) {
       throw new InvalidSep10ChallengeException("Operation should have a source account.");
-    }
-
-    if (!String.format("%s %s", domainName, MANAGER_DATA_NAME_FLAG).equals(manageDataOperation.getName())) {
-      throw new InvalidSep10ChallengeException("The transaction's operation key name does not include the expected home domain.");
     }
 
     if (StrKey.decodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID) {
@@ -153,6 +151,21 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("Random nonce before encoding as base64 should be 48 bytes long.");
     }
 
+    // verify subsequent operations are manage data ops with source account set to server account
+    for (int i = 1; i < transaction.getOperations().length; i++) {
+      Operation op = transaction.getOperations()[i];
+      if (!(op instanceof ManageDataOperation)) {
+        throw new InvalidSep10ChallengeException("Operation type should be ManageData.");
+      }
+      ManageDataOperation manageDataOp = (ManageDataOperation) op;
+      if (manageDataOp.getSourceAccount() == null) {
+        throw new InvalidSep10ChallengeException("Operation should have a source account.");
+      }
+      if (!manageDataOp.getSourceAccount().equals(serverAccountId)) {
+        throw new InvalidSep10ChallengeException("Subsequent operations are unrecognized.");
+      }
+    }
+
     if (!verifyTransactionSignature(transaction, serverAccountId)) {
       throw new InvalidSep10ChallengeException(String.format("Transaction not signed by server: %s.", serverAccountId));
     }
@@ -172,7 +185,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication (The domainName field is reserved for future use and not used).
    * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
@@ -262,7 +275,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication (The domainName field is reserved for future use and not used).
    * @param threshold       The threshold on the client account.
    * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
