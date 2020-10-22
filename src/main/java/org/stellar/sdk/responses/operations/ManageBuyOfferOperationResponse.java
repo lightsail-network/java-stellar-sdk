@@ -12,7 +12,7 @@ import org.stellar.sdk.AssetTypeNative;
  */
 public class ManageBuyOfferOperationResponse extends OperationResponse {
   @SerializedName("offer_id")
-  protected final Integer offerId;
+  protected final Long offerId;
   @SerializedName("amount")
   protected final String amount;
   // Price is not implemented yet in horizon
@@ -34,7 +34,7 @@ public class ManageBuyOfferOperationResponse extends OperationResponse {
   @SerializedName("selling_asset_issuer")
   protected final String sellingAssetIssuer;
 
-  ManageBuyOfferOperationResponse(Integer offerId, String amount, String price, String buyingAssetType, String buyingAssetCode, String buyingAssetIssuer, String sellingAssetType, String sellingAssetCode, String sellingAssetIssuer) {
+  ManageBuyOfferOperationResponse(Long offerId, String amount, String price, String buyingAssetType, String buyingAssetCode, String buyingAssetIssuer, String sellingAssetType, String sellingAssetCode, String sellingAssetIssuer) {
     this.offerId = offerId;
     this.amount = amount;
     this.price = price;
@@ -46,7 +46,7 @@ public class ManageBuyOfferOperationResponse extends OperationResponse {
     this.sellingAssetIssuer = sellingAssetIssuer;
   }
 
-  public Integer getOfferId() {
+  public Long getOfferId() {
     return offerId;
   }
 

@@ -2,6 +2,16 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.21.0
+
+### Breaking change
+- Correct the type of `offerId`, it was **java.lang.Integer** before, and now it is **java.lang.Long**. ([#303](https://github.com/stellar/java-stellar-sdk/pull/303)).
+
+    This change affects the following fields:
+    - org.stellar.sdk.responses.operations.CreatePassiveSellOfferOperationResponse.offerId
+    - org.stellar.sdk.responses.operations.ManageBuyOfferOperationResponse.offerId
+    - org.stellar.sdk.responses.operations.ManageSellOfferOperationResponse.offerId
+
 ## 0.20.0
 * Update challenge transaction helpers for SEP-0010 v2.1.0. ([#300](https://github.com/stellar/java-stellar-sdk/pull/300)).
     - Remove verification of domain name.
