@@ -5,7 +5,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## 0.21.0
 
 ### Breaking change
-- Correct the type of `offerId`, it was **java.lang.Integer** before, and now it is **java.lang.Long**. ([#303](https://github.com/stellar/java-stellar-sdk/pull/303)).
+- Change the type of `offerId` from **java.lang.Integer** to **java.lang.Long** to align with the 64-bit size of offer IDs. ([#303](https://github.com/stellar/java-stellar-sdk/pull/303)).
 
     This change affects the following fields:
     - org.stellar.sdk.responses.operations.CreatePassiveSellOfferOperationResponse.offerId
