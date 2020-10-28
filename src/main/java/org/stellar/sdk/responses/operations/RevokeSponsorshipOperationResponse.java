@@ -50,39 +50,39 @@ public class RevokeSponsorshipOperationResponse extends OperationResponse {
   }
 
   public Optional<String> getAccountId() {
-    return Optional.of(accountId);
+    return Optional.fromNullable(accountId);
   }
 
   public Optional<String> getClaimableBalanceId() {
-    return Optional.of(claimableBalanceId);
+    return Optional.fromNullable(claimableBalanceId);
   }
 
   public Optional<String> getDataAccountId() {
-    return Optional.of(dataAccountId);
+    return Optional.fromNullable(dataAccountId);
   }
 
   public Optional<String> getDataName() {
-    return Optional.of(dataName);
+    return Optional.fromNullable(dataName);
   }
 
   public Optional<String> getOfferId() {
-    return Optional.of(offerId);
+    return Optional.fromNullable(offerId);
   }
 
   public Optional<String> getTrustlineAccountId() {
-    return Optional.of(trustlineAccountId);
+    return Optional.fromNullable(trustlineAccountId);
   }
 
   public Optional<String> getTrustlineAsset() {
-    return Optional.of(trustlineAsset);
+    return Optional.fromNullable(trustlineAsset);
   }
 
   public Optional<String> getSignerAccountId() {
-    return Optional.of(signerAccountId);
+    return Optional.fromNullable(signerAccountId);
   }
 
   public Optional<String> getSignerKey() {
-    return Optional.of(signerKey);
+    return Optional.fromNullable(signerKey);
   }
 
 }
