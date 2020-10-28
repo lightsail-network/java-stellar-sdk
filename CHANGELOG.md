@@ -2,6 +2,9 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.21.1
+- Fix NullPointerException in `org.stellar.sdk.responses.operations.RevokeSponsorshipOperationResponse` accessor methods.
+
 ## 0.21.0
 
 ### Breaking change
