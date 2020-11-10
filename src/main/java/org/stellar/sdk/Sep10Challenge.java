@@ -64,17 +64,19 @@ public class Sep10Challenge {
    * that any signatures other than the servers on the transaction are valid. Use
    * one of the following functions to completely verify the transaction:
    * {@link Sep10Challenge#verifyChallengeTransactionSigners(String, String, Network, String, Set)} or
-   * {@link Sep10Challenge#verifyChallengeTransactionThreshold(String, String, Network, String, int, Set)}
+   * {@link Sep10Challenge#verifyChallengeTransactionThreshold(String, String, Network, String, int, Set)} or
+   * {@link Sep10Challenge#verifyChallengeTransactionSigners(String, String, Network, String[], Set)} or
+   * {@link Sep10Challenge#verifyChallengeTransactionThreshold(String, String, Network, String[], int, Set)} or
    *
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param domainNames     One of the home domains that is expected to be included in the first Manage Data operation's string key.
    * @return {@link ChallengeTransaction}, the decoded transaction envelope and client account ID contained within.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
-  public static ChallengeTransaction readChallengeTransaction(String challengeXdr, String serverAccountId, Network network, String domainName) throws InvalidSep10ChallengeException, IOException {
+  public static ChallengeTransaction readChallengeTransaction(String challengeXdr, String serverAccountId, Network network, String[] domainNames) throws InvalidSep10ChallengeException, IOException {
     // decode the received input as a base64-urlencoded XDR representation of Stellar transaction envelope
     AbstractTransaction parsed = Transaction.fromEnvelopeXdr(challengeXdr, network);
     if (!(parsed instanceof Transaction)) {
@@ -128,7 +130,15 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("Operation should have a source account.");
     }
 
-    if (!String.format("%s %s", domainName, MANAGER_DATA_NAME_FLAG).equals(manageDataOperation.getName())) {
+    String matchedDomainName = null;
+    for (String homeDomain: domainNames) {
+      if ((homeDomain + " " + MANAGER_DATA_NAME_FLAG).equals(manageDataOperation.getName())) {
+        matchedDomainName = homeDomain;
+        break;
+      }
+    }
+
+    if (matchedDomainName == null) {
       throw new InvalidSep10ChallengeException("The transaction's operation key name does not include the expected home domain.");
     }
 
@@ -136,6 +146,9 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("clientAccountId: "+clientAccountId+" is not a valid account id");
     }
 
+    if (manageDataOperation.getValue() == null) {
+      throw new InvalidSep10ChallengeException("The transaction's operation value should not be null.");
+    }
     // verify manage data value
     if (manageDataOperation.getValue().length != 64) {
       throw new InvalidSep10ChallengeException("Random nonce encoded as base64 should be 64 bytes long.");
@@ -157,7 +170,32 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException(String.format("Transaction not signed by server: %s.", serverAccountId));
     }
 
-    return new ChallengeTransaction(transaction, clientAccountId);
+    return new ChallengeTransaction(transaction, clientAccountId, matchedDomainName);
+  }
+
+  /**
+   * Reads a SEP 10 challenge transaction and returns the decoded transaction envelope and client account ID contained within.
+   * <p>
+   * It also verifies that transaction is signed by the server.
+   * <p>
+   * It does not verify that the transaction has been signed by the client or
+   * that any signatures other than the servers on the transaction are valid. Use
+   * one of the following functions to completely verify the transaction:
+   * {@link Sep10Challenge#verifyChallengeTransactionSigners(String, String, Network, String, Set)} or
+   * {@link Sep10Challenge#verifyChallengeTransactionThreshold(String, String, Network, String, int, Set)} or
+   * {@link Sep10Challenge#verifyChallengeTransactionSigners(String, String, Network, String[], Set)} or
+   * {@link Sep10Challenge#verifyChallengeTransactionThreshold(String, String, Network, String[], int, Set)} or
+   *
+   * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
+   * @param serverAccountId Account ID for server's account.
+   * @param network         The network to connect to for verifying and retrieving.
+   * @param domainName      The home domains that is expected to be included in the first Manage Data operation's string key.
+   * @return {@link ChallengeTransaction}, the decoded transaction envelope and client account ID contained within.
+   * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
+   * @throws IOException                    If read XDR string fails, the exception will be thrown.
+   */
+  public static ChallengeTransaction readChallengeTransaction(String challengeXdr, String serverAccountId, Network network, String domainName) throws InvalidSep10ChallengeException, IOException {
+    return readChallengeTransaction(challengeXdr, serverAccountId, network, new String[]{domainName});
   }
 
   /**
@@ -172,19 +210,41 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param domainName     One of the home domains that is expected to be included in the first Manage Data operation's string key.
    * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
   public static Set<String> verifyChallengeTransactionSigners(String challengeXdr, String serverAccountId, Network network, String domainName, Set<String> signers) throws InvalidSep10ChallengeException, IOException {
+    return verifyChallengeTransactionSigners(challengeXdr, serverAccountId, network, new String[]{domainName}, signers);
+  }
+
+  /**
+   * Verifies that for a SEP 10 challenge transaction
+   * all signatures on the transaction are accounted for. A transaction is
+   * verified if it is signed by the server account, and all other signatures
+   * match a signer that has been provided as an argument. Additional signers can
+   * be provided that do not have a signature, but all signatures must be matched
+   * to a signer for verification to succeed. If verification succeeds a list of
+   * signers that were found is returned, excluding the server account ID.
+   *
+   * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
+   * @param serverAccountId Account ID for server's account.
+   * @param network         The network to connect to for verifying and retrieving.
+   * @param domainNames     One of the home domains that is expected to be included in the first Manage Data operation's string key.
+   * @param signers         The signers of client account.
+   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
+   * @throws IOException                    If read XDR string fails, the exception will be thrown.
+   */
+  public static Set<String> verifyChallengeTransactionSigners(String challengeXdr, String serverAccountId, Network network, String[] domainNames, Set<String> signers) throws InvalidSep10ChallengeException, IOException {
     if (signers == null || signers.isEmpty()) {
       throw new InvalidSep10ChallengeException("No verifiable signers provided, at least one G... address must be provided.");
     }
 
     // Read the transaction which validates its structure.
-    ChallengeTransaction parsedChallengeTransaction = readChallengeTransaction(challengeXdr, serverAccountId, network, domainName);
+    ChallengeTransaction parsedChallengeTransaction = readChallengeTransaction(challengeXdr, serverAccountId, network, domainNames);
     Transaction transaction = parsedChallengeTransaction.getTransaction();
 
     // Ensure the server account ID is an address and not a seed.
@@ -262,14 +322,14 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param domainNames     One of the home domains that is expected to be included in the first Manage Data operation's string key.
    * @param threshold       The threshold on the client account.
    * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
-  public static Set<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId, Network network, String domainName, int threshold, Set<Signer> signers) throws InvalidSep10ChallengeException, IOException {
+  public static Set<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId, Network network, String[] domainNames, int threshold, Set<Signer> signers) throws InvalidSep10ChallengeException, IOException {
     if (signers == null || signers.isEmpty()) {
       throw new InvalidSep10ChallengeException("No verifiable signers provided, at least one G... address must be provided.");
     }
@@ -279,7 +339,7 @@ public class Sep10Challenge {
       weightsForSigner.put(signer.getKey(), signer.getWeight());
     }
 
-    Set<String> signersFound = verifyChallengeTransactionSigners(challengeXdr, serverAccountId, network, domainName, weightsForSigner.keySet());
+    Set<String> signersFound = verifyChallengeTransactionSigners(challengeXdr, serverAccountId, network, domainNames, weightsForSigner.keySet());
 
     int sum = 0;
     for (String signer : signersFound) {
@@ -294,6 +354,28 @@ public class Sep10Challenge {
     }
 
     return signersFound;
+  }
+
+  /**
+   * Verifies that for a SEP-0010 challenge transaction
+   * all signatures on the transaction are accounted for and that the signatures
+   * meet a threshold on an account. A transaction is verified if it is signed by
+   * the server account, and all other signatures match a signer that has been
+   * provided as an argument, and those signatures meet a threshold on the
+   * account.
+   *
+   * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
+   * @param serverAccountId Account ID for server's account.
+   * @param network         The network to connect to for verifying and retrieving.
+   * @param domainName      The home domain that is expected to be included in the first Manage Data operation's string key.
+   * @param threshold       The threshold on the client account.
+   * @param signers         The signers of client account.
+   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
+   * @throws IOException                    If read XDR string fails, the exception will be thrown.
+   */
+  public static Set<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId, Network network, String domainName, int threshold, Set<Signer> signers) throws InvalidSep10ChallengeException, IOException {
+    return verifyChallengeTransactionThreshold(challengeXdr, serverAccountId, network, new String[]{domainName}, threshold, signers);
   }
 
   private static Set<String> verifyTransactionSignatures(Transaction transaction, Set<String> signers) throws InvalidSep10ChallengeException {
@@ -333,15 +415,17 @@ public class Sep10Challenge {
   }
 
   /**
-   * Used to store the results produced by {@link Sep10Challenge#readChallengeTransaction(String, String, Network, String)}.
+   * Used to store the results produced by {@link Sep10Challenge#readChallengeTransaction(String, String, Network, String[])}.
    */
   public static class ChallengeTransaction {
     private final Transaction transaction;
     private final String clientAccountId;
+    private final String matchedHomeDomain;
 
-    public ChallengeTransaction(Transaction transaction, String clientAccountId) {
+    public ChallengeTransaction(Transaction transaction, String clientAccountId, String matchedHomeDomain) {
       this.transaction = transaction;
       this.clientAccountId = clientAccountId;
+      this.matchedHomeDomain = matchedHomeDomain;
     }
 
     public Transaction getTransaction() {
@@ -350,6 +434,10 @@ public class Sep10Challenge {
 
     public String getClientAccountId() {
       return clientAccountId;
+    }
+
+    public String getMatchedHomeDomain() {
+      return matchedHomeDomain;
     }
 
     @Override
@@ -369,7 +457,8 @@ public class Sep10Challenge {
 
       ChallengeTransaction other = (ChallengeTransaction) object;
       return Objects.equal(this.transaction.hashHex(), other.transaction.hashHex()) &&
-              Objects.equal(this.clientAccountId, other.clientAccountId);
+        Objects.equal(this.clientAccountId, other.clientAccountId) &&
+        Objects.equal(this.matchedHomeDomain, other.matchedHomeDomain);
     }
   }
 
