@@ -114,10 +114,12 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("Transaction is not within range of the specified timebounds.");
     }
 
-    // verify that transaction contains a single Manage Data operation and its source account is not null
-    if (transaction.getOperations().length != 1) {
-      throw new InvalidSep10ChallengeException("Transaction requires a single ManageData operation.");
+    if (transaction.getOperations().length < 1) {
+      throw new InvalidSep10ChallengeException("Transaction requires at least one ManageData operation.");
     }
+
+    // verify that the first operation in the transaction is a Manage Data operation
+    // and its source account is not null
     Operation operation = transaction.getOperations()[0];
     if (!(operation instanceof ManageDataOperation)) {
       throw new InvalidSep10ChallengeException("Operation type should be ManageData.");
@@ -164,6 +166,21 @@ public class Sep10Challenge {
 
     if (nonce.length != 48) {
       throw new InvalidSep10ChallengeException("Random nonce before encoding as base64 should be 48 bytes long.");
+    }
+
+    // verify subsequent operations are manage data ops with source account set to server account
+    for (int i = 1; i < transaction.getOperations().length; i++) {
+      Operation op = transaction.getOperations()[i];
+      if (!(op instanceof ManageDataOperation)) {
+        throw new InvalidSep10ChallengeException("Operation type should be ManageData.");
+      }
+      ManageDataOperation manageDataOp = (ManageDataOperation) op;
+      if (manageDataOp.getSourceAccount() == null) {
+        throw new InvalidSep10ChallengeException("Operation should have a source account.");
+      }
+      if (!manageDataOp.getSourceAccount().equals(serverAccountId)) {
+        throw new InvalidSep10ChallengeException("Subsequent operations are unrecognized.");
+      }
     }
 
     if (!verifyTransactionSignature(transaction, serverAccountId)) {

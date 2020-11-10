@@ -537,54 +537,6 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidTooManyOperations() throws IOException {
-    KeyPair server = KeyPair.random();
-    KeyPair client = KeyPair.random();
-    String domainName = "example.com";
-
-    Network network = Network.TESTNET;
-
-    long now = System.currentTimeMillis() / 1000L;
-    long end = now + 300;
-    TimeBounds timeBounds = new TimeBounds(now, end);
-
-    byte[] nonce = new byte[48];
-    SecureRandom random = new SecureRandom();
-    random.nextBytes(nonce);
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
-
-    Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-        .setSourceAccount(client.getAccountId())
-        .build();
-
-    ManageDataOperation manageDataOperation2 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-        .setSourceAccount(client.getAccountId())
-        .build();
-
-    Operation[] operations = new Operation[]{manageDataOperation1, manageDataOperation2};
-    Transaction transaction = new Transaction(
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
-    transaction.sign(server);
-    String challenge = transaction.toEnvelopeXdrBase64();
-
-    try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
-      fail();
-    } catch (InvalidSep10ChallengeException e) {
-      assertEquals("Transaction requires a single ManageData operation.", e.getMessage());
-    }
-  }
-
-  @Test
   public void testReadChallengeTransactionInvalidOperationWrongType() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
@@ -830,35 +782,180 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDomainNameMismatch() throws IOException {
+  public void testReadChallengeTransactionValidAdditionalManageDataOpsWithSourceAccountSetToServerAccount() throws IOException, InvalidSep10ChallengeException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    Network network = Network.TESTNET;
     String domainName = "example.com";
-    String mismatchDomainName = "mismatch_example.com";
+
+    Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
 
-    Transaction transaction = null;
-    try {
-      transaction = Sep10Challenge.newChallenge(
-          server,
-          network,
-          client.getAccountId(),
-          domainName,
-          timeBounds
-      );
-    } catch (InvalidSep10ChallengeException e) {
-      fail("Should not have thrown any exception.");
-    }
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation operation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+        .setSourceAccount(client.getAccountId())
+        .build();
+    ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes())
+        .setSourceAccount(server.getAccountId())
+        .build();
+    Operation[] operations = new Operation[]{operation1, operation2};
+    Transaction transaction = new Transaction(
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
+    );
+    transaction.sign(server);
+    String challenge = transaction.toEnvelopeXdrBase64();
+
+    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
+    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId(), domainName), challengeTransaction);
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidAdditionalManageDataOpsWithoutSourceAccountSetToServerAccount() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    String domainName = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation operation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+        .setSourceAccount(client.getAccountId())
+        .build();
+    ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes())
+        .setSourceAccount(client.getAccountId())
+        .build();
+    Operation[] operations = new Operation[]{operation1, operation2};
+    Transaction transaction = new Transaction(
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
+    );
+    transaction.sign(server);
+    String challenge = transaction.toEnvelopeXdrBase64();
 
     try {
-      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, mismatchDomainName);
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
       fail();
     } catch (InvalidSep10ChallengeException e) {
-      assertEquals("The transaction's operation key name does not include the expected home domain.", e.getMessage());
+      assertEquals("Subsequent operations are unrecognized.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidAdditionalManageDataOpsWithSourceAccountSetToNull() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    String domainName = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation operation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+        .setSourceAccount(client.getAccountId())
+        .build();
+    ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes()).build();
+    Operation[] operations = new Operation[]{operation1, operation2};
+    Transaction transaction = new Transaction(
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
+    );
+    transaction.sign(server);
+    String challenge = transaction.toEnvelopeXdrBase64();
+
+    try {
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("Operation should have a source account.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidAdditionalOpsOfOtherTypes() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    String domainName = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation operation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+        .setSourceAccount(client.getAccountId())
+        .build();
+    BumpSequenceOperation operation2 = new BumpSequenceOperation.Builder(0L)
+        .setSourceAccount(server.getAccountId())
+        .build();
+    Operation[] operations = new Operation[]{operation1, operation2};
+    Transaction transaction = new Transaction(
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
+    );
+    transaction.sign(server);
+    String challenge = transaction.toEnvelopeXdrBase64();
+
+    try {
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("Operation type should be ManageData.", e.getMessage());
     }
   }
 
@@ -916,6 +1013,7 @@ public class Sep10ChallengeTest {
 
     try {
       Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, new String[]{});
+      fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("The transaction's operation key name does not include the expected home domain.", e.getMessage());
     }
@@ -1795,6 +1893,188 @@ public class Sep10ChallengeTest {
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testVerifyChallengeTransactionValidAdditionalManageDataOpsWithSourceAccountSetToServerAccount() throws IOException, InvalidSep10ChallengeException {
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+    String domainName = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation operation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+        .setSourceAccount(masterClient.getAccountId())
+        .build();
+    ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes())
+        .setSourceAccount(server.getAccountId())
+        .build();
+    Operation[] operations = new Operation[]{operation1, operation2};
+    Transaction transaction = new Transaction(
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
+    );
+    transaction.sign(server);
+    transaction.sign(masterClient);
+
+    Set<String> signers = new HashSet<String>(Collections.singletonList(masterClient.getAccountId()));
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
+    assertEquals(signers, signersFound);
+  }
+
+  @Test
+  public void testVerifyChallengeTransactionInvalidAdditionalManageDataOpsWithoutSourceAccountSetToServerAccount() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+    String domainName = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation operation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+        .setSourceAccount(masterClient.getAccountId())
+        .build();
+    ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes())
+        .setSourceAccount(masterClient.getAccountId())
+        .build();
+    Operation[] operations = new Operation[]{operation1, operation2};
+    Transaction transaction = new Transaction(
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
+    );
+    transaction.sign(server);
+    transaction.sign(masterClient);
+
+    Set<String> signers = new HashSet<String>(Collections.singletonList(masterClient.getAccountId()));
+    try {
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("Subsequent operations are unrecognized.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testVerifyChallengeTransactionInvalidAdditionalManageDataOpsWithSourceAccountSetToNull() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+    String domainName = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation operation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+        .setSourceAccount(masterClient.getAccountId())
+        .build();
+    ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes()).build();
+    Operation[] operations = new Operation[]{operation1, operation2};
+    Transaction transaction = new Transaction(
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
+    );
+    transaction.sign(server);
+    transaction.sign(masterClient);
+
+    Set<String> signers = new HashSet<String>(Collections.singletonList(masterClient.getAccountId()));
+    try {
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("Operation should have a source account.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testVerifyChallengeTransactionInvalidAdditionalOpsOfOtherTypes() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+    String domainName = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation operation1 = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+        .setSourceAccount(masterClient.getAccountId())
+        .build();
+    BumpSequenceOperation operation2 = new BumpSequenceOperation.Builder(0L)
+        .setSourceAccount(server.getAccountId())
+        .build();
+    Operation[] operations = new Operation[]{operation1, operation2};
+    Transaction transaction = new Transaction(
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
+    );
+    transaction.sign(server);
+    transaction.sign(masterClient);
+
+    Set<String> signers = new HashSet<String>(Collections.singletonList(masterClient.getAccountId()));
+    try {
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, signers);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("Operation type should be ManageData.", e.getMessage());
     }
   }
 }
