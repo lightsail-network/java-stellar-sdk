@@ -988,7 +988,39 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDomainNamesEmpty() throws IOException, InvalidSep10ChallengeException {
+  public void testReadChallengeTransactionInvalidDomainNamesMismatch() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    Transaction transaction = null;
+    try {
+      transaction = Sep10Challenge.newChallenge(
+        server,
+        network,
+        client.getAccountId(),
+        domainName,
+        timeBounds
+      );
+    } catch (InvalidSep10ChallengeException e) {
+      fail("Should not have thrown any exception.");
+    }
+
+    try {
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, new String[]{"example2.com", "example1.com"});
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("The transaction's operation key name does not include the expected home domain.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidDomainNamesEmpty() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;

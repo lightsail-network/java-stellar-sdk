@@ -133,7 +133,7 @@ public class Sep10Challenge {
     }
 
     String matchedDomainName = null;
-    for (String homeDomain: domainNames) {
+    for (String homeDomain : domainNames) {
       if ((homeDomain + " " + MANAGER_DATA_NAME_FLAG).equals(manageDataOperation.getName())) {
         matchedDomainName = homeDomain;
         break;
@@ -227,7 +227,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName     One of the home domains that is expected to be included in the first Manage Data operation's string key.
+   * @param domainName      The home domains that is expected to be included in the first Manage Data operation's string key.
    * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.

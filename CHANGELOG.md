@@ -2,6 +2,9 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+ ## 0.21.2
+- Update challenge transaction helpers for SEP-0010 v3.0.0. ([#308](https://github.com/stellar/java-stellar-sdk/pull/308)).
+
 ## 0.21.1
 - Fix NullPointerException in `org.stellar.sdk.responses.operations.RevokeSponsorshipOperationResponse` accessor methods.
 
