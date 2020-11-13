@@ -141,7 +141,7 @@ public class Sep10Challenge {
     }
 
     if (matchedDomainName == null) {
-      throw new InvalidSep10ChallengeException("The transaction's operation key name does not include the expected home domain.");
+      throw new InvalidSep10ChallengeException("The transaction's operation key name does not include one of the expected home domains.");
     }
 
     if (StrKey.decodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID) {

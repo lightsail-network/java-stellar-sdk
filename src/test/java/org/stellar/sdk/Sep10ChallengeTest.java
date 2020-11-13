@@ -1015,7 +1015,7 @@ public class Sep10ChallengeTest {
       Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, new String[]{"example2.com", "example1.com"});
       fail();
     } catch (InvalidSep10ChallengeException e) {
-      assertEquals("The transaction's operation key name does not include the expected home domain.", e.getMessage());
+      assertEquals("The transaction's operation key name does not include one of the expected home domains.", e.getMessage());
     }
   }
 
@@ -1047,7 +1047,7 @@ public class Sep10ChallengeTest {
       Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, new String[]{});
       fail();
     } catch (InvalidSep10ChallengeException e) {
-      assertEquals("The transaction's operation key name does not include the expected home domain.", e.getMessage());
+      assertEquals("The transaction's operation key name does not include one of the expected home domains.", e.getMessage());
     }
   }
 
