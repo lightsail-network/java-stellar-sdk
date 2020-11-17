@@ -71,7 +71,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainNames     One of the home domains that is expected to be included in the first Manage Data operation's string key.
+   * @param domainNames     An array of home domains, one of which is expected to be included in the first Manage Data operation's string key.
    * @return {@link ChallengeTransaction}, the decoded transaction envelope and client account ID contained within.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
@@ -206,7 +206,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName      The home domains that is expected to be included in the first Manage Data operation's string key.
+   * @param domainName      The home domain that is expected to be included in the first Manage Data operation's string key.
    * @return {@link ChallengeTransaction}, the decoded transaction envelope and client account ID contained within.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
@@ -227,7 +227,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainName      The home domains that is expected to be included in the first Manage Data operation's string key.
+   * @param domainName      The home domain that is expected to be included in the first Manage Data operation's string key.
    * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
@@ -249,7 +249,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainNames     One of the home domains that is expected to be included in the first Manage Data operation's string key.
+   * @param domainNames     An array of home domains, one of which is expected to be included in the first Manage Data operation's string key.
    * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
@@ -339,7 +339,7 @@ public class Sep10Challenge {
    * @param challengeXdr    SEP-0010 transaction challenge transaction in base64.
    * @param serverAccountId Account ID for server's account.
    * @param network         The network to connect to for verifying and retrieving.
-   * @param domainNames     One of the home domains that is expected to be included in the first Manage Data operation's string key.
+   * @param domainNames     An array of home domains, one of which is expected to be included in the first Manage Data operation's string key.
    * @param threshold       The threshold on the client account.
    * @param signers         The signers of client account.
    * @return a list of signers that were found is returned, excluding the server account ID.
