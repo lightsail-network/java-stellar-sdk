@@ -5,6 +5,7 @@ import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -51,7 +52,14 @@ public class ClaimClaimableBalanceOperation extends Operation {
      * @param op {@link ClaimClaimableBalanceOp}
      */
     Builder(ClaimClaimableBalanceOp op) {
-      balanceId = BaseEncoding.base16().lowerCase().encode(op.getBalanceID().getV0().getHash());
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      try {
+        op.getBalanceID().encode(xdrDataOutputStream);
+      } catch (IOException e) {
+        throw new IllegalArgumentException("invalid claimClaimableBalanceOp.", e);
+      }
+      balanceId = BaseEncoding.base16().lowerCase().encode(byteArrayOutputStream.toByteArray());
     }
 
     /**
