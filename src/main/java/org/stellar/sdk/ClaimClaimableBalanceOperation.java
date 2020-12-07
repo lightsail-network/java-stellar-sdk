@@ -4,6 +4,10 @@ import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ClaimClaimableBalanceOperation extends Operation {
@@ -22,14 +26,16 @@ public class ClaimClaimableBalanceOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ClaimClaimableBalanceOp op = new ClaimClaimableBalanceOp();
 
-    ClaimableBalanceID id = new ClaimableBalanceID();
-    id.setDiscriminant(ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0);
-    Hash hash = new Hash();
-    hash.setHash(BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase()));
-    id.setV0(hash);
+    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase());
+    XdrDataInputStream balanceIdXdrDataInputStream = new XdrDataInputStream(new ByteArrayInputStream(balanceIdBytes));
+    ClaimableBalanceID id;
+    try {
+      id = ClaimableBalanceID.decode(balanceIdXdrDataInputStream);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("invalid balanceId: " + balanceId, e);
+    }
 
     op.setBalanceID(id);
-
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.CLAIM_CLAIMABLE_BALANCE);
     body.setClaimClaimableBalanceOp(op);
@@ -46,7 +52,14 @@ public class ClaimClaimableBalanceOperation extends Operation {
      * @param op {@link ClaimClaimableBalanceOp}
      */
     Builder(ClaimClaimableBalanceOp op) {
-      balanceId = BaseEncoding.base16().lowerCase().encode(op.getBalanceID().getV0().getHash());
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      try {
+        op.getBalanceID().encode(xdrDataOutputStream);
+      } catch (IOException e) {
+        throw new IllegalArgumentException("invalid claimClaimableBalanceOp.", e);
+      }
+      balanceId = BaseEncoding.base16().lowerCase().encode(byteArrayOutputStream.toByteArray());
     }
 
     /**
