@@ -3,7 +3,6 @@ package org.stellar.sdk;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
-import org.stellar.sdk.xdr.BumpSequenceOp;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 
@@ -102,7 +101,7 @@ public class Sep10ChallengeTest {
     );
 
     Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName);
-    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
+    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId(), domainName), challengeTransaction);
   }
 
   @Test
@@ -154,7 +153,7 @@ public class Sep10ChallengeTest {
           server.getAccountId(),
           Network.TESTNET, domainName
       );
-      assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
+      assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId(), domainName), challengeTransaction);
     }
   }
 
@@ -256,7 +255,7 @@ public class Sep10ChallengeTest {
     transaction.sign(client);
 
     Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName);
-    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
+    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId(), domainName), challengeTransaction);
   }
 
   @Test
@@ -745,49 +744,41 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionValidDoesNotVerifyHomeDomainWithHomeDomainSetToNull() throws IOException, InvalidSep10ChallengeException {
+  public void testReadChallengeTransactionInvalidDataValueIsNull() throws IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
-    Network network = Network.TESTNET;
     String domainName = "example.com";
+
+    Network network = Network.TESTNET;
 
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
 
-    Transaction transaction = Sep10Challenge.newChallenge(
-        server,
-        network,
-        client.getAccountId(),
-        domainName,
-        timeBounds
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", null)
+      .setSourceAccount(client.getAccountId())
+      .build();
+
+    Operation[] operations = new Operation[]{manageDataOperation1};
+    Transaction transaction = new Transaction(
+      sourceAccount.getAccountId(),
+      100 * operations.length,
+      sourceAccount.getIncrementedSequenceNumber(),
+      operations,
+      Memo.none(),
+      timeBounds,
+      network
     );
+    transaction.sign(server);
+    String challenge = transaction.toEnvelopeXdrBase64();
 
-    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, null);
-    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
-  }
-
-  @Test
-  public void testReadChallengeTransactionValidDoesNotVerifyHomeDomainWithHomeDomainSetToInvalidValue() throws IOException, InvalidSep10ChallengeException {
-    KeyPair server = KeyPair.random();
-    KeyPair client = KeyPair.random();
-    Network network = Network.TESTNET;
-    String domainName = "example.com";
-
-    long now = System.currentTimeMillis() / 1000L;
-    long end = now + 300;
-    TimeBounds timeBounds = new TimeBounds(now, end);
-
-    Transaction transaction = Sep10Challenge.newChallenge(
-      server,
-      network,
-      client.getAccountId(),
-      domainName,
-      timeBounds
-    );
-
-    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, "invalid.domain");
-    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
+    try {
+      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("The transaction's operation value should not be null.", e.getMessage());
+    }
   }
 
   @Test
@@ -829,7 +820,7 @@ public class Sep10ChallengeTest {
     String challenge = transaction.toEnvelopeXdrBase64();
 
     Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName);
-    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId()), challengeTransaction);
+    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId(), domainName), challengeTransaction);
   }
 
   @Test
@@ -969,6 +960,132 @@ public class Sep10ChallengeTest {
   }
 
   @Test
+  public void testReadChallengeTransactionValidMultipleDomainNames() throws IOException, InvalidSep10ChallengeException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    Transaction transaction = null;
+    try {
+      transaction = Sep10Challenge.newChallenge(
+        server,
+        network,
+        client.getAccountId(),
+        domainName,
+        timeBounds
+      );
+    } catch (InvalidSep10ChallengeException e) {
+      fail("Should not have thrown any exception.");
+    }
+
+    Sep10Challenge.ChallengeTransaction challengeTransaction = Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, new String[]{"example3.com", "example2.com", "example.com"});
+    assertEquals(new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId(), domainName), challengeTransaction);
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidDomainNamesMismatch() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    Transaction transaction = null;
+    try {
+      transaction = Sep10Challenge.newChallenge(
+        server,
+        network,
+        client.getAccountId(),
+        domainName,
+        timeBounds
+      );
+    } catch (InvalidSep10ChallengeException e) {
+      fail("Should not have thrown any exception.");
+    }
+
+    try {
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, new String[]{"example2.com", "example1.com"});
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("The transaction's operation key name does not include one of the expected home domains.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidDomainNamesEmpty() throws IOException, InvalidSep10ChallengeException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    Transaction transaction = null;
+    try {
+      transaction = Sep10Challenge.newChallenge(
+        server,
+        network,
+        client.getAccountId(),
+        domainName,
+        timeBounds
+      );
+    } catch (InvalidSep10ChallengeException e) {
+      fail("Should not have thrown any exception.");
+    }
+
+    try {
+      String[] domainNames = new String[]{};
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainNames);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals("At least one domain name must be included in domainNames.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidDomainNamesNull() throws IOException, InvalidSep10ChallengeException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    Transaction transaction = null;
+    try {
+      transaction = Sep10Challenge.newChallenge(
+              server,
+              network,
+              client.getAccountId(),
+              domainName,
+              timeBounds
+      );
+    } catch (InvalidSep10ChallengeException e) {
+      fail("Should not have thrown any exception.");
+    }
+
+    try {
+      String[] domainNames = null;
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainNames);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals("At least one domain name must be included in domainNames.", e.getMessage());
+    }
+  }
+
+  @Test
   public void testVerifyChallengeTransactionThresholdInvalidNotSignedByServer() throws IOException {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
@@ -1018,7 +1135,6 @@ public class Sep10ChallengeTest {
     } catch (InvalidSep10ChallengeException e) {
       assertEquals(String.format("Transaction not signed by server: %s.", server.getAccountId()), e.getMessage());
     }
-
   }
 
   @Test
@@ -1048,6 +1164,36 @@ public class Sep10ChallengeTest {
 
     int threshold = 255;
     Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, threshold, signers);
+    assertEquals(new HashSet<String>(Collections.singletonList(masterClient.getAccountId())), signersFound);
+  }
+
+  @Test
+  public void testVerifyChallengeTransactionThresholdValidMultipleDomainNames() throws IOException, InvalidSep10ChallengeException {
+    Network network = Network.TESTNET;
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+
+    Transaction transaction = Sep10Challenge.newChallenge(
+      server,
+      network,
+      masterClient.getAccountId(),
+      domainName,
+      timeBounds
+    );
+
+    transaction.sign(masterClient);
+
+    Set<Sep10Challenge.Signer> signers = new HashSet<Sep10Challenge.Signer>(Collections.singletonList(
+      new Sep10Challenge.Signer(masterClient.getAccountId(), 255)
+    ));
+
+    int threshold = 255;
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, new String[]{"example3.com", "example2.com", "example.com"}, threshold, signers);
     assertEquals(new HashSet<String>(Collections.singletonList(masterClient.getAccountId())), signersFound);
   }
 
@@ -1428,6 +1574,32 @@ public class Sep10ChallengeTest {
   }
 
   @Test
+  public void testVerifyChallengeTransactionSignersValidMultipleDomainNames() throws InvalidSep10ChallengeException, IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+
+    Transaction transaction = Sep10Challenge.newChallenge(
+      server,
+      network,
+      masterClient.getAccountId(),
+      domainName,
+      timeBounds
+    );
+
+    transaction.sign(masterClient);
+
+    Set<String> signers = new HashSet<String>(Collections.singletonList(masterClient.getAccountId()));
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, new String[]{"example3.com", "example2.com", "example.com"}, signers);
+    assertEquals(signers, signersFound);
+  }
+
+  @Test
   public void testVerifyChallengeTransactionSignersInvalidServerAndNoClient() throws InvalidSep10ChallengeException, IOException {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -1788,56 +1960,6 @@ public class Sep10ChallengeTest {
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("No verifiable signers provided, at least one G... address must be provided.", e.getMessage());
     }
-  }
-
-  @Test
-  public void testVerifyChallengeTransactionValidDoesNotVerifyHomeDomainHomeDomainSetToNull() throws IOException, InvalidSep10ChallengeException {
-    KeyPair server = KeyPair.random();
-    KeyPair masterClient = KeyPair.random();
-    Network network = Network.TESTNET;
-    String domainName = "example.com";
-
-    long now = System.currentTimeMillis() / 1000L;
-    long end = now + 300;
-    TimeBounds timeBounds = new TimeBounds(now, end);
-
-    Transaction transaction = Sep10Challenge.newChallenge(
-        server,
-        network,
-        masterClient.getAccountId(),
-        domainName,
-        timeBounds
-    );
-    transaction.sign(masterClient);
-
-    Set<String> signers = new HashSet<String>(Collections.singletonList(masterClient.getAccountId()));
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, null, signers);
-    assertEquals(signers, signersFound);
-  }
-
-  @Test
-  public void testVerifyChallengeTransactionValidDoesNotVerifyHomeDomainWithHomeDomainSetToInvalidValue() throws IOException, InvalidSep10ChallengeException {
-    KeyPair server = KeyPair.random();
-    KeyPair masterClient = KeyPair.random();
-    Network network = Network.TESTNET;
-    String domainName = "example.com";
-
-    long now = System.currentTimeMillis() / 1000L;
-    long end = now + 300;
-    TimeBounds timeBounds = new TimeBounds(now, end);
-
-    Transaction transaction = Sep10Challenge.newChallenge(
-      server,
-      network,
-      masterClient.getAccountId(),
-      domainName,
-      timeBounds
-    );
-    transaction.sign(masterClient);
-
-    Set<String> signers = new HashSet<String>(Collections.singletonList(masterClient.getAccountId()));
-    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, "invalid.domain", signers);
-    assertEquals(signers, signersFound);
   }
 
   @Test
