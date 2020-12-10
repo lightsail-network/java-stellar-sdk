@@ -77,6 +77,10 @@ public class Sep10Challenge {
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
   public static ChallengeTransaction readChallengeTransaction(String challengeXdr, String serverAccountId, Network network, String[] domainNames) throws InvalidSep10ChallengeException, IOException {
+    if (domainNames == null || domainNames.length == 0) {
+      throw new IllegalArgumentException("At least one domain name must be included in domainNames.");
+    }
+
     // decode the received input as a base64-urlencoded XDR representation of Stellar transaction envelope
     AbstractTransaction parsed = Transaction.fromEnvelopeXdr(challengeXdr, network);
     if (!(parsed instanceof Transaction)) {

@@ -1020,7 +1020,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDomainNamesEmpty() throws IOException {
+  public void testReadChallengeTransactionInvalidDomainNamesEmpty() throws IOException, InvalidSep10ChallengeException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -1044,10 +1044,44 @@ public class Sep10ChallengeTest {
     }
 
     try {
-      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, new String[]{});
+      String[] domainNames = new String[]{};
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainNames);
       fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals("At least one domain name must be included in domainNames.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidDomainNamesNull() throws IOException, InvalidSep10ChallengeException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    Transaction transaction = null;
+    try {
+      transaction = Sep10Challenge.newChallenge(
+              server,
+              network,
+              client.getAccountId(),
+              domainName,
+              timeBounds
+      );
     } catch (InvalidSep10ChallengeException e) {
-      assertEquals("The transaction's operation key name does not include one of the expected home domains.", e.getMessage());
+      fail("Should not have thrown any exception.");
+    }
+
+    try {
+      String[] domainNames = null;
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainNames);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals("At least one domain name must be included in domainNames.", e.getMessage());
     }
   }
 
