@@ -82,11 +82,54 @@ public class SurveyResponseMessage implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SurveyResponseMessage)) {
+    if (!(object instanceof SurveyResponseMessage)) {
       return false;
     }
 
     SurveyResponseMessage other = (SurveyResponseMessage) object;
     return Objects.equal(this.surveyorPeerID, other.surveyorPeerID) && Objects.equal(this.surveyedPeerID, other.surveyedPeerID) && Objects.equal(this.ledgerNum, other.ledgerNum) && Objects.equal(this.commandType, other.commandType) && Objects.equal(this.encryptedBody, other.encryptedBody);
+  }
+
+  public static final class Builder {
+    private NodeID surveyorPeerID;
+    private NodeID surveyedPeerID;
+    private Uint32 ledgerNum;
+    private SurveyMessageCommandType commandType;
+    private EncryptedBody encryptedBody;
+
+    public Builder surveyorPeerID(NodeID surveyorPeerID) {
+      this.surveyorPeerID = surveyorPeerID;
+      return this;
+    }
+
+    public Builder surveyedPeerID(NodeID surveyedPeerID) {
+      this.surveyedPeerID = surveyedPeerID;
+      return this;
+    }
+
+    public Builder ledgerNum(Uint32 ledgerNum) {
+      this.ledgerNum = ledgerNum;
+      return this;
+    }
+
+    public Builder commandType(SurveyMessageCommandType commandType) {
+      this.commandType = commandType;
+      return this;
+    }
+
+    public Builder encryptedBody(EncryptedBody encryptedBody) {
+      this.encryptedBody = encryptedBody;
+      return this;
+    }
+
+    public SurveyResponseMessage build() {
+      SurveyResponseMessage val = new SurveyResponseMessage();
+      val.setSurveyorPeerID(surveyorPeerID);
+      val.setSurveyedPeerID(surveyedPeerID);
+      val.setLedgerNum(ledgerNum);
+      val.setCommandType(commandType);
+      val.setEncryptedBody(encryptedBody);
+      return val;
+    }
   }
 }

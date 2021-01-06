@@ -124,12 +124,69 @@ public class TransactionV0 implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionV0)) {
+    if (!(object instanceof TransactionV0)) {
       return false;
     }
 
     TransactionV0 other = (TransactionV0) object;
     return Objects.equal(this.sourceAccountEd25519, other.sourceAccountEd25519) && Objects.equal(this.fee, other.fee) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.timeBounds, other.timeBounds) && Objects.equal(this.memo, other.memo) && Arrays.equals(this.operations, other.operations) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private Uint256 sourceAccountEd25519;
+    private Uint32 fee;
+    private SequenceNumber seqNum;
+    private TimeBounds timeBounds;
+    private Memo memo;
+    private Operation[] operations;
+    private TransactionV0Ext ext;
+
+    public Builder sourceAccountEd25519(Uint256 sourceAccountEd25519) {
+      this.sourceAccountEd25519 = sourceAccountEd25519;
+      return this;
+    }
+
+    public Builder fee(Uint32 fee) {
+      this.fee = fee;
+      return this;
+    }
+
+    public Builder seqNum(SequenceNumber seqNum) {
+      this.seqNum = seqNum;
+      return this;
+    }
+
+    public Builder timeBounds(TimeBounds timeBounds) {
+      this.timeBounds = timeBounds;
+      return this;
+    }
+
+    public Builder memo(Memo memo) {
+      this.memo = memo;
+      return this;
+    }
+
+    public Builder operations(Operation[] operations) {
+      this.operations = operations;
+      return this;
+    }
+
+    public Builder ext(TransactionV0Ext ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public TransactionV0 build() {
+      TransactionV0 val = new TransactionV0();
+      val.setSourceAccountEd25519(sourceAccountEd25519);
+      val.setFee(fee);
+      val.setSeqNum(seqNum);
+      val.setTimeBounds(timeBounds);
+      val.setMemo(memo);
+      val.setOperations(operations);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class TransactionV0Ext {
@@ -141,6 +198,22 @@ public class TransactionV0 implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public TransactionV0Ext build() {
+        TransactionV0Ext val = new TransactionV0Ext();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, TransactionV0Ext encodedTransactionV0Ext) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -169,7 +242,7 @@ public class TransactionV0 implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof TransactionV0Ext)) {
+      if (!(object instanceof TransactionV0Ext)) {
         return false;
       }
 

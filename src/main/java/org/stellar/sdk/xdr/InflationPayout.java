@@ -52,11 +52,33 @@ public class InflationPayout implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof InflationPayout)) {
+    if (!(object instanceof InflationPayout)) {
       return false;
     }
 
     InflationPayout other = (InflationPayout) object;
     return Objects.equal(this.destination, other.destination) && Objects.equal(this.amount, other.amount);
+  }
+
+  public static final class Builder {
+    private AccountID destination;
+    private Int64 amount;
+
+    public Builder destination(AccountID destination) {
+      this.destination = destination;
+      return this;
+    }
+
+    public Builder amount(Int64 amount) {
+      this.amount = amount;
+      return this;
+    }
+
+    public InflationPayout build() {
+      InflationPayout val = new InflationPayout();
+      val.setDestination(destination);
+      val.setAmount(amount);
+      return val;
+    }
   }
 }

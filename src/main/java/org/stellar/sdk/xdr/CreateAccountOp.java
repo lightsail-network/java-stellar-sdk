@@ -52,11 +52,33 @@ public class CreateAccountOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof CreateAccountOp)) {
+    if (!(object instanceof CreateAccountOp)) {
       return false;
     }
 
     CreateAccountOp other = (CreateAccountOp) object;
     return Objects.equal(this.destination, other.destination) && Objects.equal(this.startingBalance, other.startingBalance);
+  }
+
+  public static final class Builder {
+    private AccountID destination;
+    private Int64 startingBalance;
+
+    public Builder destination(AccountID destination) {
+      this.destination = destination;
+      return this;
+    }
+
+    public Builder startingBalance(Int64 startingBalance) {
+      this.startingBalance = startingBalance;
+      return this;
+    }
+
+    public CreateAccountOp build() {
+      CreateAccountOp val = new CreateAccountOp();
+      val.setDestination(destination);
+      val.setStartingBalance(startingBalance);
+      return val;
+    }
   }
 }

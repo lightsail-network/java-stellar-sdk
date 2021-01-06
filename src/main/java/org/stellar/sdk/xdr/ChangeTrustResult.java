@@ -28,6 +28,22 @@ public class ChangeTrustResult implements XdrElement {
   public void setDiscriminant(ChangeTrustResultCode value) {
     this.code = value;
   }
+
+  public static final class Builder {
+    private ChangeTrustResultCode discriminant;
+
+    public Builder discriminant(ChangeTrustResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public ChangeTrustResult build() {
+      ChangeTrustResult val = new ChangeTrustResult();
+      val.setDiscriminant(discriminant);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, ChangeTrustResult encodedChangeTrustResult) throws IOException {
   //Xdrgen::AST::Identifier
   //ChangeTrustResultCode
@@ -60,7 +76,7 @@ public class ChangeTrustResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ChangeTrustResult)) {
+    if (!(object instanceof ChangeTrustResult)) {
       return false;
     }
 

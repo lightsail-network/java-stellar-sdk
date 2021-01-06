@@ -15,33 +15,45 @@ import java.util.Arrays;
 //  ===========================================================================
 public class SignatureHint implements XdrElement {
   private byte[] SignatureHint;
+
+  public SignatureHint() {}
+
+  public SignatureHint(byte[] SignatureHint) {
+    this.SignatureHint = SignatureHint;
+  }
+
   public byte[] getSignatureHint() {
     return this.SignatureHint;
   }
+
   public void setSignatureHint(byte[] value) {
     this.SignatureHint = value;
   }
+
   public static void encode(XdrDataOutputStream stream, SignatureHint  encodedSignatureHint) throws IOException {
-  int SignatureHintsize = encodedSignatureHint.SignatureHint.length;
-  stream.write(encodedSignatureHint.getSignatureHint(), 0, SignatureHintsize);
+    int SignatureHintsize = encodedSignatureHint.SignatureHint.length;
+    stream.write(encodedSignatureHint.getSignatureHint(), 0, SignatureHintsize);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static SignatureHint decode(XdrDataInputStream stream) throws IOException {
     SignatureHint decodedSignatureHint = new SignatureHint();
-  int SignatureHintsize = 4;
-  decodedSignatureHint.SignatureHint = new byte[SignatureHintsize];
-  stream.read(decodedSignatureHint.SignatureHint, 0, SignatureHintsize);
+    int SignatureHintsize = 4;
+    decodedSignatureHint.SignatureHint = new byte[SignatureHintsize];
+    stream.read(decodedSignatureHint.SignatureHint, 0, SignatureHintsize);
     return decodedSignatureHint;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.SignatureHint);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SignatureHint)) {
+    if (!(object instanceof SignatureHint)) {
       return false;
     }
 

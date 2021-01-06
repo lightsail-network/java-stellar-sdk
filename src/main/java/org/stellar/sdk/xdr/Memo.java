@@ -62,6 +62,50 @@ public class Memo implements XdrElement {
   public void setRetHash(Hash value) {
     this.retHash = value;
   }
+
+  public static final class Builder {
+    private MemoType discriminant;
+    private XdrString text;
+    private Uint64 id;
+    private Hash hash;
+    private Hash retHash;
+
+    public Builder discriminant(MemoType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder text(XdrString text) {
+      this.text = text;
+      return this;
+    }
+
+    public Builder id(Uint64 id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder hash(Hash hash) {
+      this.hash = hash;
+      return this;
+    }
+
+    public Builder retHash(Hash retHash) {
+      this.retHash = retHash;
+      return this;
+    }
+
+    public Memo build() {
+      Memo val = new Memo();
+      val.setDiscriminant(discriminant);
+      val.setText(text);
+      val.setId(id);
+      val.setHash(hash);
+      val.setRetHash(retHash);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, Memo encodedMemo) throws IOException {
   //Xdrgen::AST::Identifier
   //MemoType
@@ -114,7 +158,7 @@ public class Memo implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Memo)) {
+    if (!(object instanceof Memo)) {
       return false;
     }
 

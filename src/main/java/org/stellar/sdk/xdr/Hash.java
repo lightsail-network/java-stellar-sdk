@@ -15,33 +15,45 @@ import java.util.Arrays;
 //  ===========================================================================
 public class Hash implements XdrElement {
   private byte[] Hash;
+
+  public Hash() {}
+
+  public Hash(byte[] Hash) {
+    this.Hash = Hash;
+  }
+
   public byte[] getHash() {
     return this.Hash;
   }
+
   public void setHash(byte[] value) {
     this.Hash = value;
   }
+
   public static void encode(XdrDataOutputStream stream, Hash  encodedHash) throws IOException {
-  int Hashsize = encodedHash.Hash.length;
-  stream.write(encodedHash.getHash(), 0, Hashsize);
+    int Hashsize = encodedHash.Hash.length;
+    stream.write(encodedHash.getHash(), 0, Hashsize);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static Hash decode(XdrDataInputStream stream) throws IOException {
     Hash decodedHash = new Hash();
-  int Hashsize = 32;
-  decodedHash.Hash = new byte[Hashsize];
-  stream.read(decodedHash.Hash, 0, Hashsize);
+    int Hashsize = 32;
+    decodedHash.Hash = new byte[Hashsize];
+    stream.read(decodedHash.Hash, 0, Hashsize);
     return decodedHash;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.Hash);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Hash)) {
+    if (!(object instanceof Hash)) {
       return false;
     }
 

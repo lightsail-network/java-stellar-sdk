@@ -184,11 +184,124 @@ public class PeerStats implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PeerStats)) {
+    if (!(object instanceof PeerStats)) {
       return false;
     }
 
     PeerStats other = (PeerStats) object;
     return Objects.equal(this.id, other.id) && Objects.equal(this.versionStr, other.versionStr) && Objects.equal(this.messagesRead, other.messagesRead) && Objects.equal(this.messagesWritten, other.messagesWritten) && Objects.equal(this.bytesRead, other.bytesRead) && Objects.equal(this.bytesWritten, other.bytesWritten) && Objects.equal(this.secondsConnected, other.secondsConnected) && Objects.equal(this.uniqueFloodBytesRecv, other.uniqueFloodBytesRecv) && Objects.equal(this.duplicateFloodBytesRecv, other.duplicateFloodBytesRecv) && Objects.equal(this.uniqueFetchBytesRecv, other.uniqueFetchBytesRecv) && Objects.equal(this.duplicateFetchBytesRecv, other.duplicateFetchBytesRecv) && Objects.equal(this.uniqueFloodMessageRecv, other.uniqueFloodMessageRecv) && Objects.equal(this.duplicateFloodMessageRecv, other.duplicateFloodMessageRecv) && Objects.equal(this.uniqueFetchMessageRecv, other.uniqueFetchMessageRecv) && Objects.equal(this.duplicateFetchMessageRecv, other.duplicateFetchMessageRecv);
+  }
+
+  public static final class Builder {
+    private NodeID id;
+    private XdrString versionStr;
+    private Uint64 messagesRead;
+    private Uint64 messagesWritten;
+    private Uint64 bytesRead;
+    private Uint64 bytesWritten;
+    private Uint64 secondsConnected;
+    private Uint64 uniqueFloodBytesRecv;
+    private Uint64 duplicateFloodBytesRecv;
+    private Uint64 uniqueFetchBytesRecv;
+    private Uint64 duplicateFetchBytesRecv;
+    private Uint64 uniqueFloodMessageRecv;
+    private Uint64 duplicateFloodMessageRecv;
+    private Uint64 uniqueFetchMessageRecv;
+    private Uint64 duplicateFetchMessageRecv;
+
+    public Builder id(NodeID id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder versionStr(XdrString versionStr) {
+      this.versionStr = versionStr;
+      return this;
+    }
+
+    public Builder messagesRead(Uint64 messagesRead) {
+      this.messagesRead = messagesRead;
+      return this;
+    }
+
+    public Builder messagesWritten(Uint64 messagesWritten) {
+      this.messagesWritten = messagesWritten;
+      return this;
+    }
+
+    public Builder bytesRead(Uint64 bytesRead) {
+      this.bytesRead = bytesRead;
+      return this;
+    }
+
+    public Builder bytesWritten(Uint64 bytesWritten) {
+      this.bytesWritten = bytesWritten;
+      return this;
+    }
+
+    public Builder secondsConnected(Uint64 secondsConnected) {
+      this.secondsConnected = secondsConnected;
+      return this;
+    }
+
+    public Builder uniqueFloodBytesRecv(Uint64 uniqueFloodBytesRecv) {
+      this.uniqueFloodBytesRecv = uniqueFloodBytesRecv;
+      return this;
+    }
+
+    public Builder duplicateFloodBytesRecv(Uint64 duplicateFloodBytesRecv) {
+      this.duplicateFloodBytesRecv = duplicateFloodBytesRecv;
+      return this;
+    }
+
+    public Builder uniqueFetchBytesRecv(Uint64 uniqueFetchBytesRecv) {
+      this.uniqueFetchBytesRecv = uniqueFetchBytesRecv;
+      return this;
+    }
+
+    public Builder duplicateFetchBytesRecv(Uint64 duplicateFetchBytesRecv) {
+      this.duplicateFetchBytesRecv = duplicateFetchBytesRecv;
+      return this;
+    }
+
+    public Builder uniqueFloodMessageRecv(Uint64 uniqueFloodMessageRecv) {
+      this.uniqueFloodMessageRecv = uniqueFloodMessageRecv;
+      return this;
+    }
+
+    public Builder duplicateFloodMessageRecv(Uint64 duplicateFloodMessageRecv) {
+      this.duplicateFloodMessageRecv = duplicateFloodMessageRecv;
+      return this;
+    }
+
+    public Builder uniqueFetchMessageRecv(Uint64 uniqueFetchMessageRecv) {
+      this.uniqueFetchMessageRecv = uniqueFetchMessageRecv;
+      return this;
+    }
+
+    public Builder duplicateFetchMessageRecv(Uint64 duplicateFetchMessageRecv) {
+      this.duplicateFetchMessageRecv = duplicateFetchMessageRecv;
+      return this;
+    }
+
+    public PeerStats build() {
+      PeerStats val = new PeerStats();
+      val.setId(id);
+      val.setVersionStr(versionStr);
+      val.setMessagesRead(messagesRead);
+      val.setMessagesWritten(messagesWritten);
+      val.setBytesRead(bytesRead);
+      val.setBytesWritten(bytesWritten);
+      val.setSecondsConnected(secondsConnected);
+      val.setUniqueFloodBytesRecv(uniqueFloodBytesRecv);
+      val.setDuplicateFloodBytesRecv(duplicateFloodBytesRecv);
+      val.setUniqueFetchBytesRecv(uniqueFetchBytesRecv);
+      val.setDuplicateFetchBytesRecv(duplicateFetchBytesRecv);
+      val.setUniqueFloodMessageRecv(uniqueFloodMessageRecv);
+      val.setDuplicateFloodMessageRecv(duplicateFloodMessageRecv);
+      val.setUniqueFetchMessageRecv(uniqueFetchMessageRecv);
+      val.setDuplicateFetchMessageRecv(duplicateFetchMessageRecv);
+      return val;
+    }
   }
 }

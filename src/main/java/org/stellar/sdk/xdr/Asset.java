@@ -56,6 +56,36 @@ public class Asset implements XdrElement {
   public void setAlphaNum12(AssetAlphaNum12 value) {
     this.alphaNum12 = value;
   }
+
+  public static final class Builder {
+    private AssetType discriminant;
+    private AssetAlphaNum4 alphaNum4;
+    private AssetAlphaNum12 alphaNum12;
+
+    public Builder discriminant(AssetType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder alphaNum4(AssetAlphaNum4 alphaNum4) {
+      this.alphaNum4 = alphaNum4;
+      return this;
+    }
+
+    public Builder alphaNum12(AssetAlphaNum12 alphaNum12) {
+      this.alphaNum12 = alphaNum12;
+      return this;
+    }
+
+    public Asset build() {
+      Asset val = new Asset();
+      val.setDiscriminant(discriminant);
+      val.setAlphaNum4(alphaNum4);
+      val.setAlphaNum12(alphaNum12);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, Asset encodedAsset) throws IOException {
   //Xdrgen::AST::Identifier
   //AssetType
@@ -96,7 +126,7 @@ public class Asset implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Asset)) {
+    if (!(object instanceof Asset)) {
       return false;
     }
 
@@ -139,12 +169,34 @@ public class Asset implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof AssetAlphaNum4)) {
+      if (!(object instanceof AssetAlphaNum4)) {
         return false;
       }
 
       AssetAlphaNum4 other = (AssetAlphaNum4) object;
       return Objects.equal(this.assetCode, other.assetCode) && Objects.equal(this.issuer, other.issuer);
+    }
+
+    public static final class Builder {
+      private AssetCode4 assetCode;
+      private AccountID issuer;
+
+      public Builder assetCode(AssetCode4 assetCode) {
+        this.assetCode = assetCode;
+        return this;
+      }
+
+      public Builder issuer(AccountID issuer) {
+        this.issuer = issuer;
+        return this;
+      }
+
+      public AssetAlphaNum4 build() {
+        AssetAlphaNum4 val = new AssetAlphaNum4();
+        val.setAssetCode(assetCode);
+        val.setIssuer(issuer);
+        return val;
+      }
     }
 
   }
@@ -183,12 +235,34 @@ public class Asset implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof AssetAlphaNum12)) {
+      if (!(object instanceof AssetAlphaNum12)) {
         return false;
       }
 
       AssetAlphaNum12 other = (AssetAlphaNum12) object;
       return Objects.equal(this.assetCode, other.assetCode) && Objects.equal(this.issuer, other.issuer);
+    }
+
+    public static final class Builder {
+      private AssetCode12 assetCode;
+      private AccountID issuer;
+
+      public Builder assetCode(AssetCode12 assetCode) {
+        this.assetCode = assetCode;
+        return this;
+      }
+
+      public Builder issuer(AccountID issuer) {
+        this.issuer = issuer;
+        return this;
+      }
+
+      public AssetAlphaNum12 build() {
+        AssetAlphaNum12 val = new AssetAlphaNum12();
+        val.setAssetCode(assetCode);
+        val.setIssuer(issuer);
+        return val;
+      }
     }
 
   }

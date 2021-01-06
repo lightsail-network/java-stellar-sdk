@@ -61,11 +61,33 @@ public class SCPHistoryEntryV0 implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SCPHistoryEntryV0)) {
+    if (!(object instanceof SCPHistoryEntryV0)) {
       return false;
     }
 
     SCPHistoryEntryV0 other = (SCPHistoryEntryV0) object;
     return Arrays.equals(this.quorumSets, other.quorumSets) && Objects.equal(this.ledgerMessages, other.ledgerMessages);
+  }
+
+  public static final class Builder {
+    private SCPQuorumSet[] quorumSets;
+    private LedgerSCPMessages ledgerMessages;
+
+    public Builder quorumSets(SCPQuorumSet[] quorumSets) {
+      this.quorumSets = quorumSets;
+      return this;
+    }
+
+    public Builder ledgerMessages(LedgerSCPMessages ledgerMessages) {
+      this.ledgerMessages = ledgerMessages;
+      return this;
+    }
+
+    public SCPHistoryEntryV0 build() {
+      SCPHistoryEntryV0 val = new SCPHistoryEntryV0();
+      val.setQuorumSets(quorumSets);
+      val.setLedgerMessages(ledgerMessages);
+      return val;
+    }
   }
 }

@@ -105,12 +105,34 @@ public class Operation implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Operation)) {
+    if (!(object instanceof Operation)) {
       return false;
     }
 
     Operation other = (Operation) object;
     return Objects.equal(this.sourceAccount, other.sourceAccount) && Objects.equal(this.body, other.body);
+  }
+
+  public static final class Builder {
+    private MuxedAccount sourceAccount;
+    private OperationBody body;
+
+    public Builder sourceAccount(MuxedAccount sourceAccount) {
+      this.sourceAccount = sourceAccount;
+      return this;
+    }
+
+    public Builder body(OperationBody body) {
+      this.body = body;
+      return this;
+    }
+
+    public Operation build() {
+      Operation val = new Operation();
+      val.setSourceAccount(sourceAccount);
+      val.setBody(body);
+      return val;
+    }
   }
 
   public static class OperationBody {
@@ -241,6 +263,141 @@ public class Operation implements XdrElement {
     public void setRevokeSponsorshipOp(RevokeSponsorshipOp value) {
       this.revokeSponsorshipOp = value;
     }
+
+    public static final class Builder {
+      private OperationType discriminant;
+      private CreateAccountOp createAccountOp;
+      private PaymentOp paymentOp;
+      private PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
+      private ManageSellOfferOp manageSellOfferOp;
+      private CreatePassiveSellOfferOp createPassiveSellOfferOp;
+      private SetOptionsOp setOptionsOp;
+      private ChangeTrustOp changeTrustOp;
+      private AllowTrustOp allowTrustOp;
+      private MuxedAccount destination;
+      private ManageDataOp manageDataOp;
+      private BumpSequenceOp bumpSequenceOp;
+      private ManageBuyOfferOp manageBuyOfferOp;
+      private PathPaymentStrictSendOp pathPaymentStrictSendOp;
+      private CreateClaimableBalanceOp createClaimableBalanceOp;
+      private ClaimClaimableBalanceOp claimClaimableBalanceOp;
+      private BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
+      private RevokeSponsorshipOp revokeSponsorshipOp;
+
+      public Builder discriminant(OperationType discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder createAccountOp(CreateAccountOp createAccountOp) {
+        this.createAccountOp = createAccountOp;
+        return this;
+      }
+
+      public Builder paymentOp(PaymentOp paymentOp) {
+        this.paymentOp = paymentOp;
+        return this;
+      }
+
+      public Builder pathPaymentStrictReceiveOp(PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp) {
+        this.pathPaymentStrictReceiveOp = pathPaymentStrictReceiveOp;
+        return this;
+      }
+
+      public Builder manageSellOfferOp(ManageSellOfferOp manageSellOfferOp) {
+        this.manageSellOfferOp = manageSellOfferOp;
+        return this;
+      }
+
+      public Builder createPassiveSellOfferOp(CreatePassiveSellOfferOp createPassiveSellOfferOp) {
+        this.createPassiveSellOfferOp = createPassiveSellOfferOp;
+        return this;
+      }
+
+      public Builder setOptionsOp(SetOptionsOp setOptionsOp) {
+        this.setOptionsOp = setOptionsOp;
+        return this;
+      }
+
+      public Builder changeTrustOp(ChangeTrustOp changeTrustOp) {
+        this.changeTrustOp = changeTrustOp;
+        return this;
+      }
+
+      public Builder allowTrustOp(AllowTrustOp allowTrustOp) {
+        this.allowTrustOp = allowTrustOp;
+        return this;
+      }
+
+      public Builder destination(MuxedAccount destination) {
+        this.destination = destination;
+        return this;
+      }
+
+      public Builder manageDataOp(ManageDataOp manageDataOp) {
+        this.manageDataOp = manageDataOp;
+        return this;
+      }
+
+      public Builder bumpSequenceOp(BumpSequenceOp bumpSequenceOp) {
+        this.bumpSequenceOp = bumpSequenceOp;
+        return this;
+      }
+
+      public Builder manageBuyOfferOp(ManageBuyOfferOp manageBuyOfferOp) {
+        this.manageBuyOfferOp = manageBuyOfferOp;
+        return this;
+      }
+
+      public Builder pathPaymentStrictSendOp(PathPaymentStrictSendOp pathPaymentStrictSendOp) {
+        this.pathPaymentStrictSendOp = pathPaymentStrictSendOp;
+        return this;
+      }
+
+      public Builder createClaimableBalanceOp(CreateClaimableBalanceOp createClaimableBalanceOp) {
+        this.createClaimableBalanceOp = createClaimableBalanceOp;
+        return this;
+      }
+
+      public Builder claimClaimableBalanceOp(ClaimClaimableBalanceOp claimClaimableBalanceOp) {
+        this.claimClaimableBalanceOp = claimClaimableBalanceOp;
+        return this;
+      }
+
+      public Builder beginSponsoringFutureReservesOp(BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp) {
+        this.beginSponsoringFutureReservesOp = beginSponsoringFutureReservesOp;
+        return this;
+      }
+
+      public Builder revokeSponsorshipOp(RevokeSponsorshipOp revokeSponsorshipOp) {
+        this.revokeSponsorshipOp = revokeSponsorshipOp;
+        return this;
+      }
+
+      public OperationBody build() {
+        OperationBody val = new OperationBody();
+        val.setDiscriminant(discriminant);
+        val.setCreateAccountOp(createAccountOp);
+        val.setPaymentOp(paymentOp);
+        val.setPathPaymentStrictReceiveOp(pathPaymentStrictReceiveOp);
+        val.setManageSellOfferOp(manageSellOfferOp);
+        val.setCreatePassiveSellOfferOp(createPassiveSellOfferOp);
+        val.setSetOptionsOp(setOptionsOp);
+        val.setChangeTrustOp(changeTrustOp);
+        val.setAllowTrustOp(allowTrustOp);
+        val.setDestination(destination);
+        val.setManageDataOp(manageDataOp);
+        val.setBumpSequenceOp(bumpSequenceOp);
+        val.setManageBuyOfferOp(manageBuyOfferOp);
+        val.setPathPaymentStrictSendOp(pathPaymentStrictSendOp);
+        val.setCreateClaimableBalanceOp(createClaimableBalanceOp);
+        val.setClaimClaimableBalanceOp(claimClaimableBalanceOp);
+        val.setBeginSponsoringFutureReservesOp(beginSponsoringFutureReservesOp);
+        val.setRevokeSponsorshipOp(revokeSponsorshipOp);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, OperationBody encodedOperationBody) throws IOException {
     //Xdrgen::AST::Identifier
     //OperationType
@@ -375,7 +532,7 @@ public class Operation implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof OperationBody)) {
+      if (!(object instanceof OperationBody)) {
         return false;
       }
 

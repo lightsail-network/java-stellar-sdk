@@ -38,6 +38,29 @@ public class AuthenticatedMessage implements XdrElement {
   public void setV0(AuthenticatedMessageV0 value) {
     this.v0 = value;
   }
+
+  public static final class Builder {
+    private Uint32 discriminant;
+    private AuthenticatedMessageV0 v0;
+
+    public Builder discriminant(Uint32 discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder v0(AuthenticatedMessageV0 v0) {
+      this.v0 = v0;
+      return this;
+    }
+
+    public AuthenticatedMessage build() {
+      AuthenticatedMessage val = new AuthenticatedMessage();
+      val.setDiscriminant(discriminant);
+      val.setV0(v0);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, AuthenticatedMessage encodedAuthenticatedMessage) throws IOException {
   //Xdrgen::AST::Identifier
   //Uint32
@@ -68,7 +91,7 @@ public class AuthenticatedMessage implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof AuthenticatedMessage)) {
+    if (!(object instanceof AuthenticatedMessage)) {
       return false;
     }
 
@@ -120,12 +143,41 @@ public class AuthenticatedMessage implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof AuthenticatedMessageV0)) {
+      if (!(object instanceof AuthenticatedMessageV0)) {
         return false;
       }
 
       AuthenticatedMessageV0 other = (AuthenticatedMessageV0) object;
       return Objects.equal(this.sequence, other.sequence) && Objects.equal(this.message, other.message) && Objects.equal(this.mac, other.mac);
+    }
+
+    public static final class Builder {
+      private Uint64 sequence;
+      private StellarMessage message;
+      private HmacSha256Mac mac;
+
+      public Builder sequence(Uint64 sequence) {
+        this.sequence = sequence;
+        return this;
+      }
+
+      public Builder message(StellarMessage message) {
+        this.message = message;
+        return this;
+      }
+
+      public Builder mac(HmacSha256Mac mac) {
+        this.mac = mac;
+        return this;
+      }
+
+      public AuthenticatedMessageV0 build() {
+        AuthenticatedMessageV0 val = new AuthenticatedMessageV0();
+        val.setSequence(sequence);
+        val.setMessage(message);
+        val.setMac(mac);
+        return val;
+      }
     }
 
   }

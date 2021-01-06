@@ -52,11 +52,33 @@ public class LedgerCloseValueSignature implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerCloseValueSignature)) {
+    if (!(object instanceof LedgerCloseValueSignature)) {
       return false;
     }
 
     LedgerCloseValueSignature other = (LedgerCloseValueSignature) object;
     return Objects.equal(this.nodeID, other.nodeID) && Objects.equal(this.signature, other.signature);
+  }
+
+  public static final class Builder {
+    private NodeID nodeID;
+    private Signature signature;
+
+    public Builder nodeID(NodeID nodeID) {
+      this.nodeID = nodeID;
+      return this;
+    }
+
+    public Builder signature(Signature signature) {
+      this.signature = signature;
+      return this;
+    }
+
+    public LedgerCloseValueSignature build() {
+      LedgerCloseValueSignature val = new LedgerCloseValueSignature();
+      val.setNodeID(nodeID);
+      val.setSignature(signature);
+      return val;
+    }
   }
 }

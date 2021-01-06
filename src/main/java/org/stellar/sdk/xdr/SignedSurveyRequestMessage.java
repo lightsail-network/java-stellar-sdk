@@ -52,11 +52,33 @@ public class SignedSurveyRequestMessage implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SignedSurveyRequestMessage)) {
+    if (!(object instanceof SignedSurveyRequestMessage)) {
       return false;
     }
 
     SignedSurveyRequestMessage other = (SignedSurveyRequestMessage) object;
     return Objects.equal(this.requestSignature, other.requestSignature) && Objects.equal(this.request, other.request);
+  }
+
+  public static final class Builder {
+    private Signature requestSignature;
+    private SurveyRequestMessage request;
+
+    public Builder requestSignature(Signature requestSignature) {
+      this.requestSignature = requestSignature;
+      return this;
+    }
+
+    public Builder request(SurveyRequestMessage request) {
+      this.request = request;
+      return this;
+    }
+
+    public SignedSurveyRequestMessage build() {
+      SignedSurveyRequestMessage val = new SignedSurveyRequestMessage();
+      val.setRequestSignature(requestSignature);
+      val.setRequest(request);
+      return val;
+    }
   }
 }

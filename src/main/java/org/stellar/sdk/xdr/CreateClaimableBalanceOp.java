@@ -71,11 +71,40 @@ public class CreateClaimableBalanceOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof CreateClaimableBalanceOp)) {
+    if (!(object instanceof CreateClaimableBalanceOp)) {
       return false;
     }
 
     CreateClaimableBalanceOp other = (CreateClaimableBalanceOp) object;
     return Objects.equal(this.asset, other.asset) && Objects.equal(this.amount, other.amount) && Arrays.equals(this.claimants, other.claimants);
+  }
+
+  public static final class Builder {
+    private Asset asset;
+    private Int64 amount;
+    private Claimant[] claimants;
+
+    public Builder asset(Asset asset) {
+      this.asset = asset;
+      return this;
+    }
+
+    public Builder amount(Int64 amount) {
+      this.amount = amount;
+      return this;
+    }
+
+    public Builder claimants(Claimant[] claimants) {
+      this.claimants = claimants;
+      return this;
+    }
+
+    public CreateClaimableBalanceOp build() {
+      CreateClaimableBalanceOp val = new CreateClaimableBalanceOp();
+      val.setAsset(asset);
+      val.setAmount(amount);
+      val.setClaimants(claimants);
+      return val;
+    }
   }
 }

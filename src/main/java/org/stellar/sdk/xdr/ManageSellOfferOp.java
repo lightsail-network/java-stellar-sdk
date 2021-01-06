@@ -84,11 +84,54 @@ public class ManageSellOfferOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageSellOfferOp)) {
+    if (!(object instanceof ManageSellOfferOp)) {
       return false;
     }
 
     ManageSellOfferOp other = (ManageSellOfferOp) object;
     return Objects.equal(this.selling, other.selling) && Objects.equal(this.buying, other.buying) && Objects.equal(this.amount, other.amount) && Objects.equal(this.price, other.price) && Objects.equal(this.offerID, other.offerID);
+  }
+
+  public static final class Builder {
+    private Asset selling;
+    private Asset buying;
+    private Int64 amount;
+    private Price price;
+    private Int64 offerID;
+
+    public Builder selling(Asset selling) {
+      this.selling = selling;
+      return this;
+    }
+
+    public Builder buying(Asset buying) {
+      this.buying = buying;
+      return this;
+    }
+
+    public Builder amount(Int64 amount) {
+      this.amount = amount;
+      return this;
+    }
+
+    public Builder price(Price price) {
+      this.price = price;
+      return this;
+    }
+
+    public Builder offerID(Int64 offerID) {
+      this.offerID = offerID;
+      return this;
+    }
+
+    public ManageSellOfferOp build() {
+      ManageSellOfferOp val = new ManageSellOfferOp();
+      val.setSelling(selling);
+      val.setBuying(buying);
+      val.setAmount(amount);
+      val.setPrice(price);
+      val.setOfferID(offerID);
+      return val;
+    }
   }
 }

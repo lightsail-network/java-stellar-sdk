@@ -71,12 +71,34 @@ public class ManageOfferSuccessResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageOfferSuccessResult)) {
+    if (!(object instanceof ManageOfferSuccessResult)) {
       return false;
     }
 
     ManageOfferSuccessResult other = (ManageOfferSuccessResult) object;
     return Arrays.equals(this.offersClaimed, other.offersClaimed) && Objects.equal(this.offer, other.offer);
+  }
+
+  public static final class Builder {
+    private ClaimOfferAtom[] offersClaimed;
+    private ManageOfferSuccessResultOffer offer;
+
+    public Builder offersClaimed(ClaimOfferAtom[] offersClaimed) {
+      this.offersClaimed = offersClaimed;
+      return this;
+    }
+
+    public Builder offer(ManageOfferSuccessResultOffer offer) {
+      this.offer = offer;
+      return this;
+    }
+
+    public ManageOfferSuccessResult build() {
+      ManageOfferSuccessResult val = new ManageOfferSuccessResult();
+      val.setOffersClaimed(offersClaimed);
+      val.setOffer(offer);
+      return val;
+    }
   }
 
   public static class ManageOfferSuccessResultOffer {
@@ -95,6 +117,29 @@ public class ManageOfferSuccessResult implements XdrElement {
     public void setOffer(OfferEntry value) {
       this.offer = value;
     }
+
+    public static final class Builder {
+      private ManageOfferEffect discriminant;
+      private OfferEntry offer;
+
+      public Builder discriminant(ManageOfferEffect discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder offer(OfferEntry offer) {
+        this.offer = offer;
+        return this;
+      }
+
+      public ManageOfferSuccessResultOffer build() {
+        ManageOfferSuccessResultOffer val = new ManageOfferSuccessResultOffer();
+        val.setDiscriminant(discriminant);
+        val.setOffer(offer);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, ManageOfferSuccessResultOffer encodedManageOfferSuccessResultOffer) throws IOException {
     //Xdrgen::AST::Identifier
     //ManageOfferEffect
@@ -131,7 +176,7 @@ public class ManageOfferSuccessResult implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof ManageOfferSuccessResultOffer)) {
+      if (!(object instanceof ManageOfferSuccessResultOffer)) {
         return false;
       }
 

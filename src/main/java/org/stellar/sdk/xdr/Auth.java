@@ -44,11 +44,26 @@ public class Auth implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Auth)) {
+    if (!(object instanceof Auth)) {
       return false;
     }
 
     Auth other = (Auth) object;
     return Objects.equal(this.unused, other.unused);
+  }
+
+  public static final class Builder {
+    private Integer unused;
+
+    public Builder unused(Integer unused) {
+      this.unused = unused;
+      return this;
+    }
+
+    public Auth build() {
+      Auth val = new Auth();
+      val.setUnused(unused);
+      return val;
+    }
   }
 }

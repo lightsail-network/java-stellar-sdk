@@ -79,12 +79,48 @@ public class DataEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof DataEntry)) {
+    if (!(object instanceof DataEntry)) {
       return false;
     }
 
     DataEntry other = (DataEntry) object;
     return Objects.equal(this.accountID, other.accountID) && Objects.equal(this.dataName, other.dataName) && Objects.equal(this.dataValue, other.dataValue) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private AccountID accountID;
+    private String64 dataName;
+    private DataValue dataValue;
+    private DataEntryExt ext;
+
+    public Builder accountID(AccountID accountID) {
+      this.accountID = accountID;
+      return this;
+    }
+
+    public Builder dataName(String64 dataName) {
+      this.dataName = dataName;
+      return this;
+    }
+
+    public Builder dataValue(DataValue dataValue) {
+      this.dataValue = dataValue;
+      return this;
+    }
+
+    public Builder ext(DataEntryExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public DataEntry build() {
+      DataEntry val = new DataEntry();
+      val.setAccountID(accountID);
+      val.setDataName(dataName);
+      val.setDataValue(dataValue);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class DataEntryExt {
@@ -96,6 +132,22 @@ public class DataEntry implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public DataEntryExt build() {
+        DataEntryExt val = new DataEntryExt();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, DataEntryExt encodedDataEntryExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -124,7 +176,7 @@ public class DataEntry implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof DataEntryExt)) {
+      if (!(object instanceof DataEntryExt)) {
         return false;
       }
 

@@ -82,12 +82,48 @@ public class FeeBumpTransaction implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof FeeBumpTransaction)) {
+    if (!(object instanceof FeeBumpTransaction)) {
       return false;
     }
 
     FeeBumpTransaction other = (FeeBumpTransaction) object;
     return Objects.equal(this.feeSource, other.feeSource) && Objects.equal(this.fee, other.fee) && Objects.equal(this.innerTx, other.innerTx) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private MuxedAccount feeSource;
+    private Int64 fee;
+    private FeeBumpTransactionInnerTx innerTx;
+    private FeeBumpTransactionExt ext;
+
+    public Builder feeSource(MuxedAccount feeSource) {
+      this.feeSource = feeSource;
+      return this;
+    }
+
+    public Builder fee(Int64 fee) {
+      this.fee = fee;
+      return this;
+    }
+
+    public Builder innerTx(FeeBumpTransactionInnerTx innerTx) {
+      this.innerTx = innerTx;
+      return this;
+    }
+
+    public Builder ext(FeeBumpTransactionExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public FeeBumpTransaction build() {
+      FeeBumpTransaction val = new FeeBumpTransaction();
+      val.setFeeSource(feeSource);
+      val.setFee(fee);
+      val.setInnerTx(innerTx);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class FeeBumpTransactionInnerTx {
@@ -106,6 +142,29 @@ public class FeeBumpTransaction implements XdrElement {
     public void setV1(TransactionV1Envelope value) {
       this.v1 = value;
     }
+
+    public static final class Builder {
+      private EnvelopeType discriminant;
+      private TransactionV1Envelope v1;
+
+      public Builder discriminant(EnvelopeType discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder v1(TransactionV1Envelope v1) {
+        this.v1 = v1;
+        return this;
+      }
+
+      public FeeBumpTransactionInnerTx build() {
+        FeeBumpTransactionInnerTx val = new FeeBumpTransactionInnerTx();
+        val.setDiscriminant(discriminant);
+        val.setV1(v1);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, FeeBumpTransactionInnerTx encodedFeeBumpTransactionInnerTx) throws IOException {
     //Xdrgen::AST::Identifier
     //EnvelopeType
@@ -136,7 +195,7 @@ public class FeeBumpTransaction implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof FeeBumpTransactionInnerTx)) {
+      if (!(object instanceof FeeBumpTransactionInnerTx)) {
         return false;
       }
 
@@ -154,6 +213,22 @@ public class FeeBumpTransaction implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public FeeBumpTransactionExt build() {
+        FeeBumpTransactionExt val = new FeeBumpTransactionExt();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, FeeBumpTransactionExt encodedFeeBumpTransactionExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -182,7 +257,7 @@ public class FeeBumpTransaction implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof FeeBumpTransactionExt)) {
+      if (!(object instanceof FeeBumpTransactionExt)) {
         return false;
       }
 

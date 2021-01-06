@@ -52,11 +52,33 @@ public class Error implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Error)) {
+    if (!(object instanceof Error)) {
       return false;
     }
 
     Error other = (Error) object;
     return Objects.equal(this.code, other.code) && Objects.equal(this.msg, other.msg);
+  }
+
+  public static final class Builder {
+    private ErrorCode code;
+    private XdrString msg;
+
+    public Builder code(ErrorCode code) {
+      this.code = code;
+      return this;
+    }
+
+    public Builder msg(XdrString msg) {
+      this.msg = msg;
+      return this;
+    }
+
+    public Error build() {
+      Error val = new Error();
+      val.setCode(code);
+      val.setMsg(msg);
+      return val;
+    }
   }
 }

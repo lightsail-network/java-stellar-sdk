@@ -38,6 +38,29 @@ public class OperationID implements XdrElement {
   public void setId(OperationIDId value) {
     this.id = value;
   }
+
+  public static final class Builder {
+    private EnvelopeType discriminant;
+    private OperationIDId id;
+
+    public Builder discriminant(EnvelopeType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder id(OperationIDId id) {
+      this.id = id;
+      return this;
+    }
+
+    public OperationID build() {
+      OperationID val = new OperationID();
+      val.setDiscriminant(discriminant);
+      val.setId(id);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, OperationID encodedOperationID) throws IOException {
   //Xdrgen::AST::Identifier
   //EnvelopeType
@@ -68,7 +91,7 @@ public class OperationID implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof OperationID)) {
+    if (!(object instanceof OperationID)) {
       return false;
     }
 
@@ -120,12 +143,41 @@ public class OperationID implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof OperationIDId)) {
+      if (!(object instanceof OperationIDId)) {
         return false;
       }
 
       OperationIDId other = (OperationIDId) object;
       return Objects.equal(this.sourceAccount, other.sourceAccount) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.opNum, other.opNum);
+    }
+
+    public static final class Builder {
+      private MuxedAccount sourceAccount;
+      private SequenceNumber seqNum;
+      private Uint32 opNum;
+
+      public Builder sourceAccount(MuxedAccount sourceAccount) {
+        this.sourceAccount = sourceAccount;
+        return this;
+      }
+
+      public Builder seqNum(SequenceNumber seqNum) {
+        this.seqNum = seqNum;
+        return this;
+      }
+
+      public Builder opNum(Uint32 opNum) {
+        this.opNum = opNum;
+        return this;
+      }
+
+      public OperationIDId build() {
+        OperationIDId val = new OperationIDId();
+        val.setSourceAccount(sourceAccount);
+        val.setSeqNum(seqNum);
+        val.setOpNum(opNum);
+        return val;
+      }
     }
 
   }

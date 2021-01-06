@@ -46,6 +46,36 @@ public class MuxedAccount implements XdrElement {
   public void setMed25519(MuxedAccountMed25519 value) {
     this.med25519 = value;
   }
+
+  public static final class Builder {
+    private CryptoKeyType discriminant;
+    private Uint256 ed25519;
+    private MuxedAccountMed25519 med25519;
+
+    public Builder discriminant(CryptoKeyType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder ed25519(Uint256 ed25519) {
+      this.ed25519 = ed25519;
+      return this;
+    }
+
+    public Builder med25519(MuxedAccountMed25519 med25519) {
+      this.med25519 = med25519;
+      return this;
+    }
+
+    public MuxedAccount build() {
+      MuxedAccount val = new MuxedAccount();
+      val.setDiscriminant(discriminant);
+      val.setEd25519(ed25519);
+      val.setMed25519(med25519);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, MuxedAccount encodedMuxedAccount) throws IOException {
   //Xdrgen::AST::Identifier
   //CryptoKeyType
@@ -82,7 +112,7 @@ public class MuxedAccount implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof MuxedAccount)) {
+    if (!(object instanceof MuxedAccount)) {
       return false;
     }
 
@@ -125,12 +155,34 @@ public class MuxedAccount implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof MuxedAccountMed25519)) {
+      if (!(object instanceof MuxedAccountMed25519)) {
         return false;
       }
 
       MuxedAccountMed25519 other = (MuxedAccountMed25519) object;
       return Objects.equal(this.id, other.id) && Objects.equal(this.ed25519, other.ed25519);
+    }
+
+    public static final class Builder {
+      private Uint64 id;
+      private Uint256 ed25519;
+
+      public Builder id(Uint64 id) {
+        this.id = id;
+        return this;
+      }
+
+      public Builder ed25519(Uint256 ed25519) {
+        this.ed25519 = ed25519;
+        return this;
+      }
+
+      public MuxedAccountMed25519 build() {
+        MuxedAccountMed25519 val = new MuxedAccountMed25519();
+        val.setId(id);
+        val.setEd25519(ed25519);
+        return val;
+      }
     }
 
   }

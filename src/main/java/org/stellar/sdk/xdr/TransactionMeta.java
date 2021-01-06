@@ -52,6 +52,43 @@ public class TransactionMeta implements XdrElement {
   public void setV2(TransactionMetaV2 value) {
     this.v2 = value;
   }
+
+  public static final class Builder {
+    private Integer discriminant;
+    private OperationMeta[] operations;
+    private TransactionMetaV1 v1;
+    private TransactionMetaV2 v2;
+
+    public Builder discriminant(Integer discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder operations(OperationMeta[] operations) {
+      this.operations = operations;
+      return this;
+    }
+
+    public Builder v1(TransactionMetaV1 v1) {
+      this.v1 = v1;
+      return this;
+    }
+
+    public Builder v2(TransactionMetaV2 v2) {
+      this.v2 = v2;
+      return this;
+    }
+
+    public TransactionMeta build() {
+      TransactionMeta val = new TransactionMeta();
+      val.setDiscriminant(discriminant);
+      val.setOperations(operations);
+      val.setV1(v1);
+      val.setV2(v2);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, TransactionMeta encodedTransactionMeta) throws IOException {
   //Xdrgen::AST::Typespecs::Int
   //Integer
@@ -102,7 +139,7 @@ public class TransactionMeta implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionMeta)) {
+    if (!(object instanceof TransactionMeta)) {
       return false;
     }
 

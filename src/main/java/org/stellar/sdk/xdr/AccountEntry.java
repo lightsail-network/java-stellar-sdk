@@ -164,12 +164,90 @@ public class AccountEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof AccountEntry)) {
+    if (!(object instanceof AccountEntry)) {
       return false;
     }
 
     AccountEntry other = (AccountEntry) object;
     return Objects.equal(this.accountID, other.accountID) && Objects.equal(this.balance, other.balance) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.numSubEntries, other.numSubEntries) && Objects.equal(this.inflationDest, other.inflationDest) && Objects.equal(this.flags, other.flags) && Objects.equal(this.homeDomain, other.homeDomain) && Objects.equal(this.thresholds, other.thresholds) && Arrays.equals(this.signers, other.signers) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private AccountID accountID;
+    private Int64 balance;
+    private SequenceNumber seqNum;
+    private Uint32 numSubEntries;
+    private AccountID inflationDest;
+    private Uint32 flags;
+    private String32 homeDomain;
+    private Thresholds thresholds;
+    private Signer[] signers;
+    private AccountEntryExt ext;
+
+    public Builder accountID(AccountID accountID) {
+      this.accountID = accountID;
+      return this;
+    }
+
+    public Builder balance(Int64 balance) {
+      this.balance = balance;
+      return this;
+    }
+
+    public Builder seqNum(SequenceNumber seqNum) {
+      this.seqNum = seqNum;
+      return this;
+    }
+
+    public Builder numSubEntries(Uint32 numSubEntries) {
+      this.numSubEntries = numSubEntries;
+      return this;
+    }
+
+    public Builder inflationDest(AccountID inflationDest) {
+      this.inflationDest = inflationDest;
+      return this;
+    }
+
+    public Builder flags(Uint32 flags) {
+      this.flags = flags;
+      return this;
+    }
+
+    public Builder homeDomain(String32 homeDomain) {
+      this.homeDomain = homeDomain;
+      return this;
+    }
+
+    public Builder thresholds(Thresholds thresholds) {
+      this.thresholds = thresholds;
+      return this;
+    }
+
+    public Builder signers(Signer[] signers) {
+      this.signers = signers;
+      return this;
+    }
+
+    public Builder ext(AccountEntryExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public AccountEntry build() {
+      AccountEntry val = new AccountEntry();
+      val.setAccountID(accountID);
+      val.setBalance(balance);
+      val.setSeqNum(seqNum);
+      val.setNumSubEntries(numSubEntries);
+      val.setInflationDest(inflationDest);
+      val.setFlags(flags);
+      val.setHomeDomain(homeDomain);
+      val.setThresholds(thresholds);
+      val.setSigners(signers);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class AccountEntryExt {
@@ -188,6 +266,29 @@ public class AccountEntry implements XdrElement {
     public void setV1(AccountEntryExtensionV1 value) {
       this.v1 = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+      private AccountEntryExtensionV1 v1;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder v1(AccountEntryExtensionV1 v1) {
+        this.v1 = v1;
+        return this;
+      }
+
+      public AccountEntryExt build() {
+        AccountEntryExt val = new AccountEntryExt();
+        val.setDiscriminant(discriminant);
+        val.setV1(v1);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, AccountEntryExt encodedAccountEntryExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -222,7 +323,7 @@ public class AccountEntry implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof AccountEntryExt)) {
+      if (!(object instanceof AccountEntryExt)) {
         return false;
       }
 

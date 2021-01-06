@@ -15,30 +15,42 @@ import com.google.common.base.Objects;
 //  ===========================================================================
 public class TimePoint implements XdrElement {
   private Uint64 TimePoint;
+
+  public TimePoint() {}
+
+  public TimePoint(Uint64 TimePoint) {
+    this.TimePoint = TimePoint;
+  }
+
   public Uint64 getTimePoint() {
     return this.TimePoint;
   }
+
   public void setTimePoint(Uint64 value) {
     this.TimePoint = value;
   }
+
   public static void encode(XdrDataOutputStream stream, TimePoint  encodedTimePoint) throws IOException {
-  Uint64.encode(stream, encodedTimePoint.TimePoint);
+    Uint64.encode(stream, encodedTimePoint.TimePoint);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static TimePoint decode(XdrDataInputStream stream) throws IOException {
     TimePoint decodedTimePoint = new TimePoint();
-  decodedTimePoint.TimePoint = Uint64.decode(stream);
+    decodedTimePoint.TimePoint = Uint64.decode(stream);
     return decodedTimePoint;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.TimePoint);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TimePoint)) {
+    if (!(object instanceof TimePoint)) {
       return false;
     }
 

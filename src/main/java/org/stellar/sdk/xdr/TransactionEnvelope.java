@@ -51,6 +51,43 @@ public class TransactionEnvelope implements XdrElement {
   public void setFeeBump(FeeBumpTransactionEnvelope value) {
     this.feeBump = value;
   }
+
+  public static final class Builder {
+    private EnvelopeType discriminant;
+    private TransactionV0Envelope v0;
+    private TransactionV1Envelope v1;
+    private FeeBumpTransactionEnvelope feeBump;
+
+    public Builder discriminant(EnvelopeType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder v0(TransactionV0Envelope v0) {
+      this.v0 = v0;
+      return this;
+    }
+
+    public Builder v1(TransactionV1Envelope v1) {
+      this.v1 = v1;
+      return this;
+    }
+
+    public Builder feeBump(FeeBumpTransactionEnvelope feeBump) {
+      this.feeBump = feeBump;
+      return this;
+    }
+
+    public TransactionEnvelope build() {
+      TransactionEnvelope val = new TransactionEnvelope();
+      val.setDiscriminant(discriminant);
+      val.setV0(v0);
+      val.setV1(v1);
+      val.setFeeBump(feeBump);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, TransactionEnvelope encodedTransactionEnvelope) throws IOException {
   //Xdrgen::AST::Identifier
   //EnvelopeType
@@ -93,7 +130,7 @@ public class TransactionEnvelope implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionEnvelope)) {
+    if (!(object instanceof TransactionEnvelope)) {
       return false;
     }
 

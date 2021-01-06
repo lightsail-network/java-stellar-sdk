@@ -70,12 +70,41 @@ public class PeerAddress implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PeerAddress)) {
+    if (!(object instanceof PeerAddress)) {
       return false;
     }
 
     PeerAddress other = (PeerAddress) object;
     return Objects.equal(this.ip, other.ip) && Objects.equal(this.port, other.port) && Objects.equal(this.numFailures, other.numFailures);
+  }
+
+  public static final class Builder {
+    private PeerAddressIp ip;
+    private Uint32 port;
+    private Uint32 numFailures;
+
+    public Builder ip(PeerAddressIp ip) {
+      this.ip = ip;
+      return this;
+    }
+
+    public Builder port(Uint32 port) {
+      this.port = port;
+      return this;
+    }
+
+    public Builder numFailures(Uint32 numFailures) {
+      this.numFailures = numFailures;
+      return this;
+    }
+
+    public PeerAddress build() {
+      PeerAddress val = new PeerAddress();
+      val.setIp(ip);
+      val.setPort(port);
+      val.setNumFailures(numFailures);
+      return val;
+    }
   }
 
   public static class PeerAddressIp {
@@ -101,6 +130,36 @@ public class PeerAddress implements XdrElement {
     public void setIpv6(byte[] value) {
       this.ipv6 = value;
     }
+
+    public static final class Builder {
+      private IPAddrType discriminant;
+      private byte[] ipv4;
+      private byte[] ipv6;
+
+      public Builder discriminant(IPAddrType discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder ipv4(byte[] ipv4) {
+        this.ipv4 = ipv4;
+        return this;
+      }
+
+      public Builder ipv6(byte[] ipv6) {
+        this.ipv6 = ipv6;
+        return this;
+      }
+
+      public PeerAddressIp build() {
+        PeerAddressIp val = new PeerAddressIp();
+        val.setDiscriminant(discriminant);
+        val.setIpv4(ipv4);
+        val.setIpv6(ipv6);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, PeerAddressIp encodedPeerAddressIp) throws IOException {
     //Xdrgen::AST::Identifier
     //IPAddrType
@@ -143,7 +202,7 @@ public class PeerAddress implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof PeerAddressIp)) {
+      if (!(object instanceof PeerAddressIp)) {
         return false;
       }
 

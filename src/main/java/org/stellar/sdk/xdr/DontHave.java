@@ -52,11 +52,33 @@ public class DontHave implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof DontHave)) {
+    if (!(object instanceof DontHave)) {
       return false;
     }
 
     DontHave other = (DontHave) object;
     return Objects.equal(this.type, other.type) && Objects.equal(this.reqHash, other.reqHash);
+  }
+
+  public static final class Builder {
+    private MessageType type;
+    private Uint256 reqHash;
+
+    public Builder type(MessageType type) {
+      this.type = type;
+      return this;
+    }
+
+    public Builder reqHash(Uint256 reqHash) {
+      this.reqHash = reqHash;
+      return this;
+    }
+
+    public DontHave build() {
+      DontHave val = new DontHave();
+      val.setType(type);
+      val.setReqHash(reqHash);
+      return val;
+    }
   }
 }

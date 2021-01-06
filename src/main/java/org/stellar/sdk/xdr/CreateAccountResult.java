@@ -28,6 +28,22 @@ public class CreateAccountResult implements XdrElement {
   public void setDiscriminant(CreateAccountResultCode value) {
     this.code = value;
   }
+
+  public static final class Builder {
+    private CreateAccountResultCode discriminant;
+
+    public Builder discriminant(CreateAccountResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public CreateAccountResult build() {
+      CreateAccountResult val = new CreateAccountResult();
+      val.setDiscriminant(discriminant);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, CreateAccountResult encodedCreateAccountResult) throws IOException {
   //Xdrgen::AST::Identifier
   //CreateAccountResultCode
@@ -60,7 +76,7 @@ public class CreateAccountResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof CreateAccountResult)) {
+    if (!(object instanceof CreateAccountResult)) {
       return false;
     }
 

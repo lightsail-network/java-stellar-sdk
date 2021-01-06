@@ -105,11 +105,61 @@ public class PathPaymentStrictSendOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PathPaymentStrictSendOp)) {
+    if (!(object instanceof PathPaymentStrictSendOp)) {
       return false;
     }
 
     PathPaymentStrictSendOp other = (PathPaymentStrictSendOp) object;
     return Objects.equal(this.sendAsset, other.sendAsset) && Objects.equal(this.sendAmount, other.sendAmount) && Objects.equal(this.destination, other.destination) && Objects.equal(this.destAsset, other.destAsset) && Objects.equal(this.destMin, other.destMin) && Arrays.equals(this.path, other.path);
+  }
+
+  public static final class Builder {
+    private Asset sendAsset;
+    private Int64 sendAmount;
+    private MuxedAccount destination;
+    private Asset destAsset;
+    private Int64 destMin;
+    private Asset[] path;
+
+    public Builder sendAsset(Asset sendAsset) {
+      this.sendAsset = sendAsset;
+      return this;
+    }
+
+    public Builder sendAmount(Int64 sendAmount) {
+      this.sendAmount = sendAmount;
+      return this;
+    }
+
+    public Builder destination(MuxedAccount destination) {
+      this.destination = destination;
+      return this;
+    }
+
+    public Builder destAsset(Asset destAsset) {
+      this.destAsset = destAsset;
+      return this;
+    }
+
+    public Builder destMin(Int64 destMin) {
+      this.destMin = destMin;
+      return this;
+    }
+
+    public Builder path(Asset[] path) {
+      this.path = path;
+      return this;
+    }
+
+    public PathPaymentStrictSendOp build() {
+      PathPaymentStrictSendOp val = new PathPaymentStrictSendOp();
+      val.setSendAsset(sendAsset);
+      val.setSendAmount(sendAmount);
+      val.setDestination(destination);
+      val.setDestAsset(destAsset);
+      val.setDestMin(destMin);
+      val.setPath(path);
+      return val;
+    }
   }
 }

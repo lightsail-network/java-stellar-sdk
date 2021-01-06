@@ -52,11 +52,33 @@ public class UpgradeEntryMeta implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof UpgradeEntryMeta)) {
+    if (!(object instanceof UpgradeEntryMeta)) {
       return false;
     }
 
     UpgradeEntryMeta other = (UpgradeEntryMeta) object;
     return Objects.equal(this.upgrade, other.upgrade) && Objects.equal(this.changes, other.changes);
+  }
+
+  public static final class Builder {
+    private LedgerUpgrade upgrade;
+    private LedgerEntryChanges changes;
+
+    public Builder upgrade(LedgerUpgrade upgrade) {
+      this.upgrade = upgrade;
+      return this;
+    }
+
+    public Builder changes(LedgerEntryChanges changes) {
+      this.changes = changes;
+      return this;
+    }
+
+    public UpgradeEntryMeta build() {
+      UpgradeEntryMeta val = new UpgradeEntryMeta();
+      val.setUpgrade(upgrade);
+      val.setChanges(changes);
+      return val;
+    }
   }
 }

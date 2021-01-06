@@ -15,33 +15,45 @@ import java.util.Arrays;
 //  ===========================================================================
 public class AssetCode12 implements XdrElement {
   private byte[] AssetCode12;
+
+  public AssetCode12() {}
+
+  public AssetCode12(byte[] AssetCode12) {
+    this.AssetCode12 = AssetCode12;
+  }
+
   public byte[] getAssetCode12() {
     return this.AssetCode12;
   }
+
   public void setAssetCode12(byte[] value) {
     this.AssetCode12 = value;
   }
+
   public static void encode(XdrDataOutputStream stream, AssetCode12  encodedAssetCode12) throws IOException {
-  int AssetCode12size = encodedAssetCode12.AssetCode12.length;
-  stream.write(encodedAssetCode12.getAssetCode12(), 0, AssetCode12size);
+    int AssetCode12size = encodedAssetCode12.AssetCode12.length;
+    stream.write(encodedAssetCode12.getAssetCode12(), 0, AssetCode12size);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static AssetCode12 decode(XdrDataInputStream stream) throws IOException {
     AssetCode12 decodedAssetCode12 = new AssetCode12();
-  int AssetCode12size = 12;
-  decodedAssetCode12.AssetCode12 = new byte[AssetCode12size];
-  stream.read(decodedAssetCode12.AssetCode12, 0, AssetCode12size);
+    int AssetCode12size = 12;
+    decodedAssetCode12.AssetCode12 = new byte[AssetCode12size];
+    stream.read(decodedAssetCode12.AssetCode12, 0, AssetCode12size);
     return decodedAssetCode12;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.AssetCode12);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof AssetCode12)) {
+    if (!(object instanceof AssetCode12)) {
       return false;
     }
 

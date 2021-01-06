@@ -45,11 +45,26 @@ public class Curve25519Secret implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Curve25519Secret)) {
+    if (!(object instanceof Curve25519Secret)) {
       return false;
     }
 
     Curve25519Secret other = (Curve25519Secret) object;
     return Arrays.equals(this.key, other.key);
+  }
+
+  public static final class Builder {
+    private byte[] key;
+
+    public Builder key(byte[] key) {
+      this.key = key;
+      return this;
+    }
+
+    public Curve25519Secret build() {
+      Curve25519Secret val = new Curve25519Secret();
+      val.setKey(key);
+      return val;
+    }
   }
 }

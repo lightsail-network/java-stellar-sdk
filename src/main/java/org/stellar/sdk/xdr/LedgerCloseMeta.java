@@ -33,6 +33,29 @@ public class LedgerCloseMeta implements XdrElement {
   public void setV0(LedgerCloseMetaV0 value) {
     this.v0 = value;
   }
+
+  public static final class Builder {
+    private Integer discriminant;
+    private LedgerCloseMetaV0 v0;
+
+    public Builder discriminant(Integer discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder v0(LedgerCloseMetaV0 v0) {
+      this.v0 = v0;
+      return this;
+    }
+
+    public LedgerCloseMeta build() {
+      LedgerCloseMeta val = new LedgerCloseMeta();
+      val.setDiscriminant(discriminant);
+      val.setV0(v0);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, LedgerCloseMeta encodedLedgerCloseMeta) throws IOException {
   //Xdrgen::AST::Typespecs::Int
   //Integer
@@ -63,7 +86,7 @@ public class LedgerCloseMeta implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerCloseMeta)) {
+    if (!(object instanceof LedgerCloseMeta)) {
       return false;
     }
 

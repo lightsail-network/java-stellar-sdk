@@ -42,11 +42,26 @@ public class ClaimClaimableBalanceOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ClaimClaimableBalanceOp)) {
+    if (!(object instanceof ClaimClaimableBalanceOp)) {
       return false;
     }
 
     ClaimClaimableBalanceOp other = (ClaimClaimableBalanceOp) object;
     return Objects.equal(this.balanceID, other.balanceID);
+  }
+
+  public static final class Builder {
+    private ClaimableBalanceID balanceID;
+
+    public Builder balanceID(ClaimableBalanceID balanceID) {
+      this.balanceID = balanceID;
+      return this;
+    }
+
+    public ClaimClaimableBalanceOp build() {
+      ClaimClaimableBalanceOp val = new ClaimClaimableBalanceOp();
+      val.setBalanceID(balanceID);
+      return val;
+    }
   }
 }

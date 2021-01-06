@@ -73,6 +73,57 @@ public class ClaimPredicate implements XdrElement {
   public void setRelBefore(Int64 value) {
     this.relBefore = value;
   }
+
+  public static final class Builder {
+    private ClaimPredicateType discriminant;
+    private ClaimPredicate[] andPredicates;
+    private ClaimPredicate[] orPredicates;
+    private ClaimPredicate notPredicate;
+    private Int64 absBefore;
+    private Int64 relBefore;
+
+    public Builder discriminant(ClaimPredicateType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder andPredicates(ClaimPredicate[] andPredicates) {
+      this.andPredicates = andPredicates;
+      return this;
+    }
+
+    public Builder orPredicates(ClaimPredicate[] orPredicates) {
+      this.orPredicates = orPredicates;
+      return this;
+    }
+
+    public Builder notPredicate(ClaimPredicate notPredicate) {
+      this.notPredicate = notPredicate;
+      return this;
+    }
+
+    public Builder absBefore(Int64 absBefore) {
+      this.absBefore = absBefore;
+      return this;
+    }
+
+    public Builder relBefore(Int64 relBefore) {
+      this.relBefore = relBefore;
+      return this;
+    }
+
+    public ClaimPredicate build() {
+      ClaimPredicate val = new ClaimPredicate();
+      val.setDiscriminant(discriminant);
+      val.setAndPredicates(andPredicates);
+      val.setOrPredicates(orPredicates);
+      val.setNotPredicate(notPredicate);
+      val.setAbsBefore(absBefore);
+      val.setRelBefore(relBefore);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, ClaimPredicate encodedClaimPredicate) throws IOException {
   //Xdrgen::AST::Identifier
   //ClaimPredicateType
@@ -155,7 +206,7 @@ public class ClaimPredicate implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ClaimPredicate)) {
+    if (!(object instanceof ClaimPredicate)) {
       return false;
     }
 

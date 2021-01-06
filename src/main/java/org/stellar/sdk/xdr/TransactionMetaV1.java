@@ -61,11 +61,33 @@ public class TransactionMetaV1 implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionMetaV1)) {
+    if (!(object instanceof TransactionMetaV1)) {
       return false;
     }
 
     TransactionMetaV1 other = (TransactionMetaV1) object;
     return Objects.equal(this.txChanges, other.txChanges) && Arrays.equals(this.operations, other.operations);
+  }
+
+  public static final class Builder {
+    private LedgerEntryChanges txChanges;
+    private OperationMeta[] operations;
+
+    public Builder txChanges(LedgerEntryChanges txChanges) {
+      this.txChanges = txChanges;
+      return this;
+    }
+
+    public Builder operations(OperationMeta[] operations) {
+      this.operations = operations;
+      return this;
+    }
+
+    public TransactionMetaV1 build() {
+      TransactionMetaV1 val = new TransactionMetaV1();
+      val.setTxChanges(txChanges);
+      val.setOperations(operations);
+      return val;
+    }
   }
 }

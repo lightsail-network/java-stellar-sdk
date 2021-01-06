@@ -15,38 +15,50 @@ import java.util.Arrays;
 //  ===========================================================================
 public class LedgerEntryChanges implements XdrElement {
   private LedgerEntryChange[] LedgerEntryChanges;
+
+  public LedgerEntryChanges() {}
+
+  public LedgerEntryChanges(LedgerEntryChange[] LedgerEntryChanges) {
+    this.LedgerEntryChanges = LedgerEntryChanges;
+  }
+
   public LedgerEntryChange[] getLedgerEntryChanges() {
     return this.LedgerEntryChanges;
   }
+
   public void setLedgerEntryChanges(LedgerEntryChange[] value) {
     this.LedgerEntryChanges = value;
   }
+
   public static void encode(XdrDataOutputStream stream, LedgerEntryChanges  encodedLedgerEntryChanges) throws IOException {
-  int LedgerEntryChangessize = encodedLedgerEntryChanges.getLedgerEntryChanges().length;
-  stream.writeInt(LedgerEntryChangessize);
-  for (int i = 0; i < LedgerEntryChangessize; i++) {
-    LedgerEntryChange.encode(stream, encodedLedgerEntryChanges.LedgerEntryChanges[i]);
+    int LedgerEntryChangessize = encodedLedgerEntryChanges.getLedgerEntryChanges().length;
+    stream.writeInt(LedgerEntryChangessize);
+    for (int i = 0; i < LedgerEntryChangessize; i++) {
+      LedgerEntryChange.encode(stream, encodedLedgerEntryChanges.LedgerEntryChanges[i]);
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static LedgerEntryChanges decode(XdrDataInputStream stream) throws IOException {
     LedgerEntryChanges decodedLedgerEntryChanges = new LedgerEntryChanges();
-  int LedgerEntryChangessize = stream.readInt();
-  decodedLedgerEntryChanges.LedgerEntryChanges = new LedgerEntryChange[LedgerEntryChangessize];
-  for (int i = 0; i < LedgerEntryChangessize; i++) {
-    decodedLedgerEntryChanges.LedgerEntryChanges[i] = LedgerEntryChange.decode(stream);
-  }
+    int LedgerEntryChangessize = stream.readInt();
+    decodedLedgerEntryChanges.LedgerEntryChanges = new LedgerEntryChange[LedgerEntryChangessize];
+    for (int i = 0; i < LedgerEntryChangessize; i++) {
+      decodedLedgerEntryChanges.LedgerEntryChanges[i] = LedgerEntryChange.decode(stream);
+    }
     return decodedLedgerEntryChanges;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.LedgerEntryChanges);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerEntryChanges)) {
+    if (!(object instanceof LedgerEntryChanges)) {
       return false;
     }
 

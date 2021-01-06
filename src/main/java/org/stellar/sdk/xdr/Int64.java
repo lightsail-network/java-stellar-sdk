@@ -15,30 +15,42 @@ import com.google.common.base.Objects;
 //  ===========================================================================
 public class Int64 implements XdrElement {
   private Long int64;
+
+  public Int64() {}
+
+  public Int64(Long int64) {
+    this.int64 = int64;
+  }
+
   public Long getInt64() {
     return this.int64;
   }
+
   public void setInt64(Long value) {
     this.int64 = value;
   }
+
   public static void encode(XdrDataOutputStream stream, Int64  encodedInt64) throws IOException {
-  stream.writeLong(encodedInt64.int64);
+    stream.writeLong(encodedInt64.int64);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static Int64 decode(XdrDataInputStream stream) throws IOException {
     Int64 decodedInt64 = new Int64();
-  decodedInt64.int64 = stream.readLong();
+    decodedInt64.int64 = stream.readLong();
     return decodedInt64;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.int64);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Int64)) {
+    if (!(object instanceof Int64)) {
       return false;
     }
 

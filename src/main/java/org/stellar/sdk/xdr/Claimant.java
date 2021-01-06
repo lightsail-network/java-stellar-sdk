@@ -37,6 +37,29 @@ public class Claimant implements XdrElement {
   public void setV0(ClaimantV0 value) {
     this.v0 = value;
   }
+
+  public static final class Builder {
+    private ClaimantType discriminant;
+    private ClaimantV0 v0;
+
+    public Builder discriminant(ClaimantType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder v0(ClaimantV0 v0) {
+      this.v0 = v0;
+      return this;
+    }
+
+    public Claimant build() {
+      Claimant val = new Claimant();
+      val.setDiscriminant(discriminant);
+      val.setV0(v0);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, Claimant encodedClaimant) throws IOException {
   //Xdrgen::AST::Identifier
   //ClaimantType
@@ -67,7 +90,7 @@ public class Claimant implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Claimant)) {
+    if (!(object instanceof Claimant)) {
       return false;
     }
 
@@ -110,12 +133,34 @@ public class Claimant implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof ClaimantV0)) {
+      if (!(object instanceof ClaimantV0)) {
         return false;
       }
 
       ClaimantV0 other = (ClaimantV0) object;
       return Objects.equal(this.destination, other.destination) && Objects.equal(this.predicate, other.predicate);
+    }
+
+    public static final class Builder {
+      private AccountID destination;
+      private ClaimPredicate predicate;
+
+      public Builder destination(AccountID destination) {
+        this.destination = destination;
+        return this;
+      }
+
+      public Builder predicate(ClaimPredicate predicate) {
+        this.predicate = predicate;
+        return this;
+      }
+
+      public ClaimantV0 build() {
+        ClaimantV0 val = new ClaimantV0();
+        val.setDestination(destination);
+        val.setPredicate(predicate);
+        return val;
+      }
     }
 
   }

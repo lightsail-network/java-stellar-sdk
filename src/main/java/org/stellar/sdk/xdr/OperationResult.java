@@ -76,6 +76,29 @@ public class OperationResult implements XdrElement {
   public void setTr(OperationResultTr value) {
     this.tr = value;
   }
+
+  public static final class Builder {
+    private OperationResultCode discriminant;
+    private OperationResultTr tr;
+
+    public Builder discriminant(OperationResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder tr(OperationResultTr tr) {
+      this.tr = tr;
+      return this;
+    }
+
+    public OperationResult build() {
+      OperationResult val = new OperationResult();
+      val.setDiscriminant(discriminant);
+      val.setTr(tr);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, OperationResult encodedOperationResult) throws IOException {
   //Xdrgen::AST::Identifier
   //OperationResultCode
@@ -110,7 +133,7 @@ public class OperationResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof OperationResult)) {
+    if (!(object instanceof OperationResult)) {
       return false;
     }
 
@@ -260,6 +283,155 @@ public class OperationResult implements XdrElement {
     public void setRevokeSponsorshipResult(RevokeSponsorshipResult value) {
       this.revokeSponsorshipResult = value;
     }
+
+    public static final class Builder {
+      private OperationType discriminant;
+      private CreateAccountResult createAccountResult;
+      private PaymentResult paymentResult;
+      private PathPaymentStrictReceiveResult pathPaymentStrictReceiveResult;
+      private ManageSellOfferResult manageSellOfferResult;
+      private ManageSellOfferResult createPassiveSellOfferResult;
+      private SetOptionsResult setOptionsResult;
+      private ChangeTrustResult changeTrustResult;
+      private AllowTrustResult allowTrustResult;
+      private AccountMergeResult accountMergeResult;
+      private InflationResult inflationResult;
+      private ManageDataResult manageDataResult;
+      private BumpSequenceResult bumpSeqResult;
+      private ManageBuyOfferResult manageBuyOfferResult;
+      private PathPaymentStrictSendResult pathPaymentStrictSendResult;
+      private CreateClaimableBalanceResult createClaimableBalanceResult;
+      private ClaimClaimableBalanceResult claimClaimableBalanceResult;
+      private BeginSponsoringFutureReservesResult beginSponsoringFutureReservesResult;
+      private EndSponsoringFutureReservesResult endSponsoringFutureReservesResult;
+      private RevokeSponsorshipResult revokeSponsorshipResult;
+
+      public Builder discriminant(OperationType discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder createAccountResult(CreateAccountResult createAccountResult) {
+        this.createAccountResult = createAccountResult;
+        return this;
+      }
+
+      public Builder paymentResult(PaymentResult paymentResult) {
+        this.paymentResult = paymentResult;
+        return this;
+      }
+
+      public Builder pathPaymentStrictReceiveResult(PathPaymentStrictReceiveResult pathPaymentStrictReceiveResult) {
+        this.pathPaymentStrictReceiveResult = pathPaymentStrictReceiveResult;
+        return this;
+      }
+
+      public Builder manageSellOfferResult(ManageSellOfferResult manageSellOfferResult) {
+        this.manageSellOfferResult = manageSellOfferResult;
+        return this;
+      }
+
+      public Builder createPassiveSellOfferResult(ManageSellOfferResult createPassiveSellOfferResult) {
+        this.createPassiveSellOfferResult = createPassiveSellOfferResult;
+        return this;
+      }
+
+      public Builder setOptionsResult(SetOptionsResult setOptionsResult) {
+        this.setOptionsResult = setOptionsResult;
+        return this;
+      }
+
+      public Builder changeTrustResult(ChangeTrustResult changeTrustResult) {
+        this.changeTrustResult = changeTrustResult;
+        return this;
+      }
+
+      public Builder allowTrustResult(AllowTrustResult allowTrustResult) {
+        this.allowTrustResult = allowTrustResult;
+        return this;
+      }
+
+      public Builder accountMergeResult(AccountMergeResult accountMergeResult) {
+        this.accountMergeResult = accountMergeResult;
+        return this;
+      }
+
+      public Builder inflationResult(InflationResult inflationResult) {
+        this.inflationResult = inflationResult;
+        return this;
+      }
+
+      public Builder manageDataResult(ManageDataResult manageDataResult) {
+        this.manageDataResult = manageDataResult;
+        return this;
+      }
+
+      public Builder bumpSeqResult(BumpSequenceResult bumpSeqResult) {
+        this.bumpSeqResult = bumpSeqResult;
+        return this;
+      }
+
+      public Builder manageBuyOfferResult(ManageBuyOfferResult manageBuyOfferResult) {
+        this.manageBuyOfferResult = manageBuyOfferResult;
+        return this;
+      }
+
+      public Builder pathPaymentStrictSendResult(PathPaymentStrictSendResult pathPaymentStrictSendResult) {
+        this.pathPaymentStrictSendResult = pathPaymentStrictSendResult;
+        return this;
+      }
+
+      public Builder createClaimableBalanceResult(CreateClaimableBalanceResult createClaimableBalanceResult) {
+        this.createClaimableBalanceResult = createClaimableBalanceResult;
+        return this;
+      }
+
+      public Builder claimClaimableBalanceResult(ClaimClaimableBalanceResult claimClaimableBalanceResult) {
+        this.claimClaimableBalanceResult = claimClaimableBalanceResult;
+        return this;
+      }
+
+      public Builder beginSponsoringFutureReservesResult(BeginSponsoringFutureReservesResult beginSponsoringFutureReservesResult) {
+        this.beginSponsoringFutureReservesResult = beginSponsoringFutureReservesResult;
+        return this;
+      }
+
+      public Builder endSponsoringFutureReservesResult(EndSponsoringFutureReservesResult endSponsoringFutureReservesResult) {
+        this.endSponsoringFutureReservesResult = endSponsoringFutureReservesResult;
+        return this;
+      }
+
+      public Builder revokeSponsorshipResult(RevokeSponsorshipResult revokeSponsorshipResult) {
+        this.revokeSponsorshipResult = revokeSponsorshipResult;
+        return this;
+      }
+
+      public OperationResultTr build() {
+        OperationResultTr val = new OperationResultTr();
+        val.setDiscriminant(discriminant);
+        val.setCreateAccountResult(createAccountResult);
+        val.setPaymentResult(paymentResult);
+        val.setPathPaymentStrictReceiveResult(pathPaymentStrictReceiveResult);
+        val.setManageSellOfferResult(manageSellOfferResult);
+        val.setCreatePassiveSellOfferResult(createPassiveSellOfferResult);
+        val.setSetOptionsResult(setOptionsResult);
+        val.setChangeTrustResult(changeTrustResult);
+        val.setAllowTrustResult(allowTrustResult);
+        val.setAccountMergeResult(accountMergeResult);
+        val.setInflationResult(inflationResult);
+        val.setManageDataResult(manageDataResult);
+        val.setBumpSeqResult(bumpSeqResult);
+        val.setManageBuyOfferResult(manageBuyOfferResult);
+        val.setPathPaymentStrictSendResult(pathPaymentStrictSendResult);
+        val.setCreateClaimableBalanceResult(createClaimableBalanceResult);
+        val.setClaimClaimableBalanceResult(claimClaimableBalanceResult);
+        val.setBeginSponsoringFutureReservesResult(beginSponsoringFutureReservesResult);
+        val.setEndSponsoringFutureReservesResult(endSponsoringFutureReservesResult);
+        val.setRevokeSponsorshipResult(revokeSponsorshipResult);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, OperationResultTr encodedOperationResultTr) throws IOException {
     //Xdrgen::AST::Identifier
     //OperationType
@@ -398,7 +570,7 @@ public class OperationResult implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof OperationResultTr)) {
+      if (!(object instanceof OperationResultTr)) {
         return false;
       }
 

@@ -45,11 +45,26 @@ public class HmacSha256Key implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof HmacSha256Key)) {
+    if (!(object instanceof HmacSha256Key)) {
       return false;
     }
 
     HmacSha256Key other = (HmacSha256Key) object;
     return Arrays.equals(this.key, other.key);
+  }
+
+  public static final class Builder {
+    private byte[] key;
+
+    public Builder key(byte[] key) {
+      this.key = key;
+      return this;
+    }
+
+    public HmacSha256Key build() {
+      HmacSha256Key val = new HmacSha256Key();
+      val.setKey(key);
+      return val;
+    }
   }
 }

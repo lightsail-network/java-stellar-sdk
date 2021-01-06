@@ -85,12 +85,41 @@ public class LedgerEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerEntry)) {
+    if (!(object instanceof LedgerEntry)) {
       return false;
     }
 
     LedgerEntry other = (LedgerEntry) object;
     return Objects.equal(this.lastModifiedLedgerSeq, other.lastModifiedLedgerSeq) && Objects.equal(this.data, other.data) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private Uint32 lastModifiedLedgerSeq;
+    private LedgerEntryData data;
+    private LedgerEntryExt ext;
+
+    public Builder lastModifiedLedgerSeq(Uint32 lastModifiedLedgerSeq) {
+      this.lastModifiedLedgerSeq = lastModifiedLedgerSeq;
+      return this;
+    }
+
+    public Builder data(LedgerEntryData data) {
+      this.data = data;
+      return this;
+    }
+
+    public Builder ext(LedgerEntryExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public LedgerEntry build() {
+      LedgerEntry val = new LedgerEntry();
+      val.setLastModifiedLedgerSeq(lastModifiedLedgerSeq);
+      val.setData(data);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class LedgerEntryData {
@@ -137,6 +166,57 @@ public class LedgerEntry implements XdrElement {
     public void setClaimableBalance(ClaimableBalanceEntry value) {
       this.claimableBalance = value;
     }
+
+    public static final class Builder {
+      private LedgerEntryType discriminant;
+      private AccountEntry account;
+      private TrustLineEntry trustLine;
+      private OfferEntry offer;
+      private DataEntry data;
+      private ClaimableBalanceEntry claimableBalance;
+
+      public Builder discriminant(LedgerEntryType discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder account(AccountEntry account) {
+        this.account = account;
+        return this;
+      }
+
+      public Builder trustLine(TrustLineEntry trustLine) {
+        this.trustLine = trustLine;
+        return this;
+      }
+
+      public Builder offer(OfferEntry offer) {
+        this.offer = offer;
+        return this;
+      }
+
+      public Builder data(DataEntry data) {
+        this.data = data;
+        return this;
+      }
+
+      public Builder claimableBalance(ClaimableBalanceEntry claimableBalance) {
+        this.claimableBalance = claimableBalance;
+        return this;
+      }
+
+      public LedgerEntryData build() {
+        LedgerEntryData val = new LedgerEntryData();
+        val.setDiscriminant(discriminant);
+        val.setAccount(account);
+        val.setTrustLine(trustLine);
+        val.setOffer(offer);
+        val.setData(data);
+        val.setClaimableBalance(claimableBalance);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, LedgerEntryData encodedLedgerEntryData) throws IOException {
     //Xdrgen::AST::Identifier
     //LedgerEntryType
@@ -191,7 +271,7 @@ public class LedgerEntry implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerEntryData)) {
+      if (!(object instanceof LedgerEntryData)) {
         return false;
       }
 
@@ -216,6 +296,29 @@ public class LedgerEntry implements XdrElement {
     public void setV1(LedgerEntryExtensionV1 value) {
       this.v1 = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+      private LedgerEntryExtensionV1 v1;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder v1(LedgerEntryExtensionV1 v1) {
+        this.v1 = v1;
+        return this;
+      }
+
+      public LedgerEntryExt build() {
+        LedgerEntryExt val = new LedgerEntryExt();
+        val.setDiscriminant(discriminant);
+        val.setV1(v1);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, LedgerEntryExt encodedLedgerEntryExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -250,7 +353,7 @@ public class LedgerEntry implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerEntryExt)) {
+      if (!(object instanceof LedgerEntryExt)) {
         return false;
       }
 

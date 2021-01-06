@@ -50,11 +50,26 @@ public class TransactionResultSet implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionResultSet)) {
+    if (!(object instanceof TransactionResultSet)) {
       return false;
     }
 
     TransactionResultSet other = (TransactionResultSet) object;
     return Arrays.equals(this.results, other.results);
+  }
+
+  public static final class Builder {
+    private TransactionResultPair[] results;
+
+    public Builder results(TransactionResultPair[] results) {
+      this.results = results;
+      return this;
+    }
+
+    public TransactionResultSet build() {
+      TransactionResultSet val = new TransactionResultSet();
+      val.setResults(results);
+      return val;
+    }
   }
 }

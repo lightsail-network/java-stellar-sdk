@@ -28,6 +28,22 @@ public class RevokeSponsorshipResult implements XdrElement {
   public void setDiscriminant(RevokeSponsorshipResultCode value) {
     this.code = value;
   }
+
+  public static final class Builder {
+    private RevokeSponsorshipResultCode discriminant;
+
+    public Builder discriminant(RevokeSponsorshipResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public RevokeSponsorshipResult build() {
+      RevokeSponsorshipResult val = new RevokeSponsorshipResult();
+      val.setDiscriminant(discriminant);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, RevokeSponsorshipResult encodedRevokeSponsorshipResult) throws IOException {
   //Xdrgen::AST::Identifier
   //RevokeSponsorshipResultCode
@@ -60,7 +76,7 @@ public class RevokeSponsorshipResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof RevokeSponsorshipResult)) {
+    if (!(object instanceof RevokeSponsorshipResult)) {
       return false;
     }
 

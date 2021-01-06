@@ -105,12 +105,55 @@ public class ClaimableBalanceEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ClaimableBalanceEntry)) {
+    if (!(object instanceof ClaimableBalanceEntry)) {
       return false;
     }
 
     ClaimableBalanceEntry other = (ClaimableBalanceEntry) object;
     return Objects.equal(this.balanceID, other.balanceID) && Arrays.equals(this.claimants, other.claimants) && Objects.equal(this.asset, other.asset) && Objects.equal(this.amount, other.amount) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private ClaimableBalanceID balanceID;
+    private Claimant[] claimants;
+    private Asset asset;
+    private Int64 amount;
+    private ClaimableBalanceEntryExt ext;
+
+    public Builder balanceID(ClaimableBalanceID balanceID) {
+      this.balanceID = balanceID;
+      return this;
+    }
+
+    public Builder claimants(Claimant[] claimants) {
+      this.claimants = claimants;
+      return this;
+    }
+
+    public Builder asset(Asset asset) {
+      this.asset = asset;
+      return this;
+    }
+
+    public Builder amount(Int64 amount) {
+      this.amount = amount;
+      return this;
+    }
+
+    public Builder ext(ClaimableBalanceEntryExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public ClaimableBalanceEntry build() {
+      ClaimableBalanceEntry val = new ClaimableBalanceEntry();
+      val.setBalanceID(balanceID);
+      val.setClaimants(claimants);
+      val.setAsset(asset);
+      val.setAmount(amount);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class ClaimableBalanceEntryExt {
@@ -122,6 +165,22 @@ public class ClaimableBalanceEntry implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public ClaimableBalanceEntryExt build() {
+        ClaimableBalanceEntryExt val = new ClaimableBalanceEntryExt();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, ClaimableBalanceEntryExt encodedClaimableBalanceEntryExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -150,7 +209,7 @@ public class ClaimableBalanceEntry implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof ClaimableBalanceEntryExt)) {
+      if (!(object instanceof ClaimableBalanceEntryExt)) {
         return false;
       }
 

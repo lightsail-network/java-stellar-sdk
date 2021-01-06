@@ -63,11 +63,33 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof FeeBumpTransactionEnvelope)) {
+    if (!(object instanceof FeeBumpTransactionEnvelope)) {
       return false;
     }
 
     FeeBumpTransactionEnvelope other = (FeeBumpTransactionEnvelope) object;
     return Objects.equal(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
+  }
+
+  public static final class Builder {
+    private FeeBumpTransaction tx;
+    private DecoratedSignature[] signatures;
+
+    public Builder tx(FeeBumpTransaction tx) {
+      this.tx = tx;
+      return this;
+    }
+
+    public Builder signatures(DecoratedSignature[] signatures) {
+      this.signatures = signatures;
+      return this;
+    }
+
+    public FeeBumpTransactionEnvelope build() {
+      FeeBumpTransactionEnvelope val = new FeeBumpTransactionEnvelope();
+      val.setTx(tx);
+      val.setSignatures(signatures);
+      return val;
+    }
   }
 }

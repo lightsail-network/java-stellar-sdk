@@ -52,11 +52,33 @@ public class DecoratedSignature implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof DecoratedSignature)) {
+    if (!(object instanceof DecoratedSignature)) {
       return false;
     }
 
     DecoratedSignature other = (DecoratedSignature) object;
     return Objects.equal(this.hint, other.hint) && Objects.equal(this.signature, other.signature);
+  }
+
+  public static final class Builder {
+    private SignatureHint hint;
+    private Signature signature;
+
+    public Builder hint(SignatureHint hint) {
+      this.hint = hint;
+      return this;
+    }
+
+    public Builder signature(Signature signature) {
+      this.signature = signature;
+      return this;
+    }
+
+    public DecoratedSignature build() {
+      DecoratedSignature val = new DecoratedSignature();
+      val.setHint(hint);
+      val.setSignature(signature);
+      return val;
+    }
   }
 }

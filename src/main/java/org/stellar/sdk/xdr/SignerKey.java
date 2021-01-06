@@ -53,6 +53,43 @@ public class SignerKey implements XdrElement {
   public void setHashX(Uint256 value) {
     this.hashX = value;
   }
+
+  public static final class Builder {
+    private SignerKeyType discriminant;
+    private Uint256 ed25519;
+    private Uint256 preAuthTx;
+    private Uint256 hashX;
+
+    public Builder discriminant(SignerKeyType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder ed25519(Uint256 ed25519) {
+      this.ed25519 = ed25519;
+      return this;
+    }
+
+    public Builder preAuthTx(Uint256 preAuthTx) {
+      this.preAuthTx = preAuthTx;
+      return this;
+    }
+
+    public Builder hashX(Uint256 hashX) {
+      this.hashX = hashX;
+      return this;
+    }
+
+    public SignerKey build() {
+      SignerKey val = new SignerKey();
+      val.setDiscriminant(discriminant);
+      val.setEd25519(ed25519);
+      val.setPreAuthTx(preAuthTx);
+      val.setHashX(hashX);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, SignerKey encodedSignerKey) throws IOException {
   //Xdrgen::AST::Identifier
   //SignerKeyType
@@ -95,7 +132,7 @@ public class SignerKey implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SignerKey)) {
+    if (!(object instanceof SignerKey)) {
       return false;
     }
 

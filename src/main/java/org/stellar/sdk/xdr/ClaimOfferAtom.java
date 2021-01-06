@@ -97,11 +97,61 @@ public class ClaimOfferAtom implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ClaimOfferAtom)) {
+    if (!(object instanceof ClaimOfferAtom)) {
       return false;
     }
 
     ClaimOfferAtom other = (ClaimOfferAtom) object;
     return Objects.equal(this.sellerID, other.sellerID) && Objects.equal(this.offerID, other.offerID) && Objects.equal(this.assetSold, other.assetSold) && Objects.equal(this.amountSold, other.amountSold) && Objects.equal(this.assetBought, other.assetBought) && Objects.equal(this.amountBought, other.amountBought);
+  }
+
+  public static final class Builder {
+    private AccountID sellerID;
+    private Int64 offerID;
+    private Asset assetSold;
+    private Int64 amountSold;
+    private Asset assetBought;
+    private Int64 amountBought;
+
+    public Builder sellerID(AccountID sellerID) {
+      this.sellerID = sellerID;
+      return this;
+    }
+
+    public Builder offerID(Int64 offerID) {
+      this.offerID = offerID;
+      return this;
+    }
+
+    public Builder assetSold(Asset assetSold) {
+      this.assetSold = assetSold;
+      return this;
+    }
+
+    public Builder amountSold(Int64 amountSold) {
+      this.amountSold = amountSold;
+      return this;
+    }
+
+    public Builder assetBought(Asset assetBought) {
+      this.assetBought = assetBought;
+      return this;
+    }
+
+    public Builder amountBought(Int64 amountBought) {
+      this.amountBought = amountBought;
+      return this;
+    }
+
+    public ClaimOfferAtom build() {
+      ClaimOfferAtom val = new ClaimOfferAtom();
+      val.setSellerID(sellerID);
+      val.setOfferID(offerID);
+      val.setAssetSold(assetSold);
+      val.setAmountSold(amountSold);
+      val.setAssetBought(assetBought);
+      val.setAmountBought(amountBought);
+      return val;
+    }
   }
 }

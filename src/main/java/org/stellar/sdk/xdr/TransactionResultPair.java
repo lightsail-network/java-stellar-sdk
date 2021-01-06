@@ -52,11 +52,33 @@ public class TransactionResultPair implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionResultPair)) {
+    if (!(object instanceof TransactionResultPair)) {
       return false;
     }
 
     TransactionResultPair other = (TransactionResultPair) object;
     return Objects.equal(this.transactionHash, other.transactionHash) && Objects.equal(this.result, other.result);
+  }
+
+  public static final class Builder {
+    private Hash transactionHash;
+    private TransactionResult result;
+
+    public Builder transactionHash(Hash transactionHash) {
+      this.transactionHash = transactionHash;
+      return this;
+    }
+
+    public Builder result(TransactionResult result) {
+      this.result = result;
+      return this;
+    }
+
+    public TransactionResultPair build() {
+      TransactionResultPair val = new TransactionResultPair();
+      val.setTransactionHash(transactionHash);
+      val.setResult(result);
+      return val;
+    }
   }
 }

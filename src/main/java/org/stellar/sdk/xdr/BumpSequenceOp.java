@@ -42,11 +42,26 @@ public class BumpSequenceOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof BumpSequenceOp)) {
+    if (!(object instanceof BumpSequenceOp)) {
       return false;
     }
 
     BumpSequenceOp other = (BumpSequenceOp) object;
     return Objects.equal(this.bumpTo, other.bumpTo);
+  }
+
+  public static final class Builder {
+    private SequenceNumber bumpTo;
+
+    public Builder bumpTo(SequenceNumber bumpTo) {
+      this.bumpTo = bumpTo;
+      return this;
+    }
+
+    public BumpSequenceOp build() {
+      BumpSequenceOp val = new BumpSequenceOp();
+      val.setBumpTo(bumpTo);
+      return val;
+    }
   }
 }

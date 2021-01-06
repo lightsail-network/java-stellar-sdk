@@ -52,11 +52,33 @@ public class SCPBallot implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SCPBallot)) {
+    if (!(object instanceof SCPBallot)) {
       return false;
     }
 
     SCPBallot other = (SCPBallot) object;
     return Objects.equal(this.counter, other.counter) && Objects.equal(this.value, other.value);
+  }
+
+  public static final class Builder {
+    private Uint32 counter;
+    private Value value;
+
+    public Builder counter(Uint32 counter) {
+      this.counter = counter;
+      return this;
+    }
+
+    public Builder value(Value value) {
+      this.value = value;
+      return this;
+    }
+
+    public SCPBallot build() {
+      SCPBallot val = new SCPBallot();
+      val.setCounter(counter);
+      val.setValue(value);
+      return val;
+    }
   }
 }
