@@ -28,6 +28,22 @@ public class ClaimClaimableBalanceResult implements XdrElement {
   public void setDiscriminant(ClaimClaimableBalanceResultCode value) {
     this.code = value;
   }
+
+  public static final class Builder {
+    private ClaimClaimableBalanceResultCode discriminant;
+
+    public Builder discriminant(ClaimClaimableBalanceResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public ClaimClaimableBalanceResult build() {
+      ClaimClaimableBalanceResult val = new ClaimClaimableBalanceResult();
+      val.setDiscriminant(discriminant);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, ClaimClaimableBalanceResult encodedClaimClaimableBalanceResult) throws IOException {
   //Xdrgen::AST::Identifier
   //ClaimClaimableBalanceResultCode
@@ -60,7 +76,7 @@ public class ClaimClaimableBalanceResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ClaimClaimableBalanceResult)) {
+    if (!(object instanceof ClaimClaimableBalanceResult)) {
       return false;
     }
 

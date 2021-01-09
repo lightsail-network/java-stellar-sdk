@@ -52,11 +52,33 @@ public class SCPEnvelope implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SCPEnvelope)) {
+    if (!(object instanceof SCPEnvelope)) {
       return false;
     }
 
     SCPEnvelope other = (SCPEnvelope) object;
     return Objects.equal(this.statement, other.statement) && Objects.equal(this.signature, other.signature);
+  }
+
+  public static final class Builder {
+    private SCPStatement statement;
+    private Signature signature;
+
+    public Builder statement(SCPStatement statement) {
+      this.statement = statement;
+      return this;
+    }
+
+    public Builder signature(Signature signature) {
+      this.signature = signature;
+      return this;
+    }
+
+    public SCPEnvelope build() {
+      SCPEnvelope val = new SCPEnvelope();
+      val.setStatement(statement);
+      val.setSignature(signature);
+      return val;
+    }
   }
 }

@@ -28,6 +28,22 @@ public class EndSponsoringFutureReservesResult implements XdrElement {
   public void setDiscriminant(EndSponsoringFutureReservesResultCode value) {
     this.code = value;
   }
+
+  public static final class Builder {
+    private EndSponsoringFutureReservesResultCode discriminant;
+
+    public Builder discriminant(EndSponsoringFutureReservesResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public EndSponsoringFutureReservesResult build() {
+      EndSponsoringFutureReservesResult val = new EndSponsoringFutureReservesResult();
+      val.setDiscriminant(discriminant);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, EndSponsoringFutureReservesResult encodedEndSponsoringFutureReservesResult) throws IOException {
   //Xdrgen::AST::Identifier
   //EndSponsoringFutureReservesResultCode
@@ -60,7 +76,7 @@ public class EndSponsoringFutureReservesResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof EndSponsoringFutureReservesResult)) {
+    if (!(object instanceof EndSponsoringFutureReservesResult)) {
       return false;
     }
 

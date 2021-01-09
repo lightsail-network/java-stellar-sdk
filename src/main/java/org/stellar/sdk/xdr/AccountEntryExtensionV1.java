@@ -60,12 +60,34 @@ public class AccountEntryExtensionV1 implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof AccountEntryExtensionV1)) {
+    if (!(object instanceof AccountEntryExtensionV1)) {
       return false;
     }
 
     AccountEntryExtensionV1 other = (AccountEntryExtensionV1) object;
     return Objects.equal(this.liabilities, other.liabilities) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private Liabilities liabilities;
+    private AccountEntryExtensionV1Ext ext;
+
+    public Builder liabilities(Liabilities liabilities) {
+      this.liabilities = liabilities;
+      return this;
+    }
+
+    public Builder ext(AccountEntryExtensionV1Ext ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public AccountEntryExtensionV1 build() {
+      AccountEntryExtensionV1 val = new AccountEntryExtensionV1();
+      val.setLiabilities(liabilities);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class AccountEntryExtensionV1Ext {
@@ -84,6 +106,29 @@ public class AccountEntryExtensionV1 implements XdrElement {
     public void setV2(AccountEntryExtensionV2 value) {
       this.v2 = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+      private AccountEntryExtensionV2 v2;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder v2(AccountEntryExtensionV2 v2) {
+        this.v2 = v2;
+        return this;
+      }
+
+      public AccountEntryExtensionV1Ext build() {
+        AccountEntryExtensionV1Ext val = new AccountEntryExtensionV1Ext();
+        val.setDiscriminant(discriminant);
+        val.setV2(v2);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, AccountEntryExtensionV1Ext encodedAccountEntryExtensionV1Ext) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -118,7 +163,7 @@ public class AccountEntryExtensionV1 implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof AccountEntryExtensionV1Ext)) {
+      if (!(object instanceof AccountEntryExtensionV1Ext)) {
         return false;
       }
 

@@ -62,11 +62,40 @@ public class AuthCert implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof AuthCert)) {
+    if (!(object instanceof AuthCert)) {
       return false;
     }
 
     AuthCert other = (AuthCert) object;
     return Objects.equal(this.pubkey, other.pubkey) && Objects.equal(this.expiration, other.expiration) && Objects.equal(this.sig, other.sig);
+  }
+
+  public static final class Builder {
+    private Curve25519Public pubkey;
+    private Uint64 expiration;
+    private Signature sig;
+
+    public Builder pubkey(Curve25519Public pubkey) {
+      this.pubkey = pubkey;
+      return this;
+    }
+
+    public Builder expiration(Uint64 expiration) {
+      this.expiration = expiration;
+      return this;
+    }
+
+    public Builder sig(Signature sig) {
+      this.sig = sig;
+      return this;
+    }
+
+    public AuthCert build() {
+      AuthCert val = new AuthCert();
+      val.setPubkey(pubkey);
+      val.setExpiration(expiration);
+      val.setSig(sig);
+      return val;
+    }
   }
 }

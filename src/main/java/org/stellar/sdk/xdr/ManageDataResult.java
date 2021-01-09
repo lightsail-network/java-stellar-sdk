@@ -28,6 +28,22 @@ public class ManageDataResult implements XdrElement {
   public void setDiscriminant(ManageDataResultCode value) {
     this.code = value;
   }
+
+  public static final class Builder {
+    private ManageDataResultCode discriminant;
+
+    public Builder discriminant(ManageDataResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public ManageDataResult build() {
+      ManageDataResult val = new ManageDataResult();
+      val.setDiscriminant(discriminant);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, ManageDataResult encodedManageDataResult) throws IOException {
   //Xdrgen::AST::Identifier
   //ManageDataResultCode
@@ -60,7 +76,7 @@ public class ManageDataResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageDataResult)) {
+    if (!(object instanceof ManageDataResult)) {
       return false;
     }
 

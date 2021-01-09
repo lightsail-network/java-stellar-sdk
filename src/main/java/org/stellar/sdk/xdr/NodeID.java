@@ -15,30 +15,42 @@ import com.google.common.base.Objects;
 //  ===========================================================================
 public class NodeID implements XdrElement {
   private PublicKey NodeID;
+
+  public NodeID() {}
+
+  public NodeID(PublicKey NodeID) {
+    this.NodeID = NodeID;
+  }
+
   public PublicKey getNodeID() {
     return this.NodeID;
   }
+
   public void setNodeID(PublicKey value) {
     this.NodeID = value;
   }
+
   public static void encode(XdrDataOutputStream stream, NodeID  encodedNodeID) throws IOException {
-  PublicKey.encode(stream, encodedNodeID.NodeID);
+    PublicKey.encode(stream, encodedNodeID.NodeID);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static NodeID decode(XdrDataInputStream stream) throws IOException {
     NodeID decodedNodeID = new NodeID();
-  decodedNodeID.NodeID = PublicKey.decode(stream);
+    decodedNodeID.NodeID = PublicKey.decode(stream);
     return decodedNodeID;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.NodeID);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof NodeID)) {
+    if (!(object instanceof NodeID)) {
       return false;
     }
 

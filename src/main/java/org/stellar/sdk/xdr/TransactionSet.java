@@ -61,11 +61,33 @@ public class TransactionSet implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionSet)) {
+    if (!(object instanceof TransactionSet)) {
       return false;
     }
 
     TransactionSet other = (TransactionSet) object;
     return Objects.equal(this.previousLedgerHash, other.previousLedgerHash) && Arrays.equals(this.txs, other.txs);
+  }
+
+  public static final class Builder {
+    private Hash previousLedgerHash;
+    private TransactionEnvelope[] txs;
+
+    public Builder previousLedgerHash(Hash previousLedgerHash) {
+      this.previousLedgerHash = previousLedgerHash;
+      return this;
+    }
+
+    public Builder txs(TransactionEnvelope[] txs) {
+      this.txs = txs;
+      return this;
+    }
+
+    public TransactionSet build() {
+      TransactionSet val = new TransactionSet();
+      val.setPreviousLedgerHash(previousLedgerHash);
+      val.setTxs(txs);
+      return val;
+    }
   }
 }

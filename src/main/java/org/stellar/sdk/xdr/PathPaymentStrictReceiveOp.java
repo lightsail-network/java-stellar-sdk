@@ -105,11 +105,61 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PathPaymentStrictReceiveOp)) {
+    if (!(object instanceof PathPaymentStrictReceiveOp)) {
       return false;
     }
 
     PathPaymentStrictReceiveOp other = (PathPaymentStrictReceiveOp) object;
     return Objects.equal(this.sendAsset, other.sendAsset) && Objects.equal(this.sendMax, other.sendMax) && Objects.equal(this.destination, other.destination) && Objects.equal(this.destAsset, other.destAsset) && Objects.equal(this.destAmount, other.destAmount) && Arrays.equals(this.path, other.path);
+  }
+
+  public static final class Builder {
+    private Asset sendAsset;
+    private Int64 sendMax;
+    private MuxedAccount destination;
+    private Asset destAsset;
+    private Int64 destAmount;
+    private Asset[] path;
+
+    public Builder sendAsset(Asset sendAsset) {
+      this.sendAsset = sendAsset;
+      return this;
+    }
+
+    public Builder sendMax(Int64 sendMax) {
+      this.sendMax = sendMax;
+      return this;
+    }
+
+    public Builder destination(MuxedAccount destination) {
+      this.destination = destination;
+      return this;
+    }
+
+    public Builder destAsset(Asset destAsset) {
+      this.destAsset = destAsset;
+      return this;
+    }
+
+    public Builder destAmount(Int64 destAmount) {
+      this.destAmount = destAmount;
+      return this;
+    }
+
+    public Builder path(Asset[] path) {
+      this.path = path;
+      return this;
+    }
+
+    public PathPaymentStrictReceiveOp build() {
+      PathPaymentStrictReceiveOp val = new PathPaymentStrictReceiveOp();
+      val.setSendAsset(sendAsset);
+      val.setSendMax(sendMax);
+      val.setDestination(destination);
+      val.setDestAsset(destAsset);
+      val.setDestAmount(destAmount);
+      val.setPath(path);
+      return val;
+    }
   }
 }

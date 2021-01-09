@@ -201,11 +201,82 @@ public class SetOptionsOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SetOptionsOp)) {
+    if (!(object instanceof SetOptionsOp)) {
       return false;
     }
 
     SetOptionsOp other = (SetOptionsOp) object;
     return Objects.equal(this.inflationDest, other.inflationDest) && Objects.equal(this.clearFlags, other.clearFlags) && Objects.equal(this.setFlags, other.setFlags) && Objects.equal(this.masterWeight, other.masterWeight) && Objects.equal(this.lowThreshold, other.lowThreshold) && Objects.equal(this.medThreshold, other.medThreshold) && Objects.equal(this.highThreshold, other.highThreshold) && Objects.equal(this.homeDomain, other.homeDomain) && Objects.equal(this.signer, other.signer);
+  }
+
+  public static final class Builder {
+    private AccountID inflationDest;
+    private Uint32 clearFlags;
+    private Uint32 setFlags;
+    private Uint32 masterWeight;
+    private Uint32 lowThreshold;
+    private Uint32 medThreshold;
+    private Uint32 highThreshold;
+    private String32 homeDomain;
+    private Signer signer;
+
+    public Builder inflationDest(AccountID inflationDest) {
+      this.inflationDest = inflationDest;
+      return this;
+    }
+
+    public Builder clearFlags(Uint32 clearFlags) {
+      this.clearFlags = clearFlags;
+      return this;
+    }
+
+    public Builder setFlags(Uint32 setFlags) {
+      this.setFlags = setFlags;
+      return this;
+    }
+
+    public Builder masterWeight(Uint32 masterWeight) {
+      this.masterWeight = masterWeight;
+      return this;
+    }
+
+    public Builder lowThreshold(Uint32 lowThreshold) {
+      this.lowThreshold = lowThreshold;
+      return this;
+    }
+
+    public Builder medThreshold(Uint32 medThreshold) {
+      this.medThreshold = medThreshold;
+      return this;
+    }
+
+    public Builder highThreshold(Uint32 highThreshold) {
+      this.highThreshold = highThreshold;
+      return this;
+    }
+
+    public Builder homeDomain(String32 homeDomain) {
+      this.homeDomain = homeDomain;
+      return this;
+    }
+
+    public Builder signer(Signer signer) {
+      this.signer = signer;
+      return this;
+    }
+
+    public SetOptionsOp build() {
+      SetOptionsOp val = new SetOptionsOp();
+      val.setInflationDest(inflationDest);
+      val.setClearFlags(clearFlags);
+      val.setSetFlags(setFlags);
+      val.setMasterWeight(masterWeight);
+      val.setLowThreshold(lowThreshold);
+      val.setMedThreshold(medThreshold);
+      val.setHighThreshold(highThreshold);
+      val.setHomeDomain(homeDomain);
+      val.setSigner(signer);
+      return val;
+    }
   }
 }

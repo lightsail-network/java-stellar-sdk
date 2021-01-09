@@ -62,11 +62,40 @@ public class SimplePaymentResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SimplePaymentResult)) {
+    if (!(object instanceof SimplePaymentResult)) {
       return false;
     }
 
     SimplePaymentResult other = (SimplePaymentResult) object;
     return Objects.equal(this.destination, other.destination) && Objects.equal(this.asset, other.asset) && Objects.equal(this.amount, other.amount);
+  }
+
+  public static final class Builder {
+    private AccountID destination;
+    private Asset asset;
+    private Int64 amount;
+
+    public Builder destination(AccountID destination) {
+      this.destination = destination;
+      return this;
+    }
+
+    public Builder asset(Asset asset) {
+      this.asset = asset;
+      return this;
+    }
+
+    public Builder amount(Int64 amount) {
+      this.amount = amount;
+      return this;
+    }
+
+    public SimplePaymentResult build() {
+      SimplePaymentResult val = new SimplePaymentResult();
+      val.setDestination(destination);
+      val.setAsset(asset);
+      val.setAmount(amount);
+      return val;
+    }
   }
 }

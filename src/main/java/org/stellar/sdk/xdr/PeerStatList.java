@@ -15,38 +15,50 @@ import java.util.Arrays;
 //  ===========================================================================
 public class PeerStatList implements XdrElement {
   private PeerStats[] PeerStatList;
+
+  public PeerStatList() {}
+
+  public PeerStatList(PeerStats[] PeerStatList) {
+    this.PeerStatList = PeerStatList;
+  }
+
   public PeerStats[] getPeerStatList() {
     return this.PeerStatList;
   }
+
   public void setPeerStatList(PeerStats[] value) {
     this.PeerStatList = value;
   }
+
   public static void encode(XdrDataOutputStream stream, PeerStatList  encodedPeerStatList) throws IOException {
-  int PeerStatListsize = encodedPeerStatList.getPeerStatList().length;
-  stream.writeInt(PeerStatListsize);
-  for (int i = 0; i < PeerStatListsize; i++) {
-    PeerStats.encode(stream, encodedPeerStatList.PeerStatList[i]);
+    int PeerStatListsize = encodedPeerStatList.getPeerStatList().length;
+    stream.writeInt(PeerStatListsize);
+    for (int i = 0; i < PeerStatListsize; i++) {
+      PeerStats.encode(stream, encodedPeerStatList.PeerStatList[i]);
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static PeerStatList decode(XdrDataInputStream stream) throws IOException {
     PeerStatList decodedPeerStatList = new PeerStatList();
-  int PeerStatListsize = stream.readInt();
-  decodedPeerStatList.PeerStatList = new PeerStats[PeerStatListsize];
-  for (int i = 0; i < PeerStatListsize; i++) {
-    decodedPeerStatList.PeerStatList[i] = PeerStats.decode(stream);
-  }
+    int PeerStatListsize = stream.readInt();
+    decodedPeerStatList.PeerStatList = new PeerStats[PeerStatListsize];
+    for (int i = 0; i < PeerStatListsize; i++) {
+      decodedPeerStatList.PeerStatList[i] = PeerStats.decode(stream);
+    }
     return decodedPeerStatList;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.PeerStatList);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PeerStatList)) {
+    if (!(object instanceof PeerStatList)) {
       return false;
     }
 

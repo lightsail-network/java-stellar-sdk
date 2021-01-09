@@ -35,6 +35,29 @@ public class AccountMergeResult implements XdrElement {
   public void setSourceAccountBalance(Int64 value) {
     this.sourceAccountBalance = value;
   }
+
+  public static final class Builder {
+    private AccountMergeResultCode discriminant;
+    private Int64 sourceAccountBalance;
+
+    public Builder discriminant(AccountMergeResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder sourceAccountBalance(Int64 sourceAccountBalance) {
+      this.sourceAccountBalance = sourceAccountBalance;
+      return this;
+    }
+
+    public AccountMergeResult build() {
+      AccountMergeResult val = new AccountMergeResult();
+      val.setDiscriminant(discriminant);
+      val.setSourceAccountBalance(sourceAccountBalance);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, AccountMergeResult encodedAccountMergeResult) throws IOException {
   //Xdrgen::AST::Identifier
   //AccountMergeResultCode
@@ -69,7 +92,7 @@ public class AccountMergeResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof AccountMergeResult)) {
+    if (!(object instanceof AccountMergeResult)) {
       return false;
     }
 

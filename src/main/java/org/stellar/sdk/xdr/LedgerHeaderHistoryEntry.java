@@ -69,12 +69,41 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerHeaderHistoryEntry)) {
+    if (!(object instanceof LedgerHeaderHistoryEntry)) {
       return false;
     }
 
     LedgerHeaderHistoryEntry other = (LedgerHeaderHistoryEntry) object;
     return Objects.equal(this.hash, other.hash) && Objects.equal(this.header, other.header) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private Hash hash;
+    private LedgerHeader header;
+    private LedgerHeaderHistoryEntryExt ext;
+
+    public Builder hash(Hash hash) {
+      this.hash = hash;
+      return this;
+    }
+
+    public Builder header(LedgerHeader header) {
+      this.header = header;
+      return this;
+    }
+
+    public Builder ext(LedgerHeaderHistoryEntryExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public LedgerHeaderHistoryEntry build() {
+      LedgerHeaderHistoryEntry val = new LedgerHeaderHistoryEntry();
+      val.setHash(hash);
+      val.setHeader(header);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class LedgerHeaderHistoryEntryExt {
@@ -86,6 +115,22 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public LedgerHeaderHistoryEntryExt build() {
+        LedgerHeaderHistoryEntryExt val = new LedgerHeaderHistoryEntryExt();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, LedgerHeaderHistoryEntryExt encodedLedgerHeaderHistoryEntryExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -114,7 +159,7 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerHeaderHistoryEntryExt)) {
+      if (!(object instanceof LedgerHeaderHistoryEntryExt)) {
         return false;
       }
 

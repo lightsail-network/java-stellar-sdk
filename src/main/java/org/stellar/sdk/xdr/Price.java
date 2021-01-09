@@ -52,11 +52,33 @@ public class Price implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Price)) {
+    if (!(object instanceof Price)) {
       return false;
     }
 
     Price other = (Price) object;
     return Objects.equal(this.n, other.n) && Objects.equal(this.d, other.d);
+  }
+
+  public static final class Builder {
+    private Int32 n;
+    private Int32 d;
+
+    public Builder n(Int32 n) {
+      this.n = n;
+      return this;
+    }
+
+    public Builder d(Int32 d) {
+      this.d = d;
+      return this;
+    }
+
+    public Price build() {
+      Price val = new Price();
+      val.setN(n);
+      val.setD(d);
+      return val;
+    }
   }
 }

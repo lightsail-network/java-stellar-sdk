@@ -60,6 +60,50 @@ public class LedgerUpgrade implements XdrElement {
   public void setNewBaseReserve(Uint32 value) {
     this.newBaseReserve = value;
   }
+
+  public static final class Builder {
+    private LedgerUpgradeType discriminant;
+    private Uint32 newLedgerVersion;
+    private Uint32 newBaseFee;
+    private Uint32 newMaxTxSetSize;
+    private Uint32 newBaseReserve;
+
+    public Builder discriminant(LedgerUpgradeType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder newLedgerVersion(Uint32 newLedgerVersion) {
+      this.newLedgerVersion = newLedgerVersion;
+      return this;
+    }
+
+    public Builder newBaseFee(Uint32 newBaseFee) {
+      this.newBaseFee = newBaseFee;
+      return this;
+    }
+
+    public Builder newMaxTxSetSize(Uint32 newMaxTxSetSize) {
+      this.newMaxTxSetSize = newMaxTxSetSize;
+      return this;
+    }
+
+    public Builder newBaseReserve(Uint32 newBaseReserve) {
+      this.newBaseReserve = newBaseReserve;
+      return this;
+    }
+
+    public LedgerUpgrade build() {
+      LedgerUpgrade val = new LedgerUpgrade();
+      val.setDiscriminant(discriminant);
+      val.setNewLedgerVersion(newLedgerVersion);
+      val.setNewBaseFee(newBaseFee);
+      val.setNewMaxTxSetSize(newMaxTxSetSize);
+      val.setNewBaseReserve(newBaseReserve);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, LedgerUpgrade encodedLedgerUpgrade) throws IOException {
   //Xdrgen::AST::Identifier
   //LedgerUpgradeType
@@ -108,7 +152,7 @@ public class LedgerUpgrade implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerUpgrade)) {
+    if (!(object instanceof LedgerUpgrade)) {
       return false;
     }
 

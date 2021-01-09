@@ -79,11 +79,40 @@ public class SCPQuorumSet implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SCPQuorumSet)) {
+    if (!(object instanceof SCPQuorumSet)) {
       return false;
     }
 
     SCPQuorumSet other = (SCPQuorumSet) object;
     return Objects.equal(this.threshold, other.threshold) && Arrays.equals(this.validators, other.validators) && Arrays.equals(this.innerSets, other.innerSets);
+  }
+
+  public static final class Builder {
+    private Uint32 threshold;
+    private PublicKey[] validators;
+    private SCPQuorumSet[] innerSets;
+
+    public Builder threshold(Uint32 threshold) {
+      this.threshold = threshold;
+      return this;
+    }
+
+    public Builder validators(PublicKey[] validators) {
+      this.validators = validators;
+      return this;
+    }
+
+    public Builder innerSets(SCPQuorumSet[] innerSets) {
+      this.innerSets = innerSets;
+      return this;
+    }
+
+    public SCPQuorumSet build() {
+      SCPQuorumSet val = new SCPQuorumSet();
+      val.setThreshold(threshold);
+      val.setValidators(validators);
+      val.setInnerSets(innerSets);
+      return val;
+    }
   }
 }

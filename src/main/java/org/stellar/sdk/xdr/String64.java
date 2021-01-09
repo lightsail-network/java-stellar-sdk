@@ -15,30 +15,42 @@ import com.google.common.base.Objects;
 //  ===========================================================================
 public class String64 implements XdrElement {
   private XdrString string64;
+
+  public String64() {}
+
+  public String64(XdrString string64) {
+    this.string64 = string64;
+  }
+
   public XdrString getString64() {
     return this.string64;
   }
+
   public void setString64(XdrString value) {
     this.string64 = value;
   }
+
   public static void encode(XdrDataOutputStream stream, String64  encodedString64) throws IOException {
-  encodedString64.string64.encode(stream);
+    encodedString64.string64.encode(stream);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static String64 decode(XdrDataInputStream stream) throws IOException {
     String64 decodedString64 = new String64();
-  decodedString64.string64 = XdrString.decode(stream, 64);
+    decodedString64.string64 = XdrString.decode(stream, 64);
     return decodedString64;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.string64);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof String64)) {
+    if (!(object instanceof String64)) {
       return false;
     }
 

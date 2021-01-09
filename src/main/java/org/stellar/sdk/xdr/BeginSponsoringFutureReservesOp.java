@@ -42,11 +42,26 @@ public class BeginSponsoringFutureReservesOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof BeginSponsoringFutureReservesOp)) {
+    if (!(object instanceof BeginSponsoringFutureReservesOp)) {
       return false;
     }
 
     BeginSponsoringFutureReservesOp other = (BeginSponsoringFutureReservesOp) object;
     return Objects.equal(this.sponsoredID, other.sponsoredID);
+  }
+
+  public static final class Builder {
+    private AccountID sponsoredID;
+
+    public Builder sponsoredID(AccountID sponsoredID) {
+      this.sponsoredID = sponsoredID;
+      return this;
+    }
+
+    public BeginSponsoringFutureReservesOp build() {
+      BeginSponsoringFutureReservesOp val = new BeginSponsoringFutureReservesOp();
+      val.setSponsoredID(sponsoredID);
+      return val;
+    }
   }
 }

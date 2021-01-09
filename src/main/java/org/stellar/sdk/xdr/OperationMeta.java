@@ -42,11 +42,26 @@ public class OperationMeta implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof OperationMeta)) {
+    if (!(object instanceof OperationMeta)) {
       return false;
     }
 
     OperationMeta other = (OperationMeta) object;
     return Objects.equal(this.changes, other.changes);
+  }
+
+  public static final class Builder {
+    private LedgerEntryChanges changes;
+
+    public Builder changes(LedgerEntryChanges changes) {
+      this.changes = changes;
+      return this;
+    }
+
+    public OperationMeta build() {
+      OperationMeta val = new OperationMeta();
+      val.setChanges(changes);
+      return val;
+    }
   }
 }

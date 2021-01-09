@@ -2,6 +2,12 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.22.0
+- The XDR classes have been regenerated using the latest version of xdrgen which provides the following two features:
+
+    - Builder static inner classes to unions and structs
+    - Constructors for typedefs
+
 ## 0.21.2
 - Update challenge transaction helpers for SEP-0010 v3.0.0. ([#308](https://github.com/stellar/java-stellar-sdk/pull/308))
 - Fix the decoding of `balanceId` in `org.stellar.sdk.ClaimClaimableBalanceOperation`. ([#310](https://github.com/stellar/java-stellar-sdk/pull/310))

@@ -73,11 +73,47 @@ public class TopologyResponseBody implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TopologyResponseBody)) {
+    if (!(object instanceof TopologyResponseBody)) {
       return false;
     }
 
     TopologyResponseBody other = (TopologyResponseBody) object;
     return Objects.equal(this.inboundPeers, other.inboundPeers) && Objects.equal(this.outboundPeers, other.outboundPeers) && Objects.equal(this.totalInboundPeerCount, other.totalInboundPeerCount) && Objects.equal(this.totalOutboundPeerCount, other.totalOutboundPeerCount);
+  }
+
+  public static final class Builder {
+    private PeerStatList inboundPeers;
+    private PeerStatList outboundPeers;
+    private Uint32 totalInboundPeerCount;
+    private Uint32 totalOutboundPeerCount;
+
+    public Builder inboundPeers(PeerStatList inboundPeers) {
+      this.inboundPeers = inboundPeers;
+      return this;
+    }
+
+    public Builder outboundPeers(PeerStatList outboundPeers) {
+      this.outboundPeers = outboundPeers;
+      return this;
+    }
+
+    public Builder totalInboundPeerCount(Uint32 totalInboundPeerCount) {
+      this.totalInboundPeerCount = totalInboundPeerCount;
+      return this;
+    }
+
+    public Builder totalOutboundPeerCount(Uint32 totalOutboundPeerCount) {
+      this.totalOutboundPeerCount = totalOutboundPeerCount;
+      return this;
+    }
+
+    public TopologyResponseBody build() {
+      TopologyResponseBody val = new TopologyResponseBody();
+      val.setInboundPeers(inboundPeers);
+      val.setOutboundPeers(outboundPeers);
+      val.setTotalInboundPeerCount(totalInboundPeerCount);
+      val.setTotalOutboundPeerCount(totalOutboundPeerCount);
+      return val;
+    }
   }
 }

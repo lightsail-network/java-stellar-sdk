@@ -52,11 +52,33 @@ public class Liabilities implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Liabilities)) {
+    if (!(object instanceof Liabilities)) {
       return false;
     }
 
     Liabilities other = (Liabilities) object;
     return Objects.equal(this.buying, other.buying) && Objects.equal(this.selling, other.selling);
+  }
+
+  public static final class Builder {
+    private Int64 buying;
+    private Int64 selling;
+
+    public Builder buying(Int64 buying) {
+      this.buying = buying;
+      return this;
+    }
+
+    public Builder selling(Int64 selling) {
+      this.selling = selling;
+      return this;
+    }
+
+    public Liabilities build() {
+      Liabilities val = new Liabilities();
+      val.setBuying(buying);
+      val.setSelling(selling);
+      return val;
+    }
   }
 }

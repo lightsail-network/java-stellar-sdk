@@ -63,11 +63,33 @@ public class TransactionV0Envelope implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionV0Envelope)) {
+    if (!(object instanceof TransactionV0Envelope)) {
       return false;
     }
 
     TransactionV0Envelope other = (TransactionV0Envelope) object;
     return Objects.equal(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
+  }
+
+  public static final class Builder {
+    private TransactionV0 tx;
+    private DecoratedSignature[] signatures;
+
+    public Builder tx(TransactionV0 tx) {
+      this.tx = tx;
+      return this;
+    }
+
+    public Builder signatures(DecoratedSignature[] signatures) {
+      this.signatures = signatures;
+      return this;
+    }
+
+    public TransactionV0Envelope build() {
+      TransactionV0Envelope val = new TransactionV0Envelope();
+      val.setTx(tx);
+      val.setSignatures(signatures);
+      return val;
+    }
   }
 }

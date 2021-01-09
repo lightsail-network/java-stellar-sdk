@@ -62,11 +62,40 @@ public class PaymentOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PaymentOp)) {
+    if (!(object instanceof PaymentOp)) {
       return false;
     }
 
     PaymentOp other = (PaymentOp) object;
     return Objects.equal(this.destination, other.destination) && Objects.equal(this.asset, other.asset) && Objects.equal(this.amount, other.amount);
+  }
+
+  public static final class Builder {
+    private MuxedAccount destination;
+    private Asset asset;
+    private Int64 amount;
+
+    public Builder destination(MuxedAccount destination) {
+      this.destination = destination;
+      return this;
+    }
+
+    public Builder asset(Asset asset) {
+      this.asset = asset;
+      return this;
+    }
+
+    public Builder amount(Int64 amount) {
+      this.amount = amount;
+      return this;
+    }
+
+    public PaymentOp build() {
+      PaymentOp val = new PaymentOp();
+      val.setDestination(destination);
+      val.setAsset(asset);
+      val.setAmount(amount);
+      return val;
+    }
   }
 }

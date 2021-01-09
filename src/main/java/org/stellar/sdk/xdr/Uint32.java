@@ -15,30 +15,42 @@ import com.google.common.base.Objects;
 //  ===========================================================================
 public class Uint32 implements XdrElement {
   private Integer uint32;
+
+  public Uint32() {}
+
+  public Uint32(Integer uint32) {
+    this.uint32 = uint32;
+  }
+
   public Integer getUint32() {
     return this.uint32;
   }
+
   public void setUint32(Integer value) {
     this.uint32 = value;
   }
+
   public static void encode(XdrDataOutputStream stream, Uint32  encodedUint32) throws IOException {
-  stream.writeInt(encodedUint32.uint32);
+    stream.writeInt(encodedUint32.uint32);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static Uint32 decode(XdrDataInputStream stream) throws IOException {
     Uint32 decodedUint32 = new Uint32();
-  decodedUint32.uint32 = stream.readInt();
+    decodedUint32.uint32 = stream.readInt();
     return decodedUint32;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.uint32);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Uint32)) {
+    if (!(object instanceof Uint32)) {
       return false;
     }
 

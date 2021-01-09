@@ -35,6 +35,29 @@ public class ManageSellOfferResult implements XdrElement {
   public void setSuccess(ManageOfferSuccessResult value) {
     this.success = value;
   }
+
+  public static final class Builder {
+    private ManageSellOfferResultCode discriminant;
+    private ManageOfferSuccessResult success;
+
+    public Builder discriminant(ManageSellOfferResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder success(ManageOfferSuccessResult success) {
+      this.success = success;
+      return this;
+    }
+
+    public ManageSellOfferResult build() {
+      ManageSellOfferResult val = new ManageSellOfferResult();
+      val.setDiscriminant(discriminant);
+      val.setSuccess(success);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, ManageSellOfferResult encodedManageSellOfferResult) throws IOException {
   //Xdrgen::AST::Identifier
   //ManageSellOfferResultCode
@@ -69,7 +92,7 @@ public class ManageSellOfferResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageSellOfferResult)) {
+    if (!(object instanceof ManageSellOfferResult)) {
       return false;
     }
 

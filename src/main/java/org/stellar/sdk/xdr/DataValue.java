@@ -15,34 +15,46 @@ import java.util.Arrays;
 //  ===========================================================================
 public class DataValue implements XdrElement {
   private byte[] DataValue;
+
+  public DataValue() {}
+
+  public DataValue(byte[] DataValue) {
+    this.DataValue = DataValue;
+  }
+
   public byte[] getDataValue() {
     return this.DataValue;
   }
+
   public void setDataValue(byte[] value) {
     this.DataValue = value;
   }
+
   public static void encode(XdrDataOutputStream stream, DataValue  encodedDataValue) throws IOException {
-  int DataValuesize = encodedDataValue.DataValue.length;
-  stream.writeInt(DataValuesize);
-  stream.write(encodedDataValue.getDataValue(), 0, DataValuesize);
+    int DataValuesize = encodedDataValue.DataValue.length;
+    stream.writeInt(DataValuesize);
+    stream.write(encodedDataValue.getDataValue(), 0, DataValuesize);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static DataValue decode(XdrDataInputStream stream) throws IOException {
     DataValue decodedDataValue = new DataValue();
-  int DataValuesize = stream.readInt();
-  decodedDataValue.DataValue = new byte[DataValuesize];
-  stream.read(decodedDataValue.DataValue, 0, DataValuesize);
+    int DataValuesize = stream.readInt();
+    decodedDataValue.DataValue = new byte[DataValuesize];
+    stream.read(decodedDataValue.DataValue, 0, DataValuesize);
     return decodedDataValue;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.DataValue);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof DataValue)) {
+    if (!(object instanceof DataValue)) {
       return false;
     }
 

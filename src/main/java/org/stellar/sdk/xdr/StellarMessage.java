@@ -159,6 +159,120 @@ public class StellarMessage implements XdrElement {
   public void setGetSCPLedgerSeq(Uint32 value) {
     this.getSCPLedgerSeq = value;
   }
+
+  public static final class Builder {
+    private MessageType discriminant;
+    private Error error;
+    private Hello hello;
+    private Auth auth;
+    private DontHave dontHave;
+    private PeerAddress[] peers;
+    private Uint256 txSetHash;
+    private TransactionSet txSet;
+    private TransactionEnvelope transaction;
+    private SignedSurveyRequestMessage signedSurveyRequestMessage;
+    private SignedSurveyResponseMessage signedSurveyResponseMessage;
+    private Uint256 qSetHash;
+    private SCPQuorumSet qSet;
+    private SCPEnvelope envelope;
+    private Uint32 getSCPLedgerSeq;
+
+    public Builder discriminant(MessageType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder error(Error error) {
+      this.error = error;
+      return this;
+    }
+
+    public Builder hello(Hello hello) {
+      this.hello = hello;
+      return this;
+    }
+
+    public Builder auth(Auth auth) {
+      this.auth = auth;
+      return this;
+    }
+
+    public Builder dontHave(DontHave dontHave) {
+      this.dontHave = dontHave;
+      return this;
+    }
+
+    public Builder peers(PeerAddress[] peers) {
+      this.peers = peers;
+      return this;
+    }
+
+    public Builder txSetHash(Uint256 txSetHash) {
+      this.txSetHash = txSetHash;
+      return this;
+    }
+
+    public Builder txSet(TransactionSet txSet) {
+      this.txSet = txSet;
+      return this;
+    }
+
+    public Builder transaction(TransactionEnvelope transaction) {
+      this.transaction = transaction;
+      return this;
+    }
+
+    public Builder signedSurveyRequestMessage(SignedSurveyRequestMessage signedSurveyRequestMessage) {
+      this.signedSurveyRequestMessage = signedSurveyRequestMessage;
+      return this;
+    }
+
+    public Builder signedSurveyResponseMessage(SignedSurveyResponseMessage signedSurveyResponseMessage) {
+      this.signedSurveyResponseMessage = signedSurveyResponseMessage;
+      return this;
+    }
+
+    public Builder qSetHash(Uint256 qSetHash) {
+      this.qSetHash = qSetHash;
+      return this;
+    }
+
+    public Builder qSet(SCPQuorumSet qSet) {
+      this.qSet = qSet;
+      return this;
+    }
+
+    public Builder envelope(SCPEnvelope envelope) {
+      this.envelope = envelope;
+      return this;
+    }
+
+    public Builder getSCPLedgerSeq(Uint32 getSCPLedgerSeq) {
+      this.getSCPLedgerSeq = getSCPLedgerSeq;
+      return this;
+    }
+
+    public StellarMessage build() {
+      StellarMessage val = new StellarMessage();
+      val.setDiscriminant(discriminant);
+      val.setError(error);
+      val.setHello(hello);
+      val.setAuth(auth);
+      val.setDontHave(dontHave);
+      val.setPeers(peers);
+      val.setTxSetHash(txSetHash);
+      val.setTxSet(txSet);
+      val.setTransaction(transaction);
+      val.setSignedSurveyRequestMessage(signedSurveyRequestMessage);
+      val.setSignedSurveyResponseMessage(signedSurveyResponseMessage);
+      val.setQSetHash(qSetHash);
+      val.setQSet(qSet);
+      val.setEnvelope(envelope);
+      val.setGetSCPLedgerSeq(getSCPLedgerSeq);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, StellarMessage encodedStellarMessage) throws IOException {
   //Xdrgen::AST::Identifier
   //MessageType
@@ -279,7 +393,7 @@ public class StellarMessage implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof StellarMessage)) {
+    if (!(object instanceof StellarMessage)) {
       return false;
     }
 

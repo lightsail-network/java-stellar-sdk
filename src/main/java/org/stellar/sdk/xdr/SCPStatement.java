@@ -94,12 +94,41 @@ public class SCPStatement implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SCPStatement)) {
+    if (!(object instanceof SCPStatement)) {
       return false;
     }
 
     SCPStatement other = (SCPStatement) object;
     return Objects.equal(this.nodeID, other.nodeID) && Objects.equal(this.slotIndex, other.slotIndex) && Objects.equal(this.pledges, other.pledges);
+  }
+
+  public static final class Builder {
+    private NodeID nodeID;
+    private Uint64 slotIndex;
+    private SCPStatementPledges pledges;
+
+    public Builder nodeID(NodeID nodeID) {
+      this.nodeID = nodeID;
+      return this;
+    }
+
+    public Builder slotIndex(Uint64 slotIndex) {
+      this.slotIndex = slotIndex;
+      return this;
+    }
+
+    public Builder pledges(SCPStatementPledges pledges) {
+      this.pledges = pledges;
+      return this;
+    }
+
+    public SCPStatement build() {
+      SCPStatement val = new SCPStatement();
+      val.setNodeID(nodeID);
+      val.setSlotIndex(slotIndex);
+      val.setPledges(pledges);
+      return val;
+    }
   }
 
   public static class SCPStatementPledges {
@@ -139,6 +168,50 @@ public class SCPStatement implements XdrElement {
     public void setNominate(SCPNomination value) {
       this.nominate = value;
     }
+
+    public static final class Builder {
+      private SCPStatementType discriminant;
+      private SCPStatementPrepare prepare;
+      private SCPStatementConfirm confirm;
+      private SCPStatementExternalize externalize;
+      private SCPNomination nominate;
+
+      public Builder discriminant(SCPStatementType discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder prepare(SCPStatementPrepare prepare) {
+        this.prepare = prepare;
+        return this;
+      }
+
+      public Builder confirm(SCPStatementConfirm confirm) {
+        this.confirm = confirm;
+        return this;
+      }
+
+      public Builder externalize(SCPStatementExternalize externalize) {
+        this.externalize = externalize;
+        return this;
+      }
+
+      public Builder nominate(SCPNomination nominate) {
+        this.nominate = nominate;
+        return this;
+      }
+
+      public SCPStatementPledges build() {
+        SCPStatementPledges val = new SCPStatementPledges();
+        val.setDiscriminant(discriminant);
+        val.setPrepare(prepare);
+        val.setConfirm(confirm);
+        val.setExternalize(externalize);
+        val.setNominate(nominate);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, SCPStatementPledges encodedSCPStatementPledges) throws IOException {
     //Xdrgen::AST::Identifier
     //SCPStatementType
@@ -187,7 +260,7 @@ public class SCPStatement implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof SCPStatementPledges)) {
+      if (!(object instanceof SCPStatementPledges)) {
         return false;
       }
 
@@ -282,12 +355,62 @@ public class SCPStatement implements XdrElement {
       }
       @Override
       public boolean equals(Object object) {
-        if (object == null || !(object instanceof SCPStatementPrepare)) {
+        if (!(object instanceof SCPStatementPrepare)) {
           return false;
         }
 
         SCPStatementPrepare other = (SCPStatementPrepare) object;
         return Objects.equal(this.quorumSetHash, other.quorumSetHash) && Objects.equal(this.ballot, other.ballot) && Objects.equal(this.prepared, other.prepared) && Objects.equal(this.preparedPrime, other.preparedPrime) && Objects.equal(this.nC, other.nC) && Objects.equal(this.nH, other.nH);
+      }
+
+      public static final class Builder {
+        private Hash quorumSetHash;
+        private SCPBallot ballot;
+        private SCPBallot prepared;
+        private SCPBallot preparedPrime;
+        private Uint32 nC;
+        private Uint32 nH;
+
+        public Builder quorumSetHash(Hash quorumSetHash) {
+          this.quorumSetHash = quorumSetHash;
+          return this;
+        }
+
+        public Builder ballot(SCPBallot ballot) {
+          this.ballot = ballot;
+          return this;
+        }
+
+        public Builder prepared(SCPBallot prepared) {
+          this.prepared = prepared;
+          return this;
+        }
+
+        public Builder preparedPrime(SCPBallot preparedPrime) {
+          this.preparedPrime = preparedPrime;
+          return this;
+        }
+
+        public Builder nC(Uint32 nC) {
+          this.nC = nC;
+          return this;
+        }
+
+        public Builder nH(Uint32 nH) {
+          this.nH = nH;
+          return this;
+        }
+
+        public SCPStatementPrepare build() {
+          SCPStatementPrepare val = new SCPStatementPrepare();
+          val.setQuorumSetHash(quorumSetHash);
+          val.setBallot(ballot);
+          val.setPrepared(prepared);
+          val.setPreparedPrime(preparedPrime);
+          val.setNC(nC);
+          val.setNH(nH);
+          return val;
+        }
       }
 
     }
@@ -353,12 +476,55 @@ public class SCPStatement implements XdrElement {
       }
       @Override
       public boolean equals(Object object) {
-        if (object == null || !(object instanceof SCPStatementConfirm)) {
+        if (!(object instanceof SCPStatementConfirm)) {
           return false;
         }
 
         SCPStatementConfirm other = (SCPStatementConfirm) object;
         return Objects.equal(this.ballot, other.ballot) && Objects.equal(this.nPrepared, other.nPrepared) && Objects.equal(this.nCommit, other.nCommit) && Objects.equal(this.nH, other.nH) && Objects.equal(this.quorumSetHash, other.quorumSetHash);
+      }
+
+      public static final class Builder {
+        private SCPBallot ballot;
+        private Uint32 nPrepared;
+        private Uint32 nCommit;
+        private Uint32 nH;
+        private Hash quorumSetHash;
+
+        public Builder ballot(SCPBallot ballot) {
+          this.ballot = ballot;
+          return this;
+        }
+
+        public Builder nPrepared(Uint32 nPrepared) {
+          this.nPrepared = nPrepared;
+          return this;
+        }
+
+        public Builder nCommit(Uint32 nCommit) {
+          this.nCommit = nCommit;
+          return this;
+        }
+
+        public Builder nH(Uint32 nH) {
+          this.nH = nH;
+          return this;
+        }
+
+        public Builder quorumSetHash(Hash quorumSetHash) {
+          this.quorumSetHash = quorumSetHash;
+          return this;
+        }
+
+        public SCPStatementConfirm build() {
+          SCPStatementConfirm val = new SCPStatementConfirm();
+          val.setBallot(ballot);
+          val.setNPrepared(nPrepared);
+          val.setNCommit(nCommit);
+          val.setNH(nH);
+          val.setQuorumSetHash(quorumSetHash);
+          return val;
+        }
       }
 
     }
@@ -406,12 +572,41 @@ public class SCPStatement implements XdrElement {
       }
       @Override
       public boolean equals(Object object) {
-        if (object == null || !(object instanceof SCPStatementExternalize)) {
+        if (!(object instanceof SCPStatementExternalize)) {
           return false;
         }
 
         SCPStatementExternalize other = (SCPStatementExternalize) object;
         return Objects.equal(this.commit, other.commit) && Objects.equal(this.nH, other.nH) && Objects.equal(this.commitQuorumSetHash, other.commitQuorumSetHash);
+      }
+
+      public static final class Builder {
+        private SCPBallot commit;
+        private Uint32 nH;
+        private Hash commitQuorumSetHash;
+
+        public Builder commit(SCPBallot commit) {
+          this.commit = commit;
+          return this;
+        }
+
+        public Builder nH(Uint32 nH) {
+          this.nH = nH;
+          return this;
+        }
+
+        public Builder commitQuorumSetHash(Hash commitQuorumSetHash) {
+          this.commitQuorumSetHash = commitQuorumSetHash;
+          return this;
+        }
+
+        public SCPStatementExternalize build() {
+          SCPStatementExternalize val = new SCPStatementExternalize();
+          val.setCommit(commit);
+          val.setNH(nH);
+          val.setCommitQuorumSetHash(commitQuorumSetHash);
+          return val;
+        }
       }
 
     }

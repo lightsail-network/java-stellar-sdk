@@ -72,11 +72,47 @@ public class CreatePassiveSellOfferOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof CreatePassiveSellOfferOp)) {
+    if (!(object instanceof CreatePassiveSellOfferOp)) {
       return false;
     }
 
     CreatePassiveSellOfferOp other = (CreatePassiveSellOfferOp) object;
     return Objects.equal(this.selling, other.selling) && Objects.equal(this.buying, other.buying) && Objects.equal(this.amount, other.amount) && Objects.equal(this.price, other.price);
+  }
+
+  public static final class Builder {
+    private Asset selling;
+    private Asset buying;
+    private Int64 amount;
+    private Price price;
+
+    public Builder selling(Asset selling) {
+      this.selling = selling;
+      return this;
+    }
+
+    public Builder buying(Asset buying) {
+      this.buying = buying;
+      return this;
+    }
+
+    public Builder amount(Int64 amount) {
+      this.amount = amount;
+      return this;
+    }
+
+    public Builder price(Price price) {
+      this.price = price;
+      return this;
+    }
+
+    public CreatePassiveSellOfferOp build() {
+      CreatePassiveSellOfferOp val = new CreatePassiveSellOfferOp();
+      val.setSelling(selling);
+      val.setBuying(buying);
+      val.setAmount(amount);
+      val.setPrice(price);
+      return val;
+    }
   }
 }

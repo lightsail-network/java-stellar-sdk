@@ -54,11 +54,33 @@ public class ChangeTrustOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ChangeTrustOp)) {
+    if (!(object instanceof ChangeTrustOp)) {
       return false;
     }
 
     ChangeTrustOp other = (ChangeTrustOp) object;
     return Objects.equal(this.line, other.line) && Objects.equal(this.limit, other.limit);
+  }
+
+  public static final class Builder {
+    private Asset line;
+    private Int64 limit;
+
+    public Builder line(Asset line) {
+      this.line = line;
+      return this;
+    }
+
+    public Builder limit(Int64 limit) {
+      this.limit = limit;
+      return this;
+    }
+
+    public ChangeTrustOp build() {
+      ChangeTrustOp val = new ChangeTrustOp();
+      val.setLine(line);
+      val.setLimit(limit);
+      return val;
+    }
   }
 }

@@ -33,6 +33,29 @@ public class SurveyResponseBody implements XdrElement {
   public void setTopologyResponseBody(TopologyResponseBody value) {
     this.topologyResponseBody = value;
   }
+
+  public static final class Builder {
+    private SurveyMessageCommandType discriminant;
+    private TopologyResponseBody topologyResponseBody;
+
+    public Builder discriminant(SurveyMessageCommandType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder topologyResponseBody(TopologyResponseBody topologyResponseBody) {
+      this.topologyResponseBody = topologyResponseBody;
+      return this;
+    }
+
+    public SurveyResponseBody build() {
+      SurveyResponseBody val = new SurveyResponseBody();
+      val.setDiscriminant(discriminant);
+      val.setTopologyResponseBody(topologyResponseBody);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, SurveyResponseBody encodedSurveyResponseBody) throws IOException {
   //Xdrgen::AST::Identifier
   //SurveyMessageCommandType
@@ -63,7 +86,7 @@ public class SurveyResponseBody implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SurveyResponseBody)) {
+    if (!(object instanceof SurveyResponseBody)) {
       return false;
     }
 

@@ -60,12 +60,34 @@ public class BucketMetadata implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof BucketMetadata)) {
+    if (!(object instanceof BucketMetadata)) {
       return false;
     }
 
     BucketMetadata other = (BucketMetadata) object;
     return Objects.equal(this.ledgerVersion, other.ledgerVersion) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private Uint32 ledgerVersion;
+    private BucketMetadataExt ext;
+
+    public Builder ledgerVersion(Uint32 ledgerVersion) {
+      this.ledgerVersion = ledgerVersion;
+      return this;
+    }
+
+    public Builder ext(BucketMetadataExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public BucketMetadata build() {
+      BucketMetadata val = new BucketMetadata();
+      val.setLedgerVersion(ledgerVersion);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class BucketMetadataExt {
@@ -77,6 +99,22 @@ public class BucketMetadata implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public BucketMetadataExt build() {
+        BucketMetadataExt val = new BucketMetadataExt();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, BucketMetadataExt encodedBucketMetadataExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -105,7 +143,7 @@ public class BucketMetadata implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof BucketMetadataExt)) {
+      if (!(object instanceof BucketMetadataExt)) {
         return false;
       }
 

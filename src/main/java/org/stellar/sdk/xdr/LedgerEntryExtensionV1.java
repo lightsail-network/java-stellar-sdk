@@ -58,12 +58,34 @@ public class LedgerEntryExtensionV1 implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerEntryExtensionV1)) {
+    if (!(object instanceof LedgerEntryExtensionV1)) {
       return false;
     }
 
     LedgerEntryExtensionV1 other = (LedgerEntryExtensionV1) object;
     return Objects.equal(this.sponsoringID, other.sponsoringID) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private SponsorshipDescriptor sponsoringID;
+    private LedgerEntryExtensionV1Ext ext;
+
+    public Builder sponsoringID(SponsorshipDescriptor sponsoringID) {
+      this.sponsoringID = sponsoringID;
+      return this;
+    }
+
+    public Builder ext(LedgerEntryExtensionV1Ext ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public LedgerEntryExtensionV1 build() {
+      LedgerEntryExtensionV1 val = new LedgerEntryExtensionV1();
+      val.setSponsoringID(sponsoringID);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class LedgerEntryExtensionV1Ext {
@@ -75,6 +97,22 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public LedgerEntryExtensionV1Ext build() {
+        LedgerEntryExtensionV1Ext val = new LedgerEntryExtensionV1Ext();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, LedgerEntryExtensionV1Ext encodedLedgerEntryExtensionV1Ext) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -103,7 +141,7 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerEntryExtensionV1Ext)) {
+      if (!(object instanceof LedgerEntryExtensionV1Ext)) {
         return false;
       }
 

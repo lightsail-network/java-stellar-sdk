@@ -52,11 +52,33 @@ public class Signer implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Signer)) {
+    if (!(object instanceof Signer)) {
       return false;
     }
 
     Signer other = (Signer) object;
     return Objects.equal(this.key, other.key) && Objects.equal(this.weight, other.weight);
+  }
+
+  public static final class Builder {
+    private SignerKey key;
+    private Uint32 weight;
+
+    public Builder key(SignerKey key) {
+      this.key = key;
+      return this;
+    }
+
+    public Builder weight(Uint32 weight) {
+      this.weight = weight;
+      return this;
+    }
+
+    public Signer build() {
+      Signer val = new Signer();
+      val.setKey(key);
+      val.setWeight(weight);
+      return val;
+    }
   }
 }

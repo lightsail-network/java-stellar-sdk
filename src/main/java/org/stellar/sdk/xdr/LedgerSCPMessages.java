@@ -61,11 +61,33 @@ public class LedgerSCPMessages implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerSCPMessages)) {
+    if (!(object instanceof LedgerSCPMessages)) {
       return false;
     }
 
     LedgerSCPMessages other = (LedgerSCPMessages) object;
     return Objects.equal(this.ledgerSeq, other.ledgerSeq) && Arrays.equals(this.messages, other.messages);
+  }
+
+  public static final class Builder {
+    private Uint32 ledgerSeq;
+    private SCPEnvelope[] messages;
+
+    public Builder ledgerSeq(Uint32 ledgerSeq) {
+      this.ledgerSeq = ledgerSeq;
+      return this;
+    }
+
+    public Builder messages(SCPEnvelope[] messages) {
+      this.messages = messages;
+      return this;
+    }
+
+    public LedgerSCPMessages build() {
+      LedgerSCPMessages val = new LedgerSCPMessages();
+      val.setLedgerSeq(ledgerSeq);
+      val.setMessages(messages);
+      return val;
+    }
   }
 }

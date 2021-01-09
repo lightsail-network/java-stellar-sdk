@@ -53,6 +53,43 @@ public class BucketEntry implements XdrElement {
   public void setMetaEntry(BucketMetadata value) {
     this.metaEntry = value;
   }
+
+  public static final class Builder {
+    private BucketEntryType discriminant;
+    private LedgerEntry liveEntry;
+    private LedgerKey deadEntry;
+    private BucketMetadata metaEntry;
+
+    public Builder discriminant(BucketEntryType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder liveEntry(LedgerEntry liveEntry) {
+      this.liveEntry = liveEntry;
+      return this;
+    }
+
+    public Builder deadEntry(LedgerKey deadEntry) {
+      this.deadEntry = deadEntry;
+      return this;
+    }
+
+    public Builder metaEntry(BucketMetadata metaEntry) {
+      this.metaEntry = metaEntry;
+      return this;
+    }
+
+    public BucketEntry build() {
+      BucketEntry val = new BucketEntry();
+      val.setDiscriminant(discriminant);
+      val.setLiveEntry(liveEntry);
+      val.setDeadEntry(deadEntry);
+      val.setMetaEntry(metaEntry);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, BucketEntry encodedBucketEntry) throws IOException {
   //Xdrgen::AST::Identifier
   //BucketEntryType
@@ -97,7 +134,7 @@ public class BucketEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof BucketEntry)) {
+    if (!(object instanceof BucketEntry)) {
       return false;
     }
 

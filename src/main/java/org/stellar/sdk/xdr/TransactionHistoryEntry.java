@@ -69,12 +69,41 @@ public class TransactionHistoryEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionHistoryEntry)) {
+    if (!(object instanceof TransactionHistoryEntry)) {
       return false;
     }
 
     TransactionHistoryEntry other = (TransactionHistoryEntry) object;
     return Objects.equal(this.ledgerSeq, other.ledgerSeq) && Objects.equal(this.txSet, other.txSet) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private Uint32 ledgerSeq;
+    private TransactionSet txSet;
+    private TransactionHistoryEntryExt ext;
+
+    public Builder ledgerSeq(Uint32 ledgerSeq) {
+      this.ledgerSeq = ledgerSeq;
+      return this;
+    }
+
+    public Builder txSet(TransactionSet txSet) {
+      this.txSet = txSet;
+      return this;
+    }
+
+    public Builder ext(TransactionHistoryEntryExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public TransactionHistoryEntry build() {
+      TransactionHistoryEntry val = new TransactionHistoryEntry();
+      val.setLedgerSeq(ledgerSeq);
+      val.setTxSet(txSet);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class TransactionHistoryEntryExt {
@@ -86,6 +115,22 @@ public class TransactionHistoryEntry implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public TransactionHistoryEntryExt build() {
+        TransactionHistoryEntryExt val = new TransactionHistoryEntryExt();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, TransactionHistoryEntryExt encodedTransactionHistoryEntryExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -114,7 +159,7 @@ public class TransactionHistoryEntry implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof TransactionHistoryEntryExt)) {
+      if (!(object instanceof TransactionHistoryEntryExt)) {
         return false;
       }
 

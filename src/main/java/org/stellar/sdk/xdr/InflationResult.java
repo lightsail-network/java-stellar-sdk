@@ -36,6 +36,29 @@ public class InflationResult implements XdrElement {
   public void setPayouts(InflationPayout[] value) {
     this.payouts = value;
   }
+
+  public static final class Builder {
+    private InflationResultCode discriminant;
+    private InflationPayout[] payouts;
+
+    public Builder discriminant(InflationResultCode discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder payouts(InflationPayout[] payouts) {
+      this.payouts = payouts;
+      return this;
+    }
+
+    public InflationResult build() {
+      InflationResult val = new InflationResult();
+      val.setDiscriminant(discriminant);
+      val.setPayouts(payouts);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, InflationResult encodedInflationResult) throws IOException {
   //Xdrgen::AST::Identifier
   //InflationResultCode
@@ -78,7 +101,7 @@ public class InflationResult implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof InflationResult)) {
+    if (!(object instanceof InflationResult)) {
       return false;
     }
 

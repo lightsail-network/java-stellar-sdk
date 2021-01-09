@@ -62,11 +62,40 @@ public class TransactionResultMeta implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionResultMeta)) {
+    if (!(object instanceof TransactionResultMeta)) {
       return false;
     }
 
     TransactionResultMeta other = (TransactionResultMeta) object;
     return Objects.equal(this.result, other.result) && Objects.equal(this.feeProcessing, other.feeProcessing) && Objects.equal(this.txApplyProcessing, other.txApplyProcessing);
+  }
+
+  public static final class Builder {
+    private TransactionResultPair result;
+    private LedgerEntryChanges feeProcessing;
+    private TransactionMeta txApplyProcessing;
+
+    public Builder result(TransactionResultPair result) {
+      this.result = result;
+      return this;
+    }
+
+    public Builder feeProcessing(LedgerEntryChanges feeProcessing) {
+      this.feeProcessing = feeProcessing;
+      return this;
+    }
+
+    public Builder txApplyProcessing(TransactionMeta txApplyProcessing) {
+      this.txApplyProcessing = txApplyProcessing;
+      return this;
+    }
+
+    public TransactionResultMeta build() {
+      TransactionResultMeta val = new TransactionResultMeta();
+      val.setResult(result);
+      val.setFeeProcessing(feeProcessing);
+      val.setTxApplyProcessing(txApplyProcessing);
+      return val;
+    }
   }
 }

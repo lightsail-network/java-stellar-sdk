@@ -60,12 +60,34 @@ public class TransactionSignaturePayload implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionSignaturePayload)) {
+    if (!(object instanceof TransactionSignaturePayload)) {
       return false;
     }
 
     TransactionSignaturePayload other = (TransactionSignaturePayload) object;
     return Objects.equal(this.networkId, other.networkId) && Objects.equal(this.taggedTransaction, other.taggedTransaction);
+  }
+
+  public static final class Builder {
+    private Hash networkId;
+    private TransactionSignaturePayloadTaggedTransaction taggedTransaction;
+
+    public Builder networkId(Hash networkId) {
+      this.networkId = networkId;
+      return this;
+    }
+
+    public Builder taggedTransaction(TransactionSignaturePayloadTaggedTransaction taggedTransaction) {
+      this.taggedTransaction = taggedTransaction;
+      return this;
+    }
+
+    public TransactionSignaturePayload build() {
+      TransactionSignaturePayload val = new TransactionSignaturePayload();
+      val.setNetworkId(networkId);
+      val.setTaggedTransaction(taggedTransaction);
+      return val;
+    }
   }
 
   public static class TransactionSignaturePayloadTaggedTransaction {
@@ -91,6 +113,36 @@ public class TransactionSignaturePayload implements XdrElement {
     public void setFeeBump(FeeBumpTransaction value) {
       this.feeBump = value;
     }
+
+    public static final class Builder {
+      private EnvelopeType discriminant;
+      private Transaction tx;
+      private FeeBumpTransaction feeBump;
+
+      public Builder discriminant(EnvelopeType discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public Builder tx(Transaction tx) {
+        this.tx = tx;
+        return this;
+      }
+
+      public Builder feeBump(FeeBumpTransaction feeBump) {
+        this.feeBump = feeBump;
+        return this;
+      }
+
+      public TransactionSignaturePayloadTaggedTransaction build() {
+        TransactionSignaturePayloadTaggedTransaction val = new TransactionSignaturePayloadTaggedTransaction();
+        val.setDiscriminant(discriminant);
+        val.setTx(tx);
+        val.setFeeBump(feeBump);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, TransactionSignaturePayloadTaggedTransaction encodedTransactionSignaturePayloadTaggedTransaction) throws IOException {
     //Xdrgen::AST::Identifier
     //EnvelopeType
@@ -127,7 +179,7 @@ public class TransactionSignaturePayload implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof TransactionSignaturePayloadTaggedTransaction)) {
+      if (!(object instanceof TransactionSignaturePayloadTaggedTransaction)) {
         return false;
       }
 

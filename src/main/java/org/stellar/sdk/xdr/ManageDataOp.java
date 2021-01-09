@@ -60,11 +60,33 @@ public class ManageDataOp implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageDataOp)) {
+    if (!(object instanceof ManageDataOp)) {
       return false;
     }
 
     ManageDataOp other = (ManageDataOp) object;
     return Objects.equal(this.dataName, other.dataName) && Objects.equal(this.dataValue, other.dataValue);
+  }
+
+  public static final class Builder {
+    private String64 dataName;
+    private DataValue dataValue;
+
+    public Builder dataName(String64 dataName) {
+      this.dataName = dataName;
+      return this;
+    }
+
+    public Builder dataValue(DataValue dataValue) {
+      this.dataValue = dataValue;
+      return this;
+    }
+
+    public ManageDataOp build() {
+      ManageDataOp val = new ManageDataOp();
+      val.setDataName(dataName);
+      val.setDataValue(dataValue);
+      return val;
+    }
   }
 }

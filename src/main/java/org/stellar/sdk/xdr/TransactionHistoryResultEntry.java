@@ -69,12 +69,41 @@ public class TransactionHistoryResultEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof TransactionHistoryResultEntry)) {
+    if (!(object instanceof TransactionHistoryResultEntry)) {
       return false;
     }
 
     TransactionHistoryResultEntry other = (TransactionHistoryResultEntry) object;
     return Objects.equal(this.ledgerSeq, other.ledgerSeq) && Objects.equal(this.txResultSet, other.txResultSet) && Objects.equal(this.ext, other.ext);
+  }
+
+  public static final class Builder {
+    private Uint32 ledgerSeq;
+    private TransactionResultSet txResultSet;
+    private TransactionHistoryResultEntryExt ext;
+
+    public Builder ledgerSeq(Uint32 ledgerSeq) {
+      this.ledgerSeq = ledgerSeq;
+      return this;
+    }
+
+    public Builder txResultSet(TransactionResultSet txResultSet) {
+      this.txResultSet = txResultSet;
+      return this;
+    }
+
+    public Builder ext(TransactionHistoryResultEntryExt ext) {
+      this.ext = ext;
+      return this;
+    }
+
+    public TransactionHistoryResultEntry build() {
+      TransactionHistoryResultEntry val = new TransactionHistoryResultEntry();
+      val.setLedgerSeq(ledgerSeq);
+      val.setTxResultSet(txResultSet);
+      val.setExt(ext);
+      return val;
+    }
   }
 
   public static class TransactionHistoryResultEntryExt {
@@ -86,6 +115,22 @@ public class TransactionHistoryResultEntry implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
+    public static final class Builder {
+      private Integer discriminant;
+
+      public Builder discriminant(Integer discriminant) {
+        this.discriminant = discriminant;
+        return this;
+      }
+
+      public TransactionHistoryResultEntryExt build() {
+        TransactionHistoryResultEntryExt val = new TransactionHistoryResultEntryExt();
+        val.setDiscriminant(discriminant);
+        return val;
+      }
+    }
+
     public static void encode(XdrDataOutputStream stream, TransactionHistoryResultEntryExt encodedTransactionHistoryResultEntryExt) throws IOException {
     //Xdrgen::AST::Typespecs::Int
     //Integer
@@ -114,7 +159,7 @@ public class TransactionHistoryResultEntry implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof TransactionHistoryResultEntryExt)) {
+      if (!(object instanceof TransactionHistoryResultEntryExt)) {
         return false;
       }
 

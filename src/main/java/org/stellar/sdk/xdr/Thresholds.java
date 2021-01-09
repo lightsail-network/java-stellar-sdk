@@ -15,33 +15,45 @@ import java.util.Arrays;
 //  ===========================================================================
 public class Thresholds implements XdrElement {
   private byte[] Thresholds;
+
+  public Thresholds() {}
+
+  public Thresholds(byte[] Thresholds) {
+    this.Thresholds = Thresholds;
+  }
+
   public byte[] getThresholds() {
     return this.Thresholds;
   }
+
   public void setThresholds(byte[] value) {
     this.Thresholds = value;
   }
+
   public static void encode(XdrDataOutputStream stream, Thresholds  encodedThresholds) throws IOException {
-  int Thresholdssize = encodedThresholds.Thresholds.length;
-  stream.write(encodedThresholds.getThresholds(), 0, Thresholdssize);
+    int Thresholdssize = encodedThresholds.Thresholds.length;
+    stream.write(encodedThresholds.getThresholds(), 0, Thresholdssize);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static Thresholds decode(XdrDataInputStream stream) throws IOException {
     Thresholds decodedThresholds = new Thresholds();
-  int Thresholdssize = 4;
-  decodedThresholds.Thresholds = new byte[Thresholdssize];
-  stream.read(decodedThresholds.Thresholds, 0, Thresholdssize);
+    int Thresholdssize = 4;
+    decodedThresholds.Thresholds = new byte[Thresholdssize];
+    stream.read(decodedThresholds.Thresholds, 0, Thresholdssize);
     return decodedThresholds;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.Thresholds);
   }
+
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Thresholds)) {
+    if (!(object instanceof Thresholds)) {
       return false;
     }
 

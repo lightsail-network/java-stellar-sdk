@@ -91,6 +91,57 @@ public class LedgerKey implements XdrElement {
   public void setClaimableBalance(LedgerKeyClaimableBalance value) {
     this.claimableBalance = value;
   }
+
+  public static final class Builder {
+    private LedgerEntryType discriminant;
+    private LedgerKeyAccount account;
+    private LedgerKeyTrustLine trustLine;
+    private LedgerKeyOffer offer;
+    private LedgerKeyData data;
+    private LedgerKeyClaimableBalance claimableBalance;
+
+    public Builder discriminant(LedgerEntryType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder account(LedgerKeyAccount account) {
+      this.account = account;
+      return this;
+    }
+
+    public Builder trustLine(LedgerKeyTrustLine trustLine) {
+      this.trustLine = trustLine;
+      return this;
+    }
+
+    public Builder offer(LedgerKeyOffer offer) {
+      this.offer = offer;
+      return this;
+    }
+
+    public Builder data(LedgerKeyData data) {
+      this.data = data;
+      return this;
+    }
+
+    public Builder claimableBalance(LedgerKeyClaimableBalance claimableBalance) {
+      this.claimableBalance = claimableBalance;
+      return this;
+    }
+
+    public LedgerKey build() {
+      LedgerKey val = new LedgerKey();
+      val.setDiscriminant(discriminant);
+      val.setAccount(account);
+      val.setTrustLine(trustLine);
+      val.setOffer(offer);
+      val.setData(data);
+      val.setClaimableBalance(claimableBalance);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, LedgerKey encodedLedgerKey) throws IOException {
   //Xdrgen::AST::Identifier
   //LedgerEntryType
@@ -145,7 +196,7 @@ public class LedgerKey implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof LedgerKey)) {
+    if (!(object instanceof LedgerKey)) {
       return false;
     }
 
@@ -179,12 +230,27 @@ public class LedgerKey implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerKeyAccount)) {
+      if (!(object instanceof LedgerKeyAccount)) {
         return false;
       }
 
       LedgerKeyAccount other = (LedgerKeyAccount) object;
       return Objects.equal(this.accountID, other.accountID);
+    }
+
+    public static final class Builder {
+      private AccountID accountID;
+
+      public Builder accountID(AccountID accountID) {
+        this.accountID = accountID;
+        return this;
+      }
+
+      public LedgerKeyAccount build() {
+        LedgerKeyAccount val = new LedgerKeyAccount();
+        val.setAccountID(accountID);
+        return val;
+      }
     }
 
   }
@@ -223,12 +289,34 @@ public class LedgerKey implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerKeyTrustLine)) {
+      if (!(object instanceof LedgerKeyTrustLine)) {
         return false;
       }
 
       LedgerKeyTrustLine other = (LedgerKeyTrustLine) object;
       return Objects.equal(this.accountID, other.accountID) && Objects.equal(this.asset, other.asset);
+    }
+
+    public static final class Builder {
+      private AccountID accountID;
+      private Asset asset;
+
+      public Builder accountID(AccountID accountID) {
+        this.accountID = accountID;
+        return this;
+      }
+
+      public Builder asset(Asset asset) {
+        this.asset = asset;
+        return this;
+      }
+
+      public LedgerKeyTrustLine build() {
+        LedgerKeyTrustLine val = new LedgerKeyTrustLine();
+        val.setAccountID(accountID);
+        val.setAsset(asset);
+        return val;
+      }
     }
 
   }
@@ -267,12 +355,34 @@ public class LedgerKey implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerKeyOffer)) {
+      if (!(object instanceof LedgerKeyOffer)) {
         return false;
       }
 
       LedgerKeyOffer other = (LedgerKeyOffer) object;
       return Objects.equal(this.sellerID, other.sellerID) && Objects.equal(this.offerID, other.offerID);
+    }
+
+    public static final class Builder {
+      private AccountID sellerID;
+      private Int64 offerID;
+
+      public Builder sellerID(AccountID sellerID) {
+        this.sellerID = sellerID;
+        return this;
+      }
+
+      public Builder offerID(Int64 offerID) {
+        this.offerID = offerID;
+        return this;
+      }
+
+      public LedgerKeyOffer build() {
+        LedgerKeyOffer val = new LedgerKeyOffer();
+        val.setSellerID(sellerID);
+        val.setOfferID(offerID);
+        return val;
+      }
     }
 
   }
@@ -311,12 +421,34 @@ public class LedgerKey implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerKeyData)) {
+      if (!(object instanceof LedgerKeyData)) {
         return false;
       }
 
       LedgerKeyData other = (LedgerKeyData) object;
       return Objects.equal(this.accountID, other.accountID) && Objects.equal(this.dataName, other.dataName);
+    }
+
+    public static final class Builder {
+      private AccountID accountID;
+      private String64 dataName;
+
+      public Builder accountID(AccountID accountID) {
+        this.accountID = accountID;
+        return this;
+      }
+
+      public Builder dataName(String64 dataName) {
+        this.dataName = dataName;
+        return this;
+      }
+
+      public LedgerKeyData build() {
+        LedgerKeyData val = new LedgerKeyData();
+        val.setAccountID(accountID);
+        val.setDataName(dataName);
+        return val;
+      }
     }
 
   }
@@ -346,12 +478,27 @@ public class LedgerKey implements XdrElement {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof LedgerKeyClaimableBalance)) {
+      if (!(object instanceof LedgerKeyClaimableBalance)) {
         return false;
       }
 
       LedgerKeyClaimableBalance other = (LedgerKeyClaimableBalance) object;
       return Objects.equal(this.balanceID, other.balanceID);
+    }
+
+    public static final class Builder {
+      private ClaimableBalanceID balanceID;
+
+      public Builder balanceID(ClaimableBalanceID balanceID) {
+        this.balanceID = balanceID;
+        return this;
+      }
+
+      public LedgerKeyClaimableBalance build() {
+        LedgerKeyClaimableBalance val = new LedgerKeyClaimableBalance();
+        val.setBalanceID(balanceID);
+        return val;
+      }
     }
 
   }

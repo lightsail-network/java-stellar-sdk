@@ -33,6 +33,29 @@ public class SCPHistoryEntry implements XdrElement {
   public void setV0(SCPHistoryEntryV0 value) {
     this.v0 = value;
   }
+
+  public static final class Builder {
+    private Integer discriminant;
+    private SCPHistoryEntryV0 v0;
+
+    public Builder discriminant(Integer discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder v0(SCPHistoryEntryV0 v0) {
+      this.v0 = v0;
+      return this;
+    }
+
+    public SCPHistoryEntry build() {
+      SCPHistoryEntry val = new SCPHistoryEntry();
+      val.setDiscriminant(discriminant);
+      val.setV0(v0);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, SCPHistoryEntry encodedSCPHistoryEntry) throws IOException {
   //Xdrgen::AST::Typespecs::Int
   //Integer
@@ -63,7 +86,7 @@ public class SCPHistoryEntry implements XdrElement {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SCPHistoryEntry)) {
+    if (!(object instanceof SCPHistoryEntry)) {
       return false;
     }
 
