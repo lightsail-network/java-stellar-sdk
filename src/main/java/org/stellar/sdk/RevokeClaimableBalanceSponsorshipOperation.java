@@ -64,7 +64,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
       try {
         op.getLedgerKey().getClaimableBalance().getBalanceID().encode(xdrDataOutputStream);
       } catch (IOException e) {
-        throw new IllegalArgumentException("invalid claimClaimableBalanceOp.", e);
+        throw new IllegalArgumentException("invalid revokeSponsorshipOp.", e);
       }
       balanceId = BaseEncoding.base16().lowerCase().encode(byteArrayOutputStream.toByteArray());
     }
