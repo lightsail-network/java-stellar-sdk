@@ -2,6 +2,9 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.22.1
+- Fix several bugs in revoke operations. ([#317](https://github.com/stellar/java-stellar-sdk/pull/317))
+    
 ## 0.22.0
 - The XDR classes have been regenerated using the latest version of xdrgen which provides the following two features:
 
