@@ -20,6 +20,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
+    key.setDiscriminant(LedgerEntryType.OFFER);
     LedgerKey.LedgerKeyOffer offer = new LedgerKey.LedgerKeyOffer();
     Int64 id = new Int64();
     id.setInt64(offerId);

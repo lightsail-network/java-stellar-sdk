@@ -21,6 +21,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
+    key.setDiscriminant(LedgerEntryType.CLAIMABLE_BALANCE);
     LedgerKey.LedgerKeyClaimableBalance claimableBalance = new LedgerKey.LedgerKeyClaimableBalance();
 
     ClaimableBalanceID id = new ClaimableBalanceID();

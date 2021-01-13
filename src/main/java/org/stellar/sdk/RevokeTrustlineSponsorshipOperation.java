@@ -26,6 +26,7 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
+    key.setDiscriminant(LedgerEntryType.TRUSTLINE);
     LedgerKey.LedgerKeyTrustLine trustLine = new LedgerKey.LedgerKeyTrustLine();
     trustLine.setAccountID(StrKey.encodeToXDRAccountId(accountId));
     trustLine.setAsset(asset.toXdr());

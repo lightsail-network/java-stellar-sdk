@@ -26,6 +26,7 @@ public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
+    key.setDiscriminant(LedgerEntryType.DATA);
     LedgerKey.LedgerKeyData data = new LedgerKey.LedgerKeyData();
     data.setAccountID(StrKey.encodeToXDRAccountId(accountId));
     String64 dn = new String64();
