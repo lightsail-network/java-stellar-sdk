@@ -4,6 +4,10 @@ import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
@@ -21,13 +25,17 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
+    key.setDiscriminant(LedgerEntryType.CLAIMABLE_BALANCE);
     LedgerKey.LedgerKeyClaimableBalance claimableBalance = new LedgerKey.LedgerKeyClaimableBalance();
 
-    ClaimableBalanceID id = new ClaimableBalanceID();
-    id.setDiscriminant(ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0);
-    Hash hash = new Hash();
-    hash.setHash(BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase()));
-    id.setV0(hash);
+    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase());
+    XdrDataInputStream balanceIdXdrDataInputStream = new XdrDataInputStream(new ByteArrayInputStream(balanceIdBytes));
+    ClaimableBalanceID id;
+    try {
+      id = ClaimableBalanceID.decode(balanceIdXdrDataInputStream);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("invalid balanceId: " + balanceId, e);
+    }
 
     claimableBalance.setBalanceID(id);
     key.setClaimableBalance(claimableBalance);
@@ -51,7 +59,14 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
-      balanceId = BaseEncoding.base16().lowerCase().encode(op.getLedgerKey().getClaimableBalance().getBalanceID().getV0().getHash());
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      try {
+        op.getLedgerKey().getClaimableBalance().getBalanceID().encode(xdrDataOutputStream);
+      } catch (IOException e) {
+        throw new IllegalArgumentException("invalid revokeSponsorshipOp.", e);
+      }
+      balanceId = BaseEncoding.base16().lowerCase().encode(byteArrayOutputStream.toByteArray());
     }
 
     /**
