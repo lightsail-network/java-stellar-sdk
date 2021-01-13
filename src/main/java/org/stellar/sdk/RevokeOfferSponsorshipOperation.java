@@ -6,10 +6,16 @@ import org.stellar.sdk.xdr.*;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RevokeOfferSponsorshipOperation extends Operation {
+  private final String seller;
   private final Long offerId;
 
-  private RevokeOfferSponsorshipOperation(Long offerId) {
+  private RevokeOfferSponsorshipOperation(String seller, Long offerId) {
+    this.seller = seller;
     this.offerId = offerId;
+  }
+
+  public String getSeller() {
+    return seller;
   }
 
   public Long getOfferId() {
@@ -25,6 +31,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
     Int64 id = new Int64();
     id.setInt64(offerId);
     offer.setOfferID(id);
+    offer.setSellerID(StrKey.encodeToXDRAccountId(seller));
     key.setOffer(offer);
 
     op.setLedgerKey(key);
@@ -38,6 +45,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
   }
 
   public static class Builder {
+    private final String seller;
     private final Long offerId;
 
     private String mSourceAccount;
@@ -48,13 +56,16 @@ public class RevokeOfferSponsorshipOperation extends Operation {
      */
     Builder(RevokeSponsorshipOp op) {
       offerId = op.getLedgerKey().getOffer().getOfferID().getInt64();
+      seller = StrKey.encodeStellarAccountId(op.getLedgerKey().getOffer().getSellerID());
     }
 
     /**
      * Creates a new RevokeOfferSponsorshipOperation builder.
+     * @param seller The account ID which created the offer.
      * @param offerId The id of the offer whose sponsorship will be revoked.
      */
-    public Builder(Long offerId) {
+    public Builder(String seller, Long offerId) {
+      this.seller = seller;
       this.offerId = offerId;
     }
 
@@ -72,7 +83,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
      * Builds an operation
      */
     public RevokeOfferSponsorshipOperation build() {
-      RevokeOfferSponsorshipOperation operation = new RevokeOfferSponsorshipOperation(offerId);
+      RevokeOfferSponsorshipOperation operation = new RevokeOfferSponsorshipOperation(seller, offerId);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -92,7 +103,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
     }
 
     RevokeOfferSponsorshipOperation other = (RevokeOfferSponsorshipOperation) object;
-    return Objects.equal(this.offerId, other.offerId) &&
+    return Objects.equal(this.seller, other.seller) && Objects.equal(this.offerId, other.offerId) &&
         Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }
