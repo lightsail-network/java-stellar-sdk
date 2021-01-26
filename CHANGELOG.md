@@ -2,6 +2,19 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.23.0
+### Breaking change
+- Updates the SEP-10 utility function parameters to support [SEP-10 v3.1](https://github.com/stellar/stellar-protocol/commit/6c8c9cf6685c85509835188a136ffb8cd6b9c11c) [(#319)](https://github.com/stellar/java-stellar-sdk/pull/319)
+  - A new required `webAuthDomain` parameter was added to the following functions
+    - `Sep10Challenge#newChallenge(KeyPair, Network, String, String, String, TimeBounds)`
+    - `Sep10Challenge#readChallengeTransaction(String, String, Network, String, String)`
+    - `Sep10Challenge#readChallengeTransaction(String, String, Network, String[], String)`
+    - `Sep10Challenge#verifyChallengeTransactionSigners(String, String, Network, String, String, Set)`
+    - `Sep10Challenge#verifyChallengeTransactionSigners(String, String, Network, String[], String, Set)`
+    - `Sep10Challenge#verifyChallengeTransactionThreshold(String, String, Network, String[], String, int, Set)`
+    - `Sep10Challenge#verifyChallengeTransactionThreshold(String, String, Network, String, String, int, Set)`
+  - The `webAuthDomain` parameter is expected to match the value of the Manage Data operation with the 'web_auth_domain' key, if present.
+
 ## 0.22.1
 - Fix several bugs in revoke operations. ([#317](https://github.com/stellar/java-stellar-sdk/pull/317))
     
