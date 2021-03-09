@@ -57,6 +57,12 @@ import com.google.common.base.Objects;
 //          void;
 //      case REVOKE_SPONSORSHIP:
 //          RevokeSponsorshipOp revokeSponsorshipOp;
+//      case CLAWBACK:
+//          ClawbackOp clawbackOp;
+//      case CLAWBACK_CLAIMABLE_BALANCE:
+//          ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
+//      case SET_TRUST_LINE_FLAGS:
+//          SetTrustLineFlagsOp setTrustLineFlagsOp;
 //      }
 //      body;
 //  };
@@ -263,6 +269,27 @@ public class Operation implements XdrElement {
     public void setRevokeSponsorshipOp(RevokeSponsorshipOp value) {
       this.revokeSponsorshipOp = value;
     }
+    private ClawbackOp clawbackOp;
+    public ClawbackOp getClawbackOp() {
+      return this.clawbackOp;
+    }
+    public void setClawbackOp(ClawbackOp value) {
+      this.clawbackOp = value;
+    }
+    private ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
+    public ClawbackClaimableBalanceOp getClawbackClaimableBalanceOp() {
+      return this.clawbackClaimableBalanceOp;
+    }
+    public void setClawbackClaimableBalanceOp(ClawbackClaimableBalanceOp value) {
+      this.clawbackClaimableBalanceOp = value;
+    }
+    private SetTrustLineFlagsOp setTrustLineFlagsOp;
+    public SetTrustLineFlagsOp getSetTrustLineFlagsOp() {
+      return this.setTrustLineFlagsOp;
+    }
+    public void setSetTrustLineFlagsOp(SetTrustLineFlagsOp value) {
+      this.setTrustLineFlagsOp = value;
+    }
 
     public static final class Builder {
       private OperationType discriminant;
@@ -283,6 +310,9 @@ public class Operation implements XdrElement {
       private ClaimClaimableBalanceOp claimClaimableBalanceOp;
       private BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
       private RevokeSponsorshipOp revokeSponsorshipOp;
+      private ClawbackOp clawbackOp;
+      private ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
+      private SetTrustLineFlagsOp setTrustLineFlagsOp;
 
       public Builder discriminant(OperationType discriminant) {
         this.discriminant = discriminant;
@@ -374,6 +404,21 @@ public class Operation implements XdrElement {
         return this;
       }
 
+      public Builder clawbackOp(ClawbackOp clawbackOp) {
+        this.clawbackOp = clawbackOp;
+        return this;
+      }
+
+      public Builder clawbackClaimableBalanceOp(ClawbackClaimableBalanceOp clawbackClaimableBalanceOp) {
+        this.clawbackClaimableBalanceOp = clawbackClaimableBalanceOp;
+        return this;
+      }
+
+      public Builder setTrustLineFlagsOp(SetTrustLineFlagsOp setTrustLineFlagsOp) {
+        this.setTrustLineFlagsOp = setTrustLineFlagsOp;
+        return this;
+      }
+
       public OperationBody build() {
         OperationBody val = new OperationBody();
         val.setDiscriminant(discriminant);
@@ -394,6 +439,9 @@ public class Operation implements XdrElement {
         val.setClaimClaimableBalanceOp(claimClaimableBalanceOp);
         val.setBeginSponsoringFutureReservesOp(beginSponsoringFutureReservesOp);
         val.setRevokeSponsorshipOp(revokeSponsorshipOp);
+        val.setClawbackOp(clawbackOp);
+        val.setClawbackClaimableBalanceOp(clawbackClaimableBalanceOp);
+        val.setSetTrustLineFlagsOp(setTrustLineFlagsOp);
         return val;
       }
     }
@@ -457,6 +505,15 @@ public class Operation implements XdrElement {
     break;
     case REVOKE_SPONSORSHIP:
     RevokeSponsorshipOp.encode(stream, encodedOperationBody.revokeSponsorshipOp);
+    break;
+    case CLAWBACK:
+    ClawbackOp.encode(stream, encodedOperationBody.clawbackOp);
+    break;
+    case CLAWBACK_CLAIMABLE_BALANCE:
+    ClawbackClaimableBalanceOp.encode(stream, encodedOperationBody.clawbackClaimableBalanceOp);
+    break;
+    case SET_TRUST_LINE_FLAGS:
+    SetTrustLineFlagsOp.encode(stream, encodedOperationBody.setTrustLineFlagsOp);
     break;
     }
     }
@@ -523,12 +580,21 @@ public class Operation implements XdrElement {
     case REVOKE_SPONSORSHIP:
     decodedOperationBody.revokeSponsorshipOp = RevokeSponsorshipOp.decode(stream);
     break;
+    case CLAWBACK:
+    decodedOperationBody.clawbackOp = ClawbackOp.decode(stream);
+    break;
+    case CLAWBACK_CLAIMABLE_BALANCE:
+    decodedOperationBody.clawbackClaimableBalanceOp = ClawbackClaimableBalanceOp.decode(stream);
+    break;
+    case SET_TRUST_LINE_FLAGS:
+    decodedOperationBody.setTrustLineFlagsOp = SetTrustLineFlagsOp.decode(stream);
+    break;
     }
       return decodedOperationBody;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.createAccountOp, this.paymentOp, this.pathPaymentStrictReceiveOp, this.manageSellOfferOp, this.createPassiveSellOfferOp, this.setOptionsOp, this.changeTrustOp, this.allowTrustOp, this.destination, this.manageDataOp, this.bumpSequenceOp, this.manageBuyOfferOp, this.pathPaymentStrictSendOp, this.createClaimableBalanceOp, this.claimClaimableBalanceOp, this.beginSponsoringFutureReservesOp, this.revokeSponsorshipOp, this.type);
+      return Objects.hashCode(this.createAccountOp, this.paymentOp, this.pathPaymentStrictReceiveOp, this.manageSellOfferOp, this.createPassiveSellOfferOp, this.setOptionsOp, this.changeTrustOp, this.allowTrustOp, this.destination, this.manageDataOp, this.bumpSequenceOp, this.manageBuyOfferOp, this.pathPaymentStrictSendOp, this.createClaimableBalanceOp, this.claimClaimableBalanceOp, this.beginSponsoringFutureReservesOp, this.revokeSponsorshipOp, this.clawbackOp, this.clawbackClaimableBalanceOp, this.setTrustLineFlagsOp, this.type);
     }
     @Override
     public boolean equals(Object object) {
@@ -537,7 +603,7 @@ public class Operation implements XdrElement {
       }
 
       OperationBody other = (OperationBody) object;
-      return Objects.equal(this.createAccountOp, other.createAccountOp) && Objects.equal(this.paymentOp, other.paymentOp) && Objects.equal(this.pathPaymentStrictReceiveOp, other.pathPaymentStrictReceiveOp) && Objects.equal(this.manageSellOfferOp, other.manageSellOfferOp) && Objects.equal(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp) && Objects.equal(this.setOptionsOp, other.setOptionsOp) && Objects.equal(this.changeTrustOp, other.changeTrustOp) && Objects.equal(this.allowTrustOp, other.allowTrustOp) && Objects.equal(this.destination, other.destination) && Objects.equal(this.manageDataOp, other.manageDataOp) && Objects.equal(this.bumpSequenceOp, other.bumpSequenceOp) && Objects.equal(this.manageBuyOfferOp, other.manageBuyOfferOp) && Objects.equal(this.pathPaymentStrictSendOp, other.pathPaymentStrictSendOp) && Objects.equal(this.createClaimableBalanceOp, other.createClaimableBalanceOp) && Objects.equal(this.claimClaimableBalanceOp, other.claimClaimableBalanceOp) && Objects.equal(this.beginSponsoringFutureReservesOp, other.beginSponsoringFutureReservesOp) && Objects.equal(this.revokeSponsorshipOp, other.revokeSponsorshipOp) && Objects.equal(this.type, other.type);
+      return Objects.equal(this.createAccountOp, other.createAccountOp) && Objects.equal(this.paymentOp, other.paymentOp) && Objects.equal(this.pathPaymentStrictReceiveOp, other.pathPaymentStrictReceiveOp) && Objects.equal(this.manageSellOfferOp, other.manageSellOfferOp) && Objects.equal(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp) && Objects.equal(this.setOptionsOp, other.setOptionsOp) && Objects.equal(this.changeTrustOp, other.changeTrustOp) && Objects.equal(this.allowTrustOp, other.allowTrustOp) && Objects.equal(this.destination, other.destination) && Objects.equal(this.manageDataOp, other.manageDataOp) && Objects.equal(this.bumpSequenceOp, other.bumpSequenceOp) && Objects.equal(this.manageBuyOfferOp, other.manageBuyOfferOp) && Objects.equal(this.pathPaymentStrictSendOp, other.pathPaymentStrictSendOp) && Objects.equal(this.createClaimableBalanceOp, other.createClaimableBalanceOp) && Objects.equal(this.claimClaimableBalanceOp, other.claimClaimableBalanceOp) && Objects.equal(this.beginSponsoringFutureReservesOp, other.beginSponsoringFutureReservesOp) && Objects.equal(this.revokeSponsorshipOp, other.revokeSponsorshipOp) && Objects.equal(this.clawbackOp, other.clawbackOp) && Objects.equal(this.clawbackClaimableBalanceOp, other.clawbackClaimableBalanceOp) && Objects.equal(this.setTrustLineFlagsOp, other.setTrustLineFlagsOp) && Objects.equal(this.type, other.type);
     }
 
   }

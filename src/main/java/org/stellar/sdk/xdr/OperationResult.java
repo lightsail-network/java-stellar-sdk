@@ -53,6 +53,12 @@ import com.google.common.base.Objects;
 //          EndSponsoringFutureReservesResult endSponsoringFutureReservesResult;
 //      case REVOKE_SPONSORSHIP:
 //          RevokeSponsorshipResult revokeSponsorshipResult;
+//      case CLAWBACK:
+//          ClawbackResult clawbackResult;
+//      case CLAWBACK_CLAIMABLE_BALANCE:
+//          ClawbackClaimableBalanceResult clawbackClaimableBalanceResult;
+//      case SET_TRUST_LINE_FLAGS:
+//          SetTrustLineFlagsResult setTrustLineFlagsResult;
 //      }
 //      tr;
 //  default:
@@ -283,6 +289,27 @@ public class OperationResult implements XdrElement {
     public void setRevokeSponsorshipResult(RevokeSponsorshipResult value) {
       this.revokeSponsorshipResult = value;
     }
+    private ClawbackResult clawbackResult;
+    public ClawbackResult getClawbackResult() {
+      return this.clawbackResult;
+    }
+    public void setClawbackResult(ClawbackResult value) {
+      this.clawbackResult = value;
+    }
+    private ClawbackClaimableBalanceResult clawbackClaimableBalanceResult;
+    public ClawbackClaimableBalanceResult getClawbackClaimableBalanceResult() {
+      return this.clawbackClaimableBalanceResult;
+    }
+    public void setClawbackClaimableBalanceResult(ClawbackClaimableBalanceResult value) {
+      this.clawbackClaimableBalanceResult = value;
+    }
+    private SetTrustLineFlagsResult setTrustLineFlagsResult;
+    public SetTrustLineFlagsResult getSetTrustLineFlagsResult() {
+      return this.setTrustLineFlagsResult;
+    }
+    public void setSetTrustLineFlagsResult(SetTrustLineFlagsResult value) {
+      this.setTrustLineFlagsResult = value;
+    }
 
     public static final class Builder {
       private OperationType discriminant;
@@ -305,6 +332,9 @@ public class OperationResult implements XdrElement {
       private BeginSponsoringFutureReservesResult beginSponsoringFutureReservesResult;
       private EndSponsoringFutureReservesResult endSponsoringFutureReservesResult;
       private RevokeSponsorshipResult revokeSponsorshipResult;
+      private ClawbackResult clawbackResult;
+      private ClawbackClaimableBalanceResult clawbackClaimableBalanceResult;
+      private SetTrustLineFlagsResult setTrustLineFlagsResult;
 
       public Builder discriminant(OperationType discriminant) {
         this.discriminant = discriminant;
@@ -406,6 +436,21 @@ public class OperationResult implements XdrElement {
         return this;
       }
 
+      public Builder clawbackResult(ClawbackResult clawbackResult) {
+        this.clawbackResult = clawbackResult;
+        return this;
+      }
+
+      public Builder clawbackClaimableBalanceResult(ClawbackClaimableBalanceResult clawbackClaimableBalanceResult) {
+        this.clawbackClaimableBalanceResult = clawbackClaimableBalanceResult;
+        return this;
+      }
+
+      public Builder setTrustLineFlagsResult(SetTrustLineFlagsResult setTrustLineFlagsResult) {
+        this.setTrustLineFlagsResult = setTrustLineFlagsResult;
+        return this;
+      }
+
       public OperationResultTr build() {
         OperationResultTr val = new OperationResultTr();
         val.setDiscriminant(discriminant);
@@ -428,6 +473,9 @@ public class OperationResult implements XdrElement {
         val.setBeginSponsoringFutureReservesResult(beginSponsoringFutureReservesResult);
         val.setEndSponsoringFutureReservesResult(endSponsoringFutureReservesResult);
         val.setRevokeSponsorshipResult(revokeSponsorshipResult);
+        val.setClawbackResult(clawbackResult);
+        val.setClawbackClaimableBalanceResult(clawbackClaimableBalanceResult);
+        val.setSetTrustLineFlagsResult(setTrustLineFlagsResult);
         return val;
       }
     }
@@ -493,6 +541,15 @@ public class OperationResult implements XdrElement {
     break;
     case REVOKE_SPONSORSHIP:
     RevokeSponsorshipResult.encode(stream, encodedOperationResultTr.revokeSponsorshipResult);
+    break;
+    case CLAWBACK:
+    ClawbackResult.encode(stream, encodedOperationResultTr.clawbackResult);
+    break;
+    case CLAWBACK_CLAIMABLE_BALANCE:
+    ClawbackClaimableBalanceResult.encode(stream, encodedOperationResultTr.clawbackClaimableBalanceResult);
+    break;
+    case SET_TRUST_LINE_FLAGS:
+    SetTrustLineFlagsResult.encode(stream, encodedOperationResultTr.setTrustLineFlagsResult);
     break;
     }
     }
@@ -561,12 +618,21 @@ public class OperationResult implements XdrElement {
     case REVOKE_SPONSORSHIP:
     decodedOperationResultTr.revokeSponsorshipResult = RevokeSponsorshipResult.decode(stream);
     break;
+    case CLAWBACK:
+    decodedOperationResultTr.clawbackResult = ClawbackResult.decode(stream);
+    break;
+    case CLAWBACK_CLAIMABLE_BALANCE:
+    decodedOperationResultTr.clawbackClaimableBalanceResult = ClawbackClaimableBalanceResult.decode(stream);
+    break;
+    case SET_TRUST_LINE_FLAGS:
+    decodedOperationResultTr.setTrustLineFlagsResult = SetTrustLineFlagsResult.decode(stream);
+    break;
     }
       return decodedOperationResultTr;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.createAccountResult, this.paymentResult, this.pathPaymentStrictReceiveResult, this.manageSellOfferResult, this.createPassiveSellOfferResult, this.setOptionsResult, this.changeTrustResult, this.allowTrustResult, this.accountMergeResult, this.inflationResult, this.manageDataResult, this.bumpSeqResult, this.manageBuyOfferResult, this.pathPaymentStrictSendResult, this.createClaimableBalanceResult, this.claimClaimableBalanceResult, this.beginSponsoringFutureReservesResult, this.endSponsoringFutureReservesResult, this.revokeSponsorshipResult, this.type);
+      return Objects.hashCode(this.createAccountResult, this.paymentResult, this.pathPaymentStrictReceiveResult, this.manageSellOfferResult, this.createPassiveSellOfferResult, this.setOptionsResult, this.changeTrustResult, this.allowTrustResult, this.accountMergeResult, this.inflationResult, this.manageDataResult, this.bumpSeqResult, this.manageBuyOfferResult, this.pathPaymentStrictSendResult, this.createClaimableBalanceResult, this.claimClaimableBalanceResult, this.beginSponsoringFutureReservesResult, this.endSponsoringFutureReservesResult, this.revokeSponsorshipResult, this.clawbackResult, this.clawbackClaimableBalanceResult, this.setTrustLineFlagsResult, this.type);
     }
     @Override
     public boolean equals(Object object) {
@@ -575,7 +641,7 @@ public class OperationResult implements XdrElement {
       }
 
       OperationResultTr other = (OperationResultTr) object;
-      return Objects.equal(this.createAccountResult, other.createAccountResult) && Objects.equal(this.paymentResult, other.paymentResult) && Objects.equal(this.pathPaymentStrictReceiveResult, other.pathPaymentStrictReceiveResult) && Objects.equal(this.manageSellOfferResult, other.manageSellOfferResult) && Objects.equal(this.createPassiveSellOfferResult, other.createPassiveSellOfferResult) && Objects.equal(this.setOptionsResult, other.setOptionsResult) && Objects.equal(this.changeTrustResult, other.changeTrustResult) && Objects.equal(this.allowTrustResult, other.allowTrustResult) && Objects.equal(this.accountMergeResult, other.accountMergeResult) && Objects.equal(this.inflationResult, other.inflationResult) && Objects.equal(this.manageDataResult, other.manageDataResult) && Objects.equal(this.bumpSeqResult, other.bumpSeqResult) && Objects.equal(this.manageBuyOfferResult, other.manageBuyOfferResult) && Objects.equal(this.pathPaymentStrictSendResult, other.pathPaymentStrictSendResult) && Objects.equal(this.createClaimableBalanceResult, other.createClaimableBalanceResult) && Objects.equal(this.claimClaimableBalanceResult, other.claimClaimableBalanceResult) && Objects.equal(this.beginSponsoringFutureReservesResult, other.beginSponsoringFutureReservesResult) && Objects.equal(this.endSponsoringFutureReservesResult, other.endSponsoringFutureReservesResult) && Objects.equal(this.revokeSponsorshipResult, other.revokeSponsorshipResult) && Objects.equal(this.type, other.type);
+      return Objects.equal(this.createAccountResult, other.createAccountResult) && Objects.equal(this.paymentResult, other.paymentResult) && Objects.equal(this.pathPaymentStrictReceiveResult, other.pathPaymentStrictReceiveResult) && Objects.equal(this.manageSellOfferResult, other.manageSellOfferResult) && Objects.equal(this.createPassiveSellOfferResult, other.createPassiveSellOfferResult) && Objects.equal(this.setOptionsResult, other.setOptionsResult) && Objects.equal(this.changeTrustResult, other.changeTrustResult) && Objects.equal(this.allowTrustResult, other.allowTrustResult) && Objects.equal(this.accountMergeResult, other.accountMergeResult) && Objects.equal(this.inflationResult, other.inflationResult) && Objects.equal(this.manageDataResult, other.manageDataResult) && Objects.equal(this.bumpSeqResult, other.bumpSeqResult) && Objects.equal(this.manageBuyOfferResult, other.manageBuyOfferResult) && Objects.equal(this.pathPaymentStrictSendResult, other.pathPaymentStrictSendResult) && Objects.equal(this.createClaimableBalanceResult, other.createClaimableBalanceResult) && Objects.equal(this.claimClaimableBalanceResult, other.claimClaimableBalanceResult) && Objects.equal(this.beginSponsoringFutureReservesResult, other.beginSponsoringFutureReservesResult) && Objects.equal(this.endSponsoringFutureReservesResult, other.endSponsoringFutureReservesResult) && Objects.equal(this.revokeSponsorshipResult, other.revokeSponsorshipResult) && Objects.equal(this.clawbackResult, other.clawbackResult) && Objects.equal(this.clawbackClaimableBalanceResult, other.clawbackClaimableBalanceResult) && Objects.equal(this.setTrustLineFlagsResult, other.setTrustLineFlagsResult) && Objects.equal(this.type, other.type);
     }
 
   }
