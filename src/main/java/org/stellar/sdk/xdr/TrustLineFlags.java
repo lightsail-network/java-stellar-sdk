@@ -15,13 +15,17 @@ import java.io.IOException;
 //      AUTHORIZED_FLAG = 1,
 //      // issuer has authorized account to maintain and reduce liabilities for its
 //      // credit
-//      AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG = 2
+//      AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG = 2,
+//      // issuer has specified that it may clawback its credit, and that claimable
+//      // balances created with its credit may also be clawed back
+//      TRUSTLINE_CLAWBACK_ENABLED_FLAG = 4
 //  };
 
 //  ===========================================================================
 public enum TrustLineFlags implements XdrElement {
   AUTHORIZED_FLAG(1),
   AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG(2),
+  TRUSTLINE_CLAWBACK_ENABLED_FLAG(4),
   ;
   private int mValue;
 
@@ -38,6 +42,7 @@ public enum TrustLineFlags implements XdrElement {
     switch (value) {
       case 1: return AUTHORIZED_FLAG;
       case 2: return AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG;
+      case 4: return TRUSTLINE_CLAWBACK_ENABLED_FLAG;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

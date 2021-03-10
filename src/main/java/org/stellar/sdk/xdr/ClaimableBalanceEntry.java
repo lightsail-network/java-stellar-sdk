@@ -30,6 +30,8 @@ import java.util.Arrays;
 //      {
 //      case 0:
 //          void;
+//      case 1:
+//          ClaimableBalanceEntryExtensionV1 v1;
 //      }
 //      ext;
 //  };
@@ -165,18 +167,32 @@ public class ClaimableBalanceEntry implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+    private ClaimableBalanceEntryExtensionV1 v1;
+    public ClaimableBalanceEntryExtensionV1 getV1() {
+      return this.v1;
+    }
+    public void setV1(ClaimableBalanceEntryExtensionV1 value) {
+      this.v1 = value;
+    }
 
     public static final class Builder {
       private Integer discriminant;
+      private ClaimableBalanceEntryExtensionV1 v1;
 
       public Builder discriminant(Integer discriminant) {
         this.discriminant = discriminant;
         return this;
       }
 
+      public Builder v1(ClaimableBalanceEntryExtensionV1 v1) {
+        this.v1 = v1;
+        return this;
+      }
+
       public ClaimableBalanceEntryExt build() {
         ClaimableBalanceEntryExt val = new ClaimableBalanceEntryExt();
         val.setDiscriminant(discriminant);
+        val.setV1(v1);
         return val;
       }
     }
@@ -187,6 +203,9 @@ public class ClaimableBalanceEntry implements XdrElement {
     stream.writeInt(encodedClaimableBalanceEntryExt.getDiscriminant().intValue());
     switch (encodedClaimableBalanceEntryExt.getDiscriminant()) {
     case 0:
+    break;
+    case 1:
+    ClaimableBalanceEntryExtensionV1.encode(stream, encodedClaimableBalanceEntryExt.v1);
     break;
     }
     }
@@ -200,12 +219,15 @@ public class ClaimableBalanceEntry implements XdrElement {
     switch (decodedClaimableBalanceEntryExt.getDiscriminant()) {
     case 0:
     break;
+    case 1:
+    decodedClaimableBalanceEntryExt.v1 = ClaimableBalanceEntryExtensionV1.decode(stream);
+    break;
     }
       return decodedClaimableBalanceEntryExt;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hashCode(this.v1, this.v);
     }
     @Override
     public boolean equals(Object object) {
@@ -214,7 +236,7 @@ public class ClaimableBalanceEntry implements XdrElement {
       }
 
       ClaimableBalanceEntryExt other = (ClaimableBalanceEntryExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
     }
 
   }

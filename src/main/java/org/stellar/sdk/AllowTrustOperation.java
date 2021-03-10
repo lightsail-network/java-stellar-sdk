@@ -51,7 +51,7 @@ public class AllowTrustOperation extends Operation {
     // trustor
     op.setTrustor(StrKey.encodeToXDRAccountId(this.trustor));
     // asset
-    AllowTrustOp.AllowTrustOpAsset asset = new AllowTrustOp.AllowTrustOpAsset();
+    AssetCode asset = new AssetCode();
     if (assetCode.length() <= 4) {
       AssetCode4 assetCode4 = new AssetCode4();
       assetCode4.setAssetCode4(Util.paddedByteArray(assetCode, 4));
