@@ -406,8 +406,8 @@ struct SetTrustLineFlagsOp
     AccountID trustor;
     Asset asset;
 
-    uint32* clearFlags; // which flags to clear
-    uint32* setFlags;   // which flags to set
+    uint32 clearFlags; // which flags to clear
+    uint32 setFlags;   // which flags to set
 };
 
 /* An operation is the lowest unit of work that a transaction does */
