@@ -15,8 +15,8 @@ import com.google.common.base.Objects;
 //      AccountID trustor;
 //      Asset asset;
 //  
-//      uint32* clearFlags; // which flags to clear
-//      uint32* setFlags;   // which flags to set
+//      uint32 clearFlags; // which flags to clear
+//      uint32 setFlags;   // which flags to set
 //  };
 
 //  ===========================================================================
@@ -53,18 +53,8 @@ public class SetTrustLineFlagsOp implements XdrElement {
   public static void encode(XdrDataOutputStream stream, SetTrustLineFlagsOp encodedSetTrustLineFlagsOp) throws IOException{
     AccountID.encode(stream, encodedSetTrustLineFlagsOp.trustor);
     Asset.encode(stream, encodedSetTrustLineFlagsOp.asset);
-    if (encodedSetTrustLineFlagsOp.clearFlags != null) {
-    stream.writeInt(1);
     Uint32.encode(stream, encodedSetTrustLineFlagsOp.clearFlags);
-    } else {
-    stream.writeInt(0);
-    }
-    if (encodedSetTrustLineFlagsOp.setFlags != null) {
-    stream.writeInt(1);
     Uint32.encode(stream, encodedSetTrustLineFlagsOp.setFlags);
-    } else {
-    stream.writeInt(0);
-    }
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
@@ -73,14 +63,8 @@ public class SetTrustLineFlagsOp implements XdrElement {
     SetTrustLineFlagsOp decodedSetTrustLineFlagsOp = new SetTrustLineFlagsOp();
     decodedSetTrustLineFlagsOp.trustor = AccountID.decode(stream);
     decodedSetTrustLineFlagsOp.asset = Asset.decode(stream);
-    int clearFlagsPresent = stream.readInt();
-    if (clearFlagsPresent != 0) {
     decodedSetTrustLineFlagsOp.clearFlags = Uint32.decode(stream);
-    }
-    int setFlagsPresent = stream.readInt();
-    if (setFlagsPresent != 0) {
     decodedSetTrustLineFlagsOp.setFlags = Uint32.decode(stream);
-    }
     return decodedSetTrustLineFlagsOp;
   }
   @Override
