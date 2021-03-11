@@ -1,6 +1,7 @@
 package org.stellar.sdk.responses;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import junit.framework.TestCase;
 
 import org.stellar.sdk.*;
@@ -739,5 +740,140 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getId(), new Long(12884914177L));
     assertEquals(operation.getBumpTo(), new Long(79473726952833048L));
+  }
+
+  @Test
+  public void testDeserializeClawbackClaimableBalanceOperation() {
+    String json = "{\n" +
+        "  \"_links\": {\n" +
+        "    \"effects\": {\n" +
+        "      \"href\": \"/operations/12884914177/effects/{?cursor,limit,order}\",\n" +
+        "      \"templated\": true\n" +
+        "    },\n" +
+        "    \"precedes\": {\n" +
+        "      \"href\": \"/operations?cursor=12884914177\\u0026order=asc\"\n" +
+        "    },\n" +
+        "    \"self\": {\n" +
+        "      \"href\": \"/operations/12884914177\"\n" +
+        "    },\n" +
+        "    \"succeeds\": {\n" +
+        "      \"href\": \"/operations?cursor=12884914177\\u0026order=desc\"\n" +
+        "    },\n" +
+        "    \"transaction\": {\n" +
+        "      \"href\": \"/transactions/12884914176\"\n" +
+        "    }\n" +
+        "  },\n" +
+        "  \"id\": 12884914177,\n" +
+        "  \"paging_token\": \"12884914177\",\n" +
+        "  \"type_i\": 20,\n" +
+        "  \"type\": \"clawback_claimable_balance\",\n" +
+        "  \"balance_id\": \"00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9\"\n" +
+        "}";
+
+    ClawbackClaimableBalanceOperationResponse operation = (ClawbackClaimableBalanceOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getBalanceId(), "00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9");
+    assertEquals(operation.getType(), "clawback_claimable_balance");
+  }
+
+  @Test
+  public void testDeserializeClawbackOperation() {
+    String json = "{\n" +
+        "  \"_links\": {\n" +
+        "    \"effects\": {\n" +
+        "      \"href\": \"/operations/12884914177/effects/{?cursor,limit,order}\",\n" +
+        "      \"templated\": true\n" +
+        "    },\n" +
+        "    \"precedes\": {\n" +
+        "      \"href\": \"/operations?cursor=12884914177\\u0026order=asc\"\n" +
+        "    },\n" +
+        "    \"self\": {\n" +
+        "      \"href\": \"/operations/12884914177\"\n" +
+        "    },\n" +
+        "    \"succeeds\": {\n" +
+        "      \"href\": \"/operations?cursor=12884914177\\u0026order=desc\"\n" +
+        "    },\n" +
+        "    \"transaction\": {\n" +
+        "      \"href\": \"/transactions/12884914176\"\n" +
+        "    }\n" +
+        "  },\n" +
+        "  \"id\": 12884914177,\n" +
+        "  \"paging_token\": \"12884914177\",\n" +
+        "  \"type_i\": 19,\n" +
+        "  \"type\": \"clawback\",\n" +
+        "  \"asset_type\": \"credit_alphanum4\",\n" +
+        "  \"asset_code\": \"EUR\",\n" +
+        "  \"asset_issuer\": \"GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS\",\n" +
+        "  \"from\": \"GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF\"\n" +
+        "}";
+
+    ClawbackOperationResponse operation = (ClawbackOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getFrom(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
+    assertEquals(operation.getType(), "clawback");
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
+    assertEquals(operation.getAssetIssuer(), "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS");
+    assertEquals(operation.getAssetCode(), "EUR");
+    assertEquals(operation.getAssetType(), "credit_alphanum4");
+  }
+
+  @Test
+  public void testDeserializeSetTrustlineFlagsOperation() {
+    String json = "{\n" +
+        "  \"_links\": {\n" +
+        "    \"effects\": {\n" +
+        "      \"href\": \"/operations/12884914177/effects/{?cursor,limit,order}\",\n" +
+        "      \"templated\": true\n" +
+        "    },\n" +
+        "    \"precedes\": {\n" +
+        "      \"href\": \"/operations?cursor=12884914177\\u0026order=asc\"\n" +
+        "    },\n" +
+        "    \"self\": {\n" +
+        "      \"href\": \"/operations/12884914177\"\n" +
+        "    },\n" +
+        "    \"succeeds\": {\n" +
+        "      \"href\": \"/operations?cursor=12884914177\\u0026order=desc\"\n" +
+        "    },\n" +
+        "    \"transaction\": {\n" +
+        "      \"href\": \"/transactions/12884914176\"\n" +
+        "    }\n" +
+        "  },\n" +
+        "  \"id\": 12884914177,\n" +
+        "  \"paging_token\": \"12884914177\",\n" +
+        "  \"type_i\": 21,\n" +
+        "  \"type\": \"set_trust_line_flags\",\n" +
+        "  \"asset_type\": \"credit_alphanum4\",\n" +
+        "  \"asset_code\": \"EUR\",\n" +
+        "  \"asset_issuer\": \"GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS\",\n" +
+        "  \"set_flags\": [\n" +
+        "     4\n" +
+        "  ],"+
+        "  \"clear_flags\": [\n" +
+        "     2\n" +
+        "  ],"+
+        "  \"set_flags_s\": [\n" +
+        "     \"clawback_enabled\"\n" +
+        "  ],"+
+        "  \"clear_flags_s\": [\n" +
+        "     \"authorized_to_maintain_liabilites\"\n" +
+        "  ],"+
+        "  \"trustor\": \"GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF\"\n" +
+        "}";
+
+    SetTrustLineFlagsOperationResponse operation = (SetTrustLineFlagsOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getTrustor(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
+    assertEquals(operation.getType(), "set_trust_line_flags");
+    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
+    assertEquals(operation.getAssetIssuer(), "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS");
+    assertEquals(operation.getAssetCode(), "EUR");
+    assertEquals(operation.getAssetType(), "credit_alphanum4");
+    assertEquals(operation.getSetFlags(), Lists.newArrayList(4));
+    assertEquals(operation.getClearFlags(), Lists.newArrayList(2));
+    assertEquals(operation.getSetFlagStrings(), Lists.newArrayList("clawback_enabled"));
+    assertEquals(operation.getClearFlagStrings(), Lists.newArrayList("authorized_to_maintain_liabilites"));
   }
 }
