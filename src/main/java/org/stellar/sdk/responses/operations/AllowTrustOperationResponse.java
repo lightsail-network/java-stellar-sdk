@@ -4,8 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.SetTrustlineFlagsOperation;
 
 /**
+ * @deprecated As of release 0.24.0, replaced by {@link SetTrustLineFlagsOperationResponse}
+ *
  * Represents AllowTrust operation response.
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html" target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder

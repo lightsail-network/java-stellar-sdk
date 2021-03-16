@@ -6,6 +6,8 @@ import org.stellar.sdk.xdr.*;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * @deprecated As of release 0.24.0, replaced by {@link SetTrustlineFlagsOperation}
+ *
  * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#allow-trust" target="_blank">AllowTrust</a> operation.
  * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
  */

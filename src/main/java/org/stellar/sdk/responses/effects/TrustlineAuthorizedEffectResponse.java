@@ -1,6 +1,10 @@
 package org.stellar.sdk.responses.effects;
 
+import org.stellar.sdk.responses.operations.SetTrustLineFlagsOperationResponse;
+
 /**
+ * @deprecated As of release 0.24.0, replaced by {@link TrustlineFlagsUpdatedEffectResponse}
+ *
  * Represents trustline_authorized effect response.
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/effect.html" target="_blank">Effect documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder

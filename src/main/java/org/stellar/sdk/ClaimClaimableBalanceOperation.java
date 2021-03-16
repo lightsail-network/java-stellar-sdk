@@ -1,12 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,17 +20,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ClaimClaimableBalanceOp op = new ClaimClaimableBalanceOp();
-
-    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase());
-    XdrDataInputStream balanceIdXdrDataInputStream = new XdrDataInputStream(new ByteArrayInputStream(balanceIdBytes));
-    ClaimableBalanceID id;
-    try {
-      id = ClaimableBalanceID.decode(balanceIdXdrDataInputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid balanceId: " + balanceId, e);
-    }
-
-    op.setBalanceID(id);
+    op.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.CLAIM_CLAIMABLE_BALANCE);
     body.setClaimClaimableBalanceOp(op);
@@ -52,14 +37,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
      * @param op {@link ClaimClaimableBalanceOp}
      */
     Builder(ClaimClaimableBalanceOp op) {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      try {
-        op.getBalanceID().encode(xdrDataOutputStream);
-      } catch (IOException e) {
-        throw new IllegalArgumentException("invalid claimClaimableBalanceOp.", e);
-      }
-      balanceId = BaseEncoding.base16().lowerCase().encode(byteArrayOutputStream.toByteArray());
+      balanceId = Util.xdrToClaimableBalanceId(op.getBalanceID());
     }
 
     /**
