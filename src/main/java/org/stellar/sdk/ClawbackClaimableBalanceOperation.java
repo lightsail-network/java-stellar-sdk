@@ -30,7 +30,6 @@ public class ClawbackClaimableBalanceOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ClawbackClaimableBalanceOp op = new ClawbackClaimableBalanceOp();
 
-    // trustor
     op.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
 
 
