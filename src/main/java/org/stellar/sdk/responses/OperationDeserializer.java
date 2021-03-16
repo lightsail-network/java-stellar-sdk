@@ -69,6 +69,12 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         return gson.fromJson(json, EndSponsoringFutureReservesOperationResponse.class);
       case REVOKE_SPONSORSHIP:
         return gson.fromJson(json, RevokeSponsorshipOperationResponse.class);
+      case CLAWBACK:
+        return gson.fromJson(json, ClawbackOperationResponse.class);
+      case CLAWBACK_CLAIMABLE_BALANCE:
+        return gson.fromJson(json, ClawbackClaimableBalanceOperationResponse.class);
+      case SET_TRUST_LINE_FLAGS:
+        return gson.fromJson(json, SetTrustLineFlagsOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

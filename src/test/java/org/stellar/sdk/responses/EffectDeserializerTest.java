@@ -748,4 +748,80 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getCreatedAt(), "2018-06-06T10:23:57Z");
     assertEquals(effect.getNewSequence(), new Long(79473726952833048L));
   }
+
+  @Test
+  public void testDeserializeClaimableBalanceClawedbackEffect() {
+    String json = "{\n" +
+        "        \"_links\": {\n" +
+        "          \"operation\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/operations/40181480638386177\"\n" +
+        "          },\n" +
+        "          \"succeeds\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc&cursor=40181480638386177-1\"\n" +
+        "          },\n" +
+        "          \"precedes\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc&cursor=40181480638386177-1\"\n" +
+        "          }\n" +
+        "        },\n" +
+        "        \"id\": \"0040181480638386177-0000000001\",\n" +
+        "        \"paging_token\": \"40181480638386177-1\",\n" +
+        "        \"account\": \"GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF\",\n" +
+        "        \"type\": \"claimable_balance_clawed_back\",\n" +
+        "        \"type_i\": 80,\n" +
+        "        \"balance_id\": \"00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9\",\n" +
+        "        \"created_at\": \"2018-06-06T10:23:57Z\"\n" +
+        "      }";
+
+    ClaimableBalanceClawedBackEffectResponse effect = (ClaimableBalanceClawedBackEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getAccount(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
+    assertEquals(effect.getCreatedAt(), "2018-06-06T10:23:57Z");
+    assertEquals(effect.getBalanceId(), "00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9");
+    assertEquals(effect.getType(), "claimable_balance_clawed_back");
+  }
+
+  @Test
+  public void testDeserializeTrustlineFlagsUpdatedEffect() {
+    String json = "{\n" +
+        "        \"_links\": {\n" +
+        "          \"operation\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/operations/40181480638386177\"\n" +
+        "          },\n" +
+        "          \"succeeds\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc&cursor=40181480638386177-1\"\n" +
+        "          },\n" +
+        "          \"precedes\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc&cursor=40181480638386177-1\"\n" +
+        "          }\n" +
+        "        },\n" +
+        "        \"id\": \"0040181480638386177-0000000001\",\n" +
+        "        \"paging_token\": \"40181480638386177-1\",\n" +
+        "        \"account\": \"GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF\",\n" +
+        "        \"type\": \"trustline_flags_updated\",\n" +
+        "        \"type_i\": 26,\n" +
+        "        \"trustor\": \"GCVHDLN6EHZBYW2M3BQIY32C23E4GPIRZZDBNF2Q73DAZ5VJDRGSMYRB\",\n" +
+        "        \"asset_type\": \"credit_alphanum4\",\n" +
+        "        \"asset_code\": \"EUR\",\n" +
+        "        \"asset_issuer\": \"GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS\",\n" +
+        "        \"authorized_flag\": true,\n" +
+        "        \"clawback_enabled_flag\": true,\n" +
+        "        \"created_at\": \"2018-06-06T10:23:57Z\"\n" +
+        "      }";
+
+    TrustlineFlagsUpdatedEffectResponse effect = (TrustlineFlagsUpdatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getType(), "trustline_flags_updated");
+
+    assertEquals(effect.getAccount(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
+    assertEquals(effect.getCreatedAt(), "2018-06-06T10:23:57Z");
+    assertEquals(effect.getTrustor(), "GCVHDLN6EHZBYW2M3BQIY32C23E4GPIRZZDBNF2Q73DAZ5VJDRGSMYRB");
+    assertTrue(effect.getAuthorized());
+    assertTrue(effect.getClawbackEnabled());
+    assertFalse(effect.getAuthorizedToMaintainLiabilities());
+
+    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
+    assertEquals(effect.getAssetIssuer(), "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS");
+    assertEquals(effect.getAssetCode(), "EUR");
+    assertEquals(effect.getAssetType(), "credit_alphanum4");
+  }
 }
