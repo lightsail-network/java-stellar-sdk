@@ -15,7 +15,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
   private final String balanceId;
 
   private ClawbackClaimableBalanceOperation(String balanceId) {
-    this.balanceId = checkNotNull(balanceId, "from cannot be null");
+    this.balanceId = checkNotNull(balanceId, "balanceId cannot be null");
   }
 
   /**
