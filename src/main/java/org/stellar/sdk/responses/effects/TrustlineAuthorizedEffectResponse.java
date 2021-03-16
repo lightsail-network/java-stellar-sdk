@@ -1,7 +1,5 @@
 package org.stellar.sdk.responses.effects;
 
-import org.stellar.sdk.responses.operations.SetTrustLineFlagsOperationResponse;
-
 /**
  * @deprecated As of release 0.24.0, replaced by {@link TrustlineFlagsUpdatedEffectResponse}
  *
