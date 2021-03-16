@@ -8,12 +8,11 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 * Operation `allow_trust` is deprecated in favor of `set_trust_line_flags` (although it will still be supported by the network)
 
-* Effects `trustline_authorized`, `trustline_authorized_to_maintain_liabilities` and `trustline_deauthorized` are deprecated
-  in favor of `trustline_flags_updated`. Note how we intentionally didn't add a new `trustline_authorized_clawback_enabled` effect.
+* Effects `trustline_authorized`, `trustline_authorized_to_maintain_liabilities` and `trustline_deauthorized` are deprecated in favor of `trustline_flags_updated`. Note how we intentionally didn't add a new `trustline_authorized_clawback_enabled` effect.
 
-  For uniformity, the `allow_trust` operation will start producing `trustline_flags_updated` from this release.
+For uniformity, the `allow_trust` operation will start producing `trustline_flags_updated` from this release.
 
-  For now `trustline_authorized`, `trustline_authorized_to_maintain_liabilities` and `trustline_deauthorized` will continue to be emitted as a result of the `allow_trust` operation but in the future we may stop doing so.
+For now `trustline_authorized`, `trustline_authorized_to_maintain_liabilities` and `trustline_deauthorized` will continue to be emitted as a result of the `allow_trust` operation but in the future we may stop doing so.
 
 
 Deprecated | New class
