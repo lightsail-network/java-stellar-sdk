@@ -18,7 +18,7 @@ public class ClawbackOperation extends Operation {
   private ClawbackOperation(String from, AssetTypeCreditAlphaNum asset, String amount) {
     this.from = checkNotNull(from, "from cannot be null");
     this.asset = checkNotNull(asset, "asset cannot be null");
-    this.amount = checkNotNull(amount, "asset cannot be null");
+    this.amount = checkNotNull(amount, "amount cannot be null");
   }
 
   /**
