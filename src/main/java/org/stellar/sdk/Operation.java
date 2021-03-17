@@ -152,6 +152,15 @@ public abstract class Operation {
             throw new RuntimeException("Unknown revoke sponsorship body " + body.getRevokeSponsorshipOp().getDiscriminant());
         }
         break;
+      case CLAWBACK:
+        operation = new ClawbackOperation.Builder(body.getClawbackOp()).build();
+        break;
+      case CLAWBACK_CLAIMABLE_BALANCE:
+        operation = new ClawbackClaimableBalanceOperation.Builder(body.getClawbackClaimableBalanceOp()).build();
+        break;
+      case SET_TRUST_LINE_FLAGS:
+        operation = new SetTrustlineFlagsOperation.Builder(body.getSetTrustLineFlagsOp()).build();
+        break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }

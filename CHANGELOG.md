@@ -2,6 +2,54 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.24.0
+
+### Deprecations
+
+* Operation `allow_trust` is deprecated in favor of `set_trust_line_flags` (although it will still be supported by the network)
+
+* Effects `trustline_authorized`, `trustline_authorized_to_maintain_liabilities` and `trustline_deauthorized` are deprecated in favor of `trustline_flags_updated`. Note how we intentionally didn't add a new `trustline_authorized_clawback_enabled` effect.
+
+For uniformity, the `allow_trust` operation will start producing `trustline_flags_updated` from this release.
+
+For now `trustline_authorized`, `trustline_authorized_to_maintain_liabilities` and `trustline_deauthorized` will continue to be emitted as a result of the `allow_trust` operation but in the future we may stop doing so.
+
+
+Deprecated | New class
+-|-
+`org.stellar.sdk.AllowTrustOperation`                                                      | `org.stellar.sdk.SetTrustlineFlagsOperation`
+`org.stellar.sdk.responses.operations.AllowTrustOperationResponse`                         | `org.stellar.sdk.responses.operations.SetTrustLineFlagsOperationResponse`
+`org.stellar.sdk.responses.effects.TrustlineAuthorizedEffectResponse`                      | `org.stellar.sdk.responses.effects.TrustlineFlagsUpdatedEffectResponse`
+`org.stellar.sdk.responses.effects.TrustlineAuthorizedToMaintainLiabilitiesEffectResponse` | `org.stellar.sdk.responses.effects.TrustlineFlagsUpdatedEffectResponse`
+`org.stellar.sdk.responses.effects.TrustlineDeauthorizedEffectResponse`                    | `org.stellar.sdk.responses.effects.TrustlineFlagsUpdatedEffectResponse`
+
+
+### Changes
+
+## New Operations
+
+* `clawback` implemented in `org.stellar.sdk.ClawbackOperation` claws back a trustline from a given asset holder.
+
+* `clawback_claimable_balance` implemented in `org.stellar.sdk.ClawbackClaimableBalanceOperation` claws back a claimable balance.
+
+* `set_trust_line_flags` implemented in `org.stellar.sdk.SetTrustlineFlagsOperation` modifies a trustline's flags. This operation should be used instead of `org.stellar.sdk.AllowTrustOperation`.
+
+## New effects
+
+* `trustline_flags_updated` implemented in `org.stellar.sdk.responses.effects.TrustlineFlagsUpdatedEffectResponse`, with the following fields:
+  * Asset fields (like explained in the operations above):
+    * `asset_type`
+    * `asset_code`
+    * `asset_issuer`
+  * `trustor` - account whose trustline the effect refers to
+  * `authorized_flag` - true to indicate the flag is set, field ommited if not set
+  * `authorized_to_maintain_liabilites` - true to indicate the flag is set, field ommited if not set
+  * `clawback_enabled_flag` - true to indicate that the flag is set, field ommitted if not set
+
+
+* `claimable_balance_clawed_back` implemented in `org.stellar.sdk.responses.effects.ClaimableBalanceClawedBackEffectResponse`, with the following fields:
+  * `balance_id` - claimable balance identifer of the claimable balance clawed back
+
 ## 0.23.0
 ### Breaking change
 - Updates the SEP-10 utility function parameters to support [SEP-10 v3.1](https://github.com/stellar/stellar-protocol/commit/6c8c9cf6685c85509835188a136ffb8cd6b9c11c) [(#319)](https://github.com/stellar/java-stellar-sdk/pull/319)

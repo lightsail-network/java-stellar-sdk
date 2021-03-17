@@ -1,12 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,16 +23,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
     key.setDiscriminant(LedgerEntryType.CLAIMABLE_BALANCE);
     LedgerKey.LedgerKeyClaimableBalance claimableBalance = new LedgerKey.LedgerKeyClaimableBalance();
 
-    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase());
-    XdrDataInputStream balanceIdXdrDataInputStream = new XdrDataInputStream(new ByteArrayInputStream(balanceIdBytes));
-    ClaimableBalanceID id;
-    try {
-      id = ClaimableBalanceID.decode(balanceIdXdrDataInputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid balanceId: " + balanceId, e);
-    }
-
-    claimableBalance.setBalanceID(id);
+    claimableBalance.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
     key.setClaimableBalance(claimableBalance);
     op.setLedgerKey(key);
     op.setDiscriminant(RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY);
@@ -59,14 +45,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      try {
-        op.getLedgerKey().getClaimableBalance().getBalanceID().encode(xdrDataOutputStream);
-      } catch (IOException e) {
-        throw new IllegalArgumentException("invalid revokeSponsorshipOp.", e);
-      }
-      balanceId = BaseEncoding.base16().lowerCase().encode(byteArrayOutputStream.toByteArray());
+      balanceId = Util.xdrToClaimableBalanceId(op.getLedgerKey().getClaimableBalance().getBalanceID());
     }
 
     /**
