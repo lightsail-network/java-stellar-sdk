@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
+import org.stellar.sdk.xdr.Hash;
+import org.stellar.sdk.xdr.TransactionSignaturePayload;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
@@ -119,6 +121,23 @@ public class Util {
       return (AssetTypeCreditAlphaNum) asset;
     }
     throw new IllegalArgumentException("native assets are not supported");
+  }
+
+  public static byte[] getTransactionSignatureBase(TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,
+                                                   Network network) {
+    try {
+      TransactionSignaturePayload payload = new TransactionSignaturePayload();
+      Hash hash = new Hash();
+      hash.setHash(network.getNetworkId());
+      payload.setNetworkId(hash);
+      payload.setTaggedTransaction(taggedTransaction);
+      ByteArrayOutputStream txOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
+      payload.encode(xdrOutputStream);
+      return txOutputStream.toByteArray();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }
