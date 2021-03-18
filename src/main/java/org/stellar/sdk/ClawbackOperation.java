@@ -11,35 +11,35 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
  */
 public class ClawbackOperation extends Operation {
-  private final String from;
-  private final AssetTypeCreditAlphaNum asset;
-  private final String amount;
+  private final String mFrom;
+  private final AssetTypeCreditAlphaNum mAsset;
+  private final String mAmount;
 
   private ClawbackOperation(String from, AssetTypeCreditAlphaNum asset, String amount) {
-    this.from = checkNotNull(from, "from cannot be null");
-    this.asset = checkNotNull(asset, "asset cannot be null");
-    this.amount = checkNotNull(amount, "amount cannot be null");
+    this.mFrom = checkNotNull(from, "from cannot be null");
+    this.mAsset = checkNotNull(asset, "asset cannot be null");
+    this.mAmount = checkNotNull(amount, "amount cannot be null");
   }
 
   /**
    * The account owning of the trustline.
    */
   public String getFrom() {
-    return from;
+    return mFrom;
   }
 
   /**
    * The amount to be clawed back.
    */
   public String getAmount() {
-    return amount;
+    return mAmount;
   }
 
   /**
    * The asset to be clawed back.
    */
   public Asset getAsset() {
-    return asset;
+    return mAsset;
   }
 
   @Override
@@ -47,12 +47,12 @@ public class ClawbackOperation extends Operation {
     ClawbackOp op = new ClawbackOp();
 
     // trustor
-    op.setFrom(StrKey.encodeToXDRMuxedAccount(this.from));
+    op.setFrom(StrKey.encodeToXDRMuxedAccount(mFrom));
 
     Int64 amount = new Int64();
-    amount.setInt64(Operation.toXdrAmount(this.amount));
+    amount.setInt64(Operation.toXdrAmount(mAmount));
     op.setAmount(amount);
-    op.setAsset(asset.toXdr());
+    op.setAsset(mAsset.toXdr());
 
 
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
@@ -118,9 +118,9 @@ public class ClawbackOperation extends Operation {
   public int hashCode() {
     return Objects.hashCode(
         this.getSourceAccount(),
-        this.from,
-        this.asset,
-        this.amount
+        this.mFrom,
+        this.mAsset,
+        this.mAmount
     );
   }
 
@@ -131,9 +131,9 @@ public class ClawbackOperation extends Operation {
     }
 
     ClawbackOperation other = (ClawbackOperation) object;
-    return Objects.equal(this.from, other.from) &&
-        Objects.equal(this.asset, other.asset) &&
-        Objects.equal(this.amount, other.amount) &&
+    return Objects.equal(this.mFrom, other.mFrom) &&
+        Objects.equal(this.mAsset, other.mAsset) &&
+        Objects.equal(this.mAmount, other.mAmount) &&
         Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }
