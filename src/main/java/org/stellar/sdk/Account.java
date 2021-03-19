@@ -56,7 +56,7 @@ public class Account implements TransactionBuilderAccount {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Account)) {
+    if (!(object instanceof Account)) {
       return false;
     }
 

@@ -98,7 +98,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof RevokeOfferSponsorshipOperation)) {
+    if (!(object instanceof RevokeOfferSponsorshipOperation)) {
       return false;
     }
 

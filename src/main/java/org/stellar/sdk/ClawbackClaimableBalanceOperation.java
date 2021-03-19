@@ -94,7 +94,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ClawbackClaimableBalanceOperation)) {
+    if (!(object instanceof ClawbackClaimableBalanceOperation)) {
       return false;
     }
 

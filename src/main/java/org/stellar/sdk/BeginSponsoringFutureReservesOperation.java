@@ -78,7 +78,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof BeginSponsoringFutureReservesOperation)) {
+    if (!(object instanceof BeginSponsoringFutureReservesOperation)) {
       return false;
     }
 

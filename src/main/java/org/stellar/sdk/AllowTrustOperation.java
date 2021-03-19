@@ -172,7 +172,7 @@ public class AllowTrustOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof AllowTrustOperation)) {
+    if (!(object instanceof AllowTrustOperation)) {
       return false;
     }
 

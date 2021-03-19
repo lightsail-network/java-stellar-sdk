@@ -120,7 +120,7 @@ public class ManageDataOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ManageDataOperation)) {
+    if (!(object instanceof ManageDataOperation)) {
       return false;
     }
 

@@ -126,7 +126,7 @@ public class ClawbackOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ClawbackOperation)) {
+    if (!(object instanceof ClawbackOperation)) {
       return false;
     }
 

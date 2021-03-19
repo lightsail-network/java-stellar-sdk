@@ -98,7 +98,7 @@ public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof RevokeDataSponsorshipOperation)) {
+    if (!(object instanceof RevokeDataSponsorshipOperation)) {
       return false;
     }
 
