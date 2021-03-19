@@ -123,21 +123,4 @@ public class Util {
     throw new IllegalArgumentException("native assets are not supported");
   }
 
-  public static byte[] getTransactionSignatureBase(TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,
-                                                   Network network) {
-    try {
-      TransactionSignaturePayload payload = new TransactionSignaturePayload();
-      Hash hash = new Hash();
-      hash.setHash(network.getNetworkId());
-      payload.setNetworkId(hash);
-      payload.setTaggedTransaction(taggedTransaction);
-      ByteArrayOutputStream txOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
-      payload.encode(xdrOutputStream);
-      return txOutputStream.toByteArray();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
 }

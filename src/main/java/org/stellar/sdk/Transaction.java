@@ -54,7 +54,7 @@ public class Transaction extends AbstractTransaction {
               = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
       taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
       taggedTransaction.setTx(this.toV1Xdr());
-      return Util.getTransactionSignatureBase(taggedTransaction, mNetwork);
+      return getTransactionSignatureBase(taggedTransaction, mNetwork);
   }
 
 

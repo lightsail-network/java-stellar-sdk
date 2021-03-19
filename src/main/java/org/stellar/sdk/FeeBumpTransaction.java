@@ -71,7 +71,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
     TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
     taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX_FEE_BUMP);
     taggedTransaction.setFeeBump(this.toXdr());
-    return Util.getTransactionSignatureBase(taggedTransaction, mNetwork);
+    return getTransactionSignatureBase(taggedTransaction, mNetwork);
   }
 
   /**
