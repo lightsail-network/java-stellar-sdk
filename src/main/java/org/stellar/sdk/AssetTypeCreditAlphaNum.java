@@ -16,22 +16,22 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
     public AssetTypeCreditAlphaNum(String code, String issuer) {
         checkNotNull(code, "code cannot be null");
         checkNotNull(issuer, "issuer cannot be null");
-        mCode = new String(code);
-        mIssuer = new String(issuer);
+        mCode = code;
+        mIssuer = issuer;
     }
 
     /**
      * Returns asset code
      */
     public String getCode() {
-        return new String(mCode);
+        return mCode;
     }
 
     /**
      * Returns asset issuer
      */
     public String getIssuer() {
-        return new String(mIssuer);
+        return mIssuer;
     }
 
     @Override
