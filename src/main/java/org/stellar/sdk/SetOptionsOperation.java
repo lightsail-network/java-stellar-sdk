@@ -364,7 +364,7 @@ public class SetOptionsOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SetOptionsOperation)) {
+    if (!(object instanceof SetOptionsOperation)) {
       return false;
     }
 

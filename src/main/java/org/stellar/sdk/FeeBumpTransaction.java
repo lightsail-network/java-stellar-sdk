@@ -201,7 +201,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof FeeBumpTransaction)) {
+    if (!(object instanceof FeeBumpTransaction)) {
       return false;
     }
 

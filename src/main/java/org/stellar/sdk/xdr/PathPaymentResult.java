@@ -86,7 +86,7 @@ public class PathPaymentResult  {
   }
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PathPaymentResult)) {
+    if (!(object instanceof PathPaymentResult)) {
       return false;
     }
 
@@ -134,7 +134,7 @@ public class PathPaymentResult  {
     }
     @Override
     public boolean equals(Object object) {
-      if (object == null || !(object instanceof PathPaymentResultSuccess)) {
+      if (!(object instanceof PathPaymentResultSuccess)) {
         return false;
       }
 

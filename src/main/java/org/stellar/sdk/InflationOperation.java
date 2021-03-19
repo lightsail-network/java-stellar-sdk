@@ -22,7 +22,7 @@ public class InflationOperation extends Operation {
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof InflationOperation)) {
+        if (!(object instanceof InflationOperation)) {
             return false;
         }
 

@@ -50,7 +50,7 @@ public class Network {
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof Network)) {
+        if (!(object instanceof Network)) {
             return false;
         }
 

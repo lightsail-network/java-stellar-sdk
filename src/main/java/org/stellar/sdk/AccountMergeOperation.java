@@ -82,7 +82,7 @@ public class AccountMergeOperation extends Operation {
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof AccountMergeOperation)) {
+        if (!(object instanceof AccountMergeOperation)) {
             return false;
         }
 

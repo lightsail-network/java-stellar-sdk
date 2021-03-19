@@ -424,7 +424,7 @@ public class Transaction extends AbstractTransaction {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Transaction)) {
+    if (!(object instanceof Transaction)) {
       return false;
     }
 
