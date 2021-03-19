@@ -199,23 +199,23 @@ public class SetOptionsOperation extends Operation {
         setFlags = op.getSetFlags().getUint32();
       }
       if (op.getMasterWeight() != null) {
-        masterKeyWeight = op.getMasterWeight().getUint32().intValue();
+        masterKeyWeight = op.getMasterWeight().getUint32();
       }
       if (op.getLowThreshold() != null) {
-        lowThreshold = op.getLowThreshold().getUint32().intValue();
+        lowThreshold = op.getLowThreshold().getUint32();
       }
       if (op.getMedThreshold() != null) {
-        mediumThreshold = op.getMedThreshold().getUint32().intValue();
+        mediumThreshold = op.getMedThreshold().getUint32();
       }
       if (op.getHighThreshold() != null) {
-        highThreshold = op.getHighThreshold().getUint32().intValue();
+        highThreshold = op.getHighThreshold().getUint32();
       }
       if (op.getHomeDomain() != null) {
         homeDomain = op.getHomeDomain().getString32().toString();
       }
       if (op.getSigner() != null) {
         signer = op.getSigner().getKey();
-        signerWeight = op.getSigner().getWeight().getUint32().intValue() & 0xFF;
+        signerWeight = op.getSigner().getWeight().getUint32() & 0xFF;
       }
     }
 
