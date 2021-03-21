@@ -29,7 +29,7 @@ public class EndSponsoringFutureReservesOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof EndSponsoringFutureReservesOperation)) {
+    if (!(object instanceof EndSponsoringFutureReservesOperation)) {
       return false;
     }
 

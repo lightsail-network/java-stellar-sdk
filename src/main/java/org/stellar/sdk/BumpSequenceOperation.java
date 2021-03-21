@@ -85,7 +85,7 @@ public class BumpSequenceOperation extends Operation  {
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof BumpSequenceOperation)) {
+        if (!(object instanceof BumpSequenceOperation)) {
             return false;
         }
 

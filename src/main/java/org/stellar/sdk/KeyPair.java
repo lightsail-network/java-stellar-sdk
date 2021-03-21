@@ -267,7 +267,7 @@ public class KeyPair {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof KeyPair)) {
+    if (!(object instanceof KeyPair)) {
       return false;
     }
 

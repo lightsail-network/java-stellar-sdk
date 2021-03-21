@@ -132,7 +132,7 @@ public class PaymentOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PaymentOperation)) {
+    if (!(object instanceof PaymentOperation)) {
       return false;
     }
 

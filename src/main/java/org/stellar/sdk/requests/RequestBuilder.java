@@ -9,6 +9,7 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.AssetTypeNative;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,9 +39,7 @@ public abstract class RequestBuilder {
     segmentsAdded = true;
     // Remove default segments
     this.segments.clear();
-    for (String segment : segments) {
-      this.segments.add(segment);
-    }
+    this.segments.addAll(Arrays.asList(segments));
 
     return this;
   }

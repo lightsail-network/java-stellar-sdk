@@ -77,7 +77,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof ClaimClaimableBalanceOperation)) {
+    if (!(object instanceof ClaimClaimableBalanceOperation)) {
       return false;
     }
 
