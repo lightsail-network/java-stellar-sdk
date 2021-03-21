@@ -2,8 +2,6 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
-import org.stellar.sdk.xdr.Hash;
-import org.stellar.sdk.xdr.TransactionSignaturePayload;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
