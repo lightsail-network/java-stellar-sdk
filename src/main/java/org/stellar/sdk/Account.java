@@ -40,7 +40,7 @@ public class Account implements TransactionBuilderAccount {
 
   @Override
   public Long getIncrementedSequenceNumber() {
-    return new Long(mSequenceNumber + 1);
+    return mSequenceNumber + 1;
   }
 
   /**
@@ -56,7 +56,7 @@ public class Account implements TransactionBuilderAccount {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Account)) {
+    if (!(object instanceof Account)) {
       return false;
     }
 

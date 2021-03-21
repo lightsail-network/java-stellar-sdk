@@ -177,9 +177,7 @@ public class Transaction extends AbstractTransaction {
     );
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
 
-    for (DecoratedSignature signature : envelope.getSignatures()) {
-      transaction.mSignatures.add(signature);
-    }
+    transaction.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return transaction;
   }
@@ -205,9 +203,7 @@ public class Transaction extends AbstractTransaction {
         network
     );
 
-    for (DecoratedSignature signature : envelope.getSignatures()) {
-      transaction.mSignatures.add(signature);
-    }
+    transaction.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return transaction;
   }
@@ -411,7 +407,7 @@ public class Transaction extends AbstractTransaction {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof Transaction)) {
+    if (!(object instanceof Transaction)) {
       return false;
     }
 

@@ -209,7 +209,7 @@ public class PathPaymentStrictSendOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof PathPaymentStrictSendOperation)) {
+    if (!(object instanceof PathPaymentStrictSendOperation)) {
       return false;
     }
 

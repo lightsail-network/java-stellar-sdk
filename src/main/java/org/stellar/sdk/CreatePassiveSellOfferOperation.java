@@ -149,7 +149,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof CreatePassiveSellOfferOperation)) {
+        if (!(object instanceof CreatePassiveSellOfferOperation)) {
             return false;
         }
 

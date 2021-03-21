@@ -157,7 +157,7 @@ public class SetTrustlineFlagsOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof SetTrustlineFlagsOperation)) {
+    if (!(object instanceof SetTrustlineFlagsOperation)) {
       return false;
     }
 

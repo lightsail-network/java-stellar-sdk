@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import org.stellar.sdk.xdr.*;
 
+import java.util.Arrays;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -41,9 +43,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
     long fee = envelope.getTx().getFee().getInt64();
 
     FeeBumpTransaction feeBump = new FeeBumpTransaction(feeAccount, fee, inner);
-    for (DecoratedSignature signature : envelope.getSignatures()) {
-      feeBump.mSignatures.add(signature);
-    }
+    feeBump.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return feeBump;
   }
@@ -186,7 +186,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof FeeBumpTransaction)) {
+    if (!(object instanceof FeeBumpTransaction)) {
       return false;
     }
 

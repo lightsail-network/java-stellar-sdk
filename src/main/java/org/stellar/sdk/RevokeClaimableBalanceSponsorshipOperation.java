@@ -85,7 +85,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null || !(object instanceof RevokeClaimableBalanceSponsorshipOperation)) {
+    if (!(object instanceof RevokeClaimableBalanceSponsorshipOperation)) {
       return false;
     }
 
