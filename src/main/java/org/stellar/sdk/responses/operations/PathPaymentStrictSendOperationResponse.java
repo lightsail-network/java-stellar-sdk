@@ -2,7 +2,6 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.AccountID;
+
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PaymentOp;
