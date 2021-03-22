@@ -22,7 +22,11 @@ public final class AssetTypeNative extends Asset {
 
   @Override
   public boolean equals(Object object) {
-    return this.getClass().equals(object.getClass());
+    if (object != null) {
+      return this.getClass().equals(object.getClass());
+    } else {
+      return false;
+    }
   }
 
   @Override
