@@ -7,7 +7,6 @@ import okhttp3.Response;
 import org.stellar.sdk.requests.*;
 import org.stellar.sdk.responses.*;
 import org.stellar.sdk.xdr.CryptoKeyType;
-import org.stellar.sdk.xdr.MuxedAccount;
 
 import java.io.Closeable;
 import java.io.IOException;

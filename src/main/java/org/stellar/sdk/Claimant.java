@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
-import org.stellar.sdk.Predicate;
 
 /**
  * Represents an entity who is eligible to claim the claimable balance.

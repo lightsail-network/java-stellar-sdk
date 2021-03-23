@@ -1,7 +1,5 @@
 package org.stellar.sdk.requests;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.gson.reflect.TypeToken;
 
 import okhttp3.HttpUrl;

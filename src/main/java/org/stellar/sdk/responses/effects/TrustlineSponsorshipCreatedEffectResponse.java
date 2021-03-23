@@ -2,7 +2,6 @@ package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Predicate;
 
 /**
  * Represents trustline_sponsorship_created effect response.
