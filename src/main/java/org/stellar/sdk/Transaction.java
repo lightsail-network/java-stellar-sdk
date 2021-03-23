@@ -3,8 +3,6 @@ package org.stellar.sdk;
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,22 +50,11 @@ public class Transaction extends AbstractTransaction {
 
   @Override
   public byte[] signatureBase() {
-    try {
-      TransactionSignaturePayload payload = new TransactionSignaturePayload();
-      TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
+      TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction
+              = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
       taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
       taggedTransaction.setTx(this.toV1Xdr());
-      Hash hash = new Hash();
-      hash.setHash(mNetwork.getNetworkId());
-      payload.setNetworkId(hash);
-      payload.setTaggedTransaction(taggedTransaction);
-      ByteArrayOutputStream txOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
-      payload.encode(xdrOutputStream);
-      return txOutputStream.toByteArray();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+      return getTransactionSignatureBase(taggedTransaction, mNetwork);
   }
 
 

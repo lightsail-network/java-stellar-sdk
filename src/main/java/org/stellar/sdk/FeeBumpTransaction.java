@@ -4,8 +4,6 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import org.stellar.sdk.xdr.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -70,22 +68,10 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
   @Override
   public byte[] signatureBase() {
-    try {
-      TransactionSignaturePayload payload = new TransactionSignaturePayload();
-      TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
-      taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX_FEE_BUMP);
-      taggedTransaction.setFeeBump(this.toXdr());
-      Hash hash = new Hash();
-      hash.setHash(mNetwork.getNetworkId());
-      payload.setNetworkId(hash);
-      payload.setTaggedTransaction(taggedTransaction);
-      ByteArrayOutputStream txOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
-      payload.encode(xdrOutputStream);
-      return txOutputStream.toByteArray();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
+    taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX_FEE_BUMP);
+    taggedTransaction.setFeeBump(this.toXdr());
+    return getTransactionSignatureBase(taggedTransaction, mNetwork);
   }
 
   /**
