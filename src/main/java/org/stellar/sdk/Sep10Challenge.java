@@ -15,6 +15,11 @@ import java.util.*;
 public class Sep10Challenge {
   private static final String HOME_DOMAIN_MANAGER_DATA_NAME_FLAG = "auth";
   private static final String WEB_AUTH_DOMAIN_MANAGER_DATA_NAME = "web_auth_domain";
+  
+  private Sep10Challenge() {
+    // no instance
+  }
+
   /**
    * Returns a valid <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#response" target="_blank">SEP 10</a> challenge, for use in web authentication.
    * @param signer           The server's signing account.
