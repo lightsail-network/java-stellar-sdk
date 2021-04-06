@@ -12,22 +12,34 @@ public class AssetResponse extends Response implements Pageable {
     private final String assetIssuer;
     @SerializedName("paging_token")
     private final String pagingToken;
+    @SerializedName("accounts")
+    private final AssetResponse.Accounts accounts;
+    @SerializedName("balances")
+    private final AssetResponse.Balances balances;
     @SerializedName("amount")
     private final String amount;
+    @SerializedName("claimable_balances_amount")
+    private final String claimableBalancesAmount;
     @SerializedName("num_accounts")
     private final int numAccounts;
+    @SerializedName("num_claimable_balances")
+    private final int numClaimableBalances;
     @SerializedName("flags")
     private final AssetResponse.Flags flags;
     @SerializedName("_links")
     private final AssetResponse.Links links;
 
-    public AssetResponse(String assetType, String assetCode, String assetIssuer, String pagingToken, String amount, int numAccounts, Flags flags, Links links) {
+    public AssetResponse(String assetType, String assetCode, String assetIssuer, String pagingToken, Accounts accounts, Balances balances, String amount, String claimableBalancesAmount, int numAccounts, int numClaimableBalances, Flags flags, Links links) {
         this.assetType = assetType;
         this.assetCode = assetCode;
         this.assetIssuer = assetIssuer;
         this.pagingToken = pagingToken;
+        this.accounts = accounts;
+        this.balances = balances;
         this.amount = amount;
+        this.claimableBalancesAmount = claimableBalancesAmount;
         this.numAccounts = numAccounts;
+        this.numClaimableBalances = numClaimableBalances;
         this.flags = flags;
         this.links = links;
     }
@@ -66,6 +78,66 @@ public class AssetResponse extends Response implements Pageable {
 
     public Links getLinks() {
         return links;
+    }
+
+    /**
+     * Accounts describe asset accounts.
+     */
+    public static class Accounts {
+        @SerializedName("authorized")
+        private final int authorized;
+        @SerializedName("authorized_to_maintain_liabilities")
+        private final int authorizedToMaintainLiabilities;
+        @SerializedName("unauthorized")
+        private final int unauthorized;
+
+        public Accounts(int authorized, int authorizedToMaintainLiabilities, int unauthorized) {
+            this.authorized = authorized;
+            this.authorizedToMaintainLiabilities = authorizedToMaintainLiabilities;
+            this.unauthorized = unauthorized;
+        }
+
+        public int authorized() {
+            return authorized;
+        }
+
+        public int authorizedToMaintainLiabilities() {
+            return authorizedToMaintainLiabilities;
+        }
+
+        public int unauthorized() {
+            return unauthorized;
+        }
+    }
+
+    /**
+     * Balances describe asset balances.
+     */
+    public static class Balances {
+        @SerializedName("authorized")
+        private final String authorized;
+        @SerializedName("authorized_to_maintain_liabilities")
+        private final String authorizedToMaintainLiabilities;
+        @SerializedName("unauthorized")
+        private final String unauthorized;
+
+        public Balances(String authorized, String authorizedToMaintainLiabilities, String unauthorized) {
+            this.authorized = authorized;
+            this.authorizedToMaintainLiabilities = authorizedToMaintainLiabilities;
+            this.unauthorized = unauthorized;
+        }
+
+        public String authorized() {
+            return authorized;
+        }
+
+        public String authorizedToMaintainLiabilities() {
+            return authorizedToMaintainLiabilities;
+        }
+
+        public String unauthorized() {
+            return unauthorized;
+        }
     }
 
     /**
