@@ -58,6 +58,17 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   }
 
   /**
+   * Builds request to <code>GET /claimable_balances/{claimable_balance_id}/transactions</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-claimable-balance.html">Transactions for ClaimableBalance</a>
+   * @param claimableBalance Claimable Balance for which to get transactions
+   */
+  public TransactionsRequestBuilder forClaimableBalance(String claimableBalance) {
+    claimableBalance = checkNotNull(claimableBalance, "claimableBalance cannot be null");
+    this.setSegments("claimable_balances", claimableBalance, "transactions");
+    return this;
+  }
+
+  /**
    * Builds request to <code>GET /ledgers/{ledgerSeq}/transactions</code>
    * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-ledger.html">Transactions for Ledger</a>
    * @param ledgerSeq Ledger for which to get transactions
