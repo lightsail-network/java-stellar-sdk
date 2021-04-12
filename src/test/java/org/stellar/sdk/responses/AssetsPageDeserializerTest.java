@@ -54,12 +54,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 1,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"0.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -83,12 +83,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 3,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"1000000.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -112,12 +112,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 2,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"100000000000.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -141,12 +141,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 0,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"0.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -170,12 +170,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 1,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"10000000.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -199,12 +199,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 1,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"0.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -228,12 +228,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 0,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"0.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -257,12 +257,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 0,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"0.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -286,12 +286,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 0,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"0.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
@@ -315,12 +315,12 @@ public class AssetsPageDeserializerTest extends TestCase {
             "        \"accounts\": {\n" +
             "          \"authorized\": 0,\n" +
             "          \"authorized_to_maintain_liabilities\": 0,\n" +
-            "          \"unauthorized\": 0,\n" +
+            "          \"unauthorized\": 0\n" +
             "        },\n" +
             "        \"balances\": {\n" +
             "          \"authorized\": \"0.0000000\",\n" +
             "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n" +
-            "          \"unauthorized\": \"0.0000000\",\n" +
+            "          \"unauthorized\": \"0.0000000\"\n" +
             "        },\n" +
             "        \"claimable_balances_amount\": \"0.0000000\",\n" +
             "        \"num_claimable_balances\": 0,\n" +
