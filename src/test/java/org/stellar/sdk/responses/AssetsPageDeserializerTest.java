@@ -16,8 +16,12 @@ public class AssetsPageDeserializerTest extends TestCase {
         assertEquals(page.getRecords().get(0).getAssetCode(), "6497847");
         assertEquals(page.getRecords().get(0).getAssetIssuer(), "GCGNWKCJ3KHRLPM3TM6N7D3W5YKDJFL6A2YCXFXNMRTZ4Q66MEMZ6FI2");
         assertEquals(page.getRecords().get(0).getPagingToken(), "6497847_GCGNWKCJ3KHRLPM3TM6N7D3W5YKDJFL6A2YCXFXNMRTZ4Q66MEMZ6FI2_credit_alphanum12");
-        assertEquals(page.getRecords().get(0).getAccounts(), new AssetResponse.Accounts(1, 0, 0));
-        assertEquals(page.getRecords().get(0).getBalances(), new AssetResponse.Balances("0.000000", "0.000000", "0.000000"));
+        assertEquals(page.getRecords().get(0).getAccounts().authorized(), 1);
+        assertEquals(page.getRecords().get(0).getAccounts().authorizedToMaintainLiabilities(), 0);
+        assertEquals(page.getRecords().get(0).getAccounts().unauthorized(), 0);
+        assertEquals(page.getRecords().get(0).getBalances().authorized(), "0.0000000");
+        assertEquals(page.getRecords().get(0).getBalances().authorizedToMaintainLiabilities(), "0.0000000");
+        assertEquals(page.getRecords().get(0).getBalances().unauthorized(), "0.0000000");
         assertEquals(page.getRecords().get(0).getNumClaimableBalances(), 0);
         assertEquals(page.getRecords().get(0).getClaimableBalancesAmount(), "0.0000000");
         assertEquals(page.getRecords().get(0).getAmount(), "0.0000000");
