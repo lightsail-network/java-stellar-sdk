@@ -64,6 +64,22 @@ public class AssetResponse extends Response implements Pageable {
         return pagingToken;
     }
 
+    public Accounts getAccounts() {
+        return accounts;
+    }
+
+    public Balances getBalances() {
+        return balances;
+    }
+
+    public String getClaimableBalancesAmount() {
+        return claimableBalancesAmount;
+    }
+
+    public int getNumClaimableBalances() {
+        return numClaimableBalances;
+    }
+
     public String getAmount() {
         return amount;
     }
