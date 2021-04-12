@@ -2,6 +2,11 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## Unreleased
+
+* Added TransactionsRequestBuilder.forClaimableBalance(), and OperationsRequestBuilder.forClaimableBalance().
+* Added support for new `accounts`, `balances`, `claimable_balances_amount`, and `num_claimable_balances` fields on Assets.
+
 ## 0.24.0
 
 ### Deprecations
