@@ -113,52 +113,54 @@ public class ServerTest {
             "  \"instance\": \"d3465740-ec3a-4a0b-9d4a-c9ea734ce58a\"\n" +
             "}";
 
-    private final String operationsPageResponse = "{\n" +
-            "  \"_links\": {\n" +
-            "    \"self\": {\n" +
-            "      \"href\": \"http://horizon-testnet.stellar.org/operations?order=desc\\u0026limit=10\\u0026cursor=\"\n" +
-            "    },\n" +
-            "    \"next\": {\n" +
-            "      \"href\": \"http://horizon-testnet.stellar.org/operations?order=desc\\u0026limit=10\\u0026cursor=3695540185337857\"\n" +
-            "    },\n" +
-            "    \"prev\": {\n" +
-            "      \"href\": \"http://horizon-testnet.stellar.org/operations?order=asc\\u0026limit=10\\u0026cursor=3717508943056897\"\n" +
-            "    }\n" +
-            "  },\n" +
-            "  \"_embedded\": {\n" +
-            "    \"records\": [\n" +
-            "      {\n" +
-            "        \"_links\": {\n" +
-            "          \"self\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/operations/3717508943056897\"\n" +
-            "          },\n" +
-            "          \"transaction\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/transactions/ce81d957352501a46d9b938462cbef76283dcba8108d2649e0d79279a8f36488\"\n" +
-            "          },\n" +
-            "          \"effects\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/operations/3717508943056897/effects\"\n" +
-            "          },\n" +
-            "          \"succeeds\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=3717508943056897\"\n" +
-            "          },\n" +
-            "          \"precedes\": {\n" +
-            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=3717508943056897\"\n" +
-            "          }\n" +
-            "        },\n" +
-            "        \"id\": \"3717508943056897\",\n" +
-            "        \"paging_token\": \"3717508943056897\",\n" +
-            "        \"source_account\": \"GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K\",\n" +
-            "        \"type\": \"create_account\",\n" +
-            "        \"type_i\": 0,\n" +
-            "        \"created_at\": \"2018-01-22T21:30:53Z\",\n" +
-            "        \"transaction_hash\": \"dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046\","+
-            "        \"starting_balance\": \"10000.0\",\n" +
-            "        \"funder\": \"GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K\",\n" +
-            "        \"account\": \"GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE\"\n" +
-            "      }\n"+
-            "    ]\n" +
-            "  }\n" +
-            "}";
+    private String operationsPageResponse(String baseUrl) {
+       return "{\n" +
+           "  \"_links\": {\n" +
+           "    \"self\": {\n" +
+           "      \"href\": \""+baseUrl+"/operations?order=desc\\u0026limit=10\\u0026cursor=\"\n" +
+           "    },\n" +
+           "    \"next\": {\n" +
+           "      \"href\": \""+baseUrl+"/operations?order=desc\\u0026limit=10\\u0026cursor=3695540185337857\"\n" +
+           "    },\n" +
+           "    \"prev\": {\n" +
+           "      \"href\": \""+baseUrl+"/operations?order=asc\\u0026limit=10\\u0026cursor=3717508943056897\"\n" +
+           "    }\n" +
+           "  },\n" +
+           "  \"_embedded\": {\n" +
+           "    \"records\": [\n" +
+           "      {\n" +
+           "        \"_links\": {\n" +
+           "          \"self\": {\n" +
+           "            \"href\": \""+baseUrl+"/operations/3717508943056897\"\n" +
+           "          },\n" +
+           "          \"transaction\": {\n" +
+           "            \"href\": \""+baseUrl+"/transactions/ce81d957352501a46d9b938462cbef76283dcba8108d2649e0d79279a8f36488\"\n" +
+           "          },\n" +
+           "          \"effects\": {\n" +
+           "            \"href\": \""+baseUrl+"/operations/3717508943056897/effects\"\n" +
+           "          },\n" +
+           "          \"succeeds\": {\n" +
+           "            \"href\": \""+baseUrl+"/effects?order=desc\\u0026cursor=3717508943056897\"\n" +
+           "          },\n" +
+           "          \"precedes\": {\n" +
+           "            \"href\": \""+baseUrl+"/effects?order=asc\\u0026cursor=3717508943056897\"\n" +
+           "          }\n" +
+           "        },\n" +
+           "        \"id\": \"3717508943056897\",\n" +
+           "        \"paging_token\": \"3717508943056897\",\n" +
+           "        \"source_account\": \"GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K\",\n" +
+           "        \"type\": \"create_account\",\n" +
+           "        \"type_i\": 0,\n" +
+           "        \"created_at\": \"2018-01-22T21:30:53Z\",\n" +
+           "        \"transaction_hash\": \"dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046\","+
+           "        \"starting_balance\": \"10000.0\",\n" +
+           "        \"funder\": \"GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K\",\n" +
+           "        \"account\": \"GDFH4NIYMIIAKRVEJJZOIGWKXGQUF3XHJG6ZM6CEA64AMTVDN44LHOQE\"\n" +
+           "      }\n"+
+           "    ]\n" +
+           "  }\n" +
+           "}";
+    }
 
     Transaction buildTransaction() throws IOException {
         return buildTransaction(Network.PUBLIC);
@@ -308,9 +310,19 @@ public class ServerTest {
 
     @Test
     public void testNextPage() throws IOException, URISyntaxException {
-        MockWebServer mockWebServer = new MockWebServer();
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(operationsPageResponse));
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(operationsPageResponse));
+        final MockWebServer mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(new Dispatcher() {
+                @Override
+                public MockResponse dispatch(RecordedRequest request) {
+                        String baseUrl = request
+                                .getRequestUrl()
+                                .toString()
+                                .replaceAll(request.getPath(), "");
+                        String body = operationsPageResponse(baseUrl);
+                        return new MockResponse().setResponseCode(200).setBody(body);
+                }
+        });
+
         mockWebServer.start();
         HttpUrl baseUrl = mockWebServer.url("");
         Server server = new Server(baseUrl.toString());
@@ -319,7 +331,7 @@ public class ServerTest {
         assertEquals(1, page.getRecords().size());
         assertEquals("dd9d10c80a344f4464df3ecaa63705a5ef4a0533ff2f2099d5ef371ab5e1c046", page.getRecords().get(0).getTransactionHash());
         Page<OperationResponse> nextPage = page.getNextPage(server.getHttpClient());
-        assertEquals(1, page.getRecords().size());
+        assertEquals(1, nextPage.getRecords().size());
     }
 
 

@@ -85,6 +85,17 @@ public class OperationsRequestBuilderTest {
   }
 
   @Test
+  public void testForClaimableBalance() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    HttpUrl uri = server.operations()
+            .forClaimableBalance("00000000846c047755e4a46912336f56096b48ece78ddb5fbf6d90f0eb4ecae5324fbddb")
+            .limit(200)
+            .order(RequestBuilder.Order.DESC)
+            .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/claimable_balances/00000000846c047755e4a46912336f56096b48ece78ddb5fbf6d90f0eb4ecae5324fbddb/operations?limit=200&order=desc", uri.toString());
+  }
+
+  @Test
   public void testForLedger() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.operations()
