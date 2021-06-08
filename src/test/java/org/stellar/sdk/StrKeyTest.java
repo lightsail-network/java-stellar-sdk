@@ -42,18 +42,9 @@ public class StrKeyTest {
   public void testDecodedVersionByte() {
     assertEquals(StrKey.decodeVersionByte("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR"), StrKey.VersionByte.ACCOUNT_ID);
     assertEquals(StrKey.decodeVersionByte("SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE"), StrKey.VersionByte.SEED);
+    assertEquals(StrKey.decodeVersionByte("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK"), StrKey.VersionByte.MUXED);
     assertEquals(StrKey.decodeVersionByte("TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4"), StrKey.VersionByte.PRE_AUTH_TX);
     assertEquals(StrKey.decodeVersionByte("XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD"), StrKey.VersionByte.SHA256_HASH);
-  }
-
-  @Test()
-  public void testDecodedVersionByteMAddress() {
-    try {
-      StrKey.decodeVersionByte("MBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG");
-      fail();
-    } catch (FormatException e) {
-      assertEquals("Version byte is invalid", e.getMessage());
-    }
   }
 
   @Test()
@@ -188,13 +179,49 @@ public class StrKeyTest {
 
   @Test
   public void testEncodeToXDRMuxedAccountMAddress() {
-    try {
-      String muxedAddress = "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG";
-      StrKey.encodeToXDRMuxedAccount(muxedAddress);
-      fail();
-    } catch (IllegalArgumentException e) {
-      assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
-    }
+    String unmuxedAddress = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
+    AccountID account = StrKey.encodeToXDRAccountId(unmuxedAddress);
+
+    String muxedAddress = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+    MuxedAccount muxedAccount = StrKey.encodeToXDRMuxedAccount(muxedAddress);
+    assertEquals(CryptoKeyType.KEY_TYPE_MUXED_ED25519, muxedAccount.getDiscriminant());
+    assertEquals(account.getAccountID().getEd25519(), muxedAccount.getMed25519().getEd25519());
+    assertEquals(new Long(-9223372036854775808L), muxedAccount.getMed25519().getId().getUint64());
+
+    assertEquals(muxedAddress, StrKey.encodeStellarMuxedAccount(muxedAccount));
+
+    assertEquals(muxedAddress, AccountConverter.enableMuxed().decode(muxedAccount));
+    assertEquals(unmuxedAddress, AccountConverter.disableMuxed().decode(muxedAccount));
+
+    assertEquals(muxedAccount, AccountConverter.enableMuxed().encode(muxedAddress));
+    assertEquals(account.getAccountID().getEd25519(), AccountConverter.disableMuxed().encode(muxedAddress).getEd25519());
   }
 
+  @Test
+  public void testEncodeAccountIdToMuxed() {
+    String unmuxedAddress = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
+    AccountID account = StrKey.encodeToXDRAccountId(unmuxedAddress);
+
+    MuxedAccount muxedAccount = StrKey.encodeToXDRMuxedAccount(unmuxedAddress);
+    assertEquals(CryptoKeyType.KEY_TYPE_ED25519, muxedAccount.getDiscriminant());
+    assertEquals(account.getAccountID().getEd25519(), muxedAccount.getEd25519());
+  }
+
+  @Test
+  public void testEncodeToXDRMuxedAccountInvalidAddress() {
+
+    try {
+      StrKey.encodeToXDRMuxedAccount("XBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG");
+      fail();
+    } catch (FormatException e) {
+      assertEquals("Version byte is invalid", e.getMessage());
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount("MBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG");
+      fail();
+    } catch (FormatException e) {
+      assertEquals("Checksum invalid", e.getMessage());
+    }
+  }
 }

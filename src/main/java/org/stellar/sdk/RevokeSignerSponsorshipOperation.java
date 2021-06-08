@@ -23,7 +23,7 @@ public class RevokeSignerSponsorshipOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
 
     RevokeSponsorshipOp.RevokeSponsorshipOpSigner xdrSigner = new RevokeSponsorshipOp.RevokeSponsorshipOpSigner();

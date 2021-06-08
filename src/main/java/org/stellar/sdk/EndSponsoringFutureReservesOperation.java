@@ -15,7 +15,7 @@ public class EndSponsoringFutureReservesOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.END_SPONSORING_FUTURE_RESERVES);
 

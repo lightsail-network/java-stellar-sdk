@@ -43,11 +43,11 @@ public class ClawbackOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     ClawbackOp op = new ClawbackOp();
 
     // trustor
-    op.setFrom(StrKey.encodeToXDRMuxedAccount(mFrom));
+    op.setFrom(accountConverter.encode(mFrom));
 
     Int64 amount = new Int64();
     amount.setInt64(Operation.toXdrAmount(mAmount));
@@ -72,8 +72,8 @@ public class ClawbackOperation extends Operation {
 
     private String mSourceAccount;
 
-    Builder(ClawbackOp op) {
-      from = StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(op.getFrom()));
+    Builder(AccountConverter accountConverter, ClawbackOp op) {
+      from = accountConverter.decode(op.getFrom());
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
       asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
     }

@@ -54,7 +54,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
     }
 
     @Override
-    org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+    org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
         CreatePassiveSellOfferOp op = new CreatePassiveSellOfferOp();
         op.setSelling(selling.toXdr());
         op.setBuying(buying.toXdr());

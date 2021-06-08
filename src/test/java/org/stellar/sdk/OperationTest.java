@@ -31,8 +31,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        CreateAccountOperation parsedOperation = (CreateAccountOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        CreateAccountOperation parsedOperation = (CreateAccountOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(10000000000L, xdr.getBody().getCreateAccountOp().getStartingBalance().getInt64().longValue());
         assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
@@ -41,7 +41,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAACVAvkAA==",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -58,8 +58,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        PaymentOperation parsedOperation = (PaymentOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        PaymentOperation parsedOperation = (PaymentOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(10000000000L, xdr.getBody().getPaymentOp().getAmount().getInt64().longValue());
         assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
@@ -69,7 +69,29 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAEAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAAAAAAlQL5AA=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
+    }
+
+    @Test
+    public void testMuxedPaymentOperation() throws FormatException, IOException, AssetCodeLengthInvalidException {
+        String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+        String destination = "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO";
+
+        Asset asset = new AssetTypeNative();
+        String amount = "1000";
+
+        PaymentOperation operation = new PaymentOperation.Builder(destination, asset, amount)
+            .setSourceAccount(source)
+            .build();
+
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        PaymentOperation parsedOperation = (PaymentOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        assertEquals(destination, parsedOperation.getDestination());
+        assertEquals(source, parsedOperation.getSourceAccount());
+
+        parsedOperation = (PaymentOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
+        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getDestination());
+        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -98,8 +120,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        PathPaymentStrictReceiveOperation parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        PathPaymentStrictReceiveOperation parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getSendMax().getInt64().longValue());
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getDestAmount().getInt64().longValue());
@@ -113,7 +135,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAIAAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAgAAAAFVU0QAAAAAACoIKnpnw8rtrfxa276dFZo1C19mDqWXtG4ufhWrLUd1AAAAAlRFU1RURVNUAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIg==",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -135,8 +157,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        PathPaymentStrictReceiveOperation parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        PathPaymentStrictReceiveOperation parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getSendMax().getInt64().longValue());
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getDestAmount().getInt64().longValue());
@@ -150,7 +172,36 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAIAAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAA==",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
+    }
+
+    @Test
+    public void testMuxedPathPaymentStrictReceiveOperation() throws FormatException, IOException, AssetCodeLengthInvalidException {
+        String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+        String destination = "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO";
+
+        // GCGZLB3X2B3UFOFSHHQ6ZGEPEX7XYPEH6SBFMIV74EUDOFZJA3VNL6X4
+        KeyPair issuer = KeyPair.fromSecretSeed("SBOBVZUN6WKVMI6KIL2GHBBEETEV6XKQGILITNH6LO6ZA22DBMSDCPAG");
+
+        Asset sendAsset = new AssetTypeNative();
+        String sendMax = "0.0001";
+        Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer.getAccountId());
+        String destAmount = "0.0001";
+
+        PathPaymentStrictReceiveOperation operation = new PathPaymentStrictReceiveOperation.Builder(
+            sendAsset, sendMax, destination, destAsset, destAmount)
+            .setSourceAccount(source)
+            .build();
+
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        PathPaymentStrictReceiveOperation parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+
+        assertEquals(destination, parsedOperation.getDestination());
+        assertEquals(source, parsedOperation.getSourceAccount());
+
+        parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
+        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getDestination());
+        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -179,8 +230,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        PathPaymentStrictSendOperation parsedOperation = (PathPaymentStrictSendOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        PathPaymentStrictSendOperation parsedOperation = (PathPaymentStrictSendOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictSendOp().getSendAmount().getInt64().longValue());
         assertEquals(9000L, xdr.getBody().getPathPaymentStrictSendOp().getDestMin().getInt64().longValue());
@@ -194,7 +245,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAA0AAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAACMoAAAAAgAAAAFVU0QAAAAAACoIKnpnw8rtrfxa276dFZo1C19mDqWXtG4ufhWrLUd1AAAAAlRFU1RURVNUAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIg==",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
 
@@ -222,8 +273,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        PathPaymentStrictSendOperation parsedOperation = (PathPaymentStrictSendOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        PathPaymentStrictSendOperation parsedOperation = (PathPaymentStrictSendOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(1000L, xdr.getBody().getPathPaymentStrictSendOp().getSendAmount().getInt64().longValue());
         assertEquals(9000L, xdr.getBody().getPathPaymentStrictSendOp().getDestMin().getInt64().longValue());
@@ -237,7 +288,36 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAA0AAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAACMoAAAAAA==",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
+    }
+
+    @Test
+    public void testMuxedPathPaymentStrictSendOperation() throws FormatException, IOException, AssetCodeLengthInvalidException {
+        String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+        String destination = "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO";
+
+        // GCGZLB3X2B3UFOFSHHQ6ZGEPEX7XYPEH6SBFMIV74EUDOFZJA3VNL6X4
+        KeyPair issuer = KeyPair.fromSecretSeed("SBOBVZUN6WKVMI6KIL2GHBBEETEV6XKQGILITNH6LO6ZA22DBMSDCPAG");
+
+        Asset sendAsset = new AssetTypeNative();
+        String destMin = "0.0001";
+        Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer.getAccountId());
+        String sendAmount = "0.0001";
+
+        PathPaymentStrictSendOperation operation = new PathPaymentStrictSendOperation.Builder(
+            sendAsset, sendAmount, destination, destAsset, destMin)
+            .setSourceAccount(source)
+            .build();
+
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        PathPaymentStrictSendOperation parsedOperation = (PathPaymentStrictSendOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+
+        assertEquals(destination, parsedOperation.getDestination());
+        assertEquals(source, parsedOperation.getSourceAccount());
+
+        parsedOperation = (PathPaymentStrictSendOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
+        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getDestination());
+        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -252,8 +332,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        ChangeTrustOperation parsedOperation = (ChangeTrustOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        ChangeTrustOperation parsedOperation = (ChangeTrustOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(9223372036854775807L, xdr.getBody().getChangeTrustOp().getLimit().getInt64().longValue());
         assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
@@ -262,7 +342,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAYAAAAAf/////////8=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -279,8 +359,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        AllowTrustOperation parsedOperation = (AllowTrustOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        AllowTrustOperation parsedOperation = (AllowTrustOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
         assertEquals(trustor.getAccountId(), parsedOperation.getTrustor());
@@ -289,7 +369,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAcAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEQQAAAAE=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -306,8 +386,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        AllowTrustOperation parsedOperation = (AllowTrustOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        AllowTrustOperation parsedOperation = (AllowTrustOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(assetCode, parsedOperation.getAssetCode());
     }
@@ -343,8 +423,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(inflationDestination.getAccountId(), parsedOperation.getInflationDestination());
         assertEquals(clearFlags, parsedOperation.getClearFlags());
@@ -361,7 +441,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAABAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAIAAAABAAAAAwAAAAEAAAAEAAAAAQAAAAtzdGVsbGFyLm9yZwAAAAABAAAAAET+21WXwEtXRyxb/GBe1tc5V/WUzIOW4yJp+XQgNUUiAAAAAQ==",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -376,8 +456,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(null, parsedOperation.getInflationDestination());
         assertEquals(null, parsedOperation.getClearFlags());
@@ -393,7 +473,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAtzdGVsbGFyLm9yZwAAAAAA",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -409,8 +489,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(null, parsedOperation.getInflationDestination());
         assertEquals(null, parsedOperation.getClearFlags());
@@ -426,7 +506,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAACbpRqMkaQAfCYSk/n3xIl4fCoHfKqxF34ht2iuvSYEJQAAAAK",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -437,7 +517,7 @@ public class OperationTest {
 
         long sequenceNumber = 2908908335136768L;
         Account account = new Account(source.getAccountId(), sequenceNumber);
-        Transaction transaction = new Transaction.Builder(account, Network.TESTNET)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
                 .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -451,8 +531,8 @@ public class OperationTest {
                 .setSourceAccount(opSource.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(null, parsedOperation.getInflationDestination());
         assertEquals(null, parsedOperation.getClearFlags());
@@ -468,7 +548,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAB1vRBIRC3w7ZH5rQa17hIBKUwZTvBP4kNmSP7jVyw1fQAAAAK",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -490,8 +570,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        ManageSellOfferOperation parsedOperation = (ManageSellOfferOperation) ManageSellOfferOperation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        ManageSellOfferOperation parsedOperation = (ManageSellOfferOperation) ManageSellOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(100L, xdr.getBody().getManageSellOfferOp().getAmount().getInt64().longValue());
         assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
@@ -505,7 +585,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAMAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -527,8 +607,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        ManageBuyOfferOperation parsedOperation = (ManageBuyOfferOperation) ManageBuyOfferOperation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        ManageBuyOfferOperation parsedOperation = (ManageBuyOfferOperation) ManageBuyOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(100L, xdr.getBody().getManageBuyOfferOp().getBuyAmount().getInt64().longValue());
         assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
@@ -542,7 +622,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAwAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -556,7 +636,7 @@ public class OperationTest {
         org.stellar.sdk.xdr.TransactionEnvelope transactionEnvelope = org.stellar.sdk.xdr.TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
         assertEquals(1, transactionEnvelope.getV0().getTx().getOperations().length);
 
-        ManageSellOfferOperation op = (ManageSellOfferOperation) Operation.fromXdr(transactionEnvelope.getV0().getTx().getOperations()[0]);
+        ManageSellOfferOperation op = (ManageSellOfferOperation) Operation.fromXdr(AccountConverter.enableMuxed(), transactionEnvelope.getV0().getTx().getOperations()[0]);
 
         assertEquals("3397.893306099996", op.getPrice());
     }
@@ -572,7 +652,7 @@ public class OperationTest {
         org.stellar.sdk.xdr.TransactionEnvelope transactionEnvelope = org.stellar.sdk.xdr.TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
         assertEquals(1, transactionEnvelope.getV0().getTx().getOperations().length);
 
-        ManageBuyOfferOperation op = (ManageBuyOfferOperation) Operation.fromXdr(transactionEnvelope.getV0().getTx().getOperations()[0]);
+        ManageBuyOfferOperation op = (ManageBuyOfferOperation) Operation.fromXdr(AccountConverter.enableMuxed(), transactionEnvelope.getV0().getTx().getOperations()[0]);
 
         assertEquals("3397.893306099996", op.getPrice());
     }
@@ -594,8 +674,8 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        CreatePassiveSellOfferOperation parsedOperation = (CreatePassiveSellOfferOperation) CreatePassiveSellOfferOperation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        CreatePassiveSellOfferOperation parsedOperation = (CreatePassiveSellOfferOperation) CreatePassiveSellOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(100L, xdr.getBody().getCreatePassiveSellOfferOp().getAmount().getInt64().longValue());
         assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
@@ -608,7 +688,7 @@ public class OperationTest {
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAQAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZAIweX0Avrwg",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -622,15 +702,35 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
 
-        AccountMergeOperation parsedOperation = (AccountMergeOperation) Operation.fromXdr(xdr);
+        AccountMergeOperation parsedOperation = (AccountMergeOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(destination.getAccountId(), parsedOperation.getDestination());
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAgAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxA=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
+    }
+
+    @Test
+    public void testMuxedAccountMergeOperation() throws IOException, FormatException {
+        String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+        String destination = "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO";
+
+        AccountMergeOperation operation = new AccountMergeOperation.Builder(destination)
+            .setSourceAccount(source)
+            .build();
+
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+
+        AccountMergeOperation parsedOperation = (AccountMergeOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        assertEquals(destination, parsedOperation.getDestination());
+        assertEquals(source, parsedOperation.getSourceAccount());
+
+        parsedOperation = (AccountMergeOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
+        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getDestination());
+        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -642,16 +742,16 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
 
-        ManageDataOperation parsedOperation = (ManageDataOperation) Operation.fromXdr(xdr);
+        ManageDataOperation parsedOperation = (ManageDataOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals("test", parsedOperation.getName());
         assertTrue(Arrays.equals(new byte[]{0, 1, 2, 3, 4}, parsedOperation.getValue()));
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAEAAAAFAAECAwQAAAA=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -663,16 +763,16 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
 
-        ManageDataOperation parsedOperation = (ManageDataOperation) Operation.fromXdr(xdr);
+        ManageDataOperation parsedOperation = (ManageDataOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals("test", parsedOperation.getName());
         assertEquals(null, parsedOperation.getValue());
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAA=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -684,15 +784,15 @@ public class OperationTest {
                 .setSourceAccount(source.getAccountId())
                 .build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
 
-        BumpSequenceOperation parsedOperation = (BumpSequenceOperation) Operation.fromXdr(xdr);
+        BumpSequenceOperation parsedOperation = (BumpSequenceOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(156L, parsedOperation.getBumpTo());
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAsAAAAAAAAAnA==",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -741,18 +841,18 @@ public class OperationTest {
 
         InflationOperation operation = new InflationOperation();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        InflationOperation parsedOperation = (InflationOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        InflationOperation parsedOperation = (InflationOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
         assertEquals(
                 "AAAAAAAAAAk=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
 
         operation.setSourceAccount(source.getAccountId());
 
         assertEquals(
                 "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAk=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -761,14 +861,14 @@ public class OperationTest {
         String accountId = "GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN";
         ClaimClaimableBalanceOperation operation = new ClaimClaimableBalanceOperation.Builder(balanceId).setSourceAccount(accountId).build();
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        ClaimClaimableBalanceOperation parsedOperation = (ClaimClaimableBalanceOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        ClaimClaimableBalanceOperation parsedOperation = (ClaimClaimableBalanceOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(accountId, parsedOperation.getSourceAccount());
         assertEquals(balanceId, parsedOperation.getBalanceId());
         // Generated by js-stellar-base.
         assertEquals(
                 "AAAAAQAAAAADOcvN4KfwUbxY/oKijIj6+TBW9Ca0QaQuRkR7MK0FBgAAAA8AAAAAbWoMFCUWqcx4hahcWro6H0r1GBz556gJrHrl5KWMgl8=",
-                operation.toXdrBase64());
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
@@ -777,7 +877,7 @@ public class OperationTest {
         String accountId = "GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN";
         ClaimClaimableBalanceOperation operation = new ClaimClaimableBalanceOperation.Builder(balanceId).setSourceAccount(accountId).build();
         try {
-            operation.toXdr();
+            operation.toXdr(AccountConverter.enableMuxed());
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals("invalid balanceId: ", e.getMessage());
@@ -790,7 +890,7 @@ public class OperationTest {
         String accountId = "GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN";
         ClaimClaimableBalanceOperation operation = new ClaimClaimableBalanceOperation.Builder(balanceId).setSourceAccount(accountId).build();
         try {
-            operation.toXdr();
+            operation.toXdr(AccountConverter.enableMuxed());
             fail();
         } catch (RuntimeException ignored) {
         }
@@ -802,7 +902,7 @@ public class OperationTest {
         String accountId = "GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN";
         ClaimClaimableBalanceOperation operation = new ClaimClaimableBalanceOperation.Builder(balanceId).setSourceAccount(accountId).build();
         try {
-            operation.toXdr();
+            operation.toXdr(AccountConverter.enableMuxed());
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals("invalid balanceId: " + balanceId, e.getMessage());
@@ -814,10 +914,10 @@ public class OperationTest {
         String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
         String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
         RevokeAccountSponsorshipOperation operation = new RevokeAccountSponsorshipOperation.Builder(accountId).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAAAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7Sw==", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAAAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7Sw==", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        RevokeAccountSponsorshipOperation parsedOperation = (RevokeAccountSponsorshipOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        RevokeAccountSponsorshipOperation parsedOperation = (RevokeAccountSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(accountId, parsedOperation.getAccountId());
         assertEquals(source, parsedOperation.getSourceAccount());
     }
@@ -828,10 +928,10 @@ public class OperationTest {
         String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
         String dataName = "data_name";
         RevokeDataSponsorshipOperation operation = new RevokeDataSponsorshipOperation.Builder(accountId, dataName).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAwAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAlkYXRhX25hbWUAAAA=", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAwAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAlkYXRhX25hbWUAAAA=", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        RevokeDataSponsorshipOperation parsedOperation = (RevokeDataSponsorshipOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        RevokeDataSponsorshipOperation parsedOperation = (RevokeDataSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(accountId, parsedOperation.getAccountId());
         assertEquals(source, parsedOperation.getSourceAccount());
         assertEquals(dataName, parsedOperation.getDataName());
@@ -842,10 +942,10 @@ public class OperationTest {
         String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
         String balanceId = "00000000550e14acbdafcd3089289363b3b0c8bec9b4edd87298c690655b4b2456d68ba0";
         RevokeClaimableBalanceSponsorshipOperation operation = new RevokeClaimableBalanceSponsorshipOperation.Builder(balanceId).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAABAAAAABVDhSsva/NMIkok2OzsMi+ybTt2HKYxpBlW0skVtaLoA==", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAABAAAAABVDhSsva/NMIkok2OzsMi+ybTt2HKYxpBlW0skVtaLoA==", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        RevokeClaimableBalanceSponsorshipOperation parsedOperation = (RevokeClaimableBalanceSponsorshipOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        RevokeClaimableBalanceSponsorshipOperation parsedOperation = (RevokeClaimableBalanceSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(balanceId, parsedOperation.getBalanceId());
         assertEquals(source, parsedOperation.getSourceAccount());
     }
@@ -856,10 +956,10 @@ public class OperationTest {
         String seller = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
         Long offerId = 123456L;
         RevokeOfferSponsorshipOperation operation = new RevokeOfferSponsorshipOperation.Builder(seller, offerId).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAgAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAAAAeJA", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAgAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAAAAeJA", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        RevokeOfferSponsorshipOperation parsedOperation = (RevokeOfferSponsorshipOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        RevokeOfferSponsorshipOperation parsedOperation = (RevokeOfferSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(offerId, parsedOperation.getOfferId());
         assertEquals(seller, parsedOperation.getSeller());
         assertEquals(source, parsedOperation.getSourceAccount());
@@ -871,10 +971,10 @@ public class OperationTest {
         String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
         SignerKey signerKey = KeyPair.fromAccountId("GBOSQJIV4VJMWMPVPB7EFVIRJT7A7SAAAB4FA23ZDJRUMXMYHBYWY57L").getXdrSignerKey();
         RevokeSignerSponsorshipOperation operation = new RevokeSignerSponsorshipOperation.Builder(accountId, signerKey).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAABAAAAAA0PjbClYR862HI77a+kYknlCAd8JFFkq8deOOGREDtLAAAAAF0oJRXlUssx9Xh+QtURTP4PyAAAeFBreRpjRl2YOHFs", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAABAAAAAA0PjbClYR862HI77a+kYknlCAd8JFFkq8deOOGREDtLAAAAAF0oJRXlUssx9Xh+QtURTP4PyAAAeFBreRpjRl2YOHFs", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        RevokeSignerSponsorshipOperation parsedOperation = (RevokeSignerSponsorshipOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        RevokeSignerSponsorshipOperation parsedOperation = (RevokeSignerSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(accountId, parsedOperation.getAccountId());
         assertEquals(source, parsedOperation.getSourceAccount());
         assertEquals(signerKey, parsedOperation.getSigner());
@@ -886,10 +986,10 @@ public class OperationTest {
         String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
         Asset asset = new AssetTypeCreditAlphaNum4("DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
         RevokeTrustlineSponsorshipOperation operation = new RevokeTrustlineSponsorshipOperation.Builder(accountId, asset).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAQAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAFERU1PAAAAAKz0Cr5Fd9LDTK5kQa3RORjEAcOMH1GRCsutowtJMYYr", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAQAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAFERU1PAAAAAKz0Cr5Fd9LDTK5kQa3RORjEAcOMH1GRCsutowtJMYYr", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        RevokeTrustlineSponsorshipOperation parsedOperation = (RevokeTrustlineSponsorshipOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        RevokeTrustlineSponsorshipOperation parsedOperation = (RevokeTrustlineSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(accountId, parsedOperation.getAccountId());
         assertEquals(source, parsedOperation.getSourceAccount());
         assertEquals(asset, parsedOperation.getAsset());
@@ -900,10 +1000,10 @@ public class OperationTest {
         String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
         String balanceId = "00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072";
         ClawbackClaimableBalanceOperation operation = new ClawbackClaimableBalanceOperation.Builder(balanceId).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABQAAAAAkpsgty5YkKtRwk8cxG+gHE8xjY0zNn0k3WFM/fVJEHI=", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABQAAAAAkpsgty5YkKtRwk8cxG+gHE8xjY0zNn0k3WFM/fVJEHI=", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        ClawbackClaimableBalanceOperation parsedOperation = (ClawbackClaimableBalanceOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        ClawbackClaimableBalanceOperation parsedOperation = (ClawbackClaimableBalanceOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(balanceId, parsedOperation.getBalanceId());
         assertEquals(source, parsedOperation.getSourceAccount());
         assertEquals(operation, parsedOperation);
@@ -916,16 +1016,36 @@ public class OperationTest {
         Asset asset = new AssetTypeCreditAlphaNum4("DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
         String amt = "100";
         ClawbackOperation operation = new ClawbackOperation.Builder(accountId, asset, amt).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABMAAAABREVNTwAAAACs9Aq+RXfSw0yuZEGt0TkYxAHDjB9RkQrLraMLSTGGKwAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAA7msoA", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABMAAAABREVNTwAAAACs9Aq+RXfSw0yuZEGt0TkYxAHDjB9RkQrLraMLSTGGKwAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAA7msoA", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
-        ClawbackOperation parsedOperation = (ClawbackOperation) Operation.fromXdr(xdr);
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        ClawbackOperation parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(accountId, parsedOperation.getFrom());
         assertEquals(asset, parsedOperation.getAsset());
         assertEquals(amt, parsedOperation.getAmount());
 
         assertEquals(source, parsedOperation.getSourceAccount());
         assertEquals(operation, parsedOperation);
+    }
+
+    @Test
+    public void testMuxedClawbackOperation() throws IOException, FormatException {
+        String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+        String from = "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO";
+
+        Asset asset = new AssetTypeCreditAlphaNum4("DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
+        String amt = "100";
+        ClawbackOperation operation = new ClawbackOperation.Builder(from, asset, amt).setSourceAccount(source).build();
+
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        ClawbackOperation parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+
+        assertEquals(from, parsedOperation.getFrom());
+        assertEquals(source, parsedOperation.getSourceAccount());
+
+        parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
+        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getFrom());
+        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -949,12 +1069,12 @@ public class OperationTest {
         EnumSet<TrustLineFlags> toSet = EnumSet.of(TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG, TrustLineFlags.TRUSTLINE_CLAWBACK_ENABLED_FLAG);
 
         SetTrustlineFlagsOperation operation = new SetTrustlineFlagsOperation.Builder(accountId, asset, toClear, toSet).setSourceAccount(source).build();
-        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABUAAAAADQ+NsKVhHzrYcjvtr6RiSeUIB3wkUWSrx1444ZEQO0sAAAABREVNTwAAAACs9Aq+RXfSw0yuZEGt0TkYxAHDjB9RkQrLraMLSTGGKwAAAAEAAAAG", operation.toXdrBase64());
+        assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABUAAAAADQ+NsKVhHzrYcjvtr6RiSeUIB3wkUWSrx1444ZEQO0sAAAABREVNTwAAAACs9Aq+RXfSw0yuZEGt0TkYxAHDjB9RkQrLraMLSTGGKwAAAAEAAAAG", operation.toXdrBase64(AccountConverter.enableMuxed()));
 
-        org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
         assertEquals(TrustLineFlags.AUTHORIZED_FLAG.getValue(), xdr.getBody().getSetTrustLineFlagsOp().getClearFlags().getUint32().intValue());
         assertEquals(TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue() | TrustLineFlags.TRUSTLINE_CLAWBACK_ENABLED_FLAG.getValue(), xdr.getBody().getSetTrustLineFlagsOp().getSetFlags().getUint32().intValue());
-        SetTrustlineFlagsOperation parsedOperation = (SetTrustlineFlagsOperation) Operation.fromXdr(xdr);
+        SetTrustlineFlagsOperation parsedOperation = (SetTrustlineFlagsOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(accountId, parsedOperation.getTrustor());
         assertEquals(asset, parsedOperation.getAsset());
         assertEquals(toClear, parsedOperation.getClearFlags());

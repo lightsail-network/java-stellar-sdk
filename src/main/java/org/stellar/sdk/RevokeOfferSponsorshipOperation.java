@@ -23,7 +23,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
     key.setDiscriminant(LedgerEntryType.OFFER);

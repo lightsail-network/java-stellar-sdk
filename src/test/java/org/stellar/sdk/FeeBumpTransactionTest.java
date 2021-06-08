@@ -13,7 +13,7 @@ public class FeeBumpTransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
-    Transaction inner = new Transaction.Builder(account, Network.TESTNET)
+    Transaction inner = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.TESTNET)
         .addOperation(new PaymentOperation.Builder(
             "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ",
             new AssetTypeNative(),
@@ -177,7 +177,7 @@ public class FeeBumpTransactionTest {
     assertEquals(0, feeBump.getSignatures().size());
 
     FeeBumpTransaction fromXdr = (FeeBumpTransaction) AbstractTransaction.fromEnvelopeXdr(
-        feeBump.toEnvelopeXdrBase64(), Network.TESTNET
+        AccountConverter.enableMuxed(), feeBump.toEnvelopeXdrBase64(), Network.TESTNET
     );
 
     assertEquals(feeBump, fromXdr);
@@ -186,7 +186,7 @@ public class FeeBumpTransactionTest {
     KeyPair signer = KeyPair.random();
     feeBump.sign(signer);
     fromXdr = (FeeBumpTransaction) AbstractTransaction.fromEnvelopeXdr(
-        feeBump.toEnvelopeXdrBase64(), Network.TESTNET
+        AccountConverter.enableMuxed(), feeBump.toEnvelopeXdrBase64(), Network.TESTNET
     );
     assertEquals(feeBump, fromXdr);
     assertEquals(inner, fromXdr.getInnerTransaction());
@@ -215,7 +215,7 @@ public class FeeBumpTransactionTest {
     assertEquals(innerV0, feeBump.getInnerTransaction());
 
     FeeBumpTransaction fromXdr = (FeeBumpTransaction) AbstractTransaction.fromEnvelopeXdr(
-        feeBump.toEnvelopeXdrBase64(), Network.TESTNET
+        AccountConverter.enableMuxed(), feeBump.toEnvelopeXdrBase64(), Network.TESTNET
     );
 
     assertEquals(feeBump, fromXdr);
@@ -224,7 +224,7 @@ public class FeeBumpTransactionTest {
     KeyPair signer = KeyPair.random();
     feeBump.sign(signer);
     fromXdr = (FeeBumpTransaction) AbstractTransaction.fromEnvelopeXdr(
-        feeBump.toEnvelopeXdrBase64(), Network.TESTNET
+        AccountConverter.enableMuxed(), feeBump.toEnvelopeXdrBase64(), Network.TESTNET
     );
     assertEquals(feeBump, fromXdr);
     assertEquals(feeBump.getInnerTransaction(), fromXdr.getInnerTransaction());

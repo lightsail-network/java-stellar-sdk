@@ -64,7 +64,7 @@ public class ManageBuyOfferOperation extends Operation {
     }
 
     @Override
-    org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+    org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
         ManageBuyOfferOp op = new ManageBuyOfferOp();
         op.setSelling(selling.toXdr());
         op.setBuying(buying.toXdr());

@@ -27,7 +27,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
 
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     ClawbackClaimableBalanceOp op = new ClawbackClaimableBalanceOp();
 
     op.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));

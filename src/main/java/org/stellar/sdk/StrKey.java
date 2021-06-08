@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 import com.google.common.base.Optional;
+import com.google.common.primitives.Bytes;
+import com.google.common.primitives.Longs;
 import org.stellar.sdk.xdr.*;
 
 import java.io.*;
@@ -13,6 +15,7 @@ class StrKey {
 
     public enum VersionByte {
         ACCOUNT_ID((byte)(6 << 3)), // G
+        MUXED((byte)(12 << 3)), // M
         SEED((byte)(18 << 3)), // S
         PRE_AUTH_TX((byte)(19 << 3)), // T
         SHA256_HASH((byte)(23 << 3)); // X
@@ -46,6 +49,19 @@ class StrKey {
         return String.valueOf(encoded);
     }
 
+    public static String encodeStellarMuxedAccount(MuxedAccount muxedAccount) {
+        switch (muxedAccount.getDiscriminant()) {
+            case KEY_TYPE_MUXED_ED25519:
+                return String.valueOf(encodeCheck(VersionByte.MUXED, Bytes.concat(
+                    muxedAccount.getMed25519().getEd25519().getUint256(),
+                    Longs.toByteArray(muxedAccount.getMed25519().getId().getUint64())
+                )));
+            case KEY_TYPE_ED25519:
+                return String.valueOf(encodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.getEd25519().getUint256()));
+            default:
+                throw new IllegalArgumentException("invalid discriminant");
+        }
+    }
 
     public static AccountID muxedAccountToAccountId(MuxedAccount account) {
         AccountID aid = new AccountID();
@@ -81,19 +97,38 @@ class StrKey {
     }
 
     public static MuxedAccount encodeToXDRMuxedAccount(String data) {
-        if (data.length() == ACCOUNT_ID_ADDRESS_LENGTH) {
-            MuxedAccount accountID = new MuxedAccount();
-            accountID.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
-            try {
-                accountID.setEd25519(Uint256.decode(
-                    new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))
-                ));
-            } catch (IOException e) {
-                throw new IllegalArgumentException("invalid address: "+data, e);
-            }
-            return accountID;
+        MuxedAccount muxed = new MuxedAccount();
+
+        if (data.length() == 0) {
+            throw new IllegalArgumentException("address is empty");
         }
-        throw new IllegalArgumentException("invalid address length: "+data);
+        switch (decodeVersionByte(data)) {
+            case ACCOUNT_ID:
+                muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
+                try {
+                    muxed.setEd25519(Uint256.decode(
+                        new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))
+                    ));
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("invalid address: "+data, e);
+                }
+                break;
+            case MUXED:
+                XdrDataInputStream input = new XdrDataInputStream(new ByteArrayInputStream(decodeCheck(VersionByte.MUXED, data.toCharArray())));
+                muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
+                MuxedAccount.MuxedAccountMed25519 med = new MuxedAccount.MuxedAccountMed25519();
+                try {
+                    med.setEd25519(Uint256.decode(input));
+                    med.setId(Uint64.decode(input));
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("invalid address: "+data, e);
+                }
+                muxed.setMed25519(med);
+                break;
+            default:
+                throw new FormatException("Version byte is invalid");
+        }
+        return muxed;
     }
 
 

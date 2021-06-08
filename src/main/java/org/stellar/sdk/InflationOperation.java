@@ -9,7 +9,7 @@ import org.stellar.sdk.xdr.OperationType;
  */
 public class InflationOperation extends Operation {
     @Override
-    org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+    org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
         org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
         body.setDiscriminant(OperationType.INFLATION);
         return body;

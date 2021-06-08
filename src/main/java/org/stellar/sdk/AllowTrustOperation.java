@@ -47,7 +47,7 @@ public class AllowTrustOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     AllowTrustOp op = new AllowTrustOp();
 
     // trustor

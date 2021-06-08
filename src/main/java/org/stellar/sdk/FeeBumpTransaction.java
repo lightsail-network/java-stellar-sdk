@@ -17,7 +17,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
   private final Transaction mInner;
 
   FeeBumpTransaction(String feeAccount, long fee, Transaction innerTransaction) {
-    super(innerTransaction.getNetwork());
+    super(innerTransaction.accountConverter, innerTransaction.getNetwork());
     this.mFeeAccount = checkNotNull(feeAccount, "feeAccount cannot be null");
     this.mInner = checkNotNull(innerTransaction, "innerTransaction cannot be null");
     this.mFee = fee;
@@ -36,9 +36,9 @@ public class FeeBumpTransaction extends AbstractTransaction {
     return mInner;
   }
 
-  public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(FeeBumpTransactionEnvelope envelope, Network network) {
-    Transaction inner = Transaction.fromV1EnvelopeXdr(envelope.getTx().getInnerTx().getV1(), network);
-    String feeAccount = StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(envelope.getTx().getFeeSource()));
+  public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(AccountConverter accountConverter, FeeBumpTransactionEnvelope envelope, Network network) {
+    Transaction inner = Transaction.fromV1EnvelopeXdr(accountConverter, envelope.getTx().getInnerTx().getV1(), network);
+    String feeAccount = accountConverter.decode(envelope.getTx().getFeeSource());
 
     long fee = envelope.getTx().getFee().getInt64();
 
@@ -57,7 +57,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
     xdrFee.setInt64(mFee);
     xdr.setFee(xdrFee);
 
-    xdr.setFeeSource(StrKey.encodeToXDRMuxedAccount(this.mFeeAccount));
+    xdr.setFeeSource(accountConverter.encode(this.mFeeAccount));
 
     org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx innerXDR = new org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx();
     innerXDR.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
@@ -112,6 +112,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
       EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
       if (inner.toEnvelopeXdr().getDiscriminant() == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
         this.mInner = new Transaction(
+            inner.accountConverter,
             inner.getSourceAccount(),
             inner.getFee(),
             inner.getSequenceNumber(),

@@ -62,7 +62,7 @@ public class SetTrustlineFlagsOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     SetTrustLineFlagsOp op = new SetTrustLineFlagsOp();
 
     op.setTrustor(StrKey.encodeToXDRAccountId(this.trustor));

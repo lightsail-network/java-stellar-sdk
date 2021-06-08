@@ -84,8 +84,8 @@ public class Sep10ChallengeTest {
           timeBounds
       );
       fail();
-    } catch (FormatException e) {
-      assertEquals("Version byte is invalid", e.getMessage());
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG is not a valid account id", e.getMessage());
     }
 
   }
@@ -201,8 +201,8 @@ public class Sep10ChallengeTest {
           Network.TESTNET, domainName, webAuthDomain
       );
       fail();
-    } catch (FormatException e) {
-      assertEquals("Version byte is invalid", e.getMessage());
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("serverAccountId: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG is not a valid account id", e.getMessage());
     }
   }
 
@@ -229,6 +229,7 @@ public class Sep10ChallengeTest {
     Operation[] operations = transaction.getOperations();
     operations[0].setSourceAccount("MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG");
     Transaction withMuxedClient = new Transaction(
+        AccountConverter.disableMuxed(),
         transaction.getSourceAccount(),
         transaction.getFee(),
         transaction.getSequenceNumber(),
@@ -246,8 +247,8 @@ public class Sep10ChallengeTest {
           Network.TESTNET, domainName, webAuthDomain
       );
       fail();
-    } catch (IllegalArgumentException e) {
-      assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("serverAccountId: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG is not a valid account id", e.getMessage());
     }
   }
 
@@ -304,6 +305,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -408,6 +410,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -452,6 +455,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{operation};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -492,6 +496,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{operation};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -588,6 +593,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{setOptionsOperation};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -631,6 +637,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -676,6 +683,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -716,6 +724,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -762,6 +771,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -801,6 +811,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+      AccountConverter.disableMuxed(),
       sourceAccount.getAccountId(),
       100 * operations.length,
       sourceAccount.getIncrementedSequenceNumber(),
@@ -848,6 +859,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -891,6 +903,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -936,6 +949,7 @@ public class Sep10ChallengeTest {
     ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes()).build();
     Operation[] operations = new Operation[]{operation1, operation2};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -983,6 +997,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -1225,6 +1240,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{domainNameOperation, webAuthDomainOperation};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -1275,6 +1291,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{domainNameOperation, webAuthDomainOperation, otherDomainOperation};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -1319,6 +1336,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -1754,6 +1772,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -2247,6 +2266,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -2291,6 +2311,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -2337,6 +2358,7 @@ public class Sep10ChallengeTest {
     ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes()).build();
     Operation[] operations = new Operation[]{operation1, operation2};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),
@@ -2385,6 +2407,7 @@ public class Sep10ChallengeTest {
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
     Transaction transaction = new Transaction(
+        AccountConverter.disableMuxed(),
         sourceAccount.getAccountId(),
         100 * operations.length,
         sourceAccount.getIncrementedSequenceNumber(),

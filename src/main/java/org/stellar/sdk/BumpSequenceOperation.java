@@ -20,7 +20,7 @@ public class BumpSequenceOperation extends Operation  {
     }
 
     @Override
-    org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+    org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
         BumpSequenceOp op = new BumpSequenceOp();
         Int64 bumpTo = new Int64();
         bumpTo.setInt64(this.bumpTo);
