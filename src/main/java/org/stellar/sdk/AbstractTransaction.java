@@ -121,6 +121,15 @@ public abstract class AbstractTransaction {
   }
 
   /**
+   * Creates a <code>AbstractTransaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope
+   * @return
+   */
+  public static AbstractTransaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
+    return fromEnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+  }
+
+  /**
    * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
    * @return
@@ -132,6 +141,16 @@ public abstract class AbstractTransaction {
 
     TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
     return fromEnvelopeXdr(accountConverter, transactionEnvelope, network);
+  }
+
+  /**
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
+   * @return
+   * @throws IOException
+   */
+  public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network) throws IOException {
+    return fromEnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
   }
 
   public static byte[] getTransactionSignatureBase(TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,

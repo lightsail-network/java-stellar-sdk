@@ -1049,6 +1049,26 @@ public class OperationTest {
     }
 
     @Test
+    public void testMixedMuxedClawbackOperation() throws IOException, FormatException {
+        String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+        String from = "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3";
+
+        Asset asset = new AssetTypeCreditAlphaNum4("DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
+        String amt = "100";
+        ClawbackOperation operation = new ClawbackOperation.Builder(from, asset, amt).setSourceAccount(source).build();
+
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        ClawbackOperation parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+
+        assertEquals(from, parsedOperation.getFrom());
+        assertEquals(source, parsedOperation.getSourceAccount());
+
+        parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
+        assertEquals(from, parsedOperation.getFrom());
+        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
+    }
+
+    @Test
     public void testCantClawbackNativeAsset() {
         try {
             String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";

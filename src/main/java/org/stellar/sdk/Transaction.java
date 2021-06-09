@@ -184,6 +184,10 @@ public class Transaction extends AbstractTransaction {
     return transaction;
   }
 
+  public static Transaction fromV0EnvelopeXdr(TransactionV0Envelope envelope, Network network) {
+    return fromV0EnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+  }
+
   public static Transaction fromV1EnvelopeXdr(AccountConverter accountConverter, TransactionV1Envelope envelope, Network network) {
     int mFee = envelope.getTx().getFee().getUint32();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
@@ -211,9 +215,13 @@ public class Transaction extends AbstractTransaction {
     return transaction;
   }
 
-  /**
-   * Generates TransactionEnvelope XDR object.
-   */
+  public static Transaction fromV1EnvelopeXdr(TransactionV1Envelope envelope, Network network) {
+    return fromV1EnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+  }
+
+    /**
+     * Generates TransactionEnvelope XDR object.
+     */
   @Override
   public TransactionEnvelope toEnvelopeXdr() {
     TransactionEnvelope xdr = new TransactionEnvelope();
@@ -267,6 +275,16 @@ public class Transaction extends AbstractTransaction {
       mNetwork = checkNotNull(network, "Network cannot be null");
     }
 
+    /**
+     * Construct a new transaction builder.
+     * @param sourceAccount The source account for this transaction. This account is the account
+     * who will use a sequence number. When build() is called, the account object's sequence number
+     * will be incremented.
+     */
+    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
+      this(AccountConverter.disableMuxed(), sourceAccount, network);
+    }
+    
     public int getOperationsCount() {
       return mOperations.size();
     }

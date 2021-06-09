@@ -4,14 +4,6 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Unreleased
 
-### Breaking changes
-
-* Some methods from the `Operation` interface (`toXdr()`,`toXdrBase64()`, `fromXdr()`, and `toOperationBody()`) now take an additional `AccountConverter` parameter
-  to indicate whether [SEP23](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md) M-strkeys should be enabled.
-* Some methods from the `Transaction` and `FeeBumpTransaction` classes now take an additional `AccountConverter` parameter
-  to indicate whether [SEP23](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md) M-strkeys should be enabled.
-
-### New features
 * Add opt-in support for [SEP23](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md) M-strkeys for `MuxedAccount`s
 
 ## 0.25.0

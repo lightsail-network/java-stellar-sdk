@@ -16,8 +16,8 @@ public class FeeBumpTransaction extends AbstractTransaction {
   private final String mFeeAccount;
   private final Transaction mInner;
 
-  FeeBumpTransaction(String feeAccount, long fee, Transaction innerTransaction) {
-    super(innerTransaction.accountConverter, innerTransaction.getNetwork());
+  FeeBumpTransaction(AccountConverter accountConverter, String feeAccount, long fee, Transaction innerTransaction) {
+    super(accountConverter, innerTransaction.getNetwork());
     this.mFeeAccount = checkNotNull(feeAccount, "feeAccount cannot be null");
     this.mInner = checkNotNull(innerTransaction, "innerTransaction cannot be null");
     this.mFee = fee;
@@ -42,13 +42,17 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
     long fee = envelope.getTx().getFee().getInt64();
 
-    FeeBumpTransaction feeBump = new FeeBumpTransaction(feeAccount, fee, inner);
+    FeeBumpTransaction feeBump = new FeeBumpTransaction(accountConverter, feeAccount, fee, inner);
     feeBump.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return feeBump;
   }
 
-  private org.stellar.sdk.xdr.FeeBumpTransaction toXdr() {
+  public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(FeeBumpTransactionEnvelope envelope, Network network) {
+    return fromFeeBumpTransactionEnvelope(AccountConverter.disableMuxed(), envelope, network);
+  }
+
+    private org.stellar.sdk.xdr.FeeBumpTransaction toXdr() {
     org.stellar.sdk.xdr.FeeBumpTransaction xdr = new org.stellar.sdk.xdr.FeeBumpTransaction();
     xdr.setExt(new org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionExt());
     xdr.getExt().setDiscriminant(0);
@@ -100,16 +104,19 @@ public class FeeBumpTransaction extends AbstractTransaction {
     private final Transaction mInner;
     private Long mBaseFee;
     private String mFeeAccount;
+    private final AccountConverter mAccountConverter;
 
 
     /**
      * Construct a new fee bump transaction builder.
      *
+     * @param accountConverter The AccountConverter which will be used to encode the fee account.
      * @param inner The inner transaction which will be fee bumped.
      */
-    public Builder(Transaction inner) {
+    public Builder(AccountConverter accountConverter, Transaction inner) {
       inner = checkNotNull(inner, "inner cannot be null");
       EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
+      this.mAccountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
       if (inner.toEnvelopeXdr().getDiscriminant() == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
         this.mInner = new Transaction(
             inner.accountConverter,
@@ -125,6 +132,15 @@ public class FeeBumpTransaction extends AbstractTransaction {
       } else {
         this.mInner = inner;
       }
+    }
+
+    /**
+     * Construct a new fee bump transaction builder.
+     *
+     * @param inner The inner transaction which will be fee bumped.
+     */
+    public Builder(Transaction inner) {
+      this(AccountConverter.disableMuxed(), inner);
     }
 
     public FeeBumpTransaction.Builder setBaseFee(long baseFee) {
@@ -166,6 +182,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
     public FeeBumpTransaction build() {
       return new FeeBumpTransaction(
+          this.mAccountConverter,
           checkNotNull(this.mFeeAccount, "fee account has to be set. you must call setFeeAccount()."),
           checkNotNull(this.mBaseFee, "base fee has to be set. you must call setBaseFee()."),
           this.mInner
