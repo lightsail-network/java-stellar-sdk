@@ -37,7 +37,7 @@ public class ChangeTrustOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     ChangeTrustOp op = new ChangeTrustOp();
     op.setLine(asset.toXdr());
     Int64 limit = new Int64();

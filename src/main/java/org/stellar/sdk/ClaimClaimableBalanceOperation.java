@@ -18,7 +18,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     ClaimClaimableBalanceOp op = new ClaimClaimableBalanceOp();
     op.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
     org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();

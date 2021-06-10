@@ -39,7 +39,7 @@ public class ManageDataOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     ManageDataOp op = new ManageDataOp();
     String64 name = new String64();
     name.setString64(new XdrString(this.name));

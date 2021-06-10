@@ -172,7 +172,7 @@ public class ServerTest {
         KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
         Account account = new Account(source.getAccountId(), 2908908335136768L);
-        Transaction.Builder builder = new Transaction.Builder(account, network)
+        Transaction.Builder builder = new Transaction.Builder(AccountConverter.enableMuxed(), account, network)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addMemo(Memo.text("Hello world!"))
                 .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -367,7 +367,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -391,7 +391,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_ID, new AssetTypeNative(), "10").build())
             .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_ID, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
             .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_ID, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -400,26 +400,9 @@ public class ServerTest {
             .setBaseFee(100)
             .build();
 
-        try {
-            transaction.sign(source);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
-        }
-
-        try {
-            server.submitTransaction(transaction);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
-        }
-
-        try {
-            server.submitTransaction(feeBump(transaction));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("invalid address length: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG", e.getMessage());
-        }
+        transaction.sign(source);
+        server.submitTransaction(transaction);
+        server.submitTransaction(feeBump(transaction));
     }
 
     @Test
@@ -432,7 +415,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -455,7 +438,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -493,7 +476,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -531,7 +514,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -569,7 +552,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -607,7 +590,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_C, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -645,7 +628,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new ManageDataOperation.Builder("Hello", "Stellar".getBytes()).build())
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -684,7 +667,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_NO_FOUND, new AssetTypeNative(), "10").build())
                 .addOperation(new PathPaymentStrictReceiveOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_FOUND, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
                 .addOperation(new PathPaymentStrictSendOperation.Builder(new AssetTypeNative(), "10", DESTINATION_ACCOUNT_NO_FOUND, new AssetTypeCreditAlphaNum4("BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"), "5").build())
@@ -707,7 +690,7 @@ public class ServerTest {
 
         KeyPair source = KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
         Account account = new Account(source.getAccountId(), 1L);
-        Transaction transaction = new Transaction.Builder(account, Network.PUBLIC)
+        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_FETCH_ERROR, new AssetTypeNative(), "10").build())
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10").build())
                 .addOperation(new PaymentOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeNative(), "10").build())

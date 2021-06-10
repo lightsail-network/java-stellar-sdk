@@ -36,7 +36,7 @@ public class CreateAccountOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     CreateAccountOp op = new CreateAccountOp();
     op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
     Int64 startingBalance = new Int64();

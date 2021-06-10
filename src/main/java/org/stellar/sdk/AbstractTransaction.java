@@ -14,11 +14,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class AbstractTransaction {
   protected final Network mNetwork;
+  protected final AccountConverter accountConverter;
   protected List<DecoratedSignature> mSignatures;
   public static final int MIN_BASE_FEE = 100;
 
 
-  AbstractTransaction(Network network) {
+  AbstractTransaction(AccountConverter accountConverter, Network network) {
+    this.accountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
     this.mNetwork = checkNotNull(network, "network cannot be null");
     this.mSignatures = new ArrayList<DecoratedSignature>();
   }
@@ -105,17 +107,40 @@ public abstract class AbstractTransaction {
    * @param envelope
    * @return
    */
-  public static AbstractTransaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
+  public static AbstractTransaction fromEnvelopeXdr(AccountConverter accountConverter, TransactionEnvelope envelope, Network network) {
     switch (envelope.getDiscriminant()) {
       case ENVELOPE_TYPE_TX:
-        return Transaction.fromV1EnvelopeXdr(envelope.getV1(), network);
+        return Transaction.fromV1EnvelopeXdr(accountConverter, envelope.getV1(), network);
       case ENVELOPE_TYPE_TX_V0:
-        return Transaction.fromV0EnvelopeXdr(envelope.getV0(), network);
+        return Transaction.fromV0EnvelopeXdr(accountConverter, envelope.getV0(), network);
       case ENVELOPE_TYPE_TX_FEE_BUMP:
-        return FeeBumpTransaction.fromFeeBumpTransactionEnvelope(envelope.getFeeBump(), network);
+        return FeeBumpTransaction.fromFeeBumpTransactionEnvelope(accountConverter, envelope.getFeeBump(), network);
       default:
         throw new IllegalArgumentException("transaction type is not supported: "+envelope.getDiscriminant());
     }
+  }
+
+  /**
+   * Creates a <code>AbstractTransaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope
+   * @return
+   */
+  public static AbstractTransaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
+    return fromEnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+  }
+
+  /**
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
+   * @return
+   * @throws IOException
+   */
+  public static AbstractTransaction fromEnvelopeXdr(AccountConverter accountConverter, String envelope, Network network) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(envelope);
+
+    TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+    return fromEnvelopeXdr(accountConverter, transactionEnvelope, network);
   }
 
   /**
@@ -125,11 +150,7 @@ public abstract class AbstractTransaction {
    * @throws IOException
    */
   public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(envelope);
-
-    TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
-    return fromEnvelopeXdr(transactionEnvelope, network);
+    return fromEnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
   }
 
   public static byte[] getTransactionSignatureBase(TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,

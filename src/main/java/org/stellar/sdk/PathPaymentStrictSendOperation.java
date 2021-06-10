@@ -82,7 +82,7 @@ public class PathPaymentStrictSendOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     PathPaymentStrictSendOp op = new PathPaymentStrictSendOp();
 
     // sendAsset
@@ -92,7 +92,7 @@ public class PathPaymentStrictSendOperation extends Operation {
     sendAmount.setInt64(Operation.toXdrAmount(this.sendAmount));
     op.setSendAmount(sendAmount);
     // destination
-    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
+    op.setDestination(accountConverter.encode(this.destination));
     // destAsset
     op.setDestAsset(destAsset.toXdr());
     // destMin
@@ -127,10 +127,10 @@ public class PathPaymentStrictSendOperation extends Operation {
 
     private String mSourceAccount;
 
-    Builder(PathPaymentStrictSendOp op) {
+    Builder(AccountConverter accountConverter, PathPaymentStrictSendOp op) {
       sendAsset = Asset.fromXdr(op.getSendAsset());
       sendAmount = Operation.fromXdrAmount(op.getSendAmount().getInt64().longValue());
-      destination = StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(op.getDestination()));
+      destination = accountConverter.decode(op.getDestination());
       destAsset = Asset.fromXdr(op.getDestAsset());
       destMin = Operation.fromXdrAmount(op.getDestMin().getInt64().longValue());
       path = new Asset[op.getPath().length];

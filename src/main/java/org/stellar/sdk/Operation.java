@@ -34,21 +34,28 @@ public abstract class Operation {
   /**
    * Generates Operation XDR object.
    */
-  public org.stellar.sdk.xdr.Operation toXdr() {
+  public org.stellar.sdk.xdr.Operation toXdr(AccountConverter accountConverter) {
     org.stellar.sdk.xdr.Operation xdr = new org.stellar.sdk.xdr.Operation();
     if (getSourceAccount() != null) {
-      xdr.setSourceAccount(StrKey.encodeToXDRMuxedAccount(mSourceAccount));
+      xdr.setSourceAccount(accountConverter.encode(mSourceAccount));
     }
-    xdr.setBody(toOperationBody());
+    xdr.setBody(toOperationBody(accountConverter));
     return xdr;
+  }
+
+  /**
+   * Generates Operation XDR object.
+   */
+  public org.stellar.sdk.xdr.Operation toXdr() {
+    return toXdr(AccountConverter.disableMuxed());
   }
 
   /**
    * Returns base64-encoded Operation XDR object.
    */
-  public String toXdrBase64() {
+  public String toXdrBase64(AccountConverter accountConverter) {
     try {
-      org.stellar.sdk.xdr.Operation operation = this.toXdr();
+      org.stellar.sdk.xdr.Operation operation = this.toXdr(accountConverter);
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
       org.stellar.sdk.xdr.Operation.encode(xdrOutputStream, operation);
@@ -60,11 +67,19 @@ public abstract class Operation {
   }
 
   /**
+   * Returns base64-encoded Operation XDR object.
+   */
+  public String toXdrBase64() {
+    return toXdrBase64(AccountConverter.disableMuxed());
+  }
+
+
+  /**
    * Returns new Operation object from Operation XDR object.
    *
    * @param xdr XDR object
    */
-  public static Operation fromXdr(org.stellar.sdk.xdr.Operation xdr) {
+  public static Operation fromXdr(AccountConverter accountConverter, org.stellar.sdk.xdr.Operation xdr) {
     org.stellar.sdk.xdr.Operation.OperationBody body = xdr.getBody();
     Operation operation;
     switch (body.getDiscriminant()) {
@@ -72,10 +87,10 @@ public abstract class Operation {
         operation = new CreateAccountOperation.Builder(body.getCreateAccountOp()).build();
         break;
       case PAYMENT:
-        operation = new PaymentOperation.Builder(body.getPaymentOp()).build();
+        operation = new PaymentOperation.Builder(accountConverter, body.getPaymentOp()).build();
         break;
       case PATH_PAYMENT_STRICT_RECEIVE:
-        operation = new PathPaymentStrictReceiveOperation.Builder(body.getPathPaymentStrictReceiveOp()).build();
+        operation = new PathPaymentStrictReceiveOperation.Builder(accountConverter, body.getPathPaymentStrictReceiveOp()).build();
         break;
       case MANAGE_SELL_OFFER:
         operation = new ManageSellOfferOperation.Builder(body.getManageSellOfferOp()).build();
@@ -96,7 +111,7 @@ public abstract class Operation {
         operation = new AllowTrustOperation.Builder(body.getAllowTrustOp()).build();
         break;
       case ACCOUNT_MERGE:
-        operation = new AccountMergeOperation.Builder(body).build();
+        operation = new AccountMergeOperation.Builder(accountConverter, body).build();
         break;
       case INFLATION:
         operation = new InflationOperation();
@@ -108,7 +123,7 @@ public abstract class Operation {
         operation = new BumpSequenceOperation.Builder(body.getBumpSequenceOp()).build();
         break;
       case PATH_PAYMENT_STRICT_SEND:
-        operation = new PathPaymentStrictSendOperation.Builder(body.getPathPaymentStrictSendOp()).build();
+        operation = new PathPaymentStrictSendOperation.Builder(accountConverter, body.getPathPaymentStrictSendOp()).build();
         break;
       case CREATE_CLAIMABLE_BALANCE:
         operation = new CreateClaimableBalanceOperation.Builder(body.getCreateClaimableBalanceOp()).build();
@@ -153,7 +168,7 @@ public abstract class Operation {
         }
         break;
       case CLAWBACK:
-        operation = new ClawbackOperation.Builder(body.getClawbackOp()).build();
+        operation = new ClawbackOperation.Builder(accountConverter, body.getClawbackOp()).build();
         break;
       case CLAWBACK_CLAIMABLE_BALANCE:
         operation = new ClawbackClaimableBalanceOperation.Builder(body.getClawbackClaimableBalanceOp()).build();
@@ -166,10 +181,19 @@ public abstract class Operation {
     }
     if (xdr.getSourceAccount() != null) {
       operation.setSourceAccount(
-          StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(xdr.getSourceAccount()))
+          accountConverter.decode(xdr.getSourceAccount())
       );
     }
     return operation;
+  }
+
+  /**
+   * Returns new Operation object from Operation XDR object.
+   *
+   * @param xdr XDR object
+   */
+  public static Operation fromXdr(org.stellar.sdk.xdr.Operation xdr) {
+    return fromXdr(AccountConverter.disableMuxed(), xdr);
   }
 
   /**
@@ -193,5 +217,5 @@ public abstract class Operation {
    *
    * @return OperationBody XDR object
    */
-  abstract org.stellar.sdk.xdr.Operation.OperationBody toOperationBody();
+  abstract org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter);
 }

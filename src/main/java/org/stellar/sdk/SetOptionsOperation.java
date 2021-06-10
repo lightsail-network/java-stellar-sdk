@@ -116,7 +116,7 @@ public class SetOptionsOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     SetOptionsOp op = new SetOptionsOp();
     if (inflationDestination != null) {
       op.setInflationDest(StrKey.encodeToXDRAccountId(this.inflationDestination));

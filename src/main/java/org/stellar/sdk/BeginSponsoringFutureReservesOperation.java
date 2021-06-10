@@ -17,7 +17,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     BeginSponsoringFutureReservesOp op = new BeginSponsoringFutureReservesOp();
     op.setSponsoredID(StrKey.encodeToXDRAccountId(sponsoredId));
 

@@ -24,6 +24,7 @@ public class Transaction extends AbstractTransaction {
   private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;
 
   Transaction(
+          AccountConverter accountConverter,
           String sourceAccount,
           long fee,
           long sequenceNumber,
@@ -32,7 +33,7 @@ public class Transaction extends AbstractTransaction {
           TimeBounds timeBounds,
           Network network
   ) {
-    super(network);
+    super(accountConverter, network);
     this.mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
     this.mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
     this.mOperations = checkNotNull(operations, "operations cannot be null");
@@ -53,7 +54,7 @@ public class Transaction extends AbstractTransaction {
       TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction
               = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
       taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
-      taggedTransaction.setTx(this.toV1Xdr());
+      taggedTransaction.setTx(this.toV1Xdr(accountConverter));
       return getTransactionSignatureBase(taggedTransaction, mNetwork);
   }
 
@@ -106,7 +107,7 @@ public class Transaction extends AbstractTransaction {
     // operations
     org.stellar.sdk.xdr.Operation[] operations = new org.stellar.sdk.xdr.Operation[mOperations.length];
     for (int i = 0; i < mOperations.length; i++) {
-      operations[i] = mOperations[i].toXdr();
+      operations[i] = mOperations[i].toXdr(AccountConverter.disableMuxed());
     }
     // ext
     TransactionV0.TransactionV0Ext ext = new TransactionV0.TransactionV0Ext();
@@ -123,7 +124,7 @@ public class Transaction extends AbstractTransaction {
     return transaction;
   }
 
-  private org.stellar.sdk.xdr.Transaction toV1Xdr() {
+  private org.stellar.sdk.xdr.Transaction toV1Xdr(AccountConverter accountConverter) {
 
     // fee
     Uint32 fee = new Uint32();
@@ -136,7 +137,7 @@ public class Transaction extends AbstractTransaction {
     // operations
     org.stellar.sdk.xdr.Operation[] operations = new org.stellar.sdk.xdr.Operation[mOperations.length];
     for (int i = 0; i < mOperations.length; i++) {
-      operations[i] = mOperations[i].toXdr();
+      operations[i] = mOperations[i].toXdr(accountConverter);
     }
     // ext
     org.stellar.sdk.xdr.Transaction.TransactionExt ext = new org.stellar.sdk.xdr.Transaction.TransactionExt();
@@ -146,7 +147,7 @@ public class Transaction extends AbstractTransaction {
     org.stellar.sdk.xdr.Transaction v1Tx = new org.stellar.sdk.xdr.Transaction();
     v1Tx.setFee(fee);
     v1Tx.setSeqNum(sequenceNumber);
-    v1Tx.setSourceAccount(StrKey.encodeToXDRMuxedAccount(mSourceAccount));
+    v1Tx.setSourceAccount(accountConverter.encode(mSourceAccount));
     v1Tx.setOperations(operations);
     v1Tx.setMemo(mMemo.toXdr());
     v1Tx.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
@@ -155,7 +156,7 @@ public class Transaction extends AbstractTransaction {
     return v1Tx;
   }
 
-  public static Transaction fromV0EnvelopeXdr(TransactionV0Envelope envelope, Network network) {
+  public static Transaction fromV0EnvelopeXdr(AccountConverter accountConverter, TransactionV0Envelope envelope, Network network) {
     int mFee = envelope.getTx().getFee().getUint32();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
@@ -163,10 +164,11 @@ public class Transaction extends AbstractTransaction {
 
     Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
     for (int i = 0; i < envelope.getTx().getOperations().length; i++) {
-      mOperations[i] = Operation.fromXdr(envelope.getTx().getOperations()[i]);
+      mOperations[i] = Operation.fromXdr(accountConverter, envelope.getTx().getOperations()[i]);
     }
 
     Transaction transaction = new Transaction(
+        accountConverter,
         StrKey.encodeStellarAccountId(envelope.getTx().getSourceAccountEd25519().getUint256()),
         mFee,
         mSequenceNumber,
@@ -182,7 +184,11 @@ public class Transaction extends AbstractTransaction {
     return transaction;
   }
 
-  public static Transaction fromV1EnvelopeXdr(TransactionV1Envelope envelope, Network network) {
+  public static Transaction fromV0EnvelopeXdr(TransactionV0Envelope envelope, Network network) {
+    return fromV0EnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+  }
+
+  public static Transaction fromV1EnvelopeXdr(AccountConverter accountConverter, TransactionV1Envelope envelope, Network network) {
     int mFee = envelope.getTx().getFee().getUint32();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
@@ -190,11 +196,12 @@ public class Transaction extends AbstractTransaction {
 
     Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
     for (int i = 0; i < envelope.getTx().getOperations().length; i++) {
-      mOperations[i] = Operation.fromXdr(envelope.getTx().getOperations()[i]);
+      mOperations[i] = Operation.fromXdr(accountConverter, envelope.getTx().getOperations()[i]);
     }
 
     Transaction transaction = new Transaction(
-        StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(envelope.getTx().getSourceAccount())),
+        accountConverter,
+        accountConverter.decode(envelope.getTx().getSourceAccount()),
         mFee,
         mSequenceNumber,
         mOperations,
@@ -208,9 +215,13 @@ public class Transaction extends AbstractTransaction {
     return transaction;
   }
 
-  /**
-   * Generates TransactionEnvelope XDR object.
-   */
+  public static Transaction fromV1EnvelopeXdr(TransactionV1Envelope envelope, Network network) {
+    return fromV1EnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+  }
+
+    /**
+     * Generates TransactionEnvelope XDR object.
+     */
   @Override
   public TransactionEnvelope toEnvelopeXdr() {
     TransactionEnvelope xdr = new TransactionEnvelope();
@@ -220,7 +231,7 @@ public class Transaction extends AbstractTransaction {
     if (this.envelopeType == EnvelopeType.ENVELOPE_TYPE_TX) {
       TransactionV1Envelope v1Envelope = new TransactionV1Envelope();
       xdr.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
-      v1Envelope.setTx(this.toV1Xdr());
+      v1Envelope.setTx(this.toV1Xdr(accountConverter));
       v1Envelope.setSignatures(signatures);
       xdr.setV1(v1Envelope);
     } else if (this.envelopeType == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
@@ -241,6 +252,7 @@ public class Transaction extends AbstractTransaction {
    */
   public static class Builder {
     private final TransactionBuilderAccount mSourceAccount;
+    private final AccountConverter mAccountConverter;
     private Memo mMemo;
     private TimeBounds mTimeBounds;
     List<Operation> mOperations;
@@ -256,13 +268,23 @@ public class Transaction extends AbstractTransaction {
      * who will use a sequence number. When build() is called, the account object's sequence number
      * will be incremented.
      */
-    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
-      checkNotNull(sourceAccount, "sourceAccount cannot be null");
-      mSourceAccount = sourceAccount;
+    public Builder(AccountConverter accountConverter, TransactionBuilderAccount sourceAccount, Network network) {
+      mAccountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       mOperations = Collections.synchronizedList(new ArrayList<Operation>());
       mNetwork = checkNotNull(network, "Network cannot be null");
     }
 
+    /**
+     * Construct a new transaction builder.
+     * @param sourceAccount The source account for this transaction. This account is the account
+     * who will use a sequence number. When build() is called, the account object's sequence number
+     * will be incremented.
+     */
+    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
+      this(AccountConverter.disableMuxed(), sourceAccount, network);
+    }
+    
     public int getOperationsCount() {
       return mOperations.size();
     }
@@ -376,6 +398,7 @@ public class Transaction extends AbstractTransaction {
       Operation[] operations = new Operation[mOperations.size()];
       operations = mOperations.toArray(operations);
       Transaction transaction = new Transaction(
+              mAccountConverter,
               mSourceAccount.getAccountId(),
               operations.length * mBaseFee,
               mSourceAccount.getIncrementedSequenceNumber(),

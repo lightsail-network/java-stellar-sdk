@@ -47,11 +47,11 @@ public class PaymentOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     PaymentOp op = new PaymentOp();
 
     // destination
-    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
+    op.setDestination(accountConverter.encode(this.destination));
     // asset
     op.setAsset(asset.toXdr());
     // amount
@@ -67,7 +67,7 @@ public class PaymentOperation extends Operation {
 
   /**
    * Builds Payment operation.
-   * @see PathPaymentOperation
+   * @see PaymentOperation
    */
   public static class Builder {
     private final String destination;
@@ -80,8 +80,8 @@ public class PaymentOperation extends Operation {
      * Construct a new PaymentOperation builder from a PaymentOp XDR.
      * @param op {@link PaymentOp}
      */
-    Builder(PaymentOp op) {
-      destination = StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(op.getDestination()));
+    Builder(AccountConverter accountConverter, PaymentOp op) {
+      destination = accountConverter.decode(op.getDestination());
       asset = Asset.fromXdr(op.getAsset());
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
     }

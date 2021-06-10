@@ -4,6 +4,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Unreleased
 
+* Add opt-in support for [SEP23](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md) M-strkeys for `MuxedAccount`s
+
 ## 0.25.0
 
 * Added TransactionsRequestBuilder.forClaimableBalance(), and OperationsRequestBuilder.forClaimableBalance().
