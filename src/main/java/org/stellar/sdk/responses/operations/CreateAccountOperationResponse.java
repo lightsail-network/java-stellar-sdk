@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
+import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents CreateAccount operation response.
@@ -10,16 +12,21 @@ import com.google.gson.annotations.SerializedName;
  */
 public class CreateAccountOperationResponse extends OperationResponse {
   @SerializedName("account")
-  protected final String account;
+  private String account;
   @SerializedName("funder")
-  protected final String funder;
+  private String funder;
+  @SerializedName("funder_muxed")
+  private String funderAccountMuxed;
+  @SerializedName("funder_muxed_id")
+  private Long funderAccountMuxedId;
   @SerializedName("starting_balance")
-  protected final String startingBalance;
+  private String startingBalance;
 
-  CreateAccountOperationResponse(String funder, String startingBalance, String account) {
-    this.funder = funder;
-    this.startingBalance = startingBalance;
-    this.account = account;
+  public Optional<MuxedAccount> getFunderMuxed() {
+    if (this.funderAccountMuxed == null || this.funderAccountMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.funderAccountMuxed, this.funder, this.funderAccountMuxedId));
   }
 
   public String getAccount() {

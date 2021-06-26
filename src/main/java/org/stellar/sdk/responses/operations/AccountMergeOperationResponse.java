@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
+import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents AccountMerge operation response.
@@ -10,13 +12,31 @@ import com.google.gson.annotations.SerializedName;
  */
 public class AccountMergeOperationResponse extends OperationResponse {
   @SerializedName("account")
-  protected final String account;
-  @SerializedName("into")
-  protected final String into;
+  private String account;
+  @SerializedName("account_muxed")
+  private String accountMuxed;
+  @SerializedName("account_muxed_id")
+  private Long accountMuxedId;
 
-  AccountMergeOperationResponse(String account, String into) {
-    this.account = account;
-    this.into = into;
+  @SerializedName("into")
+  private String into;
+  @SerializedName("into_muxed")
+  private String intoMuxed;
+  @SerializedName("into_muxed_id")
+  private Long intoMuxedId;
+
+  public Optional<MuxedAccount> getAccountMuxed() {
+    if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.accountMuxed, this.account, this.accountMuxedId));
+  }
+
+  public Optional<MuxedAccount> getIntoMuxed() {
+    if (this.intoMuxed == null || this.intoMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.intoMuxed, this.into, this.intoMuxedId));
   }
 
   public String getAccount() {

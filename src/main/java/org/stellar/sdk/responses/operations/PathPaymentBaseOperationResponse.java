@@ -1,53 +1,48 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.responses.MuxedAccount;
 
 import java.util.List;
 
 public abstract class PathPaymentBaseOperationResponse extends OperationResponse {
   @SerializedName("amount")
-  protected final String amount;
+  private String amount;
   @SerializedName("source_amount")
-  protected final String sourceAmount;
+  private String sourceAmount;
   @SerializedName("from")
-  protected final String from;
+  private String from;
+  @SerializedName("from_muxed")
+  private String fromMuxed;
+  @SerializedName("from_muxed_id")
+  private Long fromMuxedId;
   @SerializedName("to")
-  protected final String to;
+  private String to;
+  @SerializedName("to_muxed")
+  private String toMuxed;
+  @SerializedName("to_muxed_id")
+  private Long toMuxedId;
 
   @SerializedName("asset_type")
-  protected final String assetType;
+  private String assetType;
   @SerializedName("asset_code")
-  protected final String assetCode;
+  private String assetCode;
   @SerializedName("asset_issuer")
-  protected final String assetIssuer;
+  private String assetIssuer;
 
   @SerializedName("source_asset_type")
-  protected final String sourceAssetType;
+  private String sourceAssetType;
   @SerializedName("source_asset_code")
-  protected final String sourceAssetCode;
+  private String sourceAssetCode;
   @SerializedName("source_asset_issuer")
-  protected final String sourceAssetIssuer;
+  private String sourceAssetIssuer;
 
   @SerializedName("path")
-  protected final List<Asset> path;
-
-
-  public PathPaymentBaseOperationResponse(String amount, String sourceAmount, String from, String to, String assetType, String assetCode, String assetIssuer, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer, List<Asset> path) {
-    this.amount = amount;
-    this.sourceAmount = sourceAmount;
-    this.from = from;
-    this.to = to;
-    this.assetType = assetType;
-    this.assetCode = assetCode;
-    this.assetIssuer = assetIssuer;
-    this.sourceAssetType = sourceAssetType;
-    this.sourceAssetCode = sourceAssetCode;
-    this.sourceAssetIssuer = sourceAssetIssuer;
-    this.path = ImmutableList.copyOf(path);
-  }
+  private ImmutableList<Asset> path;
 
   public String getAmount() {
     return amount;
@@ -59,6 +54,20 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
 
   public String getFrom() {
     return from;
+  }
+
+  public Optional<MuxedAccount> getFromMuxed() {
+    if (this.fromMuxed == null || this.fromMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.fromMuxed, this.from, this.fromMuxedId));
+  }
+
+  public Optional<MuxedAccount> getToMuxed() {
+    if (this.toMuxed == null || this.toMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.toMuxed, this.to, this.toMuxedId));
   }
 
   public String getTo() {

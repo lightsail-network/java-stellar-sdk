@@ -1,8 +1,10 @@
 package org.stellar.sdk.responses.effects;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.responses.Link;
+import org.stellar.sdk.responses.MuxedAccount;
 import org.stellar.sdk.responses.Pageable;
 import org.stellar.sdk.responses.Response;
 
@@ -14,15 +16,19 @@ import org.stellar.sdk.responses.Response;
  */
 public abstract class EffectResponse extends Response implements Pageable {
   @SerializedName("id")
-  protected String id;
+  private String id;
   @SerializedName("account")
-  protected String account;
+  private String account;
+  @SerializedName("account_muxed")
+  private String accountMuxed;
+  @SerializedName("account_muxed_id")
+  private Long accountMuxedId;
   @SerializedName("type")
-  protected String type;
+  private String type;
   @SerializedName("created_at")
-  protected String createdAt;
+  private String createdAt;
   @SerializedName("paging_token")
-  protected String pagingToken;
+  private String pagingToken;
   @SerializedName("_links")
   private Links links;
 
@@ -32,6 +38,13 @@ public abstract class EffectResponse extends Response implements Pageable {
 
   public String getAccount() {
     return account;
+  }
+
+  public Optional<MuxedAccount> getAccountMuxed() {
+    if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.accountMuxed, this.account, this.accountMuxedId));
   }
 
   /**

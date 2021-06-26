@@ -1,7 +1,9 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents a Clawback operation response.
@@ -11,23 +13,19 @@ import org.stellar.sdk.Asset;
  */
 public class ClawbackOperationResponse extends OperationResponse {
   @SerializedName("asset_type")
-  protected final String assetType;
+  private String assetType;
   @SerializedName("asset_code")
-  protected final String assetCode;
+  private String assetCode;
   @SerializedName("asset_issuer")
-  protected final String assetIssuer;
+  private String assetIssuer;
   @SerializedName("amount")
-  protected final String amount;
+  private String amount;
   @SerializedName("from")
-  protected final String from;
-
-  public ClawbackOperationResponse(String assetType, String assetCode, String assetIssuer, String amount, String from) {
-    this.assetType = assetType;
-    this.assetCode = assetCode;
-    this.assetIssuer = assetIssuer;
-    this.amount = amount;
-    this.from = from;
-  }
+  private String from;
+  @SerializedName("from_muxed")
+  private String fromMuxed;
+  @SerializedName("from_muxed_id")
+  private Long fromMuxedId;
 
   public String getAssetType() {
     return assetType;
@@ -51,6 +49,13 @@ public class ClawbackOperationResponse extends OperationResponse {
 
   public String getFrom() {
     return from;
+  }
+
+  public Optional<MuxedAccount> getFromMuxed() {
+    if (this.fromMuxed == null || this.fromMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.fromMuxed, this.from, this.fromMuxedId));
   }
 
 }

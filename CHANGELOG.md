@@ -6,6 +6,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 * Add opt-in support for [SEP23](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md) M-strkeys for `MuxedAccount`s
 * Add `getClaimableBalanceId()` method to `Transaction` class which returns the claimable balance id for a given operation.
+* Add support for additional _muxed and _muxed_id optional fields in Horizon's JSON responses (available since Horizon 2.4, following what's described in SEP 23).
 
 ## 0.25.0
 

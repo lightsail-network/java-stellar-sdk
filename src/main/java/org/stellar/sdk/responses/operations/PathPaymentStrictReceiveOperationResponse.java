@@ -14,12 +14,7 @@ import java.util.List;
  */
 public class PathPaymentStrictReceiveOperationResponse extends PathPaymentBaseOperationResponse {
   @SerializedName("source_max")
-  protected final String sourceMax;
-
-  public PathPaymentStrictReceiveOperationResponse(String amount, String sourceAmount, String sourceMax, String from, String to, String assetType, String assetCode, String assetIssuer, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer, List<Asset> path) {
-    super(amount, sourceAmount, from, to, assetType, assetCode, assetIssuer, sourceAssetType, sourceAssetCode, sourceAssetIssuer, path);
-    this.sourceMax = sourceMax;
-  }
+  private String sourceMax;
 
 
   public String getSourceMax() {

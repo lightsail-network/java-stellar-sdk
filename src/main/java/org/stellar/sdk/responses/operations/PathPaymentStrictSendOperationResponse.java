@@ -14,12 +14,7 @@ import java.util.List;
  */
 public class PathPaymentStrictSendOperationResponse extends PathPaymentBaseOperationResponse {
   @SerializedName("destination_min")
-  protected final String destinationMin;
-
-  public PathPaymentStrictSendOperationResponse(String amount, String sourceAmount, String destinationMin, String from, String to, String assetType, String assetCode, String assetIssuer, String sourceAssetType, String sourceAssetCode, String sourceAssetIssuer, List<Asset> path) {
-    super(amount, sourceAmount, from, to, assetType, assetCode, assetIssuer, sourceAssetType, sourceAssetCode, sourceAssetIssuer, path);
-    this.destinationMin = destinationMin;
-  }
+  private String destinationMin;
 
   public String getDestinationMin() {
     return destinationMin;
