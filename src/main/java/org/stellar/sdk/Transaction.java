@@ -95,15 +95,20 @@ public class Transaction extends AbstractTransaction {
   }
 
   /**
-   * Returns returns the claimable balance ID for the CreateClaimableBalanceOperation at the given index within the transaction.
+   * Returns the claimable balance ID for the CreateClaimableBalanceOperation at the given index within the transaction.
    */
   public String getClaimableBalanceId(int index) throws IOException {
-    if (index >= mOperations.length) {
+    if (index < 0 || index >= mOperations.length) {
       throw new IllegalArgumentException("index: " + index + " is outside the bounds of the operations within this transaction");
     }
     if (!(mOperations[index] instanceof CreateClaimableBalanceOperation)) {
       throw new IllegalArgumentException("operation at index " + index + " is not of type CreateClaimableBalanceOperation: " + mOperations[index].getClass());
     }
+
+    // We mimic the relevant code from Stellar Core
+    // https://github.com/stellar/stellar-core/blob/9f3cc04e6ec02c38974c42545a86cdc79809252b/src/test/TestAccount.cpp#L285
+    //
+    // Note that the source account must be *unmuxed* for this to work.
 
     OperationID id = new OperationID();
     id.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_OP_ID);
@@ -122,7 +127,7 @@ public class Transaction extends AbstractTransaction {
 
     outputStream.reset();
     result.encode(new XdrDataOutputStream(outputStream));
-    return Util.bytesToHex(outputStream.toByteArray());
+    return Util.bytesToHex(outputStream.toByteArray()).toLowerCase();
   }
 
   /**

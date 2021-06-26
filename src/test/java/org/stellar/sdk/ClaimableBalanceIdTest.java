@@ -34,9 +34,9 @@ public class ClaimableBalanceIdTest {
         .setBaseFee(Transaction.MIN_BASE_FEE)
         .build();
 
-    String expectedIdIndex0 = "0000000095001252AB3B4D16ADBFA5364CE526DFCDA03CB2258B827EDBB2E0450087BE51";
-    String expectedIdIndex2 = "000000009CE17215CC7280E4F4F31FDFF4084C9DA90AE8236E157ACF09D2CE4BF20AC9FB";
-    String expectedIdSeq124 = "000000004CADB397ACBCD75F56FF7A623470ECD52D8CF7D1E7BAE26271405A1B6233BDFA";
+    String expectedIdIndex0 = "0000000095001252ab3b4d16adbfa5364ce526dfcda03cb2258b827edbb2e0450087be51";
+    String expectedIdIndex2 = "000000009ce17215cc7280e4f4f31fdff4084c9da90ae8236e157acf09d2ce4bf20ac9fb";
+    String expectedIdSeq124 = "000000004cadb397acbcd75f56ff7a623470ecd52d8cf7d1e7bae26271405a1b6233bdfa";
 
     assertEquals(expectedIdIndex0, transaction.getClaimableBalanceId(0));
     // different index changes the claimable balance id
