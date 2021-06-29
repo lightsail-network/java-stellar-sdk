@@ -1,9 +1,11 @@
 package org.stellar.sdk.responses.effects;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents trade effect response.
@@ -13,39 +15,38 @@ import org.stellar.sdk.AssetTypeNative;
  */
 public class TradeEffectResponse extends EffectResponse {
   @SerializedName("seller")
-  protected final String seller;
+  private String seller;
+  @SerializedName("seller_muxed")
+  private String sellerMuxed;
+  @SerializedName("seller_muxed_id")
+  private Long sellerMuxedId;
+
   @SerializedName("offer_id")
-  protected final Long offerId;
+  private Long offerId;
   
   @SerializedName("sold_amount")
-  protected final String soldAmount;
+  private String soldAmount;
   @SerializedName("sold_asset_type")
-  protected final String soldAssetType;
+  private String soldAssetType;
   @SerializedName("sold_asset_code")
-  protected final String soldAssetCode;
+  private String soldAssetCode;
   @SerializedName("sold_asset_issuer")
-  protected final String soldAssetIssuer;
+  private String soldAssetIssuer;
 
   @SerializedName("bought_amount")
-  protected final String boughtAmount;
+  private String boughtAmount;
   @SerializedName("bought_asset_type")
-  protected final String boughtAssetType;
+  private String boughtAssetType;
   @SerializedName("bought_asset_code")
-  protected final String boughtAssetCode;
+  private String boughtAssetCode;
   @SerializedName("bought_asset_issuer")
-  protected final String boughtAssetIssuer;
+  private String boughtAssetIssuer;
 
-  TradeEffectResponse(String seller, Long offerId, String soldAmount, String soldAssetType, String soldAssetCode, String soldAssetIssuer, String boughtAmount, String boughtAssetType, String boughtAssetCode, String boughtAssetIssuer) {
-    this.seller = seller;
-    this.offerId = offerId;
-    this.soldAmount = soldAmount;
-    this.soldAssetType = soldAssetType;
-    this.soldAssetCode = soldAssetCode;
-    this.soldAssetIssuer = soldAssetIssuer;
-    this.boughtAmount = boughtAmount;
-    this.boughtAssetType = boughtAssetType;
-    this.boughtAssetCode = boughtAssetCode;
-    this.boughtAssetIssuer = boughtAssetIssuer;
+  public Optional<MuxedAccount> getSellerMuxed() {
+    if (this.sellerMuxed == null || this.sellerMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.sellerMuxed, this.seller, this.sellerMuxedId));
   }
 
   public String getSeller() {

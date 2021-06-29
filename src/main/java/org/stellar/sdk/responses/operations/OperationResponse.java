@@ -3,10 +3,7 @@ package org.stellar.sdk.responses.operations;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
-import org.stellar.sdk.responses.Link;
-import org.stellar.sdk.responses.Pageable;
-import org.stellar.sdk.responses.Response;
-import org.stellar.sdk.responses.TransactionResponse;
+import org.stellar.sdk.responses.*;
 
 /**
  * Abstract class for operation responses.
@@ -16,23 +13,34 @@ import org.stellar.sdk.responses.TransactionResponse;
  */
 public abstract class OperationResponse extends Response implements Pageable {
   @SerializedName("id")
-  protected Long id;
+  private Long id;
   @SerializedName("source_account")
-  protected String sourceAccount;
+  private String sourceAccount;
+  @SerializedName("source_account_muxed")
+  private String sourceAccountMuxed;
+  @SerializedName("source_account_muxed_id")
+  private Long sourceAccountMuxedId;
   @SerializedName("paging_token")
-  protected String pagingToken;
+  private String pagingToken;
   @SerializedName("created_at")
-  protected String createdAt;
+  private String createdAt;
   @SerializedName("transaction_hash")
-  protected String transactionHash;
+  private String transactionHash;
   @SerializedName("transaction_successful")
-  protected Boolean transactionSuccessful;
+  private Boolean transactionSuccessful;
   @SerializedName("type")
-  protected String type;
+  private String type;
   @SerializedName("_links")
   private Links links;
   @SerializedName("transaction")
   private TransactionResponse transaction;
+
+  public Optional<MuxedAccount> getSourceAccountMuxed() {
+    if (this.sourceAccountMuxed == null|| this.sourceAccountMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.sourceAccountMuxed, this.sourceAccount, this.sourceAccountMuxedId));
+  }
 
   public Long getId() {
     return id;

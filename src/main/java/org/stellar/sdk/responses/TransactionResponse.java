@@ -17,86 +17,66 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class TransactionResponse extends Response implements Pageable {
   @SerializedName("hash")
-  private final String hash;
+  private String hash;
   @SerializedName("ledger")
-  private final Long ledger;
+  private Long ledger;
   @SerializedName("created_at")
-  private final String createdAt;
+  private String createdAt;
   @SerializedName("source_account")
-  private final String sourceAccount;
+  private String sourceAccount;
   @SerializedName("fee_account")
-  private final String feeAccount;
+  private String feeAccount;
   @SerializedName("successful")
-  private final Boolean successful;
+  private Boolean successful;
   @SerializedName("paging_token")
-  private final String pagingToken;
+  private String pagingToken;
   @SerializedName("source_account_sequence")
-  private final Long sourceAccountSequence;
+  private Long sourceAccountSequence;
   @SerializedName("max_fee")
-  private final Long maxFee;
+  private Long maxFee;
   @SerializedName("fee_charged")
-  private final Long feeCharged;
+  private Long feeCharged;
   @SerializedName("operation_count")
-  private final Integer operationCount;
+  private Integer operationCount;
   @SerializedName("envelope_xdr")
-  private final String envelopeXdr;
+  private String envelopeXdr;
   @SerializedName("result_xdr")
-  private final String resultXdr;
+  private String resultXdr;
   @SerializedName("result_meta_xdr")
-  private final String resultMetaXdr;
+  private String resultMetaXdr;
   @SerializedName("signatures")
-  private final List<String> signatures;
+  private List<String> signatures;
   @SerializedName("fee_bump_transaction")
-  private final FeeBumpTransaction feeBumpTransaction;
+  private FeeBumpTransaction feeBumpTransaction;
   @SerializedName("inner_transaction")
-  private final InnerTransaction innerTransaction;
+  private InnerTransaction innerTransaction;
+  @SerializedName("account_muxed")
+  private String accountMuxed;
+  @SerializedName("account_muxed_id")
+  private Long accountMuxedId;
+  @SerializedName("fee_account_muxed")
+  private String feeAccountMuxed;
+  @SerializedName("fee_account_muxed_id")
+  private Long feeAccountMuxedId;
   @SerializedName("_links")
-  private final Links links;
+  private Links links;
 
   // GSON won't serialize `transient` variables automatically. We need this behaviour
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  TransactionResponse(
-      String hash,
-      Long ledger,
-      String createdAt,
-      String sourceAccount,
-      String feeAccount,
-      Boolean successful,
-      String pagingToken,
-      Long sourceAccountSequence,
-      Long maxFee,
-      Long feeCharged,
-      Integer operationCount,
-      String envelopeXdr,
-      String resultXdr,
-      String resultMetaXdr,
-      Memo memo,
-      List<String> signatures,
-      FeeBumpTransaction feeBumpTransaction,
-      InnerTransaction innerTransaction,
-      Links links
-  ) {
-    this.hash = hash;
-    this.ledger = ledger;
-    this.createdAt = createdAt;
-    this.sourceAccount = sourceAccount;
-    this.feeAccount = feeAccount;
-    this.successful = successful;
-    this.pagingToken = pagingToken;
-    this.sourceAccountSequence = sourceAccountSequence;
-    this.maxFee = maxFee;
-    this.feeCharged = feeCharged;
-    this.operationCount = operationCount;
-    this.envelopeXdr = envelopeXdr;
-    this.resultXdr = resultXdr;
-    this.resultMetaXdr = resultMetaXdr;
-    this.memo = memo;
-    this.signatures = signatures;
-    this.feeBumpTransaction = feeBumpTransaction;
-    this.innerTransaction = innerTransaction;
-    this.links = links;
+  public Optional<MuxedAccount> getSourceAccountMuxed() {
+    if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.accountMuxed, this.sourceAccount, this.accountMuxedId));
+  }
+
+  public Optional<MuxedAccount> getFeeAccountMuxed() {
+    if (this.feeAccountMuxed == null || this.feeAccountMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.feeAccountMuxed, this.feeAccount, this.feeAccountMuxedId));
   }
 
   public String getHash() {
@@ -190,9 +170,9 @@ public class TransactionResponse extends Response implements Pageable {
    */
   public static class FeeBumpTransaction {
     @SerializedName("hash")
-    private final String hash;
+    private String hash;
     @SerializedName("signatures")
-    private final List<String> signatures;
+    private List<String> signatures;
 
     FeeBumpTransaction(String hash, List<String> signatures) {
       this.hash = hash;
@@ -216,11 +196,11 @@ public class TransactionResponse extends Response implements Pageable {
    */
   public static class InnerTransaction {
     @SerializedName("hash")
-    private final String hash;
+    private String hash;
     @SerializedName("signatures")
-    private final List<String> signatures;
+    private List<String> signatures;
     @SerializedName("max_fee")
-    private final Long maxFee;
+    private Long maxFee;
 
 
     InnerTransaction(String hash, List<String> signatures, Long maxFee) {
@@ -248,19 +228,19 @@ public class TransactionResponse extends Response implements Pageable {
    */
   public static class Links {
     @SerializedName("account")
-    private final Link account;
+    private Link account;
     @SerializedName("effects")
-    private final Link effects;
+    private Link effects;
     @SerializedName("ledger")
-    private final Link ledger;
+    private Link ledger;
     @SerializedName("operations")
-    private final Link operations;
+    private Link operations;
     @SerializedName("precedes")
-    private final Link precedes;
+    private Link precedes;
     @SerializedName("self")
-    private final Link self;
+    private Link self;
     @SerializedName("succeeds")
-    private final Link succeeds;
+    private Link succeeds;
 
     Links(Link account, Link effects, Link ledger, Link operations, Link self, Link precedes, Link succeeds) {
       this.account = account;

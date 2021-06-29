@@ -1,9 +1,11 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * @deprecated As of release 0.24.0, replaced by {@link SetTrustLineFlagsOperationResponse}
@@ -15,32 +17,33 @@ import org.stellar.sdk.AssetTypeNative;
  */
 public class AllowTrustOperationResponse extends OperationResponse {
   @SerializedName("trustor")
-  protected final String trustor;
+  private String trustor;
   @SerializedName("trustee")
-  protected final String trustee;
+  private String trustee;
+  @SerializedName("trustee_muxed")
+  private String trusteeMuxed;
+  @SerializedName("trustee_muxed_id")
+  private Long trusteeMuxedId;
   @SerializedName("asset_type")
-  protected final String assetType;
+  private String assetType;
   @SerializedName("asset_code")
-  protected final String assetCode;
+  private String assetCode;
   @SerializedName("asset_issuer")
-  protected final String assetIssuer;
+  private String assetIssuer;
   @SerializedName("authorize")
-  protected final boolean authorize;
+  private boolean authorize;
   @SerializedName("authorize_to_maintain_liabilities")
-  protected final boolean authorizeToMaintainLiabilities;
-
-  AllowTrustOperationResponse(boolean authorize, boolean authorizeToMaintainLiabilities, String assetIssuer, String assetCode, String assetType, String trustee, String trustor) {
-    this.authorize = authorize;
-    this.authorizeToMaintainLiabilities = authorizeToMaintainLiabilities;
-    this.assetIssuer = assetIssuer;
-    this.assetCode = assetCode;
-    this.assetType = assetType;
-    this.trustee = trustee;
-    this.trustor = trustor;
-  }
-
+  private boolean authorizeToMaintainLiabilities;
+  
   public String getTrustor() {
     return trustor;
+  }
+
+  public Optional<MuxedAccount> getTrusteeMuxed() {
+    if (this.trusteeMuxed == null || this.trusteeMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.trusteeMuxed, this.trustee, this.trusteeMuxedId));
   }
 
   public String getTrustee() {

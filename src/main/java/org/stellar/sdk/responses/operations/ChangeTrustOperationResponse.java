@@ -1,9 +1,11 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents ChangeTrust operation response.
@@ -13,25 +15,27 @@ import org.stellar.sdk.AssetTypeNative;
  */
 public class ChangeTrustOperationResponse extends OperationResponse {
   @SerializedName("trustor")
-  protected final String trustor;
+  private String trustor;
+  @SerializedName("trustor_muxed")
+  private String trustorMuxed;
+  @SerializedName("trustor_muxed_id")
+  private Long trustorMuxedId;
   @SerializedName("trustee")
-  protected final String trustee;
+  private String trustee;
   @SerializedName("asset_type")
-  protected final String assetType;
+  private String assetType;
   @SerializedName("asset_code")
-  protected final String assetCode;
+  private String assetCode;
   @SerializedName("asset_issuer")
-  protected final String assetIssuer;
+  private String assetIssuer;
   @SerializedName("limit")
-  protected final String limit;
+  private String limit;
 
-  ChangeTrustOperationResponse(String trustor, String trustee, String assetType, String assetCode, String assetIssuer, String limit) {
-    this.trustor = trustor;
-    this.trustee = trustee;
-    this.assetType = assetType;
-    this.assetCode = assetCode;
-    this.assetIssuer = assetIssuer;
-    this.limit = limit;
+  public Optional<MuxedAccount> getTrustorMuxed() {
+    if (this.trustorMuxed == null || this.trustorMuxed.isEmpty()) {
+      return Optional.absent();
+    }
+    return Optional.of(new MuxedAccount(this.trustorMuxed, this.trustor, this.trustorMuxedId));
   }
 
   public String getTrustor() {

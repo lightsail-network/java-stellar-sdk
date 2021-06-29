@@ -31,6 +31,9 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(innerTransaction.getHash(), "e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526");
     assertEquals(innerTransaction.getMaxFee(), Long.valueOf(99));
     assertEquals(innerTransaction.getSignatures(), ImmutableList.of("FBQU"));
+
+    assertFalse(transaction.getSourceAccountMuxed().isPresent());
+    assertFalse(transaction.getFeeAccountMuxed().isPresent());
   }
 
   @Test
@@ -42,6 +45,8 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(transaction.getPagingToken(), "3933090531512320");
     assertEquals(transaction.isSuccessful(), new Boolean(true));
     assertEquals(transaction.getSourceAccount(), "GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK");
+    assertFalse(transaction.getSourceAccountMuxed().isPresent());
+    assertFalse(transaction.getFeeAccountMuxed().isPresent());
     assertEquals(transaction.getSourceAccountSequence(), new Long(2373051035426646L));
     assertEquals(transaction.getMaxFee(), new Long(200));
     assertEquals(transaction.getFeeCharged(), new Long(100));
@@ -66,6 +71,19 @@ public class TransactionDeserializerTest extends TestCase {
   }
 
   @Test
+  public void testDeserializeMuxed() {
+    TransactionResponse transaction = GsonSingleton.getInstance().fromJson(muxed, TransactionResponse.class);
+    assertEquals(transaction.getSourceAccountMuxed().get(), new MuxedAccount(
+        "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
+        "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
+        123l
+    ));
+    assertEquals(transaction.getFeeAccountMuxed().get().getUnmuxedAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
+    assertEquals(transaction.getFeeAccountMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
+    assertEquals(transaction.getFeeAccountMuxed().get().getId().longValue(), 420l);
+  }
+
+    @Test
   public void testDeserializeWithoutMemo() {
     TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonMemoNone, TransactionResponse.class);
     assertTrue(transaction.getMemo() instanceof MemoNone);
@@ -203,6 +221,76 @@ public class TransactionDeserializerTest extends TestCase {
       "  \"source_account\": \"GABQGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2MX\",\n" +
       "  \"source_account_sequence\": \"97\",\n" +
       "  \"fee_account\": \"GABAEAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGKJ\",\n" +
+      "  \"fee_charged\": 123,\n" +
+      "  \"max_fee\": 776,\n" +
+      "  \"operation_count\": 1,\n" +
+      "  \"envelope_xdr\": \"AAAABQAAAAACAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMIAAAAAgAAAAADAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGMAAAAAAAAAYQAAAAEAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAEAAAAAAAAACwAAAAAAAABiAAAAAAAAAAECAgICAAAAAxQUFAAAAAAAAAAAAQMDAwMAAAADHh4eAA==\",\n" +
+      "  \"result_xdr\": \"AAAAAAAAAHsAAAAB6Yhpu6i84IwQt4QGICEn84iMJUVM03sCYAhiRSdR9SYAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAsAAAAAAAAAAAAAAAA=\",\n" +
+      "  \"result_meta_xdr\": \"AAAAAQAAAAAAAAAA\",\n" +
+      "  \"fee_meta_xdr\": \"AAAAAA==\",\n" +
+      "  \"memo_type\": \"none\",\n" +
+      "  \"signatures\": [\n" +
+      "    \"Hh4e\"\n" +
+      "  ],\n" +
+      "  \"valid_after\": \"1970-01-01T00:00:02Z\",\n" +
+      "  \"valid_before\": \"1970-01-01T00:00:04Z\",\n" +
+      "  \"fee_bump_transaction\": {\n" +
+      "    \"hash\": \"3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\",\n" +
+      "    \"signatures\": [\n" +
+      "      \"Hh4e\"\n" +
+      "    ]\n" +
+      "  },\n" +
+      "  \"inner_transaction\": {\n" +
+      "    \"hash\": \"e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526\",\n" +
+      "    \"signatures\": [\n" +
+      "      \"FBQU\"\n" +
+      "    ],\n" +
+      "    \"max_fee\": \"99\"\n" +
+      "  }\n" +
+      "}";
+
+  String muxed = "{\n" +
+      "  \"_links\": {\n" +
+      "    \"self\": {\n" +
+      "      \"href\": \"http://localhost/transactions/3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\"\n" +
+      "    },\n" +
+      "    \"account\": {\n" +
+      "      \"href\": \"http://localhost/accounts/GABQGAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2MX\"\n" +
+      "    },\n" +
+      "    \"ledger\": {\n" +
+      "      \"href\": \"http://localhost/ledgers/123\"\n" +
+      "    },\n" +
+      "    \"operations\": {\n" +
+      "      \"href\": \"http://localhost/transactions/3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352/operations{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"effects\": {\n" +
+      "      \"href\": \"http://localhost/transactions/3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352/effects{?cursor,limit,order}\",\n" +
+      "      \"templated\": true\n" +
+      "    },\n" +
+      "    \"precedes\": {\n" +
+      "      \"href\": \"http://localhost/transactions?order=asc\\u0026cursor=528280981504\"\n" +
+      "    },\n" +
+      "    \"succeeds\": {\n" +
+      "      \"href\": \"http://localhost/transactions?order=desc\\u0026cursor=528280981504\"\n" +
+      "    },\n" +
+      "    \"transaction\": {\n" +
+      "      \"href\": \"http://localhost/transactions/3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\"\n" +
+      "    }\n" +
+      "  },\n" +
+      "  \"id\": \"3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\",\n" +
+      "  \"paging_token\": \"528280981504\",\n" +
+      "  \"successful\": true,\n" +
+      "  \"hash\": \"3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352\",\n" +
+      "  \"ledger\": 123,\n" +
+      "  \"created_at\": \"2020-04-21T10:21:26Z\",\n" +
+      "  \"source_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
+      "  \"account_muxed\": \"MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA\",\n" +
+      "  \"account_muxed_id\": \"123\",\n" +
+      "  \"source_account_sequence\": \"97\",\n" +
+      "  \"fee_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
+      "  \"fee_account_muxed\": \"MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4\",\n" +
+      "  \"fee_account_muxed_id\": \"420\",\n" +
       "  \"fee_charged\": 123,\n" +
       "  \"max_fee\": 776,\n" +
       "  \"operation_count\": 1,\n" +
