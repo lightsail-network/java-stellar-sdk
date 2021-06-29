@@ -40,7 +40,7 @@ public class EffectsPageDeserializerTest extends TestCase {
     ));
     assertFalse(second.getAccountMuxed().isPresent());
 
-    assertEquals(first.getSellerMuxed().get().getAccountIdAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
+    assertEquals(first.getSellerMuxed().get().getUnmuxedAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     assertEquals(first.getSellerMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
     assertEquals(first.getSellerMuxed().get().getId().longValue(), 420l);
     assertFalse(second.getSellerMuxed().isPresent());

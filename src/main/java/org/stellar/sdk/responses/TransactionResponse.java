@@ -65,14 +65,14 @@ public class TransactionResponse extends Response implements Pageable {
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
 
-  public Optional<MuxedAccount> getSourceAccoountMuxed() {
+  public Optional<MuxedAccount> getSourceAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
       return Optional.absent();
     }
     return Optional.of(new MuxedAccount(this.accountMuxed, this.sourceAccount, this.accountMuxedId));
   }
 
-  public Optional<MuxedAccount> getFeeAccoountMuxed() {
+  public Optional<MuxedAccount> getFeeAccountMuxed() {
     if (this.feeAccountMuxed == null || this.feeAccountMuxed.isEmpty()) {
       return Optional.absent();
     }

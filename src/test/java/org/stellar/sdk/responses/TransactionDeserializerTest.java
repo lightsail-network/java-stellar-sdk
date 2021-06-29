@@ -32,8 +32,8 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(innerTransaction.getMaxFee(), Long.valueOf(99));
     assertEquals(innerTransaction.getSignatures(), ImmutableList.of("FBQU"));
 
-    assertFalse(transaction.getSourceAccoountMuxed().isPresent());
-    assertFalse(transaction.getFeeAccoountMuxed().isPresent());
+    assertFalse(transaction.getSourceAccountMuxed().isPresent());
+    assertFalse(transaction.getFeeAccountMuxed().isPresent());
   }
 
   @Test
@@ -45,8 +45,8 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(transaction.getPagingToken(), "3933090531512320");
     assertEquals(transaction.isSuccessful(), new Boolean(true));
     assertEquals(transaction.getSourceAccount(), "GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK");
-    assertFalse(transaction.getSourceAccoountMuxed().isPresent());
-    assertFalse(transaction.getFeeAccoountMuxed().isPresent());
+    assertFalse(transaction.getSourceAccountMuxed().isPresent());
+    assertFalse(transaction.getFeeAccountMuxed().isPresent());
     assertEquals(transaction.getSourceAccountSequence(), new Long(2373051035426646L));
     assertEquals(transaction.getMaxFee(), new Long(200));
     assertEquals(transaction.getFeeCharged(), new Long(100));
@@ -73,14 +73,14 @@ public class TransactionDeserializerTest extends TestCase {
   @Test
   public void testDeserializeMuxed() {
     TransactionResponse transaction = GsonSingleton.getInstance().fromJson(muxed, TransactionResponse.class);
-    assertEquals(transaction.getSourceAccoountMuxed().get(), new MuxedAccount(
+    assertEquals(transaction.getSourceAccountMuxed().get(), new MuxedAccount(
         "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
         "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
         123l
     ));
-    assertEquals(transaction.getFeeAccoountMuxed().get().getAccountIdAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
-    assertEquals(transaction.getFeeAccoountMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
-    assertEquals(transaction.getFeeAccoountMuxed().get().getId().longValue(), 420l);
+    assertEquals(transaction.getFeeAccountMuxed().get().getUnmuxedAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
+    assertEquals(transaction.getFeeAccountMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
+    assertEquals(transaction.getFeeAccountMuxed().get().getId().longValue(), 420l);
   }
 
     @Test
