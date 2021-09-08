@@ -29,7 +29,7 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
   public org.stellar.sdk.xdr.Asset toXdr() {
     org.stellar.sdk.xdr.Asset xdr = new org.stellar.sdk.xdr.Asset();
     xdr.setDiscriminant(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12);
-    org.stellar.sdk.xdr.Asset.AssetAlphaNum12 credit = new org.stellar.sdk.xdr.Asset.AssetAlphaNum12();
+    org.stellar.sdk.xdr.AlphaNum12 credit = new org.stellar.sdk.xdr.AlphaNum12();
     AssetCode12 assetCode12 = new AssetCode12();
     assetCode12.setAssetCode12(Util.paddedByteArray(mCode, 12));
     credit.setAssetCode(assetCode12);
