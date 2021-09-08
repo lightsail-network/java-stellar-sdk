@@ -9,24 +9,18 @@ import java.io.IOException;
 
 // === xdr source ============================================================
 
-//  enum AssetType
+//  enum LiquidityPoolType
 //  {
-//      ASSET_TYPE_NATIVE = 0,
-//      ASSET_TYPE_CREDIT_ALPHANUM4 = 1,
-//      ASSET_TYPE_CREDIT_ALPHANUM12 = 2,
-//      ASSET_TYPE_POOL_SHARE = 3
+//      LIQUIDITY_POOL_CONSTANT_PRODUCT = 0
 //  };
 
 //  ===========================================================================
-public enum AssetType implements XdrElement {
-  ASSET_TYPE_NATIVE(0),
-  ASSET_TYPE_CREDIT_ALPHANUM4(1),
-  ASSET_TYPE_CREDIT_ALPHANUM12(2),
-  ASSET_TYPE_POOL_SHARE(3),
+public enum LiquidityPoolType implements XdrElement {
+  LIQUIDITY_POOL_CONSTANT_PRODUCT(0),
   ;
   private int mValue;
 
-  AssetType(int value) {
+  LiquidityPoolType(int value) {
       mValue = value;
   }
 
@@ -34,19 +28,16 @@ public enum AssetType implements XdrElement {
       return mValue;
   }
 
-  public static AssetType decode(XdrDataInputStream stream) throws IOException {
+  public static LiquidityPoolType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return ASSET_TYPE_NATIVE;
-      case 1: return ASSET_TYPE_CREDIT_ALPHANUM4;
-      case 2: return ASSET_TYPE_CREDIT_ALPHANUM12;
-      case 3: return ASSET_TYPE_POOL_SHARE;
+      case 0: return LIQUIDITY_POOL_CONSTANT_PRODUCT;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, AssetType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LiquidityPoolType value) throws IOException {
     stream.writeInt(value.getValue());
   }
 

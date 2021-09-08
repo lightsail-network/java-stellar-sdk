@@ -32,7 +32,9 @@ import java.io.IOException;
 //      REVOKE_SPONSORSHIP = 18,
 //      CLAWBACK = 19,
 //      CLAWBACK_CLAIMABLE_BALANCE = 20,
-//      SET_TRUST_LINE_FLAGS = 21
+//      SET_TRUST_LINE_FLAGS = 21,
+//      LIQUIDITY_POOL_DEPOSIT = 22,
+//      LIQUIDITY_POOL_WITHDRAW = 23
 //  };
 
 //  ===========================================================================
@@ -59,6 +61,8 @@ public enum OperationType implements XdrElement {
   CLAWBACK(19),
   CLAWBACK_CLAIMABLE_BALANCE(20),
   SET_TRUST_LINE_FLAGS(21),
+  LIQUIDITY_POOL_DEPOSIT(22),
+  LIQUIDITY_POOL_WITHDRAW(23),
   ;
   private int mValue;
 
@@ -95,6 +99,8 @@ public enum OperationType implements XdrElement {
       case 19: return CLAWBACK;
       case 20: return CLAWBACK_CLAIMABLE_BALANCE;
       case 21: return SET_TRUST_LINE_FLAGS;
+      case 22: return LIQUIDITY_POOL_DEPOSIT;
+      case 23: return LIQUIDITY_POOL_WITHDRAW;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

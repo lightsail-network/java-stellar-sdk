@@ -15,10 +15,19 @@ import com.google.common.base.Objects;
 //  case ENVELOPE_TYPE_OP_ID:
 //      struct
 //      {
-//          MuxedAccount sourceAccount;
+//          AccountID sourceAccount;
 //          SequenceNumber seqNum;
 //          uint32 opNum;
 //      } id;
+//  case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
+//      struct
+//      {
+//          AccountID sourceAccount;
+//          SequenceNumber seqNum;
+//          uint32 opNum;
+//          PoolID liquidityPoolID;
+//          Asset asset;
+//      } revokeId;
 //  };
 
 //  ===========================================================================
@@ -38,10 +47,18 @@ public class OperationID implements XdrElement {
   public void setId(OperationIDId value) {
     this.id = value;
   }
+  private OperationIDRevokeId revokeId;
+  public OperationIDRevokeId getRevokeId() {
+    return this.revokeId;
+  }
+  public void setRevokeId(OperationIDRevokeId value) {
+    this.revokeId = value;
+  }
 
   public static final class Builder {
     private EnvelopeType discriminant;
     private OperationIDId id;
+    private OperationIDRevokeId revokeId;
 
     public Builder discriminant(EnvelopeType discriminant) {
       this.discriminant = discriminant;
@@ -53,10 +70,16 @@ public class OperationID implements XdrElement {
       return this;
     }
 
+    public Builder revokeId(OperationIDRevokeId revokeId) {
+      this.revokeId = revokeId;
+      return this;
+    }
+
     public OperationID build() {
       OperationID val = new OperationID();
       val.setDiscriminant(discriminant);
       val.setId(id);
+      val.setRevokeId(revokeId);
       return val;
     }
   }
@@ -68,6 +91,9 @@ public class OperationID implements XdrElement {
   switch (encodedOperationID.getDiscriminant()) {
   case ENVELOPE_TYPE_OP_ID:
   OperationIDId.encode(stream, encodedOperationID.id);
+  break;
+  case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
+  OperationIDRevokeId.encode(stream, encodedOperationID.revokeId);
   break;
   }
   }
@@ -82,12 +108,15 @@ public class OperationID implements XdrElement {
   case ENVELOPE_TYPE_OP_ID:
   decodedOperationID.id = OperationIDId.decode(stream);
   break;
+  case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
+  decodedOperationID.revokeId = OperationIDRevokeId.decode(stream);
+  break;
   }
     return decodedOperationID;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.id, this.type);
+    return Objects.hashCode(this.id, this.revokeId, this.type);
   }
   @Override
   public boolean equals(Object object) {
@@ -96,16 +125,16 @@ public class OperationID implements XdrElement {
     }
 
     OperationID other = (OperationID) object;
-    return Objects.equal(this.id, other.id) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.id, other.id) && Objects.equal(this.revokeId, other.revokeId) && Objects.equal(this.type, other.type);
   }
 
   public static class OperationIDId {
     public OperationIDId () {}
-    private MuxedAccount sourceAccount;
-    public MuxedAccount getSourceAccount() {
+    private AccountID sourceAccount;
+    public AccountID getSourceAccount() {
       return this.sourceAccount;
     }
-    public void setSourceAccount(MuxedAccount value) {
+    public void setSourceAccount(AccountID value) {
       this.sourceAccount = value;
     }
     private SequenceNumber seqNum;
@@ -123,7 +152,7 @@ public class OperationID implements XdrElement {
       this.opNum = value;
     }
     public static void encode(XdrDataOutputStream stream, OperationIDId encodedOperationIDId) throws IOException{
-      MuxedAccount.encode(stream, encodedOperationIDId.sourceAccount);
+      AccountID.encode(stream, encodedOperationIDId.sourceAccount);
       SequenceNumber.encode(stream, encodedOperationIDId.seqNum);
       Uint32.encode(stream, encodedOperationIDId.opNum);
     }
@@ -132,7 +161,7 @@ public class OperationID implements XdrElement {
     }
     public static OperationIDId decode(XdrDataInputStream stream) throws IOException {
       OperationIDId decodedOperationIDId = new OperationIDId();
-      decodedOperationIDId.sourceAccount = MuxedAccount.decode(stream);
+      decodedOperationIDId.sourceAccount = AccountID.decode(stream);
       decodedOperationIDId.seqNum = SequenceNumber.decode(stream);
       decodedOperationIDId.opNum = Uint32.decode(stream);
       return decodedOperationIDId;
@@ -152,11 +181,11 @@ public class OperationID implements XdrElement {
     }
 
     public static final class Builder {
-      private MuxedAccount sourceAccount;
+      private AccountID sourceAccount;
       private SequenceNumber seqNum;
       private Uint32 opNum;
 
-      public Builder sourceAccount(MuxedAccount sourceAccount) {
+      public Builder sourceAccount(AccountID sourceAccount) {
         this.sourceAccount = sourceAccount;
         return this;
       }
@@ -176,6 +205,120 @@ public class OperationID implements XdrElement {
         val.setSourceAccount(sourceAccount);
         val.setSeqNum(seqNum);
         val.setOpNum(opNum);
+        return val;
+      }
+    }
+
+  }
+  public static class OperationIDRevokeId {
+    public OperationIDRevokeId () {}
+    private AccountID sourceAccount;
+    public AccountID getSourceAccount() {
+      return this.sourceAccount;
+    }
+    public void setSourceAccount(AccountID value) {
+      this.sourceAccount = value;
+    }
+    private SequenceNumber seqNum;
+    public SequenceNumber getSeqNum() {
+      return this.seqNum;
+    }
+    public void setSeqNum(SequenceNumber value) {
+      this.seqNum = value;
+    }
+    private Uint32 opNum;
+    public Uint32 getOpNum() {
+      return this.opNum;
+    }
+    public void setOpNum(Uint32 value) {
+      this.opNum = value;
+    }
+    private PoolID liquidityPoolID;
+    public PoolID getLiquidityPoolID() {
+      return this.liquidityPoolID;
+    }
+    public void setLiquidityPoolID(PoolID value) {
+      this.liquidityPoolID = value;
+    }
+    private Asset asset;
+    public Asset getAsset() {
+      return this.asset;
+    }
+    public void setAsset(Asset value) {
+      this.asset = value;
+    }
+    public static void encode(XdrDataOutputStream stream, OperationIDRevokeId encodedOperationIDRevokeId) throws IOException{
+      AccountID.encode(stream, encodedOperationIDRevokeId.sourceAccount);
+      SequenceNumber.encode(stream, encodedOperationIDRevokeId.seqNum);
+      Uint32.encode(stream, encodedOperationIDRevokeId.opNum);
+      PoolID.encode(stream, encodedOperationIDRevokeId.liquidityPoolID);
+      Asset.encode(stream, encodedOperationIDRevokeId.asset);
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
+    public static OperationIDRevokeId decode(XdrDataInputStream stream) throws IOException {
+      OperationIDRevokeId decodedOperationIDRevokeId = new OperationIDRevokeId();
+      decodedOperationIDRevokeId.sourceAccount = AccountID.decode(stream);
+      decodedOperationIDRevokeId.seqNum = SequenceNumber.decode(stream);
+      decodedOperationIDRevokeId.opNum = Uint32.decode(stream);
+      decodedOperationIDRevokeId.liquidityPoolID = PoolID.decode(stream);
+      decodedOperationIDRevokeId.asset = Asset.decode(stream);
+      return decodedOperationIDRevokeId;
+    }
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(this.sourceAccount, this.seqNum, this.opNum, this.liquidityPoolID, this.asset);
+    }
+    @Override
+    public boolean equals(Object object) {
+      if (!(object instanceof OperationIDRevokeId)) {
+        return false;
+      }
+
+      OperationIDRevokeId other = (OperationIDRevokeId) object;
+      return Objects.equal(this.sourceAccount, other.sourceAccount) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.opNum, other.opNum) && Objects.equal(this.liquidityPoolID, other.liquidityPoolID) && Objects.equal(this.asset, other.asset);
+    }
+
+    public static final class Builder {
+      private AccountID sourceAccount;
+      private SequenceNumber seqNum;
+      private Uint32 opNum;
+      private PoolID liquidityPoolID;
+      private Asset asset;
+
+      public Builder sourceAccount(AccountID sourceAccount) {
+        this.sourceAccount = sourceAccount;
+        return this;
+      }
+
+      public Builder seqNum(SequenceNumber seqNum) {
+        this.seqNum = seqNum;
+        return this;
+      }
+
+      public Builder opNum(Uint32 opNum) {
+        this.opNum = opNum;
+        return this;
+      }
+
+      public Builder liquidityPoolID(PoolID liquidityPoolID) {
+        this.liquidityPoolID = liquidityPoolID;
+        return this;
+      }
+
+      public Builder asset(Asset asset) {
+        this.asset = asset;
+        return this;
+      }
+
+      public OperationIDRevokeId build() {
+        OperationIDRevokeId val = new OperationIDRevokeId();
+        val.setSourceAccount(sourceAccount);
+        val.setSeqNum(seqNum);
+        val.setOpNum(opNum);
+        val.setLiquidityPoolID(liquidityPoolID);
+        val.setAsset(asset);
         return val;
       }
     }

@@ -11,12 +11,14 @@ import java.io.IOException;
 
 //  enum ClaimableBalanceIDType
 //  {
-//      CLAIMABLE_BALANCE_ID_TYPE_V0 = 0
+//      CLAIMABLE_BALANCE_ID_TYPE_V0 = 0,
+//      CLAIMABLE_BALANCE_ID_TYPE_FROM_POOL_REVOKE = 1
 //  };
 
 //  ===========================================================================
 public enum ClaimableBalanceIDType implements XdrElement {
   CLAIMABLE_BALANCE_ID_TYPE_V0(0),
+  CLAIMABLE_BALANCE_ID_TYPE_FROM_POOL_REVOKE(1),
   ;
   private int mValue;
 
@@ -32,6 +34,7 @@ public enum ClaimableBalanceIDType implements XdrElement {
     int value = stream.readInt();
     switch (value) {
       case 0: return CLAIMABLE_BALANCE_ID_TYPE_V0;
+      case 1: return CLAIMABLE_BALANCE_ID_TYPE_FROM_POOL_REVOKE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

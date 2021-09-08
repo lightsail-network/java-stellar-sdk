@@ -22,7 +22,7 @@ import com.google.common.base.Objects;
 //      struct
 //      {
 //          AccountID accountID;
-//          Asset asset;
+//          TrustLineAsset asset;
 //      } trustLine;
 //  
 //  case OFFER:
@@ -44,6 +44,12 @@ import com.google.common.base.Objects;
 //      {
 //          ClaimableBalanceID balanceID;
 //      } claimableBalance;
+//  
+//  case LIQUIDITY_POOL:
+//      struct
+//      {
+//          PoolID liquidityPoolID;
+//      } liquidityPool;
 //  };
 
 //  ===========================================================================
@@ -91,6 +97,13 @@ public class LedgerKey implements XdrElement {
   public void setClaimableBalance(LedgerKeyClaimableBalance value) {
     this.claimableBalance = value;
   }
+  private LedgerKeyLiquidityPool liquidityPool;
+  public LedgerKeyLiquidityPool getLiquidityPool() {
+    return this.liquidityPool;
+  }
+  public void setLiquidityPool(LedgerKeyLiquidityPool value) {
+    this.liquidityPool = value;
+  }
 
   public static final class Builder {
     private LedgerEntryType discriminant;
@@ -99,6 +112,7 @@ public class LedgerKey implements XdrElement {
     private LedgerKeyOffer offer;
     private LedgerKeyData data;
     private LedgerKeyClaimableBalance claimableBalance;
+    private LedgerKeyLiquidityPool liquidityPool;
 
     public Builder discriminant(LedgerEntryType discriminant) {
       this.discriminant = discriminant;
@@ -130,6 +144,11 @@ public class LedgerKey implements XdrElement {
       return this;
     }
 
+    public Builder liquidityPool(LedgerKeyLiquidityPool liquidityPool) {
+      this.liquidityPool = liquidityPool;
+      return this;
+    }
+
     public LedgerKey build() {
       LedgerKey val = new LedgerKey();
       val.setDiscriminant(discriminant);
@@ -138,6 +157,7 @@ public class LedgerKey implements XdrElement {
       val.setOffer(offer);
       val.setData(data);
       val.setClaimableBalance(claimableBalance);
+      val.setLiquidityPool(liquidityPool);
       return val;
     }
   }
@@ -161,6 +181,9 @@ public class LedgerKey implements XdrElement {
   break;
   case CLAIMABLE_BALANCE:
   LedgerKeyClaimableBalance.encode(stream, encodedLedgerKey.claimableBalance);
+  break;
+  case LIQUIDITY_POOL:
+  LedgerKeyLiquidityPool.encode(stream, encodedLedgerKey.liquidityPool);
   break;
   }
   }
@@ -187,12 +210,15 @@ public class LedgerKey implements XdrElement {
   case CLAIMABLE_BALANCE:
   decodedLedgerKey.claimableBalance = LedgerKeyClaimableBalance.decode(stream);
   break;
+  case LIQUIDITY_POOL:
+  decodedLedgerKey.liquidityPool = LedgerKeyLiquidityPool.decode(stream);
+  break;
   }
     return decodedLedgerKey;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.account, this.trustLine, this.offer, this.data, this.claimableBalance, this.type);
+    return Objects.hashCode(this.account, this.trustLine, this.offer, this.data, this.claimableBalance, this.liquidityPool, this.type);
   }
   @Override
   public boolean equals(Object object) {
@@ -201,7 +227,7 @@ public class LedgerKey implements XdrElement {
     }
 
     LedgerKey other = (LedgerKey) object;
-    return Objects.equal(this.account, other.account) && Objects.equal(this.trustLine, other.trustLine) && Objects.equal(this.offer, other.offer) && Objects.equal(this.data, other.data) && Objects.equal(this.claimableBalance, other.claimableBalance) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.account, other.account) && Objects.equal(this.trustLine, other.trustLine) && Objects.equal(this.offer, other.offer) && Objects.equal(this.data, other.data) && Objects.equal(this.claimableBalance, other.claimableBalance) && Objects.equal(this.liquidityPool, other.liquidityPool) && Objects.equal(this.type, other.type);
   }
 
   public static class LedgerKeyAccount {
@@ -263,16 +289,16 @@ public class LedgerKey implements XdrElement {
     public void setAccountID(AccountID value) {
       this.accountID = value;
     }
-    private Asset asset;
-    public Asset getAsset() {
+    private TrustLineAsset asset;
+    public TrustLineAsset getAsset() {
       return this.asset;
     }
-    public void setAsset(Asset value) {
+    public void setAsset(TrustLineAsset value) {
       this.asset = value;
     }
     public static void encode(XdrDataOutputStream stream, LedgerKeyTrustLine encodedLedgerKeyTrustLine) throws IOException{
       AccountID.encode(stream, encodedLedgerKeyTrustLine.accountID);
-      Asset.encode(stream, encodedLedgerKeyTrustLine.asset);
+      TrustLineAsset.encode(stream, encodedLedgerKeyTrustLine.asset);
     }
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
@@ -280,7 +306,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyTrustLine decode(XdrDataInputStream stream) throws IOException {
       LedgerKeyTrustLine decodedLedgerKeyTrustLine = new LedgerKeyTrustLine();
       decodedLedgerKeyTrustLine.accountID = AccountID.decode(stream);
-      decodedLedgerKeyTrustLine.asset = Asset.decode(stream);
+      decodedLedgerKeyTrustLine.asset = TrustLineAsset.decode(stream);
       return decodedLedgerKeyTrustLine;
     }
     @Override
@@ -299,14 +325,14 @@ public class LedgerKey implements XdrElement {
 
     public static final class Builder {
       private AccountID accountID;
-      private Asset asset;
+      private TrustLineAsset asset;
 
       public Builder accountID(AccountID accountID) {
         this.accountID = accountID;
         return this;
       }
 
-      public Builder asset(Asset asset) {
+      public Builder asset(TrustLineAsset asset) {
         this.asset = asset;
         return this;
       }
@@ -497,6 +523,56 @@ public class LedgerKey implements XdrElement {
       public LedgerKeyClaimableBalance build() {
         LedgerKeyClaimableBalance val = new LedgerKeyClaimableBalance();
         val.setBalanceID(balanceID);
+        return val;
+      }
+    }
+
+  }
+  public static class LedgerKeyLiquidityPool {
+    public LedgerKeyLiquidityPool () {}
+    private PoolID liquidityPoolID;
+    public PoolID getLiquidityPoolID() {
+      return this.liquidityPoolID;
+    }
+    public void setLiquidityPoolID(PoolID value) {
+      this.liquidityPoolID = value;
+    }
+    public static void encode(XdrDataOutputStream stream, LedgerKeyLiquidityPool encodedLedgerKeyLiquidityPool) throws IOException{
+      PoolID.encode(stream, encodedLedgerKeyLiquidityPool.liquidityPoolID);
+    }
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
+    public static LedgerKeyLiquidityPool decode(XdrDataInputStream stream) throws IOException {
+      LedgerKeyLiquidityPool decodedLedgerKeyLiquidityPool = new LedgerKeyLiquidityPool();
+      decodedLedgerKeyLiquidityPool.liquidityPoolID = PoolID.decode(stream);
+      return decodedLedgerKeyLiquidityPool;
+    }
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(this.liquidityPoolID);
+    }
+    @Override
+    public boolean equals(Object object) {
+      if (!(object instanceof LedgerKeyLiquidityPool)) {
+        return false;
+      }
+
+      LedgerKeyLiquidityPool other = (LedgerKeyLiquidityPool) object;
+      return Objects.equal(this.liquidityPoolID, other.liquidityPoolID);
+    }
+
+    public static final class Builder {
+      private PoolID liquidityPoolID;
+
+      public Builder liquidityPoolID(PoolID liquidityPoolID) {
+        this.liquidityPoolID = liquidityPoolID;
+        return this;
+      }
+
+      public LedgerKeyLiquidityPool build() {
+        LedgerKeyLiquidityPool val = new LedgerKeyLiquidityPool();
+        val.setLiquidityPoolID(liquidityPoolID);
         return val;
       }
     }

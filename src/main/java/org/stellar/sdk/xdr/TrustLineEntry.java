@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 //  struct TrustLineEntry
 //  {
 //      AccountID accountID; // account this trustline belongs to
-//      Asset asset;         // type of asset (with issuer)
+//      TrustLineAsset asset;         // type of asset (with issuer)
 //      int64 balance;       // how much of this asset the user has.
 //                           // Asset defines the unit for this;
 //  
@@ -34,6 +34,8 @@ import com.google.common.base.Objects;
 //              {
 //              case 0:
 //                  void;
+//              case 2:
+//                  TrustLineEntryExtensionV2 v2;
 //              }
 //              ext;
 //          } v1;
@@ -51,11 +53,11 @@ public class TrustLineEntry implements XdrElement {
   public void setAccountID(AccountID value) {
     this.accountID = value;
   }
-  private Asset asset;
-  public Asset getAsset() {
+  private TrustLineAsset asset;
+  public TrustLineAsset getAsset() {
     return this.asset;
   }
-  public void setAsset(Asset value) {
+  public void setAsset(TrustLineAsset value) {
     this.asset = value;
   }
   private Int64 balance;
@@ -88,7 +90,7 @@ public class TrustLineEntry implements XdrElement {
   }
   public static void encode(XdrDataOutputStream stream, TrustLineEntry encodedTrustLineEntry) throws IOException{
     AccountID.encode(stream, encodedTrustLineEntry.accountID);
-    Asset.encode(stream, encodedTrustLineEntry.asset);
+    TrustLineAsset.encode(stream, encodedTrustLineEntry.asset);
     Int64.encode(stream, encodedTrustLineEntry.balance);
     Int64.encode(stream, encodedTrustLineEntry.limit);
     Uint32.encode(stream, encodedTrustLineEntry.flags);
@@ -100,7 +102,7 @@ public class TrustLineEntry implements XdrElement {
   public static TrustLineEntry decode(XdrDataInputStream stream) throws IOException {
     TrustLineEntry decodedTrustLineEntry = new TrustLineEntry();
     decodedTrustLineEntry.accountID = AccountID.decode(stream);
-    decodedTrustLineEntry.asset = Asset.decode(stream);
+    decodedTrustLineEntry.asset = TrustLineAsset.decode(stream);
     decodedTrustLineEntry.balance = Int64.decode(stream);
     decodedTrustLineEntry.limit = Int64.decode(stream);
     decodedTrustLineEntry.flags = Uint32.decode(stream);
@@ -123,7 +125,7 @@ public class TrustLineEntry implements XdrElement {
 
   public static final class Builder {
     private AccountID accountID;
-    private Asset asset;
+    private TrustLineAsset asset;
     private Int64 balance;
     private Int64 limit;
     private Uint32 flags;
@@ -134,7 +136,7 @@ public class TrustLineEntry implements XdrElement {
       return this;
     }
 
-    public Builder asset(Asset asset) {
+    public Builder asset(TrustLineAsset asset) {
       this.asset = asset;
       return this;
     }
@@ -326,18 +328,32 @@ public class TrustLineEntry implements XdrElement {
         public void setDiscriminant(Integer value) {
           this.v = value;
         }
+        private TrustLineEntryExtensionV2 v2;
+        public TrustLineEntryExtensionV2 getV2() {
+          return this.v2;
+        }
+        public void setV2(TrustLineEntryExtensionV2 value) {
+          this.v2 = value;
+        }
 
         public static final class Builder {
           private Integer discriminant;
+          private TrustLineEntryExtensionV2 v2;
 
           public Builder discriminant(Integer discriminant) {
             this.discriminant = discriminant;
             return this;
           }
 
+          public Builder v2(TrustLineEntryExtensionV2 v2) {
+            this.v2 = v2;
+            return this;
+          }
+
           public TrustLineEntryV1Ext build() {
             TrustLineEntryV1Ext val = new TrustLineEntryV1Ext();
             val.setDiscriminant(discriminant);
+            val.setV2(v2);
             return val;
           }
         }
@@ -348,6 +364,9 @@ public class TrustLineEntry implements XdrElement {
         stream.writeInt(encodedTrustLineEntryV1Ext.getDiscriminant().intValue());
         switch (encodedTrustLineEntryV1Ext.getDiscriminant()) {
         case 0:
+        break;
+        case 2:
+        TrustLineEntryExtensionV2.encode(stream, encodedTrustLineEntryV1Ext.v2);
         break;
         }
         }
@@ -361,12 +380,15 @@ public class TrustLineEntry implements XdrElement {
         switch (decodedTrustLineEntryV1Ext.getDiscriminant()) {
         case 0:
         break;
+        case 2:
+        decodedTrustLineEntryV1Ext.v2 = TrustLineEntryExtensionV2.decode(stream);
+        break;
         }
           return decodedTrustLineEntryV1Ext;
         }
         @Override
         public int hashCode() {
-          return Objects.hashCode(this.v);
+          return Objects.hashCode(this.v2, this.v);
         }
         @Override
         public boolean equals(Object object) {
@@ -375,7 +397,7 @@ public class TrustLineEntry implements XdrElement {
           }
 
           TrustLineEntryV1Ext other = (TrustLineEntryV1Ext) object;
-          return Objects.equal(this.v, other.v);
+          return Objects.equal(this.v2, other.v2) && Objects.equal(this.v, other.v);
         }
 
       }

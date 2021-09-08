@@ -14,7 +14,7 @@ import com.google.common.base.Objects;
 //  {
 //      Asset selling; // A
 //      Asset buying;  // B
-//      int64 amount;  // amount taker gets. if set to 0, delete the offer
+//      int64 amount;  // amount taker gets
 //      Price price;   // cost of A in terms of B
 //  };
 

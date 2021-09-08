@@ -19,8 +19,7 @@ import com.google.common.base.Objects;
 //      {
 //          AccountID accountID;
 //          SignerKey signerKey;
-//      }
-//      signer;
+//      } signer;
 //  };
 
 //  ===========================================================================

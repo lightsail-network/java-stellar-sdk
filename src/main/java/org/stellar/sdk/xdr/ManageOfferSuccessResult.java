@@ -14,7 +14,7 @@ import com.google.common.base.Objects;
 //  struct ManageOfferSuccessResult
 //  {
 //      // offers that got claimed while creating this offer
-//      ClaimOfferAtom offersClaimed<>;
+//      ClaimAtom offersClaimed<>;
 //  
 //      union switch (ManageOfferEffect effect)
 //      {
@@ -30,11 +30,11 @@ import com.google.common.base.Objects;
 //  ===========================================================================
 public class ManageOfferSuccessResult implements XdrElement {
   public ManageOfferSuccessResult () {}
-  private ClaimOfferAtom[] offersClaimed;
-  public ClaimOfferAtom[] getOffersClaimed() {
+  private ClaimAtom[] offersClaimed;
+  public ClaimAtom[] getOffersClaimed() {
     return this.offersClaimed;
   }
-  public void setOffersClaimed(ClaimOfferAtom[] value) {
+  public void setOffersClaimed(ClaimAtom[] value) {
     this.offersClaimed = value;
   }
   private ManageOfferSuccessResultOffer offer;
@@ -48,7 +48,7 @@ public class ManageOfferSuccessResult implements XdrElement {
     int offersClaimedsize = encodedManageOfferSuccessResult.getOffersClaimed().length;
     stream.writeInt(offersClaimedsize);
     for (int i = 0; i < offersClaimedsize; i++) {
-      ClaimOfferAtom.encode(stream, encodedManageOfferSuccessResult.offersClaimed[i]);
+      ClaimAtom.encode(stream, encodedManageOfferSuccessResult.offersClaimed[i]);
     }
     ManageOfferSuccessResultOffer.encode(stream, encodedManageOfferSuccessResult.offer);
   }
@@ -58,9 +58,9 @@ public class ManageOfferSuccessResult implements XdrElement {
   public static ManageOfferSuccessResult decode(XdrDataInputStream stream) throws IOException {
     ManageOfferSuccessResult decodedManageOfferSuccessResult = new ManageOfferSuccessResult();
     int offersClaimedsize = stream.readInt();
-    decodedManageOfferSuccessResult.offersClaimed = new ClaimOfferAtom[offersClaimedsize];
+    decodedManageOfferSuccessResult.offersClaimed = new ClaimAtom[offersClaimedsize];
     for (int i = 0; i < offersClaimedsize; i++) {
-      decodedManageOfferSuccessResult.offersClaimed[i] = ClaimOfferAtom.decode(stream);
+      decodedManageOfferSuccessResult.offersClaimed[i] = ClaimAtom.decode(stream);
     }
     decodedManageOfferSuccessResult.offer = ManageOfferSuccessResultOffer.decode(stream);
     return decodedManageOfferSuccessResult;
@@ -80,10 +80,10 @@ public class ManageOfferSuccessResult implements XdrElement {
   }
 
   public static final class Builder {
-    private ClaimOfferAtom[] offersClaimed;
+    private ClaimAtom[] offersClaimed;
     private ManageOfferSuccessResultOffer offer;
 
-    public Builder offersClaimed(ClaimOfferAtom[] offersClaimed) {
+    public Builder offersClaimed(ClaimAtom[] offersClaimed) {
       this.offersClaimed = offersClaimed;
       return this;
     }

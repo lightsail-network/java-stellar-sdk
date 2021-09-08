@@ -10,7 +10,7 @@ import com.google.common.base.Objects;
 
 // === xdr source ============================================================
 
-//  union Asset switch (AssetType type)
+//  union TrustLineAsset switch (AssetType type)
 //  {
 //  case ASSET_TYPE_NATIVE: // Not credit
 //      void;
@@ -21,12 +21,15 @@ import com.google.common.base.Objects;
 //  case ASSET_TYPE_CREDIT_ALPHANUM12:
 //      AlphaNum12 alphaNum12;
 //  
+//  case ASSET_TYPE_POOL_SHARE:
+//      PoolID liquidityPoolID;
+//  
 //      // add other asset types here in the future
 //  };
 
 //  ===========================================================================
-public class Asset implements XdrElement {
-  public Asset () {}
+public class TrustLineAsset implements XdrElement {
+  public TrustLineAsset () {}
   AssetType type;
   public AssetType getDiscriminant() {
     return this.type;
@@ -48,11 +51,19 @@ public class Asset implements XdrElement {
   public void setAlphaNum12(AlphaNum12 value) {
     this.alphaNum12 = value;
   }
+  private PoolID liquidityPoolID;
+  public PoolID getLiquidityPoolID() {
+    return this.liquidityPoolID;
+  }
+  public void setLiquidityPoolID(PoolID value) {
+    this.liquidityPoolID = value;
+  }
 
   public static final class Builder {
     private AssetType discriminant;
     private AlphaNum4 alphaNum4;
     private AlphaNum12 alphaNum12;
+    private PoolID liquidityPoolID;
 
     public Builder discriminant(AssetType discriminant) {
       this.discriminant = discriminant;
@@ -69,60 +80,72 @@ public class Asset implements XdrElement {
       return this;
     }
 
-    public Asset build() {
-      Asset val = new Asset();
+    public Builder liquidityPoolID(PoolID liquidityPoolID) {
+      this.liquidityPoolID = liquidityPoolID;
+      return this;
+    }
+
+    public TrustLineAsset build() {
+      TrustLineAsset val = new TrustLineAsset();
       val.setDiscriminant(discriminant);
       val.setAlphaNum4(alphaNum4);
       val.setAlphaNum12(alphaNum12);
+      val.setLiquidityPoolID(liquidityPoolID);
       return val;
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, Asset encodedAsset) throws IOException {
+  public static void encode(XdrDataOutputStream stream, TrustLineAsset encodedTrustLineAsset) throws IOException {
   //Xdrgen::AST::Identifier
   //AssetType
-  stream.writeInt(encodedAsset.getDiscriminant().getValue());
-  switch (encodedAsset.getDiscriminant()) {
+  stream.writeInt(encodedTrustLineAsset.getDiscriminant().getValue());
+  switch (encodedTrustLineAsset.getDiscriminant()) {
   case ASSET_TYPE_NATIVE:
   break;
   case ASSET_TYPE_CREDIT_ALPHANUM4:
-  AlphaNum4.encode(stream, encodedAsset.alphaNum4);
+  AlphaNum4.encode(stream, encodedTrustLineAsset.alphaNum4);
   break;
   case ASSET_TYPE_CREDIT_ALPHANUM12:
-  AlphaNum12.encode(stream, encodedAsset.alphaNum12);
+  AlphaNum12.encode(stream, encodedTrustLineAsset.alphaNum12);
+  break;
+  case ASSET_TYPE_POOL_SHARE:
+  PoolID.encode(stream, encodedTrustLineAsset.liquidityPoolID);
   break;
   }
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
-  public static Asset decode(XdrDataInputStream stream) throws IOException {
-  Asset decodedAsset = new Asset();
+  public static TrustLineAsset decode(XdrDataInputStream stream) throws IOException {
+  TrustLineAsset decodedTrustLineAsset = new TrustLineAsset();
   AssetType discriminant = AssetType.decode(stream);
-  decodedAsset.setDiscriminant(discriminant);
-  switch (decodedAsset.getDiscriminant()) {
+  decodedTrustLineAsset.setDiscriminant(discriminant);
+  switch (decodedTrustLineAsset.getDiscriminant()) {
   case ASSET_TYPE_NATIVE:
   break;
   case ASSET_TYPE_CREDIT_ALPHANUM4:
-  decodedAsset.alphaNum4 = AlphaNum4.decode(stream);
+  decodedTrustLineAsset.alphaNum4 = AlphaNum4.decode(stream);
   break;
   case ASSET_TYPE_CREDIT_ALPHANUM12:
-  decodedAsset.alphaNum12 = AlphaNum12.decode(stream);
+  decodedTrustLineAsset.alphaNum12 = AlphaNum12.decode(stream);
+  break;
+  case ASSET_TYPE_POOL_SHARE:
+  decodedTrustLineAsset.liquidityPoolID = PoolID.decode(stream);
   break;
   }
-    return decodedAsset;
+    return decodedTrustLineAsset;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.alphaNum4, this.alphaNum12, this.type);
+    return Objects.hashCode(this.alphaNum4, this.alphaNum12, this.liquidityPoolID, this.type);
   }
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof Asset)) {
+    if (!(object instanceof TrustLineAsset)) {
       return false;
     }
 
-    Asset other = (Asset) object;
-    return Objects.equal(this.alphaNum4, other.alphaNum4) && Objects.equal(this.alphaNum12, other.alphaNum12) && Objects.equal(this.type, other.type);
+    TrustLineAsset other = (TrustLineAsset) object;
+    return Objects.equal(this.alphaNum4, other.alphaNum4) && Objects.equal(this.alphaNum12, other.alphaNum12) && Objects.equal(this.liquidityPoolID, other.liquidityPoolID) && Objects.equal(this.type, other.type);
   }
 }

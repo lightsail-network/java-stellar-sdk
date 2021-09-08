@@ -18,7 +18,8 @@ import java.io.IOException;
 //      REVOKE_SPONSORSHIP_DOES_NOT_EXIST = -1,
 //      REVOKE_SPONSORSHIP_NOT_SPONSOR = -2,
 //      REVOKE_SPONSORSHIP_LOW_RESERVE = -3,
-//      REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE = -4
+//      REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE = -4,
+//      REVOKE_SPONSORSHIP_MALFORMED = -5
 //  };
 
 //  ===========================================================================
@@ -28,6 +29,7 @@ public enum RevokeSponsorshipResultCode implements XdrElement {
   REVOKE_SPONSORSHIP_NOT_SPONSOR(-2),
   REVOKE_SPONSORSHIP_LOW_RESERVE(-3),
   REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE(-4),
+  REVOKE_SPONSORSHIP_MALFORMED(-5),
   ;
   private int mValue;
 
@@ -47,6 +49,7 @@ public enum RevokeSponsorshipResultCode implements XdrElement {
       case -2: return REVOKE_SPONSORSHIP_NOT_SPONSOR;
       case -3: return REVOKE_SPONSORSHIP_LOW_RESERVE;
       case -4: return REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE;
+      case -5: return REVOKE_SPONSORSHIP_MALFORMED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

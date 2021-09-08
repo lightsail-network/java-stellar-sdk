@@ -20,7 +20,7 @@ import java.util.Arrays;
 //      // this is a vector of encoded 'LedgerUpgrade' so that nodes can drop
 //      // unknown steps during consensus if needed.
 //      // see notes below on 'LedgerUpgrade' for more detail
-//      // max size is dictated by number of upgrade types (+ room for future)
+//      // max size is dictated by number of upgrade types ( room for future)
 //      UpgradeType upgrades<6>;
 //  
 //      // reserved for future use

@@ -9,24 +9,22 @@ import java.io.IOException;
 
 // === xdr source ============================================================
 
-//  enum AssetType
+//  enum ClaimAtomType
 //  {
-//      ASSET_TYPE_NATIVE = 0,
-//      ASSET_TYPE_CREDIT_ALPHANUM4 = 1,
-//      ASSET_TYPE_CREDIT_ALPHANUM12 = 2,
-//      ASSET_TYPE_POOL_SHARE = 3
+//      CLAIM_ATOM_TYPE_V0 = 0,
+//      CLAIM_ATOM_TYPE_ORDER_BOOK = 1,
+//      CLAIM_ATOM_TYPE_LIQUIDITY_POOL = 2
 //  };
 
 //  ===========================================================================
-public enum AssetType implements XdrElement {
-  ASSET_TYPE_NATIVE(0),
-  ASSET_TYPE_CREDIT_ALPHANUM4(1),
-  ASSET_TYPE_CREDIT_ALPHANUM12(2),
-  ASSET_TYPE_POOL_SHARE(3),
+public enum ClaimAtomType implements XdrElement {
+  CLAIM_ATOM_TYPE_V0(0),
+  CLAIM_ATOM_TYPE_ORDER_BOOK(1),
+  CLAIM_ATOM_TYPE_LIQUIDITY_POOL(2),
   ;
   private int mValue;
 
-  AssetType(int value) {
+  ClaimAtomType(int value) {
       mValue = value;
   }
 
@@ -34,19 +32,18 @@ public enum AssetType implements XdrElement {
       return mValue;
   }
 
-  public static AssetType decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimAtomType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return ASSET_TYPE_NATIVE;
-      case 1: return ASSET_TYPE_CREDIT_ALPHANUM4;
-      case 2: return ASSET_TYPE_CREDIT_ALPHANUM12;
-      case 3: return ASSET_TYPE_POOL_SHARE;
+      case 0: return CLAIM_ATOM_TYPE_V0;
+      case 1: return CLAIM_ATOM_TYPE_ORDER_BOOK;
+      case 2: return CLAIM_ATOM_TYPE_LIQUIDITY_POOL;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, AssetType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ClaimAtomType value) throws IOException {
     stream.writeInt(value.getValue());
   }
 

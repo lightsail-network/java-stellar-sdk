@@ -63,6 +63,10 @@ import com.google.common.base.Objects;
 //          ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
 //      case SET_TRUST_LINE_FLAGS:
 //          SetTrustLineFlagsOp setTrustLineFlagsOp;
+//      case LIQUIDITY_POOL_DEPOSIT:
+//          LiquidityPoolDepositOp liquidityPoolDepositOp;
+//      case LIQUIDITY_POOL_WITHDRAW:
+//          LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
 //      }
 //      body;
 //  };
@@ -290,6 +294,20 @@ public class Operation implements XdrElement {
     public void setSetTrustLineFlagsOp(SetTrustLineFlagsOp value) {
       this.setTrustLineFlagsOp = value;
     }
+    private LiquidityPoolDepositOp liquidityPoolDepositOp;
+    public LiquidityPoolDepositOp getLiquidityPoolDepositOp() {
+      return this.liquidityPoolDepositOp;
+    }
+    public void setLiquidityPoolDepositOp(LiquidityPoolDepositOp value) {
+      this.liquidityPoolDepositOp = value;
+    }
+    private LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
+    public LiquidityPoolWithdrawOp getLiquidityPoolWithdrawOp() {
+      return this.liquidityPoolWithdrawOp;
+    }
+    public void setLiquidityPoolWithdrawOp(LiquidityPoolWithdrawOp value) {
+      this.liquidityPoolWithdrawOp = value;
+    }
 
     public static final class Builder {
       private OperationType discriminant;
@@ -313,6 +331,8 @@ public class Operation implements XdrElement {
       private ClawbackOp clawbackOp;
       private ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
       private SetTrustLineFlagsOp setTrustLineFlagsOp;
+      private LiquidityPoolDepositOp liquidityPoolDepositOp;
+      private LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
 
       public Builder discriminant(OperationType discriminant) {
         this.discriminant = discriminant;
@@ -419,6 +439,16 @@ public class Operation implements XdrElement {
         return this;
       }
 
+      public Builder liquidityPoolDepositOp(LiquidityPoolDepositOp liquidityPoolDepositOp) {
+        this.liquidityPoolDepositOp = liquidityPoolDepositOp;
+        return this;
+      }
+
+      public Builder liquidityPoolWithdrawOp(LiquidityPoolWithdrawOp liquidityPoolWithdrawOp) {
+        this.liquidityPoolWithdrawOp = liquidityPoolWithdrawOp;
+        return this;
+      }
+
       public OperationBody build() {
         OperationBody val = new OperationBody();
         val.setDiscriminant(discriminant);
@@ -442,6 +472,8 @@ public class Operation implements XdrElement {
         val.setClawbackOp(clawbackOp);
         val.setClawbackClaimableBalanceOp(clawbackClaimableBalanceOp);
         val.setSetTrustLineFlagsOp(setTrustLineFlagsOp);
+        val.setLiquidityPoolDepositOp(liquidityPoolDepositOp);
+        val.setLiquidityPoolWithdrawOp(liquidityPoolWithdrawOp);
         return val;
       }
     }
@@ -514,6 +546,12 @@ public class Operation implements XdrElement {
     break;
     case SET_TRUST_LINE_FLAGS:
     SetTrustLineFlagsOp.encode(stream, encodedOperationBody.setTrustLineFlagsOp);
+    break;
+    case LIQUIDITY_POOL_DEPOSIT:
+    LiquidityPoolDepositOp.encode(stream, encodedOperationBody.liquidityPoolDepositOp);
+    break;
+    case LIQUIDITY_POOL_WITHDRAW:
+    LiquidityPoolWithdrawOp.encode(stream, encodedOperationBody.liquidityPoolWithdrawOp);
     break;
     }
     }
@@ -589,12 +627,18 @@ public class Operation implements XdrElement {
     case SET_TRUST_LINE_FLAGS:
     decodedOperationBody.setTrustLineFlagsOp = SetTrustLineFlagsOp.decode(stream);
     break;
+    case LIQUIDITY_POOL_DEPOSIT:
+    decodedOperationBody.liquidityPoolDepositOp = LiquidityPoolDepositOp.decode(stream);
+    break;
+    case LIQUIDITY_POOL_WITHDRAW:
+    decodedOperationBody.liquidityPoolWithdrawOp = LiquidityPoolWithdrawOp.decode(stream);
+    break;
     }
       return decodedOperationBody;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.createAccountOp, this.paymentOp, this.pathPaymentStrictReceiveOp, this.manageSellOfferOp, this.createPassiveSellOfferOp, this.setOptionsOp, this.changeTrustOp, this.allowTrustOp, this.destination, this.manageDataOp, this.bumpSequenceOp, this.manageBuyOfferOp, this.pathPaymentStrictSendOp, this.createClaimableBalanceOp, this.claimClaimableBalanceOp, this.beginSponsoringFutureReservesOp, this.revokeSponsorshipOp, this.clawbackOp, this.clawbackClaimableBalanceOp, this.setTrustLineFlagsOp, this.type);
+      return Objects.hashCode(this.createAccountOp, this.paymentOp, this.pathPaymentStrictReceiveOp, this.manageSellOfferOp, this.createPassiveSellOfferOp, this.setOptionsOp, this.changeTrustOp, this.allowTrustOp, this.destination, this.manageDataOp, this.bumpSequenceOp, this.manageBuyOfferOp, this.pathPaymentStrictSendOp, this.createClaimableBalanceOp, this.claimClaimableBalanceOp, this.beginSponsoringFutureReservesOp, this.revokeSponsorshipOp, this.clawbackOp, this.clawbackClaimableBalanceOp, this.setTrustLineFlagsOp, this.liquidityPoolDepositOp, this.liquidityPoolWithdrawOp, this.type);
     }
     @Override
     public boolean equals(Object object) {
@@ -603,7 +647,7 @@ public class Operation implements XdrElement {
       }
 
       OperationBody other = (OperationBody) object;
-      return Objects.equal(this.createAccountOp, other.createAccountOp) && Objects.equal(this.paymentOp, other.paymentOp) && Objects.equal(this.pathPaymentStrictReceiveOp, other.pathPaymentStrictReceiveOp) && Objects.equal(this.manageSellOfferOp, other.manageSellOfferOp) && Objects.equal(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp) && Objects.equal(this.setOptionsOp, other.setOptionsOp) && Objects.equal(this.changeTrustOp, other.changeTrustOp) && Objects.equal(this.allowTrustOp, other.allowTrustOp) && Objects.equal(this.destination, other.destination) && Objects.equal(this.manageDataOp, other.manageDataOp) && Objects.equal(this.bumpSequenceOp, other.bumpSequenceOp) && Objects.equal(this.manageBuyOfferOp, other.manageBuyOfferOp) && Objects.equal(this.pathPaymentStrictSendOp, other.pathPaymentStrictSendOp) && Objects.equal(this.createClaimableBalanceOp, other.createClaimableBalanceOp) && Objects.equal(this.claimClaimableBalanceOp, other.claimClaimableBalanceOp) && Objects.equal(this.beginSponsoringFutureReservesOp, other.beginSponsoringFutureReservesOp) && Objects.equal(this.revokeSponsorshipOp, other.revokeSponsorshipOp) && Objects.equal(this.clawbackOp, other.clawbackOp) && Objects.equal(this.clawbackClaimableBalanceOp, other.clawbackClaimableBalanceOp) && Objects.equal(this.setTrustLineFlagsOp, other.setTrustLineFlagsOp) && Objects.equal(this.type, other.type);
+      return Objects.equal(this.createAccountOp, other.createAccountOp) && Objects.equal(this.paymentOp, other.paymentOp) && Objects.equal(this.pathPaymentStrictReceiveOp, other.pathPaymentStrictReceiveOp) && Objects.equal(this.manageSellOfferOp, other.manageSellOfferOp) && Objects.equal(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp) && Objects.equal(this.setOptionsOp, other.setOptionsOp) && Objects.equal(this.changeTrustOp, other.changeTrustOp) && Objects.equal(this.allowTrustOp, other.allowTrustOp) && Objects.equal(this.destination, other.destination) && Objects.equal(this.manageDataOp, other.manageDataOp) && Objects.equal(this.bumpSequenceOp, other.bumpSequenceOp) && Objects.equal(this.manageBuyOfferOp, other.manageBuyOfferOp) && Objects.equal(this.pathPaymentStrictSendOp, other.pathPaymentStrictSendOp) && Objects.equal(this.createClaimableBalanceOp, other.createClaimableBalanceOp) && Objects.equal(this.claimClaimableBalanceOp, other.claimClaimableBalanceOp) && Objects.equal(this.beginSponsoringFutureReservesOp, other.beginSponsoringFutureReservesOp) && Objects.equal(this.revokeSponsorshipOp, other.revokeSponsorshipOp) && Objects.equal(this.clawbackOp, other.clawbackOp) && Objects.equal(this.clawbackClaimableBalanceOp, other.clawbackClaimableBalanceOp) && Objects.equal(this.setTrustLineFlagsOp, other.setTrustLineFlagsOp) && Objects.equal(this.liquidityPoolDepositOp, other.liquidityPoolDepositOp) && Objects.equal(this.liquidityPoolWithdrawOp, other.liquidityPoolWithdrawOp) && Objects.equal(this.type, other.type);
     }
 
   }

@@ -43,7 +43,7 @@ public class XdrString implements XdrElement {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof XdrString)) {
+        if (object == null || !(object instanceof XdrString)) {
           return false;
         }
 

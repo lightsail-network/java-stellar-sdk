@@ -14,7 +14,7 @@ import java.util.Arrays;
 //  struct SCPQuorumSet
 //  {
 //      uint32 threshold;
-//      PublicKey validators<>;
+//      NodeID validators<>;
 //      SCPQuorumSet innerSets<>;
 //  };
 
@@ -28,11 +28,11 @@ public class SCPQuorumSet implements XdrElement {
   public void setThreshold(Uint32 value) {
     this.threshold = value;
   }
-  private PublicKey[] validators;
-  public PublicKey[] getValidators() {
+  private NodeID[] validators;
+  public NodeID[] getValidators() {
     return this.validators;
   }
-  public void setValidators(PublicKey[] value) {
+  public void setValidators(NodeID[] value) {
     this.validators = value;
   }
   private SCPQuorumSet[] innerSets;
@@ -47,7 +47,7 @@ public class SCPQuorumSet implements XdrElement {
     int validatorssize = encodedSCPQuorumSet.getValidators().length;
     stream.writeInt(validatorssize);
     for (int i = 0; i < validatorssize; i++) {
-      PublicKey.encode(stream, encodedSCPQuorumSet.validators[i]);
+      NodeID.encode(stream, encodedSCPQuorumSet.validators[i]);
     }
     int innerSetssize = encodedSCPQuorumSet.getInnerSets().length;
     stream.writeInt(innerSetssize);
@@ -62,9 +62,9 @@ public class SCPQuorumSet implements XdrElement {
     SCPQuorumSet decodedSCPQuorumSet = new SCPQuorumSet();
     decodedSCPQuorumSet.threshold = Uint32.decode(stream);
     int validatorssize = stream.readInt();
-    decodedSCPQuorumSet.validators = new PublicKey[validatorssize];
+    decodedSCPQuorumSet.validators = new NodeID[validatorssize];
     for (int i = 0; i < validatorssize; i++) {
-      decodedSCPQuorumSet.validators[i] = PublicKey.decode(stream);
+      decodedSCPQuorumSet.validators[i] = NodeID.decode(stream);
     }
     int innerSetssize = stream.readInt();
     decodedSCPQuorumSet.innerSets = new SCPQuorumSet[innerSetssize];
@@ -89,7 +89,7 @@ public class SCPQuorumSet implements XdrElement {
 
   public static final class Builder {
     private Uint32 threshold;
-    private PublicKey[] validators;
+    private NodeID[] validators;
     private SCPQuorumSet[] innerSets;
 
     public Builder threshold(Uint32 threshold) {
@@ -97,7 +97,7 @@ public class SCPQuorumSet implements XdrElement {
       return this;
     }
 
-    public Builder validators(PublicKey[] validators) {
+    public Builder validators(NodeID[] validators) {
       this.validators = validators;
       return this;
     }
