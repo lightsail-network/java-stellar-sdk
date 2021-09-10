@@ -32,6 +32,13 @@ public abstract class Asset {
     }
   }
 
+  public static Asset create(ChangeTrustAsset.Wrapper wrapped) {
+    return wrapped.getAsset();
+  }
+  public static Asset create(TrustLineAsset.Wrapper wrapped) {
+    return wrapped.getAsset();
+  }
+
   /**
    * Creates one of AssetTypeCreditAlphaNum4 or AssetTypeCreditAlphaNum12 object based on a <code>code</code> length
    * @param code Asset code
@@ -75,6 +82,7 @@ public abstract class Asset {
    *   <li><code>native</code></li>
    *   <li><code>credit_alphanum4</code></li>
    *   <li><code>credit_alphanum12</code></li>
+   *   <li><code>pool_share</code></li>
    * </ul>
    */
   public abstract String getType();
