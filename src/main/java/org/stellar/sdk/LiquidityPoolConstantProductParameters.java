@@ -29,9 +29,26 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
     fee = feeBP;
   }
 
+  public Asset getAssetA() {
+    return assetA;
+  }
+
+  public Asset getAssetB() {
+    return assetB;
+  }
+
+  public int getFee() {
+    return fee;
+  }
+
   @Override
   public final boolean equals(Object object) {
-    throw new RuntimeException("TODO: Implement LiquidityPoolConstantProductParameters.equals");
+    if (object == null || !this.getClass().equals(object.getClass())) {
+        return false;
+    }
+
+    LiquidityPoolConstantProductParameters o = (LiquidityPoolConstantProductParameters) object;
+    return this.getAssetA().equals(o.getAssetA()) && this.getAssetB().equals(o.getAssetB()) && this.getFee() == o.getFee();
   }
 
   /**
@@ -58,8 +75,8 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
    */
   public static LiquidityPoolConstantProductParameters fromXdr(org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters xdr) {
     return new LiquidityPoolConstantProductParameters(
-      Asset.fromXdr(xdr.getAssetA()), 
-      Asset.fromXdr(xdr.getAssetB()), 
+      Asset.fromXdr(xdr.getAssetA()),
+      Asset.fromXdr(xdr.getAssetB()),
       xdr.getFee().getInt32().intValue()
     );
   }
@@ -67,7 +84,6 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
 
   @Override
   public final org.stellar.sdk.LiquidityPoolID getId() {
-    // TODO: I think we need to pass the type here as well?
     return new LiquidityPoolID(
       org.stellar.sdk.xdr.LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
       assetA,

@@ -26,6 +26,7 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
     return mParams;
   }
 
+  @Override
   public String getType() {
     return "pool_share";
   }

@@ -325,7 +325,7 @@ public class OperationTest {
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
-        Asset asset = new AssetTypeNative();
+        ChangeTrustAsset asset = ChangeTrustAsset.create(new AssetTypeNative());
         String limit = "922337203685.4775807";
 
         ChangeTrustOperation operation = new ChangeTrustOperation.Builder(asset, limit)
@@ -337,7 +337,7 @@ public class OperationTest {
 
         assertEquals(9223372036854775807L, xdr.getBody().getChangeTrustOp().getLimit().getInt64().longValue());
         assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
-        assertTrue(parsedOperation.getAsset() instanceof AssetTypeNative);
+        assertEquals("native", parsedOperation.getAsset().getType());
         assertEquals(limit, parsedOperation.getLimit());
 
         assertEquals(
@@ -984,7 +984,7 @@ public class OperationTest {
     public void testRevokeTrustlineSponsorshipOperation() {
         String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
         String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
-        Asset asset = new AssetTypeCreditAlphaNum4("DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
+        TrustLineAsset asset = TrustLineAsset.createNonNativeAsset("DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
         RevokeTrustlineSponsorshipOperation operation = new RevokeTrustlineSponsorshipOperation.Builder(accountId, asset).setSourceAccount(source).build();
         assertEquals("AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAQAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAFERU1PAAAAAKz0Cr5Fd9LDTK5kQa3RORjEAcOMH1GRCsutowtJMYYr", operation.toXdrBase64(AccountConverter.enableMuxed()));
 

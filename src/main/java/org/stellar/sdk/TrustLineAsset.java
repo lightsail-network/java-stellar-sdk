@@ -72,6 +72,9 @@ public abstract class TrustLineAsset {
     }
   }
 
+  @Override
+  public abstract boolean equals(Object object);
+
   public abstract String getType();
 
   /**
@@ -90,6 +93,16 @@ public abstract class TrustLineAsset {
 
     public Asset getAsset() {
       return asset;
+    }
+
+    @Override
+    public final boolean equals(Object object) {
+      if (object == null || !this.getClass().equals(object.getClass())) {
+          return false;
+      }
+
+      TrustLineAsset.Wrapper o = (TrustLineAsset.Wrapper) object;
+      return this.getAsset().equals(o.getAsset());
     }
 
     @Override

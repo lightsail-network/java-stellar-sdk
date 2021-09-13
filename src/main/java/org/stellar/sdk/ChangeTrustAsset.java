@@ -68,6 +68,10 @@ public abstract class ChangeTrustAsset {
     }
   }
 
+  public abstract boolean equals(Object object);
+
+  public abstract String getType();
+
   /**
    * Generates XDR object from a given ChangeTrustAsset object
    */
@@ -87,6 +91,16 @@ public abstract class ChangeTrustAsset {
     }
 
     @Override
+    public final boolean equals(Object object) {
+      if (object == null || !this.getClass().equals(object.getClass())) {
+          return false;
+      }
+
+      ChangeTrustAsset.Wrapper o = (ChangeTrustAsset.Wrapper) object;
+      return this.getAsset().equals(o.getAsset());
+    }
+
+    @Override
     public org.stellar.sdk.xdr.ChangeTrustAsset toXdr() {
       org.stellar.sdk.xdr.ChangeTrustAsset xdr = new org.stellar.sdk.xdr.ChangeTrustAsset();
 
@@ -96,6 +110,11 @@ public abstract class ChangeTrustAsset {
       xdr.setAlphaNum12(assetXdr.getAlphaNum12());
 
       return xdr;
+    }
+
+    @Override
+    public String getType() {
+      return asset.getType();
     }
   }
 }
