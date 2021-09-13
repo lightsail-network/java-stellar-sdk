@@ -1,0 +1,142 @@
+package org.stellar.sdk;
+
+import com.google.common.base.Objects;
+import org.stellar.sdk.xdr.Operation.OperationBody;
+import org.stellar.sdk.xdr.LiquidityPoolWithdrawOp;
+import org.stellar.sdk.xdr.OperationType;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#liquidity-pool-deposit" target="_blank">LiquidityPoolDeposit</a> operation.
+ * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
+ */
+public class LiquidityPoolWithdrawOperation extends Operation {
+    private final LiquidityPoolID liquidityPoolID;
+    private final String amount;
+    private final String minAmountA;
+    private final String minAmountB;
+
+    private LiquidityPoolWithdrawOperation(LiquidityPoolID liquidityPoolID, String amount, String minAmountA, String minAmountB) {
+      this.liquidityPoolID = checkNotNull(liquidityPoolID, "liquidityPoolID cannot be null");
+      this.amount = checkNotNull(amount, "amount cannot be null");
+      this.minAmountA = checkNotNull(minAmountA, "minAmountA cannot be null");
+      this.minAmountB = checkNotNull(minAmountB, "minAmountB cannot be null");
+    }
+
+    public LiquidityPoolID getLiquidityPoolID() {
+        return liquidityPoolID;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public String getMinAmountA() {
+        return minAmountA;
+    }
+
+    public String getMinAmountB() {
+        return minAmountB;
+    }
+
+    @Override
+    OperationBody toOperationBody(AccountConverter accountConverter) {
+        LiquidityPoolWithdrawOp op = new LiquidityPoolWithdrawOp();
+        op.setLiquidityPoolID(this.getLiquidityPoolID().toXdr());
+        op.setAmount(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getAmount())));
+        op.setMinAmountA(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getMinAmountA())));
+        op.setMinAmountB(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getMinAmountB())));
+
+        OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+        body.setDiscriminant(OperationType.LIQUIDITY_POOL_WITHDRAW);
+        body.setLiquidityPoolWithdrawOp(op);
+        return body;
+    }
+
+    /**
+     * Builds LiquidityPoolWithdraw operation.
+     * @see LiquidityPoolWithdrawOperation
+     */
+    public static class Builder {
+        private LiquidityPoolID liquidityPoolID;
+        private String amount;
+        private String minAmountA;
+        private String minAmountB;
+
+        private String sourceAccount;
+
+        Builder(LiquidityPoolWithdrawOp op) {
+          this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
+          this.amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
+          this.minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64().longValue());
+          this.minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64().longValue());
+        }
+
+        /**
+         * Creates a new LiquidityPoolDeposit builder.
+         */
+        public Builder(LiquidityPoolID liquidityPoolID, String amount, String minAmountA, String minAmountB) {
+          this.liquidityPoolID = liquidityPoolID;
+          this.amount = amount;
+          this.minAmountA = minAmountA;
+          this.minAmountB = minAmountB;
+        }
+
+        public Builder setLiquidityPoolID(LiquidityPoolID liquidityPoolID) {
+            this.liquidityPoolID = liquidityPoolID;
+            return this;
+        }
+
+        public Builder setAmount(String amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public Builder setMinAmountA(String minAmountA) {
+            this.minAmountA = minAmountA;
+            return this;
+        }
+
+        public Builder setMinAmountB(String minAmountB) {
+            this.minAmountB = minAmountB;
+            return this;
+        }
+
+        /**
+         * Set source account of this operation
+         * @param sourceAccount Source account
+         * @return Builder object so you can chain methods.
+         */
+        public Builder setSourceAccount(String sourceAccount) {
+            this.sourceAccount = sourceAccount;
+            return this;
+        }
+
+        /**
+         * Builds an operation
+         */
+        public LiquidityPoolWithdrawOperation build() {
+            LiquidityPoolWithdrawOperation op = new LiquidityPoolWithdrawOperation(liquidityPoolID, amount, minAmountA, minAmountB);
+            op.setSourceAccount(sourceAccount);
+            return op;
+        }
+    }
+
+    public int hashCode() {
+        return Objects.hashCode(liquidityPoolID, amount, minAmountA, minAmountB);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof LiquidityPoolWithdrawOperation)) {
+            return false;
+        }
+
+        LiquidityPoolWithdrawOperation o = (LiquidityPoolWithdrawOperation) object;
+        return Objects.equal(this.getLiquidityPoolID(), o.getLiquidityPoolID()) &&
+                Objects.equal(this.getAmount(), o.getAmount()) &&
+                Objects.equal(this.getMinAmountA(), o.getMinAmountA()) &&
+                Objects.equal(this.getMinAmountB(), o.getMinAmountB());
+    }
+}
