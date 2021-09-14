@@ -87,7 +87,7 @@ public class LiquidityPoolDepositOperation extends Operation {
          * Creates a new LiquidityPoolDeposit builder.
          */
         public Builder(AssetAmount a, AssetAmount b, Price minPrice, Price maxPrice) {
-          this.liquidityPoolID = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.getAsset(), b.getAsset(), LiquidityPoolFeeV18);
+          this.liquidityPoolID = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.getAsset(), b.getAsset(), LiquidityPoolParameters.Fee);
           this.maxAmountA = a.getAmount();
           this.maxAmountB = b.getAmount();
           this.minPrice = minPrice;

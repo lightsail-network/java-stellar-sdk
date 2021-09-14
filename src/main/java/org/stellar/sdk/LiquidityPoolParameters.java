@@ -9,6 +9,8 @@ import org.stellar.sdk.xdr.*;
 public abstract class LiquidityPoolParameters {
   LiquidityPoolParameters() {}
 
+  public static Integer Fee = 30;
+
   /**
    * TODO: Write something here
    *

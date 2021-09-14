@@ -216,6 +216,13 @@ public class Server implements Closeable {
         return new TransactionsRequestBuilder(httpClient, serverURI);
     }
 
+    /**
+     * Returns {@link LiquidityPoolsRequestBuilder} instance.
+     */
+    public LiquidityPoolsRequestBuilder liquidityPools() {
+        return new LiquidityPoolsRequestBuilder(httpClient, serverURI);
+    }
+
     private Optional<Network> getNetwork() {
         Lock readLock = this.networkLock.readLock();
         readLock.lock();

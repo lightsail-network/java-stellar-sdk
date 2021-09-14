@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.TrustLineAsset;
 
 import java.util.HashMap;
 
@@ -199,11 +201,11 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("asset_type")
     private final String assetType;
     @SerializedName("asset_code")
-    private final String assetCode;
+    private String assetCode;
     @SerializedName("asset_issuer")
-    private final String assetIssuer;
-    @SerializedName("liquidity_pool_shares");
-    private final String liquidityPoolID;
+    private String assetIssuer;
+    @SerializedName("liquidity_pool_shares")
+    private LiquidityPoolID liquidityPoolID;
     @SerializedName("limit")
     private final String limit;
     @SerializedName("balance")
@@ -221,7 +223,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     private String sponsor;
 
-    Balance(String assetType, String assetCode, String assetIssuer, String liquidityPoolID, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger, String sponsor) {
+    Balance(String assetType, String assetCode, String assetIssuer, LiquidityPoolID liquidityPoolID, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger, String sponsor) {
       this.assetType = checkNotNull(assetType, "assertType cannot be null");
       this.balance = checkNotNull(balance, "balance cannot be null");
       this.limit = limit;
@@ -237,13 +239,14 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       this.sponsor = sponsor;
     }
 
-    public Asset getAsset() {
+    public Optional<Asset> getAsset() {
       if (assetType.equals("native")) {
-        return new AssetTypeNative();
+        return Optional.of((Asset)new AssetTypeNative());
       } else if (assetType.equals("liquidity_pool_shares")) {
-        return TrustLineAsset.create(getLiquidityPoolID());
+        // TODO: Decide if this is the right way to handle this...
+        return Optional.absent();
       } else {
-        return Asset.createNonNativeAsset(assetCode, getAssetIssuer());
+        return Optional.of(Asset.createNonNativeAsset(assetCode, assetIssuer));
       }
     }
 
@@ -251,28 +254,28 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       return assetType;
     }
 
-    public String getAssetCode() {
-      return assetCode;
+    public Optional<String> getAssetCode() {
+      return Optional.fromNullable(assetCode);
     }
 
-    public String getAssetIssuer() {
-      return assetIssuer;
+    public Optional<String> getAssetIssuer() {
+      return Optional.fromNullable(assetIssuer);
     }
 
-    public LiquidityPoolID getLiquidityPoolID() {
-      return new LiquidityPoolID(liquidityPoolID);
+    public Optional<LiquidityPoolID> getLiquidityPoolID() {
+      return Optional.fromNullable(liquidityPoolID);
     }
 
     public String getBalance() {
       return balance;
     }
 
-    public String getBuyingLiabilities() {
-      return buyingLiabilities;
+    public Optional<String> getBuyingLiabilities() {
+      return Optional.fromNullable(buyingLiabilities);
     }
 
-    public String getSellingLiabilities() {
-      return sellingLiabilities;
+    public Optional<String> getSellingLiabilities() {
+      return Optional.fromNullable(sellingLiabilities);
     }
 
     public String getLimit() {

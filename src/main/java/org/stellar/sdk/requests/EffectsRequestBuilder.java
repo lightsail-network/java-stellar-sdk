@@ -5,6 +5,8 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.effects.EffectResponse;
 
@@ -49,6 +51,16 @@ public class EffectsRequestBuilder extends RequestBuilder {
   public EffectsRequestBuilder forTransaction(String transactionId) {
     transactionId = checkNotNull(transactionId, "transactionId cannot be null");
     this.setSegments("transactions", transactionId, "effects");
+    return this;
+  }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/effects</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/effects-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get effects
+   */
+  public EffectsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
+    this.setSegments("liquidity_pools", String.valueOf(liquidityPoolID), "effects");
     return this;
   }
 

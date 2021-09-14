@@ -7,6 +7,8 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
@@ -92,6 +94,16 @@ public class OperationsRequestBuilder extends RequestBuilder {
   public OperationsRequestBuilder forTransaction(String transactionId) {
     transactionId = checkNotNull(transactionId, "transactionId cannot be null");
     this.setSegments("transactions", transactionId, "operations");
+    return this;
+  }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/operations</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/operations-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get operations
+   */
+  public OperationsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
+    this.setSegments("liquidity_pools", String.valueOf(liquidityPoolID), "operations");
     return this;
   }
 
