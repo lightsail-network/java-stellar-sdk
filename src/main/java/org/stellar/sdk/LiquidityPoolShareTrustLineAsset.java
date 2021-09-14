@@ -54,6 +54,14 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
   }
 
   @Override
+  public int compareTo(TrustLineAsset other) {
+    if (other.getType() != "pool_share") {
+      return 1;
+    }
+    return this.toString().compareTo(((LiquidityPoolShareTrustLineAsset) other).toString());
+  }
+
+  @Override
   public org.stellar.sdk.xdr.TrustLineAsset toXdr() {
     org.stellar.sdk.xdr.TrustLineAsset xdr = new org.stellar.sdk.xdr.TrustLineAsset();
     xdr.setDiscriminant(AssetType.ASSET_TYPE_POOL_SHARE);

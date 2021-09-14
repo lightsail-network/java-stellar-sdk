@@ -53,6 +53,14 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
   }
 
   @Override
+  public int compareTo(ChangeTrustAsset other) {
+    if (other.getType() != "pool_share") {
+      return 1;
+    }
+    return this.toString().compareTo(((LiquidityPoolShareChangeTrustAsset) other).toString());
+  }
+
+  @Override
   public org.stellar.sdk.xdr.ChangeTrustAsset toXdr() {
     org.stellar.sdk.xdr.ChangeTrustAsset xdr = new org.stellar.sdk.xdr.ChangeTrustAsset();
     xdr.setDiscriminant(AssetType.ASSET_TYPE_POOL_SHARE);

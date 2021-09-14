@@ -40,4 +40,12 @@ public final class AssetTypeNative extends Asset {
     xdr.setDiscriminant(AssetType.ASSET_TYPE_NATIVE);
     return xdr;
   }
+
+  @Override
+  public int compareTo(Asset other) {
+    if (other.getType() == "native") {
+      return 0;
+    }
+    return -1;
+  }
 }

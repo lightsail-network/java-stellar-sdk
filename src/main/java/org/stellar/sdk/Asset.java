@@ -4,7 +4,7 @@ package org.stellar.sdk;
  * Base Asset class.
  * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
  */
-public abstract class Asset {
+public abstract class Asset implements Comparable<Asset> {
   Asset() {}
 
   /**
@@ -94,4 +94,6 @@ public abstract class Asset {
    * Generates XDR object from a given Asset object
    */
   public abstract org.stellar.sdk.xdr.Asset toXdr();
+
+  public abstract int compareTo(Asset other);
 }

@@ -37,4 +37,21 @@ public final class AssetTypeCreditAlphaNum4 extends AssetTypeCreditAlphaNum {
     xdr.setAlphaNum4(credit);
     return xdr;
   }
+
+  @Override
+  public int compareTo(Asset other) {
+    if (other.getType() == "credit_alphanum12") {
+      return -1;
+    } else if (other.getType() == "native") {
+      return 1;
+    }
+
+    AssetTypeCreditAlphaNum o = (AssetTypeCreditAlphaNum) other;
+
+    if (this.getCode() != o.getCode()) {
+      return this.getCode().compareTo(o.getCode());
+    }
+
+    return this.getIssuer().compareTo(o.getIssuer());
+  }
 }

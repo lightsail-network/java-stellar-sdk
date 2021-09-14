@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * ChangeTrustAsset class.
  * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
  */
-public abstract class ChangeTrustAsset {
+public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
   ChangeTrustAsset() {}
 
   /**
@@ -91,6 +91,11 @@ public abstract class ChangeTrustAsset {
     }
 
     @Override
+    public String getType() {
+      return asset.getType();
+    }
+
+    @Override
     public final boolean equals(Object object) {
       if (object == null || !this.getClass().equals(object.getClass())) {
           return false;
@@ -98,6 +103,14 @@ public abstract class ChangeTrustAsset {
 
       ChangeTrustAsset.Wrapper o = (ChangeTrustAsset.Wrapper) object;
       return this.getAsset().equals(o.getAsset());
+    }
+
+    @Override
+    public int compareTo(ChangeTrustAsset other) {
+      if (other.getType() == "pool_share") {
+        return -1;
+      }
+      return this.getAsset().compareTo(((ChangeTrustAsset.Wrapper) other).getAsset());
     }
 
     @Override
@@ -110,11 +123,6 @@ public abstract class ChangeTrustAsset {
       xdr.setAlphaNum12(assetXdr.getAlphaNum12());
 
       return xdr;
-    }
-
-    @Override
-    public String getType() {
-      return asset.getType();
     }
   }
 }

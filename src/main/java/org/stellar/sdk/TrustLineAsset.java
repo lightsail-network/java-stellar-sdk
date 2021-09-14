@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * TrustLineAsset class.
  * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
  */
-public abstract class TrustLineAsset {
+public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
   TrustLineAsset() {}
 
   /**
@@ -96,6 +96,11 @@ public abstract class TrustLineAsset {
     }
 
     @Override
+    public String getType() {
+      return asset.getType();
+    }
+
+    @Override
     public final boolean equals(Object object) {
       if (object == null || !this.getClass().equals(object.getClass())) {
           return false;
@@ -103,6 +108,14 @@ public abstract class TrustLineAsset {
 
       TrustLineAsset.Wrapper o = (TrustLineAsset.Wrapper) object;
       return this.getAsset().equals(o.getAsset());
+    }
+
+    @Override
+    public int compareTo(TrustLineAsset other) {
+      if (other.getType() == "pool_share") {
+        return -1;
+      }
+      return this.getAsset().compareTo(((TrustLineAsset.Wrapper) other).getAsset());
     }
 
     @Override
@@ -115,11 +128,6 @@ public abstract class TrustLineAsset {
       xdr.setAlphaNum12(assetXdr.getAlphaNum12());
 
       return xdr;
-    }
-
-    @Override
-    public String getType() {
-      return asset.getType();
     }
   }
 }
