@@ -1,9 +1,11 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.Operation.OperationBody;
+import com.google.common.base.Optional;
+
 import org.stellar.sdk.xdr.LiquidityPoolDepositOp;
 import org.stellar.sdk.xdr.LiquidityPoolType;
+import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -67,16 +69,18 @@ public class LiquidityPoolDepositOperation extends Operation {
      * @see LiquidityPoolDepositOperation
      */
     public static class Builder {
-        private final LiquidityPoolID liquidityPoolID;
-        private final String maxAmountA;
-        private final String maxAmountB;
-        private final Price minPrice;
-        private final Price maxPrice;
+        private Optional<LiquidityPoolID> liquidityPoolID;
+        private Optional<Asset> a;
+        private Optional<Asset> b;
+        private String maxAmountA;
+        private String maxAmountB;
+        private Price minPrice;
+        private Price maxPrice;
 
         private String sourceAccount;
 
         Builder(LiquidityPoolDepositOp op) {
-          this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
+          this.liquidityPoolID = Optional.fromNullable(LiquidityPoolID.fromXdr(op.getLiquidityPoolID()));
           this.maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64().longValue());
           this.maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64().longValue());
           this.minPrice = Price.fromXdr(op.getMinPrice());
@@ -87,7 +91,9 @@ public class LiquidityPoolDepositOperation extends Operation {
          * Creates a new LiquidityPoolDeposit builder.
          */
         public Builder(AssetAmount a, AssetAmount b, Price minPrice, Price maxPrice) {
-          this.liquidityPoolID = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.getAsset(), b.getAsset(), LiquidityPoolParameters.Fee);
+          this.liquidityPoolID = Optional.of(new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.getAsset(), b.getAsset(), LiquidityPoolParameters.Fee));
+          this.a = Optional.of(a.getAsset());
+          this.b = Optional.of(b.getAsset());
           this.maxAmountA = a.getAmount();
           this.maxAmountB = b.getAmount();
           this.minPrice = minPrice;
@@ -98,11 +104,57 @@ public class LiquidityPoolDepositOperation extends Operation {
          * Creates a new LiquidityPoolDeposit builder.
          */
         public Builder(LiquidityPoolID liquidityPoolID, String amountA, String amountB, Price minPrice, Price maxPrice) {
-          this.liquidityPoolID = liquidityPoolID;
+          this.liquidityPoolID = Optional.fromNullable(liquidityPoolID);
           this.maxAmountA = amountA;
           this.maxAmountB = amountB;
           this.minPrice = minPrice;
           this.maxPrice = maxPrice;
+        }
+
+        /**
+         * Set asset and amount A of this operation
+         * @param asset Asset A
+         * @param maxAmount Max amount of asset A to deposit
+         * @return Builder object so you can chain methods.
+         */
+        public Builder setA(Asset asset, String maxAmount) {
+          this.liquidityPoolID = Optional.absent();
+          this.a = Optional.of(asset);
+          this.maxAmountA = maxAmount;
+          return this;
+        }
+
+        /**
+         * Set asset and amount B of this operation
+         * @param asset Asset B
+         * @param maxAmount Max amount of asset B to deposit
+         * @return Builder object so you can chain methods.
+         */
+        public Builder setB(Asset asset, String maxAmount) {
+          this.liquidityPoolID = Optional.absent();
+          this.b = Optional.of(asset);
+          this.maxAmountB = maxAmount;
+          return this;
+        }
+
+        /**
+         * Set minimum price for this deposit.
+         * @param value Min price for this operation
+         * @return Builder object so you can chain methods.
+         */
+        public Builder setMinPrice(Price value) {
+          this.minPrice = value;
+          return this;
+        }
+
+        /**
+         * Set maximum price for this deposit.
+         * @param value Max price for this operation
+         * @return Builder object so you can chain methods.
+         */
+        public Builder setMaxPrice(Price value) {
+          this.maxPrice = value;
+          return this;
         }
 
         /**
@@ -119,7 +171,11 @@ public class LiquidityPoolDepositOperation extends Operation {
          * Builds an operation
          */
         public LiquidityPoolDepositOperation build() {
-            LiquidityPoolDepositOperation op = new LiquidityPoolDepositOperation(liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
+            if (!liquidityPoolID.isPresent() && a.isPresent() && b.isPresent()) {
+              liquidityPoolID = Optional.of(new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.get(), b.get(), LiquidityPoolParameters.Fee));
+            }
+
+            LiquidityPoolDepositOperation op = new LiquidityPoolDepositOperation(liquidityPoolID.get(), maxAmountA, maxAmountB, minPrice, maxPrice);
             op.setSourceAccount(sourceAccount);
             return op;
         }
