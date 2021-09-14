@@ -6,7 +6,7 @@ public final class AssetAmount {
   private final Asset asset;
   private final String amount;
 
-  private AssetAmount(Asset asset, String amount) {
+  AssetAmount(Asset asset, String amount) {
     this.asset = asset;
     this.amount = amount;
   }

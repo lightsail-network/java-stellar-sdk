@@ -136,7 +136,9 @@ public class LiquidityPoolDepositOperation extends Operation {
          * Builds an operation
          */
         public LiquidityPoolDepositOperation build() {
-          throw new Exception("TODO: Implement LiquidityPoolDepositOperation.Builder.build");
+            LiquidityPoolDepositOperation op = new LiquidityPoolDepositOperation(liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
+            op.setSourceAccount(sourceAccount);
+            return op;
         }
     }
 
