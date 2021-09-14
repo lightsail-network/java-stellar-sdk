@@ -27,6 +27,8 @@ public class TradeResponse extends Response implements Pageable {
 
     @SerializedName("base_account")
     protected final String baseAccount;
+    @SerializedName("base_liquidity_pool_id")
+    protected final String baseLiquidityPoolID;
     @SerializedName("base_offer_id")
     private final String baseOfferId;
     @SerializedName("base_amount")
@@ -40,6 +42,8 @@ public class TradeResponse extends Response implements Pageable {
 
     @SerializedName("counter_account")
     protected final String counterAccount;
+    @SerializedName("counter_liquidity_pool_id")
+    protected final String counterLiquidityPoolID;
     @SerializedName("counter_offer_id")
     private final String counterOfferId;
     @SerializedName("counter_amount")
@@ -57,19 +61,21 @@ public class TradeResponse extends Response implements Pageable {
     @SerializedName("_links")
     private TradeResponse.Links links;
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, String baseLiquidityPoolID, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, String counterLiquidityPoolID, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
         this.offerId = offerId;
         this.baseIsSeller = baseIsSeller;
         this.baseAccount = baseAccount;
+        this.baseLiquidityPoolID = baseLiquidityPoolID;
         this.baseOfferId = baseOfferId;
         this.baseAmount = baseAmount;
         this.baseAssetType = baseAssetType;
         this.baseAssetCode = baseAssetCode;
         this.baseAssetIssuer = baseAssetIssuer;
         this.counterAccount = counterAccount;
+        this.counterLiquidityPoolID = counterLiquidityPoolID;
         this.counterOfferId = counterOfferId;
         this.counterAmount = counterAmount;
         this.counterAssetType = counterAssetType;
@@ -106,6 +112,10 @@ public class TradeResponse extends Response implements Pageable {
         return baseAccount;
     }
 
+    public LiquidityPoolID getBaseLiquidityPoolID() {
+        return new LiquidityPoolID(baseLiquidityPoolID);
+    }
+
     public String getBaseAmount() {
         return baseAmount;
     }
@@ -128,6 +138,10 @@ public class TradeResponse extends Response implements Pageable {
 
     public String getCounterAccount() {
         return counterAccount;
+    }
+
+    public LiquidityPoolID getCounterLiquidityPoolID() {
+        return new LiquidityPoolID(counterLiquidityPoolID);
     }
 
     public String getCounterOfferId() {

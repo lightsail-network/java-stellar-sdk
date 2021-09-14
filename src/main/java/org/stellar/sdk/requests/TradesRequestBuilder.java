@@ -17,6 +17,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Builds requests connected to trades.
  */
 public class TradesRequestBuilder extends RequestBuilder {
+    private static final String TRADE_TYPE_PARAMETER_NAME = "trade_type";
+
     public TradesRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
         super(httpClient, serverURI, "trades");
     }
@@ -51,6 +53,20 @@ public class TradesRequestBuilder extends RequestBuilder {
         this.setSegments("accounts", account, "trades");
         return this;
     }
+
+    /**
+     * Returns all trades that of a specific type.
+     *
+     * @param trade type
+     * @return current {@link TradesRequestBuilder} instance
+     * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades.html">Trades</a>
+     */
+    public TradesRequestBuilder forTradeType(String tradeType) {
+        tradeType = checkNotNull(tradeType, "tradeType cannot be null");
+        uriBuilder.setQueryParameter(TRADE_TYPE_PARAMETER_NAME, tradeType);
+        return this;
+    }
+
 
     public static Page<TradeResponse> execute(OkHttpClient httpClient, HttpUrl uri)
         throws IOException, TooManyRequestsException {

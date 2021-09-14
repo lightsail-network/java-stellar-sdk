@@ -202,6 +202,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private final String assetCode;
     @SerializedName("asset_issuer")
     private final String assetIssuer;
+    @SerializedName("liquidity_pool_shares");
+    private final String liquidityPoolID;
     @SerializedName("limit")
     private final String limit;
     @SerializedName("balance")
@@ -219,12 +221,13 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     private String sponsor;
 
-    Balance(String assetType, String assetCode, String assetIssuer, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger, String sponsor) {
+    Balance(String assetType, String assetCode, String assetIssuer, String liquidityPoolID, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger, String sponsor) {
       this.assetType = checkNotNull(assetType, "assertType cannot be null");
       this.balance = checkNotNull(balance, "balance cannot be null");
       this.limit = limit;
       this.assetCode = assetCode;
       this.assetIssuer = assetIssuer;
+      this.liquidityPoolID = liquidityPoolID;
       this.buyingLiabilities = checkNotNull(buyingLiabilities, "buyingLiabilities cannot be null");
       this.sellingLiabilities = checkNotNull(sellingLiabilities, "sellingLiabilities cannot be null");
       this.isAuthorized = isAuthorized;
@@ -237,6 +240,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     public Asset getAsset() {
       if (assetType.equals("native")) {
         return new AssetTypeNative();
+      } else if (assetType.equals("liquidity_pool_shares")) {
+        return TrustLineAsset.create(getLiquidityPoolID());
       } else {
         return Asset.createNonNativeAsset(assetCode, getAssetIssuer());
       }
@@ -252,6 +257,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
     public String getAssetIssuer() {
       return assetIssuer;
+    }
+
+    public LiquidityPoolID getLiquidityPoolID() {
+      return new LiquidityPoolID(liquidityPoolID);
     }
 
     public String getBalance() {
