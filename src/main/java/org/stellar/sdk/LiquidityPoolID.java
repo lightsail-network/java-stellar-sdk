@@ -14,6 +14,10 @@ public final class LiquidityPoolID {
   protected final byte[] hash;
 
   LiquidityPoolID(LiquidityPoolType type, Asset a, Asset b, int fee) {
+    if (a.compareTo(b) >= 0) {
+      throw new RuntimeException("AssetA must be < AssetB");
+    }
+
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
     try {

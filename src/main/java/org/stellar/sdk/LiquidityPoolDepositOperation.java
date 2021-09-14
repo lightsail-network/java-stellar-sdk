@@ -105,23 +105,6 @@ public class LiquidityPoolDepositOperation extends Operation {
           this.maxPrice = maxPrice;
         }
 
-        public Builder setA(AssetAmount _a) {
-            a = _a;
-            return this;
-        }
-        public Builder setA(Asset asset, String amount) {
-            a = new AssetAmount(asset, amount);
-            return this;
-        }
-        public Builder setB(AssetAmount _b) {
-            b = _b;
-            return this;
-        }
-        public Builder setB(Asset asset, String amount) {
-            b = new AssetAmount(asset, amount);
-            return this;
-        }
-
         /**
          * Set source account of this operation
          * @param sourceAccount Source account
@@ -153,8 +136,9 @@ public class LiquidityPoolDepositOperation extends Operation {
         }
 
         LiquidityPoolDepositOperation o = (LiquidityPoolDepositOperation) object;
-        return Objects.equal(this.getA(), o.getA()) &&
-                Objects.equal(this.getB(), o.getB()) &&
+        return Objects.equal(this.getLiquidityPoolID(), o.getLiquidityPoolID()) &&
+                Objects.equal(this.getMaxAmountA(), o.getMaxAmountA()) &&
+                Objects.equal(this.getMaxAmountB(), o.getMaxAmountB()) &&
                 Objects.equal(this.getMinPrice(), o.getMinPrice()) &&
                 Objects.equal(this.getMaxPrice(), o.getMaxPrice());
     }
