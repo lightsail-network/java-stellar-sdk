@@ -91,6 +91,9 @@ public class LiquidityPoolDepositOperation extends Operation {
          * Creates a new LiquidityPoolDeposit builder.
          */
         public Builder(AssetAmount a, AssetAmount b, Price minPrice, Price maxPrice) {
+          if (a.getAsset().compareTo(b.getAsset()) >= 0) {
+            throw new RuntimeException("AssetA must be < AssetB");
+          }
           this.liquidityPoolID = Optional.of(new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.getAsset(), b.getAsset(), LiquidityPoolParameters.Fee));
           this.a = Optional.of(a.getAsset());
           this.b = Optional.of(b.getAsset());
@@ -171,8 +174,14 @@ public class LiquidityPoolDepositOperation extends Operation {
          * Builds an operation
          */
         public LiquidityPoolDepositOperation build() {
-            if (!liquidityPoolID.isPresent() && a.isPresent() && b.isPresent()) {
-              liquidityPoolID = Optional.of(new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.get(), b.get(), LiquidityPoolParameters.Fee));
+            if (a.isPresent() && b.isPresent()) {
+                if (a.getAsset().compareTo(b.getAsset()) >= 0) {
+                    throw new RuntimeException("AssetA must be < AssetB");
+                }
+
+                if (!liquidityPoolID.isPresent()) {
+                    liquidityPoolID = Optional.of(new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.get(), b.get(), LiquidityPoolParameters.Fee));
+                }
             }
 
             LiquidityPoolDepositOperation op = new LiquidityPoolDepositOperation(liquidityPoolID.get(), maxAmountA, maxAmountB, minPrice, maxPrice);
