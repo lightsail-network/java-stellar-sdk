@@ -72,10 +72,13 @@ public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
     }
   }
 
+  public abstract String getType();
+
   @Override
   public abstract boolean equals(Object object);
 
-  public abstract String getType();
+  @Override
+  public abstract int compareTo(TrustLineAsset other);
 
   /**
    * Generates XDR object from a given TrustLineAsset object

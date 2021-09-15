@@ -68,9 +68,13 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
     }
   }
 
+  public abstract String getType();
+
+  @Override
   public abstract boolean equals(Object object);
 
-  public abstract String getType();
+  @Override
+  public abstract int compareTo(ChangeTrustAsset other);
 
   /**
    * Generates XDR object from a given ChangeTrustAsset object

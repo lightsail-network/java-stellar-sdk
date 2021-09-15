@@ -175,7 +175,7 @@ public class LiquidityPoolDepositOperation extends Operation {
          */
         public LiquidityPoolDepositOperation build() {
             if (a.isPresent() && b.isPresent()) {
-                if (a.getAsset().compareTo(b.getAsset()) >= 0) {
+                if (a.get().compareTo(b.get()) >= 0) {
                     throw new RuntimeException("AssetA must be < AssetB");
                 }
 

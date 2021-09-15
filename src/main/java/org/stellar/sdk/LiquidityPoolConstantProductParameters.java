@@ -48,7 +48,9 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
     }
 
     LiquidityPoolConstantProductParameters o = (LiquidityPoolConstantProductParameters) object;
-    return this.getAssetA().equals(o.getAssetA()) && this.getAssetB().equals(o.getAssetB()) && this.getFee() == o.getFee();
+    return Objects.equal(this.getAssetA(), o.getAssetA())
+      && Objects.equal(this.getAssetB(), o.getAssetB())
+      && Objects.equal(this.getFee(), o.getFee());
   }
 
   /**

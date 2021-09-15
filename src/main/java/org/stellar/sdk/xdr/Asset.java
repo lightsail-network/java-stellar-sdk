@@ -79,39 +79,44 @@ public class Asset implements XdrElement {
   }
 
   public static void encode(XdrDataOutputStream stream, Asset encodedAsset) throws IOException {
-  //Xdrgen::AST::Identifier
-  //AssetType
-  stream.writeInt(encodedAsset.getDiscriminant().getValue());
-  switch (encodedAsset.getDiscriminant()) {
-  case ASSET_TYPE_NATIVE:
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM4:
-  AlphaNum4.encode(stream, encodedAsset.alphaNum4);
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM12:
-  AlphaNum12.encode(stream, encodedAsset.alphaNum12);
-  break;
-  }
+    //Xdrgen::AST::Identifier
+    //AssetType
+    stream.writeInt(encodedAsset.getDiscriminant().getValue());
+    switch (encodedAsset.getDiscriminant()) {
+      case ASSET_TYPE_NATIVE:
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        AlphaNum4.encode(stream, encodedAsset.alphaNum4);
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        AlphaNum12.encode(stream, encodedAsset.alphaNum12);
+        break;
+      case ASSET_TYPE_POOL_SHARE:
+        throw new RuntimeException("Invalid asset type");
+    }
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static Asset decode(XdrDataInputStream stream) throws IOException {
-  Asset decodedAsset = new Asset();
-  AssetType discriminant = AssetType.decode(stream);
-  decodedAsset.setDiscriminant(discriminant);
-  switch (decodedAsset.getDiscriminant()) {
-  case ASSET_TYPE_NATIVE:
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM4:
-  decodedAsset.alphaNum4 = AlphaNum4.decode(stream);
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM12:
-  decodedAsset.alphaNum12 = AlphaNum12.decode(stream);
-  break;
-  }
+    Asset decodedAsset = new Asset();
+    AssetType discriminant = AssetType.decode(stream);
+    decodedAsset.setDiscriminant(discriminant);
+    switch (decodedAsset.getDiscriminant()) {
+      case ASSET_TYPE_NATIVE:
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        decodedAsset.alphaNum4 = AlphaNum4.decode(stream);
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        decodedAsset.alphaNum12 = AlphaNum12.decode(stream);
+        break;
+      case ASSET_TYPE_POOL_SHARE:
+        throw new RuntimeException("Invalid asset type");
+    }
     return decodedAsset;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.alphaNum4, this.alphaNum12, this.type);

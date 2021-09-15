@@ -1,15 +1,9 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.base.Optional;
-import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPoolID;
-
-import java.util.HashMap;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
