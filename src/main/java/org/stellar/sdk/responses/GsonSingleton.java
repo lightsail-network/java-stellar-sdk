@@ -6,8 +6,10 @@ import com.google.gson.reflect.TypeToken;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Predicate;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class GsonSingleton {
   private static Gson instance = null;
@@ -20,6 +22,7 @@ public class GsonSingleton {
       TypeToken assetPageType = new TypeToken<Page<AssetResponse>>() {};
       TypeToken effectPageType = new TypeToken<Page<EffectResponse>>() {};
       TypeToken ledgerPageType = new TypeToken<Page<LedgerResponse>>() {};
+      TypeToken liquidityPoolPageType = new TypeToken<Page<LiquidityPoolResponse>>() {};
       TypeToken offerPageType = new TypeToken<Page<OfferResponse>>() {};
       TypeToken operationPageType = new TypeToken<Page<OperationResponse>>() {};
       TypeToken pathPageType = new TypeToken<Page<PathResponse>>() {};
@@ -33,11 +36,14 @@ public class GsonSingleton {
                       .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
                       .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
                       .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
+                      .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
+                      .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
                       .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
                       .registerTypeAdapter(accountPageType.getType(), new PageDeserializer<AccountResponse>(accountPageType))
                       .registerTypeAdapter(assetPageType.getType(), new PageDeserializer<AssetResponse>(assetPageType))
                       .registerTypeAdapter(effectPageType.getType(), new PageDeserializer<AccountResponse>(effectPageType))
                       .registerTypeAdapter(ledgerPageType.getType(), new PageDeserializer<LedgerResponse>(ledgerPageType))
+                      .registerTypeAdapter(liquidityPoolPageType.getType(), new PageDeserializer<LiquidityPoolResponse>(liquidityPoolPageType))
                       .registerTypeAdapter(offerPageType.getType(), new PageDeserializer<OfferResponse>(offerPageType))
                       .registerTypeAdapter(operationPageType.getType(), new PageDeserializer<OperationResponse>(operationPageType))
                       .registerTypeAdapter(pathPageType.getType(), new PageDeserializer<PathResponse>(pathPageType))

@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -12,7 +13,7 @@ import org.stellar.sdk.xdr.*;
 public final class LiquidityPoolID {
   protected final byte[] hash;
 
-  LiquidityPoolID(LiquidityPoolType type, Asset a, Asset b, int fee) {
+  public LiquidityPoolID(LiquidityPoolType type, Asset a, Asset b, int fee) {
     if (a.compareTo(b) >= 0) {
       throw new RuntimeException("AssetA must be < AssetB");
     }
@@ -27,11 +28,11 @@ public final class LiquidityPoolID {
     hash = Util.hash(byteArrayOutputStream.toByteArray());
   }
 
-  LiquidityPoolID(String hex) {
+  public LiquidityPoolID(String hex) {
     hash = Util.hexToBytes(hex.toUpperCase());
   }
 
-  LiquidityPoolID(byte[] bytes) {
+  public LiquidityPoolID(byte[] bytes) {
     hash = bytes;
   }
 
@@ -56,7 +57,7 @@ public final class LiquidityPoolID {
 
     LiquidityPoolID o = (LiquidityPoolID) object;
 
-    return this.toString() == o.toString();
+    return Objects.equal(this.toString(), o.toString());
   }
 
   /**

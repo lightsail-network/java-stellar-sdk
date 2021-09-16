@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 public class LiquidityPoolIDTest {
   private final Asset a = Asset.create("native");
   private final Asset b = Asset.createNonNativeAsset("ABC", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
+  private final Asset c = Asset.createNonNativeAsset("ABCD", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
 
   @Test
   public void testLiquidityPoolID() {
@@ -24,5 +25,18 @@ public class LiquidityPoolIDTest {
     } catch (RuntimeException e) {
       assertEquals("AssetA must be < AssetB", e.getMessage());
     }
+  }
+
+  @Test
+  public void testEquality() {
+    LiquidityPoolID pool1 = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.Fee);
+    assertEquals(pool1, pool1);
+  }
+  
+  @Test
+  public void testInequality() {
+    LiquidityPoolID pool1 = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.Fee);
+    LiquidityPoolID pool2 = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, b, c, LiquidityPoolParameters.Fee);
+    assertNotEquals(pool1, pool2);
   }
 }

@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.Operation.OperationBody;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 import org.stellar.sdk.xdr.LiquidityPoolWithdrawOp;
 import org.stellar.sdk.xdr.OperationType;
 
@@ -64,7 +65,7 @@ public class LiquidityPoolWithdrawOperation extends Operation {
         private String minAmountA;
         private String minAmountB;
 
-        private String sourceAccount;
+        private String mSourceAccount;
 
         Builder(LiquidityPoolWithdrawOp op) {
           this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
@@ -82,6 +83,16 @@ public class LiquidityPoolWithdrawOperation extends Operation {
           this.minAmountA = minAmountA;
           this.minAmountB = minAmountB;
         }
+
+        /**
+         * Creates a new LiquidityPoolDeposit builder.
+         */
+        public Builder(AssetAmount a, AssetAmount b, String amount) {
+            this.liquidityPoolID = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.getAsset(), b.getAsset(), LiquidityPoolParameters.Fee);
+            this.amount = amount;
+            this.minAmountA = a.getAmount();
+            this.minAmountB = b.getAmount();
+          }
 
         public Builder setLiquidityPoolID(LiquidityPoolID liquidityPoolID) {
             this.liquidityPoolID = liquidityPoolID;
@@ -109,7 +120,7 @@ public class LiquidityPoolWithdrawOperation extends Operation {
          * @return Builder object so you can chain methods.
          */
         public Builder setSourceAccount(String sourceAccount) {
-            this.sourceAccount = sourceAccount;
+            mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
             return this;
         }
 
@@ -118,7 +129,9 @@ public class LiquidityPoolWithdrawOperation extends Operation {
          */
         public LiquidityPoolWithdrawOperation build() {
             LiquidityPoolWithdrawOperation op = new LiquidityPoolWithdrawOperation(liquidityPoolID, amount, minAmountA, minAmountB);
-            op.setSourceAccount(sourceAccount);
+            if (mSourceAccount != null) {
+                op.setSourceAccount(mSourceAccount);
+            }
             return op;
         }
     }

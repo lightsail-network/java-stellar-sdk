@@ -1,11 +1,15 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.errorprone.annotations.ForOverride;
 
 /**
  * Represents liquidity pool response.
@@ -21,7 +25,7 @@ public class LiquidityPoolResponse extends Response {
   @SerializedName("fee_bp")
   private Integer feeBP;
   @SerializedName("type")
-  private String type;
+  private LiquidityPoolType type;
   @SerializedName("total_trustlines")
   private String totalTrustlines;
   @SerializedName("total_shares")
@@ -47,7 +51,7 @@ public class LiquidityPoolResponse extends Response {
     return feeBP;
   }
 
-  public String getType() {
+  public LiquidityPoolType getType() {
     return type;
   }
 
@@ -70,19 +74,35 @@ public class LiquidityPoolResponse extends Response {
     @SerializedName("amount")
     private final String amount;
     @SerializedName("asset")
-    private final String asset;
+    private final Asset asset;
 
-    Reserve(String amount, String asset) {
+    public Reserve(String amount, String asset) {
+      this.amount = checkNotNull(amount, "amount cannot be null");
+      this.asset = Asset.create(checkNotNull(asset, "asset cannot be null"));
+    }
+
+    public Reserve(String amount, Asset asset) {
       this.amount = checkNotNull(amount, "amount cannot be null");
       this.asset = checkNotNull(asset, "asset cannot be null");
     }
 
     public Asset getAsset() {
-      return Asset.create(asset);
+      return asset;
     }
 
     public String getAmount() {
       return amount;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+      if (!(other instanceof LiquidityPoolResponse.Reserve)) {
+        return false;
+      }
+  
+      LiquidityPoolResponse.Reserve o = (LiquidityPoolResponse.Reserve) other;
+      return Objects.equal(this.getAsset(), o.getAsset())
+        && Objects.equal(this.getAmount(), o.getAmount());
     }
   }
 

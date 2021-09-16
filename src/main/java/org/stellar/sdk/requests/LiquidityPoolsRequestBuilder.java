@@ -58,15 +58,14 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
     return this.liquidityPool(liquidityPoolID.toString());
   }
 
-
   /**
    * Returns all liquidity pools that contain reserves in all specified assets.
    *
-   * @param signer Liquidity Pool ID
+   * @param reserves Reserve assets to filter liquidity pools
    * @return current {@link LiquidityPoolsRequestBuilder} instance
    * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/liquidity-pools.html">LiquidityPools</a>
    */
-  public LiquidityPoolsRequestBuilder forReserves(String[] reserves) {
+  public LiquidityPoolsRequestBuilder forReserves(String... reserves) {
     uriBuilder.setQueryParameter(RESERVES_PARAMETER_NAME, String.join(",", reserves));
     return this;
   }

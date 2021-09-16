@@ -26,4 +26,21 @@ public class AssetDeserializerTest extends TestCase {
         assertEquals(creditAsset.getCode(), "CNY");
         assertEquals(creditAsset.getIssuer(), "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX");
     }
+
+    @Test
+    public void testDeserializeCanonicalStringNative() {
+        String json = "\"native\"";
+        Asset asset = GsonSingleton.getInstance().fromJson(json, Asset.class);
+        assertEquals(asset.getType(), "native");
+    }
+
+    @Test
+    public void testDeserializeCanonicalStringCredit() {
+        String json = "\"CNY:GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX\"";
+        Asset asset = GsonSingleton.getInstance().fromJson(json, Asset.class);
+        assertEquals(asset.getType(), "credit_alphanum4");
+        AssetTypeCreditAlphaNum creditAsset = (AssetTypeCreditAlphaNum) asset;
+        assertEquals(creditAsset.getCode(), "CNY");
+        assertEquals(creditAsset.getIssuer(), "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX");
+    }
 }

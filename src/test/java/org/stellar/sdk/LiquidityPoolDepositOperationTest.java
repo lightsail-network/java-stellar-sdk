@@ -1,30 +1,92 @@
 package org.stellar.sdk;
 
-import com.google.common.collect.Lists;
 import org.junit.Test;
-import org.stellar.sdk.xdr.SignerKey;
-import org.stellar.sdk.xdr.TrustLineFlags;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-
-import com.google.common.io.BaseEncoding;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.EnumSet;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class LiquidityPoolDepositOperationTest {
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+    Asset nativeAsset = Asset.create("native");
+    Asset creditAsset = Asset.createNonNativeAsset("ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    LiquidityPoolID liquidityPoolID = new LiquidityPoolID(
+        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+        nativeAsset,
+        creditAsset,
+        LiquidityPoolParameters.Fee
+    );
+
     @Test
     public void testLiquidityPoolDepositOperationValid() {
-        fail();
+        String maxAmountA = "1000";
+        String maxAmountB = "2000";
+        Price minPrice = Price.fromString("0.01");
+        Price maxPrice = Price.fromString("0.02");
+        LiquidityPoolDepositOperation operation = new LiquidityPoolDepositOperation.Builder(liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice)
+                .setSourceAccount(source.getAccountId())
+                .build();
+
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        LiquidityPoolDepositOperation parsedOperation = (LiquidityPoolDepositOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+
+        assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
+        assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+        assertEquals(maxAmountA, parsedOperation.getMaxAmountA());
+        assertEquals(maxAmountB, parsedOperation.getMaxAmountB());
+        assertEquals(minPrice, parsedOperation.getMinPrice());
+        assertEquals(maxPrice, parsedOperation.getMaxPrice());
+
+        assertEquals(
+                "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAABb5NUX4ubtAgBk7zCsrbB/oCH2ADwtupaNB0FyfhxedxwAAAAJUC+QAAAAABKgXyAAAAAABAAAAZAAAAAEAAAAy",
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
     }
 
     @Test
-    public void testLiquidityPoolDepositOperationMisorderedAssets() {
-        fail();
+    public void testBuilderPairs() {
+        String maxAmountA = "1000";
+        String maxAmountB = "2000";
+        Price minPrice = Price.fromString("0.01");
+        Price maxPrice = Price.fromString("0.02");
+        LiquidityPoolDepositOperation operation = new LiquidityPoolDepositOperation.Builder(
+            new AssetAmount(nativeAsset, maxAmountA),
+            new AssetAmount(creditAsset, maxAmountB),
+            minPrice,
+            maxPrice
+        ).setSourceAccount(source.getAccountId()).build();
+
+        org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+        LiquidityPoolDepositOperation parsedOperation = (LiquidityPoolDepositOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+
+        assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
+        assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+        assertEquals(maxAmountA, parsedOperation.getMaxAmountA());
+        assertEquals(maxAmountB, parsedOperation.getMaxAmountB());
+        assertEquals(minPrice, parsedOperation.getMinPrice());
+        assertEquals(maxPrice, parsedOperation.getMaxPrice());
+
+        assertEquals(
+                "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAABb5NUX4ubtAgBk7zCsrbB/oCH2ADwtupaNB0FyfhxedxwAAAAJUC+QAAAAABKgXyAAAAAABAAAAZAAAAAEAAAAy",
+                operation.toXdrBase64(AccountConverter.enableMuxed()));
+    }
+
+    @Test
+    public void testBuilderPairsMisorderedAssets() {
+        String maxAmountA = "1000";
+        String maxAmountB = "2000";
+        Price minPrice = Price.fromString("0.01");
+        Price maxPrice = Price.fromString("0.02");
+        try {
+            new LiquidityPoolDepositOperation.Builder(
+                new AssetAmount(creditAsset, maxAmountB),
+                new AssetAmount(nativeAsset, maxAmountA),
+                minPrice,
+                maxPrice
+            ).setSourceAccount(source.getAccountId()).build();
+            fail();
+        } catch (RuntimeException e) {
+            assertEquals("AssetA must be < AssetB", e.getMessage());
+        }
     }
 }

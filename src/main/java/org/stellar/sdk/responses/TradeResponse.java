@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Price;
 import org.stellar.sdk.LiquidityPoolID;
 
 /**
@@ -58,12 +57,12 @@ public class TradeResponse extends Response implements Pageable {
     protected final String counterAssetIssuer;
 
     @SerializedName("price")
-    protected final Price price;
+    protected final TradePrice price;
 
     @SerializedName("_links")
     private TradeResponse.Links links;
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, LiquidityPoolID baseLiquidityPoolID, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, LiquidityPoolID counterLiquidityPoolID, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, LiquidityPoolID baseLiquidityPoolID, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, LiquidityPoolID counterLiquidityPoolID, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, TradePrice price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
@@ -170,7 +169,7 @@ public class TradeResponse extends Response implements Pageable {
         return counterAssetIssuer;
     }
 
-    public Price getPrice() {
+    public TradePrice getPrice() {
         return price;
     }
 

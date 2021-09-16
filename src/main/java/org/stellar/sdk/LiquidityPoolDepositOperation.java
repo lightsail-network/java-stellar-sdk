@@ -69,15 +69,15 @@ public class LiquidityPoolDepositOperation extends Operation {
      * @see LiquidityPoolDepositOperation
      */
     public static class Builder {
-        private Optional<LiquidityPoolID> liquidityPoolID;
-        private Optional<Asset> a;
-        private Optional<Asset> b;
+        private Optional<LiquidityPoolID> liquidityPoolID = Optional.absent();
+        private Optional<Asset> a = Optional.absent();
+        private Optional<Asset> b = Optional.absent();
         private String maxAmountA;
         private String maxAmountB;
         private Price minPrice;
         private Price maxPrice;
 
-        private String sourceAccount;
+        private String mSourceAccount;
 
         Builder(LiquidityPoolDepositOp op) {
           this.liquidityPoolID = Optional.fromNullable(LiquidityPoolID.fromXdr(op.getLiquidityPoolID()));
@@ -166,7 +166,7 @@ public class LiquidityPoolDepositOperation extends Operation {
          * @return Builder object so you can chain methods.
          */
         public Builder setSourceAccount(String sourceAccount) {
-            this.sourceAccount = sourceAccount;
+            mSourceAccount = sourceAccount;
             return this;
         }
 
@@ -185,7 +185,9 @@ public class LiquidityPoolDepositOperation extends Operation {
             }
 
             LiquidityPoolDepositOperation op = new LiquidityPoolDepositOperation(liquidityPoolID.get(), maxAmountA, maxAmountB, minPrice, maxPrice);
-            op.setSourceAccount(sourceAccount);
+            if (mSourceAccount != null) {
+              op.setSourceAccount(mSourceAccount);
+            }
             return op;
         }
     }

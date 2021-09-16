@@ -13,6 +13,10 @@ import java.lang.reflect.Type;
 class AssetDeserializer implements JsonDeserializer<Asset> {
   @Override
   public Asset deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    if (!json.isJsonObject()) {
+      // Probably a canonical string
+      return Asset.create(json.getAsString());
+    }
     String type = json.getAsJsonObject().get("asset_type").getAsString();
     if (type.equals("native")) {
       return new AssetTypeNative();

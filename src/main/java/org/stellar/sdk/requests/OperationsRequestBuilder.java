@@ -98,12 +98,21 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/operations</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/operations-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * Builds request to <code>GET /liquidity_pools/{poolID}/operations</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/operations-for-liquidity-pool.html">Operations for Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get operations
    */
   public OperationsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
-    this.setSegments("liquidity_pools", String.valueOf(liquidityPoolID), "operations");
+    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
+  }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{poolID}/operations</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/operations-for-liquidity-pool.html">Operations for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get operations
+   */
+  public OperationsRequestBuilder forLiquidityPool(String liquidityPoolID) {
+    this.setSegments("liquidity_pools", liquidityPoolID, "operations");
     return this;
   }
 

@@ -86,7 +86,16 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param liquidityPoolID Liquidity pool for which to get transactions
    */
   public TransactionsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
-    this.setSegments("liquidity_pools", String.valueOf(liquidityPoolID), "transactions");
+    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
+  }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/transactions</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get transactions
+   */
+  public TransactionsRequestBuilder forLiquidityPool(String liquidityPoolID) {
+    this.setSegments("liquidity_pools", liquidityPoolID, "transactions");
     return this;
   }
 

@@ -55,12 +55,21 @@ public class EffectsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/effects</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/effects-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * Builds request to <code>GET /liquidity_pools/{poolID}/effects</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/effects-for-liquidity-pool.html">Effects for Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get effects
    */
   public EffectsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
-    this.setSegments("liquidity_pools", String.valueOf(liquidityPoolID), "effects");
+    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
+  }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{poolID}/effects</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/effects-for-liquidity-pool.html">Effects for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get effects
+   */
+  public EffectsRequestBuilder forLiquidityPool(String liquidityPoolID) {
+    this.setSegments("liquidity_pools", liquidityPoolID, "effects");
     return this;
   }
 
