@@ -12,7 +12,7 @@ public abstract class LiquidityPoolParameters {
   public static Integer Fee = 30;
 
   /**
-   * TODO: Write something here
+   * LiquidityPoolParameters represents the parameters specifying a liquidity pool.
    *
    * @param type Type of the liquidity pool
    * @param a First asset in the liquidity pool

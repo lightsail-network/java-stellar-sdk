@@ -14,7 +14,7 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
   protected final int fee;
 
   /**
-   * TODO: Write something here
+   * LiquidityPoolConstantProductParameters represents the parameters specifying a constant-product liquidity pool.
    *
    * @param a First asset in the liquidity pool
    * @param b Second asset in the liquidity pool
