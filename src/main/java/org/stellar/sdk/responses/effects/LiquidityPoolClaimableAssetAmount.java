@@ -5,13 +5,13 @@ import org.stellar.sdk.Asset;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents liquidity_pool_claimable_asset_amount effect response.
+ * Represents liquidity_pool_claimable_asset_amount used in effect responses.
  *
  * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/effect.html" target="_blank">Effect documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
-public class LiquidityPoolClaimableAssetAmountEffectResponse extends EffectResponse {
+public class LiquidityPoolClaimableAssetAmount {
   @SerializedName("asset")
   protected final Asset asset;
   @SerializedName("amount")
@@ -19,7 +19,7 @@ public class LiquidityPoolClaimableAssetAmountEffectResponse extends EffectRespo
   @SerializedName("claimable_balance_id")
   protected final String claimableBalanceID;
 
-  public LiquidityPoolClaimableAssetAmountEffectResponse(Asset asset, String amount, String claimableBalanceID) {
+  public LiquidityPoolClaimableAssetAmount(Asset asset, String amount, String claimableBalanceID) {
     this.asset = asset;
     this.amount = amount;
     this.claimableBalanceID = claimableBalanceID;

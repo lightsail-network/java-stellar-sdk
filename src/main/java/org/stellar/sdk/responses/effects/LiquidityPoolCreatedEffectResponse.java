@@ -17,7 +17,7 @@ public class LiquidityPoolCreatedEffectResponse extends EffectResponse {
     this.liquidityPool = liquidityPool;
   }
 
-  public LiquidityPoolID getLiquidityPoolID() {
+  public LiquidityPool getLiquidityPool() {
     return liquidityPool;
   }
 }

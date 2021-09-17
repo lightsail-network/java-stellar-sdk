@@ -123,6 +123,18 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         return gson.fromJson(json, SignerSponsorshipRemovedEffectResponse.class);
       case 80:
         return gson.fromJson(json, ClaimableBalanceClawedBackEffectResponse.class);
+      case 90:
+        return gson.fromJson(json, LiquidityPoolDepositedEffectResponse.class);
+      case 91:
+        return gson.fromJson(json, LiquidityPoolWithdrewEffectResponse.class);
+      case 92:
+        return gson.fromJson(json, LiquidityPoolTradeEffectResponse.class);
+      case 93:
+        return gson.fromJson(json, LiquidityPoolCreatedEffectResponse.class);
+      case 94:
+        return gson.fromJson(json, LiquidityPoolRemovedEffectResponse.class);
+      case 95:
+        return gson.fromJson(json, LiquidityPoolRevokedEffectResponse.class);
       default:
         throw new RuntimeException("Invalid effect type");
     }

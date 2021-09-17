@@ -43,6 +43,7 @@ class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
             .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
             .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
+            .registerTypeAdapter(LiquidityPoolResponse.class, new LiquidityPoolDeserializer())
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
             .create();
 

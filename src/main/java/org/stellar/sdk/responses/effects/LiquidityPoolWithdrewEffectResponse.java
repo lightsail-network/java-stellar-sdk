@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
-public class LiquidityPoolWithdrewEffectReponse extends EffectResponse {
+public class LiquidityPoolWithdrewEffectResponse extends EffectResponse {
   @SerializedName("liquidity_pool")
   protected final LiquidityPool liquidityPool;
   @SerializedName("reserves_received")
@@ -19,7 +19,7 @@ public class LiquidityPoolWithdrewEffectReponse extends EffectResponse {
   @SerializedName("shares_redeemed")
   protected final String sharesRedeemed;
 
-  public LiquidityPoolWithdrewEffectReponse(LiquidityPool liquidityPool, AssetAmount[] reservesReceived, String sharesRedeemed) {
+  public LiquidityPoolWithdrewEffectResponse(LiquidityPool liquidityPool, AssetAmount[] reservesReceived, String sharesRedeemed) {
     this.liquidityPool = liquidityPool;
     this.reservesReceived = reservesReceived;
     this.sharesRedeemed = sharesRedeemed;

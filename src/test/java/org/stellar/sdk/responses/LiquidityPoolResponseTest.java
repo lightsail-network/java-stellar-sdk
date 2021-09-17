@@ -50,7 +50,7 @@ public class LiquidityPoolResponseTest extends TestCase {
     "}";
 
     LiquidityPoolResponse liquidityPool = GsonSingleton.getInstance().fromJson(json, LiquidityPoolResponse.class);
-    assertEquals(new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"), liquidityPool.getLiquidityPoolID());
+    assertEquals(new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"), liquidityPool.getID());
     assertEquals("113725249324879873", liquidityPool.getPagingToken());
     assertEquals(Integer.valueOf(30), liquidityPool.getFeeBP());
     assertEquals(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, liquidityPool.getType());

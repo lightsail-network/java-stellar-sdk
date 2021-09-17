@@ -19,7 +19,7 @@ import com.google.errorprone.annotations.ForOverride;
  */
 public class LiquidityPoolResponse extends Response {
   @SerializedName("id")
-  private LiquidityPoolID liquidityPoolID;
+  private LiquidityPoolID id;
   @SerializedName("paging_token")
   private String pagingToken;
   @SerializedName("fee_bp")
@@ -35,12 +35,12 @@ public class LiquidityPoolResponse extends Response {
   @SerializedName("_links")
   private Links links;
 
-  LiquidityPoolResponse(LiquidityPoolID liquidityPoolID) {
-    this.liquidityPoolID = liquidityPoolID;
+  LiquidityPoolResponse(LiquidityPoolID id) {
+    this.id = id;
   }
 
-  public LiquidityPoolID getLiquidityPoolID() {
-    return liquidityPoolID;
+  public LiquidityPoolID getID() {
+    return id;
   }
 
   public String getPagingToken() {
