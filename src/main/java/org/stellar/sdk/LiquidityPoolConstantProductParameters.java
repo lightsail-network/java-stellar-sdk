@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import com.google.common.base.Objects;
 
+import org.stellar.sdk.xdr.LiquidityPoolType;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -59,7 +61,7 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
   @Override
   public final org.stellar.sdk.xdr.LiquidityPoolParameters toXdr() {
     org.stellar.sdk.xdr.LiquidityPoolParameters xdr = new org.stellar.sdk.xdr.LiquidityPoolParameters();
-    xdr.setDiscriminant(org.stellar.sdk.xdr.LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT);
+    xdr.setDiscriminant(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT);
 
     org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters params = new org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters();
     params.setAssetA(assetA.toXdr());
@@ -85,9 +87,9 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
 
 
   @Override
-  public final org.stellar.sdk.LiquidityPoolID getId() {
+  public final LiquidityPoolID getId() {
     return new LiquidityPoolID(
-      org.stellar.sdk.xdr.LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+      LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
       assetA,
       assetB,
       fee
