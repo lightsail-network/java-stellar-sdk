@@ -11,16 +11,16 @@ import java.math.MathContext;
  */
 public class TradePrice {
     @SerializedName("n")
-    private final String n;
+    private final Long n;
     @SerializedName("d")
-    private final String d;
+    private final Long d;
 
     /**
      * Create a new price. Price in Stellar is represented as a fraction.
      * @param n numerator
      * @param d denominator
      */
-    public TradePrice(String n, String d) {
+    public TradePrice(Long n, Long d) {
         this.n = n;
         this.d = d;
     }
@@ -28,14 +28,14 @@ public class TradePrice {
     /**
      * Returns numerator.
      */
-    public String getNumerator() {
+    public Long getNumerator() {
         return n;
     }
 
     /**
      * Returns denominator
      */
-    public String getDenominator() {
+    public Long getDenominator() {
         return d;
     }
 
