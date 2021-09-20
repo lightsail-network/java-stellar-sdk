@@ -23,8 +23,8 @@ public class LiquidityPoolsPageDeserializerTest extends TestCase {
         assertEquals("113725249324879873", liquidityPool.getPagingToken());
         assertEquals(Integer.valueOf(30), liquidityPool.getFeeBP());
         assertEquals(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, liquidityPool.getType());
-        assertEquals("300", liquidityPool.getTotalTrustlines());
-        assertEquals("5000", liquidityPool.getTotalShares());
+        assertEquals(Long.valueOf(300), liquidityPool.getTotalTrustlines());
+        assertEquals(Long.valueOf(5000), liquidityPool.getTotalShares());
         assertArrayEquals(new LiquidityPoolResponse.Reserve[]{
           new LiquidityPoolResponse.Reserve("1000.0000005", "EURT:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S"),
           new LiquidityPoolResponse.Reserve("2000.0000000", "PHP:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S")

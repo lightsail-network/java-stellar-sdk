@@ -27,9 +27,9 @@ public class LiquidityPoolResponse extends Response {
   @SerializedName("type")
   private LiquidityPoolType type;
   @SerializedName("total_trustlines")
-  private String totalTrustlines;
+  private Long totalTrustlines;
   @SerializedName("total_shares")
-  private String totalShares;
+  private Long totalShares;
   @SerializedName("reserves")
   private Reserve[] reserves;
   @SerializedName("_links")
@@ -55,11 +55,11 @@ public class LiquidityPoolResponse extends Response {
     return type;
   }
 
-  public String getTotalTrustlines() {
+  public Long getTotalTrustlines() {
     return totalTrustlines;
   }
 
-  public String getTotalShares() {
+  public Long getTotalShares() {
     return totalShares;
   }
 

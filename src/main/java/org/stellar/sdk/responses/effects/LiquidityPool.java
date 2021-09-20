@@ -14,13 +14,13 @@ public class LiquidityPool {
   @SerializedName("type")
   protected final LiquidityPoolType type;
   @SerializedName("total_trustlines")
-  protected final Integer totalTrustlines;
+  protected final Long totalTrustlines;
   @SerializedName("total_shares")
-  protected final String totalShares;
+  protected final Long totalShares;
   @SerializedName("reserves")
   protected final AssetAmount[] reserves;
 
-  public LiquidityPool(LiquidityPoolID id, Integer feeBP, LiquidityPoolType type, Integer totalTrustlines, String totalShares, AssetAmount[] reserves) {
+  public LiquidityPool(LiquidityPoolID id, Integer feeBP, LiquidityPoolType type, Long totalTrustlines, Long totalShares, AssetAmount[] reserves) {
     this.id = id;
     this.feeBP = feeBP;
     this.type = type;
@@ -41,11 +41,11 @@ public class LiquidityPool {
     return type;
   }
 
-  public Integer getTotalTrustlines() {
+  public Long getTotalTrustlines() {
     return totalTrustlines;
   }
 
-  public String getTotalShares() {
+  public Long getTotalShares() {
     return totalShares;
   }
 
