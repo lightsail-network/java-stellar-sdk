@@ -23,9 +23,8 @@ public class LiquidityPoolWithdrawOperationTest {
         String amount = "5";
         String minAmountA = "1000";
         String minAmountB = "2000";
-        LiquidityPoolWithdrawOperation operation = new LiquidityPoolWithdrawOperation.Builder(liquidityPoolID, amount, minAmountA, minAmountB)
-                .setSourceAccount(source.getAccountId())
-                .build();
+        LiquidityPoolWithdrawOperation operation = new LiquidityPoolWithdrawOperation(liquidityPoolID, amount, minAmountA, minAmountB);
+        operation.setSourceAccount(source.getAccountId());
 
         org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
         LiquidityPoolWithdrawOperation parsedOperation = (LiquidityPoolWithdrawOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
@@ -42,15 +41,16 @@ public class LiquidityPoolWithdrawOperationTest {
     }
 
     @Test
-    public void testBuilderPairs() {
+    public void testConstructorPairs() {
         String amount = "5";
         String minAmountA = "1000";
         String minAmountB = "2000";
-        LiquidityPoolWithdrawOperation operation = new LiquidityPoolWithdrawOperation.Builder(
+        LiquidityPoolWithdrawOperation operation = new LiquidityPoolWithdrawOperation(
             new AssetAmount(nativeAsset, minAmountA),
             new AssetAmount(creditAsset, minAmountB),
             amount
-        ).setSourceAccount(source.getAccountId()).build();
+        );
+        operation.setSourceAccount(source.getAccountId());
 
         org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
         LiquidityPoolWithdrawOperation parsedOperation = (LiquidityPoolWithdrawOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
@@ -67,16 +67,16 @@ public class LiquidityPoolWithdrawOperationTest {
     }
 
     @Test
-    public void testBuilderPairsMisorderedAssets() {
+    public void testConstructorPairsMisorderedAssets() {
         String amount = "5";
         String minAmountA = "1000";
         String minAmountB = "2000";
         try {
-            new LiquidityPoolWithdrawOperation.Builder(
+            new LiquidityPoolWithdrawOperation(
                 new AssetAmount(creditAsset, minAmountA),
                 new AssetAmount(nativeAsset, minAmountB),
                 amount
-            ).setSourceAccount(source.getAccountId()).build();
+            ).setSourceAccount(source.getAccountId());
             fail();
         } catch (RuntimeException e) {
             assertEquals("AssetA must be < AssetB", e.getMessage());

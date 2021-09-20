@@ -18,11 +18,25 @@ public class LiquidityPoolWithdrawOperation extends Operation {
     private final String minAmountA;
     private final String minAmountB;
 
-    private LiquidityPoolWithdrawOperation(LiquidityPoolID liquidityPoolID, String amount, String minAmountA, String minAmountB) {
+    public LiquidityPoolWithdrawOperation(LiquidityPoolID liquidityPoolID, String amount, String minAmountA, String minAmountB) {
       this.liquidityPoolID = checkNotNull(liquidityPoolID, "liquidityPoolID cannot be null");
       this.amount = checkNotNull(amount, "amount cannot be null");
       this.minAmountA = checkNotNull(minAmountA, "minAmountA cannot be null");
       this.minAmountB = checkNotNull(minAmountB, "minAmountB cannot be null");
+    }
+
+    public LiquidityPoolWithdrawOperation(LiquidityPoolWithdrawOp op) {
+      this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
+      this.amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
+      this.minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64().longValue());
+      this.minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64().longValue());
+    }
+
+    public LiquidityPoolWithdrawOperation(AssetAmount a, AssetAmount b, String amount) {
+      this.liquidityPoolID = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.getAsset(), b.getAsset(), LiquidityPoolParameters.Fee);
+      this.amount = checkNotNull(amount, "amount cannot be null");
+      this.minAmountA = a.getAmount();
+      this.minAmountB = b.getAmount();
     }
 
     public LiquidityPoolID getLiquidityPoolID() {
@@ -53,87 +67,6 @@ public class LiquidityPoolWithdrawOperation extends Operation {
         body.setDiscriminant(OperationType.LIQUIDITY_POOL_WITHDRAW);
         body.setLiquidityPoolWithdrawOp(op);
         return body;
-    }
-
-    /**
-     * Builds LiquidityPoolWithdraw operation.
-     * @see LiquidityPoolWithdrawOperation
-     */
-    public static class Builder {
-        private LiquidityPoolID liquidityPoolID;
-        private String amount;
-        private String minAmountA;
-        private String minAmountB;
-
-        private String mSourceAccount;
-
-        Builder(LiquidityPoolWithdrawOp op) {
-          this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
-          this.amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
-          this.minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64().longValue());
-          this.minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64().longValue());
-        }
-
-        /**
-         * Creates a new LiquidityPoolDeposit builder.
-         */
-        public Builder(LiquidityPoolID liquidityPoolID, String amount, String minAmountA, String minAmountB) {
-          this.liquidityPoolID = liquidityPoolID;
-          this.amount = amount;
-          this.minAmountA = minAmountA;
-          this.minAmountB = minAmountB;
-        }
-
-        /**
-         * Creates a new LiquidityPoolDeposit builder.
-         */
-        public Builder(AssetAmount a, AssetAmount b, String amount) {
-            this.liquidityPoolID = new LiquidityPoolID(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a.getAsset(), b.getAsset(), LiquidityPoolParameters.Fee);
-            this.amount = amount;
-            this.minAmountA = a.getAmount();
-            this.minAmountB = b.getAmount();
-          }
-
-        public Builder setLiquidityPoolID(LiquidityPoolID liquidityPoolID) {
-            this.liquidityPoolID = liquidityPoolID;
-            return this;
-        }
-
-        public Builder setAmount(String amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public Builder setMinAmountA(String minAmountA) {
-            this.minAmountA = minAmountA;
-            return this;
-        }
-
-        public Builder setMinAmountB(String minAmountB) {
-            this.minAmountB = minAmountB;
-            return this;
-        }
-
-        /**
-         * Set source account of this operation
-         * @param sourceAccount Source account
-         * @return Builder object so you can chain methods.
-         */
-        public Builder setSourceAccount(String sourceAccount) {
-            mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
-            return this;
-        }
-
-        /**
-         * Builds an operation
-         */
-        public LiquidityPoolWithdrawOperation build() {
-            LiquidityPoolWithdrawOperation op = new LiquidityPoolWithdrawOperation(liquidityPoolID, amount, minAmountA, minAmountB);
-            if (mSourceAccount != null) {
-                op.setSourceAccount(mSourceAccount);
-            }
-            return op;
-        }
     }
 
     public int hashCode() {

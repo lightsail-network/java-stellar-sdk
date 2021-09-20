@@ -24,9 +24,8 @@ public class LiquidityPoolDepositOperationTest {
         String maxAmountB = "2000";
         Price minPrice = Price.fromString("0.01");
         Price maxPrice = Price.fromString("0.02");
-        LiquidityPoolDepositOperation operation = new LiquidityPoolDepositOperation.Builder(liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice)
-                .setSourceAccount(source.getAccountId())
-                .build();
+        LiquidityPoolDepositOperation operation = new LiquidityPoolDepositOperation(liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
+        operation.setSourceAccount(source.getAccountId());
 
         org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
         LiquidityPoolDepositOperation parsedOperation = (LiquidityPoolDepositOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
@@ -44,17 +43,18 @@ public class LiquidityPoolDepositOperationTest {
     }
 
     @Test
-    public void testBuilderPairs() {
+    public void testConstructorPairs() {
         String maxAmountA = "1000";
         String maxAmountB = "2000";
         Price minPrice = Price.fromString("0.01");
         Price maxPrice = Price.fromString("0.02");
-        LiquidityPoolDepositOperation operation = new LiquidityPoolDepositOperation.Builder(
+        LiquidityPoolDepositOperation operation = new LiquidityPoolDepositOperation(
             new AssetAmount(nativeAsset, maxAmountA),
             new AssetAmount(creditAsset, maxAmountB),
             minPrice,
             maxPrice
-        ).setSourceAccount(source.getAccountId()).build();
+        );
+        operation.setSourceAccount(source.getAccountId());
 
         org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
         LiquidityPoolDepositOperation parsedOperation = (LiquidityPoolDepositOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
@@ -72,18 +72,18 @@ public class LiquidityPoolDepositOperationTest {
     }
 
     @Test
-    public void testBuilderPairsMisorderedAssets() {
+    public void testConstructorPairsMisorderedAssets() {
         String maxAmountA = "1000";
         String maxAmountB = "2000";
         Price minPrice = Price.fromString("0.01");
         Price maxPrice = Price.fromString("0.02");
         try {
-            new LiquidityPoolDepositOperation.Builder(
+            new LiquidityPoolDepositOperation(
                 new AssetAmount(creditAsset, maxAmountB),
                 new AssetAmount(nativeAsset, maxAmountA),
                 minPrice,
                 maxPrice
-            ).setSourceAccount(source.getAccountId()).build();
+            ).setSourceAccount(source.getAccountId());
             fail();
         } catch (RuntimeException e) {
             assertEquals("AssetA must be < AssetB", e.getMessage());

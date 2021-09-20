@@ -177,10 +177,10 @@ public abstract class Operation {
         operation = new SetTrustlineFlagsOperation.Builder(body.getSetTrustLineFlagsOp()).build();
         break;
       case LIQUIDITY_POOL_DEPOSIT:
-        operation = new LiquidityPoolDepositOperation.Builder(body.getLiquidityPoolDepositOp()).build();
+        operation = new LiquidityPoolDepositOperation(body.getLiquidityPoolDepositOp());
         break;
       case LIQUIDITY_POOL_WITHDRAW:
-        operation = new LiquidityPoolWithdrawOperation.Builder(body.getLiquidityPoolWithdrawOp()).build();
+        operation = new LiquidityPoolWithdrawOperation(body.getLiquidityPoolWithdrawOp());
         break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
