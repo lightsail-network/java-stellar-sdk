@@ -12,7 +12,7 @@ import com.google.common.base.Objects;
 
 //  struct ChangeTrustOp
 //  {
-//      Asset line;
+//      ChangeTrustAsset line;
 //  
 //      // if limit is set to 0, deletes the trust line
 //      int64 limit;
@@ -21,11 +21,11 @@ import com.google.common.base.Objects;
 //  ===========================================================================
 public class ChangeTrustOp implements XdrElement {
   public ChangeTrustOp () {}
-  private Asset line;
-  public Asset getLine() {
+  private ChangeTrustAsset line;
+  public ChangeTrustAsset getLine() {
     return this.line;
   }
-  public void setLine(Asset value) {
+  public void setLine(ChangeTrustAsset value) {
     this.line = value;
   }
   private Int64 limit;
@@ -36,7 +36,7 @@ public class ChangeTrustOp implements XdrElement {
     this.limit = value;
   }
   public static void encode(XdrDataOutputStream stream, ChangeTrustOp encodedChangeTrustOp) throws IOException{
-    Asset.encode(stream, encodedChangeTrustOp.line);
+    ChangeTrustAsset.encode(stream, encodedChangeTrustOp.line);
     Int64.encode(stream, encodedChangeTrustOp.limit);
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -44,7 +44,7 @@ public class ChangeTrustOp implements XdrElement {
   }
   public static ChangeTrustOp decode(XdrDataInputStream stream) throws IOException {
     ChangeTrustOp decodedChangeTrustOp = new ChangeTrustOp();
-    decodedChangeTrustOp.line = Asset.decode(stream);
+    decodedChangeTrustOp.line = ChangeTrustAsset.decode(stream);
     decodedChangeTrustOp.limit = Int64.decode(stream);
     return decodedChangeTrustOp;
   }
@@ -63,10 +63,10 @@ public class ChangeTrustOp implements XdrElement {
   }
 
   public static final class Builder {
-    private Asset line;
+    private ChangeTrustAsset line;
     private Int64 limit;
 
-    public Builder line(Asset line) {
+    public Builder line(ChangeTrustAsset line) {
       this.line = line;
       return this;
     }

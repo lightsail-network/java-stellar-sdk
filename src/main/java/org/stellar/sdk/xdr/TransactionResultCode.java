@@ -26,7 +26,7 @@ import java.io.IOException;
 //      txNO_ACCOUNT = -8,           // source account not found
 //      txINSUFFICIENT_FEE = -9,     // fee is too small
 //      txBAD_AUTH_EXTRA = -10,      // unused signatures attached to transaction
-//      txINTERNAL_ERROR = -11,      // an unknown error occured
+//      txINTERNAL_ERROR = -11,      // an unknown error occurred
 //  
 //      txNOT_SUPPORTED = -12,         // transaction type not supported
 //      txFEE_BUMP_INNER_FAILED = -13, // fee bump inner transaction failed

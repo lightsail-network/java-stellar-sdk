@@ -17,7 +17,8 @@ import java.io.IOException;
 //      ENVELOPE_TYPE_AUTH = 3,
 //      ENVELOPE_TYPE_SCPVALUE = 4,
 //      ENVELOPE_TYPE_TX_FEE_BUMP = 5,
-//      ENVELOPE_TYPE_OP_ID = 6
+//      ENVELOPE_TYPE_OP_ID = 6,
+//      ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7
 //  };
 
 //  ===========================================================================
@@ -29,6 +30,7 @@ public enum EnvelopeType implements XdrElement {
   ENVELOPE_TYPE_SCPVALUE(4),
   ENVELOPE_TYPE_TX_FEE_BUMP(5),
   ENVELOPE_TYPE_OP_ID(6),
+  ENVELOPE_TYPE_POOL_REVOKE_OP_ID(7),
   ;
   private int mValue;
 
@@ -50,6 +52,7 @@ public enum EnvelopeType implements XdrElement {
       case 4: return ENVELOPE_TYPE_SCPVALUE;
       case 5: return ENVELOPE_TYPE_TX_FEE_BUMP;
       case 6: return ENVELOPE_TYPE_OP_ID;
+      case 7: return ENVELOPE_TYPE_POOL_REVOKE_OP_ID;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

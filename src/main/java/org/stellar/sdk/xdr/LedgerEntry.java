@@ -26,6 +26,8 @@ import com.google.common.base.Objects;
 //          DataEntry data;
 //      case CLAIMABLE_BALANCE:
 //          ClaimableBalanceEntry claimableBalance;
+//      case LIQUIDITY_POOL:
+//          LiquidityPoolEntry liquidityPool;
 //      }
 //      data;
 //  
@@ -166,6 +168,13 @@ public class LedgerEntry implements XdrElement {
     public void setClaimableBalance(ClaimableBalanceEntry value) {
       this.claimableBalance = value;
     }
+    private LiquidityPoolEntry liquidityPool;
+    public LiquidityPoolEntry getLiquidityPool() {
+      return this.liquidityPool;
+    }
+    public void setLiquidityPool(LiquidityPoolEntry value) {
+      this.liquidityPool = value;
+    }
 
     public static final class Builder {
       private LedgerEntryType discriminant;
@@ -174,6 +183,7 @@ public class LedgerEntry implements XdrElement {
       private OfferEntry offer;
       private DataEntry data;
       private ClaimableBalanceEntry claimableBalance;
+      private LiquidityPoolEntry liquidityPool;
 
       public Builder discriminant(LedgerEntryType discriminant) {
         this.discriminant = discriminant;
@@ -205,6 +215,11 @@ public class LedgerEntry implements XdrElement {
         return this;
       }
 
+      public Builder liquidityPool(LiquidityPoolEntry liquidityPool) {
+        this.liquidityPool = liquidityPool;
+        return this;
+      }
+
       public LedgerEntryData build() {
         LedgerEntryData val = new LedgerEntryData();
         val.setDiscriminant(discriminant);
@@ -213,6 +228,7 @@ public class LedgerEntry implements XdrElement {
         val.setOffer(offer);
         val.setData(data);
         val.setClaimableBalance(claimableBalance);
+        val.setLiquidityPool(liquidityPool);
         return val;
       }
     }
@@ -236,6 +252,9 @@ public class LedgerEntry implements XdrElement {
     break;
     case CLAIMABLE_BALANCE:
     ClaimableBalanceEntry.encode(stream, encodedLedgerEntryData.claimableBalance);
+    break;
+    case LIQUIDITY_POOL:
+    LiquidityPoolEntry.encode(stream, encodedLedgerEntryData.liquidityPool);
     break;
     }
     }
@@ -262,12 +281,15 @@ public class LedgerEntry implements XdrElement {
     case CLAIMABLE_BALANCE:
     decodedLedgerEntryData.claimableBalance = ClaimableBalanceEntry.decode(stream);
     break;
+    case LIQUIDITY_POOL:
+    decodedLedgerEntryData.liquidityPool = LiquidityPoolEntry.decode(stream);
+    break;
     }
       return decodedLedgerEntryData;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.account, this.trustLine, this.offer, this.data, this.claimableBalance, this.type);
+      return Objects.hashCode(this.account, this.trustLine, this.offer, this.data, this.claimableBalance, this.liquidityPool, this.type);
     }
     @Override
     public boolean equals(Object object) {
@@ -276,7 +298,7 @@ public class LedgerEntry implements XdrElement {
       }
 
       LedgerEntryData other = (LedgerEntryData) object;
-      return Objects.equal(this.account, other.account) && Objects.equal(this.trustLine, other.trustLine) && Objects.equal(this.offer, other.offer) && Objects.equal(this.data, other.data) && Objects.equal(this.claimableBalance, other.claimableBalance) && Objects.equal(this.type, other.type);
+      return Objects.equal(this.account, other.account) && Objects.equal(this.trustLine, other.trustLine) && Objects.equal(this.offer, other.offer) && Objects.equal(this.data, other.data) && Objects.equal(this.claimableBalance, other.claimableBalance) && Objects.equal(this.liquidityPool, other.liquidityPool) && Objects.equal(this.type, other.type);
     }
 
   }

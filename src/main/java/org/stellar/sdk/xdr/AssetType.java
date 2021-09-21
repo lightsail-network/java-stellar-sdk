@@ -13,7 +13,8 @@ import java.io.IOException;
 //  {
 //      ASSET_TYPE_NATIVE = 0,
 //      ASSET_TYPE_CREDIT_ALPHANUM4 = 1,
-//      ASSET_TYPE_CREDIT_ALPHANUM12 = 2
+//      ASSET_TYPE_CREDIT_ALPHANUM12 = 2,
+//      ASSET_TYPE_POOL_SHARE = 3
 //  };
 
 //  ===========================================================================
@@ -21,6 +22,7 @@ public enum AssetType implements XdrElement {
   ASSET_TYPE_NATIVE(0),
   ASSET_TYPE_CREDIT_ALPHANUM4(1),
   ASSET_TYPE_CREDIT_ALPHANUM12(2),
+  ASSET_TYPE_POOL_SHARE(3),
   ;
   private int mValue;
 
@@ -38,6 +40,7 @@ public enum AssetType implements XdrElement {
       case 0: return ASSET_TYPE_NATIVE;
       case 1: return ASSET_TYPE_CREDIT_ALPHANUM4;
       case 2: return ASSET_TYPE_CREDIT_ALPHANUM12;
+      case 3: return ASSET_TYPE_POOL_SHARE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

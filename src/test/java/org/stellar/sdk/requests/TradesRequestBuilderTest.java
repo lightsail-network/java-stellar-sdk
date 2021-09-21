@@ -3,6 +3,7 @@ package org.stellar.sdk.requests;
 import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Network;
 import org.stellar.sdk.Server;
@@ -47,6 +48,14 @@ public class TradesRequestBuilderTest {
                 "cursor=13537736921089&" +
                 "limit=200&" +
                 "order=asc", uri.toString());
-
     }
+
+  @Test
+  public void testForLiquidityPool() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    HttpUrl uri = server.trades()
+            .forLiquidityPool(new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"))
+            .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/trades", uri.toString());
+  }
 }

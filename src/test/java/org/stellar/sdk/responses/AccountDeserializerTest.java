@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -12,19 +13,19 @@ public class AccountDeserializerTest extends TestCase {
     AccountResponse account = GsonSingleton.getInstance().fromJson(jsonAuthorizedToMaintainLiabilities, AccountResponse.class);
 
     assertEquals(account.getBalances()[0].getAssetType(), "credit_alphanum4");
-    assertEquals(account.getBalances()[0].getAssetCode(), "ABC");
-    assertEquals(account.getBalances()[0].getAssetIssuer(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    assertEquals(account.getBalances()[0].getAssetCode(), Optional.of("ABC"));
+    assertEquals(account.getBalances()[0].getAssetIssuer(), Optional.of("GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"));
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
-    assertEquals(account.getBalances()[0].getBuyingLiabilities(), "100.1234567");
-    assertEquals(account.getBalances()[0].getSellingLiabilities(), "100.7654321");
+    assertEquals(account.getBalances()[0].getBuyingLiabilities(), Optional.of("100.1234567"));
+    assertEquals(account.getBalances()[0].getSellingLiabilities(), Optional.of("100.7654321"));
     assertEquals(account.getBalances()[0].getAuthorized(), Boolean.FALSE);
     assertEquals(account.getBalances()[0].getAuthorizedToMaintainLiabilities(), Boolean.TRUE);
 
     assertEquals(account.getBalances()[1].getAssetType(), "native");
     assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
-    assertEquals(account.getBalances()[1].getBuyingLiabilities(), "5.1234567");
-    assertEquals(account.getBalances()[1].getSellingLiabilities(), "1.7654321");
+    assertEquals(account.getBalances()[1].getBuyingLiabilities(), Optional.of("5.1234567"));
+    assertEquals(account.getBalances()[1].getSellingLiabilities(), Optional.of("1.7654321"));
     assertEquals(account.getBalances()[1].getLimit(), null);
   }
 
@@ -47,18 +48,18 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getFlags().getAuthImmutable(), true);
 
     assertEquals(account.getBalances()[0].getAssetType(), "credit_alphanum4");
-    assertEquals(account.getBalances()[0].getAssetCode(), "ABC");
-    assertEquals(account.getBalances()[0].getAssetIssuer(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    assertEquals(account.getBalances()[0].getAssetCode(), Optional.of("ABC"));
+    assertEquals(account.getBalances()[0].getAssetIssuer(), Optional.of("GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"));
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
-    assertEquals(account.getBalances()[0].getBuyingLiabilities(), "100.1234567");
-    assertEquals(account.getBalances()[0].getSellingLiabilities(), "100.7654321");
+    assertEquals(account.getBalances()[0].getBuyingLiabilities(), Optional.of("100.1234567"));
+    assertEquals(account.getBalances()[0].getSellingLiabilities(), Optional.of("100.7654321"));
     assertFalse(account.getBalances()[0].getSponsor().isPresent());
 
     assertEquals(account.getBalances()[1].getAssetType(), "native");
     assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
-    assertEquals(account.getBalances()[1].getBuyingLiabilities(), "5.1234567");
-    assertEquals(account.getBalances()[1].getSellingLiabilities(), "1.7654321");
+    assertEquals(account.getBalances()[1].getBuyingLiabilities(), Optional.of("5.1234567"));
+    assertEquals(account.getBalances()[1].getSellingLiabilities(), Optional.of("1.7654321"));
     assertEquals(account.getBalances()[1].getLimit(), null);
     assertFalse(account.getBalances()[1].getSponsor().isPresent());
 
@@ -101,17 +102,17 @@ public class AccountDeserializerTest extends TestCase {
     AccountResponse account = GsonSingleton.getInstance().fromJson(jsonV9, AccountResponse.class);
 
     assertEquals(account.getBalances()[0].getAssetType(), "credit_alphanum4");
-    assertEquals(account.getBalances()[0].getAssetCode(), "ABC");
-    assertEquals(account.getBalances()[0].getAssetIssuer(), "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    assertEquals(account.getBalances()[0].getAssetCode(), Optional.of("ABC"));
+    assertEquals(account.getBalances()[0].getAssetIssuer(), Optional.of("GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"));
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
-    assertEquals(account.getBalances()[0].getBuyingLiabilities(), null);
-    assertEquals(account.getBalances()[0].getSellingLiabilities(), null);
+    assertEquals(account.getBalances()[0].getBuyingLiabilities(), Optional.absent());
+    assertEquals(account.getBalances()[0].getSellingLiabilities(), Optional.absent());
 
     assertEquals(account.getBalances()[1].getAssetType(), "native");
     assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
-    assertEquals(account.getBalances()[1].getBuyingLiabilities(), null);
-    assertEquals(account.getBalances()[1].getSellingLiabilities(), null);
+    assertEquals(account.getBalances()[1].getBuyingLiabilities(), Optional.absent());
+    assertEquals(account.getBalances()[1].getSellingLiabilities(), Optional.absent());
     assertEquals(account.getBalances()[1].getLimit(), null);
   }
 

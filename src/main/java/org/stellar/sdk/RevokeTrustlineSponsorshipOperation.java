@@ -7,9 +7,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RevokeTrustlineSponsorshipOperation extends Operation {
   private final String accountId;
-  private final Asset asset;
+  private final TrustLineAsset asset;
 
-  private RevokeTrustlineSponsorshipOperation(String accountId, Asset asset) {
+  private RevokeTrustlineSponsorshipOperation(String accountId, TrustLineAsset asset) {
     this.accountId = accountId;
     this.asset = asset;
   }
@@ -18,7 +18,7 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
     return accountId;
   }
 
-  public Asset getAsset() {
+  public TrustLineAsset getAsset() {
     return asset;
   }
 
@@ -44,7 +44,7 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
 
   public static class Builder {
     private final String accountId;
-    private final Asset asset;
+    private final TrustLineAsset asset;
 
     private String mSourceAccount;
 
@@ -54,7 +54,7 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
      */
     Builder(RevokeSponsorshipOp op) {
       accountId = StrKey.encodeStellarAccountId(op.getLedgerKey().getTrustLine().getAccountID());
-      asset = Asset.fromXdr(op.getLedgerKey().getTrustLine().getAsset());
+      asset = TrustLineAsset.fromXdr(op.getLedgerKey().getTrustLine().getAsset());
     }
 
     /**
@@ -62,7 +62,7 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
      * @param accountId The id of the account whose trustline will be revoked.
      * @param asset The asset of the trustline which will be revoked.
      */
-    public Builder(String accountId, Asset asset) {
+    public Builder(String accountId, TrustLineAsset asset) {
       this.accountId = accountId;
       this.asset = asset;
     }

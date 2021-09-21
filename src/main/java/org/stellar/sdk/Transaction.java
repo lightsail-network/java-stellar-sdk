@@ -115,7 +115,7 @@ public class Transaction extends AbstractTransaction {
     OperationID.OperationIDId body = new OperationID.OperationIDId();
     body.setOpNum(new Uint32(index));
     body.setSeqNum(new SequenceNumber(new Int64(getSequenceNumber())));
-    body.setSourceAccount(AccountConverter.disableMuxed().encode(getSourceAccount()));
+    body.setSourceAccount(StrKey.muxedAccountToAccountId(AccountConverter.disableMuxed().encode(getSourceAccount())));
     id.setId(body);
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

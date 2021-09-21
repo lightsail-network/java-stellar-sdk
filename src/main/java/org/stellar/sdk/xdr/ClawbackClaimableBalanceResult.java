@@ -10,7 +10,8 @@ import com.google.common.base.Objects;
 
 // === xdr source ============================================================
 
-//  union ClawbackClaimableBalanceResult switch (ClawbackClaimableBalanceResultCode code)
+//  union ClawbackClaimableBalanceResult switch (
+//      ClawbackClaimableBalanceResultCode code)
 //  {
 //  case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
 //      void;

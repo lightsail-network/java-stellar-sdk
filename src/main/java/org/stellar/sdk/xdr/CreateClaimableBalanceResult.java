@@ -10,7 +10,8 @@ import com.google.common.base.Objects;
 
 // === xdr source ============================================================
 
-//  union CreateClaimableBalanceResult switch (CreateClaimableBalanceResultCode code)
+//  union CreateClaimableBalanceResult switch (
+//      CreateClaimableBalanceResultCode code)
 //  {
 //  case CREATE_CLAIMABLE_BALANCE_SUCCESS:
 //      ClaimableBalanceID balanceID;

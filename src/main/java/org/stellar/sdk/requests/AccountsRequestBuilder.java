@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
  */
 public class AccountsRequestBuilder extends RequestBuilder {
   private static final String ASSET_PARAMETER_NAME = "asset";
+  private static final String LIQUIDITY_POOL_PARAMETER_NAME = "liquidity_pool";
   private static final String SIGNER_PARAMETER_NAME = "signer";
   private static final String SPONSOR_PARAMETER_NAME = "sponsor";
 
@@ -58,10 +60,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    */
   public AccountsRequestBuilder forSigner(String signer) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both signer and asset");
+      throw new RuntimeException("cannot set both asset and signer");
+    }
+    if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both liquidity_pool and signer");
     }
     if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both signer and sponsor");
+      throw new RuntimeException("cannot set both sponsor and signer");
     }
     uriBuilder.setQueryParameter(SIGNER_PARAMETER_NAME, signer);
     return this;
@@ -75,6 +80,9 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
    */
   public AccountsRequestBuilder forAsset(AssetTypeCreditAlphaNum asset) {
+    if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both liquidity_pool and asset");
+    }
     if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
       throw new RuntimeException("cannot set both signer and asset");
     }
@@ -86,6 +94,38 @@ public class AccountsRequestBuilder extends RequestBuilder {
   }
 
   /**
+   * Returns all accounts who have trustlines to the specified liquidity pool.
+   *
+   * @param Liquidity Pool ID
+   * @return current {@link AccountsRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   */
+  public AccountsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
+    return this.forLiquidityPool(liquidityPoolID.toString());
+  }
+
+  /**
+   * Returns all accounts who have trustlines to the specified liquidity pool.
+   *
+   * @param Liquidity Pool ID
+   * @return current {@link AccountsRequestBuilder} instance
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   */
+  public AccountsRequestBuilder forLiquidityPool(String liquidityPoolID) {
+    if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both asset and liquidity_pool");
+    }
+    if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both signer and liquidity_pool");
+    }
+    if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both sponsor and liquidity_pool");
+    }
+    uriBuilder.setQueryParameter(LIQUIDITY_POOL_PARAMETER_NAME, liquidityPoolID);
+    return this;
+  }
+
+  /**
    * Returns all accounts who are sponsored by a given account or have subentries which are sponsored by a given account.
    *
    * @param sponsor Account ID
@@ -93,11 +133,14 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
    */
   public AccountsRequestBuilder forSponsor(String sponsor) {
-    if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both signer and sponsor");
-    }
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
       throw new RuntimeException("cannot set both asset and sponsor");
+    }
+    if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both liquidity_pool and sponsor");
+    }
+    if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
+      throw new RuntimeException("cannot set both signer and sponsor");
     }
     uriBuilder.setQueryParameter(SPONSOR_PARAMETER_NAME, sponsor);
     return this;

@@ -14,10 +14,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChangeTrustOperation extends Operation {
 
-  private final Asset asset;
+  private final ChangeTrustAsset asset;
   private final String limit;
 
-  private ChangeTrustOperation(Asset asset, String limit) {
+  private ChangeTrustOperation(ChangeTrustAsset asset, String limit) {
     this.asset = checkNotNull(asset, "asset cannot be null");
     this.limit = checkNotNull(limit, "limit cannot be null");
   }
@@ -25,7 +25,7 @@ public class ChangeTrustOperation extends Operation {
   /**
    * The asset of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a user, the line is USD.
    */
-  public Asset getAsset() {
+  public ChangeTrustAsset getAsset() {
     return asset;
   }
 
@@ -55,13 +55,13 @@ public class ChangeTrustOperation extends Operation {
    * @see ChangeTrustOperation
    */
   public static class Builder {
-    private final Asset asset;
+    private final ChangeTrustAsset asset;
     private final String limit;
 
     private String mSourceAccount;
 
     Builder(ChangeTrustOp op) {
-      asset = Asset.fromXdr(op.getLine());
+      asset = ChangeTrustAsset.fromXdr(op.getLine());
       limit = Operation.fromXdrAmount(op.getLimit().getInt64().longValue());
     }
 
@@ -71,7 +71,7 @@ public class ChangeTrustOperation extends Operation {
      * @param limit The limit of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a user, the limit is 200.
      * @throws ArithmeticException when limit has more than 7 decimal places.
      */
-    public Builder(Asset asset, String limit) {
+    public Builder(ChangeTrustAsset asset, String limit) {
       this.asset = checkNotNull(asset, "asset cannot be null");
       this.limit = checkNotNull(limit, "limit cannot be null");
     }

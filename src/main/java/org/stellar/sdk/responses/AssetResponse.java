@@ -20,16 +20,20 @@ public class AssetResponse extends Response implements Pageable {
     private final String amount;
     @SerializedName("claimable_balances_amount")
     private final String claimableBalancesAmount;
+    @SerializedName("liquidity_pools_amount")
+    private final String liquidityPoolsAmount;
     @SerializedName("num_accounts")
     private final int numAccounts;
     @SerializedName("num_claimable_balances")
     private final int numClaimableBalances;
+    @SerializedName("num_liquidity_pools")
+    private final int numLiquidityPools;
     @SerializedName("flags")
     private final AssetResponse.Flags flags;
     @SerializedName("_links")
     private final AssetResponse.Links links;
 
-    public AssetResponse(String assetType, String assetCode, String assetIssuer, String pagingToken, Accounts accounts, Balances balances, String amount, String claimableBalancesAmount, int numAccounts, int numClaimableBalances, Flags flags, Links links) {
+    public AssetResponse(String assetType, String assetCode, String assetIssuer, String pagingToken, Accounts accounts, Balances balances, String amount, String claimableBalancesAmount, String liquidityPoolsAmount, int numAccounts, int numClaimableBalances, int numLiquidityPools, Flags flags, Links links) {
         this.assetType = assetType;
         this.assetCode = assetCode;
         this.assetIssuer = assetIssuer;
@@ -38,8 +42,10 @@ public class AssetResponse extends Response implements Pageable {
         this.balances = balances;
         this.amount = amount;
         this.claimableBalancesAmount = claimableBalancesAmount;
+        this.liquidityPoolsAmount = liquidityPoolsAmount;
         this.numAccounts = numAccounts;
         this.numClaimableBalances = numClaimableBalances;
+        this.numLiquidityPools = numLiquidityPools;
         this.flags = flags;
         this.links = links;
     }
@@ -76,8 +82,16 @@ public class AssetResponse extends Response implements Pageable {
         return claimableBalancesAmount;
     }
 
+    public String getLiquidityPoolsAmount() {
+        return liquidityPoolsAmount;
+    }
+
     public int getNumClaimableBalances() {
         return numClaimableBalances;
+    }
+
+    public int getNumLiquidityPools() {
+        return numLiquidityPools;
     }
 
     public String getAmount() {

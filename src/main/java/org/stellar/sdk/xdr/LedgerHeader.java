@@ -45,6 +45,8 @@ import java.util.Arrays;
 //      {
 //      case 0:
 //          void;
+//      case 1:
+//          LedgerHeaderExtensionV1 v1;
 //      }
 //      ext;
 //  };
@@ -339,18 +341,32 @@ public class LedgerHeader implements XdrElement {
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+    private LedgerHeaderExtensionV1 v1;
+    public LedgerHeaderExtensionV1 getV1() {
+      return this.v1;
+    }
+    public void setV1(LedgerHeaderExtensionV1 value) {
+      this.v1 = value;
+    }
 
     public static final class Builder {
       private Integer discriminant;
+      private LedgerHeaderExtensionV1 v1;
 
       public Builder discriminant(Integer discriminant) {
         this.discriminant = discriminant;
         return this;
       }
 
+      public Builder v1(LedgerHeaderExtensionV1 v1) {
+        this.v1 = v1;
+        return this;
+      }
+
       public LedgerHeaderExt build() {
         LedgerHeaderExt val = new LedgerHeaderExt();
         val.setDiscriminant(discriminant);
+        val.setV1(v1);
         return val;
       }
     }
@@ -361,6 +377,9 @@ public class LedgerHeader implements XdrElement {
     stream.writeInt(encodedLedgerHeaderExt.getDiscriminant().intValue());
     switch (encodedLedgerHeaderExt.getDiscriminant()) {
     case 0:
+    break;
+    case 1:
+    LedgerHeaderExtensionV1.encode(stream, encodedLedgerHeaderExt.v1);
     break;
     }
     }
@@ -374,12 +393,15 @@ public class LedgerHeader implements XdrElement {
     switch (decodedLedgerHeaderExt.getDiscriminant()) {
     case 0:
     break;
+    case 1:
+    decodedLedgerHeaderExt.v1 = LedgerHeaderExtensionV1.decode(stream);
+    break;
     }
       return decodedLedgerHeaderExt;
     }
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hashCode(this.v1, this.v);
     }
     @Override
     public boolean equals(Object object) {
@@ -388,7 +410,7 @@ public class LedgerHeader implements XdrElement {
       }
 
       LedgerHeaderExt other = (LedgerHeaderExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
     }
 
   }

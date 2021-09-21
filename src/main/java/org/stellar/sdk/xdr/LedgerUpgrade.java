@@ -20,6 +20,8 @@ import com.google.common.base.Objects;
 //      uint32 newMaxTxSetSize; // update maxTxSetSize
 //  case LEDGER_UPGRADE_BASE_RESERVE:
 //      uint32 newBaseReserve; // update baseReserve
+//  case LEDGER_UPGRADE_FLAGS:
+//      uint32 newFlags; // update flags
 //  };
 
 //  ===========================================================================
@@ -60,6 +62,13 @@ public class LedgerUpgrade implements XdrElement {
   public void setNewBaseReserve(Uint32 value) {
     this.newBaseReserve = value;
   }
+  private Uint32 newFlags;
+  public Uint32 getNewFlags() {
+    return this.newFlags;
+  }
+  public void setNewFlags(Uint32 value) {
+    this.newFlags = value;
+  }
 
   public static final class Builder {
     private LedgerUpgradeType discriminant;
@@ -67,6 +76,7 @@ public class LedgerUpgrade implements XdrElement {
     private Uint32 newBaseFee;
     private Uint32 newMaxTxSetSize;
     private Uint32 newBaseReserve;
+    private Uint32 newFlags;
 
     public Builder discriminant(LedgerUpgradeType discriminant) {
       this.discriminant = discriminant;
@@ -93,6 +103,11 @@ public class LedgerUpgrade implements XdrElement {
       return this;
     }
 
+    public Builder newFlags(Uint32 newFlags) {
+      this.newFlags = newFlags;
+      return this;
+    }
+
     public LedgerUpgrade build() {
       LedgerUpgrade val = new LedgerUpgrade();
       val.setDiscriminant(discriminant);
@@ -100,6 +115,7 @@ public class LedgerUpgrade implements XdrElement {
       val.setNewBaseFee(newBaseFee);
       val.setNewMaxTxSetSize(newMaxTxSetSize);
       val.setNewBaseReserve(newBaseReserve);
+      val.setNewFlags(newFlags);
       return val;
     }
   }
@@ -120,6 +136,9 @@ public class LedgerUpgrade implements XdrElement {
   break;
   case LEDGER_UPGRADE_BASE_RESERVE:
   Uint32.encode(stream, encodedLedgerUpgrade.newBaseReserve);
+  break;
+  case LEDGER_UPGRADE_FLAGS:
+  Uint32.encode(stream, encodedLedgerUpgrade.newFlags);
   break;
   }
   }
@@ -143,12 +162,15 @@ public class LedgerUpgrade implements XdrElement {
   case LEDGER_UPGRADE_BASE_RESERVE:
   decodedLedgerUpgrade.newBaseReserve = Uint32.decode(stream);
   break;
+  case LEDGER_UPGRADE_FLAGS:
+  decodedLedgerUpgrade.newFlags = Uint32.decode(stream);
+  break;
   }
     return decodedLedgerUpgrade;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.newLedgerVersion, this.newBaseFee, this.newMaxTxSetSize, this.newBaseReserve, this.type);
+    return Objects.hashCode(this.newLedgerVersion, this.newBaseFee, this.newMaxTxSetSize, this.newBaseReserve, this.newFlags, this.type);
   }
   @Override
   public boolean equals(Object object) {
@@ -157,6 +179,6 @@ public class LedgerUpgrade implements XdrElement {
     }
 
     LedgerUpgrade other = (LedgerUpgrade) object;
-    return Objects.equal(this.newLedgerVersion, other.newLedgerVersion) && Objects.equal(this.newBaseFee, other.newBaseFee) && Objects.equal(this.newMaxTxSetSize, other.newMaxTxSetSize) && Objects.equal(this.newBaseReserve, other.newBaseReserve) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.newLedgerVersion, other.newLedgerVersion) && Objects.equal(this.newBaseFee, other.newBaseFee) && Objects.equal(this.newMaxTxSetSize, other.newMaxTxSetSize) && Objects.equal(this.newBaseReserve, other.newBaseReserve) && Objects.equal(this.newFlags, other.newFlags) && Objects.equal(this.type, other.type);
   }
 }

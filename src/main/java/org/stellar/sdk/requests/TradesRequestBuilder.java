@@ -8,6 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
 
@@ -17,6 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Builds requests connected to trades.
  */
 public class TradesRequestBuilder extends RequestBuilder {
+    private static final String TRADE_TYPE_PARAMETER_NAME = "trade_type";
+
     public TradesRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
         super(httpClient, serverURI, "trades");
     }
@@ -51,6 +54,39 @@ public class TradesRequestBuilder extends RequestBuilder {
         this.setSegments("accounts", account, "trades");
         return this;
     }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{poolID}/trades</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/trades-for-liquidity-pool.html">Trades for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get trades
+   */
+  public TradesRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
+    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
+  }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{poolID}/trades</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/trades-for-liquidity-pool.html">Trades for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get trades
+   */
+  public TradesRequestBuilder forLiquidityPool(String liquidityPoolID) {
+    this.setSegments("liquidity_pools", String.valueOf(liquidityPoolID), "trades");
+    return this;
+  }
+
+    /**
+     * Returns all trades that of a specific type.
+     *
+     * @param trade type
+     * @return current {@link TradesRequestBuilder} instance
+     * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades.html">Trades</a>
+     */
+    public TradesRequestBuilder forTradeType(String tradeType) {
+        tradeType = checkNotNull(tradeType, "tradeType cannot be null");
+        uriBuilder.setQueryParameter(TRADE_TYPE_PARAMETER_NAME, tradeType);
+        return this;
+    }
+
 
     public static Page<TradeResponse> execute(OkHttpClient httpClient, HttpUrl uri)
         throws IOException, TooManyRequestsException {

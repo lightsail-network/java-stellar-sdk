@@ -1,9 +1,10 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
+
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Price;
-;
+import org.stellar.sdk.LiquidityPoolID;
 
 /**
  * Represents trades response.
@@ -26,9 +27,11 @@ public class TradeResponse extends Response implements Pageable {
     protected final boolean baseIsSeller;
 
     @SerializedName("base_account")
-    protected final String baseAccount;
+    protected String baseAccount;
+    @SerializedName("base_liquidity_pool_id")
+    protected LiquidityPoolID baseLiquidityPoolID;
     @SerializedName("base_offer_id")
-    private final String baseOfferId;
+    private String baseOfferId;
     @SerializedName("base_amount")
     protected final String baseAmount;
     @SerializedName("base_asset_type")
@@ -39,9 +42,11 @@ public class TradeResponse extends Response implements Pageable {
     protected final String baseAssetIssuer;
 
     @SerializedName("counter_account")
-    protected final String counterAccount;
+    protected String counterAccount;
+    @SerializedName("counter_liquidity_pool_id")
+    protected LiquidityPoolID counterLiquidityPoolID;
     @SerializedName("counter_offer_id")
-    private final String counterOfferId;
+    private String counterOfferId;
     @SerializedName("counter_amount")
     protected final String counterAmount;
     @SerializedName("counter_asset_type")
@@ -52,24 +57,26 @@ public class TradeResponse extends Response implements Pageable {
     protected final String counterAssetIssuer;
 
     @SerializedName("price")
-    protected final Price price;
+    protected final TradePrice price;
 
     @SerializedName("_links")
     private TradeResponse.Links links;
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, Price price) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, LiquidityPoolID baseLiquidityPoolID, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, LiquidityPoolID counterLiquidityPoolID, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, TradePrice price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
         this.offerId = offerId;
         this.baseIsSeller = baseIsSeller;
         this.baseAccount = baseAccount;
+        this.baseLiquidityPoolID = baseLiquidityPoolID;
         this.baseOfferId = baseOfferId;
         this.baseAmount = baseAmount;
         this.baseAssetType = baseAssetType;
         this.baseAssetCode = baseAssetCode;
         this.baseAssetIssuer = baseAssetIssuer;
         this.counterAccount = counterAccount;
+        this.counterLiquidityPoolID = counterLiquidityPoolID;
         this.counterOfferId = counterOfferId;
         this.counterAmount = counterAmount;
         this.counterAssetType = counterAssetType;
@@ -98,12 +105,16 @@ public class TradeResponse extends Response implements Pageable {
         return baseIsSeller;
     }
 
-    public String getBaseOfferId() {
-        return baseOfferId;
+    public Optional<String> getBaseOfferId() {
+        return Optional.fromNullable(baseOfferId);
     }
 
-    public String getBaseAccount() {
-        return baseAccount;
+    public Optional<String> getBaseAccount() {
+        return Optional.fromNullable(baseAccount);
+    }
+
+    public Optional<LiquidityPoolID> getBaseLiquidityPoolID() {
+        return Optional.fromNullable(baseLiquidityPoolID);
     }
 
     public String getBaseAmount() {
@@ -126,12 +137,16 @@ public class TradeResponse extends Response implements Pageable {
         return baseAssetIssuer;
     }
 
-    public String getCounterAccount() {
-        return counterAccount;
+    public Optional<String> getCounterAccount() {
+        return Optional.fromNullable(counterAccount);
     }
 
-    public String getCounterOfferId() {
-        return counterOfferId;
+    public Optional<LiquidityPoolID> getCounterLiquidityPoolID() {
+        return Optional.fromNullable(counterLiquidityPoolID);
+    }
+
+    public Optional<String> getCounterOfferId() {
+        return Optional.fromNullable(counterOfferId);
     }
 
     public Asset getCounterAsset() {
@@ -154,7 +169,7 @@ public class TradeResponse extends Response implements Pageable {
         return counterAssetIssuer;
     }
 
-    public Price getPrice() {
+    public TradePrice getPrice() {
         return price;
     }
 

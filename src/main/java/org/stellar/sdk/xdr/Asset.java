@@ -16,18 +16,10 @@ import com.google.common.base.Objects;
 //      void;
 //  
 //  case ASSET_TYPE_CREDIT_ALPHANUM4:
-//      struct
-//      {
-//          AssetCode4 assetCode;
-//          AccountID issuer;
-//      } alphaNum4;
+//      AlphaNum4 alphaNum4;
 //  
 //  case ASSET_TYPE_CREDIT_ALPHANUM12:
-//      struct
-//      {
-//          AssetCode12 assetCode;
-//          AccountID issuer;
-//      } alphaNum12;
+//      AlphaNum12 alphaNum12;
 //  
 //      // add other asset types here in the future
 //  };
@@ -42,37 +34,37 @@ public class Asset implements XdrElement {
   public void setDiscriminant(AssetType value) {
     this.type = value;
   }
-  private AssetAlphaNum4 alphaNum4;
-  public AssetAlphaNum4 getAlphaNum4() {
+  private AlphaNum4 alphaNum4;
+  public AlphaNum4 getAlphaNum4() {
     return this.alphaNum4;
   }
-  public void setAlphaNum4(AssetAlphaNum4 value) {
+  public void setAlphaNum4(AlphaNum4 value) {
     this.alphaNum4 = value;
   }
-  private AssetAlphaNum12 alphaNum12;
-  public AssetAlphaNum12 getAlphaNum12() {
+  private AlphaNum12 alphaNum12;
+  public AlphaNum12 getAlphaNum12() {
     return this.alphaNum12;
   }
-  public void setAlphaNum12(AssetAlphaNum12 value) {
+  public void setAlphaNum12(AlphaNum12 value) {
     this.alphaNum12 = value;
   }
 
   public static final class Builder {
     private AssetType discriminant;
-    private AssetAlphaNum4 alphaNum4;
-    private AssetAlphaNum12 alphaNum12;
+    private AlphaNum4 alphaNum4;
+    private AlphaNum12 alphaNum12;
 
     public Builder discriminant(AssetType discriminant) {
       this.discriminant = discriminant;
       return this;
     }
 
-    public Builder alphaNum4(AssetAlphaNum4 alphaNum4) {
+    public Builder alphaNum4(AlphaNum4 alphaNum4) {
       this.alphaNum4 = alphaNum4;
       return this;
     }
 
-    public Builder alphaNum12(AssetAlphaNum12 alphaNum12) {
+    public Builder alphaNum12(AlphaNum12 alphaNum12) {
       this.alphaNum12 = alphaNum12;
       return this;
     }
@@ -87,39 +79,44 @@ public class Asset implements XdrElement {
   }
 
   public static void encode(XdrDataOutputStream stream, Asset encodedAsset) throws IOException {
-  //Xdrgen::AST::Identifier
-  //AssetType
-  stream.writeInt(encodedAsset.getDiscriminant().getValue());
-  switch (encodedAsset.getDiscriminant()) {
-  case ASSET_TYPE_NATIVE:
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM4:
-  AssetAlphaNum4.encode(stream, encodedAsset.alphaNum4);
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM12:
-  AssetAlphaNum12.encode(stream, encodedAsset.alphaNum12);
-  break;
-  }
+    //Xdrgen::AST::Identifier
+    //AssetType
+    stream.writeInt(encodedAsset.getDiscriminant().getValue());
+    switch (encodedAsset.getDiscriminant()) {
+      case ASSET_TYPE_NATIVE:
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        AlphaNum4.encode(stream, encodedAsset.alphaNum4);
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        AlphaNum12.encode(stream, encodedAsset.alphaNum12);
+        break;
+      case ASSET_TYPE_POOL_SHARE:
+        throw new RuntimeException("Invalid asset type");
+    }
   }
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
   public static Asset decode(XdrDataInputStream stream) throws IOException {
-  Asset decodedAsset = new Asset();
-  AssetType discriminant = AssetType.decode(stream);
-  decodedAsset.setDiscriminant(discriminant);
-  switch (decodedAsset.getDiscriminant()) {
-  case ASSET_TYPE_NATIVE:
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM4:
-  decodedAsset.alphaNum4 = AssetAlphaNum4.decode(stream);
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM12:
-  decodedAsset.alphaNum12 = AssetAlphaNum12.decode(stream);
-  break;
-  }
+    Asset decodedAsset = new Asset();
+    AssetType discriminant = AssetType.decode(stream);
+    decodedAsset.setDiscriminant(discriminant);
+    switch (decodedAsset.getDiscriminant()) {
+      case ASSET_TYPE_NATIVE:
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        decodedAsset.alphaNum4 = AlphaNum4.decode(stream);
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        decodedAsset.alphaNum12 = AlphaNum12.decode(stream);
+        break;
+      case ASSET_TYPE_POOL_SHARE:
+        throw new RuntimeException("Invalid asset type");
+    }
     return decodedAsset;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.alphaNum4, this.alphaNum12, this.type);
@@ -132,138 +129,5 @@ public class Asset implements XdrElement {
 
     Asset other = (Asset) object;
     return Objects.equal(this.alphaNum4, other.alphaNum4) && Objects.equal(this.alphaNum12, other.alphaNum12) && Objects.equal(this.type, other.type);
-  }
-
-  public static class AssetAlphaNum4 {
-    public AssetAlphaNum4 () {}
-    private AssetCode4 assetCode;
-    public AssetCode4 getAssetCode() {
-      return this.assetCode;
-    }
-    public void setAssetCode(AssetCode4 value) {
-      this.assetCode = value;
-    }
-    private AccountID issuer;
-    public AccountID getIssuer() {
-      return this.issuer;
-    }
-    public void setIssuer(AccountID value) {
-      this.issuer = value;
-    }
-    public static void encode(XdrDataOutputStream stream, AssetAlphaNum4 encodedAssetAlphaNum4) throws IOException{
-      AssetCode4.encode(stream, encodedAssetAlphaNum4.assetCode);
-      AccountID.encode(stream, encodedAssetAlphaNum4.issuer);
-    }
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
-    }
-    public static AssetAlphaNum4 decode(XdrDataInputStream stream) throws IOException {
-      AssetAlphaNum4 decodedAssetAlphaNum4 = new AssetAlphaNum4();
-      decodedAssetAlphaNum4.assetCode = AssetCode4.decode(stream);
-      decodedAssetAlphaNum4.issuer = AccountID.decode(stream);
-      return decodedAssetAlphaNum4;
-    }
-    @Override
-    public int hashCode() {
-      return Objects.hashCode(this.assetCode, this.issuer);
-    }
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof AssetAlphaNum4)) {
-        return false;
-      }
-
-      AssetAlphaNum4 other = (AssetAlphaNum4) object;
-      return Objects.equal(this.assetCode, other.assetCode) && Objects.equal(this.issuer, other.issuer);
-    }
-
-    public static final class Builder {
-      private AssetCode4 assetCode;
-      private AccountID issuer;
-
-      public Builder assetCode(AssetCode4 assetCode) {
-        this.assetCode = assetCode;
-        return this;
-      }
-
-      public Builder issuer(AccountID issuer) {
-        this.issuer = issuer;
-        return this;
-      }
-
-      public AssetAlphaNum4 build() {
-        AssetAlphaNum4 val = new AssetAlphaNum4();
-        val.setAssetCode(assetCode);
-        val.setIssuer(issuer);
-        return val;
-      }
-    }
-
-  }
-  public static class AssetAlphaNum12 {
-    public AssetAlphaNum12 () {}
-    private AssetCode12 assetCode;
-    public AssetCode12 getAssetCode() {
-      return this.assetCode;
-    }
-    public void setAssetCode(AssetCode12 value) {
-      this.assetCode = value;
-    }
-    private AccountID issuer;
-    public AccountID getIssuer() {
-      return this.issuer;
-    }
-    public void setIssuer(AccountID value) {
-      this.issuer = value;
-    }
-    public static void encode(XdrDataOutputStream stream, AssetAlphaNum12 encodedAssetAlphaNum12) throws IOException{
-      AssetCode12.encode(stream, encodedAssetAlphaNum12.assetCode);
-      AccountID.encode(stream, encodedAssetAlphaNum12.issuer);
-    }
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
-    }
-    public static AssetAlphaNum12 decode(XdrDataInputStream stream) throws IOException {
-      AssetAlphaNum12 decodedAssetAlphaNum12 = new AssetAlphaNum12();
-      decodedAssetAlphaNum12.assetCode = AssetCode12.decode(stream);
-      decodedAssetAlphaNum12.issuer = AccountID.decode(stream);
-      return decodedAssetAlphaNum12;
-    }
-    @Override
-    public int hashCode() {
-      return Objects.hashCode(this.assetCode, this.issuer);
-    }
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof AssetAlphaNum12)) {
-        return false;
-      }
-
-      AssetAlphaNum12 other = (AssetAlphaNum12) object;
-      return Objects.equal(this.assetCode, other.assetCode) && Objects.equal(this.issuer, other.issuer);
-    }
-
-    public static final class Builder {
-      private AssetCode12 assetCode;
-      private AccountID issuer;
-
-      public Builder assetCode(AssetCode12 assetCode) {
-        this.assetCode = assetCode;
-        return this;
-      }
-
-      public Builder issuer(AccountID issuer) {
-        this.issuer = issuer;
-        return this;
-      }
-
-      public AssetAlphaNum12 build() {
-        AssetAlphaNum12 val = new AssetAlphaNum12();
-        val.setAssetCode(assetCode);
-        val.setIssuer(issuer);
-        return val;
-      }
-    }
-
   }
 }

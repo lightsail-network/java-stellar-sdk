@@ -10,7 +10,8 @@ import com.google.common.base.Objects;
 
 // === xdr source ============================================================
 
-//  union BeginSponsoringFutureReservesResult switch (BeginSponsoringFutureReservesResultCode code)
+//  union BeginSponsoringFutureReservesResult switch (
+//      BeginSponsoringFutureReservesResultCode code)
 //  {
 //  case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
 //      void;

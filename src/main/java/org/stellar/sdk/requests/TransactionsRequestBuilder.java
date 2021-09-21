@@ -5,6 +5,8 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
 
@@ -75,6 +77,25 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    */
   public TransactionsRequestBuilder forLedger(long ledgerSeq) {
     this.setSegments("ledgers", String.valueOf(ledgerSeq), "transactions");
+    return this;
+  }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/transactions</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get transactions
+   */
+  public TransactionsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
+    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
+  }
+
+  /**
+   * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/transactions</code>
+   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * @param liquidityPoolID Liquidity pool for which to get transactions
+   */
+  public TransactionsRequestBuilder forLiquidityPool(String liquidityPoolID) {
+    this.setSegments("liquidity_pools", liquidityPoolID, "transactions");
     return this;
   }
 
