@@ -1,7 +1,6 @@
 package org.stellar.sdk.responses.effects;
 
 import org.stellar.sdk.AssetAmount;
-import org.stellar.sdk.LiquidityPoolID;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -14,20 +13,20 @@ import com.google.gson.annotations.SerializedName;
  */
 public class LiquidityPoolTradeEffectResponse extends EffectResponse {
   @SerializedName("liquidity_pool")
-  protected final LiquidityPoolID liquidityPoolID;
+  protected final LiquidityPool liquidityPool;
   @SerializedName("sold")
   protected final AssetAmount sold;
   @SerializedName("bought")
   protected final AssetAmount bought;
 
-  public LiquidityPoolTradeEffectResponse(LiquidityPoolID liquidityPoolID, AssetAmount sold, AssetAmount bought) {
-    this.liquidityPoolID = liquidityPoolID;
+  public LiquidityPoolTradeEffectResponse(LiquidityPool liquidityPool, AssetAmount sold, AssetAmount bought) {
+    this.liquidityPool = liquidityPool;
     this.sold = sold;
     this.bought = bought;
   }
 
-  public LiquidityPoolID getLiquidityPoolID() {
-    return liquidityPoolID;
+  public LiquidityPool getLiquidityPool() {
+    return liquidityPool;
   }
 
   public AssetAmount getSold() {
