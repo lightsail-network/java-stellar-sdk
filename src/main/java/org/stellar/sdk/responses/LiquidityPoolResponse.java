@@ -29,7 +29,7 @@ public class LiquidityPoolResponse extends Response {
   @SerializedName("total_trustlines")
   private Long totalTrustlines;
   @SerializedName("total_shares")
-  private Long totalShares;
+  private String totalShares;
   @SerializedName("reserves")
   private Reserve[] reserves;
   @SerializedName("_links")
@@ -59,7 +59,7 @@ public class LiquidityPoolResponse extends Response {
     return totalTrustlines;
   }
 
-  public Long getTotalShares() {
+  public String getTotalShares() {
     return totalShares;
   }
 
