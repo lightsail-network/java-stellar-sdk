@@ -24,7 +24,7 @@ public class LiquidityPoolsPageDeserializerTest extends TestCase {
         assertEquals(Integer.valueOf(30), liquidityPool.getFeeBP());
         assertEquals(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, liquidityPool.getType());
         assertEquals(Long.valueOf(300), liquidityPool.getTotalTrustlines());
-        assertEquals(Long.valueOf(5000), liquidityPool.getTotalShares());
+        assertEquals("5000.0000000", liquidityPool.getTotalShares());
         assertArrayEquals(new LiquidityPoolResponse.Reserve[]{
           new LiquidityPoolResponse.Reserve("1000.0000005", "EURT:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S"),
           new LiquidityPoolResponse.Reserve("2000.0000000", "PHP:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S")
@@ -82,7 +82,7 @@ public class LiquidityPoolsPageDeserializerTest extends TestCase {
         "            \"asset\": \"PHP:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S\"\n" +
         "          }\n" +
         "        ],\n" +
-        "        \"total_shares\": \"5000\",\n" +
+        "        \"total_shares\": \"5000.0000000\",\n" +
         "        \"total_trustlines\": \"300\",\n" +
         "        \"type\": \"constant_product\"\n" +
         "      },\n" +
