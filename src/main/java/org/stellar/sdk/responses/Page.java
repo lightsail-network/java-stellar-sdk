@@ -16,7 +16,7 @@ import okhttp3.Request;
 
 /**
  * Represents page of objects.
- * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/page.html" target="_blank">Page documentation</a>
+ * @see <a href="https://developers.stellar.org/api/introduction/pagination/" target="_blank">Page documentation</a>
  */
 public class Page<T> extends Response implements TypedResponse<Page<T>> {
 

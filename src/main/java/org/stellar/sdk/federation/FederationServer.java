@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * FederationServer handles a network connection to a
- * <a href="https://www.stellar.org/developers/learn/concepts/federation.html" target="_blank">federation server</a>
+ * <a href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">federation server</a>
  * instance and exposes an interface for requests to that instance.
  *
  * For resolving a stellar address without knowing which federation server
  * to query use {@link Federation#resolve(String)}.
  *
- * @see <a href="https://www.stellar.org/developers/learn/concepts/federation.html" target="_blank">Federation docs</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">Federation docs</a>
  */
 public class FederationServer {
   private final HttpUrl serverUri;
@@ -66,7 +66,7 @@ public class FederationServer {
   /**
    * Creates a <code>FederationServer</code> instance for a given domain.
    * It tries to find a federation server URL in stellar.toml file.
-   * @see <a href="https://www.stellar.org/developers/learn/concepts/stellar-toml.html" target="_blank">Stellar.toml docs</a>
+   * @see <a href="https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/#what-is-a-stellartoml" target="_blank">Stellar.toml docs</a>
    * @param domain Domain to find a federation server for
    * @throws ConnectionErrorException Connection problems
    * @throws NoFederationServerException Stellar.toml does not contain federation server info

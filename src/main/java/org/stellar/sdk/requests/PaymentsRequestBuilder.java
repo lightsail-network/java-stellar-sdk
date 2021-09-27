@@ -28,7 +28,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /accounts/{account}/payments</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/payments-for-account.html">Payments for Account</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/payments/">Payments for Account</a>
    * @param account Account for which to get payments
    */
   public PaymentsRequestBuilder forAccount(String account) {
@@ -39,7 +39,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /ledgers/{ledgerSeq}/payments</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/payments-for-ledger.html">Payments for Ledger</a>
+   * @see <a href="https://developers.stellar.org/api/resources/ledgers/payments/">Payments for Ledger</a>
    * @param ledgerSeq Ledger for which to get payments
    */
   public PaymentsRequestBuilder forLedger(long ledgerSeq) {
@@ -49,7 +49,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /transactions/{transactionId}/payments</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/payments-for-transaction.html">Payments for Transaction</a>
+   * @see <a href="https://developers.stellar.org/api/resources/transactions/payments/">Payments for Transaction</a>
    * @param transactionId Transaction ID for which to get payments
    */
   public PaymentsRequestBuilder forTransaction(String transactionId) {
@@ -104,7 +104,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * This mode will keep the connection to horizon open and horizon will continue to return
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link OperationResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */

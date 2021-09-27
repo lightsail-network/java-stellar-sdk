@@ -3,7 +3,7 @@ package org.stellar.sdk.federation;
 /**
  * Helper class for resolving Stellar addresses.
  *
- * @see <a href="https://www.stellar.org/developers/learn/concepts/federation.html" target="_blank">Federation docs</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">Federation docs</a>
  */
 public class Federation {
   private Federation() {

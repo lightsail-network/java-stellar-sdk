@@ -39,7 +39,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
 
   /**
    * Requests <code>GET /transactions/{transactionId}</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-single.html">Transaction Details</a>
+   * @see <a href="https://developers.stellar.org/api/resources/transactions/single/">Transaction Details</a>
    * @param transactionId Transaction to fetch
    * @throws IOException
    */
@@ -50,7 +50,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /accounts/{account}/transactions</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-account.html">Transactions for Account</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/transactions/">Transactions for Account</a>
    * @param account Account for which to get transactions
    */
   public TransactionsRequestBuilder forAccount(String account) {
@@ -61,7 +61,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /claimable_balances/{claimable_balance_id}/transactions</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-claimable-balance.html">Transactions for ClaimableBalance</a>
+   * @see <a href="https://developers.stellar.org/api/resources/claimablebalances/transactions/">Transactions for ClaimableBalance</a>
    * @param claimableBalance Claimable Balance for which to get transactions
    */
   public TransactionsRequestBuilder forClaimableBalance(String claimableBalance) {
@@ -72,7 +72,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /ledgers/{ledgerSeq}/transactions</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-ledger.html">Transactions for Ledger</a>
+   * @see <a href="https://developers.stellar.org/api/resources/ledgers/transactions/">Transactions for Ledger</a>
    * @param ledgerSeq Ledger for which to get transactions
    */
   public TransactionsRequestBuilder forLedger(long ledgerSeq) {
@@ -82,7 +82,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/transactions</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/transactions/">Transactions for Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get transactions
    */
   public TransactionsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
@@ -91,7 +91,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/transactions</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/transactions-for-liquidity-pool.html">Transactions for Liquidity Pool</a>
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/transactions/">Transactions for Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get transactions
    */
   public TransactionsRequestBuilder forLiquidityPool(String liquidityPoolID) {
@@ -132,7 +132,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * This mode will keep the connection to horizon open and horizon will continue to return
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link TransactionResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */

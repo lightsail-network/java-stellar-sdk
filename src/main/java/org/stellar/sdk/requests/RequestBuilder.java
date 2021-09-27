@@ -48,7 +48,7 @@ public abstract class RequestBuilder {
    * Sets <code>cursor</code> parameter on the request.
    * A cursor is a value that points to a specific location in a collection of resources.
    * The cursor attribute itself is an opaque value meaning that users should not try to parse it.
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/page.html">Page documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/pagination/">Page documentation</a>
    * @param cursor
    */
   public RequestBuilder cursor(String cursor) {

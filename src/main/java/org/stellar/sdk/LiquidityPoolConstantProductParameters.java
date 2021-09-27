@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Base LiquidityPoolConstantProductParameters class.
- * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/" target="_blank">Liquidity Pool</a>
  */
 public final class LiquidityPoolConstantProductParameters extends LiquidityPoolParameters {
   protected final Asset assetA;

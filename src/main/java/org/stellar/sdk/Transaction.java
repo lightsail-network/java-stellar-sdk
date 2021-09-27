@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Represents <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">Transaction</a> in Stellar network.
+ * Represents <a href="https://developers.stellar.org/docs/glossary/transactions/" target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction extends AbstractTransaction {
   private final long mFee;
@@ -328,7 +328,7 @@ public class Transaction extends AbstractTransaction {
     }
 
     /**
-     * Adds a new <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">operation</a> to this transaction.
+     * Adds a new <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">operation</a> to this transaction.
      * @param operation
      * @return Builder object so you can chain methods.
      * @see Operation
@@ -340,7 +340,7 @@ public class Transaction extends AbstractTransaction {
     }
 
     /**
-     * Adds a <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">memo</a> to this transaction.
+     * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/#memo" target="_blank">memo</a> to this transaction.
      * @param memo
      * @return Builder object so you can chain methods.
      * @see Memo
@@ -355,7 +355,7 @@ public class Transaction extends AbstractTransaction {
     }
     
     /**
-     * Adds a <a href="https://www.stellar.org/developers/learn/concepts/transactions.html" target="_blank">time-bounds</a> to this transaction.
+     * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/" target="_blank">time-bounds</a> to this transaction.
      * @param timeBounds
      * @return Builder object so you can chain methods.
      * @see TimeBounds

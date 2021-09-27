@@ -11,9 +11,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#path-payment-strict-receive" target="_blank">PathPaymentStrictReceive</a> operation.
+ * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#path-payment-strict-receive" target="_blank">PathPaymentStrictReceive</a> operation.
  *
- * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
+ * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List of Operations</a>
  */
 public class PathPaymentStrictReceiveOperation extends Operation {
 

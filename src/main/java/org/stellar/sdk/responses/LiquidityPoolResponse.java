@@ -13,7 +13,7 @@ import com.google.errorprone.annotations.ForOverride;
 
 /**
  * Represents liquidity pool response.
- * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/liquiditypool.html" target="_blank">Liquidity Pool documentation</a>
+ * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/" target="_blank">Liquidity Pool documentation</a>
  * @see org.stellar.sdk.requests.LiquidityPoolsRequestBuilder
  * @see org.stellar.sdk.Server#liquidityPools()
  */

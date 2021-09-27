@@ -35,7 +35,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
 
   /**
    * Requests <code>GET /ledgers/{ledgerSeq}</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/ledgers-single.html">Ledger Details</a>
+   * @see <a href="https://developers.stellar.org/api/resources/ledgers/single/">Ledger Details</a>
    * @param ledgerSeq Ledger to fetch
    * @throws IOException
    */
@@ -67,7 +67,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * This mode will keep the connection to horizon open and horizon will continue to return
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link LedgerResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */

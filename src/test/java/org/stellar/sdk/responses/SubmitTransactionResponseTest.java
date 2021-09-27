@@ -13,10 +13,10 @@ public class SubmitTransactionResponseTest extends TestCase {
   @Test
   public void testDeserializeTransactionFailureResponse() throws IOException {
     String json = "{\n" +
-            "  \"type\": \"https://stellar.org/horizon-errors/transaction_failed\",\n" +
+            "  \"type\": \"https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/transaction-failed/\",\n" +
             "  \"title\": \"Transaction Failed\",\n" +
             "  \"status\": 400,\n" +
-            "  \"detail\": \"The transaction failed when submitted to the stellar network. The `extras.result_codes` field on this response contains further details.  Descriptions of each code can be found at: https://www.stellar.org/developers/learn/concepts/list-of-operations.html\",\n" +
+            "  \"detail\": \"The transaction failed when submitted to the stellar network. The `extras.result_codes` field on this response contains further details.  Descriptions of each code can be found at: https://developers.stellar.org/docs/start/list-of-operations/\",\n" +
             "  \"instance\": \"horizon-testnet-001.prd.stellar001.internal.stellar-ops.com/4elYz2fHhC-528285\",\n" +
             "  \"extras\": {\n" +
             "    \"envelope_xdr\": \"AAAAAKpmDL6Z4hvZmkTBkYpHftan4ogzTaO4XTB7joLgQnYYAAAAZAAAAAAABeoyAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAA=\",\n" +
@@ -39,10 +39,10 @@ public class SubmitTransactionResponseTest extends TestCase {
   @Test
   public void testDeserializeOperationFailureResponse() throws IOException {
     String json = "{\n" +
-            "  \"type\": \"https://stellar.org/horizon-errors/transaction_failed\",\n" +
+            "  \"type\": \"https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/transaction-failed/\",\n" +
             "  \"title\": \"Transaction Failed\",\n" +
             "  \"status\": 400,\n" +
-            "  \"detail\": \"The transaction failed when submitted to the stellar network. The `extras.result_codes` field on this response contains further details.  Descriptions of each code can be found at: https://www.stellar.org/developers/learn/concepts/list-of-operations.html\",\n" +
+            "  \"detail\": \"The transaction failed when submitted to the stellar network. The `extras.result_codes` field on this response contains further details.  Descriptions of each code can be found at: https://developers.stellar.org/docs/start/list-of-operations/\",\n" +
             "  \"instance\": \"horizon-testnet-001.prd.stellar001.internal.stellar-ops.com/4elYz2fHhC-528366\",\n" +
             "  \"extras\": {\n" +
             "    \"envelope_xdr\": \"AAAAAF2O0axA67+p2jMunG6G188kDSHIvqQ13d9l29YCSA/uAAAAZAAvvc0AAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAECSA/uAAAAQFuZVAjftHa+JZes1VxSk8naOfjjAz9V86mY1AZf8Ik6PtTsBpDsCfG57EYsq4jWyZcT+vhXyWsw5evF1ELqMw4=\",\n" +

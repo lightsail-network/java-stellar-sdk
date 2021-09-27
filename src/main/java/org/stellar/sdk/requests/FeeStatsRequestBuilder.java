@@ -19,7 +19,7 @@ public class FeeStatsRequestBuilder extends RequestBuilder {
      *
      * @throws IOException
      * @throws TooManyRequestsException
-     * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/fee-stats.html">Fee Stats</a>
+     * @see <a href="https://developers.stellar.org/api/aggregations/fee-stats/">Fee Stats</a>
      */
     public FeeStatsResponse execute() throws IOException, TooManyRequestsException {
         TypeToken type = new TypeToken<FeeStatsResponse>() {

@@ -8,7 +8,7 @@ import org.stellar.sdk.xdr.*;
 
 /**
  * Class for LiquidityPoolShareChangeTrustAsset
- * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/" target="_blank">Liquidity Pool</a>
  */
 public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
   protected final LiquidityPoolParameters mParams;

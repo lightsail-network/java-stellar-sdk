@@ -49,7 +49,7 @@ public class OffersRequestBuilder extends RequestBuilder {
 
   /**
    * @param account Account for which to get offers
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/offers-for-account.html">Offers for Account</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/offers/">Offers for Account</a>
    * @deprecated Use {@link OffersRequestBuilder#forSeller}
    * Builds request to <code>GET /accounts/{account}/offers</code>
    */
@@ -65,7 +65,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param sponsor Account ID of the sponsor.
    * @return current {@link OffersRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
+   * @see <a href="https://developers.stellar.org/api/resources/offers/">Offers</a>
    */
   public OffersRequestBuilder forSponsor(String sponsor) {
     uriBuilder.setQueryParameter("sponsor", sponsor);
@@ -77,7 +77,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param seller Account ID of the offer creator.
    * @return current {@link OffersRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
+   * @see <a href="https://developers.stellar.org/api/resources/offers/">Offers</a>
    */
   public OffersRequestBuilder forSeller(String seller) {
     uriBuilder.setQueryParameter("seller", seller);
@@ -89,7 +89,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param asset The Asset being bought.
    * @return current {@link OffersRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
+   * @see <a href="https://developers.stellar.org/api/resources/offers/">Offers</a>
    */
   public OffersRequestBuilder forBuyingAsset(Asset asset) {
     setAssetParameter("buying", asset);
@@ -101,7 +101,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param asset The Asset being sold.
    * @return current {@link OffersRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/offers.html">Offers</a>
+   * @see <a href="https://developers.stellar.org/api/resources/offers/">Offers</a>
    */
   public OffersRequestBuilder forSellingAsset(Asset asset) {
     setAssetParameter("selling", asset);
@@ -131,7 +131,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * This mode will keep the connection to horizon open and horizon will continue to return
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link OfferResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */

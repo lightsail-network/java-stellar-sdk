@@ -8,7 +8,7 @@ import org.stellar.sdk.LiquidityPoolID;
 
 /**
  * Represents trades response.
- * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades.html" target="_blank">Trades documentation</a>
+ * @see <a href="https://developers.stellar.org/api/resources/trades/" target="_blank">Trades documentation</a>
  * @see org.stellar.sdk.requests.TradesRequestBuilder
  * @see org.stellar.sdk.Server#trades()
  */
