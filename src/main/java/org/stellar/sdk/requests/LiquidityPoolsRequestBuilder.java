@@ -39,7 +39,7 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
 
   /**
    * Requests <code>GET /liquidity_pools/{liquidity_pool_id}</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/liquiditypool-single.html">Liquidity Pool Details</a>
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity Pool Details</a>
    * @param liquidityPoolID Liquidity Pool to fetch
    * @throws IOException
    */
@@ -50,7 +50,7 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
 
   /**
    * Requests <code>GET /liquidity_pools/{liquidity_pool_id}</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/liquiditypool-single.html">Liquidity Pool Details</a>
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity Pool Details</a>
    * @param liquidityPoolID Liquidity Pool to fetch
    * @throws IOException
    */
@@ -63,7 +63,7 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    *
    * @param reserves Reserve assets to filter liquidity pools
    * @return current {@link LiquidityPoolsRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/liquidity-pools.html">LiquidityPools</a>
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/list/">LiquidityPools</a>
    */
   public LiquidityPoolsRequestBuilder forReserves(String... reserves) {
     uriBuilder.setQueryParameter(RESERVES_PARAMETER_NAME, String.join(",", reserves));
@@ -93,7 +93,7 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * This mode will keep the connection to horizon open and horizon will continue to return
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link LiquidityPoolResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */

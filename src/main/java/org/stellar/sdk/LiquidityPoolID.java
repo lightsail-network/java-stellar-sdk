@@ -8,7 +8,7 @@ import org.stellar.sdk.xdr.*;
 
 /**
  * Base LiquidityPoolID class.
- * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/" target="_blank">Liquidity Pool</a>
  */
 public final class LiquidityPoolID {
   protected final byte[] hash;

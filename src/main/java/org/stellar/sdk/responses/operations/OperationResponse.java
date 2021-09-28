@@ -7,7 +7,7 @@ import org.stellar.sdk.responses.*;
 
 /**
  * Abstract class for operation responses.
- * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html" target="_blank">Operation documentation</a>
+ * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */

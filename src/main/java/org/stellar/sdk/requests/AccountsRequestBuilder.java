@@ -42,7 +42,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
 
   /**
    * Requests <code>GET /accounts/{account}</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/accounts-single.html">Account Details</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/single/">Account Details</a>
    * @param account Account to fetch
    * @throws IOException
    */
@@ -56,7 +56,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param signer Account ID
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forSigner(String signer) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
@@ -77,7 +77,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param asset An issued asset
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forAsset(AssetTypeCreditAlphaNum asset) {
     if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
@@ -98,7 +98,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param Liquidity Pool ID
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
     return this.forLiquidityPool(liquidityPoolID.toString());
@@ -109,7 +109,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param Liquidity Pool ID
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forLiquidityPool(String liquidityPoolID) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
@@ -130,7 +130,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param sponsor Account ID
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forSponsor(String sponsor) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
@@ -169,7 +169,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * This mode will keep the connection to horizon open and horizon will continue to return
    * responses as ledgers close.
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link AccountResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */

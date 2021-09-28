@@ -7,8 +7,8 @@ import org.stellar.sdk.xdr.*;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#set-options">SetOptions</a> operation.
- * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html">List of Operations</a>
+ * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#set-options">SetOptions</a> operation.
+ * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/">List of Operations</a>
  */
 public class SetOptionsOperation extends Operation {
 
@@ -51,7 +51,7 @@ public class SetOptionsOperation extends Operation {
   }
 
   /**
-   * Indicates which flags to clear. For details about the flags, please refer to the <a href="https://www.stellar.org/developers/learn/concepts/accounts.html" target="_blank">accounts doc</a>.
+   * Indicates which flags to clear. For details about the flags, please refer to the <a href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
    * You can also use {@link AccountFlag} enum.
    */
   public Integer getClearFlags() {
@@ -59,7 +59,7 @@ public class SetOptionsOperation extends Operation {
   }
 
   /**
-   * Indicates which flags to set. For details about the flags, please refer to the <a href="https://www.stellar.org/developers/learn/concepts/accounts.html" target="_blank">accounts doc</a>.
+   * Indicates which flags to set. For details about the flags, please refer to the <a href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
    * You can also use {@link AccountFlag} enum.
    */
   public Integer getSetFlags() {
@@ -74,21 +74,21 @@ public class SetOptionsOperation extends Operation {
   }
 
   /**
-   * A number from 0-255 representing the threshold this account sets on all operations it performs that have <a href="https://www.stellar.org/developers/learn/concepts/multi-sig.html" target="_blank">a low threshold</a>.
+   * A number from 0-255 representing the threshold this account sets on all operations it performs that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a low threshold</a>.
    */
   public Integer getLowThreshold() {
     return lowThreshold;
   }
 
   /**
-   * A number from 0-255 representing the threshold this account sets on all operations it performs that have <a href="https://www.stellar.org/developers/learn/concepts/multi-sig.html" target="_blank">a medium threshold</a>.
+   * A number from 0-255 representing the threshold this account sets on all operations it performs that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a medium threshold</a>.
    */
   public Integer getMediumThreshold() {
     return mediumThreshold;
   }
 
   /**
-   * A number from 0-255 representing the threshold this account sets on all operations it performs that have <a href="https://www.stellar.org/developers/learn/concepts/multi-sig.html" target="_blank">a high threshold</a>.
+   * A number from 0-255 representing the threshold this account sets on all operations it performs that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a high threshold</a>.
    */
   public Integer getHighThreshold() {
     return highThreshold;
@@ -236,7 +236,7 @@ public class SetOptionsOperation extends Operation {
 
     /**
      * Clears the given flags from the account.
-     * @param clearFlags For details about the flags, please refer to the <a href="https://www.stellar.org/developers/learn/concepts/accounts.html" target="_blank">accounts doc</a>.
+     * @param clearFlags For details about the flags, please refer to the <a href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
      * @return Builder object so you can chain methods.
      */
     public Builder setClearFlags(int clearFlags) {
@@ -246,7 +246,7 @@ public class SetOptionsOperation extends Operation {
 
     /**
      * Sets the given flags on the account.
-     * @param setFlags For details about the flags, please refer to the <a href="https://www.stellar.org/developers/learn/concepts/accounts.html" target="_blank">accounts doc</a>.
+     * @param setFlags For details about the flags, please refer to the <a href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
      * @return Builder object so you can chain methods.
      */
     public Builder setSetFlags(int setFlags) {
@@ -295,7 +295,7 @@ public class SetOptionsOperation extends Operation {
     }
 
     /**
-     * Sets the account's home domain address used in <a href="https://www.stellar.org/developers/learn/concepts/federation.html" target="_blank">Federation</a>.
+     * Sets the account's home domain address used in <a href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">Federation</a>.
      * @param homeDomain A string of the address which can be up to 32 characters.
      * @return Builder object so you can chain methods.
      */

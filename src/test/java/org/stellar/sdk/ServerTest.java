@@ -79,7 +79,7 @@ public class ServerTest {
 
     private final String failureResponse =
             "{\n" +
-            "  \"type\": \"https://stellar.org/horizon-errors/transaction_failed\",\n" +
+            "  \"type\": \"https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/transaction-failed/\",\n" +
             "  \"title\": \"Transaction Failed\",\n" +
             "  \"status\": 400,\n" +
             "  \"detail\": \"TODO\",\n" +
@@ -98,7 +98,7 @@ public class ServerTest {
 
     private final String timeoutResponse =
             "{\n" +
-            "  \"type\": \"https://stellar.org/horizon-errors/transaction_failed\",\n" +
+            "  \"type\": \"https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/transaction-failed/\",\n" +
             "  \"title\": \"Timeout\",\n" +
             "  \"status\": 403,\n" +
             "  \"detail\": \"TODO\",\n" +
@@ -107,7 +107,7 @@ public class ServerTest {
 
     private final String internalServerErrorResponse =
             "{\n" +
-            "  \"type\":     \"https://www.stellar.org/docs/horizon/problems/server_error\",\n" +
+            "  \"type\":     \"https://developers.stellar.org/api/errors/http-status-codes/standard/\",\n" +
             "  \"title\":    \"Internal Server Error\",\n" +
             "  \"status\":   500,\n" +
             "  \"instance\": \"d3465740-ec3a-4a0b-9d4a-c9ea734ce58a\"\n" +

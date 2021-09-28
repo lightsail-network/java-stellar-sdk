@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * ChangeTrustAsset class.
- * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/assets/" target="_blank">Assets</a>
  */
 public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
   ChangeTrustAsset() {}

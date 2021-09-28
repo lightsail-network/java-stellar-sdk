@@ -8,7 +8,7 @@ import org.stellar.sdk.xdr.*;
 
 /**
  * Class for LiquidityPoolShareTrustLineAsset
- * @see <a href="https://www.stellar.org/developers/learn/concepts/assets.html" target="_blank">Assets</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/" target="_blank">Liquidity Pool</a>
  */
 public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
   protected final LiquidityPoolID mId;

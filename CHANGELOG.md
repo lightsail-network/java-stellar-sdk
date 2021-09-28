@@ -395,7 +395,7 @@ Deprecated | New method/class
 ## 0.2.2
 
 * Fixed `MemoReturnHash#toXdr()` method.
-* Patch for Horizon [Timeout](https://www.stellar.org/developers/horizon/reference/errors/timeout.html) responses (`SubmitTransactionResponse.getEnvelopeXdr()` and `SubmitTransactionResponse.getResultXdr()`).
+* Patch for Horizon [Timeout](https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/timeout/) responses (`SubmitTransactionResponse.getEnvelopeXdr()` and `SubmitTransactionResponse.getResultXdr()`).
 
 ## 0.2.1
 

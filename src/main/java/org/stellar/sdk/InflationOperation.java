@@ -4,8 +4,8 @@ import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.OperationType;
 
 /**
- * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#inflation" target="_blank">Inflation</a> operation.
- * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
+ * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#inflation" target="_blank">Inflation</a> operation.
+ * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List of Operations</a>
  */
 public class InflationOperation extends Operation {
     @Override

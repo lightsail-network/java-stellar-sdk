@@ -28,7 +28,7 @@ The list of versions to install can be found in the [Releases](./releases) secti
 Download the latest jar from the GitHub repo's [releases tab](https://github.com/stellar/java-stellar-sdk/releases). Add the `jar` package to your project according to how your environment is set up.
 
 ## Basic Usage
-For some examples on how to use this library, take a look at the [Get Started docs in the developers site](https://www.stellar.org/developers/guides/get-started/create-account.html).
+For some examples on how to use this library, take a look at the [Get Started docs in the developers site](https://developers.stellar.org/docs/tutorials/create-account/).
 
 ## Documentation
 Javadoc is available at https://stellar.github.io/java-stellar-sdk

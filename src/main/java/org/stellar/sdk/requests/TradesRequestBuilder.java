@@ -46,7 +46,7 @@ public class TradesRequestBuilder extends RequestBuilder {
 
     /**
      * Builds request to <code>GET /accounts/{account}/trades</code>
-     * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-account.html">Trades for Account</a>
+     * @see <a href="https://developers.stellar.org/api/resources/accounts/trades/">Trades for Account</a>
      * @param account Account for which to get trades
      */
     public TradesRequestBuilder forAccount(String account) {
@@ -57,7 +57,7 @@ public class TradesRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /liquidity_pools/{poolID}/trades</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/trades-for-liquidity-pool.html">Trades for Liquidity Pool</a>
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/trades/">Trades for Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get trades
    */
   public TradesRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
@@ -66,7 +66,7 @@ public class TradesRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /liquidity_pools/{poolID}/trades</code>
-   * @see <a href="https://www.stellar.org/developers/horizon/reference/trades-for-liquidity-pool.html">Trades for Liquidity Pool</a>
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/trades/">Trades for Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get trades
    */
   public TradesRequestBuilder forLiquidityPool(String liquidityPoolID) {
@@ -79,7 +79,7 @@ public class TradesRequestBuilder extends RequestBuilder {
      *
      * @param trade type
      * @return current {@link TradesRequestBuilder} instance
-     * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades.html">Trades</a>
+     * @see <a href="https://developers.stellar.org/api/resources/trades/list/">List All Trades</a>
      */
     public TradesRequestBuilder forTradeType(String tradeType) {
         tradeType = checkNotNull(tradeType, "tradeType cannot be null");
@@ -126,7 +126,7 @@ public class TradesRequestBuilder extends RequestBuilder {
      * This mode will keep the connection to horizon open and horizon will continue to return
      * responses as ledgers close.
      * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-     * @see <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+     * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
      * @param listener {@link EventListener} implementation with {@link TradeResponse} type
      * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
      */

@@ -7,7 +7,7 @@ import org.stellar.sdk.Asset;
 
 /**
  * Represents offer response.
- * @see <a href="https://www.stellar.org/developers/horizon/reference/resources/offer.html" target="_blank">Offer documentation</a>
+ * @see <a href="https://developers.stellar.org/api/resources/offers/" target="_blank">Offer documentation</a>
  * @see org.stellar.sdk.requests.OffersRequestBuilder
  * @see org.stellar.sdk.Server#offers()
  */

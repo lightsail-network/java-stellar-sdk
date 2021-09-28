@@ -7,8 +7,8 @@ import org.stellar.sdk.xdr.*;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Represents <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#manage-sell-offer" target="_blank">ManageSellOffer</a> operation.
- * @see <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html" target="_blank">List of Operations</a>
+ * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#manage-sell-offer" target="_blank">ManageSellOffer</a> operation.
+ * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List of Operations</a>
  */
 public class ManageSellOfferOperation extends Operation {
 

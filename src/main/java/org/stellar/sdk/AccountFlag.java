@@ -4,7 +4,7 @@ import org.stellar.sdk.xdr.AccountFlags;
 
 /**
  * AccountFlag is the <code>enum</code> that can be used in {@link SetOptionsOperation}.
- * @see <a href="https://www.stellar.org/developers/guides/concepts/accounts.html#flags" target="_blank">Account Flags</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/accounts/#flags" target="_blank">Account Flags</a>
  */
 public enum AccountFlag {
   /**
