@@ -2,7 +2,11 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
-## 0.27.0-beta.0
+## 0.27.1-beta
+
+* Add 5 minute grace period to SEP-10 challenge parsing function ([#366](https://github.com/stellar/java-stellar-sdk/pull/366)).
+
+## 0.27.0-beta
 
 * Add AMM support for [CAP38](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0038.md) ([#359](https://github.com/stellar/java-stellar-sdk/pull/359)).
 
