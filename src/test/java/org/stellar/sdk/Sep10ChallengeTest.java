@@ -522,7 +522,7 @@ public class Sep10ChallengeTest {
     KeyPair client = KeyPair.random();
 
     long current = System.currentTimeMillis() / 1000L;
-    long start = current + 300;
+    long start = current + Sep10Challenge.GRACE_PERIOD_SECONDS + 30;
     long end = current + 600;
     TimeBounds timeBounds = new TimeBounds(start, end);
     String domainName = "example.com";
@@ -542,6 +542,34 @@ public class Sep10ChallengeTest {
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction is not within range of the specified timebounds.", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionGracePeriod() throws InvalidSep10ChallengeException, IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+
+    long current = System.currentTimeMillis() / 1000L;
+    long start = current + Sep10Challenge.GRACE_PERIOD_SECONDS - 30;
+    long end = current + 600;
+    TimeBounds timeBounds = new TimeBounds(start, end);
+    String domainName = "example.com";
+    String webAuthDomain = "example.com";
+
+    Transaction transaction = Sep10Challenge.newChallenge(
+        server,
+        Network.TESTNET,
+        client.getAccountId(),
+        domainName,
+        webAuthDomain,
+        timeBounds
+    );
+
+    try {
+      Sep10Challenge.readChallengeTransaction(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName, webAuthDomain);
+    } catch (InvalidSep10ChallengeException e) {
+      fail();
     }
   }
 

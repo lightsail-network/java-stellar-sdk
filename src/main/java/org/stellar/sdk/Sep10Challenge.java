@@ -15,7 +15,8 @@ import java.util.*;
 public class Sep10Challenge {
   private static final String HOME_DOMAIN_MANAGER_DATA_NAME_FLAG = "auth";
   private static final String WEB_AUTH_DOMAIN_MANAGER_DATA_NAME = "web_auth_domain";
-  
+  static final int GRACE_PERIOD_SECONDS = 5 * 60;
+
   private Sep10Challenge() {
     // no instance
   }
@@ -127,7 +128,7 @@ public class Sep10Challenge {
     }
 
     long currentTime = System.currentTimeMillis() / 1000L;
-    if (currentTime < minTime || currentTime > maxTime) {
+    if ((currentTime + GRACE_PERIOD_SECONDS)< minTime || currentTime > maxTime) {
       throw new InvalidSep10ChallengeException("Transaction is not within range of the specified timebounds.");
     }
 
