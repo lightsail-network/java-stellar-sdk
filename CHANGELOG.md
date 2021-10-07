@@ -2,6 +2,10 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.27.2-beta
+
+* Added support for 'client_domain' ManageData operations in SEP 10 challenges ([#368](https://github.com/stellar/java-stellar-sdk/pull/368)).
+
 ## 0.27.1-beta
 
 * Add 5 minute grace period to SEP-10 challenge parsing function ([#366](https://github.com/stellar/java-stellar-sdk/pull/366)).
