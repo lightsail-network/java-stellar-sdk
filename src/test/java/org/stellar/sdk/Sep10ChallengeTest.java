@@ -834,19 +834,19 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 = new ManageDataOperation.Builder(domainName + " auth", null)
-      .setSourceAccount(client.getAccountId())
-      .build();
+        .setSourceAccount(client.getAccountId())
+        .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
     Transaction transaction = new Transaction(
-      AccountConverter.disableMuxed(),
-      sourceAccount.getAccountId(),
-      100 * operations.length,
-      sourceAccount.getIncrementedSequenceNumber(),
-      operations,
-      Memo.none(),
-      timeBounds,
-      network
+        AccountConverter.disableMuxed(),
+        sourceAccount.getAccountId(),
+        100 * operations.length,
+        sourceAccount.getIncrementedSequenceNumber(),
+        operations,
+        Memo.none(),
+        timeBounds,
+        network
     );
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -1060,12 +1060,12 @@ public class Sep10ChallengeTest {
     Transaction transaction = null;
     try {
       transaction = Sep10Challenge.newChallenge(
-        server,
-        network,
-        client.getAccountId(),
-        domainName,
-        webAuthDomain,
-        timeBounds
+          server,
+          network,
+          client.getAccountId(),
+          domainName,
+          webAuthDomain,
+          timeBounds
       );
     } catch (InvalidSep10ChallengeException e) {
       fail("Should not have thrown any exception.");
@@ -1090,12 +1090,12 @@ public class Sep10ChallengeTest {
     Transaction transaction = null;
     try {
       transaction = Sep10Challenge.newChallenge(
-        server,
-        network,
-        client.getAccountId(),
-        domainName,
-        webAuthDomain,
-        timeBounds
+          server,
+          network,
+          client.getAccountId(),
+          domainName,
+          webAuthDomain,
+          timeBounds
       );
     } catch (InvalidSep10ChallengeException e) {
       fail("Should not have thrown any exception.");
@@ -1124,12 +1124,12 @@ public class Sep10ChallengeTest {
     Transaction transaction = null;
     try {
       transaction = Sep10Challenge.newChallenge(
-        server,
-        network,
-        client.getAccountId(),
-        domainName,
-        webAuthDomain,
-        timeBounds
+          server,
+          network,
+          client.getAccountId(),
+          domainName,
+          webAuthDomain,
+          timeBounds
       );
     } catch (InvalidSep10ChallengeException e) {
       fail("Should not have thrown any exception.");
@@ -1159,12 +1159,12 @@ public class Sep10ChallengeTest {
     Transaction transaction = null;
     try {
       transaction = Sep10Challenge.newChallenge(
-              server,
-              network,
-              client.getAccountId(),
-              domainName,
-              webAuthDomain,
-              timeBounds
+          server,
+          network,
+          client.getAccountId(),
+          domainName,
+          webAuthDomain,
+          timeBounds
       );
     } catch (InvalidSep10ChallengeException e) {
       fail("Should not have thrown any exception.");
@@ -1338,6 +1338,182 @@ public class Sep10ChallengeTest {
   }
 
   @Test
+  public void testChallengeWithClientDomain() throws InvalidSep10ChallengeException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    KeyPair clientDomainSigner = KeyPair.random();
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+    String webAuthDomain = "auth.example.com";
+    String clientDomain = "client.domain.com";
+
+    Transaction transaction = Sep10Challenge.newChallenge(
+        server,
+        Network.TESTNET,
+        client.getAccountId(),
+        domainName,
+        webAuthDomain,
+        timeBounds,
+        clientDomain,
+        clientDomainSigner.getAccountId()
+    );
+
+
+    assertEquals(Network.TESTNET, transaction.getNetwork());
+    assertEquals(300, transaction.getFee());
+    assertEquals(timeBounds, transaction.getTimeBounds());
+    assertEquals(server.getAccountId(), transaction.getSourceAccount());
+    assertEquals(0, transaction.getSequenceNumber());
+
+    assertEquals(3, transaction.getOperations().length);
+    ManageDataOperation homeDomainOp = (ManageDataOperation) transaction.getOperations()[0];
+    assertEquals(client.getAccountId(), homeDomainOp.getSourceAccount());
+    assertEquals(domainName + " auth", homeDomainOp.getName());
+
+    assertEquals(64, homeDomainOp.getValue().length);
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    assertTrue(base64Encoding.canDecode(new String(homeDomainOp.getValue())));
+
+    ManageDataOperation webAuthDomainOp = (ManageDataOperation) transaction.getOperations()[1];
+    assertEquals(server.getAccountId(), webAuthDomainOp.getSourceAccount());
+    assertEquals("web_auth_domain", webAuthDomainOp.getName());
+    assertArrayEquals(webAuthDomain.getBytes(), webAuthDomainOp.getValue());
+
+    ManageDataOperation clientAuthDomainOp = (ManageDataOperation) transaction.getOperations()[2];
+    assertEquals(clientDomainSigner.getAccountId(), clientAuthDomainOp.getSourceAccount());
+    assertEquals("client_domain", clientAuthDomainOp.getName());
+    assertArrayEquals(clientDomain.getBytes(), clientAuthDomainOp.getValue());
+
+    assertEquals(1, transaction.getSignatures().size());
+    assertTrue(
+        server.verify(transaction.hash(), transaction.getSignatures().get(0).getSignature().getSignature())
+    );
+  }
+
+  @Test
+  public void testChallengeWithClientDomainButWithoutClientDomainSigner() {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    KeyPair clientDomainSigner = KeyPair.random();
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+    String webAuthDomain = "auth.example.com";
+    String clientDomain = "client.domain.com";
+
+    try {
+      Sep10Challenge.newChallenge(
+          server,
+          Network.TESTNET,
+          client.getAccountId(),
+          domainName,
+          webAuthDomain,
+          timeBounds,
+          "",
+          clientDomainSigner.getAccountId()
+      );
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("clientDomain is required if clientSigningKey is provided", e.getMessage());
+    }
+
+    try {
+      Sep10Challenge.newChallenge(
+          server,
+          Network.TESTNET,
+          client.getAccountId(),
+          domainName,
+          webAuthDomain,
+          timeBounds,
+          clientDomain,
+          ""
+      );
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("clientDomain is required if clientSigningKey is provided", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testVerifyChallengeWithClientDomain() throws IOException, InvalidSep10ChallengeException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    KeyPair clientDomainSigner = KeyPair.random();
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+    String webAuthDomain = "auth.example.com";
+    String clientDomain = "client.domain.com";
+
+    Transaction transaction = Sep10Challenge.newChallenge(
+        server,
+        Network.TESTNET,
+        client.getAccountId(),
+        domainName,
+        webAuthDomain,
+        timeBounds,
+        clientDomain,
+        clientDomainSigner.getAccountId()
+    );
+
+    transaction.sign(client);
+    transaction.sign(clientDomainSigner);
+
+    // should pass if clientDomainSigner is omitted from signers set
+    Set<String> signers = new HashSet<String>(Arrays.asList(client.getAccountId()));
+    Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName, webAuthDomain, signers);
+
+    // should pass if clientDomainSigner is included in signers set
+    signers = new HashSet<String>(Arrays.asList(client.getAccountId(), clientDomainSigner.getAccountId()));
+    Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName, webAuthDomain, signers);
+  }
+
+  @Test
+  public void testVerifyChallengeWithClientDomainMissingSignature() throws IOException, InvalidSep10ChallengeException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    KeyPair clientDomainSigner = KeyPair.random();
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+    String webAuthDomain = "auth.example.com";
+    String clientDomain = "client.domain.com";
+
+    Transaction transaction = Sep10Challenge.newChallenge(
+        server,
+        Network.TESTNET,
+        client.getAccountId(),
+        domainName,
+        webAuthDomain,
+        timeBounds,
+        clientDomain,
+        clientDomainSigner.getAccountId()
+    );
+
+    transaction.sign(client);
+
+    Set<String> signers = new HashSet<String>(Arrays.asList(client.getAccountId()));
+    try {
+      Sep10Challenge.verifyChallengeTransactionSigners(transaction.toEnvelopeXdrBase64(), server.getAccountId(), Network.TESTNET, domainName, webAuthDomain, signers);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals(
+          String.format("Transaction not signed by by the source account of the 'client_domain' ManageDataOperation: %s.", clientDomainSigner.getAccountId()),
+          e.getMessage()
+      );
+    }
+  }
+
+  @Test
   public void testVerifyChallengeTransactionThresholdInvalidNotSignedByServer() throws IOException {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
@@ -1436,18 +1612,18 @@ public class Sep10ChallengeTest {
     String webAuthDomain = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
-      server,
-      network,
-      masterClient.getAccountId(),
-      domainName,
-      webAuthDomain,
-      timeBounds
+        server,
+        network,
+        masterClient.getAccountId(),
+        domainName,
+        webAuthDomain,
+        timeBounds
     );
 
     transaction.sign(masterClient);
 
     Set<Sep10Challenge.Signer> signers = new HashSet<Sep10Challenge.Signer>(Collections.singletonList(
-      new Sep10Challenge.Signer(masterClient.getAccountId(), 255)
+        new Sep10Challenge.Signer(masterClient.getAccountId(), 255)
     ));
 
     int threshold = 255;
@@ -1864,12 +2040,12 @@ public class Sep10ChallengeTest {
     String webAuthDomain = "example.com";
 
     Transaction transaction = Sep10Challenge.newChallenge(
-      server,
-      network,
-      masterClient.getAccountId(),
-      domainName,
-      webAuthDomain,
-      timeBounds
+        server,
+        network,
+        masterClient.getAccountId(),
+        domainName,
+        webAuthDomain,
+        timeBounds
     );
 
     transaction.sign(masterClient);

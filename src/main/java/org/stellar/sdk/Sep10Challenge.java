@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
@@ -13,9 +14,10 @@ import java.security.SecureRandom;
 import java.util.*;
 
 public class Sep10Challenge {
+  static final int GRACE_PERIOD_SECONDS = 5 * 60;
+  static final String CLIENT_DOMAIN_DATA_NAME = "client_domain";
   private static final String HOME_DOMAIN_MANAGER_DATA_NAME_FLAG = "auth";
   private static final String WEB_AUTH_DOMAIN_MANAGER_DATA_NAME = "web_auth_domain";
-  static final int GRACE_PERIOD_SECONDS = 5 * 60;
 
   private Sep10Challenge() {
     // no instance
@@ -23,12 +25,13 @@ public class Sep10Challenge {
 
   /**
    * Returns a valid <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#response" target="_blank">SEP 10</a> challenge, for use in web authentication.
-   * @param signer           The server's signing account.
-   * @param network          The Stellar network used by the server.
-   * @param clientAccountId  The stellar account belonging to the client.
-   * @param domainName       The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
-   * @param webAuthDomain    The fully qualified domain name of the service issuing the challenge.
-   * @param timebounds       The lifetime of the challenge token.
+   *
+   * @param signer          The server's signing account.
+   * @param network         The Stellar network used by the server.
+   * @param clientAccountId The stellar account belonging to the client.
+   * @param domainName      The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param webAuthDomain   The fully qualified domain name of the service issuing the challenge.
+   * @param timebounds      The lifetime of the challenge token.
    */
   public static Transaction newChallenge(
       KeyPair signer,
@@ -38,15 +41,43 @@ public class Sep10Challenge {
       String webAuthDomain,
       TimeBounds timebounds
   ) throws InvalidSep10ChallengeException {
+    return newChallenge(signer, network, clientAccountId, domainName, webAuthDomain, timebounds, "", "");
+  }
+
+  /**
+   * Returns a valid <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#response" target="_blank">SEP 10</a> challenge, for use in web authentication.
+   *
+   * @param signer           The server's signing account.
+   * @param network          The Stellar network used by the server.
+   * @param clientAccountId  The stellar account belonging to the client.
+   * @param domainName       The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param webAuthDomain    The fully qualified domain name of the service issuing the challenge.
+   * @param timebounds       The lifetime of the challenge token.
+   * @param clientDomain     The domain of the client application requesting authentication.
+   * @param clientSigningKey The stellar account listed as the SIGNING_KEY on the client domain's TOML file.
+   */
+  public static Transaction newChallenge(
+      KeyPair signer,
+      Network network,
+      String clientAccountId,
+      String domainName,
+      String webAuthDomain,
+      TimeBounds timebounds,
+      String clientDomain,
+      String clientSigningKey
+  ) throws InvalidSep10ChallengeException {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
     BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
 
+    if (clientDomain.isEmpty() != clientSigningKey.isEmpty()) {
+      throw new InvalidSep10ChallengeException("clientDomain is required if clientSigningKey is provided");
+    }
 
     if (StrKey.decodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID) {
-      throw new InvalidSep10ChallengeException(clientAccountId+" is not a valid account id");
+      throw new InvalidSep10ChallengeException(clientAccountId + " is not a valid account id");
     }
 
     Account sourceAccount = new Account(signer.getAccountId(), -1L);
@@ -56,13 +87,23 @@ public class Sep10Challenge {
     ManageDataOperation webAuthDomainOperation = new ManageDataOperation.Builder(WEB_AUTH_DOMAIN_MANAGER_DATA_NAME, webAuthDomain.getBytes())
         .setSourceAccount(sourceAccount.getAccountId())
         .build();
-    Transaction transaction = new Transaction.Builder(AccountConverter.disableMuxed(), sourceAccount, network)
+
+    Transaction.Builder builder = new Transaction.Builder(AccountConverter.disableMuxed(), sourceAccount, network)
         .addTimeBounds(timebounds)
         .setBaseFee(100)
         .addOperation(domainNameOperation)
-        .addOperation(webAuthDomainOperation)
-        .build();
+        .addOperation(webAuthDomainOperation);
 
+    if (!clientSigningKey.isEmpty()) {
+      if (StrKey.decodeVersionByte(clientSigningKey) != StrKey.VersionByte.ACCOUNT_ID) {
+        throw new InvalidSep10ChallengeException(clientSigningKey + " is not a valid account id");
+      }
+      builder.addOperation(new ManageDataOperation.Builder(CLIENT_DOMAIN_DATA_NAME, clientDomain.getBytes())
+          .setSourceAccount(clientSigningKey)
+          .build());
+    }
+
+    Transaction transaction = builder.build();
     transaction.sign(signer);
 
     return transaction;
@@ -100,10 +141,10 @@ public class Sep10Challenge {
     if (!(parsed instanceof Transaction)) {
       throw new InvalidSep10ChallengeException("Transaction cannot be a fee bump transaction");
     }
-    Transaction transaction = (Transaction)parsed;
+    Transaction transaction = (Transaction) parsed;
 
     if (StrKey.decodeVersionByte(serverAccountId) != StrKey.VersionByte.ACCOUNT_ID) {
-      throw new InvalidSep10ChallengeException("serverAccountId: "+serverAccountId+" is not a valid account id");
+      throw new InvalidSep10ChallengeException("serverAccountId: " + serverAccountId + " is not a valid account id");
     }
 
     // verify that transaction source account is equal to the server's signing key
@@ -128,7 +169,7 @@ public class Sep10Challenge {
     }
 
     long currentTime = System.currentTimeMillis() / 1000L;
-    if ((currentTime + GRACE_PERIOD_SECONDS)< minTime || currentTime > maxTime) {
+    if ((currentTime + GRACE_PERIOD_SECONDS) < minTime || currentTime > maxTime) {
       throw new InvalidSep10ChallengeException("Transaction is not within range of the specified timebounds.");
     }
 
@@ -163,7 +204,7 @@ public class Sep10Challenge {
     }
 
     if (StrKey.decodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID) {
-      throw new InvalidSep10ChallengeException("clientAccountId: "+clientAccountId+" is not a valid account id");
+      throw new InvalidSep10ChallengeException("clientAccountId: " + clientAccountId + " is not a valid account id");
     }
 
     if (manageDataOperation.getValue() == null) {
@@ -196,7 +237,7 @@ public class Sep10Challenge {
       if (manageDataOp.getSourceAccount() == null) {
         throw new InvalidSep10ChallengeException("Operation should have a source account.");
       }
-      if (!manageDataOp.getSourceAccount().equals(serverAccountId)) {
+      if (!manageDataOp.getName().equals(CLIENT_DOMAIN_DATA_NAME) && !manageDataOp.getSourceAccount().equals(serverAccountId)) {
         throw new InvalidSep10ChallengeException("Subsequent operations are unrecognized.");
       }
       if (WEB_AUTH_DOMAIN_MANAGER_DATA_NAME.equals(manageDataOp.getName())) {
@@ -334,6 +375,23 @@ public class Sep10Challenge {
     // are consumed only once on the transaction.
     Set<String> allSigners = new HashSet<String>(clientSigners);
     allSigners.add(serverKeyPair.getAccountId());
+    Optional<String> clientDomainSigner = Optional.absent();
+
+    for (Operation op : transaction.getOperations()) {
+      if (!(op instanceof ManageDataOperation)) {
+        throw new InvalidSep10ChallengeException("Operation type should be ManageData.");
+      }
+      ManageDataOperation manageDataOp = (ManageDataOperation) op;
+      if (manageDataOp.getSourceAccount() == null) {
+        throw new InvalidSep10ChallengeException("Operation should have a source account.");
+      }
+      if (manageDataOp.getName().equals(CLIENT_DOMAIN_DATA_NAME)) {
+        allSigners.add(manageDataOp.getSourceAccount());
+        clientDomainSigner = Optional.of(manageDataOp.getSourceAccount());
+        break;
+      }
+    }
+
     Set<String> signersFound = verifyTransactionSignatures(transaction, allSigners);
 
     // Confirm the server is in the list of signers found and remove it.
@@ -349,8 +407,21 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("Transaction not signed by any client signer.");
     }
 
+    int expectedSignaturesLength = transaction.getSignatures().size() - 1;
+
+    if (clientDomainSigner.isPresent()) {
+      // Confirm the client_domain signer is in the list of signers found and remove it.
+      boolean clientSignerFound = signersFound.remove(clientDomainSigner.get());
+
+      // Confirm we matched a signature to the client_domain signer.
+      if (!clientSignerFound) {
+        throw new InvalidSep10ChallengeException(String.format("Transaction not signed by by the source account of the 'client_domain' ManageDataOperation: %s.", clientDomainSigner.get()));
+      }
+      expectedSignaturesLength--;
+    }
+
     // Confirm all signatures were consumed by a signer.
-    if (signersFound.size() != transaction.getSignatures().size() - 1) {
+    if (signersFound.size() != expectedSignaturesLength) {
       throw new InvalidSep10ChallengeException("Transaction has unrecognized signatures.");
     }
 
@@ -422,7 +493,7 @@ public class Sep10Challenge {
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be thrown.
    * @throws IOException                    If read XDR string fails, the exception will be thrown.
    */
-  public static Set<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId,Network network, String domainName, String webAuthDomain, int threshold, Set<Signer> signers) throws InvalidSep10ChallengeException, IOException {
+  public static Set<String> verifyChallengeTransactionThreshold(String challengeXdr, String serverAccountId, Network network, String domainName, String webAuthDomain, int threshold, Set<Signer> signers) throws InvalidSep10ChallengeException, IOException {
     return verifyChallengeTransactionThreshold(challengeXdr, serverAccountId, network, new String[]{domainName}, webAuthDomain, threshold, signers);
   }
 
@@ -505,8 +576,8 @@ public class Sep10Challenge {
 
       ChallengeTransaction other = (ChallengeTransaction) object;
       return Objects.equal(this.transaction.hashHex(), other.transaction.hashHex()) &&
-        Objects.equal(this.clientAccountId, other.clientAccountId) &&
-        Objects.equal(this.matchedHomeDomain, other.matchedHomeDomain);
+          Objects.equal(this.clientAccountId, other.clientAccountId) &&
+          Objects.equal(this.matchedHomeDomain, other.matchedHomeDomain);
     }
   }
 
@@ -547,7 +618,7 @@ public class Sep10Challenge {
 
       Signer other = (Signer) object;
       return Objects.equal(this.key, other.key) &&
-              Objects.equal(this.weight, other.weight);
+          Objects.equal(this.weight, other.weight);
     }
   }
 }
