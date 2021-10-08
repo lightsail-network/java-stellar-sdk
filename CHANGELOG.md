@@ -2,7 +2,7 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
-## 0.27.2-beta
+## 0.28.0
 
 * Added support for 'client_domain' ManageData operations in SEP 10 challenges ([#368](https://github.com/stellar/java-stellar-sdk/pull/368)).
 
