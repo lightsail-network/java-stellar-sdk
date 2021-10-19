@@ -4,9 +4,11 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.effects.*;
+
+import java.util.Arrays;
 
 public class EffectDeserializerTest extends TestCase {
   @Test
@@ -823,5 +825,70 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getAssetIssuer(), "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS");
     assertEquals(effect.getAssetCode(), "EUR");
     assertEquals(effect.getAssetType(), "credit_alphanum4");
+  }
+
+  @Test
+  public void testDeserializeLiquidityPoolTradeEffect() {
+    String json = "      {\n" +
+        "        \"_links\": {\n" +
+        "          \"operation\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/operations/2091275411030017\"\n" +
+        "          },\n" +
+        "          \"succeeds\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=2091275411030017-3\"\n" +
+        "          },\n" +
+        "          \"precedes\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=2091275411030017-3\"\n" +
+        "          }\n" +
+        "        },\n" +
+        "        \"id\": \"0002091275411030017-0000000003\",\n" +
+        "        \"paging_token\": \"2091275411030017-3\",\n" +
+        "        \"account\": \"GDUZE3MB2TJVVCGM7LLYUXGZTZNRQS6OEESTQDO4RGI7QZPI2VYOIC4G\",\n" +
+        "        \"type\": \"liquidity_pool_trade\",\n" +
+        "        \"type_i\": 92,\n" +
+        "        \"created_at\": \"2021-10-15T00:15:07Z\",\n" +
+        "        \"liquidity_pool\": {\n" +
+        "          \"id\": \"af961c246cc51e6eda2441482f09cf6b1478e30b34e47daf86c860f753d8f04c\",\n" +
+        "          \"fee_bp\": 30,\n" +
+        "          \"type\": \"constant_product\",\n" +
+        "          \"total_trustlines\": \"3\",\n" +
+        "          \"total_shares\": \"18560.5392046\",\n" +
+        "          \"reserves\": [\n" +
+        "            {\n" +
+        "              \"asset\": \"native\",\n" +
+        "              \"amount\": \"6080.9091224\"\n" +
+        "            },\n" +
+        "            {\n" +
+        "              \"asset\": \"ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO\",\n" +
+        "              \"amount\": \"56817.1796745\"\n" +
+        "            }\n" +
+        "          ]\n" +
+        "        },\n" +
+        "        \"sold\": {\n" +
+        "          \"asset\": \"native\",\n" +
+        "          \"amount\": \"0.1067066\"\n" +
+        "        },\n" +
+        "        \"bought\": {\n" +
+        "          \"asset\": \"ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO\",\n" +
+        "          \"amount\": \"1.0000000\"\n" +
+        "        }\n" +
+        "      }";
+    LiquidityPoolTradeEffectResponse effect = (LiquidityPoolTradeEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getType(), "liquidity_pool_trade");
+
+    assertEquals(effect.getAccount(), "GDUZE3MB2TJVVCGM7LLYUXGZTZNRQS6OEESTQDO4RGI7QZPI2VYOIC4G");
+    assertEquals(effect.getCreatedAt(), "2021-10-15T00:15:07Z");
+    assertEquals(effect.getLiquidityPool().getID().toString(), "af961c246cc51e6eda2441482f09cf6b1478e30b34e47daf86c860f753d8f04c");
+    assertEquals(effect.getLiquidityPool().getFeeBP(), Integer.valueOf(30));
+    assertEquals(effect.getLiquidityPool().getType(), "constant_product");
+    assertEquals(effect.getLiquidityPool().getTotalTrustlines(), Long.valueOf(3));
+    assertEquals(effect.getLiquidityPool().getTotalShares(), "18560.5392046");
+    assertTrue(Arrays.equals(effect.getLiquidityPool().getReserves(), new AssetAmount[]{
+        new AssetAmount(Asset.create("native"), "6080.9091224"),
+        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "56817.1796745")
+    }));
+    assertEquals(effect.getSold(), new AssetAmount(Asset.create("native"), "0.1067066"));
+    assertEquals(effect.getBought(), new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "1.0000000"));
   }
 }

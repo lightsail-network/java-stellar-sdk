@@ -2,7 +2,6 @@ package org.stellar.sdk.responses.effects;
 
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +11,7 @@ public class LiquidityPool {
   @SerializedName("fee_bp")
   protected final Integer feeBP;
   @SerializedName("type")
-  protected final LiquidityPoolType type;
+  protected final String type;
   @SerializedName("total_trustlines")
   protected final Long totalTrustlines;
   @SerializedName("total_shares")
@@ -20,7 +19,7 @@ public class LiquidityPool {
   @SerializedName("reserves")
   protected final AssetAmount[] reserves;
 
-  public LiquidityPool(LiquidityPoolID id, Integer feeBP, LiquidityPoolType type, Long totalTrustlines, String totalShares, AssetAmount[] reserves) {
+  public LiquidityPool(LiquidityPoolID id, Integer feeBP, String type, Long totalTrustlines, String totalShares, AssetAmount[] reserves) {
     this.id = id;
     this.feeBP = feeBP;
     this.type = type;
@@ -37,7 +36,7 @@ public class LiquidityPool {
     return feeBP;
   }
 
-  public LiquidityPoolType getType() {
+  public String getType() {
     return type;
   }
 

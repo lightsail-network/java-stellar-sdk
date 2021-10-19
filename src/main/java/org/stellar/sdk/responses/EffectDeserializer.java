@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.effects.*;
 
@@ -19,6 +20,7 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
     // Create new Gson object with adapters needed in Operation
     Gson gson = new GsonBuilder()
         .registerTypeAdapter(Asset.class, new AssetDeserializer())
+        .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
         .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
         .create();
 

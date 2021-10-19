@@ -1,12 +1,15 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
+import com.google.gson.annotations.SerializedName;
 
 public final class AssetAmount {
+  @SerializedName("asset")
   private final Asset asset;
+  @SerializedName("amount")
   private final String amount;
 
-  AssetAmount(Asset asset, String amount) {
+  public AssetAmount(Asset asset, String amount) {
     this.asset = asset;
     this.amount = amount;
   }

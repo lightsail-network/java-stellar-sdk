@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.operations.*;
 import org.stellar.sdk.xdr.OperationType;
@@ -25,6 +26,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
             .registerTypeAdapter(ImmutableList.class, new ImmutableListDeserializer())
+            .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
             .create();
 
     int type = json.getAsJsonObject().get("type_i").getAsInt();
@@ -77,6 +79,10 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         return gson.fromJson(json, ClawbackClaimableBalanceOperationResponse.class);
       case SET_TRUST_LINE_FLAGS:
         return gson.fromJson(json, SetTrustLineFlagsOperationResponse.class);
+      case LIQUIDITY_POOL_DEPOSIT:
+        return gson.fromJson(json, LiquidityPoolDepositOperationResponse.class);
+      case LIQUIDITY_POOL_WITHDRAW:
+        return gson.fromJson(json, LiquidityPoolWithdrawOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }
