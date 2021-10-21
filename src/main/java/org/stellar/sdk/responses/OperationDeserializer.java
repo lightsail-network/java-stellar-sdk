@@ -12,6 +12,7 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.operations.*;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 import org.stellar.sdk.xdr.OperationType;
 
 import java.lang.reflect.Type;
@@ -27,6 +28,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
             .registerTypeAdapter(ImmutableList.class, new ImmutableListDeserializer())
             .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
+            .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
             .create();
 
     int type = json.getAsJsonObject().get("type_i").getAsInt();

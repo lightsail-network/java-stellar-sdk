@@ -7,6 +7,7 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.effects.*;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import java.util.Arrays;
 
@@ -881,7 +882,7 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getCreatedAt(), "2021-10-15T00:15:07Z");
     assertEquals(effect.getLiquidityPool().getID().toString(), "af961c246cc51e6eda2441482f09cf6b1478e30b34e47daf86c860f753d8f04c");
     assertEquals(effect.getLiquidityPool().getFeeBP(), Integer.valueOf(30));
-    assertEquals(effect.getLiquidityPool().getType(), "constant_product");
+    assertEquals(effect.getLiquidityPool().getType(), LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT);
     assertEquals(effect.getLiquidityPool().getTotalTrustlines(), Long.valueOf(3));
     assertEquals(effect.getLiquidityPool().getTotalShares(), "18560.5392046");
     assertTrue(Arrays.equals(effect.getLiquidityPool().getReserves(), new AssetAmount[]{
