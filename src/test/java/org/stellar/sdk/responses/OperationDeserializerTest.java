@@ -9,6 +9,8 @@ import org.stellar.sdk.*;
 import org.junit.Test;
 import org.stellar.sdk.responses.operations.*;
 
+import java.util.Arrays;
+
 public class OperationDeserializerTest extends TestCase {
   @Test
   public void testDeserializeCreateAccountOperation() {
@@ -1330,5 +1332,157 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getClearFlags(), Lists.newArrayList(2));
     assertEquals(operation.getSetFlagStrings(), Lists.newArrayList("clawback_enabled"));
     assertEquals(operation.getClearFlagStrings(), Lists.newArrayList("authorized_to_maintain_liabilites"));
+  }
+
+  @Test
+  public void testDeserializeLiquidityPoolDepositOperation() {
+    String json = "{\n" +
+        "        \"_links\": {\n" +
+        "          \"self\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/operations/2278153733029889\"\n" +
+        "          },\n" +
+        "          \"transaction\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/transactions/0a3037071e226d981ad4114d268ad88693ee432a7b267b6007bae48f63e5e84d\"\n" +
+        "          },\n" +
+        "          \"effects\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/operations/2278153733029889/effects\"\n" +
+        "          },\n" +
+        "          \"succeeds\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=2278153733029889\"\n" +
+        "          },\n" +
+        "          \"precedes\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=2278153733029889\"\n" +
+        "          }\n" +
+        "        },\n" +
+        "        \"id\": \"2278153733029889\",\n" +
+        "        \"paging_token\": \"2278153733029889\",\n" +
+        "        \"transaction_successful\": true,\n" +
+        "        \"source_account\": \"GC5NCMHE56RCV44WULN6BU3THEJWWXH6PYNLCM5LGWGEGIVLTP3355V3\",\n" +
+        "        \"type\": \"liquidity_pool_deposit\",\n" +
+        "        \"type_i\": 22,\n" +
+        "        \"created_at\": \"2021-10-17T15:45:20Z\",\n" +
+        "        \"transaction_hash\": \"0a3037071e226d981ad4114d268ad88693ee432a7b267b6007bae48f63e5e84d\",\n" +
+        "        \"liquidity_pool_id\": \"1df1380108ca32e96650074db1f3e1e10541ab8768c9eba7ec3b6f9315f9faee\",\n" +
+        "        \"reserves_max\": [\n" +
+        "          {\n" +
+        "            \"asset\": \"ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO\",\n" +
+        "            \"amount\": \"10000.0000000\"\n" +
+        "          },\n" +
+        "          {\n" +
+        "            \"asset\": \"USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC\",\n" +
+        "            \"amount\": \"187.0000000\"\n" +
+        "          }\n" +
+        "        ],\n" +
+        "        \"min_price\": \"53.4759358\",\n" +
+        "        \"min_price_r\": {\n" +
+        "          \"n\": 10000,\n" +
+        "          \"d\": 187\n" +
+        "        },\n" +
+        "        \"max_price\": \"53.4759358\",\n" +
+        "        \"max_price_r\": {\n" +
+        "          \"n\": 10000,\n" +
+        "          \"d\": 187\n" +
+        "        },\n" +
+        "        \"reserves_deposited\": [\n" +
+        "          {\n" +
+        "            \"asset\": \"ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO\",\n" +
+        "            \"amount\": \"10000.0000000\"\n" +
+        "          },\n" +
+        "          {\n" +
+        "            \"asset\": \"USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC\",\n" +
+        "            \"amount\": \"187.0000000\"\n" +
+        "          }\n" +
+        "        ],\n" +
+        "        \"shares_received\": \"1367.4794331\"\n" +
+        "      }";
+
+    LiquidityPoolDepositOperationResponse operation = (LiquidityPoolDepositOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId(), new Long(2278153733029889L));
+    assertEquals(operation.getType(), "liquidity_pool_deposit");
+    assertEquals(operation.getSharesReceived(), "1367.4794331");
+    assertEquals(operation.getLiquidityPoolId().toString(), "1df1380108ca32e96650074db1f3e1e10541ab8768c9eba7ec3b6f9315f9faee");
+    assertEquals(operation.getMaxPrice(), "53.4759358");
+    assertEquals(operation.getMaxPriceR(), new Price(10000, 187));
+    assertEquals(operation.getMinPrice(), "53.4759358");
+    assertEquals(operation.getMinPriceR(), new Price(10000, 187));
+    assertTrue(Arrays.equals(operation.getReservesDeposited(), new AssetAmount[]{
+        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
+        new AssetAmount(Asset.create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
+    }));
+    assertTrue(Arrays.equals(operation.getReservesMax(), new AssetAmount[]{
+        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
+        new AssetAmount(Asset.create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
+    }));
+  }
+
+  @Test
+  public void testDeserializeLiquidityPoolWithdrawOperation() {
+    String json = "      {\n" +
+        "        \"_links\": {\n" +
+        "          \"self\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/operations/2313539968573441\"\n" +
+        "          },\n" +
+        "          \"transaction\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/transactions/691487d46d6e8bf37bf54afae9a99cd23e1e609fd1b0071cdd5011e68099306a\"\n" +
+        "          },\n" +
+        "          \"effects\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/operations/2313539968573441/effects\"\n" +
+        "          },\n" +
+        "          \"succeeds\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=2313539968573441\"\n" +
+        "          },\n" +
+        "          \"precedes\": {\n" +
+        "            \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=2313539968573441\"\n" +
+        "          }\n" +
+        "        },\n" +
+        "        \"id\": \"2313539968573441\",\n" +
+        "        \"paging_token\": \"2313539968573441\",\n" +
+        "        \"transaction_successful\": true,\n" +
+        "        \"source_account\": \"GC5NCMHE56RCV44WULN6BU3THEJWWXH6PYNLCM5LGWGEGIVLTP3355V3\",\n" +
+        "        \"type\": \"liquidity_pool_withdraw\",\n" +
+        "        \"type_i\": 23,\n" +
+        "        \"created_at\": \"2021-10-18T03:47:46Z\",\n" +
+        "        \"transaction_hash\": \"691487d46d6e8bf37bf54afae9a99cd23e1e609fd1b0071cdd5011e68099306a\",\n" +
+        "        \"liquidity_pool_id\": \"1df1380108ca32e96650074db1f3e1e10541ab8768c9eba7ec3b6f9315f9faee\",\n" +
+        "        \"reserves_min\": [\n" +
+        "          {\n" +
+        "            \"asset\": \"ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO\",\n" +
+        "            \"amount\": \"10000.0000000\"\n" +
+        "          },\n" +
+        "          {\n" +
+        "            \"asset\": \"USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC\",\n" +
+        "            \"amount\": \"187.0000000\"\n" +
+        "          }\n" +
+        "        ],\n" +
+        "        \"shares\": \"1367.4794331\",\n" +
+        "        \"reserves_received\": [\n" +
+        "          {\n" +
+        "            \"asset\": \"ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO\",\n" +
+        "            \"amount\": \"10000.0000000\"\n" +
+        "          },\n" +
+        "          {\n" +
+        "            \"asset\": \"USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC\",\n" +
+        "            \"amount\": \"187.0000000\"\n" +
+        "          }\n" +
+        "        ]\n" +
+        "      }";
+
+    LiquidityPoolWithdrawOperationResponse operation = (LiquidityPoolWithdrawOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId(), new Long(2313539968573441L));
+    assertEquals(operation.getType(), "liquidity_pool_withdraw");
+    assertEquals(operation.getShares(), "1367.4794331");
+    assertEquals(operation.getLiquidityPoolId().toString(), "1df1380108ca32e96650074db1f3e1e10541ab8768c9eba7ec3b6f9315f9faee");
+    assertTrue(Arrays.equals(operation.getReservesMin(), new AssetAmount[]{
+        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
+        new AssetAmount(Asset.create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
+        }
+    ));
+    assertTrue(Arrays.equals(operation.getReservesReceived(), new AssetAmount[]{
+        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
+        new AssetAmount(Asset.create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
+        }
+    ));
   }
 }

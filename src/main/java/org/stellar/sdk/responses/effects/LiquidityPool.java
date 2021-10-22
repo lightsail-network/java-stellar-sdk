@@ -2,9 +2,9 @@ package org.stellar.sdk.responses.effects;
 
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import com.google.gson.annotations.SerializedName;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class LiquidityPool {
   @SerializedName("id")
