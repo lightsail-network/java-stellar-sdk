@@ -2,9 +2,7 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
-
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -30,6 +28,8 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   private String assetIssuer;
   @SerializedName("limit")
   private String limit;
+  @SerializedName("liquidity_pool_id")
+  private String liquidityPoolId;
 
   public Optional<MuxedAccount> getTrustorMuxed() {
     if (this.trustorMuxed == null || this.trustorMuxed.isEmpty()) {
@@ -51,10 +51,7 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   }
 
   public Asset getAsset() {
-    if (assetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return Asset.createNonNativeAsset(assetCode, assetIssuer);
-    }
+    return Asset.create(assetType, assetCode, assetIssuer, liquidityPoolId);
   }
+
 }

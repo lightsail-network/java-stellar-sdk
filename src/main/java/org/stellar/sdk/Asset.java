@@ -9,9 +9,11 @@ public abstract class Asset implements Comparable<Asset> {
 
   /**
    * Parses an asset string and returns the equivalent Asset instance.
-   * The asset string is expected to either be "native" or a string of the form "CODE:ISSUER"
+   * The asset string is expected to either be "native" or a string of Alpha4 or Alpha12
+   * asset code as "CODE:ISSUER"
    *
-   * @param canonicalForm Canonical string representation of an asset
+   * @param canonicalForm Canonical string representation of an Alpha4 or Alpha12 asset
+   * @return Asset or throws IllegalArgumentException if not Alpha4 or Alpha12 asset code
    */
   public static Asset create(String canonicalForm) {
     if (canonicalForm.equals("native")) {
@@ -24,12 +26,36 @@ public abstract class Asset implements Comparable<Asset> {
     return Asset.createNonNativeAsset(parts[0], parts[1]);
   }
 
+  /**
+   * Creates Asset for Alpha4/Alpha5/Native
+   *
+   * @param type the type of asset can be 'native', 'alpha4', 'alpha12'
+   * @param code the asset code that conforms to type or null
+   * @param issuer the asset issuer the conforms to type or null
+   * @return
+   */
   public static Asset create(String type, String code, String issuer) {
+    return create(type, code, issuer, null);
+  }
+
+  /**
+   * Creates Asset for Alpha4/Alpha5/Native/LiquidityPool
+   *
+   * @param type the type of asset can be 'native', 'alpha4', 'alpha12' or 'liquidity_pool_shares'
+   * @param code the asset code that conforms to type or null
+   * @param issuer the asset issuer the conforms to type or null
+   * @param liquidityPoolID provided only if type is 'liquidity_pool_shares'
+   * @return Asset
+   */
+  public static Asset create(String type, String code, String issuer, String liquidityPoolID) {
     if (type.equals("native")) {
       return new AssetTypeNative();
-    } else {
-      return Asset.createNonNativeAsset(code, issuer);
     }
+    if (type.equals("liquidity_pool_shares")) {
+      return new AssetTypePoolShare(liquidityPoolID);
+    }
+
+    return Asset.createNonNativeAsset(code, issuer);
   }
 
   public static Asset create(ChangeTrustAsset.Wrapper wrapped) {
@@ -82,7 +108,7 @@ public abstract class Asset implements Comparable<Asset> {
    *   <li><code>native</code></li>
    *   <li><code>credit_alphanum4</code></li>
    *   <li><code>credit_alphanum12</code></li>
-   *   <li><code>pool_share</code></li>
+   *   <li><code>liquidity_pool_shares</code></li>
    * </ul>
    */
   public abstract String getType();

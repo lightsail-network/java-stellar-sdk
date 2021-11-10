@@ -366,11 +366,52 @@ public class OperationDeserializerTest extends TestCase {
 
     ChangeTrustOperationResponse operation = (ChangeTrustOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
+    operation.getAsset();
     assertEquals(operation.getTrustee(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
     assertEquals(operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.getLimit(), "922337203685.4775807");
     assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
     assertFalse(operation.getTrustorMuxed().isPresent());
+  }
+
+  @Test
+  public void testDeserializeChangeTrustOperationLiquidityPoolShares() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"self\": {\n" +
+            "            \"href\": \"//horizon-testnet.stellar.org/operations/3602970755207169\"\n" +
+            "          },\n" +
+            "          \"transaction\": {\n" +
+            "            \"href\": \"//horizon-testnet.stellar.org/transactions/8d409a788543895843d269c3f97a2d6a2ebca6e9f8f9a7ae593457b5c0ba6644\"\n" +
+            "          },\n" +
+            "          \"effects\": {\n" +
+            "            \"href\": \"//horizon-testnet.stellar.org/operations/3602970755207169/effects\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"//horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=3602970755207169\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"//horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=3602970755207169\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"3602970755207169\",\n" +
+            "        \"paging_token\": \"3602970755207169\",\n" +
+            "        \"source_account\": \"GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F\",\n" +
+            "        \"type\": \"change_trust\",\n" +
+            "        \"type_i\": 6,\n" +
+            "        \"asset_type\": \"liquidity_pool_shares\",\n" +
+            "        \"liquidity_pool_id\": \"02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0\",\n" +
+            "        \"limit\": \"5.0000000\",\n" +
+            "        \"trustee\": \"GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM\",\n" +
+            "        \"trustor\": \"GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F\"\n" +
+            "      }";
+
+    ChangeTrustOperationResponse operation = (ChangeTrustOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getTrustee(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
+    assertEquals(operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
+    assertEquals(operation.getLimit(), "5.0000000");
+    assertEquals(((AssetTypePoolShare)operation.getAsset()).getPoolId(), "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0");
   }
 
   @Test
