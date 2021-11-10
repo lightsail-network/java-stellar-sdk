@@ -1,14 +1,15 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Function;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 
 import java.lang.reflect.Type;
+
+import static com.google.common.base.Optional.fromNullable;
 
 class AssetDeserializer implements JsonDeserializer<Asset> {
   @Override
@@ -17,13 +18,18 @@ class AssetDeserializer implements JsonDeserializer<Asset> {
       // Probably a canonical string
       return Asset.create(json.getAsString());
     }
-    String type = json.getAsJsonObject().get("asset_type").getAsString();
-    if (type.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      String code = json.getAsJsonObject().get("asset_code").getAsString();
-      String issuer = json.getAsJsonObject().get("asset_issuer").getAsString();
-      return Asset.createNonNativeAsset(code, issuer);
+
+    return Asset.create(json.getAsJsonObject().get("asset_type").getAsString(),
+            fromNullable(json.getAsJsonObject().get("asset_code")).transform(ToString.FUNCTION).orNull(),
+            fromNullable(json.getAsJsonObject().get("asset_issuer")).transform(ToString.FUNCTION).orNull(),
+            fromNullable(json.getAsJsonObject().get("liquidity_pool_id")).transform(ToString.FUNCTION).orNull());
+  }
+
+  enum ToString implements Function<JsonElement, String> {
+    FUNCTION;
+    @Override
+    public String apply(JsonElement input) {
+      return input.getAsString();
     }
   }
 }
