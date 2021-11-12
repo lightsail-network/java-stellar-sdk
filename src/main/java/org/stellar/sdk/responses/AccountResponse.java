@@ -204,7 +204,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private String assetCode;
     @SerializedName("asset_issuer")
     private String assetIssuer;
-    @SerializedName("liquidity_pool_shares")
+    @SerializedName("liquidity_pool_id")
     private LiquidityPoolID liquidityPoolID;
     @SerializedName("limit")
     private final String limit;
