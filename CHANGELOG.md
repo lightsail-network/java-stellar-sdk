@@ -2,6 +2,10 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## Unreleased
+
+* Fixed missing Liquidity Pool ID in AccountResponse Balance ([#379](https://github.com/stellar/java-stellar-sdk/pull/379)).
+
 ## 0.29.0
 
 * Fixed bug in parsing liquidity pool operation and effect responses ([#373](https://github.com/stellar/java-stellar-sdk/pull/373)).

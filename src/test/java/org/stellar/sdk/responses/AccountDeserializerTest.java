@@ -116,6 +116,27 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getBalances()[1].getLimit(), null);
   }
 
+  @Test
+  public void testDeserializeLiquidityPoolBalanc() {
+    AccountResponse account = GsonSingleton.getInstance().fromJson(jsonLiquidityPoolBalance, AccountResponse.class);
+
+    assertEquals(account.getBalances()[0].getAssetType(), "liquidity_pool_shares");
+    assertEquals(account.getBalances()[0].getAssetCode(), Optional.absent());
+    assertEquals(account.getBalances()[0].getAssetIssuer(), Optional.<String>absent());
+    assertEquals(account.getBalances()[0].getBalance(), "223.6067977");
+    assertEquals(account.getBalances()[0].getLimit(), "10000.00000");
+    assertEquals(account.getBalances()[0].getBuyingLiabilities(), Optional.absent());
+    assertEquals(account.getBalances()[0].getSellingLiabilities(), Optional.absent());
+    assertTrue(account.getBalances()[0].getLiquidityPoolID().isPresent());
+    assertEquals(account.getBalances()[0].getLiquidityPoolID().get().toString(),"02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0");
+
+    assertEquals(account.getBalances()[1].getAssetType(), "native");
+    assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
+    assertEquals(account.getBalances()[1].getBuyingLiabilities(), Optional.absent());
+    assertEquals(account.getBalances()[1].getSellingLiabilities(), Optional.absent());
+    assertEquals(account.getBalances()[1].getLimit(), null);
+  }
+
   String jsonAuthorizedToMaintainLiabilities = "{\n" +
       "  \"_links\": {\n" +
       "    \"effects\": {\n" +
@@ -316,6 +337,70 @@ public class AccountDeserializerTest extends TestCase {
           "      \"asset_code\": \"ABC\",\n" +
           "      \"asset_issuer\": \"GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU\"\n" +
           "    },"+
+          "    {\n" +
+          "      \"asset_type\": \"native\",\n" +
+          "      \"balance\": \"20.0000300\"\n" +
+          "    }\n" +
+          "  ],\n" +
+          "  \"signers\": [\n" +
+          "    {\n" +
+          "      \"public_key\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "      \"weight\": 0\n" +
+          "    },\n" +
+          "    {\n" +
+          "      \"public_key\": \"GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2\",\n" +
+          "      \"weight\": 1\n" +
+          "    }\n" +
+          "  ]\n" +
+          "}";
+
+  String jsonLiquidityPoolBalance = "{\n" +
+          "  \"_links\": {\n" +
+          "    \"effects\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/effects{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"offers\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/offers{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"operations\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"self\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\"\n" +
+          "    },\n" +
+          "    \"transactions\": {\n" +
+          "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    }\n" +
+          "  },"+
+          "  \"id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "  \"paging_token\": \"1\",\n" +
+          "  \"account_id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
+          "  \"sequence\": 2319149195853854,\n" +
+          "  \"subentry_count\": 0,\n" +
+          "  \"home_domain\": \"stellar.org\",\n" +
+          "  \"thresholds\": {\n" +
+          "    \"low_threshold\": 0,\n" +
+          "    \"med_threshold\": 0,\n" +
+          "    \"high_threshold\": 0\n" +
+          "  },\n" +
+          "  \"flags\": {\n" +
+          "    \"auth_required\": false,\n" +
+          "    \"auth_revocable\": false\n" +
+          "  },\n" +
+          "  \"balances\": [\n" +
+          " {\n" +
+          "      \"balance\": \"223.6067977\",\n" +
+          "      \"liquidity_pool_id\": \"02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0\",\n" +
+          "      \"limit\": \"10000.00000\",\n" +
+          "      \"last_modified_ledger\": 799014,\n" +
+          "      \"is_authorized\": false,\n" +
+          "      \"is_authorized_to_maintain_liabilities\": false,\n" +
+          "      \"asset_type\": \"liquidity_pool_shares\"\n" +
+          "    },\n" +
           "    {\n" +
           "      \"asset_type\": \"native\",\n" +
           "      \"balance\": \"20.0000300\"\n" +
