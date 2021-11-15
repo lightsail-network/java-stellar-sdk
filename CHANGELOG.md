@@ -4,7 +4,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Unreleased
 
-* Fixed bug, absence of Liquidity Pool ID in AccountResponse Balance ([#379](https://github.com/stellar/java-stellar-sdk/pull/379)).
+* Fixed missing Liquidity Pool ID in AccountResponse Balance ([#379](https://github.com/stellar/java-stellar-sdk/pull/379)).
 
 ## 0.29.0
 
