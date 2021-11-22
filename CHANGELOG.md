@@ -6,6 +6,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 * Fix missing Liquidity Pool ID in AccountResponse Balance ([#379](https://github.com/stellar/java-stellar-sdk/pull/379)).
 * Fix null pointer when calling ChangeTrustOperationResponse.getAsset() for LiquidityPool trust line ([#378](https://github.com/stellar/java-stellar-sdk/pull/378)).
+* Fix exception when parsing huge datetime values from responses with ClaimableBalance AbsBefore Predicate ([#382](https://github.com/stellar/java-stellar-sdk/pull/382)).
 
 ## 0.29.0
 
