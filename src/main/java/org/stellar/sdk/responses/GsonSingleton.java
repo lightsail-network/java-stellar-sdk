@@ -33,7 +33,7 @@ public class GsonSingleton {
 
       instance = new GsonBuilder()
                       .registerTypeAdapter(Asset.class, new AssetDeserializer())
-                      .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
+                      .registerTypeAdapter(Predicate.class, new PredicateDeserializer(new ISO8601ExtendedDeserialzer()))
                       .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
                       .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
                       .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())

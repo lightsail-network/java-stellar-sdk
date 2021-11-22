@@ -3,12 +3,17 @@ package org.stellar.sdk.responses;
 import com.google.common.collect.Lists;
 import com.google.gson.*;
 import org.stellar.sdk.Predicate;
-import org.threeten.bp.Instant;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 public class PredicateDeserializer implements JsonDeserializer<Predicate> {
+
+  private final FormattedDateStringDeserializer formattedDateStringDeserializer;
+  public PredicateDeserializer(FormattedDateStringDeserializer formattedDateStringDeserializer) {
+    this.formattedDateStringDeserializer = formattedDateStringDeserializer;
+  }
+
   @Override
   public Predicate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     JsonObject obj = json.getAsJsonObject();
@@ -37,8 +42,8 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
     }
 
     if (obj.has("abs_before")) {
-      String formattedDate = obj.get("abs_before").getAsString();
-      return new Predicate.AbsBefore(Instant.parse(formattedDate).getEpochSecond());
+      return new Predicate.AbsBefore(
+              formattedDateStringDeserializer.unixEpochSeconds(obj.get("abs_before").getAsString(), Long.MAX_VALUE));
     }
 
     if (obj.has("rel_before")) {

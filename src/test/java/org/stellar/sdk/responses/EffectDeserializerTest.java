@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.effects.*;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
@@ -782,6 +783,45 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getBalanceId(), "00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9");
     assertEquals(effect.getType(), "claimable_balance_clawed_back");
   }
+
+  @Test
+  public void testDeserializeClaimableBalanceClaimantCreatedEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/operations/158104892991700993\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/effects?order=desc&cursor=158104892991700993-2\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"https://horizon.stellar.org/effects?order=asc&cursor=158104892991700993-2\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0158104892991700993-0000000002\",\n" +
+            "        \"paging_token\": \"158104892991700993-2\",\n" +
+            "        \"account\": \"GBQECQVAS2FJ7DLCUXDASZAJQLWPXNTCR2DGBPKQDO3QS66TJXLRHFIK\",\n" +
+            "        \"type\": \"claimable_balance_claimant_created\",\n" +
+            "        \"type_i\": 51,\n" +
+            "        \"created_at\": \"2021-08-11T16:16:32Z\",\n" +
+            "        \"asset\": \"KES:GA2MSSZKJOU6RNL3EJKH3S5TB5CDYTFQFWRYFGUJVIN5I6AOIRTLUHTO\",\n" +
+            "        \"balance_id\": \"0000000071d3336fa6b6cf81fcbeda85a503ccfabc786ab1066594716f3f9551ea4b89ca\",\n" +
+            "        \"amount\": \"0.0012200\",\n" +
+            "        \"predicate\": {\n" +
+            "          \"abs_before\": \"+39121901036-03-29T15:30:22Z\"\n" +
+            "        }\n" +
+            "      }\n";
+
+    ClaimableBalanceClaimantCreatedEffectResponse effect = (ClaimableBalanceClaimantCreatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getAccount(), "GBQECQVAS2FJ7DLCUXDASZAJQLWPXNTCR2DGBPKQDO3QS66TJXLRHFIK");
+    assertEquals(effect.getCreatedAt(), "2021-08-11T16:16:32Z");
+    assertEquals(effect.getBalanceId(), "0000000071d3336fa6b6cf81fcbeda85a503ccfabc786ab1066594716f3f9551ea4b89ca");
+    assertEquals(effect.getType(), "claimable_balance_claimant_created");
+    assertSame(effect.getPredicate().getClass(), Predicate.AbsBefore.class);
+    assertEquals(((Predicate.AbsBefore)effect.getPredicate()).getTimestampSeconds(), 1234567890982222222L);
+  }
+
 
   @Test
   public void testDeserializeTrustlineFlagsUpdatedEffect() {

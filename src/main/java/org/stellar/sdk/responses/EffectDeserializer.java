@@ -16,6 +16,9 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
 import java.lang.reflect.Type;
 
 class EffectDeserializer implements JsonDeserializer<EffectResponse> {
+
+  private final FormattedDateStringDeserializer iso8601Deserializer = new ISO8601ExtendedDeserialzer();
+
   @Override
   public EffectResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     // Create new Gson object with adapters needed in Operation
@@ -23,7 +26,7 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         .registerTypeAdapter(Asset.class, new AssetDeserializer())
         .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
         .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
-        .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
+        .registerTypeAdapter(Predicate.class, new PredicateDeserializer(iso8601Deserializer))
         .create();
 
 

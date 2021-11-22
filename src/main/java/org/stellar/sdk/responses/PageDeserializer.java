@@ -40,7 +40,7 @@ class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
     // Create new Gson object with adapters needed in Page
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
-            .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
+            .registerTypeAdapter(Predicate.class, new PredicateDeserializer(new ISO8601ExtendedDeserialzer()))
             .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
             .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
             .registerTypeAdapter(LiquidityPoolResponse.class, new LiquidityPoolDeserializer())

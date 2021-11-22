@@ -1152,6 +1152,50 @@ public class OperationDeserializerTest extends TestCase {
   }
 
   @Test
+  public void testDeserializeCreateClaimableBalanceOperation() {
+    String json = "{\n" +
+            "  \n" +
+            "  \"id\": \"158104892991700993\",\n" +
+            "  \"paging_token\": \"158104892991700993\",\n" +
+            "  \"transaction_successful\": true,\n" +
+            "  \"source_account\": \"GAKFBRS24U3PEN6XDMEX4JEV5NGBARS2ZFF5O4CF3JL464SQSD4MDCPF\",\n" +
+            "  \"type\": \"create_claimable_balance\",\n" +
+            "  \"type_i\": 14,\n" +
+            "  \"created_at\": \"2021-08-11T16:16:32Z\",\n" +
+            "  \"transaction_hash\": \"c78e86007a0ee0bb0c717b02f5e306e524b4913b892e9983e7db4664a0c29841\",\n" +
+            "  \"sponsor\": \"GAKFBRS24U3PEN6XDMEX4JEV5NGBARS2ZFF5O4CF3JL464SQSD4MDCPF\",\n" +
+            "  \"asset\": \"KES:GA2MSSZKJOU6RNL3EJKH3S5TB5CDYTFQFWRYFGUJVIN5I6AOIRTLUHTO\",\n" +
+            "  \"amount\": \"0.0012200\",\n" +
+            "  \"claimants\": [\n" +
+            "    {\n" +
+            "      \"destination\": \"GBQECQVAS2FJ7DLCUXDASZAJQLWPXNTCR2DGBPKQDO3QS66TJXLRHFIK\",\n" +
+            "      \"predicate\": {\n" +
+            "        \"abs_before\": \"+39121901036-03-29T15:30:22Z\"\n" +
+            "      }\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"destination\": \"GAKFBRS24U3PEN6XDMEX4JEV5NGBARS2ZFF5O4CF3JL464SQSD4MDCPF\",\n" +
+            "      \"predicate\": {\n" +
+            "        \"unconditional\": true\n" +
+            "      }\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}";
+
+    CreateClaimableBalanceOperationResponse operation = (CreateClaimableBalanceOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId().longValue(), 158104892991700993L);
+    assertEquals(operation.getClaimants().size(), 2);
+    assertEquals(operation.getClaimants().get(0).getDestination(), "GBQECQVAS2FJ7DLCUXDASZAJQLWPXNTCR2DGBPKQDO3QS66TJXLRHFIK");
+    assertSame(operation.getClaimants().get(0).getPredicate().getClass(), Predicate.AbsBefore.class);
+    assertEquals(((Predicate.AbsBefore)operation.getClaimants().get(0).getPredicate()).getTimestampSeconds(), 1234567890982222222L);
+    assertEquals(operation.getClaimants().get(1).getDestination(), "GAKFBRS24U3PEN6XDMEX4JEV5NGBARS2ZFF5O4CF3JL464SQSD4MDCPF");
+    assertSame(operation.getClaimants().get(1).getPredicate().getClass(), Predicate.Unconditional.class);
+    assertEquals(operation.getType(), "create_claimable_balance");
+  }
+
+
+  @Test
   public void testDeserializeMuxedClaimClaimableBalanceOperation() {
     String json = "{\n" +
         "  \"_links\": {\n" +
