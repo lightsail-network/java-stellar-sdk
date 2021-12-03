@@ -3,10 +3,16 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Unreleased
-
+### Changes
 * Fix missing Liquidity Pool ID in AccountResponse Balance ([#379](https://github.com/stellar/java-stellar-sdk/pull/379)).
 * Fix null pointer when calling ChangeTrustOperationResponse.getAsset() for LiquidityPool trust line ([#378](https://github.com/stellar/java-stellar-sdk/pull/378)).
-* Change offer ids to be represented in requests and response models as long data type. 
+### Breaking changes
+* Changed offer ids to be represented in requests and response models as long data type. ([#386](https://github.com/stellar/java-stellar-sdk/pull/386)).
+  * `TradesRequestBuilder.offerId()`
+  * `TradeResponse.getOfferId()` 
+  * `TradeResponse.getBaseOfferId()` 
+  * `TradeResponse.getCounterOfferId()` 
+  * `RevokeSponsorshipOperationResponse.getOfferId()`
 
 ## 0.29.0
 
