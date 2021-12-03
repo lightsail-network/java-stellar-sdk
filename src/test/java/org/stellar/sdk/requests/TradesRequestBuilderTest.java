@@ -18,6 +18,7 @@ public class TradesRequestBuilderTest {
                 .baseAsset(Asset.createNonNativeAsset("EUR", "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
                 .counterAsset(Asset.createNonNativeAsset("USD", "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
                 .cursor("13537736921089")
+                .offerId(123L)
                 .limit(200)
                 .order(RequestBuilder.Order.ASC)
                 .buildUri();
@@ -30,6 +31,7 @@ public class TradesRequestBuilderTest {
                 "counter_asset_code=USD&" +
                 "counter_asset_issuer=GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ&" +
                 "cursor=13537736921089&" +
+                "offer_id=123&" +
                 "limit=200&" +
                 "order=asc", uri.toString());
     }
@@ -58,4 +60,15 @@ public class TradesRequestBuilderTest {
             .buildUri();
     assertEquals("https://horizon-testnet.stellar.org/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/trades", uri.toString());
   }
+
+    @Test
+    public void testForNullOfferId() {
+        Server server = new Server("https://horizon-testnet.stellar.org");
+        HttpUrl uri = server.trades()
+                .cursor("13537736921089")
+                .offerId(null)
+                .limit(200)
+                .buildUri();
+        assertEquals("https://horizon-testnet.stellar.org/trades?cursor=13537736921089&limit=200", uri.toString());
+    }
 }
