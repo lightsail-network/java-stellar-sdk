@@ -106,6 +106,7 @@ public class TradesRequestBuilder extends RequestBuilder {
 
     public TradesRequestBuilder offerId(Long offerId) {
         if (offerId == null) {
+            uriBuilder.removeAllQueryParameters("offer_id");
             return this;
         }
         uriBuilder.setQueryParameter("offer_id",  offerId.toString());

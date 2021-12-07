@@ -65,6 +65,7 @@ public class TradesRequestBuilderTest {
     public void testForNullOfferId() {
         Server server = new Server("https://horizon-testnet.stellar.org");
         HttpUrl uri = server.trades()
+                .offerId(12345L)
                 .cursor("13537736921089")
                 .offerId(null)
                 .limit(200)
