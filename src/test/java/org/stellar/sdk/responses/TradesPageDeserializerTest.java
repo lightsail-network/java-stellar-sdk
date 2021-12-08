@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 
+import static java.lang.Long.valueOf;
+
 public class TradesPageDeserializerTest extends TestCase {
     @Test
     public void testDeserialize() {
@@ -19,13 +21,13 @@ public class TradesPageDeserializerTest extends TestCase {
         assertEquals(tradesPage.getRecords().get(0).getId(), "3697472920621057-0");
         assertEquals(tradesPage.getRecords().get(0).getPagingToken(), "3697472920621057-0");
         assertEquals(tradesPage.getRecords().get(0).getLedgerCloseTime(), "2015-11-18T03:47:47Z");
-        assertEquals(tradesPage.getRecords().get(0).getOfferId(), "9");
-        assertEquals(tradesPage.getRecords().get(0).getBaseOfferId(), Optional.of("10"));
-        assertEquals(tradesPage.getRecords().get(0).getCounterOfferId(), Optional.of("11"));
+        assertEquals(tradesPage.getRecords().get(0).getOfferId(), valueOf(9));
+        assertEquals(tradesPage.getRecords().get(0).getBaseOfferId(), Optional.of(valueOf(10)));
+        assertEquals(tradesPage.getRecords().get(0).getCounterOfferId(), Optional.of(valueOf(11)));
         assertEquals(tradesPage.getRecords().get(0).getBaseAsset(), new AssetTypeNative());
         assertEquals(tradesPage.getRecords().get(0).getCounterAsset(), Asset.createNonNativeAsset("JPY", "GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM"));
-        assertEquals(tradesPage.getRecords().get(0).getPrice().getNumerator(), Long.valueOf(267));
-        assertEquals(tradesPage.getRecords().get(0).getPrice().getDenominator(), Long.valueOf(1000));
+        assertEquals(tradesPage.getRecords().get(0).getPrice().getNumerator(), valueOf(267));
+        assertEquals(tradesPage.getRecords().get(0).getPrice().getDenominator(), valueOf(1000));
 
         assertEquals(tradesPage.getRecords().get(1).getBaseAccount(), Optional.of("GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G"));
     }

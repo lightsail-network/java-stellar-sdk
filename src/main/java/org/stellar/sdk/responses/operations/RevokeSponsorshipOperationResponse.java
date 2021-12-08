@@ -22,7 +22,7 @@ public class RevokeSponsorshipOperationResponse extends OperationResponse {
   private final String dataName;
 
   @SerializedName("offer_id")
-  private final String offerId;
+  private final Long offerId;
 
   @SerializedName("trustline_account_id")
   private final String trustlineAccountId;
@@ -37,7 +37,7 @@ public class RevokeSponsorshipOperationResponse extends OperationResponse {
   private final String signerKey;
 
 
-  public RevokeSponsorshipOperationResponse(String accountId, String claimableBalanceId, String dataAccountId, String dataName, String offerId, String trustlineAccountId, String trustlineAsset, String signerAccountId, String signerKey) {
+  public RevokeSponsorshipOperationResponse(String accountId, String claimableBalanceId, String dataAccountId, String dataName, Long offerId, String trustlineAccountId, String trustlineAsset, String signerAccountId, String signerKey) {
     this.accountId = accountId;
     this.claimableBalanceId = claimableBalanceId;
     this.dataAccountId = dataAccountId;
@@ -65,7 +65,7 @@ public class RevokeSponsorshipOperationResponse extends OperationResponse {
     return Optional.fromNullable(dataName);
   }
 
-  public Optional<String> getOfferId() {
+  public Optional<Long> getOfferId() {
     return Optional.fromNullable(offerId);
   }
 

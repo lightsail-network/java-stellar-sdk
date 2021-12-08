@@ -1,7 +1,6 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -11,6 +10,8 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
+
+import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -77,7 +78,7 @@ public class TradesRequestBuilder extends RequestBuilder {
     /**
      * Returns all trades that of a specific type.
      *
-     * @param trade type
+     * @param tradeType type
      * @return current {@link TradesRequestBuilder} instance
      * @see <a href="https://developers.stellar.org/api/resources/trades/list/">List All Trades</a>
      */
@@ -103,8 +104,12 @@ public class TradesRequestBuilder extends RequestBuilder {
         return this.execute(this.httpClient, this.buildUri());
     }
 
-    public TradesRequestBuilder offerId(String offerId) {
-        uriBuilder.setQueryParameter("offer_id", offerId);
+    public TradesRequestBuilder offerId(Long offerId) {
+        if (offerId == null) {
+            uriBuilder.removeAllQueryParameters("offer_id");
+            return this;
+        }
+        uriBuilder.setQueryParameter("offer_id",  offerId.toString());
         return this;
     }
 

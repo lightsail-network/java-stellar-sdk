@@ -12,6 +12,8 @@ import org.stellar.sdk.responses.operations.OperationResponse;
 import org.stellar.sdk.responses.operations.PaymentOperationResponse;
 import org.stellar.sdk.responses.operations.RevokeSponsorshipOperationResponse;
 
+import static java.lang.Long.valueOf;
+
 public class OperationsPageDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
@@ -50,7 +52,7 @@ public class OperationsPageDeserializerTest extends TestCase {
 
     TransactionResponse transaction = createAccountOperation.getTransaction().get();
     assertEquals(transaction.getHash(), "749e4f8933221b9942ef38a02856803f379789ec8d971f1f60535db70135673e");
-    assertEquals(transaction.getLedger(), Long.valueOf(193));
+    assertEquals(transaction.getLedger(), valueOf(193));
     assertEquals(transaction.getMemo(), Memo.none());
   }
 
@@ -67,7 +69,7 @@ public class OperationsPageDeserializerTest extends TestCase {
     assertFalse(revokeOp.getSignerKey().isPresent());
     assertFalse(revokeOp.getTrustlineAccountId().isPresent());
     assertFalse(revokeOp.getTrustlineAsset().isPresent());
-    assertEquals(revokeOp.getOfferId().get(), "8822470");
+    assertEquals(revokeOp.getOfferId().get(), valueOf(8822470));
     assertEquals(revokeOp.getSourceAccount(), "GB6QDNU47MYBR4NDTRP7M3FW27DAFOEADN5KDQI2DAVWW6YVKKG4QJS7");
   }
 

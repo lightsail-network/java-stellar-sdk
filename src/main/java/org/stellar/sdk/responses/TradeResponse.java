@@ -21,7 +21,7 @@ public class TradeResponse extends Response implements Pageable {
     private final String ledgerCloseTime;
 
     @SerializedName("offer_id")
-    private final String offerId;
+    private final Long offerId;
 
     @SerializedName("base_is_seller")
     protected final boolean baseIsSeller;
@@ -31,7 +31,7 @@ public class TradeResponse extends Response implements Pageable {
     @SerializedName("base_liquidity_pool_id")
     protected LiquidityPoolID baseLiquidityPoolID;
     @SerializedName("base_offer_id")
-    private String baseOfferId;
+    private Long baseOfferId;
     @SerializedName("base_amount")
     protected final String baseAmount;
     @SerializedName("base_asset_type")
@@ -46,7 +46,7 @@ public class TradeResponse extends Response implements Pageable {
     @SerializedName("counter_liquidity_pool_id")
     protected LiquidityPoolID counterLiquidityPoolID;
     @SerializedName("counter_offer_id")
-    private String counterOfferId;
+    private Long counterOfferId;
     @SerializedName("counter_amount")
     protected final String counterAmount;
     @SerializedName("counter_asset_type")
@@ -62,7 +62,7 @@ public class TradeResponse extends Response implements Pageable {
     @SerializedName("_links")
     private TradeResponse.Links links;
 
-    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, String offerId, boolean baseIsSeller, String baseAccount, LiquidityPoolID baseLiquidityPoolID, String baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, LiquidityPoolID counterLiquidityPoolID, String counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, TradePrice price) {
+    public TradeResponse(String id, String pagingToken, String ledgerCloseTime, Long offerId, boolean baseIsSeller, String baseAccount, LiquidityPoolID baseLiquidityPoolID, Long baseOfferId, String baseAmount, String baseAssetType, String baseAssetCode, String baseAssetIssuer, String counterAccount, LiquidityPoolID counterLiquidityPoolID, Long counterOfferId, String counterAmount, String counterAssetType, String counterAssetCode, String counterAssetIssuer, TradePrice price) {
         this.id = id;
         this.pagingToken = pagingToken;
         this.ledgerCloseTime = ledgerCloseTime;
@@ -97,7 +97,7 @@ public class TradeResponse extends Response implements Pageable {
         return ledgerCloseTime;
     }
 
-    public String getOfferId() {
+    public Long getOfferId() {
         return offerId;
     }
 
@@ -105,7 +105,7 @@ public class TradeResponse extends Response implements Pageable {
         return baseIsSeller;
     }
 
-    public Optional<String> getBaseOfferId() {
+    public Optional<Long> getBaseOfferId() {
         return Optional.fromNullable(baseOfferId);
     }
 
@@ -145,7 +145,7 @@ public class TradeResponse extends Response implements Pageable {
         return Optional.fromNullable(counterLiquidityPoolID);
     }
 
-    public Optional<String> getCounterOfferId() {
+    public Optional<Long> getCounterOfferId() {
         return Optional.fromNullable(counterOfferId);
     }
 
