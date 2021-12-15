@@ -10,7 +10,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ### Breaking changes
 * Changed offer ids to be represented in requests and response models as long data type. ([#386](https://github.com/stellar/java-stellar-sdk/pull/386)).
-* Changed all *MuxedId* attributes to be of data type `java.math.BigInteger` in request and response models ([#386](https://github.com/stellar/java-stellar-sdk/pull/386)).
+* Changed all *MuxedId* attributes to be of data type `java.math.BigInteger` in request and response models ([#388](https://github.com/stellar/java-stellar-sdk/pull/388)).
 
 ## 0.29.0
 
