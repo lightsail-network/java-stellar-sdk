@@ -7,6 +7,8 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
 
+import java.math.BigInteger;
+
 /**
  * @deprecated As of release 0.24.0, replaced by {@link SetTrustLineFlagsOperationResponse}
  *
@@ -23,7 +25,7 @@ public class AllowTrustOperationResponse extends OperationResponse {
   @SerializedName("trustee_muxed")
   private String trusteeMuxed;
   @SerializedName("trustee_muxed_id")
-  private Long trusteeMuxedId;
+  private BigInteger trusteeMuxedId;
   @SerializedName("asset_type")
   private String assetType;
   @SerializedName("asset_code")

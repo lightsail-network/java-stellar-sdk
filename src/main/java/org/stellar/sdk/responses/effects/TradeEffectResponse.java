@@ -7,6 +7,8 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
 
+import java.math.BigInteger;
+
 /**
  * Represents trade effect response.
  * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect documentation</a>
@@ -19,7 +21,7 @@ public class TradeEffectResponse extends EffectResponse {
   @SerializedName("seller_muxed")
   private String sellerMuxed;
   @SerializedName("seller_muxed_id")
-  private Long sellerMuxedId;
+  private BigInteger sellerMuxedId;
 
   @SerializedName("offer_id")
   private Long offerId;

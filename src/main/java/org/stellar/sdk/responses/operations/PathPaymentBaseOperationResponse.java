@@ -7,6 +7,7 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public abstract class PathPaymentBaseOperationResponse extends OperationResponse {
@@ -19,13 +20,13 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
   @SerializedName("from_muxed")
   private String fromMuxed;
   @SerializedName("from_muxed_id")
-  private Long fromMuxedId;
+  private BigInteger fromMuxedId;
   @SerializedName("to")
   private String to;
   @SerializedName("to_muxed")
   private String toMuxed;
   @SerializedName("to_muxed_id")
-  private Long toMuxedId;
+  private BigInteger toMuxedId;
 
   @SerializedName("asset_type")
   private String assetType;

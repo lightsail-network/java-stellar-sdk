@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.MuxedAccount;
 
+import java.math.BigInteger;
+
 /**
  * Represents ChangeTrust operation response.
  * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation documentation</a>
@@ -17,7 +19,7 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   @SerializedName("trustor_muxed")
   private String trustorMuxed;
   @SerializedName("trustor_muxed_id")
-  private Long trustorMuxedId;
+  private BigInteger trustorMuxedId;
   @SerializedName("trustee")
   private String trustee;
   @SerializedName("asset_type")

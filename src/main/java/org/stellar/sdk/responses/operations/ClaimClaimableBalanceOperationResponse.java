@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.responses.MuxedAccount;
 
+import java.math.BigInteger;
+
 /**
  * Represents ClaimClaimableBalance operation response.
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
@@ -17,7 +19,7 @@ public class ClaimClaimableBalanceOperationResponse extends OperationResponse {
   @SerializedName("claimant_muxed")
   private String claimantMuxed;
   @SerializedName("claimant_muxed_id")
-  private Long claimantMuxedId;
+  private BigInteger claimantMuxedId;
 
   public Optional<MuxedAccount> getClaimantMuxed() {
     if (this.claimantMuxed == null || this.claimantMuxed.isEmpty()) {

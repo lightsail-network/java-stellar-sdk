@@ -2,12 +2,14 @@ package org.stellar.sdk.responses;
 
 import com.google.common.base.Objects;
 
+import java.math.BigInteger;
+
 public class MuxedAccount {
   private final String muxedAddress;
   private final String unmuxedAddress;
-  private final Long id;
+  private final BigInteger id;
 
-  public MuxedAccount(String muxedAddress, String unmuxedAddress, Long id) {
+  public MuxedAccount(String muxedAddress, String unmuxedAddress, BigInteger id) {
     this.muxedAddress = muxedAddress;
     this.unmuxedAddress = unmuxedAddress;
     this.id = id;
@@ -18,7 +20,7 @@ public class MuxedAccount {
     return muxedAddress;
   }
 
-  public Long getId() {
+  public BigInteger getId() {
     return id;
   }
 
