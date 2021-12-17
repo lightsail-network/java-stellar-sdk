@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.responses.*;
 
+import java.math.BigInteger;
+
 /**
  * Abstract class for operation responses.
  * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation documentation</a>
@@ -19,7 +21,7 @@ public abstract class OperationResponse extends Response implements Pageable {
   @SerializedName("source_account_muxed")
   private String sourceAccountMuxed;
   @SerializedName("source_account_muxed_id")
-  private Long sourceAccountMuxedId;
+  private BigInteger sourceAccountMuxedId;
   @SerializedName("paging_token")
   private String pagingToken;
   @SerializedName("created_at")

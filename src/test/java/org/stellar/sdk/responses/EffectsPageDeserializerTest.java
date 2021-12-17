@@ -10,6 +10,10 @@ import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.effects.SignerCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.TradeEffectResponse;
 
+import java.math.BigInteger;
+
+import static java.math.BigInteger.valueOf;
+
 public class EffectsPageDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
@@ -36,7 +40,7 @@ public class EffectsPageDeserializerTest extends TestCase {
     assertEquals(first.getAccountMuxed().get(), new MuxedAccount(
       "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
       "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
-      123l
+      new BigInteger("18446744073709551615")
     ));
     assertFalse(second.getAccountMuxed().isPresent());
 
@@ -291,7 +295,7 @@ public class EffectsPageDeserializerTest extends TestCase {
       "        \"paging_token\": \"3697472920621057-1\",\n" +
       "        \"account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
       "        \"account_muxed\": \"MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA\",\n" +
-      "        \"account_muxed_id\": \"123\",\n" +
+      "        \"account_muxed_id\": \"18446744073709551615\",\n" +
       "        \"type\": \"trade\",\n" +
       "        \"type_i\": 33,\n" +
       "        \"created_at\": \"2015-11-18T03:47:47Z\",\n" +

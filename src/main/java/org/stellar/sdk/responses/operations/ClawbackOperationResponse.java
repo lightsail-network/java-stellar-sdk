@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.MuxedAccount;
 
+import java.math.BigInteger;
+
 /**
  * Represents a Clawback operation response.
  *
@@ -25,7 +27,7 @@ public class ClawbackOperationResponse extends OperationResponse {
   @SerializedName("from_muxed")
   private String fromMuxed;
   @SerializedName("from_muxed_id")
-  private Long fromMuxedId;
+  private BigInteger fromMuxedId;
 
   public String getAssetType() {
     return assetType;

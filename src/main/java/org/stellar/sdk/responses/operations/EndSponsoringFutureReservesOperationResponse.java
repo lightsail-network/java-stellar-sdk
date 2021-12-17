@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.responses.MuxedAccount;
 
+import java.math.BigInteger;
+
 /**
  * Represents EndSponsoringFutureReserves operation response.
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
@@ -15,7 +17,7 @@ public class EndSponsoringFutureReservesOperationResponse extends OperationRespo
   @SerializedName("begin_sponsor_muxed")
   private String beginSponsorMuxed;
   @SerializedName("begin_sponsor_muxed_id")
-  private Long beginSponsorMuxedId;
+  private BigInteger beginSponsorMuxedId;
 
   public Optional<MuxedAccount> getBeginSponsorMuxed() {
     if (this.beginSponsorMuxed == null || this.beginSponsorMuxed.isEmpty()) {

@@ -3,10 +3,11 @@ package org.stellar.sdk.responses;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import junit.framework.TestCase;
-
 import org.junit.Test;
 import org.stellar.sdk.MemoHash;
 import org.stellar.sdk.MemoNone;
+
+import static java.math.BigInteger.valueOf;
 
 public class TransactionDeserializerTest extends TestCase {
   @Test
@@ -76,18 +77,18 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(transaction.getSourceAccountMuxed().get(), new MuxedAccount(
         "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
         "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
-        123l
+        valueOf(123l)
     ));
     assertEquals(transaction.getFeeAccountMuxed().get().getUnmuxedAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     assertEquals(transaction.getFeeAccountMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
-    assertEquals(transaction.getFeeAccountMuxed().get().getId().longValue(), 420l);
+    assertEquals(transaction.getFeeAccountMuxed().get().getId(), valueOf(420l));
   }
 
     @Test
   public void testDeserializeWithoutMemo() {
     TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonMemoNone, TransactionResponse.class);
     assertTrue(transaction.getMemo() instanceof MemoNone);
-    assertEquals(transaction.isSuccessful(), new Boolean(false));
+    assertEquals(transaction.isSuccessful().booleanValue(), false);
   }
 
   String json = "{\n" +

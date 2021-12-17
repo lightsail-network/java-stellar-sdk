@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.stellar.sdk.Memo;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -53,11 +54,11 @@ public class TransactionResponse extends Response implements Pageable {
   @SerializedName("account_muxed")
   private String accountMuxed;
   @SerializedName("account_muxed_id")
-  private Long accountMuxedId;
+  private BigInteger accountMuxedId;
   @SerializedName("fee_account_muxed")
   private String feeAccountMuxed;
   @SerializedName("fee_account_muxed_id")
-  private Long feeAccountMuxedId;
+  private BigInteger feeAccountMuxedId;
   @SerializedName("_links")
   private Links links;
 

@@ -3,13 +3,14 @@ package org.stellar.sdk.responses;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import junit.framework.TestCase;
-
-import org.stellar.sdk.*;
-
 import org.junit.Test;
+import org.stellar.sdk.*;
 import org.stellar.sdk.responses.operations.*;
 
+import java.math.BigInteger;
 import java.util.Arrays;
+
+import static java.math.BigInteger.valueOf;
 
 public class OperationDeserializerTest extends TestCase {
   @Test
@@ -46,7 +47,7 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getSourceAccount(), "GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD");
     assertEquals(operation.getPagingToken(), "3936840037961729");
-    assertEquals(operation.getId(), new Long(3936840037961729L));
+    assertEquals(operation.getId().longValue(), 3936840037961729L);
     assertNull(operation.isTransactionSuccessful());
     assertFalse(operation.getFunderMuxed().isPresent());
 
@@ -85,7 +86,7 @@ public class OperationDeserializerTest extends TestCase {
         "  \"account\": \"GAR4DDXYNSN2CORG3XQFLAPWYKTUMLZYHYWV4Y2YJJ4JO6ZJFXMJD7PT\",\n" +
         "  \"funder\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" +
         "  \"funder_muxed\": \"MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4\",\n" +
-        "  \"funder_muxed_id\": \"420\",\n" +
+        "  \"funder_muxed_id\": \"18446744073709551615\",\n" +
         "  \"id\": 3936840037961729,\n" +
         "  \"paging_token\": \"3936840037961729\",\n" +
         "  \"source_account\": \"GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L\",\n" +
@@ -102,13 +103,13 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getSourceAccountMuxed().get(), new MuxedAccount(
         "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
         "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
-        123l
+            valueOf(123l)
     ));
 
     assertEquals(operation.getFunder(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     assertEquals(operation.getFunderMuxed().get().getUnmuxedAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     assertEquals(operation.getFunderMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
-    assertEquals(operation.getFunderMuxed().get().getId().longValue(), 420l);
+    assertEquals(operation.getFunderMuxed().get().getId(), new BigInteger("18446744073709551615"));
   }
 
   @Test
@@ -146,8 +147,8 @@ public class OperationDeserializerTest extends TestCase {
     PaymentOperationResponse operation = (PaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals(operation.getSourceAccount(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
-    assertEquals(operation.getId(), new Long(3940808587743233L));
-    assertEquals(operation.isTransactionSuccessful(), new Boolean(false));
+    assertEquals(operation.getId().longValue(), 3940808587743233L);
+    assertEquals(operation.isTransactionSuccessful().booleanValue(), false);
 
     assertEquals(operation.getFrom(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
     assertEquals(operation.getTo(), "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
@@ -191,7 +192,7 @@ public class OperationDeserializerTest extends TestCase {
 
     PaymentOperationResponse operation = (PaymentOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.isTransactionSuccessful(), new Boolean(true));
+    assertEquals(operation.isTransactionSuccessful().booleanValue(),true);
 
     assertEquals(operation.getFrom(), "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
     assertEquals(operation.getTo(), "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
@@ -634,11 +635,11 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getAccountMuxed().get(), new MuxedAccount(
         "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
         "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
-        123l
+        valueOf(123l)
     ));
     assertEquals(operation.getIntoMuxed().get().getUnmuxedAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     assertEquals(operation.getIntoMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
-    assertEquals(operation.getIntoMuxed().get().getId().longValue(), 420l);
+    assertEquals(operation.getIntoMuxed().get().getId(), valueOf(420l));
   }
 
   @Test
@@ -844,13 +845,13 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getFromMuxed().get(), new MuxedAccount(
         "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
         "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
-        123l
+        valueOf(123l)
     ));
 
     assertEquals(operation.getTo(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     assertEquals(operation.getToMuxed().get().getUnmuxedAddress(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     assertEquals(operation.getToMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
-    assertEquals(operation.getToMuxed().get().getId().longValue(), 420l);
+    assertEquals(operation.getToMuxed().get().getId(), valueOf(420l));
   }
 
   @Test
@@ -931,7 +932,7 @@ public class OperationDeserializerTest extends TestCase {
 
     InflationOperationResponse operation = (InflationOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
   }
 
   @Test
@@ -965,7 +966,7 @@ public class OperationDeserializerTest extends TestCase {
 
     ManageDataOperationResponse operation = (ManageDataOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(14336188517191688L));
+    assertEquals(operation.getId().longValue(), 14336188517191688L);
     assertEquals(operation.getName(), "CollateralValue");
     assertEquals(operation.getValue(), "MjAwMA==");
   }
@@ -1034,8 +1035,8 @@ public class OperationDeserializerTest extends TestCase {
 
     BumpSequenceOperationResponse operation = (BumpSequenceOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
-    assertEquals(operation.getBumpTo(), new Long(79473726952833048L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
+    assertEquals(operation.getBumpTo().longValue(), 79473726952833048L);
   }
 
   @Test
@@ -1068,7 +1069,7 @@ public class OperationDeserializerTest extends TestCase {
 
     EndSponsoringFutureReservesOperationResponse operation = (EndSponsoringFutureReservesOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getBeginSponsor(), "GDRW375MAYR46ODGF2WGANQC2RRZL7O246DYHHCGWTV2RE7IHE2QUQLD");
     assertFalse(operation.getBeginSponsorMuxed().isPresent());
     assertEquals(operation.getType(), "end_sponsoring_future_reserves");
@@ -1106,7 +1107,7 @@ public class OperationDeserializerTest extends TestCase {
 
     EndSponsoringFutureReservesOperationResponse operation = (EndSponsoringFutureReservesOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getBeginSponsor(), "GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G");
     assertEquals(operation.getBeginSponsorMuxed().get().toString(), "MAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472YAAAAAAAAAABUSON4");
     assertEquals(operation.getBeginSponsorMuxed().get().getId().longValue(), 420l);
@@ -1144,7 +1145,7 @@ public class OperationDeserializerTest extends TestCase {
 
     ClaimClaimableBalanceOperationResponse operation = (ClaimClaimableBalanceOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getBalanceId(), "00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9");
     assertEquals(operation.getClaimant(), "GDRW375MAYR46ODGF2WGANQC2RRZL7O246DYHHCGWTV2RE7IHE2QUQLD");
     assertFalse(operation.getClaimantMuxed().isPresent());
@@ -1184,13 +1185,13 @@ public class OperationDeserializerTest extends TestCase {
 
     ClaimClaimableBalanceOperationResponse operation = (ClaimClaimableBalanceOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getBalanceId(), "00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9");
     assertEquals(operation.getClaimant(), "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L");
     assertEquals(operation.getClaimantMuxed().get(), new MuxedAccount(
         "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
         "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
-        123l
+        valueOf(123l)
     ));
     assertEquals(operation.getType(), "claim_claimable_balance");
   }
@@ -1226,7 +1227,7 @@ public class OperationDeserializerTest extends TestCase {
 
     ClawbackClaimableBalanceOperationResponse operation = (ClawbackClaimableBalanceOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getBalanceId(), "00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9");
     assertEquals(operation.getType(), "clawback_claimable_balance");
   }
@@ -1264,7 +1265,7 @@ public class OperationDeserializerTest extends TestCase {
 
     ClawbackOperationResponse operation = (ClawbackOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getFrom(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
     assertEquals(operation.getType(), "clawback");
     assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
@@ -1313,7 +1314,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getFromMuxed().get(), new MuxedAccount(
         "MBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA6AAAAAAAAAAAPN7BA",
         "GBB4JST32UWKOLGYYSCEYBHBCOFL2TGBHDVOMZP462ET4ZRD4ULA7S2L",
-        123l
+        valueOf(123l)
     ));
   }
 
@@ -1362,7 +1363,7 @@ public class OperationDeserializerTest extends TestCase {
 
     SetTrustLineFlagsOperationResponse operation = (SetTrustLineFlagsOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(12884914177L));
+    assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getTrustor(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
     assertEquals(operation.getType(), "set_trust_line_flags");
     assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
@@ -1439,7 +1440,7 @@ public class OperationDeserializerTest extends TestCase {
 
     LiquidityPoolDepositOperationResponse operation = (LiquidityPoolDepositOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(2278153733029889L));
+    assertEquals(operation.getId().longValue(), 2278153733029889L);
     assertEquals(operation.getType(), "liquidity_pool_deposit");
     assertEquals(operation.getSharesReceived(), "1367.4794331");
     assertEquals(operation.getLiquidityPoolId().toString(), "1df1380108ca32e96650074db1f3e1e10541ab8768c9eba7ec3b6f9315f9faee");
@@ -1511,7 +1512,7 @@ public class OperationDeserializerTest extends TestCase {
 
     LiquidityPoolWithdrawOperationResponse operation = (LiquidityPoolWithdrawOperationResponse) GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    assertEquals(operation.getId(), new Long(2313539968573441L));
+    assertEquals(operation.getId().longValue(), 2313539968573441L);
     assertEquals(operation.getType(), "liquidity_pool_withdraw");
     assertEquals(operation.getShares(), "1367.4794331");
     assertEquals(operation.getLiquidityPoolId().toString(), "1df1380108ca32e96650074db1f3e1e10541ab8768c9eba7ec3b6f9315f9faee");
