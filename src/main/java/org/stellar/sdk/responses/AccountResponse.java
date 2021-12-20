@@ -145,7 +145,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("high_threshold")
     private final int highThreshold;
 
-    Thresholds(int lowThreshold, int medThreshold, int highThreshold) {
+    public Thresholds(int lowThreshold, int medThreshold, int highThreshold) {
       this.lowThreshold = lowThreshold;
       this.medThreshold = medThreshold;
       this.highThreshold = highThreshold;
@@ -175,7 +175,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("auth_immutable")
     private final boolean authImmutable;
 
-    Flags(boolean authRequired, boolean authRevocable, boolean authImmutable) {
+    public Flags(boolean authRequired, boolean authRevocable, boolean authImmutable) {
       this.authRequired = authRequired;
       this.authRevocable = authRevocable;
       this.authImmutable = authImmutable;
@@ -223,7 +223,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     private String sponsor;
 
-    Balance(String assetType, String assetCode, String assetIssuer, LiquidityPoolID liquidityPoolID, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger, String sponsor) {
+    public Balance(String assetType, String assetCode, String assetIssuer, LiquidityPoolID liquidityPoolID, String balance, String limit, String buyingLiabilities, String sellingLiabilities, Boolean isAuthorized, Boolean isAuthorizedToMaintainLiabilities, Integer lastModifiedLedger, String sponsor) {
       this.assetType = checkNotNull(assetType, "assertType cannot be null");
       this.balance = checkNotNull(balance, "balance cannot be null");
       this.limit = limit;
@@ -312,7 +312,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     private String sponsor;
 
-    Signer(String key, String type, int weight, String sponsor) {
+    public Signer(String key, String type, int weight, String sponsor) {
       this.key = checkNotNull(key, "key cannot be null");
       this.type = checkNotNull(type, "type cannot be null");
       this.weight = checkNotNull(weight, "weight cannot be null");
@@ -393,7 +393,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("transactions")
     private final Link transactions;
 
-    Links(Link effects, Link offers, Link operations, Link self, Link transactions) {
+    public Links(Link effects, Link offers, Link operations, Link self, Link transactions) {
       this.effects = effects;
       this.offers = offers;
       this.operations = operations;
