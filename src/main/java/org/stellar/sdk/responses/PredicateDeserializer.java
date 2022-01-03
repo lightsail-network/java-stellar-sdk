@@ -36,7 +36,11 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
       return new Predicate.Or(inner);
     }
 
-    if (obj.has("abs_before")) {
+    // backwards compatible for abs before, uses the newer abs_before_epoch if available from server
+    // otherwise if abs_before_epoch is absent, it will fall back to original attempt to parse abs_before date string
+    if (obj.has("abs_before_epoch")) {
+      return new Predicate.AbsBefore(obj.get("abs_before_epoch").getAsLong());
+    } else if (obj.has("abs_before")) {
       String formattedDate = obj.get("abs_before").getAsString();
       return new Predicate.AbsBefore(Instant.parse(formattedDate).getEpochSecond());
     }
