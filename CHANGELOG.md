@@ -4,11 +4,13 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Unreleased
 
-### Changes
+## 0.30.0
+
 * Fix missing Liquidity Pool ID in AccountResponse Balance ([#379](https://github.com/stellar/java-stellar-sdk/pull/379)).
 * Fix null pointer when calling ChangeTrustOperationResponse.getAsset() for LiquidityPool trust line ([#378](https://github.com/stellar/java-stellar-sdk/pull/378)).
-* Changed the access modifiers of the inner static classes of `AccountResponse` to public. 
-* Use the new ClaimableBalance Predicate AbsBeforeEpoch field to avoid parsing errors on potenital large dates in AbsBefore ([#394](https://github.com/stellar/java-stellar-sdk/pull/394)).
+* Changed the access modifiers of the inner static classes of `AccountResponse` to public ([#390](https://github.com/stellar/java-stellar-sdk/pull/390)).
+* Use the new ClaimableBalance Predicate AbsBeforeEpoch field to avoid parsing errors on potential large dates in AbsBefore ([#394](https://github.com/stellar/java-stellar-sdk/pull/394)).
+
 ### Breaking changes
 * Changed offer ids to be represented in requests and response models as long data type. ([#386](https://github.com/stellar/java-stellar-sdk/pull/386)).
 * Changed all *MuxedId* attributes to be of data type `java.math.BigInteger` in request and response models ([#388](https://github.com/stellar/java-stellar-sdk/pull/388)).
