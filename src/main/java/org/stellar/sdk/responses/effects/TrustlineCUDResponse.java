@@ -18,14 +18,6 @@ abstract class TrustlineCUDResponse extends EffectResponse {
   @SerializedName("liquidity_pool_id")
   private String liquidityPoolId;
 
-  public TrustlineCUDResponse(String limit, String assetType, String assetCode, String assetIssuer, String liquidityPoolId) {
-    this.limit = limit;
-    this.assetType = assetType;
-    this.assetCode = assetCode;
-    this.assetIssuer = assetIssuer;
-    this.liquidityPoolId = liquidityPoolId;
-  }
-
   public String getLimit() {
     return limit;
   }

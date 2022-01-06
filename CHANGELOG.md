@@ -3,6 +3,13 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Unreleased
+* Fixed NPE on TrustlineCreatedEffectResponse.getAsset() for liquidity pool asset type.
+  Consolidated Asset factory creation pattern, made consistent for all asset types including native, alpha4, alpha12, liquidity pool shares.
+  ([#398](https://github.com/stellar/java-stellar-sdk/pull/398)).
+
+### Breaking changes
+* org.stellar.sdk.Asset.createNonNativeAsset() is now private. ([#398](https://github.com/stellar/java-stellar-sdk/pull/398)).
+* org.stellar.sdk.responses.effects.TrustlineCUDResponse, removed non-default public constructor, it wasn't needed. ([#398](https://github.com/stellar/java-stellar-sdk/pull/398)).
 
 ## 0.30.0
 

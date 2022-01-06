@@ -20,8 +20,6 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
   protected final String assetCode;
   @SerializedName("asset_issuer")
   protected final String assetIssuer;
-  @SerializedName("liquidity_pool_id")
-  protected final String liquidityPoolId;
 
   @SerializedName("clear_flags")
   protected final List<Integer> clearFlags;
@@ -36,9 +34,7 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
   @SerializedName("trustor")
   private final String trustor;
 
-  public SetTrustLineFlagsOperationResponse(String assetType, String assetCode, String assetIssuer,
-                                            List<Integer> clearFlags, List<String> clearFlagStings, List<Integer> setFlags,
-                                            List<String> setFlagStrings, String trustor, String LiquidityPoolId) {
+  public SetTrustLineFlagsOperationResponse(String assetType, String assetCode, String assetIssuer, List<Integer> clearFlags, List<String> clearFlagStings, List<Integer> setFlags, List<String> setFlagStrings, String trustor) {
     this.assetType = assetType;
     this.assetCode = assetCode;
     this.assetIssuer = assetIssuer;
@@ -47,7 +43,6 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
     this.setFlags = setFlags;
     this.setFlagStrings = setFlagStrings;
     this.trustor = trustor;
-    this.liquidityPoolId = LiquidityPoolId;
   }
 
   public String getAssetType() {
@@ -63,7 +58,7 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
   }
 
   public Asset getAsset() {
-    return create(assetType, assetCode, assetIssuer, liquidityPoolId);
+    return create(assetType, assetCode, assetIssuer);
   }
 
   public String getTrustor() {
