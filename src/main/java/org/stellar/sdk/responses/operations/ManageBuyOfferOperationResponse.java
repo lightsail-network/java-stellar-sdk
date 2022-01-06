@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 
+import static org.stellar.sdk.Asset.create;
+
 /**
  * Represents ManageBuyOffer operation response.
  * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation documentation</a>
@@ -62,7 +64,7 @@ public class ManageBuyOfferOperationResponse extends OperationResponse {
     if (buyingAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(buyingAssetCode, buyingAssetIssuer);
+      return create(buyingAssetType, buyingAssetCode, buyingAssetIssuer);
     }
   }
 
@@ -70,7 +72,7 @@ public class ManageBuyOfferOperationResponse extends OperationResponse {
     if (sellingAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(sellingAssetCode, sellingAssetIssuer);
+      return create(sellingAssetType, sellingAssetCode, sellingAssetIssuer);
     }
   }
 }

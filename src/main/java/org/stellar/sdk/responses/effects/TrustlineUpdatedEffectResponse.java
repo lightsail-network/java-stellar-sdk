@@ -7,7 +7,7 @@ package org.stellar.sdk.responses.effects;
  * @see org.stellar.sdk.Server#effects()
  */
 public class TrustlineUpdatedEffectResponse extends TrustlineCUDResponse {
-  TrustlineUpdatedEffectResponse(String limit, String assetType, String assetCode, String assetIssuer) {
-    super(limit, assetType, assetCode, assetIssuer);
+  TrustlineUpdatedEffectResponse(String limit, String assetType, String assetCode, String assetIssuer, String liquidityPoolId) {
+    super(limit, assetType, assetCode, assetIssuer, liquidityPoolId);
   }
 }

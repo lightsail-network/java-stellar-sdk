@@ -1,25 +1,29 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
-
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 
+import static org.stellar.sdk.Asset.create;
+
 abstract class TrustlineCUDResponse extends EffectResponse {
   @SerializedName("limit")
-  protected final String limit;
+  private String limit;
   @SerializedName("asset_type")
-  protected final String assetType;
+  private String assetType;
   @SerializedName("asset_code")
-  protected final String assetCode;
+  private String assetCode;
   @SerializedName("asset_issuer")
-  protected final String assetIssuer;
+  private String assetIssuer;
+  @SerializedName("liquidity_pool_id")
+  private String liquidityPoolId;
 
-  public TrustlineCUDResponse(String limit, String assetType, String assetCode, String assetIssuer) {
+  public TrustlineCUDResponse(String limit, String assetType, String assetCode, String assetIssuer, String liquidityPoolId) {
     this.limit = limit;
     this.assetType = assetType;
     this.assetCode = assetCode;
     this.assetIssuer = assetIssuer;
+    this.liquidityPoolId = liquidityPoolId;
   }
 
   public String getLimit() {
@@ -30,7 +34,7 @@ abstract class TrustlineCUDResponse extends EffectResponse {
     if (assetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(assetCode, assetIssuer);
+      return create(assetType, assetCode, assetIssuer, liquidityPoolId);
     }
   }
 }

@@ -1,10 +1,9 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
+import org.stellar.sdk.xdr.AssetType;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import org.stellar.sdk.xdr.*;
 
 /**
  * Class for LiquidityPoolShareChangeTrustAsset
@@ -13,15 +12,30 @@ import org.stellar.sdk.xdr.*;
 public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
   protected final LiquidityPoolParameters mParams;
 
+  /**
+   * Constructor
+   *
+   * @param params the liquidity pool parameters
+   */
   public LiquidityPoolShareChangeTrustAsset(LiquidityPoolParameters params) {
     checkNotNull(params, "params cannot be null");
     mParams = params;
   }
 
+  /**
+   * Get the liquidity pool id
+   *
+   * @return LiquidityPoolID
+   */
   public LiquidityPoolID getLiquidityPoolID() {
     return mParams.getId();
   }
 
+  /**
+   * Get the liquidity pool parameters
+   *
+   * @return LiquidityPoolParameters
+   */
   public LiquidityPoolParameters getLiquidityPoolParams() {
     return mParams;
   }

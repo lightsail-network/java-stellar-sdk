@@ -3,16 +3,14 @@ package org.stellar.sdk.responses;
 import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
-
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.TrustLineAsset;
 
 import java.util.HashMap;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.stellar.sdk.Asset.create;
 
 /**
  * Represents account response.
@@ -240,14 +238,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<Asset> getAsset() {
-      if (assetType.equals("native")) {
-        return Optional.of((Asset)new AssetTypeNative());
-      } else if (assetType.equals("liquidity_pool_shares")) {
-        // TODO: Decide if this is the right way to handle this...
-        return Optional.absent();
-      } else {
-        return Optional.of(Asset.createNonNativeAsset(assetCode, assetIssuer));
-      }
+      return Optional.of(create(assetType, assetCode, assetIssuer, liquidityPoolID.toString()));
     }
 
     public String getAssetType() {

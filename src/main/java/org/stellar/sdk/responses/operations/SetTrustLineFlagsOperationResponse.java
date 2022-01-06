@@ -5,6 +5,8 @@ import org.stellar.sdk.Asset;
 
 import java.util.List;
 
+import static org.stellar.sdk.Asset.create;
+
 /**
  * Represents a Set Trustine Flags operation response.
  *
@@ -18,6 +20,8 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
   protected final String assetCode;
   @SerializedName("asset_issuer")
   protected final String assetIssuer;
+  @SerializedName("liquidity_pool_id")
+  protected final String liquidityPoolId;
 
   @SerializedName("clear_flags")
   protected final List<Integer> clearFlags;
@@ -32,7 +36,9 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
   @SerializedName("trustor")
   private final String trustor;
 
-  public SetTrustLineFlagsOperationResponse(String assetType, String assetCode, String assetIssuer, List<Integer> clearFlags, List<String> clearFlagStings, List<Integer> setFlags, List<String> setFlagStrings, String trustor) {
+  public SetTrustLineFlagsOperationResponse(String assetType, String assetCode, String assetIssuer,
+                                            List<Integer> clearFlags, List<String> clearFlagStings, List<Integer> setFlags,
+                                            List<String> setFlagStrings, String trustor, String LiquidityPoolId) {
     this.assetType = assetType;
     this.assetCode = assetCode;
     this.assetIssuer = assetIssuer;
@@ -41,6 +47,7 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
     this.setFlags = setFlags;
     this.setFlagStrings = setFlagStrings;
     this.trustor = trustor;
+    this.liquidityPoolId = LiquidityPoolId;
   }
 
   public String getAssetType() {
@@ -56,7 +63,7 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
   }
 
   public Asset getAsset() {
-    return Asset.createNonNativeAsset(assetCode, assetIssuer);
+    return create(assetType, assetCode, assetIssuer, liquidityPoolId);
   }
 
   public String getTrustor() {

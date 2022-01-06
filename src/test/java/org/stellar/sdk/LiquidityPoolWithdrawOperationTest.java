@@ -5,12 +5,13 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.stellar.sdk.Asset.create;
 
 public class LiquidityPoolWithdrawOperationTest {
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source = KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
-    Asset nativeAsset = Asset.create("native");
-    Asset creditAsset = Asset.createNonNativeAsset("ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+    Asset nativeAsset = create("native");
+    Asset creditAsset = create(null,"ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
     LiquidityPoolID liquidityPoolID = new LiquidityPoolID(
         LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
         nativeAsset,

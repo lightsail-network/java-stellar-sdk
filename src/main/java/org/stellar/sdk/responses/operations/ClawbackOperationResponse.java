@@ -7,6 +7,8 @@ import org.stellar.sdk.responses.MuxedAccount;
 
 import java.math.BigInteger;
 
+import static org.stellar.sdk.Asset.create;
+
 /**
  * Represents a Clawback operation response.
  *
@@ -42,7 +44,7 @@ public class ClawbackOperationResponse extends OperationResponse {
   }
 
   public Asset getAsset() {
-    return Asset.createNonNativeAsset(assetCode, assetIssuer);
+    return create(assetType, assetCode, assetIssuer);
   }
 
   public String getAmount() {
