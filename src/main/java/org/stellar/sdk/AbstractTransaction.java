@@ -126,7 +126,7 @@ public abstract class AbstractTransaction {
    * @return
    */
   public static AbstractTransaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
-    return fromEnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+    return fromEnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
   }
 
   /**
@@ -150,7 +150,7 @@ public abstract class AbstractTransaction {
    * @throws IOException
    */
   public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network) throws IOException {
-    return fromEnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+    return fromEnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
   }
 
   public static byte[] getTransactionSignatureBase(TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,

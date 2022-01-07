@@ -90,9 +90,9 @@ public class OperationTest {
         assertEquals(destination, parsedOperation.getDestination());
         assertEquals(source, parsedOperation.getSourceAccount());
 
-        parsedOperation = (PaymentOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
-        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getDestination());
-        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
+        parsedOperation = (PaymentOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        assertEquals("MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO", parsedOperation.getDestination());
+        assertEquals("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -200,9 +200,9 @@ public class OperationTest {
         assertEquals(destination, parsedOperation.getDestination());
         assertEquals(source, parsedOperation.getSourceAccount());
 
-        parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
-        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getDestination());
-        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
+        parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        assertEquals("MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO", parsedOperation.getDestination());
+        assertEquals("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -316,9 +316,9 @@ public class OperationTest {
         assertEquals(destination, parsedOperation.getDestination());
         assertEquals(source, parsedOperation.getSourceAccount());
 
-        parsedOperation = (PathPaymentStrictSendOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
-        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getDestination());
-        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
+        parsedOperation = (PathPaymentStrictSendOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        assertEquals("MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO", parsedOperation.getDestination());
+        assertEquals("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -729,9 +729,9 @@ public class OperationTest {
         assertEquals(destination, parsedOperation.getDestination());
         assertEquals(source, parsedOperation.getSourceAccount());
 
-        parsedOperation = (AccountMergeOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
-        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getDestination());
-        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
+        parsedOperation = (AccountMergeOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        assertEquals("MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO", parsedOperation.getDestination());
+        assertEquals("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -1044,9 +1044,9 @@ public class OperationTest {
         assertEquals(from, parsedOperation.getFrom());
         assertEquals(source, parsedOperation.getSourceAccount());
 
-        parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
-        assertEquals("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", parsedOperation.getFrom());
-        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
+        parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        assertEquals("MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO", parsedOperation.getFrom());
+        assertEquals("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK", parsedOperation.getSourceAccount());
     }
 
     @Test
@@ -1064,9 +1064,9 @@ public class OperationTest {
         assertEquals(from, parsedOperation.getFrom());
         assertEquals(source, parsedOperation.getSourceAccount());
 
-        parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.disableMuxed(), xdr);
+        parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
         assertEquals(from, parsedOperation.getFrom());
-        assertEquals("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", parsedOperation.getSourceAccount());
+        assertEquals("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK", parsedOperation.getSourceAccount());
     }
 
     @Test

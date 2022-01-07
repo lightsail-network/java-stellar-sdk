@@ -49,7 +49,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
   }
 
   public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(FeeBumpTransactionEnvelope envelope, Network network) {
-    return fromFeeBumpTransactionEnvelope(AccountConverter.disableMuxed(), envelope, network);
+    return fromFeeBumpTransactionEnvelope(AccountConverter.enableMuxed(), envelope, network);
   }
 
     private org.stellar.sdk.xdr.FeeBumpTransaction toXdr() {
@@ -140,7 +140,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
      * @param inner The inner transaction which will be fee bumped.
      */
     public Builder(Transaction inner) {
-      this(AccountConverter.disableMuxed(), inner);
+      this(AccountConverter.enableMuxed(), inner);
     }
 
     public FeeBumpTransaction.Builder setBaseFee(long baseFee) {
