@@ -145,7 +145,7 @@ public class Transaction extends AbstractTransaction {
     // operations
     org.stellar.sdk.xdr.Operation[] operations = new org.stellar.sdk.xdr.Operation[mOperations.length];
     for (int i = 0; i < mOperations.length; i++) {
-      operations[i] = mOperations[i].toXdr(AccountConverter.disableMuxed());
+      operations[i] = mOperations[i].toXdr(AccountConverter.enableMuxed());
     }
     // ext
     TransactionV0.TransactionV0Ext ext = new TransactionV0.TransactionV0Ext();
@@ -223,7 +223,7 @@ public class Transaction extends AbstractTransaction {
   }
 
   public static Transaction fromV0EnvelopeXdr(TransactionV0Envelope envelope, Network network) {
-    return fromV0EnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+    return fromV0EnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
   }
 
   public static Transaction fromV1EnvelopeXdr(AccountConverter accountConverter, TransactionV1Envelope envelope, Network network) {
@@ -254,7 +254,7 @@ public class Transaction extends AbstractTransaction {
   }
 
   public static Transaction fromV1EnvelopeXdr(TransactionV1Envelope envelope, Network network) {
-    return fromV1EnvelopeXdr(AccountConverter.disableMuxed(), envelope, network);
+    return fromV1EnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
   }
 
     /**
@@ -320,7 +320,7 @@ public class Transaction extends AbstractTransaction {
      * will be incremented.
      */
     public Builder(TransactionBuilderAccount sourceAccount, Network network) {
-      this(AccountConverter.disableMuxed(), sourceAccount, network);
+      this(AccountConverter.enableMuxed(), sourceAccount, network);
     }
     
     public int getOperationsCount() {

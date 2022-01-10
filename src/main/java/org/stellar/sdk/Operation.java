@@ -47,7 +47,7 @@ public abstract class Operation {
    * Generates Operation XDR object.
    */
   public org.stellar.sdk.xdr.Operation toXdr() {
-    return toXdr(AccountConverter.disableMuxed());
+    return toXdr(AccountConverter.enableMuxed());
   }
 
   /**
@@ -70,7 +70,7 @@ public abstract class Operation {
    * Returns base64-encoded Operation XDR object.
    */
   public String toXdrBase64() {
-    return toXdrBase64(AccountConverter.disableMuxed());
+    return toXdrBase64(AccountConverter.enableMuxed());
   }
 
 
@@ -199,7 +199,7 @@ public abstract class Operation {
    * @param xdr XDR object
    */
   public static Operation fromXdr(org.stellar.sdk.xdr.Operation xdr) {
-    return fromXdr(AccountConverter.disableMuxed(), xdr);
+    return fromXdr(AccountConverter.enableMuxed(), xdr);
   }
 
   /**

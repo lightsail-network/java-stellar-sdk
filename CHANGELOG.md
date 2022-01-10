@@ -10,6 +10,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ### Breaking changes
 * org.stellar.sdk.Asset.createNonNativeAsset() is now private. ([#398](https://github.com/stellar/java-stellar-sdk/pull/398)).
 * org.stellar.sdk.responses.effects.TrustlineCUDResponse, removed non-default public constructor, it wasn't needed. ([#398](https://github.com/stellar/java-stellar-sdk/pull/398)).
+* Muxed accounts are now supported by default. Previously we added opt in support for muxed accounts. But now we are changing the default behavior so that muxed accounts are rendered using their 'M' address encoding ([#399](https://github.com/stellar/java-stellar-sdk/pull/399)).
 
 ## 0.30.0
 
