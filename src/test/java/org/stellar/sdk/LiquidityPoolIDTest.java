@@ -5,11 +5,12 @@ import org.junit.Test;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import static org.junit.Assert.*;
+import static org.stellar.sdk.Asset.create;
 
 public class LiquidityPoolIDTest {
-  private final Asset a = Asset.create("native");
-  private final Asset b = Asset.createNonNativeAsset("ABC", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
-  private final Asset c = Asset.createNonNativeAsset("ABCD", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
+  private final Asset a = create("native");
+  private final Asset b = create(null,"ABC", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
+  private final Asset c = create(null,"ABCD", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
 
   @Test
   public void testLiquidityPoolID() {

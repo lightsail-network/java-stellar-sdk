@@ -2,21 +2,19 @@ package org.stellar.sdk.requests;
 
 import okhttp3.HttpUrl;
 import org.junit.Test;
-import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.Network;
 import org.stellar.sdk.Server;
 
 import static org.junit.Assert.assertEquals;
+import static org.stellar.sdk.Asset.create;
 
 public class TradesRequestBuilderTest {
     @Test
     public void testTrades() {
         Server server = new Server("https://horizon-testnet.stellar.org");
         HttpUrl uri = server.trades()
-                .baseAsset(Asset.createNonNativeAsset("EUR", "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
-                .counterAsset(Asset.createNonNativeAsset("USD", "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
+                .baseAsset(create(null,"EUR", "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
+                .counterAsset(create(null,"USD", "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
                 .cursor("13537736921089")
                 .offerId(123L)
                 .limit(200)

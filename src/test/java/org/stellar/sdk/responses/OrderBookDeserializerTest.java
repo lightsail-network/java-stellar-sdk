@@ -6,13 +6,15 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 
+import static org.stellar.sdk.Asset.create;
+
 public class OrderBookDeserializerTest extends TestCase {
     @Test
     public void testDeserialize() {
         OrderBookResponse orderBook = GsonSingleton.getInstance().fromJson(json, OrderBookResponse.class);
 
         assertEquals(orderBook.getBase(), new AssetTypeNative());
-        assertEquals(orderBook.getCounter(), Asset.createNonNativeAsset("DEMO", "GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE"));
+        assertEquals(orderBook.getCounter(), create(null,"DEMO", "GBAMBOOZDWZPVV52RCLJQYMQNXOBLOXWNQAY2IF2FREV2WL46DBCH3BE"));
 
         assertEquals(orderBook.getBids()[0].getAmount(), "31.4007644");
         assertEquals(orderBook.getBids()[0].getPrice(), "0.0024224");

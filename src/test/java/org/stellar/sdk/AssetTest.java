@@ -10,12 +10,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.stellar.sdk.Asset.create;
 
 /**
  * Created by andrewrogers on 7/1/15.
  */
 public class AssetTest {
-  Asset xlm = Asset.create("native");
+  Asset xlm = create("native");
 
   @Test
   public void testAssetTypeNative() {
@@ -87,12 +88,12 @@ public class AssetTest {
 
   @Test
   public void testAssetCompareTo0IfAssetsEqual() {
-    Asset assetA = Asset.createNonNativeAsset(
+    Asset assetA = create(null,
 			"ARST",
 			"GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
 		);
 
-		Asset assetB = Asset.createNonNativeAsset(
+		Asset assetB = create(null,
 			"USD",
 			"GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ"
 		);
@@ -104,11 +105,11 @@ public class AssetTest {
 
   @Test
   public void testAssetCompareToOrderingByType() {
-		Asset anum4 = Asset.createNonNativeAsset(
+		Asset anum4 = create(null,
 			"ARSZ",
 			"GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
 		);
-		Asset anum12 = Asset.createNonNativeAsset(
+		Asset anum12 = create(null,
 			"ARSTANUM12",
 			"GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
 		);
@@ -128,11 +129,11 @@ public class AssetTest {
 
   @Test
   public void testAssetCompareToOrderingByCode() {
-    Asset assetARST = Asset.createNonNativeAsset(
+    Asset assetARST = create(null,
       "ARST",
       "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
     );
-    Asset assetUSDX = Asset.createNonNativeAsset(
+    Asset assetUSDX = create(null,
       "USDX",
       "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
     );
@@ -146,11 +147,11 @@ public class AssetTest {
 
   @Test
   public void testAssetCompareToOrderingByIssuer() {
-		Asset assetIssuerA = Asset.createNonNativeAsset(
+		Asset assetIssuerA = create(null,
 			"ARST",
 			"GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
 		);
-		Asset assetIssuerB = Asset.createNonNativeAsset(
+		Asset assetIssuerB = create(null,
 			"ARST",
 			"GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ"
 		);
@@ -165,18 +166,18 @@ public class AssetTest {
   @Test
   public void testAssetsAreSortable()	{
     // Native is always first
-    Asset a = Asset.create("native");
+    Asset a = create("native");
     // Type is Alphanum4
-    Asset b = Asset.createNonNativeAsset("BCDE",  "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+    Asset b = create(null,"BCDE",  "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     // Type is Alphanum12
-    Asset c = Asset.createNonNativeAsset("ABCD1", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+    Asset c = create(null,"ABCD1", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     // Code is >
-    Asset d = Asset.createNonNativeAsset("ABCD2", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+    Asset d = create(null,"ABCD2", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     // Issuer is >
-    Asset e = Asset.createNonNativeAsset("ABCD2", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
+    Asset e = create(null,"ABCD2", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
 
     Asset[] expected = {a, b, c, d, e};
 

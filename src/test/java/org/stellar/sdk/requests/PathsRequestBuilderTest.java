@@ -8,7 +8,10 @@ import org.stellar.sdk.Server;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.stellar.sdk.Asset.create;
 
 public class PathsRequestBuilderTest {
   @Test
@@ -18,7 +21,7 @@ public class PathsRequestBuilderTest {
             .destinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
             .sourceAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN")
             .destinationAmount("20.50")
-            .destinationAsset(Asset.createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+            .destinationAsset(create(null,"USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
             .cursor("13537736921089")
             .limit(200)
             .order(RequestBuilder.Order.ASC)
@@ -39,16 +42,16 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictReceiveWithSourceAssets() {
     List<Asset> assets = Lists.newArrayList(
-        Asset.create("native", "", ""),
-        Asset.create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
-        Asset.create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
+        create("native", "", ""),
+        create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+        create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
     );
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.strictReceivePaths()
         .destinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
         .sourceAssets(assets)
         .destinationAmount("20.50")
-        .destinationAsset(Asset.createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+        .destinationAsset(create(null,"USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
         .cursor("13537736921089")
         .limit(3)
         .order(RequestBuilder.Order.ASC)
@@ -69,9 +72,9 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictReceiveWithSourceAccountAndSourceAssets() {
     List<Asset> assets = Lists.newArrayList(
-        Asset.create("native", "", ""),
-        Asset.create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
-        Asset.create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
+        create("native", "", ""),
+        create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+        create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
     );
     Server server = new Server("https://horizon-testnet.stellar.org");
 
@@ -96,7 +99,7 @@ public class PathsRequestBuilderTest {
     HttpUrl uri = server.strictSendPaths()
         .destinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
         .sourceAmount("20.50")
-        .sourceAsset(Asset.createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+        .sourceAsset(create(null,"USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
         .cursor("13537736921089")
         .limit(200)
         .order(RequestBuilder.Order.ASC)
@@ -116,15 +119,15 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictSendWithDestinationAssets() {
     List<Asset> assets = Lists.newArrayList(
-        Asset.create("native", "", ""),
-        Asset.create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
-        Asset.create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
+        create("native", "", ""),
+        create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+        create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
     );
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.strictSendPaths()
         .destinationAssets(assets)
         .sourceAmount("20.50")
-        .sourceAsset(Asset.createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+        .sourceAsset(create(null,"USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
         .cursor("13537736921089")
         .limit(3)
         .order(RequestBuilder.Order.ASC)
@@ -144,9 +147,9 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictSendWithDestinationAccountAndDestinationAssets() {
     List<Asset> assets = Lists.newArrayList(
-        Asset.create("native", "", ""),
-        Asset.create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
-        Asset.create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
+        create("native", "", ""),
+        create("credit_alphanum4", "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+        create("credit_alphanum4", "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH")
     );
     Server server = new Server("https://horizon-testnet.stellar.org");
 

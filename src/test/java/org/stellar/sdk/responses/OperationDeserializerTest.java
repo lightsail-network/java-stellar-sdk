@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 import static java.math.BigInteger.valueOf;
+import static org.stellar.sdk.Asset.create;
 
 public class OperationDeserializerTest extends TestCase {
   @Test
@@ -197,7 +198,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getFrom(), "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
     assertEquals(operation.getTo(), "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
     assertEquals(operation.getAmount(), "1000000000.0");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+    assertEquals(operation.getAsset(), create(null,"EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
   }
 
   @Test
@@ -240,7 +241,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.isAuthorize(), true);
     assertEquals(operation.isAuthorizedToMaintainLiabilities(), false);
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
+    assertEquals(operation.getAsset(), create(null,"EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
     assertFalse(operation.getTrusteeMuxed().isPresent());
   }
 
@@ -329,7 +330,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.isAuthorize(), false);
     assertEquals(operation.isAuthorizedToMaintainLiabilities(), true);
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
+    assertEquals(operation.getAsset(), create(null,"EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
   }
 
   @Test
@@ -371,7 +372,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getTrustee(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
     assertEquals(operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.getLimit(), "922337203685.4775807");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
+    assertEquals(operation.getAsset(), create(null,"EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
     assertFalse(operation.getTrustorMuxed().isPresent());
   }
 
@@ -679,7 +680,7 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getOfferId(), Long.valueOf(0));
     assertEquals(operation.getAmount(), "100.0");
-    assertEquals(operation.getBuyingAsset(), Asset.createNonNativeAsset("CNY", "GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN"));
+    assertEquals(operation.getBuyingAsset(), create(null,"CNY", "GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN"));
     assertEquals(operation.getSellingAsset(), new AssetTypeNative());
   }
 
@@ -732,10 +733,10 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getAsset(), new AssetTypeNative());
     assertEquals(operation.getPath(), ImmutableList.<Asset>of(
             new AssetTypeNative(),
-            Asset.createNonNativeAsset("CNY", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX"),
-            Asset.createNonNativeAsset("CNYMNL", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX")
+            create(null,"CNY", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX"),
+            create(null,"CNYMNL", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX")
     ));
-    assertEquals(operation.getSourceAsset(), Asset.createNonNativeAsset("XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
+    assertEquals(operation.getSourceAsset(), create(null,"XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
   }
 
   @Test
@@ -790,10 +791,10 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getAsset(), new AssetTypeNative());
     assertEquals(operation.getPath(), ImmutableList.<Asset>of(
             new AssetTypeNative(),
-            Asset.createNonNativeAsset("CNY", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX"),
-            Asset.createNonNativeAsset("CNYMNL", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX")
+            create(null,"CNY", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX"),
+            create(null,"CNYMNL", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX")
     ));
-    assertEquals(operation.getSourceAsset(), Asset.createNonNativeAsset("XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
+    assertEquals(operation.getSourceAsset(), create(null,"XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
   }
 
   @Test
@@ -900,7 +901,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getSourceMax(), "1.1779523");
     assertEquals(operation.getSourceAsset(), new AssetTypeNative());
     assertEquals(operation.getPath(), ImmutableList.<Asset>of());
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
+    assertEquals(operation.getAsset(), create(null,"XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
   }
 
   @Test
@@ -1268,7 +1269,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getFrom(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
     assertEquals(operation.getType(), "clawback");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
+    assertEquals(operation.getAsset(), create(null,"EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
     assertEquals(operation.getAssetIssuer(), "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS");
     assertEquals(operation.getAssetCode(), "EUR");
     assertEquals(operation.getAssetType(), "credit_alphanum4");
@@ -1366,7 +1367,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getId().longValue(), 12884914177L);
     assertEquals(operation.getTrustor(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
     assertEquals(operation.getType(), "set_trust_line_flags");
-    assertEquals(operation.getAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
+    assertEquals(operation.getAsset(), create(null,"EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
     assertEquals(operation.getAssetIssuer(), "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS");
     assertEquals(operation.getAssetCode(), "EUR");
     assertEquals(operation.getAssetType(), "credit_alphanum4");
@@ -1449,12 +1450,12 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getMinPrice(), "53.4759358");
     assertEquals(operation.getMinPriceR(), new Price(10000, 187));
     assertTrue(Arrays.equals(operation.getReservesDeposited(), new AssetAmount[]{
-        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
-        new AssetAmount(Asset.create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
+        new AssetAmount(create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
+        new AssetAmount(create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
     }));
     assertTrue(Arrays.equals(operation.getReservesMax(), new AssetAmount[]{
-        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
-        new AssetAmount(Asset.create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
+        new AssetAmount(create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
+        new AssetAmount(create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
     }));
   }
 
@@ -1517,13 +1518,13 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getShares(), "1367.4794331");
     assertEquals(operation.getLiquidityPoolId().toString(), "1df1380108ca32e96650074db1f3e1e10541ab8768c9eba7ec3b6f9315f9faee");
     assertTrue(Arrays.equals(operation.getReservesMin(), new AssetAmount[]{
-        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
-        new AssetAmount(Asset.create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
+        new AssetAmount(create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
+        new AssetAmount(create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
         }
     ));
     assertTrue(Arrays.equals(operation.getReservesReceived(), new AssetAmount[]{
-        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
-        new AssetAmount(Asset.create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
+        new AssetAmount(create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "10000.0000000"),
+        new AssetAmount(create("USDC:GC5W3BH2MQRQK2H4A6LP3SXDSAAY2W2W64OWKKVNQIAOVWSAHFDEUSDC"), "187.0000000")
         }
     ));
   }

@@ -7,6 +7,8 @@ import org.stellar.sdk.responses.MuxedAccount;
 
 import java.math.BigInteger;
 
+import static org.stellar.sdk.Asset.create;
+
 /**
  * Represents ChangeTrust operation response.
  * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation documentation</a>
@@ -53,7 +55,7 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   }
 
   public Asset getAsset() {
-    return Asset.create(assetType, assetCode, assetIssuer, liquidityPoolId);
+    return create(assetType, assetCode, assetIssuer, liquidityPoolId);
   }
 
 }

@@ -3,6 +3,8 @@ package org.stellar.sdk.responses.effects;
 import com.google.gson.annotations.SerializedName;
 import org.stellar.sdk.Asset;
 
+import static org.stellar.sdk.Asset.create;
+
 /**
  * Represents trustline_flags_updated effect response.
  *
@@ -55,7 +57,7 @@ public class TrustlineFlagsUpdatedEffectResponse extends EffectResponse {
   }
 
   public Asset getAsset() {
-    return Asset.createNonNativeAsset(assetCode, assetIssuer);
+    return create(assetType, assetCode, assetIssuer);
   }
 
   public boolean getAuthorized() {

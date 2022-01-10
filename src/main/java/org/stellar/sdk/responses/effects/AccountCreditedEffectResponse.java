@@ -1,9 +1,9 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
-
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
+
+import static org.stellar.sdk.Asset.create;
 
 
 /**
@@ -34,10 +34,6 @@ public class AccountCreditedEffectResponse extends EffectResponse {
   }
 
   public Asset getAsset() {
-    if (assetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return Asset.createNonNativeAsset(assetCode, assetIssuer);
-    }
+      return create(assetType, assetCode, assetIssuer);
   }
 }

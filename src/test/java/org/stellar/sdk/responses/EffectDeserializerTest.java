@@ -12,6 +12,8 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import java.util.Arrays;
 
+import static org.stellar.sdk.Asset.create;
+
 public class EffectDeserializerTest extends TestCase {
   @Test
   public void testDeserializeAccountCreatedEffect() {
@@ -481,12 +483,40 @@ public class EffectDeserializerTest extends TestCase {
     TrustlineCreatedEffectResponse effect = (TrustlineCreatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    TestCase.assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+    TestCase.assertEquals(effect.getAsset(), create(null, "EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
     assertEquals(effect.getLimit(), "1000.0");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
     assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");
     assertEquals(effect.getLinks().getPrecedes().getHref(), "http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2");
+  }
+
+  @Test
+  public void testDeserializeLiquidityPoolTrustlineCreatedEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/operations/33788507721730\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=33788507721730-2\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=33788507721730-2\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0000033788507721730-0000000002\",\n" +
+            "        \"paging_token\": \"33788507721730-2\",\n" +
+            "        \"account\": \"GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO\",\n" +
+            "        \"type\": \"trustline_created\",\n" +
+            "        \"type_i\": 20,\n" +
+            "        \"asset_type\": \"liquidity_pool_shares\",\n" +
+            "        \"liquidity_pool_id\": \"02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0\",\n" +
+            "        \"limit\": \"1000.0\"\n" +
+            "      }";
+
+    TrustlineCreatedEffectResponse effect = (TrustlineCreatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+    TestCase.assertEquals(effect.getAsset(), create("liquidity_pool_shares", null, null, "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0"));
   }
 
   @Test
@@ -517,12 +547,40 @@ public class EffectDeserializerTest extends TestCase {
     TrustlineRemovedEffectResponse effect = (TrustlineRemovedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+    assertEquals(effect.getAsset(), create(null,"EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
     assertEquals(effect.getLimit(), "0.0");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
     assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");
     assertEquals(effect.getLinks().getPrecedes().getHref(), "http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2");
+  }
+
+  @Test
+  public void testDeserializeLiquidityPoolTrustlineRemovedEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/operations/33788507721730\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=33788507721730-2\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=33788507721730-2\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0000033788507721730-0000000002\",\n" +
+            "        \"paging_token\": \"33788507721730-2\",\n" +
+            "        \"account\": \"GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO\",\n" +
+            "        \"type\": \"trustline_removed\",\n" +
+            "        \"type_i\": 21,\n" +
+            "        \"asset_type\": \"liquidity_pool_shares\",\n" +
+            "        \"liquidity_pool_id\": \"02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0\",\n" +
+            "        \"limit\": \"0.0\"\n" +
+            "      }";
+
+    TrustlineRemovedEffectResponse effect = (TrustlineRemovedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+    TestCase.assertEquals(effect.getAsset(), create("liquidity_pool_shares", null, null, "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0"));
   }
 
   @Test
@@ -553,12 +611,40 @@ public class EffectDeserializerTest extends TestCase {
     TrustlineUpdatedEffectResponse effect = (TrustlineUpdatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("TESTTEST", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+    assertEquals(effect.getAsset(), create(null,"TESTTEST", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
     assertEquals(effect.getLimit(), "100.0");
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
     assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");
     assertEquals(effect.getLinks().getPrecedes().getHref(), "http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2");
+  }
+
+  @Test
+  public void testDeserializeLiquidityPoolTrustlineUpdatedEffect() {
+    String json = "{\n" +
+            "        \"_links\": {\n" +
+            "          \"operation\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/operations/33788507721730\"\n" +
+            "          },\n" +
+            "          \"succeeds\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=desc\\u0026cursor=33788507721730-2\"\n" +
+            "          },\n" +
+            "          \"precedes\": {\n" +
+            "            \"href\": \"http://horizon-testnet.stellar.org/effects?order=asc\\u0026cursor=33788507721730-2\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"id\": \"0000033788507721730-0000000002\",\n" +
+            "        \"paging_token\": \"33788507721730-2\",\n" +
+            "        \"account\": \"GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO\",\n" +
+            "        \"type\": \"trustline_updated\",\n" +
+            "        \"type_i\": 22,\n" +
+            "        \"asset_type\": \"liquidity_pool_shares\",\n" +
+            "        \"liquidity_pool_id\": \"02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0\",\n" +
+            "        \"limit\": \"100.0\"\n" +
+            "      }";
+
+    TrustlineUpdatedEffectResponse effect = (TrustlineUpdatedEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+    TestCase.assertEquals(effect.getAsset(), create("liquidity_pool_shares", null, null, "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0"));
   }
 
   @Test
@@ -707,9 +793,9 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getSeller(), "GCVHDLN6EHZBYW2M3BQIY32C23E4GPIRZZDBNF2Q73DAZ5VJDRGSMYRB");
     assertEquals(effect.getOfferId(), new Long(1));
     assertEquals(effect.getSoldAmount(), "1000.0");
-    assertEquals(effect.getSoldAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
+    assertEquals(effect.getSoldAsset(), create(null,"EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
     assertEquals(effect.getBoughtAmount(), "60.0");
-    assertEquals(effect.getBoughtAsset(), Asset.createNonNativeAsset("TESTTEST", "GAHXPUDP3AK6F2QQM4FIRBGPNGKLRDDSTQCVKEXXKKRHJZUUQ23D5BU7"));
+    assertEquals(effect.getBoughtAsset(), create(null,"TESTTEST", "GAHXPUDP3AK6F2QQM4FIRBGPNGKLRDDSTQCVKEXXKKRHJZUUQ23D5BU7"));
 
     assertEquals(effect.getLinks().getOperation().getHref(), "http://horizon-testnet.stellar.org/operations/33788507721730");
     assertEquals(effect.getLinks().getSucceeds().getHref(), "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2");
@@ -900,7 +986,7 @@ public class EffectDeserializerTest extends TestCase {
     assertTrue(effect.getClawbackEnabled());
     assertFalse(effect.getAuthorizedToMaintainLiabilities());
 
-    assertEquals(effect.getAsset(), Asset.createNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
+    assertEquals(effect.getAsset(), create(null,"EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
     assertEquals(effect.getAssetIssuer(), "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS");
     assertEquals(effect.getAssetCode(), "EUR");
     assertEquals(effect.getAssetType(), "credit_alphanum4");
@@ -964,10 +1050,10 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getLiquidityPool().getTotalTrustlines(), Long.valueOf(3));
     assertEquals(effect.getLiquidityPool().getTotalShares(), "18560.5392046");
     assertTrue(Arrays.equals(effect.getLiquidityPool().getReserves(), new AssetAmount[]{
-        new AssetAmount(Asset.create("native"), "6080.9091224"),
-        new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "56817.1796745")
+        new AssetAmount(create("native"), "6080.9091224"),
+        new AssetAmount(create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "56817.1796745")
     }));
-    assertEquals(effect.getSold(), new AssetAmount(Asset.create("native"), "0.1067066"));
-    assertEquals(effect.getBought(), new AssetAmount(Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "1.0000000"));
+    assertEquals(effect.getSold(), new AssetAmount(create("native"), "0.1067066"));
+    assertEquals(effect.getBought(), new AssetAmount(create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "1.0000000"));
   }
 }

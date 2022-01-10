@@ -16,6 +16,7 @@ import java.util.EnumSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.stellar.sdk.Asset.create;
 
 public class OperationTest {
 
@@ -559,7 +560,7 @@ public class OperationTest {
         KeyPair issuer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
 
         Asset selling = new AssetTypeNative();
-        Asset buying = Asset.createNonNativeAsset("USD", issuer.getAccountId());
+        Asset buying = create(null,"USD", issuer.getAccountId());
         String amount = "0.00001";
         String price = "0.85334384"; // n=5333399 d=6250000
         Price priceObj = Price.fromString(price);
@@ -596,7 +597,7 @@ public class OperationTest {
         KeyPair issuer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
 
         Asset selling = new AssetTypeNative();
-        Asset buying = Asset.createNonNativeAsset("USD", issuer.getAccountId());
+        Asset buying = create(null,"USD", issuer.getAccountId());
         String amount = "0.00001";
         String price = "0.85334384"; // n=5333399 d=6250000
         Price priceObj = Price.fromString(price);
@@ -665,7 +666,7 @@ public class OperationTest {
         KeyPair issuer = KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
 
         Asset selling = new AssetTypeNative();
-        Asset buying = Asset.createNonNativeAsset("USD", issuer.getAccountId());
+        Asset buying = create(null,"USD", issuer.getAccountId());
         String amount = "0.00001";
         String price = "2.93850088"; // n=36731261 d=12500000
         Price priceObj = Price.fromString(price);
@@ -1073,7 +1074,7 @@ public class OperationTest {
         try {
             String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
             String amt = "100";
-            new ClawbackOperation.Builder(accountId, Asset.create("native"), amt);
+            new ClawbackOperation.Builder(accountId, create("native"), amt);
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals("native assets are not supported", e.getMessage());
@@ -1112,7 +1113,7 @@ public class OperationTest {
             EnumSet<TrustLineFlags> toClear = EnumSet.of(TrustLineFlags.AUTHORIZED_FLAG);
             EnumSet<TrustLineFlags> toSet = EnumSet.of(TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG);
 
-            new SetTrustlineFlagsOperation.Builder(accountId, Asset.create("native"), toClear, toSet).setSourceAccount(source).build();
+            new SetTrustlineFlagsOperation.Builder(accountId, create("native"), toClear, toSet).setSourceAccount(source).build();
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals("native assets are not supported", e.getMessage());

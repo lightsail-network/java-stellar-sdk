@@ -2,12 +2,12 @@ package org.stellar.sdk.responses.effects;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
-
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
 
 import java.math.BigInteger;
+
+import static org.stellar.sdk.Asset.create;
 
 /**
  * Represents trade effect response.
@@ -68,18 +68,10 @@ public class TradeEffectResponse extends EffectResponse {
   }
 
   public Asset getSoldAsset() {
-    if (soldAssetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return Asset.createNonNativeAsset(soldAssetCode, soldAssetIssuer);
-    }
+    return create(soldAssetType, soldAssetCode, soldAssetIssuer);
   }
 
   public Asset getBoughtAsset() {
-    if (boughtAssetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return Asset.createNonNativeAsset(boughtAssetCode, boughtAssetIssuer);
-    }
+    return create(boughtAssetType, boughtAssetCode, boughtAssetIssuer);
   }
 }

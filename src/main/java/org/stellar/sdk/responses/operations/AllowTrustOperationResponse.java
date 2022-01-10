@@ -2,12 +2,13 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
-
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
 
 import java.math.BigInteger;
+
+import static org.stellar.sdk.Asset.create;
 
 /**
  * @deprecated As of release 0.24.0, replaced by {@link SetTrustLineFlagsOperationResponse}
@@ -65,7 +66,7 @@ public class AllowTrustOperationResponse extends OperationResponse {
     if (assetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(assetCode, assetIssuer);
+      return create(assetType, assetCode, assetIssuer);
     }
   }
 }

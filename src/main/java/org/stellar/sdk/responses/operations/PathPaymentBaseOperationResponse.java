@@ -10,6 +10,8 @@ import org.stellar.sdk.responses.MuxedAccount;
 import java.math.BigInteger;
 import java.util.List;
 
+import static org.stellar.sdk.Asset.create;
+
 public abstract class PathPaymentBaseOperationResponse extends OperationResponse {
   @SerializedName("amount")
   private String amount;
@@ -83,7 +85,7 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
     if (assetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(assetCode, assetIssuer);
+      return create(assetType, assetCode, assetIssuer);
     }
   }
 
@@ -91,7 +93,7 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
     if (sourceAssetType.equals("native")) {
       return new AssetTypeNative();
     } else {
-      return Asset.createNonNativeAsset(sourceAssetCode, sourceAssetIssuer);
+      return create(sourceAssetType, sourceAssetCode, sourceAssetIssuer);
     }
   }
 }

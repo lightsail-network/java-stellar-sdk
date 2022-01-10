@@ -5,6 +5,8 @@ import org.stellar.sdk.Asset;
 
 import java.util.List;
 
+import static org.stellar.sdk.Asset.create;
+
 /**
  * Represents a Set Trustine Flags operation response.
  *
@@ -56,7 +58,7 @@ public class SetTrustLineFlagsOperationResponse extends OperationResponse {
   }
 
   public Asset getAsset() {
-    return Asset.createNonNativeAsset(assetCode, assetIssuer);
+    return create(assetType, assetCode, assetIssuer);
   }
 
   public String getTrustor() {

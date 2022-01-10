@@ -19,32 +19,69 @@ public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
     return new Wrapper(Asset.create(canonicalForm));
   }
 
+  /**
+   * Parses type, code, issuer and returns the equivalent TrustLineAsset instance.
+   * @param type the asset type
+   * @param code the asset code
+   * @param issuer the assset issuer
+   * @return TrustLineAsset
+   */
   public static TrustLineAsset create(String type, String code, String issuer) {
     return new Wrapper(Asset.create(type, code, issuer));
   }
+
+  /**
+   * Converts Asset to TrustLineAsset
+   * @param asset the Asset
+   * @return TrustLineAsset
+   */
   public static TrustLineAsset create(Asset asset) {
     return new Wrapper(asset);
   }
+
+  /**
+   * Creates a TrustLineAsset from LiquidityPoolParameters
+   * @param params the LiquidityPoolParameters
+   * @return TrustLineAsset
+   */
   public static TrustLineAsset create(LiquidityPoolParameters params) {
     return new LiquidityPoolShareTrustLineAsset(params);
   }
+
+  /**
+   * Creates a TrustLineAsset from LiquidityPoolID
+   * @param id the LiquidityPoolID
+   * @return TrustLineAsset
+   */
   public static TrustLineAsset create(LiquidityPoolID id) {
     return new LiquidityPoolShareTrustLineAsset(id);
   }
+
+  /**
+   * Creates a TrustLineAsset from ChangeTrustAsset
+   * @param wrapper the ChangeTrustAsset wrapper
+   * @return TrustLineAsset
+   */
   public static TrustLineAsset create(ChangeTrustAsset.Wrapper wrapper) {
     return new Wrapper(wrapper.getAsset());
   }
+
+  /**
+   * Create TrustLineAsset from LiquidityPoolShareChangeTrustAsset
+   * @param share the LiquidityPoolShareChangeTrustAsset
+   * @return TrustLineAsset
+   */
   public static TrustLineAsset create(LiquidityPoolShareChangeTrustAsset share) {
     return new LiquidityPoolShareTrustLineAsset(share.getLiquidityPoolParams());
   }
 
   /**
-   * Creates one of AssetTypeCreditAlphaNum4 or AssetTypeCreditAlphaNum12 object based on a <code>code</code> length
-   * @param code TrustLineAsset code
-   * @param issuer TrustLineAsset issuer
+   * Creates TrustLineAsset based on a <code>code</code> length and issuer only
+   * @param code the TrustLineAsset code
+   * @param issuer the TrustLineAsset issuer
    */
   public static TrustLineAsset createNonNativeAsset(String code, String issuer) {
-    return TrustLineAsset.create(Asset.createNonNativeAsset(code, issuer));
+    return create(Asset.create(null, code, issuer));
   }
 
   /**
@@ -72,8 +109,6 @@ public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
     }
   }
 
-  public abstract String getType();
-
   @Override
   public abstract boolean equals(Object object);
 
@@ -81,7 +116,16 @@ public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
   public abstract int compareTo(TrustLineAsset other);
 
   /**
+   * Get the asset type
+   *
+   * @return the asset type
+   */
+  public abstract String getType();
+
+  /**
    * Generates XDR object from a given TrustLineAsset object
+   *
+   * @return xdr model
    */
   public abstract org.stellar.sdk.xdr.TrustLineAsset toXdr();
 

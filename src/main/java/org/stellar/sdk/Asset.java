@@ -17,67 +17,68 @@ public abstract class Asset implements Comparable<Asset> {
    */
   public static Asset create(String canonicalForm) {
     if (canonicalForm.equals("native")) {
-      return new AssetTypeNative();
+      return create(canonicalForm, null, null);
     }
     String [] parts = canonicalForm.split(":");
     if (parts.length != 2) {
       throw new IllegalArgumentException("invalid asset "+ canonicalForm);
     }
-    return Asset.createNonNativeAsset(parts[0], parts[1]);
+    return create(null, parts[0], parts[1]);
   }
 
   /**
-   * Creates Asset for Alpha4/Alpha5/Native
+   * Creates Asset for Alpha4/Alpha12/Native
    *
-   * @param type the type of asset can be 'native', 'alpha4', 'alpha12'
-   * @param code the asset code that conforms to type or null
-   * @param issuer the asset issuer the conforms to type or null
-   * @return
+   * @param type the type of asset. 'native' will generate its respective asset sub-class,
+   *             if null or any other value will attempt to derive the asset sub-class from code and issuer.
+   * @param code the asset code or null
+   * @param issuer the asset issuer or null
+   * @return Asset
    */
   public static Asset create(String type, String code, String issuer) {
     return create(type, code, issuer, null);
   }
 
   /**
-   * Creates Asset for Alpha4/Alpha5/Native/LiquidityPool
+   * Creates Asset for Alpha4/Alpha12/Native/LiquidityPool
    *
-   * @param type the type of asset can be 'native', 'alpha4', 'alpha12' or 'liquidity_pool_shares'
-   * @param code the asset code that conforms to type or null
-   * @param issuer the asset issuer the conforms to type or null
-   * @param liquidityPoolID provided only if type is 'liquidity_pool_shares'
+   * @param type the type of asset. 'native' and 'liquidity_pool_shares' will generate their respective asset sub-classes
+   *             null or any other value will attempt to derive the asset sub-class from code and issuer.
+   * @param code the asset code or null
+   * @param issuer the asset issuer or null
+   * @param liquidityPoolID required only if type is 'liquidity_pool_shares'
    * @return Asset
    */
   public static Asset create(String type, String code, String issuer, String liquidityPoolID) {
+    if (type == null) {
+      return createNonNativeAsset(code, issuer);
+    }
     if (type.equals("native")) {
       return new AssetTypeNative();
     }
     if (type.equals("liquidity_pool_shares")) {
       return new AssetTypePoolShare(liquidityPoolID);
     }
-
-    return Asset.createNonNativeAsset(code, issuer);
+    return createNonNativeAsset(code, issuer);
   }
 
+  /**
+   * Create Asset from a ChangeTrustAsset
+   * @param wrapped the ChangeTrustAsset wrapper
+   * @return Asset
+   */
   public static Asset create(ChangeTrustAsset.Wrapper wrapped) {
-    return wrapped.getAsset();
-  }
-  public static Asset create(TrustLineAsset.Wrapper wrapped) {
     return wrapped.getAsset();
   }
 
   /**
-   * Creates one of AssetTypeCreditAlphaNum4 or AssetTypeCreditAlphaNum12 object based on a <code>code</code> length
-   * @param code Asset code
-   * @param issuer Asset issuer
+   * Create Asset from a TrustLineAsset
+   *
+   * @param wrapped the TrustLineAsset wrapper
+   * @return Asset
    */
-  public static Asset createNonNativeAsset(String code, String issuer) {
-    if (code.length() >= 1 && code.length() <= 4) {
-      return new AssetTypeCreditAlphaNum4(code, issuer);
-    } else if (code.length() >= 5 && code.length() <= 12) {
-      return new AssetTypeCreditAlphaNum12(code, issuer);
-    } else {
-      throw new AssetCodeLengthInvalidException();
-    }
+  public static Asset create(TrustLineAsset.Wrapper wrapped) {
+    return wrapped.getAsset();
   }
 
   /**
@@ -113,13 +114,25 @@ public abstract class Asset implements Comparable<Asset> {
    */
   public abstract String getType();
 
-  @Override
-  public abstract boolean equals(Object object);
-
   /**
    * Generates XDR object from a given Asset object
    */
   public abstract org.stellar.sdk.xdr.Asset toXdr();
 
+  @Override
+  public abstract boolean equals(Object object);
+
+  @Override
   public abstract int compareTo(Asset other);
+
+  private static Asset createNonNativeAsset(String code, String issuer) {
+    if (code.length() >= 1 && code.length() <= 4) {
+      return new AssetTypeCreditAlphaNum4(code, issuer);
+    } else if (code.length() >= 5 && code.length() <= 12) {
+      return new AssetTypeCreditAlphaNum12(code, issuer);
+    } else {
+      throw new AssetCodeLengthInvalidException();
+    }
+  }
+
 }
