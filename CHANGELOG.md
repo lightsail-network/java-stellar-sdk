@@ -2,7 +2,7 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
-## Unreleased
+## 0.31.0
 * Fixed NPE on TrustlineCreatedEffectResponse.getAsset() for liquidity pool asset type.
   Consolidated Asset factory creation pattern, made consistent for all asset types including native, alpha4, alpha12, liquidity pool shares.
   ([#398](https://github.com/stellar/java-stellar-sdk/pull/398)).
