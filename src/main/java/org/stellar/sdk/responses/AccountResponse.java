@@ -238,7 +238,11 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<Asset> getAsset() {
-      return Optional.of(create(assetType, assetCode, assetIssuer, liquidityPoolID.toString()));
+      if (liquidityPoolID != null) {
+        return Optional.of(create(assetType, assetCode, assetIssuer, liquidityPoolID.toString()));
+      } else {
+        return Optional.of(create(assetType, assetCode, assetIssuer));
+      }
     }
 
     public String getAssetType() {
