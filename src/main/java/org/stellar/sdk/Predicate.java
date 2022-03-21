@@ -37,9 +37,9 @@ public abstract class Predicate {
       case CLAIM_PREDICATE_NOT:
         return new Not(fromXdr(xdr.getNotPredicate()));
       case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-        return new RelBefore(xdr.getRelBefore().getDuration().getInt64());
+        return new RelBefore(xdr.getRelBefore());
       case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-        return new AbsBefore(xdr.getAbsBefore().getTimePoint().getUint64());
+        return new AbsBefore(xdr.getAbsBefore());
       default:
         throw new IllegalArgumentException("Unknown asset type " + xdr.getDiscriminant());
     }
@@ -181,18 +181,18 @@ public abstract class Predicate {
   }
 
   public static class AbsBefore extends Predicate {
-    private final long epochSeconds;
+    private final TimePoint timePoint;
 
-    public AbsBefore(long epochSeconds) {
-      this.epochSeconds = epochSeconds;
+    public AbsBefore(TimePoint timePoint) {
+      this.timePoint = timePoint;
     }
 
-    public long getTimestampSeconds() {
-      return epochSeconds;
+    public TimePoint getTimestampSeconds() {
+      return timePoint;
     }
 
     public Instant getDate() {
-      return Instant.ofEpochSecond(epochSeconds);
+      return Instant.ofEpochSecond(timePoint.getTimePoint().getUint64());
     }
 
     @Override
@@ -200,36 +200,32 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(epochSeconds, ((AbsBefore)o).epochSeconds);
+      return (getClass() == o.getClass()) && Objects.equal(timePoint, ((AbsBefore)o).timePoint);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(epochSeconds);
+      return Objects.hashCode(timePoint);
     }
 
     @Override
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME);
-      Uint64 t = new Uint64();
-      t.setUint64(epochSeconds);
-      TimePoint beforeTime = new TimePoint();
-      beforeTime.setTimePoint(t);
-      xdr.setAbsBefore(beforeTime);
+      xdr.setAbsBefore(timePoint);
       return xdr;
     }
   }
 
   public static class RelBefore extends Predicate {
-    private final long secondsSinceClose;
+    private final Duration duration;
 
-    public RelBefore(long secondsSinceClose) {
-      this.secondsSinceClose = secondsSinceClose;
+    public RelBefore(Duration secondsSinceClose) {
+      this.duration = secondsSinceClose;
     }
 
-    public long getSecondsSinceClose() {
-      return secondsSinceClose;
+    public Duration getSecondsSinceClose() {
+      return duration;
     }
 
     @Override
@@ -237,23 +233,19 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(secondsSinceClose, ((RelBefore)o).secondsSinceClose);
+      return (getClass() == o.getClass()) && Objects.equal(duration, ((RelBefore)o).duration);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(secondsSinceClose);
+      return Objects.hashCode(duration);
     }
 
     @Override
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME);
-      Int64 t = new Int64();
-      t.setInt64(secondsSinceClose);
-      Duration beforeTime = new Duration();
-      beforeTime.setDuration(t);
-      xdr.setRelBefore(beforeTime);
+      xdr.setRelBefore(duration);
       return xdr;
     }
   }

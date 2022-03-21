@@ -19,7 +19,7 @@ public class SignedPayloadSigner {
     }
 
     /**
-     * get the StrKey encoded representation of a stellar account id
+     * get the StrKey encoded representation of a signed payload signer
      * @return stellar account id in StrKey encoding
      */
     public String getEncodedAccountId() {

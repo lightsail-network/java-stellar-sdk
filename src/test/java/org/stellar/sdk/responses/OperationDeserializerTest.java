@@ -1567,7 +1567,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getClaimants().size(), 2);
     assertEquals(operation.getClaimants().get(0).getDestination(), "GBQECQVAS2FJ7DLCUXDASZAJQLWPXNTCR2DGBPKQDO3QS66TJXLRHFIK");
     assertSame(operation.getClaimants().get(0).getPredicate().getClass(), Predicate.AbsBefore.class);
-    assertEquals(((Predicate.AbsBefore)operation.getClaimants().get(0).getPredicate()).getTimestampSeconds(), 1234567890982222222L);
+    assertEquals(((Predicate.AbsBefore)operation.getClaimants().get(0).getPredicate()).getTimestampSeconds().getTimePoint().getUint64().longValue(), 1234567890982222222L);
     assertEquals(operation.getClaimants().get(1).getDestination(), "GAKFBRS24U3PEN6XDMEX4JEV5NGBARS2ZFF5O4CF3JL464SQSD4MDCPF");
     assertSame(operation.getClaimants().get(1).getPredicate().getClass(), Predicate.Unconditional.class);
     assertEquals(operation.getType(), "create_claimable_balance");

@@ -284,7 +284,7 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getBalanceId(), "0000000071d3336fa6b6cf81fcbeda85a503ccfabc786ab1066594716f3f9551ea4b89ca");
     assertEquals(effect.getType(), "claimable_balance_claimant_created");
     assertSame(effect.getPredicate().getClass(), Predicate.AbsBefore.class);
-    assertEquals(((Predicate.AbsBefore)effect.getPredicate()).getTimestampSeconds(), 1234567890982222222L);
+    assertEquals(((Predicate.AbsBefore)effect.getPredicate()).getTimestampSeconds().getTimePoint().getUint64().longValue(), 1234567890982222222L);
   }
 
   @Test
@@ -322,7 +322,7 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getBalanceId(), "0000000071d3336fa6b6cf81fcbeda85a503ccfabc786ab1066594716f3f9551ea4b89ca");
     assertEquals(effect.getType(), "claimable_balance_claimant_created");
     assertSame(effect.getPredicate().getClass(), Predicate.AbsBefore.class);
-    assertEquals(((Predicate.AbsBefore)effect.getPredicate()).getTimestampSeconds(), 1637479450L);
+    assertEquals(((Predicate.AbsBefore)effect.getPredicate()).getTimestampSeconds().getTimePoint().getUint64().longValue(), 1637479450L);
   }
 
   @Test
