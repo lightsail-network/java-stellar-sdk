@@ -4,7 +4,10 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import org.stellar.sdk.xdr.ClaimPredicate;
 import org.stellar.sdk.xdr.ClaimPredicateType;
+import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
+import org.stellar.sdk.xdr.TimePoint;
+import org.stellar.sdk.xdr.Uint64;
 import org.threeten.bp.Instant;
 
 import java.util.List;
@@ -34,9 +37,9 @@ public abstract class Predicate {
       case CLAIM_PREDICATE_NOT:
         return new Not(fromXdr(xdr.getNotPredicate()));
       case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-        return new RelBefore(xdr.getRelBefore().getInt64());
+        return new RelBefore(xdr.getRelBefore().getDuration().getInt64());
       case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-        return new AbsBefore(xdr.getAbsBefore().getInt64());
+        return new AbsBefore(xdr.getAbsBefore().getTimePoint().getUint64());
       default:
         throw new IllegalArgumentException("Unknown asset type " + xdr.getDiscriminant());
     }
@@ -209,9 +212,11 @@ public abstract class Predicate {
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME);
-      Int64 t = new Int64();
-      t.setInt64(epochSeconds);
-      xdr.setAbsBefore(t);
+      Uint64 t = new Uint64();
+      t.setUint64(epochSeconds);
+      TimePoint beforeTime = new TimePoint();
+      beforeTime.setTimePoint(t);
+      xdr.setAbsBefore(beforeTime);
       return xdr;
     }
   }
@@ -246,7 +251,9 @@ public abstract class Predicate {
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME);
       Int64 t = new Int64();
       t.setInt64(secondsSinceClose);
-      xdr.setRelBefore(t);
+      Duration beforeTime = new Duration();
+      beforeTime.setDuration(t);
+      xdr.setRelBefore(beforeTime);
       return xdr;
     }
   }

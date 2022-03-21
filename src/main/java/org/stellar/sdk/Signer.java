@@ -4,12 +4,15 @@ import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Signer is a helper class that creates {@link org.stellar.sdk.xdr.SignerKey} objects.
  */
 public class Signer {
+    public static final int SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH = 64;
+
     /**
      * Create <code>ed25519PublicKey</code> {@link org.stellar.sdk.xdr.SignerKey} from
      * a {@link org.stellar.sdk.KeyPair}
@@ -68,6 +71,27 @@ public class Signer {
 
         signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_PRE_AUTH_TX);
         signerKey.setPreAuthTx(value);
+
+        return signerKey;
+    }
+
+    /**
+     * Create <code>SignerKey</code> {@link org.stellar.sdk.xdr.SignerKey} from {@link org.stellar.sdk.SignedPayloadSigner}
+     *
+     * @param signedPayloadSigner - signed payload values
+     * @return org.stellar.sdk.xdr.SignerKey
+     */
+    public static SignerKey signedPayload(SignedPayloadSigner signedPayloadSigner) {
+        checkNotNull(signedPayloadSigner.getEncodedAccountId(), "accountId cannot be null");
+        checkArgument(signedPayloadSigner.getPayload().length <= SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH );
+
+        SignerKey signerKey = new SignerKey();
+        SignerKey.SignerKeyEd25519SignedPayload payloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
+        payloadSigner.setPayload(signedPayloadSigner.getPayload());
+        payloadSigner.setEd25519(createUint256(signedPayloadSigner.getDecodedAccountId()));
+
+        signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+        signerKey.setEd25519SignedPayload(payloadSigner);
 
         return signerKey;
     }

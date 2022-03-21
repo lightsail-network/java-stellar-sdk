@@ -4,18 +4,18 @@
 package org.stellar.sdk.xdr;
 
 
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+
+import java.io.IOException;
 
 // === xdr source ============================================================
 
 //  struct TrustLineEntry
 //  {
-//      AccountID accountID; // account this trustline belongs to
-//      TrustLineAsset asset;         // type of asset (with issuer)
-//      int64 balance;       // how much of this asset the user has.
-//                           // Asset defines the unit for this;
+//      AccountID accountID;  // account this trustline belongs to
+//      TrustLineAsset asset; // type of asset (with issuer)
+//      int64 balance;        // how much of this asset the user has.
+//                            // Asset defines the unit for this;
 //  
 //      int64 limit;  // balance cannot be above this
 //      uint32 flags; // see TrustLineFlags

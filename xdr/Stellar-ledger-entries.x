@@ -13,6 +13,7 @@ typedef string string32<32>;
 typedef string string64<64>;
 typedef int64 SequenceNumber;
 typedef uint64 TimePoint;
+typedef int64 Duration;
 typedef opaque DataValue<64>;
 typedef Hash PoolID; // SHA256(LiquidityPoolParameters)
 
@@ -133,6 +134,19 @@ const MAX_SIGNERS = 20;
 
 typedef AccountID* SponsorshipDescriptor;
 
+struct AccountEntryExtensionV3
+{
+    // We can use this to add more fields, or because it is first, to
+    // change AccountEntryExtensionV3 into a union.
+    ExtensionPoint ext;
+
+    // Ledger number at which `seqNum` took on its present value.
+    uint32 seqLedger;
+
+    // Time at which `seqNum` took on its present value.
+    TimePoint seqTime;
+};
+
 struct AccountEntryExtensionV2
 {
     uint32 numSponsored;
@@ -143,6 +157,8 @@ struct AccountEntryExtensionV2
     {
     case 0:
         void;
+    case 3:
+        AccountEntryExtensionV3 v3;
     }
     ext;
 };
@@ -257,10 +273,10 @@ struct TrustLineEntryExtensionV2
 
 struct TrustLineEntry
 {
-    AccountID accountID; // account this trustline belongs to
-    TrustLineAsset asset;         // type of asset (with issuer)
-    int64 balance;       // how much of this asset the user has.
-                         // Asset defines the unit for this;
+    AccountID accountID;  // account this trustline belongs to
+    TrustLineAsset asset; // type of asset (with issuer)
+    int64 balance;        // how much of this asset the user has.
+                          // Asset defines the unit for this;
 
     int64 limit;  // balance cannot be above this
     uint32 flags; // see TrustLineFlags
@@ -290,7 +306,7 @@ struct TrustLineEntry
 
 enum OfferEntryFlags
 {
-    // issuer has authorized account to perform transactions with its credit
+    // an offer with this flag will not act on and take a reverse offer of equal price
     PASSIVE_FLAG = 1
 };
 
@@ -368,10 +384,10 @@ case CLAIM_PREDICATE_OR:
 case CLAIM_PREDICATE_NOT:
     ClaimPredicate* notPredicate;
 case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-    int64 absBefore; // Predicate will be true if closeTime < absBefore
+    TimePoint absBefore; // Predicate will be true if closeTime < absBefore
 case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-    int64 relBefore; // Seconds since closeTime of the ledger in which the
-                     // ClaimableBalanceEntry was created
+    Duration relBefore; // Seconds since closeTime of the ledger in which the
+                        // ClaimableBalanceEntry was created
 };
 
 enum ClaimantType
@@ -391,16 +407,13 @@ case CLAIMANT_TYPE_V0:
 
 enum ClaimableBalanceIDType
 {
-    CLAIMABLE_BALANCE_ID_TYPE_V0 = 0,
-    CLAIMABLE_BALANCE_ID_TYPE_FROM_POOL_REVOKE = 1
+    CLAIMABLE_BALANCE_ID_TYPE_V0 = 0
 };
 
 union ClaimableBalanceID switch (ClaimableBalanceIDType type)
 {
 case CLAIMABLE_BALANCE_ID_TYPE_V0:
     Hash v0;
-case CLAIMABLE_BALANCE_ID_TYPE_FROM_POOL_REVOKE:
-    Hash fromPoolRevoke;
 };
 
 enum ClaimableBalanceFlags

@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TransactionTest {
 
@@ -121,8 +124,8 @@ public class TransactionTest {
         );
         org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
 
-        assertEquals(decodedTransaction.getV1().getTx().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
-        assertEquals(decodedTransaction.getV1().getTx().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 1337);
+        assertEquals(decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
+        assertEquals(decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 1337);
 
         Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), transaction.toEnvelopeXdr(), Network.TESTNET);
 
@@ -299,8 +302,8 @@ public class TransactionTest {
         );
         org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
 
-        assertEquals(decodedTransaction.getV1().getTx().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
-        assertEquals(decodedTransaction.getV1().getTx().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 0);
+        assertEquals(decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
+        assertEquals(decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 0);
     }
 
     @Test

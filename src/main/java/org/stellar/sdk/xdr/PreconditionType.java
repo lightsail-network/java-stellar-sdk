@@ -9,18 +9,21 @@ import java.io.IOException;
 
 // === xdr source ============================================================
 
-//  enum ClaimableBalanceIDType
-//  {
-//      CLAIMABLE_BALANCE_ID_TYPE_V0 = 0
+//  enum PreconditionType {
+//      PRECOND_NONE = 0,
+//      PRECOND_TIME = 1,
+//      PRECOND_V2 = 2
 //  };
 
 //  ===========================================================================
-public enum ClaimableBalanceIDType implements XdrElement {
-  CLAIMABLE_BALANCE_ID_TYPE_V0(0),
+public enum PreconditionType implements XdrElement {
+  PRECOND_NONE(0),
+  PRECOND_TIME(1),
+  PRECOND_V2(2),
   ;
   private int mValue;
 
-  ClaimableBalanceIDType(int value) {
+  PreconditionType(int value) {
       mValue = value;
   }
 
@@ -28,16 +31,18 @@ public enum ClaimableBalanceIDType implements XdrElement {
       return mValue;
   }
 
-  public static ClaimableBalanceIDType decode(XdrDataInputStream stream) throws IOException {
+  public static PreconditionType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return CLAIMABLE_BALANCE_ID_TYPE_V0;
+      case 0: return PRECOND_NONE;
+      case 1: return PRECOND_TIME;
+      case 2: return PRECOND_V2;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ClaimableBalanceIDType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, PreconditionType value) throws IOException {
     stream.writeInt(value.getValue());
   }
 

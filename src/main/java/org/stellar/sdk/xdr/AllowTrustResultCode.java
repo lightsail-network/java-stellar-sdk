@@ -21,7 +21,7 @@ import java.io.IOException;
 //      ALLOW_TRUST_CANT_REVOKE = -4,     // source account can't revoke trust,
 //      ALLOW_TRUST_SELF_NOT_ALLOWED = -5, // trusting self is not allowed
 //      ALLOW_TRUST_LOW_RESERVE = -6 // claimable balances can't be created
-//                                   // on revoke due to low reserves 
+//                                   // on revoke due to low reserves
 //  };
 
 //  ===========================================================================

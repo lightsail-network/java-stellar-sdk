@@ -4,9 +4,9 @@
 package org.stellar.sdk.xdr;
 
 
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -22,8 +22,8 @@ import java.util.Arrays;
 //      // sequence number to consume in the account
 //      SequenceNumber seqNum;
 //  
-//      // validity range (inclusive) for the last ledger close time
-//      TimeBounds* timeBounds;
+//      // validity conditions
+//      Preconditions cond;
 //  
 //      Memo memo;
 //  
@@ -62,12 +62,12 @@ public class Transaction implements XdrElement {
   public void setSeqNum(SequenceNumber value) {
     this.seqNum = value;
   }
-  private TimeBounds timeBounds;
-  public TimeBounds getTimeBounds() {
-    return this.timeBounds;
+  private Preconditions cond;
+  public Preconditions getCond() {
+    return this.cond;
   }
-  public void setTimeBounds(TimeBounds value) {
-    this.timeBounds = value;
+  public void setCond(Preconditions value) {
+    this.cond = value;
   }
   private Memo memo;
   public Memo getMemo() {
@@ -94,12 +94,7 @@ public class Transaction implements XdrElement {
     MuxedAccount.encode(stream, encodedTransaction.sourceAccount);
     Uint32.encode(stream, encodedTransaction.fee);
     SequenceNumber.encode(stream, encodedTransaction.seqNum);
-    if (encodedTransaction.timeBounds != null) {
-    stream.writeInt(1);
-    TimeBounds.encode(stream, encodedTransaction.timeBounds);
-    } else {
-    stream.writeInt(0);
-    }
+    Preconditions.encode(stream, encodedTransaction.cond);
     Memo.encode(stream, encodedTransaction.memo);
     int operationssize = encodedTransaction.getOperations().length;
     stream.writeInt(operationssize);
@@ -116,10 +111,7 @@ public class Transaction implements XdrElement {
     decodedTransaction.sourceAccount = MuxedAccount.decode(stream);
     decodedTransaction.fee = Uint32.decode(stream);
     decodedTransaction.seqNum = SequenceNumber.decode(stream);
-    int timeBoundsPresent = stream.readInt();
-    if (timeBoundsPresent != 0) {
-    decodedTransaction.timeBounds = TimeBounds.decode(stream);
-    }
+    decodedTransaction.cond = Preconditions.decode(stream);
     decodedTransaction.memo = Memo.decode(stream);
     int operationssize = stream.readInt();
     decodedTransaction.operations = new Operation[operationssize];
@@ -131,7 +123,7 @@ public class Transaction implements XdrElement {
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.sourceAccount, this.fee, this.seqNum, this.timeBounds, this.memo, Arrays.hashCode(this.operations), this.ext);
+    return Objects.hashCode(this.sourceAccount, this.fee, this.seqNum, this.cond, this.memo, Arrays.hashCode(this.operations), this.ext);
   }
   @Override
   public boolean equals(Object object) {
@@ -140,14 +132,14 @@ public class Transaction implements XdrElement {
     }
 
     Transaction other = (Transaction) object;
-    return Objects.equal(this.sourceAccount, other.sourceAccount) && Objects.equal(this.fee, other.fee) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.timeBounds, other.timeBounds) && Objects.equal(this.memo, other.memo) && Arrays.equals(this.operations, other.operations) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.sourceAccount, other.sourceAccount) && Objects.equal(this.fee, other.fee) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.cond, other.cond) && Objects.equal(this.memo, other.memo) && Arrays.equals(this.operations, other.operations) && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
     private MuxedAccount sourceAccount;
     private Uint32 fee;
     private SequenceNumber seqNum;
-    private TimeBounds timeBounds;
+    private Preconditions cond;
     private Memo memo;
     private Operation[] operations;
     private TransactionExt ext;
@@ -167,8 +159,8 @@ public class Transaction implements XdrElement {
       return this;
     }
 
-    public Builder timeBounds(TimeBounds timeBounds) {
-      this.timeBounds = timeBounds;
+    public Builder cond(Preconditions cond) {
+      this.cond = cond;
       return this;
     }
 
@@ -192,7 +184,7 @@ public class Transaction implements XdrElement {
       val.setSourceAccount(sourceAccount);
       val.setFee(fee);
       val.setSeqNum(seqNum);
-      val.setTimeBounds(timeBounds);
+      val.setCond(cond);
       val.setMemo(memo);
       val.setOperations(operations);
       val.setExt(ext);

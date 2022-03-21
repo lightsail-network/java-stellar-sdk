@@ -4,15 +4,15 @@
 package org.stellar.sdk.xdr;
 
 
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+
+import java.io.IOException;
 
 // === xdr source ============================================================
 
 //  struct LedgerHeaderExtensionV1
 //  {
-//      uint32 flags; // UpgradeFlags
+//      uint32 flags; // LedgerHeaderFlags
 //  
 //      union switch (int v)
 //      {

@@ -33,7 +33,7 @@ struct StellarValue
     // this is a vector of encoded 'LedgerUpgrade' so that nodes can drop
     // unknown steps during consensus if needed.
     // see notes below on 'LedgerUpgrade' for more detail
-    // max size is dictated by number of upgrade types ( room for future)
+    // max size is dictated by number of upgrade types (+ room for future)
     UpgradeType upgrades<6>;
 
     // reserved for future use
@@ -47,11 +47,10 @@ struct StellarValue
     ext;
 };
 
-const MASK_LEDGERHEADER_FLAGS = 0x7;
+const MASK_LEDGER_HEADER_FLAGS = 0x7;
 
 enum LedgerHeaderFlags
-{ // masks for each flag
-
+{
     DISABLE_LIQUIDITY_POOL_TRADING_FLAG = 0x1,
     DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG = 0x2,
     DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG = 0x4
@@ -59,7 +58,7 @@ enum LedgerHeaderFlags
 
 struct LedgerHeaderExtensionV1
 {
-    uint32 flags; // UpgradeFlags
+    uint32 flags; // LedgerHeaderFlags
 
     union switch (int v)
     {
@@ -68,7 +67,6 @@ struct LedgerHeaderExtensionV1
     }
     ext;
 };
-
 
 /* The LedgerHeader is the highest level structure representing the
  * state of a ledger, cryptographically linked to previous ledgers.

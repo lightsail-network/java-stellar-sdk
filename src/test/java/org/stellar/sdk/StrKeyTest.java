@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
@@ -7,7 +8,10 @@ import org.stellar.sdk.xdr.MuxedAccount;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 
 public class StrKeyTest {
   @Test
@@ -45,6 +49,7 @@ public class StrKeyTest {
     assertEquals(StrKey.decodeVersionByte("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK"), StrKey.VersionByte.MUXED);
     assertEquals(StrKey.decodeVersionByte("TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4"), StrKey.VersionByte.PRE_AUTH_TX);
     assertEquals(StrKey.decodeVersionByte("XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD"), StrKey.VersionByte.SHA256_HASH);
+    assertEquals(StrKey.decodeVersionByte("PDPYP7E6NEYZSVOTV6M23OFM2XRIMPDUJABHGHHH2Y67X7JL25GW6AAAAAAAAAAAAAAJEVA"), StrKey.VersionByte.SIGNED_PAYLOAD);
   }
 
   @Test()
@@ -127,6 +132,62 @@ public class StrKeyTest {
         String.valueOf(StrKey.encodeCheck(StrKey.VersionByte.SHA256_HASH, data))
     );
     assertArrayEquals(data, StrKey.decodeCheck(StrKey.VersionByte.SHA256_HASH, hashX.toCharArray()));
+  }
+
+  @Test
+  public void testValidSignedPayloadEncode() {
+    // Valid signed payload with an ed25519 public key and a 32-byte payload.
+    byte[] payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", payload);
+    String encoded = StrKey.encodeSignedPayload(signedPayloadSigner);
+    assertEquals(encoded, "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAQACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB6IBZGM");
+
+    // Valid signed payload with an ed25519 public key and a 29-byte payload.
+    payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d".toUpperCase());
+    signedPayloadSigner = new SignedPayloadSigner("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", payload);
+    encoded = StrKey.encodeSignedPayload(signedPayloadSigner);
+    assertEquals(encoded, "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUAAAAFGBU");
+  }
+
+  @Test
+  public void testInvalidSignedPayloadEncode() {
+    byte[] payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2001".toUpperCase());
+    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", payload);
+    try {
+      StrKey.encodeSignedPayload(signedPayloadSigner);
+      fail("should not encode signed payloads > 64");
+    } catch (FormatException ignored){}
+
+    payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+    signedPayloadSigner = new SignedPayloadSigner("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KV_notgood", payload);
+    try {
+      StrKey.encodeSignedPayload(signedPayloadSigner);
+      fail("should not encode when accountid is not valid strkey");
+    } catch (FormatException ignored){}
+  }
+
+  @Test
+  public void testRoundTripSignedPayloadVersionByte() {
+    byte[] data = rawBytes(
+              // ed25519
+      0x36, 0x3e, 0xaa, 0x38, 0x67, 0x84, 0x1f, 0xba,
+              0xd0, 0xf4, 0xed, 0x88, 0xc7, 0x79, 0xe4, 0xfe,
+              0x66, 0xe5, 0x6a, 0x24, 0x70, 0xdc, 0x98, 0xc0,
+              0xec, 0x9c, 0x07, 0x3d, 0x05, 0xc7, 0xb1, 0x03,
+              // payload length
+              0x00, 0x00, 0x00, 0x09,
+              // payload
+              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+              0x00,
+              // padding
+              0x00, 0x00, 0x00);
+
+    String hashX = "PA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQGAAAAAEQAAAAAAAAAAAAAAAAAABBXA";
+    assertEquals(
+            hashX,
+            String.valueOf(StrKey.encodeCheck(StrKey.VersionByte.SIGNED_PAYLOAD, data))
+    );
+    assertArrayEquals(data, StrKey.decodeCheck(StrKey.VersionByte.SIGNED_PAYLOAD, hashX.toCharArray()));
   }
 
   @Test

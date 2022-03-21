@@ -1,7 +1,23 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.xdr.ClaimableBalanceID;
+import org.stellar.sdk.xdr.ClaimableBalanceIDType;
+import org.stellar.sdk.xdr.DecoratedSignature;
+import org.stellar.sdk.xdr.EnvelopeType;
+import org.stellar.sdk.xdr.Hash;
+import org.stellar.sdk.xdr.Int64;
+import org.stellar.sdk.xdr.OperationID;
+import org.stellar.sdk.xdr.PreconditionType;
+import org.stellar.sdk.xdr.Preconditions;
+import org.stellar.sdk.xdr.SequenceNumber;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.TransactionSignaturePayload;
+import org.stellar.sdk.xdr.TransactionV0;
+import org.stellar.sdk.xdr.TransactionV0Envelope;
+import org.stellar.sdk.xdr.TransactionV1Envelope;
+import org.stellar.sdk.xdr.Uint32;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -188,7 +204,11 @@ public class Transaction extends AbstractTransaction {
     v1Tx.setSourceAccount(accountConverter.encode(mSourceAccount));
     v1Tx.setOperations(operations);
     v1Tx.setMemo(mMemo.toXdr());
-    v1Tx.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
+    Preconditions.Builder preconditions = new Preconditions.Builder().discriminant(PreconditionType.PRECOND_NONE);
+    if (mTimeBounds != null) {
+      preconditions.discriminant(PreconditionType.PRECOND_TIME).timeBounds(mTimeBounds.toXdr());
+    }
+    v1Tx.setCond(preconditions.build());
     v1Tx.setExt(ext);
 
     return v1Tx;
@@ -228,9 +248,12 @@ public class Transaction extends AbstractTransaction {
 
   public static Transaction fromV1EnvelopeXdr(AccountConverter accountConverter, TransactionV1Envelope envelope, Network network) {
     int mFee = envelope.getTx().getFee().getUint32();
+    TimeBounds mTimeBounds = null;
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
-    TimeBounds mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getTimeBounds());
+    if (envelope.getTx().getCond().getDiscriminant().equals(PreconditionType.PRECOND_TIME)) {
+      mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getCond().getTimeBounds());
+    }
 
     Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
     for (int i = 0; i < envelope.getTx().getOperations().length; i++) {

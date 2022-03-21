@@ -2,6 +2,12 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.32.0 (Pending)
+
+* Update XDR definitions and auto-generated classes to support upcoming protocol 19 release ([#276](https://github.com/stellar/java-stellar-sdk/pull/276)).
+* Extend StrKey implementation to handle [CAP 40 Payload Signer](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md) ([#276](https://github.com/stellar/java-stellar-sdk/pull/276)).
+
+
 ## 0.31.0
 
 * Fixed NPE on TrustlineCreatedEffectResponse.getAsset() for liquidity pool asset type.
