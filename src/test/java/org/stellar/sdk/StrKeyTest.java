@@ -138,13 +138,13 @@ public class StrKeyTest {
   public void testValidSignedPayloadEncode() {
     // Valid signed payload with an ed25519 public key and a 32-byte payload.
     byte[] payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
-    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", payload);
+    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner(StrKey.decodeStellarAccountId("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ"), payload);
     String encoded = StrKey.encodeSignedPayload(signedPayloadSigner);
     assertEquals(encoded, "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAQACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB6IBZGM");
 
     // Valid signed payload with an ed25519 public key and a 29-byte payload.
     payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d".toUpperCase());
-    signedPayloadSigner = new SignedPayloadSigner("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", payload);
+    signedPayloadSigner = new SignedPayloadSigner(StrKey.decodeStellarAccountId("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ"), payload);
     encoded = StrKey.encodeSignedPayload(signedPayloadSigner);
     assertEquals(encoded, "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUAAAAFGBU");
   }
@@ -152,17 +152,10 @@ public class StrKeyTest {
   @Test
   public void testInvalidSignedPayloadEncode() {
     byte[] payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2001".toUpperCase());
-    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ", payload);
+    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner(StrKey.decodeStellarAccountId("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ"), payload);
     try {
       StrKey.encodeSignedPayload(signedPayloadSigner);
       fail("should not encode signed payloads > 64");
-    } catch (FormatException ignored){}
-
-    payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
-    signedPayloadSigner = new SignedPayloadSigner("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KV_notgood", payload);
-    try {
-      StrKey.encodeSignedPayload(signedPayloadSigner);
-      fail("should not encode when accountid is not valid strkey");
     } catch (FormatException ignored){}
   }
 

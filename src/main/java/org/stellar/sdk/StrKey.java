@@ -9,15 +9,15 @@ import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
 import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
+import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -69,14 +69,17 @@ class StrKey {
         if (signedPayloadSigner.getPayload().length > SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH) {
             throw new FormatException("invalid payload length, must be less than " + SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH);
         }
+        if (!signedPayloadSigner.getAccountId().getAccountID().getDiscriminant().equals(PublicKeyType.PUBLIC_KEY_TYPE_ED25519)) {
+            throw new FormatException("invalid payload signer, only ED25519 public key accounts are supported currently");
+        }
         try {
+            SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
+            xdrPayloadSigner.setPayload(signedPayloadSigner.getPayload());
+            xdrPayloadSigner.setEd25519(signedPayloadSigner.getAccountId().getAccountID().getEd25519());
+
             ByteArrayOutputStream record = new ByteArrayOutputStream();
-            DataOutputStream dataStream = new DataOutputStream(record);
-            dataStream.write(signedPayloadSigner.getDecodedAccountId());
-            dataStream.writeInt(signedPayloadSigner.getPayload().length);
-            dataStream.write(signedPayloadSigner.getPayload());
-            int padding = signedPayloadSigner.getPayload().length % 4 > 0 ? 4 - signedPayloadSigner.getPayload().length % 4 : 0;
-            dataStream.write(new byte[padding]);
+            xdrPayloadSigner.encode(new XdrDataOutputStream(record));
+
             char[] encoded = encodeCheck(VersionByte.SIGNED_PAYLOAD, record.toByteArray());
             return String.valueOf(encoded);
         } catch (Exception ex) {
@@ -192,14 +195,12 @@ class StrKey {
     public static SignedPayloadSigner decodeSignedPayload(char[] data) {
         try {
             byte[] signedPayloadRaw = decodeCheck(VersionByte.SIGNED_PAYLOAD, data);
-            DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(signedPayloadRaw));
-            byte[] binaryAccountId = new byte[32];
-            dataStream.read(binaryAccountId);
-            int payloadLength = dataStream.readInt();
-            byte[] payload = new byte[payloadLength];
-            dataStream.read(payload);
 
-            return new SignedPayloadSigner(encodeStellarAccountId(binaryAccountId), payload );
+            SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = SignerKey.SignerKeyEd25519SignedPayload.decode(
+                    new XdrDataInputStream(new ByteArrayInputStream(signedPayloadRaw))
+            );
+
+            return new SignedPayloadSigner( xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
         } catch (Exception ex) {
             throw new FormatException(ex.getMessage());
         }
