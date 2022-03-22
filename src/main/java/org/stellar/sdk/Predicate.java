@@ -180,6 +180,9 @@ public abstract class Predicate {
     }
   }
 
+  /**
+   * Represents a predicate based on a maximum date and time.
+   */
   public static class AbsBefore extends Predicate {
     private final TimePoint timePoint;
 
@@ -187,8 +190,11 @@ public abstract class Predicate {
       this.timePoint = timePoint;
     }
 
-    public TimePoint getTimestampSeconds() {
-      return timePoint;
+    public AbsBefore(long epochSeconds) {
+      this(new TimePoint(new Uint64(epochSeconds)));
+    }
+    public long getTimestampSeconds() {
+      return timePoint.getTimePoint().getUint64();
     }
 
     public Instant getDate() {
@@ -217,6 +223,9 @@ public abstract class Predicate {
     }
   }
 
+  /**
+   * Represents predicate based on maximum length of time
+   */
   public static class RelBefore extends Predicate {
     private final Duration duration;
 
@@ -224,8 +233,12 @@ public abstract class Predicate {
       this.duration = secondsSinceClose;
     }
 
-    public Duration getSecondsSinceClose() {
-      return duration;
+    public RelBefore(long secondsSinceClose) {
+      this(new Duration(new Int64(secondsSinceClose)));
+    }
+
+    public long getSecondsSinceClose() {
+      return duration.getDuration().getInt64();
     }
 
     @Override

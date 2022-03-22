@@ -27,7 +27,7 @@ public class SignedPayloadSigner {
     }
 
     /**
-     * construcxtor
+     * constructor
      *
      * @param ed25519PublicKey raw bytes of a ED25519 public key
      * @param payload the raw payload for a signed payload

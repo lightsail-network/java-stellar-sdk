@@ -34,7 +34,7 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
     Predicate.AbsBefore absBefore = (Predicate.AbsBefore)or.getInner().get(0);
     Predicate.RelBefore relBefore = (Predicate.RelBefore)or.getInner().get(1);
     assertEquals(absBefore.getDate().toString(), "2020-09-28T17:57:04Z");
-    assertEquals(relBefore.getSecondsSinceClose().getDuration().getInt64().longValue(), 12L);
+    assertEquals(relBefore.getSecondsSinceClose(), 12L);
 
     assertEquals(claimableBalancePage.getRecords().get(1).getId(), "00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd3");
     assertEquals(claimableBalancePage.getRecords().get(1).getAsset(), Asset.create("native"));
