@@ -1,37 +1,28 @@
 buildscript {
-  ext.okhttpclientVersion="3.11.0"
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
-    classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
-  }
+    ext.okhttpclientVersion= '3.11.0'
 }
 
-apply plugin: "com.github.johnrengelman.shadow" // provides shading 
-apply plugin: 'java'
-apply plugin: 'maven' // needed to add the install task for jitpack.io
-apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates -Drevision=release
-apply plugin: 'project-report' // gradle htmlDependencyReport
+plugins {
+    id "io.freefair.lombok" version "6.4.1"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "java"
+    id "com.github.ben-manes.versions" version "0.42.0"
+    id "project-report"
+    id "maven-publish"
+}
 
 sourceCompatibility = 1.6
-version = '0.31.0'
+version = '0.32.0'
 group = 'stellar'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'stellar-sdk',
-                   'Implementation-Version': version
+        attributes (
+            "Implementation-Title" : "stellar-sdk",
+            "Implementation-Version" : project.getVersion()
+        )
     }
     archiveName 'stellar-sdk.jar'
-    duplicatesStrategy DuplicatesStrategy.EXCLUDE
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
-
-artifacts {
-    // make sure the non shaded jar is not 
-    archives shadowJar
 }
 
 repositories {
@@ -39,52 +30,21 @@ repositories {
 }
 
 dependencies {
-    compile "com.squareup.okhttp3:okhttp:${okhttpclientVersion}"
-    compile "com.squareup.okhttp3:okhttp-sse:${okhttpclientVersion}"
-    compile 'com.moandjiezana.toml:toml4j:0.7.2'
+    implementation "com.squareup.okhttp3:okhttp:${okhttpclientVersion}"
+    implementation "com.squareup.okhttp3:okhttp-sse:${okhttpclientVersion}"
+    implementation 'com.moandjiezana.toml:toml4j:0.7.2'
     // use the android version because we don't want java 8 stuff
-    compile 'com.google.guava:guava:26.0-android'
-    compile 'com.google.code.gson:gson:2.8.5'
-    compile 'commons-io:commons-io:2.6'
-    compile 'net.i2p.crypto:eddsa:0.3.0'
-    compile 'org.threeten:threetenbp:1.4.4'
-    
-    testCompile 'org.mockito:mockito-core:2.21.0'
-    testCompile "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
-    testCompile 'junit:junit:4.12'
-    testCompile 'javax.xml.bind:jaxb-api:2.3.0'
+    implementation 'com.google.guava:guava:26.0-android'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'net.i2p.crypto:eddsa:0.3.0'
+    implementation 'org.threeten:threetenbp:1.4.4'
+
+    testImplementation 'org.mockito:mockito-core:2.21.0'
+    testImplementation "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'javax.xml.bind:jaxb-api:2.3.0'
 }
-
-project.configurations.compile 
-jar.enabled = false
-
-// make sure the install task creates the shadowjar; this is called by jitpack.ios
-install.dependsOn(shadowJar);
-
-// we need this so we can get to the installer and deployer below so we can remove the dependencies
-uploadArchives {
-    repositories {
-        mavenDeployer {
-        }
-    }
-}
-
-def installer = install.repositories.mavenInstaller
-def deployer = uploadArchives.repositories.mavenDeployer
-[installer, deployer]*.pom*.whenConfigured {pom ->
-    // force pom dependencies to be empty because we are shading everything
-    pom.dependencies = []
-}
-
-shadowJar {
-   archiveName 'stellar-sdk.jar' 
-   relocate 'com.','shadow.com.'
-   relocate 'net.','shadow.net.'
-   relocate 'javax.annotation', 'shadow.javax.annotation'
-   relocate 'org.apache','shadow.org.apache'
-   relocate 'org.jvnet','shadow.org.jvnet'
-   relocate 'org.codehaus','shadow.org.codehaus'
-   relocate 'org.checkerframework','shadow.org.checkerframework'
-   relocate 'okhttp3','shadow.okhttp3'
-   relocate 'okio','shadow.okio'
+tasks.named('test') {
+    useJUnitPlatform()
 }
