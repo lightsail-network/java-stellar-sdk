@@ -4,9 +4,9 @@
 package org.stellar.sdk.xdr;
 
 
-import com.google.common.base.Objects;
-
 import java.io.IOException;
+
+import com.google.common.base.Objects;
 import java.util.Arrays;
 
 // === xdr source ============================================================
