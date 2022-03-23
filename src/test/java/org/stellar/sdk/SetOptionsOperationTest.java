@@ -29,7 +29,7 @@ public class SetOptionsOperationTest {
 
         // verify round trip between xdr and pojo
         assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
-        assertEquals(signedPayloadSigner.getAccountId().getAccountID().getEd25519(), parsedOperation.getSigner().getEd25519SignedPayload().getEd25519());
+        assertEquals(signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519(), parsedOperation.getSigner().getEd25519SignedPayload().getEd25519());
         assertArrayEquals(signedPayloadSigner.getPayload(), parsedOperation.getSigner().getEd25519SignedPayload().getPayload());
 
         // verify serialized xdr emitted with signed payload

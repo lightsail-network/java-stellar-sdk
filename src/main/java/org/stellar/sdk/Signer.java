@@ -82,13 +82,13 @@ public class Signer {
      * @return org.stellar.sdk.xdr.SignerKey
      */
     public static SignerKey signedPayload(SignedPayloadSigner signedPayloadSigner) {
-        checkNotNull(signedPayloadSigner.getAccountId(), "accountId cannot be null");
+        checkNotNull(signedPayloadSigner.getSignerAccountId(), "accountId cannot be null");
         checkArgument(signedPayloadSigner.getPayload().length <= SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH );
 
         SignerKey signerKey = new SignerKey();
         SignerKey.SignerKeyEd25519SignedPayload payloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
         payloadSigner.setPayload(signedPayloadSigner.getPayload());
-        payloadSigner.setEd25519(signedPayloadSigner.getAccountId().getAccountID().getEd25519());
+        payloadSigner.setEd25519(signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
 
         signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
         signerKey.setEd25519SignedPayload(payloadSigner);
