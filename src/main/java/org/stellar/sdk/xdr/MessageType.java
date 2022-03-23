@@ -33,7 +33,9 @@ import java.io.IOException;
 //      HELLO = 13,
 //  
 //      SURVEY_REQUEST = 14,
-//      SURVEY_RESPONSE = 15
+//      SURVEY_RESPONSE = 15,
+//  
+//      SEND_MORE = 16
 //  };
 
 //  ===========================================================================
@@ -53,6 +55,7 @@ public enum MessageType implements XdrElement {
   HELLO(13),
   SURVEY_REQUEST(14),
   SURVEY_RESPONSE(15),
+  SEND_MORE(16),
   ;
   private int mValue;
 
@@ -82,6 +85,7 @@ public enum MessageType implements XdrElement {
       case 13: return HELLO;
       case 14: return SURVEY_REQUEST;
       case 15: return SURVEY_RESPONSE;
+      case 16: return SEND_MORE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
