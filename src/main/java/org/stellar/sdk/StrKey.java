@@ -69,13 +69,13 @@ class StrKey {
         if (signedPayloadSigner.getPayload().length > SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH) {
             throw new FormatException("invalid payload length, must be less than " + SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH);
         }
-        if (!signedPayloadSigner.getAccountId().getAccountID().getDiscriminant().equals(PublicKeyType.PUBLIC_KEY_TYPE_ED25519)) {
+        if (!signedPayloadSigner.getSignerAccountId().getAccountID().getDiscriminant().equals(PublicKeyType.PUBLIC_KEY_TYPE_ED25519)) {
             throw new FormatException("invalid payload signer, only ED25519 public key accounts are supported currently");
         }
         try {
             SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
             xdrPayloadSigner.setPayload(signedPayloadSigner.getPayload());
-            xdrPayloadSigner.setEd25519(signedPayloadSigner.getAccountId().getAccountID().getEd25519());
+            xdrPayloadSigner.setEd25519(signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
 
             ByteArrayOutputStream record = new ByteArrayOutputStream();
             xdrPayloadSigner.encode(new XdrDataOutputStream(record));

@@ -19,7 +19,7 @@ public class SignerTest {
         SignerKey signerKey = Signer.signedPayload(signedPayloadSigner);
 
         assertArrayEquals(signerKey.getEd25519SignedPayload().getPayload(), payload);
-        assertEquals(signerKey.getEd25519SignedPayload().getEd25519(),signedPayloadSigner.getAccountId().getAccountID().getEd25519());
+        assertEquals(signerKey.getEd25519SignedPayload().getEd25519(),signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
     }
 
     @Test
