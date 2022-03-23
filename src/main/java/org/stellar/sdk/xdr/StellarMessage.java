@@ -49,6 +49,8 @@ import java.util.Arrays;
 //      SCPEnvelope envelope;
 //  case GET_SCP_STATE:
 //      uint32 getSCPLedgerSeq; // ledger seq requested ; if 0, requests the latest
+//  case SEND_MORE:
+//      SendMore sendMoreMessage;
 //  };
 
 //  ===========================================================================
@@ -159,6 +161,13 @@ public class StellarMessage implements XdrElement {
   public void setGetSCPLedgerSeq(Uint32 value) {
     this.getSCPLedgerSeq = value;
   }
+  private SendMore sendMoreMessage;
+  public SendMore getSendMoreMessage() {
+    return this.sendMoreMessage;
+  }
+  public void setSendMoreMessage(SendMore value) {
+    this.sendMoreMessage = value;
+  }
 
   public static final class Builder {
     private MessageType discriminant;
@@ -176,6 +185,7 @@ public class StellarMessage implements XdrElement {
     private SCPQuorumSet qSet;
     private SCPEnvelope envelope;
     private Uint32 getSCPLedgerSeq;
+    private SendMore sendMoreMessage;
 
     public Builder discriminant(MessageType discriminant) {
       this.discriminant = discriminant;
@@ -252,6 +262,11 @@ public class StellarMessage implements XdrElement {
       return this;
     }
 
+    public Builder sendMoreMessage(SendMore sendMoreMessage) {
+      this.sendMoreMessage = sendMoreMessage;
+      return this;
+    }
+
     public StellarMessage build() {
       StellarMessage val = new StellarMessage();
       val.setDiscriminant(discriminant);
@@ -269,6 +284,7 @@ public class StellarMessage implements XdrElement {
       val.setQSet(qSet);
       val.setEnvelope(envelope);
       val.setGetSCPLedgerSeq(getSCPLedgerSeq);
+      val.setSendMoreMessage(sendMoreMessage);
       return val;
     }
   }
@@ -325,6 +341,9 @@ public class StellarMessage implements XdrElement {
   break;
   case GET_SCP_STATE:
   Uint32.encode(stream, encodedStellarMessage.getSCPLedgerSeq);
+  break;
+  case SEND_MORE:
+  SendMore.encode(stream, encodedStellarMessage.sendMoreMessage);
   break;
   }
   }
@@ -384,12 +403,15 @@ public class StellarMessage implements XdrElement {
   case GET_SCP_STATE:
   decodedStellarMessage.getSCPLedgerSeq = Uint32.decode(stream);
   break;
+  case SEND_MORE:
+  decodedStellarMessage.sendMoreMessage = SendMore.decode(stream);
+  break;
   }
     return decodedStellarMessage;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.error, this.hello, this.auth, this.dontHave, Arrays.hashCode(this.peers), this.txSetHash, this.txSet, this.transaction, this.signedSurveyRequestMessage, this.signedSurveyResponseMessage, this.qSetHash, this.qSet, this.envelope, this.getSCPLedgerSeq, this.type);
+    return Objects.hashCode(this.error, this.hello, this.auth, this.dontHave, Arrays.hashCode(this.peers), this.txSetHash, this.txSet, this.transaction, this.signedSurveyRequestMessage, this.signedSurveyResponseMessage, this.qSetHash, this.qSet, this.envelope, this.getSCPLedgerSeq, this.sendMoreMessage, this.type);
   }
   @Override
   public boolean equals(Object object) {
@@ -398,6 +420,6 @@ public class StellarMessage implements XdrElement {
     }
 
     StellarMessage other = (StellarMessage) object;
-    return Objects.equal(this.error, other.error) && Objects.equal(this.hello, other.hello) && Objects.equal(this.auth, other.auth) && Objects.equal(this.dontHave, other.dontHave) && Arrays.equals(this.peers, other.peers) && Objects.equal(this.txSetHash, other.txSetHash) && Objects.equal(this.txSet, other.txSet) && Objects.equal(this.transaction, other.transaction) && Objects.equal(this.signedSurveyRequestMessage, other.signedSurveyRequestMessage) && Objects.equal(this.signedSurveyResponseMessage, other.signedSurveyResponseMessage) && Objects.equal(this.qSetHash, other.qSetHash) && Objects.equal(this.qSet, other.qSet) && Objects.equal(this.envelope, other.envelope) && Objects.equal(this.getSCPLedgerSeq, other.getSCPLedgerSeq) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.error, other.error) && Objects.equal(this.hello, other.hello) && Objects.equal(this.auth, other.auth) && Objects.equal(this.dontHave, other.dontHave) && Arrays.equals(this.peers, other.peers) && Objects.equal(this.txSetHash, other.txSetHash) && Objects.equal(this.txSet, other.txSet) && Objects.equal(this.transaction, other.transaction) && Objects.equal(this.signedSurveyRequestMessage, other.signedSurveyRequestMessage) && Objects.equal(this.signedSurveyResponseMessage, other.signedSurveyResponseMessage) && Objects.equal(this.qSetHash, other.qSetHash) && Objects.equal(this.qSet, other.qSet) && Objects.equal(this.envelope, other.envelope) && Objects.equal(this.getSCPLedgerSeq, other.getSCPLedgerSeq) && Objects.equal(this.sendMoreMessage, other.sendMoreMessage) && Objects.equal(this.type, other.type);
   }
 }
