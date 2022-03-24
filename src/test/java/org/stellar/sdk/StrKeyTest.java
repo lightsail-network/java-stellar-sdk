@@ -150,16 +150,6 @@ public class StrKeyTest {
   }
 
   @Test
-  public void testInvalidSignedPayloadEncode() {
-    byte[] payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2001".toUpperCase());
-    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner(StrKey.decodeStellarAccountId("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ"), payload);
-    try {
-      StrKey.encodeSignedPayload(signedPayloadSigner);
-      fail("should not encode signed payloads > 64");
-    } catch (FormatException ignored){}
-  }
-
-  @Test
   public void testRoundTripSignedPayloadVersionByte() {
     byte[] data = rawBytes(
               // ed25519

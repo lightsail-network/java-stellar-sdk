@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import static org.stellar.sdk.Signer.SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH;
-
 class StrKey {
 
     public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
@@ -66,12 +64,6 @@ class StrKey {
     }
 
     public static String encodeSignedPayload(SignedPayloadSigner signedPayloadSigner) {
-        if (signedPayloadSigner.getPayload().length > SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH) {
-            throw new FormatException("invalid payload length, must be less than " + SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH);
-        }
-        if (!signedPayloadSigner.getSignerAccountId().getAccountID().getDiscriminant().equals(PublicKeyType.PUBLIC_KEY_TYPE_ED25519)) {
-            throw new FormatException("invalid payload signer, only ED25519 public key accounts are supported currently");
-        }
         try {
             SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
             xdrPayloadSigner.setPayload(signedPayloadSigner.getPayload());
