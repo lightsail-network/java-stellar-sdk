@@ -6,7 +6,6 @@ import org.stellar.sdk.xdr.SignerKey;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class SignerTest {
 
@@ -21,17 +20,4 @@ public class SignerTest {
         assertArrayEquals(signerKey.getEd25519SignedPayload().getPayload(), payload);
         assertEquals(signerKey.getEd25519SignedPayload().getEd25519(),signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
     }
-
-    @Test
-    public void itFailsWhenInvalidParameters() {
-        String accountStrKey = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
-        byte[] payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2001".toUpperCase());
-        SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner(StrKey.decodeStellarAccountId(accountStrKey), payload);
-        try {
-            SignerKey signerKey = Signer.signedPayload(signedPayloadSigner);
-            fail("should not create a payload signer if payload > max length");
-        } catch (IllegalArgumentException ignored) {}
-
-    }
-
 }
