@@ -11,8 +11,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Signer is a helper class that creates {@link org.stellar.sdk.xdr.SignerKey} objects.
  */
 public class Signer {
-    public static final int SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH = 64;
-
     /**
      * Create <code>ed25519PublicKey</code> {@link org.stellar.sdk.xdr.SignerKey} from
      * a {@link org.stellar.sdk.KeyPair}
@@ -82,8 +80,6 @@ public class Signer {
      * @return org.stellar.sdk.xdr.SignerKey
      */
     public static SignerKey signedPayload(SignedPayloadSigner signedPayloadSigner) {
-        checkNotNull(signedPayloadSigner.getSignerAccountId(), "accountId cannot be null");
-        checkArgument(signedPayloadSigner.getPayload().length <= SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH );
 
         SignerKey signerKey = new SignerKey();
         SignerKey.SignerKeyEd25519SignedPayload payloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
