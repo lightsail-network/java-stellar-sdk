@@ -1,12 +1,25 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
 import com.google.common.base.Optional;
+import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Longs;
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.xdr.AccountID;
+import org.stellar.sdk.xdr.CryptoKeyType;
+import org.stellar.sdk.xdr.MuxedAccount;
+import org.stellar.sdk.xdr.PublicKey;
+import org.stellar.sdk.xdr.PublicKeyType;
+import org.stellar.sdk.xdr.SignerKey;
+import org.stellar.sdk.xdr.Uint256;
+import org.stellar.sdk.xdr.Uint64;
+import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 class StrKey {
@@ -18,7 +31,8 @@ class StrKey {
         MUXED((byte)(12 << 3)), // M
         SEED((byte)(18 << 3)), // S
         PRE_AUTH_TX((byte)(19 << 3)), // T
-        SHA256_HASH((byte)(23 << 3)); // X
+        SHA256_HASH((byte)(23 << 3)), // X
+        SIGNED_PAYLOAD((byte)(15 << 3)); // P
         private final byte value;
         VersionByte(byte value) {
             this.value = value;
@@ -47,6 +61,22 @@ class StrKey {
     public static String encodeStellarAccountId(AccountID accountID) {
         char[] encoded = encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
         return String.valueOf(encoded);
+    }
+
+    public static String encodeSignedPayload(SignedPayloadSigner signedPayloadSigner) {
+        try {
+            SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
+            xdrPayloadSigner.setPayload(signedPayloadSigner.getPayload());
+            xdrPayloadSigner.setEd25519(signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
+
+            ByteArrayOutputStream record = new ByteArrayOutputStream();
+            xdrPayloadSigner.encode(new XdrDataOutputStream(record));
+
+            char[] encoded = encodeCheck(VersionByte.SIGNED_PAYLOAD, record.toByteArray());
+            return String.valueOf(encoded);
+        } catch (Exception ex) {
+            throw new FormatException(ex.getMessage());
+        }
     }
 
     public static String encodeStellarMuxedAccount(MuxedAccount muxedAccount) {
@@ -154,6 +184,20 @@ class StrKey {
         return decodeCheck(VersionByte.SEED, data);
     }
 
+    public static SignedPayloadSigner decodeSignedPayload(char[] data) {
+        try {
+            byte[] signedPayloadRaw = decodeCheck(VersionByte.SIGNED_PAYLOAD, data);
+
+            SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = SignerKey.SignerKeyEd25519SignedPayload.decode(
+                    new XdrDataInputStream(new ByteArrayInputStream(signedPayloadRaw))
+            );
+
+            return new SignedPayloadSigner( xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
+        } catch (Exception ex) {
+            throw new FormatException(ex.getMessage());
+        }
+    }
+
     public static String encodePreAuthTx(byte[] data) {
         char[] encoded = encodeCheck(VersionByte.PRE_AUTH_TX, data);
         return String.valueOf(encoded);
@@ -177,20 +221,20 @@ class StrKey {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             outputStream.write(versionByte.getValue());
             outputStream.write(data);
-            byte payload[] = outputStream.toByteArray();
-            byte checksum[] = StrKey.calculateChecksum(payload);
+            byte[] payload = outputStream.toByteArray();
+            byte[] checksum = StrKey.calculateChecksum(payload);
             outputStream.write(checksum);
-            byte unencoded[] = outputStream.toByteArray();
+            byte[] unencoded = outputStream.toByteArray();
 
             if (VersionByte.SEED != versionByte) {
-                return StrKey.base32Encoding.encode(unencoded).toCharArray();
+                return base32Encoding.encode(unencoded).toCharArray();
             }
 
             // Why not use base32Encoding.encode here?
             // We don't want secret seed to be stored as String in memory because of security reasons. It's impossible
             // to erase it from memory when we want it to be erased (ASAP).
             CharArrayWriter charArrayWriter = new CharArrayWriter(unencoded.length);
-            OutputStream charOutputStream = StrKey.base32Encoding.encodingStream(charArrayWriter);
+            OutputStream charOutputStream = base32Encoding.encodingStream(charArrayWriter);
             charOutputStream.write(unencoded);
             char[] charsEncoded = charArrayWriter.toCharArray();
 
@@ -242,7 +286,7 @@ class StrKey {
             }
         }
 
-        byte[] decoded = StrKey.base32Encoding.decode(java.nio.CharBuffer.wrap(encoded));
+        byte[] decoded = base32Encoding.decode(java.nio.CharBuffer.wrap(encoded));
         byte decodedVersionByte = decoded[0];
         byte[] payload  = Arrays.copyOfRange(decoded, 0, decoded.length-2);
         byte[] data     = Arrays.copyOfRange(payload, 1, payload.length);
