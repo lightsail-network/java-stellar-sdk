@@ -75,6 +75,11 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   }
 
   @Override
+  public void setSequenceNumber(long seqNum) {
+     sequenceNumber = seqNum;
+  }
+
+  @Override
   public Long getIncrementedSequenceNumber() {
     return new Long(sequenceNumber + 1);
   }
