@@ -2,7 +2,13 @@ package org.stellar.sdk;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.xdr.DecoratedSignature;
+import org.stellar.sdk.xdr.EnvelopeType;
+import org.stellar.sdk.xdr.FeeBumpTransactionEnvelope;
+import org.stellar.sdk.xdr.Int64;
+import org.stellar.sdk.xdr.PreconditionsV2;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.TransactionSignaturePayload;
 
 import java.util.Arrays;
 
@@ -113,21 +119,30 @@ public class FeeBumpTransaction extends AbstractTransaction {
      * @param accountConverter The AccountConverter which will be used to encode the fee account.
      * @param inner The inner transaction which will be fee bumped.
      */
-    public Builder(AccountConverter accountConverter, Transaction inner) {
-      inner = checkNotNull(inner, "inner cannot be null");
+    public Builder(AccountConverter accountConverter, final Transaction inner) {
+      checkNotNull(inner, "inner cannot be null");
       EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
       this.mAccountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
       if (inner.toEnvelopeXdr().getDiscriminant() == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
-        this.mInner = new Transaction(
-            inner.accountConverter,
-            inner.getSourceAccount(),
-            inner.getFee(),
-            inner.getSequenceNumber(),
-            inner.getOperations(),
-            inner.getMemo(),
-            inner.getTimeBounds(),
-            inner.getNetwork()
-        );
+        this.mInner = new TransactionBuilder(inner.accountConverter, new Account(inner.getSourceAccount(), inner.getSequenceNumber()), inner.getNetwork())
+                .setBaseFee((int)inner.getFee())
+                .addOperations(Arrays.asList(inner.getOperations()))
+                .addMemo(inner.getMemo())
+                .addSequenceNumberStrategy(new SequenceNumberStrategy() {
+                  @Override
+                  public long getSequenceNumber(TransactionBuilderAccount account) {
+                    // set the tx seq num to same as that of the inner tx
+                    return inner.getSequenceNumber();
+                  }
+
+                  @Override
+                  public void setSequenceNumber(long newSequenceNumber, TransactionBuilderAccount account) {
+                    //no-op, account instance is local to this scope, not external, no need to update it.
+                  }
+                })
+                .addPreconditions(new PreconditionsV2.Builder().timeBounds(inner.getTimeBounds().toXdr()).build())
+                .build();
+
         this.mInner.mSignatures = Lists.newArrayList(inner.mSignatures);
       } else {
         this.mInner = inner;

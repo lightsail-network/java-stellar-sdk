@@ -10,6 +10,7 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationID;
 import org.stellar.sdk.xdr.PreconditionType;
 import org.stellar.sdk.xdr.Preconditions;
+import org.stellar.sdk.xdr.PreconditionsV2;
 import org.stellar.sdk.xdr.SequenceNumber;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
@@ -21,10 +22,7 @@ import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,7 +36,7 @@ public class Transaction extends AbstractTransaction {
   private final long mSequenceNumber;
   private final Operation[] mOperations;
   private final Memo mMemo;
-  private final TimeBounds mTimeBounds;
+  private final PreconditionsV2 preconditions;
   private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;
 
   Transaction(
@@ -48,18 +46,17 @@ public class Transaction extends AbstractTransaction {
           long sequenceNumber,
           Operation[] operations,
           Memo memo,
-          TimeBounds timeBounds,
+          PreconditionsV2 preconditions,
           Network network
   ) {
     super(accountConverter, network);
     this.mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
-    this.mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
+    this.mSequenceNumber = sequenceNumber;
     this.mOperations = checkNotNull(operations, "operations cannot be null");
     checkArgument(operations.length > 0, "At least one operation required");
-
+    this.preconditions = preconditions;
     this.mFee = fee;
     this.mMemo = memo != null ? memo : Memo.none();
-    this.mTimeBounds = timeBounds;
   }
 
   // setEnvelopeType is only used in tests which is why this method is package protected
@@ -90,10 +87,21 @@ public class Transaction extends AbstractTransaction {
   }
   
   /**
-   * @return TimeBounds, or null (representing no time restrictions)
+   * @return Preconditions
+   */
+  public PreconditionsV2 getPreconditions() {
+    return preconditions;
+  }
+
+  /**
+   * @return TimeBounds, or null (representing no time restrictions, i.e. infinite)
    */
   public TimeBounds getTimeBounds() {
-    return mTimeBounds;
+    TimeBounds timeBounds = TimeBounds.fromXdr(preconditions.getTimeBounds());
+    if (timeBounds == null || (timeBounds.getMinTime() < 1 && timeBounds.getMaxTime() < 1)) {
+      return null;
+    }
+    return timeBounds;
   }
 
   /**
@@ -173,7 +181,7 @@ public class Transaction extends AbstractTransaction {
     transaction.setSourceAccountEd25519(StrKey.encodeToXDRAccountId(this.mSourceAccount).getAccountID().getEd25519());
     transaction.setOperations(operations);
     transaction.setMemo(mMemo.toXdr());
-    transaction.setTimeBounds(mTimeBounds == null ? null : mTimeBounds.toXdr());
+    transaction.setTimeBounds(preconditions == null || preconditions.getTimeBounds() == null ? null : preconditions.getTimeBounds());
     transaction.setExt(ext);
     return transaction;
   }
@@ -204,11 +212,11 @@ public class Transaction extends AbstractTransaction {
     v1Tx.setSourceAccount(accountConverter.encode(mSourceAccount));
     v1Tx.setOperations(operations);
     v1Tx.setMemo(mMemo.toXdr());
-    Preconditions.Builder preconditions = new Preconditions.Builder().discriminant(PreconditionType.PRECOND_NONE);
-    if (mTimeBounds != null) {
-      preconditions.discriminant(PreconditionType.PRECOND_TIME).timeBounds(mTimeBounds.toXdr());
+    Preconditions.Builder preconditionsBuilder = new Preconditions.Builder().discriminant(PreconditionType.PRECOND_NONE);
+    if (preconditions != null && preconditions.getTimeBounds() != null) {
+      preconditionsBuilder.discriminant(PreconditionType.PRECOND_TIME).timeBounds(preconditions.getTimeBounds());
     }
-    v1Tx.setCond(preconditions.build());
+    v1Tx.setCond(preconditionsBuilder.build());
     v1Tx.setExt(ext);
 
     return v1Tx;
@@ -218,7 +226,8 @@ public class Transaction extends AbstractTransaction {
     int mFee = envelope.getTx().getFee().getUint32();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
-    TimeBounds mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getTimeBounds());
+    PreconditionsV2.Builder preconditionsV2Builder = new PreconditionsV2.Builder();
+    preconditionsV2Builder.timeBounds(envelope.getTx().getTimeBounds());
 
     Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
     for (int i = 0; i < envelope.getTx().getOperations().length; i++) {
@@ -232,7 +241,7 @@ public class Transaction extends AbstractTransaction {
         mSequenceNumber,
         mOperations,
         mMemo,
-        mTimeBounds,
+        preconditionsV2Builder.build(),
         network
     );
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
@@ -248,11 +257,15 @@ public class Transaction extends AbstractTransaction {
 
   public static Transaction fromV1EnvelopeXdr(AccountConverter accountConverter, TransactionV1Envelope envelope, Network network) {
     int mFee = envelope.getTx().getFee().getUint32();
-    TimeBounds mTimeBounds = null;
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
+    PreconditionsV2 preconditionsV2 = new PreconditionsV2();
+
     if (envelope.getTx().getCond().getDiscriminant().equals(PreconditionType.PRECOND_TIME)) {
-      mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getCond().getTimeBounds());
+      preconditionsV2 = new PreconditionsV2.Builder().timeBounds(envelope.getTx().getCond().getTimeBounds()).build();
+    }
+    if (envelope.getTx().getCond().getDiscriminant().equals(PreconditionType.PRECOND_V2) && envelope.getTx().getCond().getV2().getTimeBounds() != null) {
+      preconditionsV2 = envelope.getTx().getCond().getV2();
     }
 
     Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
@@ -267,7 +280,7 @@ public class Transaction extends AbstractTransaction {
         mSequenceNumber,
         mOperations,
         mMemo,
-        mTimeBounds,
+        preconditionsV2,
         network
     );
 
@@ -308,172 +321,6 @@ public class Transaction extends AbstractTransaction {
     return xdr;
   }
 
-  /**
-   * Builds a new Transaction object.
-   */
-  public static class Builder {
-    private final TransactionBuilderAccount mSourceAccount;
-    private final AccountConverter mAccountConverter;
-    private Memo mMemo;
-    private TimeBounds mTimeBounds;
-    List<Operation> mOperations;
-    private boolean timeoutSet;
-    private Integer mBaseFee;
-    private Network mNetwork;
-
-    public static final long TIMEOUT_INFINITE = 0;
-
-    /**
-     * Construct a new transaction builder.
-     * @param sourceAccount The source account for this transaction. This account is the account
-     * who will use a sequence number. When build() is called, the account object's sequence number
-     * will be incremented.
-     */
-    public Builder(AccountConverter accountConverter, TransactionBuilderAccount sourceAccount, Network network) {
-      mAccountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
-      mOperations = Collections.synchronizedList(new ArrayList<Operation>());
-      mNetwork = checkNotNull(network, "Network cannot be null");
-    }
-
-    /**
-     * Construct a new transaction builder.
-     * @param sourceAccount The source account for this transaction. This account is the account
-     * who will use a sequence number. When build() is called, the account object's sequence number
-     * will be incremented.
-     */
-    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
-      this(AccountConverter.enableMuxed(), sourceAccount, network);
-    }
-    
-    public int getOperationsCount() {
-      return mOperations.size();
-    }
-
-    /**
-     * Adds a new <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">operation</a> to this transaction.
-     * @param operation
-     * @return Builder object so you can chain methods.
-     * @see Operation
-     */
-    public Builder addOperation(Operation operation) {
-      checkNotNull(operation, "operation cannot be null");
-      mOperations.add(operation);
-      return this;
-    }
-
-    /**
-     * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/#memo" target="_blank">memo</a> to this transaction.
-     * @param memo
-     * @return Builder object so you can chain methods.
-     * @see Memo
-     */
-    public Builder addMemo(Memo memo) {
-      if (mMemo != null) {
-        throw new RuntimeException("Memo has been already added.");
-      }
-      checkNotNull(memo, "memo cannot be null");
-      mMemo = memo;
-      return this;
-    }
-    
-    /**
-     * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/" target="_blank">time-bounds</a> to this transaction.
-     * @param timeBounds
-     * @return Builder object so you can chain methods.
-     * @see TimeBounds
-     */
-    public Builder addTimeBounds(TimeBounds timeBounds) {
-      if (mTimeBounds != null) {
-        throw new RuntimeException("TimeBounds has been already added.");
-      }
-      checkNotNull(timeBounds, "timeBounds cannot be null");
-      mTimeBounds = timeBounds;
-      return this;
-    }
-
-    /**
-     * Because of the distributed nature of the Stellar network it is possible that the status of your transaction
-     * will be determined after a long time if the network is highly congested.
-     * If you want to be sure to receive the status of the transaction within a given period you should set the
-     * {@link TimeBounds} with <code>maxTime</code> on the transaction (this is what <code>setTimeout</code> does
-     * internally; if there's <code>minTime</code> set but no <code>maxTime</code> it will be added).
-     * Call to <code>Builder.setTimeout</code> is required if Transaction does not have <code>max_time</code> set.
-     * If you don't want to set timeout, use <code>TIMEOUT_INFINITE</code>. In general you should set
-     * <code>TIMEOUT_INFINITE</code> only in smart contracts.
-     * Please note that Horizon may still return <code>504 Gateway Timeout</code> error, even for short timeouts.
-     * In such case you need to resubmit the same transaction again without making any changes to receive a status.
-     * This method is using the machine system time (UTC), make sure it is set correctly.
-     * @param timeout Timeout in seconds.
-     * @see TimeBounds
-     * @return
-     */
-    public Builder setTimeout(long timeout) {
-      if (mTimeBounds != null && mTimeBounds.getMaxTime() > 0) {
-        throw new RuntimeException("TimeBounds.max_time has been already set - setting timeout would overwrite it.");
-      }
-
-      if (timeout < 0) {
-        throw new RuntimeException("timeout cannot be negative");
-      }
-
-      timeoutSet = true;
-      if (timeout > 0) {
-        long timeoutTimestamp = System.currentTimeMillis() / 1000L + timeout;
-        if (mTimeBounds == null) {
-          mTimeBounds = new TimeBounds(0, timeoutTimestamp);
-        } else {
-          mTimeBounds = new TimeBounds(mTimeBounds.getMinTime(), timeoutTimestamp);
-        }
-      }
-
-      return this;
-    }
-
-    public Builder setBaseFee(int baseFee) {
-      if (baseFee < MIN_BASE_FEE) {
-        throw new IllegalArgumentException("baseFee cannot be smaller than the BASE_FEE (" + MIN_BASE_FEE + "): " + baseFee);
-      }
-
-      this.mBaseFee = baseFee;
-      return this;
-    }
-
-    /**
-     * Builds a transaction. It will increment sequence number of the source account.
-     */
-    public Transaction build() {
-      // Ensure setTimeout called or maxTime is set
-      if ((mTimeBounds == null || mTimeBounds != null && mTimeBounds.getMaxTime() == 0) && !timeoutSet) {
-        throw new RuntimeException("TimeBounds has to be set or you must call setTimeout(TIMEOUT_INFINITE).");
-      }
-
-      if (mBaseFee == null) {
-        throw new RuntimeException("mBaseFee has to be set. you must call setBaseFee().");
-      }
-
-      if (mNetwork == null) {
-        throw new NoNetworkSelectedException();
-      }
-
-      Operation[] operations = new Operation[mOperations.size()];
-      operations = mOperations.toArray(operations);
-      Transaction transaction = new Transaction(
-              mAccountConverter,
-              mSourceAccount.getAccountId(),
-              operations.length * mBaseFee,
-              mSourceAccount.getIncrementedSequenceNumber(),
-              operations,
-              mMemo,
-              mTimeBounds,
-              mNetwork
-      );
-      // Increment sequence number when there were no exceptions when creating a transaction
-      mSourceAccount.incrementSequenceNumber();
-      return transaction;
-    }
-  }
-
   @Override
   public int hashCode() {
     return Objects.hashCode(
@@ -483,7 +330,7 @@ public class Transaction extends AbstractTransaction {
             this.mSequenceNumber,
             Arrays.hashCode(this.mOperations),
             this.mMemo,
-            this.mTimeBounds,
+            this.preconditions,
             this.mSignatures,
             this.mNetwork
     );
@@ -502,8 +349,24 @@ public class Transaction extends AbstractTransaction {
             Objects.equal(this.mSequenceNumber, other.mSequenceNumber) &&
             Arrays.equals(this.mOperations, other.mOperations) &&
             Objects.equal(this.mMemo, other.mMemo) &&
-            Objects.equal(this.mTimeBounds, other.mTimeBounds) &&
+            Objects.equal(this.preconditions, other.preconditions) &&
             Objects.equal(this.mNetwork, other.mNetwork) &&
             Objects.equal(this.mSignatures, other.mSignatures);
+  }
+
+  /**
+   * Maintain backwards compatibility references to Transaction.Builder
+   *
+   * @deprecated will be removed in upcoming releases. Use <code>TransactionBuilder</code> instead.
+   * @see org.stellar.sdk.TransactionBuilder
+   */
+  public static class Builder extends TransactionBuilder {
+    public Builder(AccountConverter accountConverter, TransactionBuilderAccount sourceAccount, Network network) {
+      super(accountConverter, sourceAccount, network);
+    }
+
+    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
+      super(sourceAccount, network);
+    }
   }
 }

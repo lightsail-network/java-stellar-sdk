@@ -5,7 +5,9 @@ import org.stellar.sdk.xdr.EnvelopeType;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 public class FeeBumpTransactionTest {
 
@@ -13,7 +15,7 @@ public class FeeBumpTransactionTest {
     KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
-    Transaction inner = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+    Transaction inner = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
         .addOperation(new PaymentOperation.Builder(
             "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ",
             new AssetTypeNative(),

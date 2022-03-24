@@ -11,7 +11,12 @@ import org.stellar.sdk.xdr.SignatureHint;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Sep10Challenge {
   static final int GRACE_PERIOD_SECONDS = 5 * 60;
@@ -88,7 +93,7 @@ public class Sep10Challenge {
         .setSourceAccount(sourceAccount.getAccountId())
         .build();
 
-    Transaction.Builder builder = new Transaction.Builder(AccountConverter.enableMuxed(), sourceAccount, network)
+    TransactionBuilder builder = new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
         .addTimeBounds(timebounds)
         .setBaseFee(100)
         .addOperation(domainNameOperation)
