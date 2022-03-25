@@ -37,9 +37,11 @@ public class AccountDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
     AccountResponse account = GsonSingleton.getInstance().fromJson(json, AccountResponse.class);
-      assertEquals(account.getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+    assertEquals(account.getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSequenceNumber(), new Long(2319149195853854L));
     assertEquals(account.getSubentryCount(), new Integer(0));
+    assertEquals(account.getSequenceUpdatedAtLedger().longValue(),1234) ;
+    assertEquals(account.getSequenceUpdatedAtTime().longValue(),4567) ;
     assertEquals(account.getInflationDestination(), "GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC");
     assertEquals(account.getHomeDomain(), "stellar.org");
     assertFalse(account.getSponsor().isPresent());
@@ -250,6 +252,8 @@ public class AccountDeserializerTest extends TestCase {
           "  \"paging_token\": \"1\",\n" +
           "  \"account_id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n" +
           "  \"sequence\": 2319149195853854,\n" +
+          "  \"sequence_ledger\": 1234,\n" +
+          "  \"sequence_time\": 4567,\n" +
           "  \"subentry_count\": 0,\n" +
           "  \"inflation_destination\": \"GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC\",\n" +
           "  \"home_domain\": \"stellar.org\",\n" +
