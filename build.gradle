@@ -24,11 +24,6 @@ publishing {
     }
 }
 
-artifacts {
-    // make sure the non shaded jar is not
-    archives shadowJar
-}
-
 shadowJar {
     manifest {
         attributes (
@@ -37,7 +32,8 @@ shadowJar {
         )
     }
     duplicatesStrategy DuplicatesStrategy.EXCLUDE
-    archiveName 'stellar-sdk.jar'
+    archiveClassifier.set('')
+    archiveBaseName.set('stellar-sdk')
     relocate 'com.','shadow.com.'
     relocate 'net.','shadow.net.'
     relocate 'javax.annotation', 'shadow.javax.annotation'
