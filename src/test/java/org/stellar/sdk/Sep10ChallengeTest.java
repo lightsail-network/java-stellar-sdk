@@ -245,7 +245,7 @@ public class Sep10ChallengeTest {
               }
 
               @Override
-              public void setSequenceNumber(long newSequenceNumber, TransactionBuilderAccount account) {
+              public void updateSourceAccount(long newSequenceNumber, TransactionBuilderAccount account) {
 
               }
             })

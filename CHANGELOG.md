@@ -10,7 +10,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ### Breaking changes
 
-* org.stellar.sdk.Transaction
+* org.stellar.sdk.Transaction.Builder
   * deprecated `addTimeBounds()` use `addPreconditions()` instead
   * deprecated `setTimeout()` use `addPreconditions()` instead
   * deprecated `Transaction.Builder` use TransactionBuilder instead

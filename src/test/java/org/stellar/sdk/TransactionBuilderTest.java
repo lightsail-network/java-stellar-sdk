@@ -340,7 +340,7 @@ public class TransactionBuilderTest {
                     }
 
                     @Override
-                    public void setSequenceNumber(long newSequenceNumber, TransactionBuilderAccount account) {
+                    public void updateSourceAccount(long newSequenceNumber, TransactionBuilderAccount account) {
                         account.setSequenceNumber(newSequenceNumber);
                     }
                 })
