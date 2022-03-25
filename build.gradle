@@ -8,20 +8,46 @@ plugins {
     id "com.github.ben-manes.versions" version "0.42.0"
     id "project-report"
     id "maven-publish"
+    id "java-library"
 }
 
 sourceCompatibility = 1.6
 version = '0.32.0'
 group = 'stellar'
+jar.enabled = false
 
-jar {
+publishing {
+    publications {
+        sdkLibrary(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+    }
+}
+
+artifacts {
+    // make sure the non shaded jar is not
+    archives shadowJar
+}
+
+shadowJar {
     manifest {
         attributes (
             "Implementation-Title" : "stellar-sdk",
             "Implementation-Version" : project.getVersion()
         )
     }
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
     archiveName 'stellar-sdk.jar'
+    relocate 'com.','shadow.com.'
+    relocate 'net.','shadow.net.'
+    relocate 'javax.annotation', 'shadow.javax.annotation'
+    relocate 'org.apache','shadow.org.apache'
+    relocate 'org.jvnet','shadow.org.jvnet'
+    relocate 'org.codehaus','shadow.org.codehaus'
+    relocate 'org.threeten','shadow.org.threeten'
+    relocate 'org.checkerframework','shadow.org.checkerframework'
+    relocate 'okhttp3','shadow.okhttp3'
+    relocate 'okio','shadow.okio'
 }
 
 repositories {
@@ -45,6 +71,6 @@ dependencies {
     testImplementation 'javax.xml.bind:jaxb-api:2.3.0'
     testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '4.12.1'
 }
-tasks.named('test') {
+tasks.named('test') { task ->
     useJUnitPlatform()
 }
