@@ -7,7 +7,7 @@ public class SequentialSequenceNumberStrategy implements SequenceNumberStrategy{
     }
 
     @Override
-    public void setSequenceNumber(long newSequnceNumber, TransactionBuilderAccount account) {
+    public void updateSourceAccount(long newSequnceNumber, TransactionBuilderAccount account) {
         account.incrementSequenceNumber();
     }
 }

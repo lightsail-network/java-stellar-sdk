@@ -136,7 +136,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
                   }
 
                   @Override
-                  public void setSequenceNumber(long newSequenceNumber, TransactionBuilderAccount account) {
+                  public void updateSourceAccount(long newSequenceNumber, TransactionBuilderAccount account) {
                     //no-op, account instance is local to this scope, not external, no need to update it.
                   }
                 })

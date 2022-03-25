@@ -242,7 +242,7 @@ public class TransactionBuilder {
                 mNetwork
         );
         // Increment sequence number when there were no exceptions when creating a transaction
-        sequenceNumberStrategy.setSequenceNumber(sequenceNumber, mSourceAccount);
+        sequenceNumberStrategy.updateSourceAccount(sequenceNumber, mSourceAccount);
         return transaction;
     }
 
