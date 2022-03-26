@@ -36,7 +36,7 @@ public class Transaction extends AbstractTransaction {
   private final long mSequenceNumber;
   private final Operation[] mOperations;
   private final Memo mMemo;
-  private final PreconditionsV2 preconditions;
+  private final PreconditionsV2 mPreconditions;
   private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;
 
   Transaction(
@@ -54,7 +54,7 @@ public class Transaction extends AbstractTransaction {
     this.mSequenceNumber = sequenceNumber;
     this.mOperations = checkNotNull(operations, "operations cannot be null");
     checkArgument(operations.length > 0, "At least one operation required");
-    this.preconditions = preconditions;
+    this.mPreconditions = preconditions;
     this.mFee = fee;
     this.mMemo = memo != null ? memo : Memo.none();
   }
@@ -90,14 +90,14 @@ public class Transaction extends AbstractTransaction {
    * @return Preconditions
    */
   public PreconditionsV2 getPreconditions() {
-    return preconditions;
+    return mPreconditions;
   }
 
   /**
    * @return TimeBounds, or null (representing no time restrictions, i.e. infinite)
    */
   public TimeBounds getTimeBounds() {
-    TimeBounds timeBounds = TimeBounds.fromXdr(preconditions.getTimeBounds());
+    TimeBounds timeBounds = TimeBounds.fromXdr(mPreconditions.getTimeBounds());
     if (timeBounds == null || (timeBounds.getMinTime() < 1 && timeBounds.getMaxTime() < 1)) {
       return null;
     }
@@ -181,7 +181,7 @@ public class Transaction extends AbstractTransaction {
     transaction.setSourceAccountEd25519(StrKey.encodeToXDRAccountId(this.mSourceAccount).getAccountID().getEd25519());
     transaction.setOperations(operations);
     transaction.setMemo(mMemo.toXdr());
-    transaction.setTimeBounds(preconditions == null || preconditions.getTimeBounds() == null ? null : preconditions.getTimeBounds());
+    transaction.setTimeBounds(mPreconditions == null || mPreconditions.getTimeBounds() == null ? null : mPreconditions.getTimeBounds());
     transaction.setExt(ext);
     return transaction;
   }
@@ -213,8 +213,8 @@ public class Transaction extends AbstractTransaction {
     v1Tx.setOperations(operations);
     v1Tx.setMemo(mMemo.toXdr());
     Preconditions.Builder preconditionsBuilder = new Preconditions.Builder().discriminant(PreconditionType.PRECOND_NONE);
-    if (preconditions != null && preconditions.getTimeBounds() != null) {
-      preconditionsBuilder.discriminant(PreconditionType.PRECOND_TIME).timeBounds(preconditions.getTimeBounds());
+    if (mPreconditions != null && mPreconditions.getTimeBounds() != null) {
+      preconditionsBuilder.discriminant(PreconditionType.PRECOND_TIME).timeBounds(mPreconditions.getTimeBounds());
     }
     v1Tx.setCond(preconditionsBuilder.build());
     v1Tx.setExt(ext);
@@ -330,7 +330,7 @@ public class Transaction extends AbstractTransaction {
             this.mSequenceNumber,
             Arrays.hashCode(this.mOperations),
             this.mMemo,
-            this.preconditions,
+            this.mPreconditions,
             this.mSignatures,
             this.mNetwork
     );
@@ -349,7 +349,7 @@ public class Transaction extends AbstractTransaction {
             Objects.equal(this.mSequenceNumber, other.mSequenceNumber) &&
             Arrays.equals(this.mOperations, other.mOperations) &&
             Objects.equal(this.mMemo, other.mMemo) &&
-            Objects.equal(this.preconditions, other.preconditions) &&
+            Objects.equal(this.mPreconditions, other.mPreconditions) &&
             Objects.equal(this.mNetwork, other.mNetwork) &&
             Objects.equal(this.mSignatures, other.mSignatures);
   }
