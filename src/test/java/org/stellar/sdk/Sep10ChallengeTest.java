@@ -481,47 +481,6 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidNoTimeBounds() throws IOException {
-    KeyPair server = KeyPair.random();
-    KeyPair client = KeyPair.random();
-    String domainName = "example.com";
-    String webAuthDomain = "example.com";
-
-    Network network = Network.TESTNET;
-
-    byte[] nonce = new byte[48];
-    SecureRandom random = new SecureRandom();
-    random.nextBytes(nonce);
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
-
-    Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation operation = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-        .setSourceAccount(client.getAccountId())
-        .build();
-    Operation[] operations = new Operation[]{operation};
-    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
-            .setBaseFee(100 * operations.length)
-            .addOperations(Arrays.asList(operations))
-            .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(new org.stellar.sdk.xdr.TimeBounds.Builder()
-                            .minTime(new TimePoint(new Uint64(0L)))
-                            .maxTime(new TimePoint(new Uint64(0L)))
-                            .build())
-                    .build())
-            .build();
-    transaction.sign(server);
-    String challenge = transaction.toEnvelopeXdrBase64();
-
-    try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName, webAuthDomain);
-      fail();
-    } catch (InvalidSep10ChallengeException e) {
-      assertEquals("Transaction requires timebounds.", e.getMessage());
-    }
-  }
-
-  @Test
   public void testReadChallengeTransactionInvalidTimeBoundsTooEarly() throws InvalidSep10ChallengeException, IOException {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
