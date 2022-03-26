@@ -94,13 +94,10 @@ public class Transaction extends AbstractTransaction {
   }
 
   /**
-   * @return TimeBounds, or null (representing no time restrictions, i.e. infinite)
+   * @return TimeBounds
    */
   public TimeBounds getTimeBounds() {
     TimeBounds timeBounds = TimeBounds.fromXdr(mPreconditions.getTimeBounds());
-    if (timeBounds == null || (timeBounds.getMinTime() < 1 && timeBounds.getMaxTime() < 1)) {
-      return null;
-    }
     return timeBounds;
   }
 
@@ -213,7 +210,9 @@ public class Transaction extends AbstractTransaction {
     v1Tx.setOperations(operations);
     v1Tx.setMemo(mMemo.toXdr());
     Preconditions.Builder preconditionsBuilder = new Preconditions.Builder().discriminant(PreconditionType.PRECOND_NONE);
-    if (mPreconditions != null && mPreconditions.getTimeBounds() != null) {
+
+    //TODO - need to check if preconditions has attributes that are just V1Preconditions or V2Preconditions and set here.
+    if (mPreconditions != null) {
       preconditionsBuilder.discriminant(PreconditionType.PRECOND_TIME).timeBounds(mPreconditions.getTimeBounds());
     }
     v1Tx.setCond(preconditionsBuilder.build());

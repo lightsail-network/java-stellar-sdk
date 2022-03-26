@@ -162,11 +162,6 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("The transaction sequence number should be zero.");
     }
 
-    // verify that transaction has time bounds set, and that current time is between the minimum and maximum bounds.
-    if (transaction.getTimeBounds() == null) {
-      throw new InvalidSep10ChallengeException("Transaction requires timebounds.");
-    }
-
     long maxTime = transaction.getTimeBounds().getMaxTime();
     long minTime = transaction.getTimeBounds().getMinTime();
     if (maxTime == 0L) {
