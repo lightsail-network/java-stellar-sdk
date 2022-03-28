@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 import org.stellar.sdk.xdr.EnvelopeType;
-import org.stellar.sdk.xdr.PreconditionsV2;
-import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.TransactionEnvelope;
-import org.stellar.sdk.xdr.Uint64;
 
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -249,7 +246,7 @@ public class Sep10ChallengeTest {
 
               }
             })
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(transaction.getTimeBounds().toXdr()).build())
+            .addPreconditions(transaction.getPreconditions())
             .build();
 
     withMuxedClient.getSignatures().addAll(transaction.mSignatures);
@@ -322,7 +319,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
 
     transaction.sign(client);
@@ -423,7 +420,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
 
     transaction.sign(server);
@@ -466,7 +463,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
 
     transaction.sign(server);
@@ -588,7 +585,7 @@ public class Sep10ChallengeTest {
                     .setBaseFee(100 * operations.length)
                     .addOperations(Arrays.asList(operations))
                     .addMemo(Memo.none())
-                    .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+                    .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
                     .build();
 
     transaction.sign(server);
@@ -629,7 +626,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
 
     transaction.sign(server);
@@ -672,7 +669,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -709,7 +706,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -752,7 +749,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -788,7 +785,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -832,7 +829,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -872,7 +869,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -914,7 +911,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -958,7 +955,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -1197,7 +1194,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -1244,7 +1241,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
@@ -1461,7 +1458,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
 
     transaction.sign(masterClient);
@@ -1893,7 +1890,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
 
     transaction.sign(masterClient);
@@ -2383,7 +2380,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     transaction.sign(masterClient);
@@ -2424,7 +2421,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     transaction.sign(masterClient);
@@ -2467,7 +2464,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     transaction.sign(masterClient);
@@ -2512,7 +2509,7 @@ public class Sep10ChallengeTest {
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
-            .addPreconditions(new PreconditionsV2.Builder().timeBounds(timeBounds.toXdr()).build())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
             .build();
     transaction.sign(server);
     transaction.sign(masterClient);
