@@ -3,12 +3,13 @@ package org.stellar.sdk;
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 import org.stellar.sdk.xdr.EnvelopeType;
-import org.stellar.sdk.xdr.PreconditionsV2;
+import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -27,13 +28,13 @@ public class TransactionTest {
         Account account = new Account(source.getAccountId(), 2908908335136768L);
 
         Transaction transaction = new Transaction(
-                AccountConverter.disableMuxed(),
+                AccountConverter.enableMuxed(),
                 account.getAccountId(),
                 Transaction.MIN_BASE_FEE,
                 account.getIncrementedSequenceNumber(),
                 new org.stellar.sdk.Operation[]{new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()},
-                Memo.none(),
-                new PreconditionsV2.Builder().timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE).toXdr()).build(),
+                null,
+                new TransactionPreconditions(null, null, null, null, new ArrayList<SignerKey>(),null),
                 Network.PUBLIC
         );
 
@@ -48,6 +49,11 @@ public class TransactionTest {
         assertTrue(parsed.equals(transaction));
         assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, parsed.toEnvelopeXdr().getDiscriminant());
         assertEquals(transaction.toEnvelopeXdrBase64(), parsed.toEnvelopeXdrBase64());
+
+        assertEquals(
+                "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDzfR5PgRFim5Wdvq9ImdZNWGBxBWwYkQPa9l5iiBdtPLzAZv6qj+iOfSrqinsoF0XrLkwdIcZQVtp3VRHhRoUE",
+                transaction.toEnvelopeXdrBase64());
+
     }
 
     @Test
@@ -63,8 +69,8 @@ public class TransactionTest {
                 Transaction.MIN_BASE_FEE,
                 account.getIncrementedSequenceNumber(),
                 new org.stellar.sdk.Operation[]{new PaymentOperation.Builder(destination.getAccountId(), new AssetTypeNative(), "2000").build()},
-                Memo.none(),
-                new PreconditionsV2.Builder().timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE).toXdr()).build(),
+                null,
+                new TransactionPreconditions(null, null, null, null, new ArrayList<SignerKey>(),null),
                 Network.PUBLIC
         );
 
@@ -90,17 +96,21 @@ public class TransactionTest {
         Account account = new Account(source.getAccountId(), 2908908335136768L);
 
         Transaction transaction = new Transaction(
-                AccountConverter.disableMuxed(),
+                AccountConverter.enableMuxed(),
                 account.getAccountId(),
                 Transaction.MIN_BASE_FEE,
                 account.getIncrementedSequenceNumber(),
                 new org.stellar.sdk.Operation[]{new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()},
-                Memo.none(),
-                new PreconditionsV2.Builder().timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE).toXdr()).build(),
+                null,
+                new TransactionPreconditions(null, null, null, null, new ArrayList<SignerKey>(),null),
                 Network.TESTNET
         );
 
         Transaction parsed = (Transaction) Transaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.TESTNET);
         assertEquals(parsed, transaction);
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAA==",
+                transaction.toEnvelopeXdrBase64()
+        );
     }
 }

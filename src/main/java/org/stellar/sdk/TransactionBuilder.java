@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import org.stellar.sdk.xdr.PreconditionsV2;
+import org.stellar.sdk.TransactionPreconditions.TransactionPreconditionsBuilder;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 
@@ -21,10 +21,11 @@ public class TransactionBuilder {
     private Integer mBaseFee;
     private Network mNetwork;
     private SequenceNumberStrategy sequenceNumberStrategy;
-    private PreconditionsV2 preconditions;
+    private TransactionPreconditions mPreconditions;
+    private TimeBounds mTimeBounds;
+    private boolean mTimeoutSet;
 
     public static final long TIMEOUT_INFINITE = 0;
-    public static final long MAX_EXTRA_SIGNERS_COUNT = 2;
 
     /**
      * Construct a new transaction builder.
@@ -40,7 +41,6 @@ public class TransactionBuilder {
         mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
         mNetwork = checkNotNull(network, "Network cannot be null");
         mOperations = newArrayList();
-        preconditions = new PreconditionsV2();
         sequenceNumberStrategy = new SequentialSequenceNumberStrategy();
     }
 
@@ -93,12 +93,9 @@ public class TransactionBuilder {
      * @param preconditions the tx PreConditions
      * @return updated Builder object
      */
-    public TransactionBuilder addPreconditions(PreconditionsV2 preconditions) {
+    public TransactionBuilder addPreconditions(TransactionPreconditions preconditions) {
         checkNotNull(preconditions, "preconditions cannot be null");
-        if (preconditions.getExtraSigners() != null && preconditions.getExtraSigners().length > MAX_EXTRA_SIGNERS_COUNT) {
-            throw new FormatException("Invalid preconditions, too many extra signers, can only have up to " + MAX_EXTRA_SIGNERS_COUNT);
-        }
-        this.preconditions = preconditions;
+        this.mPreconditions = preconditions;
         return this;
     }
 
@@ -141,7 +138,7 @@ public class TransactionBuilder {
      */
     public TransactionBuilder addTimeBounds(TimeBounds timeBounds) {
         checkNotNull(timeBounds, "timeBounds cannot be null");
-        preconditions.setTimeBounds(timeBounds.toXdr());
+        mTimeBounds = timeBounds;
         return this;
     }
 
@@ -161,11 +158,11 @@ public class TransactionBuilder {
      * @param timeout Timeout in seconds.
      * @return updated Builder
      * @see TimeBounds
-     * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()</code> instead
-     * for more control over preconditions.
+     * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()</code> with TimeBound
+     * set instead for more control over preconditions.
      */
     public TransactionBuilder setTimeout(long timeout) {
-        if (preconditions.getTimeBounds() != null && preconditions.getTimeBounds().getMaxTime().getTimePoint().getUint64() > 0) {
+        if (mTimeBounds != null && mTimeBounds.getMaxTime() > 0) {
             throw new RuntimeException("TimeBounds.max_time has been already set - setting timeout would overwrite it.");
         }
 
@@ -173,31 +170,15 @@ public class TransactionBuilder {
             throw new RuntimeException("timeout cannot be negative");
         }
 
+        mTimeoutSet = true;
         if (timeout > 0) {
             long timeoutTimestamp = System.currentTimeMillis() / 1000L + timeout;
-            if (preconditions.getTimeBounds() == null) {
-                // no timebounds settings yet, so timeout is conveyed on the tx as a new timebounds in precondition
-                // with a range of genesis to (current time + timeout interval)
-                preconditions.setTimeBounds(buildTimeBounds(0L, timeoutTimestamp));
+            if (mTimeBounds == null) {
+                mTimeBounds = new TimeBounds(0, timeoutTimestamp);
             } else {
-                // an existing timebounds in precondition, so timeout is conveyed on the tx as the current timebounds
-                // min time to a max time of (current time + timeout interval)
-                preconditions.getTimeBounds().setMaxTime(new TimePoint(new Uint64(timeoutTimestamp)));
+                mTimeBounds = new TimeBounds(mTimeBounds.getMinTime(), timeoutTimestamp);
             }
         }
-
-        if (timeout == 0) {
-            if (preconditions.getTimeBounds() == null) {
-                // no timebounds settings yet, so infinite timeout is conveyed on the tx in a new timebounds precondition
-                // with a range of genesis to infinite
-                preconditions.setTimeBounds(buildTimeBounds(0L, 0L));
-            } else {
-                // an existing timebounds in precondition, so timeout is conveyed on the tx as the current timebounds min time
-                // to a max time of infinite
-                preconditions.getTimeBounds().setMaxTime(new TimePoint(new Uint64(0L)));
-            }
-        }
-
         return this;
     }
 
@@ -211,13 +192,21 @@ public class TransactionBuilder {
     }
 
     /**
-     * Builds a transaction. It will use the SequenceNumberStrategy to determine how to update source account
-     * sequence number
+     * Builds a transaction. It will use the SequenceNumberStrategy if provided to determine how to update source account
+     * sequence number after transaction is constructed.
      */
     public Transaction build() {
-        if (preconditions.getTimeBounds() == null) {
-            throw new FormatException("Timebounds is a mandatory precondition that must be set. Use TimeBounds(0,0) for infinite timeout");
+        TransactionPreconditionsBuilder preconditionsBuilder = mPreconditions != null ? mPreconditions.toBuilder() : TransactionPreconditions.builder();
+
+        // left in for backwards compatibility, check on TransactionBuilder.mTimeBounds should be removed when both TransactionBuilder.setTimeBounds() and
+        // TransactionBuilder.setTimeout() are removed due to deprecation. This currently allows the builder to override
+        // any timebounds in new preconditions with timebounds directly from legacy timebounds/timeouts.
+        if (mTimeBounds != null) {
+            preconditionsBuilder.timeBounds(mTimeBounds);
         }
+
+        mPreconditions = preconditionsBuilder.build();
+        mPreconditions.isValid(mTimeoutSet);
 
         if (mBaseFee == null) {
             throw new FormatException("mBaseFee has to be set. you must call setBaseFee().");
@@ -238,7 +227,7 @@ public class TransactionBuilder {
                 sequenceNumber,
                 operations,
                 mMemo,
-                preconditions,
+                mPreconditions,
                 mNetwork
         );
         // Increment sequence number when there were no exceptions when creating a transaction

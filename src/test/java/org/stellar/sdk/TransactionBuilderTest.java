@@ -2,21 +2,18 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
-import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
-import org.stellar.sdk.xdr.LedgerBounds;
 import org.stellar.sdk.xdr.PreconditionsV2;
-import org.stellar.sdk.xdr.PublicKeyType;
 import org.stellar.sdk.xdr.SequenceNumber;
 import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
-import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +36,7 @@ public class TransactionBuilderTest {
         }
     }
 
-        @Test
+    @Test
     public void testBuilderSuccessTestnet() throws FormatException {
         // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
         KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -58,6 +55,10 @@ public class TransactionBuilderTest {
         assertEquals(transaction.getSourceAccount(), source.getAccountId());
         assertEquals(transaction.getSequenceNumber(), sequenceNumber + 1);
         assertEquals(transaction.getFee(), 100);
+
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAy5IvTou9NDetC6PIFJhBR2yr2BuEEql4iyLfU9K7tjuQaYVZf40fbWLRwA/lHg2IYFzYMFMakxLtVrpLxMmHAw==",
+                transaction.toEnvelopeXdrBase64());
 
         Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), transaction.toEnvelopeXdr(), Network.TESTNET);
 
@@ -81,6 +82,9 @@ public class TransactionBuilderTest {
         transaction.sign(source);
 
         Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), transaction.toEnvelopeXdr(), Network.TESTNET);
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAABAAAADEhlbGxvIHdvcmxkIQAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQMc6HwYaGsrlJ8/LdE9VDVq04JifpQofSmnjhrtqaTTs/VBsNGmxi4b/vaFkLLLWh8emI8FsS/vBgb8AVFVkZQU=",
+                transaction.toEnvelopeXdrBase64());
 
         assertEquals(transaction, transaction2);
     }
@@ -133,6 +137,9 @@ public class TransactionBuilderTest {
         transaction.sign(source);
 
         Transaction transaction2 = (Transaction)Transaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), transaction.toEnvelopeXdr(), Network.TESTNET);
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAMgAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABA9TG3dKKLtLHzRUbsbEqr68CfUc800p1/LE5pWzCnFdFdypdXgyqHqw/sWdaTUMDiWawBtsmqV8oOtD0Hw1HDDQ==",
+                transaction.toEnvelopeXdrBase64());
 
         assertEquals(transaction, transaction2);
     }
@@ -212,25 +219,33 @@ public class TransactionBuilderTest {
 
     @Test
     public void testBuilderSetsLedgerBounds() throws IOException {
-        Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
-        PreconditionsV2.Builder preconditionsV2 = new PreconditionsV2.Builder();
-
-        preconditionsV2.timeBounds(TransactionBuilder.buildTimeBounds(0, TransactionBuilder.TIMEOUT_INFINITE));
-        preconditionsV2.ledgerBounds(new LedgerBounds.Builder().minLedger(new Uint32(1)).maxLedger(new Uint32(2)).build());
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
+        KeyPair newAccount = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
-                .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                .addPreconditions(preconditionsV2.build())
+                .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                .addPreconditions(TransactionPreconditions.builder()
+                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .ledgerBounds(LedgerBounds.builder().minLedger(1).maxLedger(2).build())
+                        .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
-        assertEquals(1, transaction.getPreconditions().getLedgerBounds().getMinLedger().getUint32().intValue());
-        assertEquals(2, transaction.getPreconditions().getLedgerBounds().getMaxLedger().getUint32().intValue());
+        assertEquals(1, transaction.getPreconditions().getLedgerBounds().getMinLedger());
+        assertEquals(2, transaction.getPreconditions().getLedgerBounds().getMaxLedger());
+
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAIAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAA=",
+                transaction.toEnvelopeXdrBase64());
+
     }
 
     @Test
     public void testBuilderSetsMinSeqNum() throws IOException {
-        Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
+        KeyPair newAccount = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
         PreconditionsV2.Builder preconditionsV2 = new PreconditionsV2.Builder();
 
         SequenceNumber seqNum = new SequenceNumber();
@@ -239,54 +254,70 @@ public class TransactionBuilderTest {
         preconditionsV2.minSeqNum(seqNum);
 
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
-                .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                .addPreconditions(preconditionsV2.build())
+                .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                .addPreconditions(TransactionPreconditions.builder()
+                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .minSeqNumber(5L)
+                        .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
-        assertEquals(5, transaction.getPreconditions().getMinSeqNum().getSequenceNumber().getInt64().longValue());
+        assertEquals(Long.valueOf(5), transaction.getPreconditions().getMinSeqNumber());
+
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAIAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAA=",
+                transaction.toEnvelopeXdrBase64());
     }
 
     @Test
     public void testBuilderSetsMinSeqAge() throws IOException {
-        Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
-        PreconditionsV2.Builder preconditionsV2 = new PreconditionsV2.Builder();
-
-        Duration duration = new Duration();
-        duration.setDuration(new Int64(5L));
-        preconditionsV2.timeBounds(TransactionBuilder.buildTimeBounds(0, TransactionBuilder.TIMEOUT_INFINITE));
-        preconditionsV2.minSeqAge(duration);
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        KeyPair newAccount = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
 
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
-                .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                .addPreconditions(preconditionsV2.build())
+                .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                .addPreconditions(TransactionPreconditions.builder()
+                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .minSeqAge(5L)
+                        .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
-        assertEquals(5, transaction.getPreconditions().getMinSeqAge().getDuration().getInt64().longValue());
+        assertEquals(Long.valueOf(5), transaction.getPreconditions().getMinSeqAge());
+
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAIAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAAA",
+                transaction.toEnvelopeXdrBase64());
     }
 
     @Test
     public void testBuilderSetsMinSeqLedgerGap() throws IOException {
-        Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
-        PreconditionsV2.Builder preconditionsV2 = new PreconditionsV2.Builder();
-
-        preconditionsV2.timeBounds(TransactionBuilder.buildTimeBounds(0, TransactionBuilder.TIMEOUT_INFINITE));
-        preconditionsV2.minSeqLedgerGap(new Uint32(5));
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        KeyPair newAccount = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
 
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
-                .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                .addPreconditions(preconditionsV2.build())
+                .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                .addPreconditions(TransactionPreconditions.builder()
+                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .minSeqLedgerGap(5)
+                        .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
-        assertEquals(5, transaction.getPreconditions().getMinSeqLedgerGap().getUint32().longValue());
+        assertEquals(Integer.valueOf(5), transaction.getPreconditions().getMinSeqLedgerGap());
+
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAIAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAAA",
+                transaction.toEnvelopeXdrBase64());
     }
 
     @Test
     public void testBuilderExtraSigners() throws IOException {
-        Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
-        PreconditionsV2.Builder preconditionsV2 = new PreconditionsV2.Builder();
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        KeyPair newAccount = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
 
         String accountStrKey = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
         byte[] payload = BaseEncoding.base16().decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
@@ -299,17 +330,22 @@ public class TransactionBuilderTest {
                         .build())
                 .build();
 
-        preconditionsV2.timeBounds(TransactionBuilder.buildTimeBounds(0, TransactionBuilder.TIMEOUT_INFINITE));
-        preconditionsV2.extraSigners(new SignerKey[]{signerKey});
-
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
-                .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                .addPreconditions(preconditionsV2.build())
+                .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                .addPreconditions(TransactionPreconditions.builder()
+                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .extraSigners(newArrayList(signerKey))
+                        .minSeqLedgerGap(5)
+                        .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
-        assertEquals(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD, transaction.getPreconditions().getExtraSigners()[0].getDiscriminant());
-        assertArrayEquals(payload, transaction.getPreconditions().getExtraSigners()[0].getEd25519SignedPayload().getPayload());
+        assertEquals(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD, newArrayList(transaction.getPreconditions().getExtraSigners()).get(0).getDiscriminant());
+        assertArrayEquals(payload, newArrayList(transaction.getPreconditions().getExtraSigners()).get(0).getEd25519SignedPayload().getPayload());
+
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAIAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAQAAAAM/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omgAAACABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fIAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAAA",
+                transaction.toEnvelopeXdrBase64());
     }
 
     @Test
@@ -319,7 +355,11 @@ public class TransactionBuilderTest {
         try {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                     .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                    .addPreconditions(new PreconditionsV2.Builder().extraSigners(new SignerKey[3]).build())
+                    .addPreconditions(TransactionPreconditions.builder()
+                            .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                            .extraSigners(newArrayList(new SignerKey.Builder().build(), new SignerKey.Builder().build(), new SignerKey.Builder().build()))
+                            .minSeqLedgerGap(5)
+                            .build())
                     .setBaseFee(Transaction.MIN_BASE_FEE)
                     .build();
             fail();
@@ -331,8 +371,8 @@ public class TransactionBuilderTest {
         Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                .addPreconditions(new PreconditionsV2.Builder()
-                        .timeBounds(TransactionBuilder.buildTimeBounds(0, TransactionBuilder.TIMEOUT_INFINITE)).build())
+                .addPreconditions(TransactionPreconditions.builder()
+                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE)).build())
                 .addSequenceNumberStrategy(new SequenceNumberStrategy() {
                     @Override
                     public long getSequenceNumber(TransactionBuilderAccount account) {
@@ -429,6 +469,10 @@ public class TransactionBuilderTest {
         transaction.sign(source);
 
         Transaction decodedTransaction = (Transaction) Transaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.PUBLIC);
+        assertEquals(
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABA830eT4ERYpuVnb6vSJnWTVhgcQVsGJED2vZeYogXbTy8wGb+qo/ojn0q6op7KBdF6y5MHSHGUFbad1UR4UaFBA==",
+                transaction.toEnvelopeXdrBase64());
+
         assertEquals(decodedTransaction, transaction);
     }
 

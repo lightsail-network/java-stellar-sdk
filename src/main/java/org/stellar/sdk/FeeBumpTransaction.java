@@ -6,7 +6,6 @@ import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.FeeBumpTransactionEnvelope;
 import org.stellar.sdk.xdr.Int64;
-import org.stellar.sdk.xdr.PreconditionsV2;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
 
@@ -140,7 +139,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
                     //no-op, account instance is local to this scope, not external, no need to update it.
                   }
                 })
-                .addPreconditions(new PreconditionsV2.Builder().timeBounds(inner.getTimeBounds().toXdr()).build())
+                .addPreconditions(new TransactionPreconditions.TransactionPreconditionsBuilder().timeBounds(inner.getTimeBounds()).build())
                 .build();
 
         this.mInner.mSignatures = Lists.newArrayList(inner.mSignatures);

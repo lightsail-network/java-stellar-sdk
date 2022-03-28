@@ -8,9 +8,6 @@ import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationID;
-import org.stellar.sdk.xdr.PreconditionType;
-import org.stellar.sdk.xdr.Preconditions;
-import org.stellar.sdk.xdr.PreconditionsV2;
 import org.stellar.sdk.xdr.SequenceNumber;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
@@ -36,7 +33,7 @@ public class Transaction extends AbstractTransaction {
   private final long mSequenceNumber;
   private final Operation[] mOperations;
   private final Memo mMemo;
-  private final PreconditionsV2 mPreconditions;
+  private final TransactionPreconditions mPreconditions;
   private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;
 
   Transaction(
@@ -46,7 +43,7 @@ public class Transaction extends AbstractTransaction {
           long sequenceNumber,
           Operation[] operations,
           Memo memo,
-          PreconditionsV2 preconditions,
+          TransactionPreconditions preconditions,
           Network network
   ) {
     super(accountConverter, network);
@@ -89,7 +86,7 @@ public class Transaction extends AbstractTransaction {
   /**
    * @return Preconditions
    */
-  public PreconditionsV2 getPreconditions() {
+  public TransactionPreconditions getPreconditions() {
     return mPreconditions;
   }
 
@@ -97,8 +94,7 @@ public class Transaction extends AbstractTransaction {
    * @return TimeBounds
    */
   public TimeBounds getTimeBounds() {
-    TimeBounds timeBounds = TimeBounds.fromXdr(mPreconditions.getTimeBounds());
-    return timeBounds;
+    return mPreconditions.getTimeBounds();
   }
 
   /**
@@ -178,7 +174,7 @@ public class Transaction extends AbstractTransaction {
     transaction.setSourceAccountEd25519(StrKey.encodeToXDRAccountId(this.mSourceAccount).getAccountID().getEd25519());
     transaction.setOperations(operations);
     transaction.setMemo(mMemo.toXdr());
-    transaction.setTimeBounds(mPreconditions == null || mPreconditions.getTimeBounds() == null ? null : mPreconditions.getTimeBounds());
+    transaction.setTimeBounds(mPreconditions.getTimeBounds() == null ? null : getTimeBounds().toXdr());
     transaction.setExt(ext);
     return transaction;
   }
@@ -202,20 +198,13 @@ public class Transaction extends AbstractTransaction {
     org.stellar.sdk.xdr.Transaction.TransactionExt ext = new org.stellar.sdk.xdr.Transaction.TransactionExt();
     ext.setDiscriminant(0);
 
-
     org.stellar.sdk.xdr.Transaction v1Tx = new org.stellar.sdk.xdr.Transaction();
     v1Tx.setFee(fee);
     v1Tx.setSeqNum(sequenceNumber);
     v1Tx.setSourceAccount(accountConverter.encode(mSourceAccount));
     v1Tx.setOperations(operations);
     v1Tx.setMemo(mMemo.toXdr());
-    Preconditions.Builder preconditionsBuilder = new Preconditions.Builder().discriminant(PreconditionType.PRECOND_NONE);
-
-    //TODO - need to check if preconditions has attributes that are just V1Preconditions or V2Preconditions and set here.
-    if (mPreconditions != null) {
-      preconditionsBuilder.discriminant(PreconditionType.PRECOND_TIME).timeBounds(mPreconditions.getTimeBounds());
-    }
-    v1Tx.setCond(preconditionsBuilder.build());
+    v1Tx.setCond(mPreconditions.toXdr());
     v1Tx.setExt(ext);
 
     return v1Tx;
@@ -225,8 +214,7 @@ public class Transaction extends AbstractTransaction {
     int mFee = envelope.getTx().getFee().getUint32();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
-    PreconditionsV2.Builder preconditionsV2Builder = new PreconditionsV2.Builder();
-    preconditionsV2Builder.timeBounds(envelope.getTx().getTimeBounds());
+    TimeBounds mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getTimeBounds());
 
     Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
     for (int i = 0; i < envelope.getTx().getOperations().length; i++) {
@@ -240,7 +228,7 @@ public class Transaction extends AbstractTransaction {
         mSequenceNumber,
         mOperations,
         mMemo,
-        preconditionsV2Builder.build(),
+        TransactionPreconditions.builder().timeBounds(mTimeBounds).build(),
         network
     );
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
@@ -258,14 +246,6 @@ public class Transaction extends AbstractTransaction {
     int mFee = envelope.getTx().getFee().getUint32();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
-    PreconditionsV2 preconditionsV2 = new PreconditionsV2();
-
-    if (envelope.getTx().getCond().getDiscriminant().equals(PreconditionType.PRECOND_TIME)) {
-      preconditionsV2 = new PreconditionsV2.Builder().timeBounds(envelope.getTx().getCond().getTimeBounds()).build();
-    }
-    if (envelope.getTx().getCond().getDiscriminant().equals(PreconditionType.PRECOND_V2) && envelope.getTx().getCond().getV2().getTimeBounds() != null) {
-      preconditionsV2 = envelope.getTx().getCond().getV2();
-    }
 
     Operation[] mOperations = new Operation[envelope.getTx().getOperations().length];
     for (int i = 0; i < envelope.getTx().getOperations().length; i++) {
@@ -279,7 +259,7 @@ public class Transaction extends AbstractTransaction {
         mSequenceNumber,
         mOperations,
         mMemo,
-        preconditionsV2,
+        TransactionPreconditions.fromXdr(envelope.getTx().getCond()),
         network
     );
 
