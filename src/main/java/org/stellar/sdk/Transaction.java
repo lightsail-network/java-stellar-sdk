@@ -174,7 +174,7 @@ public class Transaction extends AbstractTransaction {
     transaction.setSourceAccountEd25519(StrKey.encodeToXDRAccountId(this.mSourceAccount).getAccountID().getEd25519());
     transaction.setOperations(operations);
     transaction.setMemo(mMemo.toXdr());
-    transaction.setTimeBounds(mPreconditions.getTimeBounds() == null ? null : getTimeBounds().toXdr());
+    transaction.setTimeBounds(getTimeBounds() == null ? null : getTimeBounds().toXdr());
     transaction.setExt(ext);
     return transaction;
   }
