@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class TransactionPreconditions {
     public static final long MAX_EXTRA_SIGNERS_COUNT = 2;
+    public static final long TIMEOUT_INFINITE = 0;
 
     LedgerBounds ledgerBounds;
     Long minSeqNumber;

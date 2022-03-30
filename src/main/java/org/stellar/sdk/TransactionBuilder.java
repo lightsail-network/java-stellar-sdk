@@ -22,10 +22,7 @@ public class TransactionBuilder {
     private Network mNetwork;
     private SequenceNumberStrategy sequenceNumberStrategy;
     private TransactionPreconditions mPreconditions;
-    private TimeBounds mTimeBounds;
     private boolean mTimeoutSet;
-
-    public static final long TIMEOUT_INFINITE = 0;
 
     /**
      * Construct a new transaction builder.
@@ -42,6 +39,7 @@ public class TransactionBuilder {
         mNetwork = checkNotNull(network, "Network cannot be null");
         mOperations = newArrayList();
         sequenceNumberStrategy = new SequentialSequenceNumberStrategy();
+        mPreconditions = TransactionPreconditions.builder().build();
     }
 
     /**
@@ -138,7 +136,11 @@ public class TransactionBuilder {
      */
     public TransactionBuilder addTimeBounds(TimeBounds timeBounds) {
         checkNotNull(timeBounds, "timeBounds cannot be null");
-        mTimeBounds = timeBounds;
+        if (mPreconditions.getTimeBounds() != null) {
+            throw new RuntimeException("TimeBounds already set.");
+        }
+
+        mPreconditions = mPreconditions.toBuilder().timeBounds(timeBounds).build();
         return this;
     }
 
@@ -162,7 +164,7 @@ public class TransactionBuilder {
      * set instead for more control over preconditions.
      */
     public TransactionBuilder setTimeout(long timeout) {
-        if (mTimeBounds != null && mTimeBounds.getMaxTime() > 0) {
+        if (mPreconditions.getTimeBounds() != null && mPreconditions.getTimeBounds().getMaxTime() != TransactionPreconditions.TIMEOUT_INFINITE) {
             throw new RuntimeException("TimeBounds.max_time has been already set - setting timeout would overwrite it.");
         }
 
@@ -173,11 +175,13 @@ public class TransactionBuilder {
         mTimeoutSet = true;
         if (timeout > 0) {
             long timeoutTimestamp = System.currentTimeMillis() / 1000L + timeout;
-            if (mTimeBounds == null) {
-                mTimeBounds = new TimeBounds(0, timeoutTimestamp);
+            TransactionPreconditionsBuilder preconditionsBuilder = mPreconditions.toBuilder();
+            if (mPreconditions.getTimeBounds() == null) {
+                preconditionsBuilder.timeBounds(new TimeBounds(0, timeoutTimestamp));
             } else {
-                mTimeBounds = new TimeBounds(mTimeBounds.getMinTime(), timeoutTimestamp);
+                preconditionsBuilder.timeBounds( new TimeBounds(mPreconditions.getTimeBounds().getMinTime(), timeoutTimestamp));
             }
+            mPreconditions = preconditionsBuilder.build();
         }
         return this;
     }
@@ -196,16 +200,6 @@ public class TransactionBuilder {
      * sequence number after transaction is constructed.
      */
     public Transaction build() {
-        TransactionPreconditionsBuilder preconditionsBuilder = mPreconditions != null ? mPreconditions.toBuilder() : TransactionPreconditions.builder();
-
-        // left in for backwards compatibility, check on TransactionBuilder.mTimeBounds should be removed when both TransactionBuilder.setTimeBounds() and
-        // TransactionBuilder.setTimeout() are removed due to deprecation. This currently allows the builder to override
-        // any timebounds in new preconditions with timebounds directly from legacy timebounds/timeouts.
-        if (mTimeBounds != null) {
-            preconditionsBuilder.timeBounds(mTimeBounds);
-        }
-
-        mPreconditions = preconditionsBuilder.build();
         mPreconditions.isValid(mTimeoutSet);
 
         if (mBaseFee == null) {

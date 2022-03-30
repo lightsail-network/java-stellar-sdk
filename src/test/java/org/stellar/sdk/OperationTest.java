@@ -519,7 +519,7 @@ public class OperationTest {
         Account account = new Account(source.getAccountId(), sequenceNumber);
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-                .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 

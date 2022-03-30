@@ -84,13 +84,17 @@ public class Transaction extends AbstractTransaction {
   }
   
   /**
-   * @return Preconditions
+   * Get the pre-conditions for the transaction
+   *
+   * @return TransactionPreconditions
    */
   public TransactionPreconditions getPreconditions() {
     return mPreconditions;
   }
 
   /**
+   * Gets the time bounds defined for the transaction.
+   *
    * @return TimeBounds
    */
   public TimeBounds getTimeBounds() {
