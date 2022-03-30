@@ -116,6 +116,17 @@ public class TransactionPreconditionsTest {
         preconditions.isValid(true);
     }
 
+    @Test
+    public void itChecksValidityWhenNoTimeboundsAndNoTimeoutSet() {
+        TransactionPreconditions preconditions = TransactionPreconditions.builder().build();
+        try {
+            preconditions.isValid(false);
+            fail();
+        } catch (FormatException exception) {
+            assertTrue(exception.getMessage().contains("Invalid preconditions, must define timebounds or set infinite timeout"));
+        }
+    }
+
 
     @Test
     public void itChecksV2Status() {

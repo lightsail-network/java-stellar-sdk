@@ -28,7 +28,7 @@ public class TransactionBuilderTest {
         try {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR", "2000").build())
-                .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .build();
             fail("expected RuntimeException");
         } catch (RuntimeException e) {
@@ -46,7 +46,7 @@ public class TransactionBuilderTest {
         Account account = new Account(source.getAccountId(), sequenceNumber);
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-                .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
@@ -75,7 +75,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addMemo(Memo.text("Hello world!"))
-                .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
@@ -131,7 +131,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .setBaseFee(200)
-                .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .build();
 
         transaction.sign(source);
@@ -226,7 +226,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
                 .addPreconditions(TransactionPreconditions.builder()
-                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE))
                         .ledgerBounds(LedgerBounds.builder().minLedger(1).maxLedger(2).build())
                         .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -250,13 +250,13 @@ public class TransactionBuilderTest {
 
         SequenceNumber seqNum = new SequenceNumber();
         seqNum.setSequenceNumber(new Int64(5L));
-        preconditionsV2.timeBounds(TransactionBuilder.buildTimeBounds(0, TransactionBuilder.TIMEOUT_INFINITE));
+        preconditionsV2.timeBounds(TransactionBuilder.buildTimeBounds(0, TransactionPreconditions.TIMEOUT_INFINITE));
         preconditionsV2.minSeqNum(seqNum);
 
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
                 .addPreconditions(TransactionPreconditions.builder()
-                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE))
                         .minSeqNumber(5L)
                         .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -278,7 +278,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
                 .addPreconditions(TransactionPreconditions.builder()
-                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE))
                         .minSeqAge(5L)
                         .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -300,7 +300,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
                 .addPreconditions(TransactionPreconditions.builder()
-                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE))
                         .minSeqLedgerGap(5)
                         .build())
                 .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -333,7 +333,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
                 .addPreconditions(TransactionPreconditions.builder()
-                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                        .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE))
                         .extraSigners(newArrayList(signerKey))
                         .minSeqLedgerGap(5)
                         .build())
@@ -356,7 +356,7 @@ public class TransactionBuilderTest {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                     .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                     .addPreconditions(TransactionPreconditions.builder()
-                            .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE))
+                            .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE))
                             .extraSigners(newArrayList(new SignerKey.Builder().build(), new SignerKey.Builder().build(), new SignerKey.Builder().build()))
                             .minSeqLedgerGap(5)
                             .build())
@@ -367,12 +367,31 @@ public class TransactionBuilderTest {
     }
 
     @Test
+    public void testBuilderFailsWhenTimeoutLessThanTimeBoundsMinimum() throws Exception {
+        Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
+
+        try {
+            new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+                    .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+                    .addPreconditions(TransactionPreconditions.builder()
+                            // set min time to 120 seconds from now
+                            .timeBounds(new TimeBounds((System.currentTimeMillis() / 1000 )+ 120, TransactionPreconditions.TIMEOUT_INFINITE))
+                            .build())
+                    .setBaseFee(Transaction.MIN_BASE_FEE)
+                    .setTimeout(1); // sat max time to 1 second from now
+            fail();
+        } catch (IllegalArgumentException exception){
+            assertTrue(exception.getMessage().contains("minTime must be >= maxTime"));
+        }
+    }
+
+    @Test
     public void testBuilderUsesCustomSequence() throws IOException {
         Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                 .addPreconditions(TransactionPreconditions.builder()
-                        .timeBounds(new TimeBounds(0L,TransactionBuilder.TIMEOUT_INFINITE)).build())
+                        .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE)).build())
                 .addSequenceNumberStrategy(new SequenceNumberStrategy() {
                     @Override
                     public long getSequenceNumber(TransactionBuilderAccount account) {
@@ -413,6 +432,22 @@ public class TransactionBuilderTest {
     }
 
     @Test
+    public void testBuilderFailsWhenSettingTimeboundsAndAlreadySet() throws IOException {
+        Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
+        try {
+            new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+                    .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+                    .setTimeout(10)
+                    .addTimeBounds(new TimeBounds(42, 1337))
+                    .build();
+            fail();
+        } catch (RuntimeException exception) {
+            assertTrue(exception.getMessage().contains("TimeBounds already set."));
+            assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
+        }
+    }
+
+    @Test
     public void testBuilderTimeoutAndMaxTimeNotSet() throws IOException {
         Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
         long currentUnix = System.currentTimeMillis() / 1000L;
@@ -437,7 +472,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addTimeBounds(new TimeBounds(42, 0))
-                .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .addMemo(Memo.hash("abcdef"))
                 .setBaseFee(100)
                 .build();
@@ -462,7 +497,7 @@ public class TransactionBuilderTest {
         Account account = new Account(source.getAccountId(), 2908908335136768L);
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-                .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
@@ -484,7 +519,7 @@ public class TransactionBuilderTest {
         Account account = new Account(source.getAccountId(), 2908908335136768L);
         try {
             Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
-                .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
             fail();
@@ -523,7 +558,7 @@ public class TransactionBuilderTest {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, null)
                     .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                     .addMemo(Memo.none())
-                    .setTimeout(TransactionBuilder.TIMEOUT_INFINITE)
+                    .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                     .build();
             fail();
         } catch (NullPointerException e) {
