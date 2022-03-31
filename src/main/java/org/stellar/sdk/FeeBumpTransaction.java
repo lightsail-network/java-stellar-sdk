@@ -125,18 +125,10 @@ public class FeeBumpTransaction extends AbstractTransaction {
       EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
       this.mAccountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
       if (inner.toEnvelopeXdr().getDiscriminant() == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
-        this.mInner = new TransactionBuilder(inner.accountConverter, new Account(inner.getSourceAccount(), inner.getSequenceNumber()), inner.getNetwork())
+        this.mInner = new TransactionBuilder(inner.accountConverter, new Account(inner.getSourceAccount(), inner.getSequenceNumber() - 1), inner.getNetwork())
                 .setBaseFee((int)inner.getFee())
                 .addOperations(Arrays.asList(inner.getOperations()))
                 .addMemo(inner.getMemo())
-                .addSequenceNumberResolver(new Function<TransactionBuilderAccount, Long>() {
-                  @Override
-                  public Long apply(@NullableDecl TransactionBuilderAccount input) {
-                    // override the sequence number resolution which be default, would have generated sourceAccount.sequenceNumber + 1
-                    // the fee bump tx needs to be set to same sequence as the inner tx.
-                    return inner.getSequenceNumber();
-                  }
-                })
                 .addPreconditions(new TransactionPreconditions.TransactionPreconditionsBuilder().timeBounds(inner.getTimeBounds()).build())
                 .build();
 

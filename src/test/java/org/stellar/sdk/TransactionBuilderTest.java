@@ -476,30 +476,22 @@ public class TransactionBuilderTest {
     }
 
     @Test
-    public void testBuilderUsesCustomSequence() throws IOException {
-        Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
+    public void testBuilderUsesAccountSequence() throws IOException {
+        Account account = new Account(KeyPair.random().getAccountId(), 3L);
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                 .addPreconditions(TransactionPreconditions.builder()
                         .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE)).build())
-                .addSequenceNumberResolver(new Function<TransactionBuilderAccount, Long>() {
-                    @Override
-                    public Long apply(TransactionBuilderAccount sourceAccount) {
-                        // an example of overriding the default 'sourceAccount + 1' sequence number resolution
-                        // can use this resolver function to inject the sequence number applied on the new transaction.
-                        return 5L;
-                    }
-                })
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
         // check that the created tx has the sequence number which custom sequence handler sets,
         // rather than using default of sourceAccount.seqNum + 1
-        assertEquals(5, transaction.getSequenceNumber());
+        assertEquals(4, transaction.getSequenceNumber());
 
         // check that the sourceAccount.seqNum gets updated to what the custom sequence handler sets,
         // rather than the default of sourceAccount.seqNum + 1
-        assertEquals(5, account.getSequenceNumber().longValue());
+        assertEquals(4, account.getSequenceNumber().longValue());
     }
 
     @Test

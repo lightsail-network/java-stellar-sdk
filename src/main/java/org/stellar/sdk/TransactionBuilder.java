@@ -21,7 +21,6 @@ public class TransactionBuilder {
     private List<Operation> mOperations;
     private Integer mBaseFee;
     private Network mNetwork;
-    private Function<TransactionBuilderAccount, Long> generateSequenceNumberFunc;
     private TransactionPreconditions mPreconditions;
     private boolean mTimeoutSet;
 
@@ -39,7 +38,6 @@ public class TransactionBuilder {
         mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
         mNetwork = checkNotNull(network, "Network cannot be null");
         mOperations = newArrayList();
-        generateSequenceNumberFunc = IncrementedSequenceNumberFunc;
         mPreconditions = TransactionPreconditions.builder().build();
     }
 
@@ -95,20 +93,6 @@ public class TransactionBuilder {
     public TransactionBuilder addPreconditions(TransactionPreconditions preconditions) {
         checkNotNull(preconditions, "preconditions cannot be null");
         this.mPreconditions = preconditions;
-        return this;
-    }
-
-    /**
-     * Override the default sequence number resolution. Transaction builder invokes this function
-     * to obtain the sequence number to apply to the transaction. By default, the <code>IncrementedSequenceNumberFunc</code>
-     * is used which will derive a sequence number based on sourceAccount's current sequence number incremeneted by 1.
-     *
-     * @param generateSequenceNumberFunc a function that receives the transaction's source account and returns
-     *                                   the sequence number desired for this transaction.
-     * @return updated Builder object
-     */
-    public TransactionBuilder addSequenceNumberResolver(Function<TransactionBuilderAccount, Long> generateSequenceNumberFunc) {
-        this.generateSequenceNumberFunc = generateSequenceNumberFunc;
         return this;
     }
 
@@ -212,8 +196,7 @@ public class TransactionBuilder {
             throw new NoNetworkSelectedException();
         }
 
-        long sequenceNumber = generateSequenceNumberFunc.apply(mSourceAccount);
-
+        long sequenceNumber = mSourceAccount.getIncrementedSequenceNumber();
         Operation[] operations = new Operation[mOperations.size()];
         operations = mOperations.toArray(operations);
         Transaction transaction = new Transaction(
