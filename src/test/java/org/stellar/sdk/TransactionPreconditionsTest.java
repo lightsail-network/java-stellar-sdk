@@ -37,7 +37,7 @@ public class TransactionPreconditionsTest {
         PreconditionsV2.Builder v2Builder = new PreconditionsV2.Builder();
 
         v2Builder.extraSigners(new SignerKey[]{});
-        v2Builder.minSeqAge(new Duration(new Int64(2L)));
+        v2Builder.minSeqAge(new Duration(new Uint64(2L)));
         v2Builder.ledgerBounds(new org.stellar.sdk.xdr.LedgerBounds.Builder()
                 .minLedger(new Uint32(1))
                 .maxLedger(new Uint32(2))
@@ -69,7 +69,7 @@ public class TransactionPreconditionsTest {
         org.stellar.sdk.xdr.TimeBounds xdrTimeBounds = new org.stellar.sdk.xdr.TimeBounds.Builder().minTime(new TimePoint(new Uint64(1L))).maxTime(new TimePoint(new Uint64(2L))).build();
         v2Builder.timeBounds(xdrTimeBounds);
         v2Builder.minSeqLedgerGap(new Uint32(0));
-        v2Builder.minSeqAge(new Duration(new Int64(0L)));
+        v2Builder.minSeqAge(new Duration(new Uint64(0L)));
         v2Builder.extraSigners(new SignerKey[]{});
         preconditionsBuilder.v2(v2Builder.build());
         // create V2 Precond with just timebounds
@@ -123,7 +123,7 @@ public class TransactionPreconditionsTest {
         // xdr encoding requires non-null for min ledger gap
         assertEquals(xdr.getV2().getMinSeqLedgerGap().getUint32().intValue(), 0);
         // xdr encoding requires non-null for min seq age
-        assertEquals(xdr.getV2().getMinSeqAge().getDuration().getInt64().longValue(), 0);
+        assertEquals(xdr.getV2().getMinSeqAge().getDuration().getUint64().longValue(), 0);
         assertEquals(xdr.getV2().getExtraSigners().length, 3);
     }
 
@@ -216,7 +216,7 @@ public class TransactionPreconditionsTest {
         PreconditionsV2.Builder v2Builder = new PreconditionsV2.Builder();
 
         v2Builder.extraSigners(new SignerKey[]{});
-        v2Builder.minSeqAge(new Duration(new Int64(2L)));
+        v2Builder.minSeqAge(new Duration(new Uint64(2L)));
         v2Builder.ledgerBounds(new org.stellar.sdk.xdr.LedgerBounds.Builder()
                 .minLedger(new Uint32(1))
                 .maxLedger(new Uint32(2))

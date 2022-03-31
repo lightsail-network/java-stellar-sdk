@@ -22,9 +22,9 @@ import java.util.Arrays;
 //  case CLAIM_PREDICATE_NOT:
 //      ClaimPredicate* notPredicate;
 //  case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-//      TimePoint absBefore; // Predicate will be true if closeTime < absBefore
+//      int64 absBefore; // Predicate will be true if closeTime < absBefore
 //  case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-//      Duration relBefore; // Seconds since closeTime of the ledger in which the
+//      int64 relBefore; // Seconds since closeTime of the ledger in which the
 //                          // ClaimableBalanceEntry was created
 //  };
 
@@ -59,18 +59,18 @@ public class ClaimPredicate implements XdrElement {
   public void setNotPredicate(ClaimPredicate value) {
     this.notPredicate = value;
   }
-  private TimePoint absBefore;
-  public TimePoint getAbsBefore() {
+  private Int64 absBefore;
+  public Int64 getAbsBefore() {
     return this.absBefore;
   }
-  public void setAbsBefore(TimePoint value) {
+  public void setAbsBefore(Int64 value) {
     this.absBefore = value;
   }
-  private Duration relBefore;
-  public Duration getRelBefore() {
+  private Int64 relBefore;
+  public Int64 getRelBefore() {
     return this.relBefore;
   }
-  public void setRelBefore(Duration value) {
+  public void setRelBefore(Int64 value) {
     this.relBefore = value;
   }
 
@@ -79,8 +79,8 @@ public class ClaimPredicate implements XdrElement {
     private ClaimPredicate[] andPredicates;
     private ClaimPredicate[] orPredicates;
     private ClaimPredicate notPredicate;
-    private TimePoint absBefore;
-    private Duration relBefore;
+    private Int64 absBefore;
+    private Int64 relBefore;
 
     public Builder discriminant(ClaimPredicateType discriminant) {
       this.discriminant = discriminant;
@@ -102,12 +102,12 @@ public class ClaimPredicate implements XdrElement {
       return this;
     }
 
-    public Builder absBefore(TimePoint absBefore) {
+    public Builder absBefore(Int64 absBefore) {
       this.absBefore = absBefore;
       return this;
     }
 
-    public Builder relBefore(Duration relBefore) {
+    public Builder relBefore(Int64 relBefore) {
       this.relBefore = relBefore;
       return this;
     }
@@ -154,10 +154,10 @@ public class ClaimPredicate implements XdrElement {
   }
   break;
   case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-  TimePoint.encode(stream, encodedClaimPredicate.absBefore);
+  Int64.encode(stream, encodedClaimPredicate.absBefore);
   break;
   case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-  Duration.encode(stream, encodedClaimPredicate.relBefore);
+  Int64.encode(stream, encodedClaimPredicate.relBefore);
   break;
   }
   }
@@ -192,10 +192,10 @@ public class ClaimPredicate implements XdrElement {
   }
   break;
   case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-  decodedClaimPredicate.absBefore = TimePoint.decode(stream);
+  decodedClaimPredicate.absBefore = Int64.decode(stream);
   break;
   case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-  decodedClaimPredicate.relBefore = Duration.decode(stream);
+  decodedClaimPredicate.relBefore = Int64.decode(stream);
   break;
   }
     return decodedClaimPredicate;
