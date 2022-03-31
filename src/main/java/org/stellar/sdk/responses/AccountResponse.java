@@ -25,6 +25,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private Long sequenceNumber;
   @SerializedName("subentry_count")
   private Integer subentryCount;
+  @SerializedName("sequence_ledger")
+  private Long sequenceUpdatedAtLedger;
+  @SerializedName("sequence_time")
+  private Long sequenceUpdatedAtTime;
   @SerializedName("inflation_destination")
   private String inflationDestination;
   @SerializedName("home_domain")
@@ -75,6 +79,11 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   }
 
   @Override
+  public void setSequenceNumber(long seqNum) {
+     sequenceNumber = seqNum;
+  }
+
+  @Override
   public Long getIncrementedSequenceNumber() {
     return new Long(sequenceNumber + 1);
   }
@@ -83,7 +92,15 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   public void incrementSequenceNumber() {
     sequenceNumber++;
   }
-  
+
+  public Long getSequenceUpdatedAtLedger() {
+    return sequenceUpdatedAtLedger;
+  }
+
+  public Long getSequenceUpdatedAtTime() {
+    return sequenceUpdatedAtTime;
+  }
+
   public Integer getSubentryCount() {
     return subentryCount;
   }

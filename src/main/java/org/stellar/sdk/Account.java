@@ -7,7 +7,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Represents an account in Stellar network with it's sequence number.
  * Account object is required to build a {@link Transaction}.
- * @see org.stellar.sdk.Transaction.Builder
+ * @see TransactionBuilder
  */
 public class Account implements TransactionBuilderAccount {
   private final String mAccountId;
@@ -36,6 +36,11 @@ public class Account implements TransactionBuilderAccount {
   @Override
   public Long getSequenceNumber() {
     return mSequenceNumber;
+  }
+
+  @Override
+  public void setSequenceNumber(long seqNum) {
+    mSequenceNumber = seqNum;
   }
 
   @Override

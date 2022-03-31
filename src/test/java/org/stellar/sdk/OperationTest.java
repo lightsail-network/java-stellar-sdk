@@ -1,12 +1,11 @@
 package org.stellar.sdk;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.TrustLineFlags;
 import org.stellar.sdk.xdr.XdrDataInputStream;
-
-import com.google.common.io.BaseEncoding;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -518,9 +517,9 @@ public class OperationTest {
 
         long sequenceNumber = 2908908335136768L;
         Account account = new Account(source.getAccountId(), sequenceNumber);
-        Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-                .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
@@ -535,21 +534,17 @@ public class OperationTest {
         org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
         SetOptionsOperation parsedOperation = (SetOptionsOperation) SetOptionsOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
 
-        assertEquals(null, parsedOperation.getInflationDestination());
-        assertEquals(null, parsedOperation.getClearFlags());
-        assertEquals(null, parsedOperation.getSetFlags());
-        assertEquals(null, parsedOperation.getMasterKeyWeight());
-        assertEquals(null, parsedOperation.getLowThreshold());
-        assertEquals(null, parsedOperation.getMediumThreshold());
-        assertEquals(null, parsedOperation.getHighThreshold());
-        assertEquals(null, parsedOperation.getHomeDomain());
+        assertEquals(operation.getInflationDestination(), parsedOperation.getInflationDestination());
+        assertEquals(operation.getClearFlags(), parsedOperation.getClearFlags());
+        assertEquals(operation.getSetFlags(), parsedOperation.getSetFlags());
+        assertEquals(operation.getMasterKeyWeight(), parsedOperation.getMasterKeyWeight());
+        assertEquals(operation.getLowThreshold(), parsedOperation.getLowThreshold());
+        assertEquals(operation.getMediumThreshold(), parsedOperation.getMediumThreshold());
+        assertEquals(operation.getHighThreshold(), parsedOperation.getHighThreshold());
+        assertEquals(operation.getHomeDomain(), parsedOperation.getHomeDomain());
         assertTrue(Arrays.equals(transaction.hash(), parsedOperation.getSigner().getPreAuthTx().getUint256()));
-        assertEquals(new Integer(10), parsedOperation.getSignerWeight());
-        assertEquals(opSource.getAccountId(), parsedOperation.getSourceAccount());
-
-        assertEquals(
-                "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAB1vRBIRC3w7ZH5rQa17hIBKUwZTvBP4kNmSP7jVyw1fQAAAAK",
-                operation.toXdrBase64(AccountConverter.enableMuxed()));
+        assertEquals(operation.getSignerWeight(), parsedOperation.getSignerWeight());
+        assertEquals(operation.getSourceAccount(), parsedOperation.getSourceAccount());
     }
 
     @Test

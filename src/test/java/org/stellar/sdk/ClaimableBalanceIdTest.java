@@ -26,11 +26,11 @@ public class ClaimableBalanceIdTest {
                 new Predicate.Unconditional()
             )
         )).build();
-    Transaction transaction = new Transaction.Builder(AccountConverter.enableMuxed(), new Account(sourceAccount, 123l), Network.TESTNET)
+    Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), new Account(sourceAccount, 123l), Network.TESTNET)
         .addOperation(op0)
         .addOperation(new BumpSequenceOperation.Builder(2l).build())
         .addOperation(op0)
-        .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+        .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
         .setBaseFee(Transaction.MIN_BASE_FEE)
         .build();
 
@@ -51,18 +51,18 @@ public class ClaimableBalanceIdTest {
                 new Predicate.Unconditional()
             )
         )).setSourceAccount("GABXJTV7ELEB2TQZKJYEGXBUIG6QODJULKJDI65KZMIZZG2EACJU5EA7").build();
-    transaction = new Transaction.Builder(AccountConverter.enableMuxed(), new Account(sourceAccount, 123l), Network.TESTNET)
+    transaction = new TransactionBuilder(AccountConverter.enableMuxed(), new Account(sourceAccount, 123l), Network.TESTNET)
         .addOperation(opWithSourceAccount)
-        .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+        .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
         .setBaseFee(Transaction.MIN_BASE_FEE)
         .build();
 
     // operation source account does not affect claimable balance id
     assertEquals(expectedIdIndex0, transaction.getClaimableBalanceId(0));
 
-    transaction = new Transaction.Builder(AccountConverter.enableMuxed(), new Account(sourceAccount, 124l), Network.TESTNET)
+    transaction = new TransactionBuilder(AccountConverter.enableMuxed(), new Account(sourceAccount, 124l), Network.TESTNET)
         .addOperation(opWithSourceAccount)
-        .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+        .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
         .setBaseFee(Transaction.MIN_BASE_FEE)
         .build();
 
@@ -78,10 +78,10 @@ public class ClaimableBalanceIdTest {
     muxedAccount.setMed25519(med);
 
 
-    transaction = new Transaction.Builder(AccountConverter.enableMuxed(), new Account(StrKey.encodeStellarMuxedAccount(muxedAccount), 123l), Network.TESTNET)
+    transaction = new TransactionBuilder(AccountConverter.enableMuxed(), new Account(StrKey.encodeStellarMuxedAccount(muxedAccount), 123l), Network.TESTNET)
         .addOperation(op0)
         .addOperation(new BumpSequenceOperation.Builder(2l).build())
-        .setTimeout(Transaction.Builder.TIMEOUT_INFINITE)
+        .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
         .setBaseFee(Transaction.MIN_BASE_FEE)
         .build();
 

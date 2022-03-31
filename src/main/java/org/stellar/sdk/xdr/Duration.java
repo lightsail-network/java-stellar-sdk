@@ -10,28 +10,28 @@ import com.google.common.base.Objects;
 
 // === xdr source ============================================================
 
-//  typedef int64 Duration;
+//  typedef uint64 Duration;
 
 //  ===========================================================================
 public class Duration implements XdrElement {
-  private Int64 Duration;
+  private Uint64 Duration;
 
   public Duration() {}
 
-  public Duration(Int64 Duration) {
+  public Duration(Uint64 Duration) {
     this.Duration = Duration;
   }
 
-  public Int64 getDuration() {
+  public Uint64 getDuration() {
     return this.Duration;
   }
 
-  public void setDuration(Int64 value) {
+  public void setDuration(Uint64 value) {
     this.Duration = value;
   }
 
   public static void encode(XdrDataOutputStream stream, Duration  encodedDuration) throws IOException {
-    Int64.encode(stream, encodedDuration.Duration);
+    Uint64.encode(stream, encodedDuration.Duration);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -39,7 +39,7 @@ public class Duration implements XdrElement {
   }
   public static Duration decode(XdrDataInputStream stream) throws IOException {
     Duration decodedDuration = new Duration();
-    decodedDuration.Duration = Int64.decode(stream);
+    decodedDuration.Duration = Uint64.decode(stream);
     return decodedDuration;
   }
 

@@ -11,7 +11,12 @@ import org.stellar.sdk.xdr.SignatureHint;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Sep10Challenge {
   static final int GRACE_PERIOD_SECONDS = 5 * 60;
@@ -88,7 +93,7 @@ public class Sep10Challenge {
         .setSourceAccount(sourceAccount.getAccountId())
         .build();
 
-    Transaction.Builder builder = new Transaction.Builder(AccountConverter.enableMuxed(), sourceAccount, network)
+    TransactionBuilder builder = new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
         .addTimeBounds(timebounds)
         .setBaseFee(100)
         .addOperation(domainNameOperation)
@@ -155,11 +160,6 @@ public class Sep10Challenge {
     // verify that transaction sequenceNumber is equal to zero
     if (transaction.getSequenceNumber() != 0L) {
       throw new InvalidSep10ChallengeException("The transaction sequence number should be zero.");
-    }
-
-    // verify that transaction has time bounds set, and that current time is between the minimum and maximum bounds.
-    if (transaction.getTimeBounds() == null) {
-      throw new InvalidSep10ChallengeException("Transaction requires timebounds.");
     }
 
     long maxTime = transaction.getTimeBounds().getMaxTime();
