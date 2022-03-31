@@ -50,7 +50,7 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
     }
 
     if (obj.has("rel_before")) {
-      return new Predicate.RelBefore(new Duration(new Int64(obj.get("rel_before").getAsLong())));
+      return new Predicate.RelBefore(new Duration(new Uint64(obj.get("rel_before").getAsLong())));
     }
 
     throw new IllegalArgumentException("Unsupported predicate: "+json.toString());

@@ -12,6 +12,7 @@ import org.stellar.sdk.xdr.PreconditionsV2;
 import org.stellar.sdk.xdr.SequenceNumber;
 import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.Uint32;
+import org.stellar.sdk.xdr.Uint64;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +66,7 @@ public class TransactionPreconditions {
                 builder.extraSigners(Arrays.asList(preconditions.getV2().getExtraSigners()));
             }
             if (preconditions.getV2().getMinSeqAge() != null) {
-                builder.minSeqAge(preconditions.getV2().getMinSeqAge().getDuration().getInt64());
+                builder.minSeqAge(preconditions.getV2().getMinSeqAge().getDuration().getUint64());
             }
             if (preconditions.getV2().getLedgerBounds() != null) {
                 builder.ledgerBounds(LedgerBounds.fromXdr(preconditions.getV2().getLedgerBounds()));
@@ -94,7 +95,7 @@ public class TransactionPreconditions {
             PreconditionsV2.Builder v2Builder = new PreconditionsV2.Builder();
 
             v2Builder.extraSigners(extraSigners.toArray(new SignerKey[]{}));
-            v2Builder.minSeqAge(new Duration(new Int64(minSeqAge)));
+            v2Builder.minSeqAge(new Duration(new Uint64(minSeqAge)));
 
             if (ledgerBounds != null) {
                 v2Builder.ledgerBounds(new org.stellar.sdk.xdr.LedgerBounds.Builder()
