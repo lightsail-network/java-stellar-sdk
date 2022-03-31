@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Function;
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 import org.stellar.sdk.xdr.Int64;
@@ -481,15 +482,12 @@ public class TransactionBuilderTest {
                 .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                 .addPreconditions(TransactionPreconditions.builder()
                         .timeBounds(new TimeBounds(0L,TransactionPreconditions.TIMEOUT_INFINITE)).build())
-                .addSequenceNumberStrategy(new SequenceNumberStrategy() {
+                .addSequenceNumberResolver(new Function<TransactionBuilderAccount, Long>() {
                     @Override
-                    public long getSequenceNumber(TransactionBuilderAccount account) {
-                        return 5;
-                    }
-
-                    @Override
-                    public void updateSourceAccount(long newSequenceNumber, TransactionBuilderAccount account) {
-                        account.setSequenceNumber(newSequenceNumber);
+                    public Long apply(TransactionBuilderAccount sourceAccount) {
+                        // an example of overriding the default 'sourceAccount + 1' sequence number resolution
+                        // can use this resolver function to inject the sequence number applied on the new transaction.
+                        return 5L;
                     }
                 })
                 .setBaseFee(Transaction.MIN_BASE_FEE)

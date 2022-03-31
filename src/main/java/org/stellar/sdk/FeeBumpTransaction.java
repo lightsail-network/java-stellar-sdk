@@ -1,7 +1,9 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.FeeBumpTransactionEnvelope;
@@ -127,16 +129,12 @@ public class FeeBumpTransaction extends AbstractTransaction {
                 .setBaseFee((int)inner.getFee())
                 .addOperations(Arrays.asList(inner.getOperations()))
                 .addMemo(inner.getMemo())
-                .addSequenceNumberStrategy(new SequenceNumberStrategy() {
+                .addSequenceNumberResolver(new Function<TransactionBuilderAccount, Long>() {
                   @Override
-                  public long getSequenceNumber(TransactionBuilderAccount account) {
-                    // set the tx seq num to same as that of the inner tx
+                  public Long apply(@NullableDecl TransactionBuilderAccount input) {
+                    // override the sequence number resolution which be default, would have generated sourceAccount.sequenceNumber + 1
+                    // the fee bump tx needs to be set to same sequence as the inner tx.
                     return inner.getSequenceNumber();
-                  }
-
-                  @Override
-                  public void updateSourceAccount(long newSequenceNumber, TransactionBuilderAccount account) {
-                    //no-op, account instance is local to this scope, not external, no need to update it.
                   }
                 })
                 .addPreconditions(new TransactionPreconditions.TransactionPreconditionsBuilder().timeBounds(inner.getTimeBounds()).build())
