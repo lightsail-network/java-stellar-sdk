@@ -11,9 +11,4 @@ public class SequentialSequenceNumberStrategy implements SequenceNumberStrategy{
     public long getSequenceNumber(TransactionBuilderAccount account) {
         return account.getIncrementedSequenceNumber();
     }
-
-    @Override
-    public void updateSourceAccount(long newSequenceNumber, TransactionBuilderAccount account) {
-        account.setSequenceNumber(newSequenceNumber);
-    }
 }

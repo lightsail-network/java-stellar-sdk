@@ -7,6 +7,10 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 * Update XDR definitions and auto-generated classes to support upcoming protocol 19 release ([#276](https://github.com/stellar/java-stellar-sdk/pull/276)).
 * Extend StrKey implementation to handle [CAP 40 Payload Signer](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md) ([#276](https://github.com/stellar/java-stellar-sdk/pull/276)).
 * Extended Transaction submission settings, additional new Preconditions can be added now, refer to [CAP 21 Transaction Preconditions](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md).
+* Added ability to override the sequence number that is set by transaction builder. By default, transaction builder creates
+  transactions with sequence number equal to source account's sequence number incremented by 1. 
+  Refer to `TransactionBuilder.addSequenceNumberResolver()` for using this optional new functionality.
+
 
 ### Breaking changes
 

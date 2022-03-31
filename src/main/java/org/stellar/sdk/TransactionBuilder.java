@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Function;
 import org.stellar.sdk.TransactionPreconditions.TransactionPreconditionsBuilder;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
@@ -20,7 +21,7 @@ public class TransactionBuilder {
     private List<Operation> mOperations;
     private Integer mBaseFee;
     private Network mNetwork;
-    private SequenceNumberStrategy sequenceNumberStrategy;
+    private Function<TransactionBuilderAccount, Long> generateSequenceNumberFunc;
     private TransactionPreconditions mPreconditions;
     private boolean mTimeoutSet;
 
@@ -38,7 +39,7 @@ public class TransactionBuilder {
         mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
         mNetwork = checkNotNull(network, "Network cannot be null");
         mOperations = newArrayList();
-        sequenceNumberStrategy = new SequentialSequenceNumberStrategy();
+        generateSequenceNumberFunc = IncrementedSequenceNumberFunc;
         mPreconditions = TransactionPreconditions.builder().build();
     }
 
@@ -98,15 +99,16 @@ public class TransactionBuilder {
     }
 
     /**
-     * Add a sequnce number resolution strategy. The Strategy is a callback that can determine the
-     * actual sequence number applied to the tx being built.
+     * Override the default sequence number resolution. Transaction builder invokes this function
+     * to obtain the sequence number to apply to the transaction. By default, the <code>IncrementedSequenceNumberFunc</code>
+     * is used which will derive a sequence number based on sourceAccount's current sequence number incremeneted by 1.
      *
-     * @param sequenceNumberStrategy the sequence number strategy that defines how to get a sequence number for the tx
-     *                               and if/how to set source account sequence number after tx is built.
+     * @param generateSequenceNumberFunc a function that receives the transaction's source account and returns
+     *                                   the sequence number desired for this transaction.
      * @return updated Builder object
      */
-    public TransactionBuilder addSequenceNumberStrategy(SequenceNumberStrategy sequenceNumberStrategy) {
-        this.sequenceNumberStrategy = sequenceNumberStrategy;
+    public TransactionBuilder addSequenceNumberResolver(Function<TransactionBuilderAccount, Long> generateSequenceNumberFunc) {
+        this.generateSequenceNumberFunc = generateSequenceNumberFunc;
         return this;
     }
 
@@ -210,7 +212,7 @@ public class TransactionBuilder {
             throw new NoNetworkSelectedException();
         }
 
-        long sequenceNumber = sequenceNumberStrategy.getSequenceNumber(mSourceAccount);
+        long sequenceNumber = generateSequenceNumberFunc.apply(mSourceAccount);
 
         Operation[] operations = new Operation[mOperations.size()];
         operations = mOperations.toArray(operations);
@@ -224,10 +226,20 @@ public class TransactionBuilder {
                 mPreconditions,
                 mNetwork
         );
-        // Increment sequence number when there were no exceptions when creating a transaction
-        sequenceNumberStrategy.updateSourceAccount(sequenceNumber, mSourceAccount);
+        mSourceAccount.setSequenceNumber(sequenceNumber);
         return transaction;
     }
+
+    /**
+     * A default implementation of sequence number generation which will derive a sequence number based on
+     * sourceAccount's current sequence number + 1.
+     */
+    public static Function<TransactionBuilderAccount, Long> IncrementedSequenceNumberFunc = new Function<TransactionBuilderAccount, Long>() {
+        @Override
+        public Long apply(TransactionBuilderAccount sourceAccount) {
+            return sourceAccount.getIncrementedSequenceNumber();
+        }
+    };
 
     public static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(long minTime, long maxTime) {
         return new org.stellar.sdk.xdr.TimeBounds.Builder().minTime(new TimePoint(new Uint64(minTime)))

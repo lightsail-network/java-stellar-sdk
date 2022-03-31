@@ -235,17 +235,6 @@ public class Sep10ChallengeTest {
             .setBaseFee((int)transaction.getFee())
             .addMemo(transaction.getMemo())
             .addOperations(Arrays.asList(operations))
-            .addSequenceNumberStrategy(new SequenceNumberStrategy() {
-              @Override
-              public long getSequenceNumber(TransactionBuilderAccount account) {
-                return transaction.getSequenceNumber();
-              }
-
-              @Override
-              public void updateSourceAccount(long newSequenceNumber, TransactionBuilderAccount account) {
-
-              }
-            })
             .addPreconditions(transaction.getPreconditions())
             .build();
 
