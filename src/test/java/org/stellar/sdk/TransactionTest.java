@@ -34,7 +34,7 @@ public class TransactionTest {
                 account.getIncrementedSequenceNumber(),
                 new org.stellar.sdk.Operation[]{new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()},
                 null,
-                new TransactionPreconditions(null, null, null, null, new ArrayList<SignerKey>(),null),
+                new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(),null),
                 Network.PUBLIC
         );
 
@@ -70,7 +70,7 @@ public class TransactionTest {
                 account.getIncrementedSequenceNumber(),
                 new org.stellar.sdk.Operation[]{new PaymentOperation.Builder(destination.getAccountId(), new AssetTypeNative(), "2000").build()},
                 null,
-                new TransactionPreconditions(null, null, null, null, new ArrayList<SignerKey>(),null),
+                new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(),null),
                 Network.PUBLIC
         );
 
@@ -102,7 +102,7 @@ public class TransactionTest {
                 account.getIncrementedSequenceNumber(),
                 new org.stellar.sdk.Operation[]{new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()},
                 null,
-                new TransactionPreconditions(null, null, null, null, new ArrayList<SignerKey>(),null),
+                new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(),null),
                 Network.TESTNET
         );
 
