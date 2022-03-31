@@ -27,8 +27,8 @@ public class TransactionPreconditions {
 
     LedgerBounds ledgerBounds;
     Long minSeqNumber;
-    Long minSeqAge;
-    Integer minSeqLedgerGap;
+    long minSeqAge;
+    int minSeqLedgerGap;
     @Singular
     @NonNull
     List<SignerKey> extraSigners;
@@ -45,19 +45,23 @@ public class TransactionPreconditions {
     }
 
     public boolean hasV2() {
-        return (ledgerBounds != null || minSeqLedgerGap != null || minSeqAge != null || minSeqNumber != null || !extraSigners.isEmpty());
+        return (ledgerBounds != null ||
+                (minSeqLedgerGap > 0) ||
+                (minSeqAge > 0) ||
+                minSeqNumber != null ||
+                !extraSigners.isEmpty());
     }
 
     public static TransactionPreconditions fromXdr(Preconditions preconditions) {
         TransactionPreconditionsBuilder builder = new TransactionPreconditionsBuilder();
 
         if (preconditions.getDiscriminant().equals(PreconditionType.PRECOND_V2)) {
-            if (preconditions.getTimeBounds() != null) {
+            if (preconditions.getV2().getTimeBounds() != null) {
                 builder.timeBounds(new TimeBounds(
                         preconditions.getV2().getTimeBounds().getMinTime().getTimePoint().getUint64(),
                         preconditions.getV2().getTimeBounds().getMaxTime().getTimePoint().getUint64()));
             }
-            if (preconditions.getV2().getExtraSigners().length > 0) {
+            if (preconditions.getV2().getExtraSigners() != null && preconditions.getV2().getExtraSigners().length > 0) {
                 builder.extraSigners(Arrays.asList(preconditions.getV2().getExtraSigners()));
             }
             if (preconditions.getV2().getMinSeqAge() != null) {
@@ -90,7 +94,7 @@ public class TransactionPreconditions {
             PreconditionsV2.Builder v2Builder = new PreconditionsV2.Builder();
 
             v2Builder.extraSigners(extraSigners.toArray(new SignerKey[]{}));
-            v2Builder.minSeqAge(new Duration(new Int64(minSeqAge != null ? minSeqAge : 0L)));
+            v2Builder.minSeqAge(new Duration(new Int64(minSeqAge)));
 
             if (ledgerBounds != null) {
                 v2Builder.ledgerBounds(new org.stellar.sdk.xdr.LedgerBounds.Builder()
@@ -102,7 +106,7 @@ public class TransactionPreconditions {
                 v2Builder.minSeqNum(new SequenceNumber(new Int64(minSeqNumber)));
             }
 
-            v2Builder.minSeqLedgerGap(new Uint32(minSeqLedgerGap != null ? minSeqLedgerGap : 0));
+            v2Builder.minSeqLedgerGap(new Uint32(minSeqLedgerGap));
 
             if (timeBounds != null) {
                 v2Builder.timeBounds(timeBounds.toXdr());
