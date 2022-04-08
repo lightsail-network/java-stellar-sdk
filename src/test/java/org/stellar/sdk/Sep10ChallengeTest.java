@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
+import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 
@@ -238,7 +239,9 @@ public class Sep10ChallengeTest {
             .addPreconditions(transaction.getPreconditions())
             .build();
 
-    withMuxedClient.getSignatures().addAll(transaction.mSignatures);
+    for (DecoratedSignature signature : transaction.mSignatures) {
+      withMuxedClient.addSignature(signature);
+    }
 
     try {
       Sep10Challenge.readChallengeTransaction(

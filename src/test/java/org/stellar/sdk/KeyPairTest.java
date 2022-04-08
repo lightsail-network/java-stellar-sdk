@@ -2,11 +2,15 @@ package org.stellar.sdk;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.stellar.sdk.xdr.DecoratedSignature;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class KeyPairTest {
 
@@ -85,5 +89,27 @@ public class KeyPairTest {
     } catch (RuntimeException e) {
       assertEquals("KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.", e.getMessage());
     }
+  }
+
+  @Test
+  public void testSignPayloadSigner() {
+    KeyPair keypair = KeyPair.fromSecretSeed(Util.hexToBytes(SEED));
+    // the hint from this keypair is [254,66,4,55]
+
+    byte[] payload = new byte[]{1,2,3,4,5};
+    DecoratedSignature sig = keypair.signPayloadDecorated(payload);
+    Assert.assertArrayEquals(sig.getHint().getSignatureHint(), new byte[]{(byte)(0xFF & 252), 65, 0, 50});
+
+  }
+
+  @Test
+  public void testSignPayloadSignerLessThanHint() {
+    KeyPair keypair = KeyPair.fromSecretSeed(Util.hexToBytes(SEED));
+    // the hint from this keypair is [254,66,4,55]
+
+    byte[] payload = new byte[]{1,2,3};
+    DecoratedSignature sig = keypair.signPayloadDecorated(payload);
+    // the hint could only be derived off of 3 bytes from payload
+    Assert.assertArrayEquals(sig.getHint().getSignatureHint(), new byte[]{(byte)(255), 64, 7, 55});
   }
 }

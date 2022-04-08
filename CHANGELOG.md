@@ -18,6 +18,9 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   * deprecated `addTimeBounds()` use `addPreconditions()` instead
   * deprecated `setTimeout()` use `addPreconditions()` instead
   * deprecated `Transaction.Builder` use TransactionBuilder instead
+* org.stellar.sdk.Transaction
+  * `getSignatures()` returns an ImmutableList of signatures, do NOT add signatures to the collection returned.
+    use `addSignature(DecoratedSignature signature)` instead.
 
 ## 0.31.0
 
