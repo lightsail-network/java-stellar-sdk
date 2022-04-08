@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
+import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.XdrDataInputStream;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TransactionTest {
 
@@ -54,6 +56,36 @@ public class TransactionTest {
                 "AAAAAF7FIiDToW1fOYUFBC0dmyufJbFTOa2GQESGz+S2h5ViAAAAZAAKVaMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDzfR5PgRFim5Wdvq9ImdZNWGBxBWwYkQPa9l5iiBdtPLzAZv6qj+iOfSrqinsoF0XrLkwdIcZQVtp3VRHhRoUE",
                 transaction.toEnvelopeXdrBase64());
 
+    }
+
+    @Test
+    public void testAddingSignaturesDirectly() {
+        KeyPair source = KeyPair.fromAccountId("GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB");
+        KeyPair destination = KeyPair.fromAccountId("GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2");
+
+        Account account = new Account(source.getAccountId(), 0L);
+
+        Transaction transaction = new Transaction(
+                AccountConverter.disableMuxed(),
+                account.getAccountId(),
+                Transaction.MIN_BASE_FEE,
+                account.getIncrementedSequenceNumber(),
+                new org.stellar.sdk.Operation[]{new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()},
+                null,
+                new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(),null),
+                Network.PUBLIC
+        );
+
+        assertEquals(0, transaction.getSignatures().size());
+        try {
+            // should not be able to change the list of signatures directly
+            transaction.getSignatures().add(new DecoratedSignature());
+            fail();
+        } catch (UnsupportedOperationException ignored) {}
+
+        // should only be able to add signatures through interface
+        transaction.addSignature(new DecoratedSignature());
+        assertEquals(1, transaction.getSignatures().size());
     }
 
     @Test
