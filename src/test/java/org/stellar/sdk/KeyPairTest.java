@@ -98,11 +98,7 @@ public class KeyPairTest {
 
     byte[] payload = new byte[]{1,2,3,4,5};
     DecoratedSignature sig = keypair.signPayloadDecorated(payload);
-    Assert.assertArrayEquals(sig.getHint().getSignatureHint(), new byte[]{
-            (byte)(0xFF & 252),
-            (byte)(0xFF & 65),
-            (byte)(0),
-            (byte)(0xFF & 50)});
+    Assert.assertArrayEquals(sig.getHint().getSignatureHint(), new byte[]{(byte)(0xFF & 252), 65, 0, 50});
 
   }
 
@@ -114,11 +110,6 @@ public class KeyPairTest {
     byte[] payload = new byte[]{1,2,3};
     DecoratedSignature sig = keypair.signPayloadDecorated(payload);
     // the hint could only be derived off of 3 bytes from payload
-    Assert.assertArrayEquals(sig.getHint().getSignatureHint(), new byte[]{
-            (byte)(255),
-            (byte)(0xFF & 64),
-            (byte)(0xFF & 7),
-            (byte)(0xFF & 55)});
-
+    Assert.assertArrayEquals(sig.getHint().getSignatureHint(), new byte[]{(byte)(255), 64, 7, 55});
   }
 }
