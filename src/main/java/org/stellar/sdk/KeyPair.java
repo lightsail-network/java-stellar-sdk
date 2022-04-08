@@ -9,8 +9,14 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
-
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.xdr.DecoratedSignature;
+import org.stellar.sdk.xdr.PublicKey;
+import org.stellar.sdk.xdr.PublicKeyType;
+import org.stellar.sdk.xdr.SignatureHint;
+import org.stellar.sdk.xdr.SignerKey;
+import org.stellar.sdk.xdr.SignerKeyType;
+import org.stellar.sdk.xdr.Uint256;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,6 +27,7 @@ import java.security.SignatureException;
 import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.System.arraycopy;
 
 /**
  * Holds a Stellar keypair.
@@ -227,7 +234,9 @@ public class KeyPair {
 
   /**
    * Sign the provided data with the keypair's private key and returns {@link DecoratedSignature}.
-   * @param data
+   *
+   * @param data the data to sign, typically the tx hash
+   * @return          DecoratedSignature
    */
   public DecoratedSignature signDecorated(byte[] data) {
     byte[] signatureBytes = this.sign(data);
@@ -239,6 +248,34 @@ public class KeyPair {
     decoratedSignature.setHint(this.getSignatureHint());
     decoratedSignature.setSignature(signature);
     return decoratedSignature;
+  }
+
+  /**
+   * Sign the provided payload data for payload signer where the input is the data being signed.
+   * Per the <a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint" CAP-40 Signature spec</a>
+   * {@link DecoratedSignature}.
+   *
+   * @param signerPayload the payload signers raw data to sign
+   * @return          DecoratedSignature
+   */
+  public DecoratedSignature signPayloadDecorated(byte[] signerPayload) {
+    DecoratedSignature payloadSignature = signDecorated(signerPayload);
+
+    byte[] hint = new byte[4];
+
+    // copy the last four bytes of the payload into the new hint
+    if (signerPayload.length >= hint.length) {
+      arraycopy(signerPayload, signerPayload.length - hint.length, hint, 0, hint.length);
+    } else {
+      arraycopy(signerPayload, 0, hint, 0, signerPayload.length);
+    }
+
+    //XOR the new hint with this keypair's public key hint
+    for (int i = 0; i < hint.length; i++) {
+      hint[i] ^= (i < payloadSignature.getHint().getSignatureHint().length ? payloadSignature.getHint().getSignatureHint()[i] : 0);
+    }
+    payloadSignature.getHint().setSignatureHint(hint);
+    return payloadSignature;
   }
 
   /**

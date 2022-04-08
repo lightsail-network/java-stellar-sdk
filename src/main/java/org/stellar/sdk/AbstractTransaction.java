@@ -1,7 +1,14 @@
 package org.stellar.sdk;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.xdr.DecoratedSignature;
+import org.stellar.sdk.xdr.Hash;
+import org.stellar.sdk.xdr.SignatureHint;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.TransactionSignaturePayload;
+import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -75,13 +82,33 @@ public abstract class AbstractTransaction {
    */
   public abstract byte[] signatureBase();
 
+  /**
+   * Gets the Network string for this transaction.
+   *
+   * @return the Network string
+   */
   public Network getNetwork() {
     return mNetwork;
   }
 
+  /**
+   * Gets read only list(immutable) of the signatures on transaction.
+   *
+   * @return immutable list of signatures
+   */
   public List<DecoratedSignature> getSignatures() {
-    return mSignatures;
+    return ImmutableList.copyOf(mSignatures);
   }
+
+  /**
+   * Adds an additional signature to the transaction's existing list of signatures.
+   *
+   * @param signature the signature to add
+   */
+  public void addSignature(DecoratedSignature signature) {
+    mSignatures.add(signature);
+  }
+
 
   public abstract TransactionEnvelope toEnvelopeXdr();
 
