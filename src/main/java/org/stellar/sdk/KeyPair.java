@@ -272,7 +272,7 @@ public class KeyPair {
 
     //XOR the new hint with this keypair's public key hint
     for (int i = 0; i < hint.length; i++) {
-      hint[i] ^= (i < payloadSignature.getHint().getSignatureHint().length ? payloadSignature.getHint().getSignatureHint()[i] : 0);
+      hint[i] ^= payloadSignature.getHint().getSignatureHint()[i];
     }
     payloadSignature.getHint().setSignatureHint(hint);
     return payloadSignature;
