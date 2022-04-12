@@ -11,13 +11,14 @@ import java.util.Arrays;
 
 // === xdr source ============================================================
 
-//  struct PreconditionsV2 {
-//      TimeBounds *timeBounds;
+//  struct PreconditionsV2
+//  {
+//      TimeBounds* timeBounds;
 //  
 //      // Transaction only valid for ledger numbers n such that
 //      // minLedger <= n < maxLedger (if maxLedger == 0, then
 //      // only minLedger is checked)
-//      LedgerBounds *ledgerBounds;
+//      LedgerBounds* ledgerBounds;
 //  
 //      // If NULL, only valid when sourceAccount's sequence number
 //      // is seqNum - 1.  Otherwise, valid when sourceAccount's
@@ -25,7 +26,7 @@ import java.util.Arrays;
 //      // Note that after execution the account's sequence number
 //      // is always raised to tx.seqNum, and a transaction is not
 //      // valid if tx.seqNum is too high to ensure replay protection.
-//      SequenceNumber *minSeqNum;
+//      SequenceNumber* minSeqNum;
 //  
 //      // For the transaction to be valid, the current ledger time must
 //      // be at least minSeqAge greater than sourceAccount's seqTime.
