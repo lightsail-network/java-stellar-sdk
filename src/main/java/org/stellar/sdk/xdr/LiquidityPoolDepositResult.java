@@ -10,8 +10,7 @@ import com.google.common.base.Objects;
 
 // === xdr source ============================================================
 
-//  union LiquidityPoolDepositResult switch (
-//      LiquidityPoolDepositResultCode code)
+//  union LiquidityPoolDepositResult switch (LiquidityPoolDepositResultCode code)
 //  {
 //  case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
 //      void;

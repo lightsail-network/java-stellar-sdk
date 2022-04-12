@@ -36,6 +36,7 @@ import java.util.Arrays;
 //      // txFEE_BUMP_INNER_FAILED is not included
 //      case txBAD_SPONSORSHIP:
 //      case txBAD_MIN_SEQ_AGE_OR_GAP:
+//      case txMALFORMED:
 //          void;
 //      }
 //      result;
@@ -196,6 +197,7 @@ public class InnerTransactionResult implements XdrElement {
     case txNOT_SUPPORTED:
     case txBAD_SPONSORSHIP:
     case txBAD_MIN_SEQ_AGE_OR_GAP:
+    case txMALFORMED:
     break;
     }
     }
@@ -228,6 +230,7 @@ public class InnerTransactionResult implements XdrElement {
     case txNOT_SUPPORTED:
     case txBAD_SPONSORSHIP:
     case txBAD_MIN_SEQ_AGE_OR_GAP:
+    case txMALFORMED:
     break;
     }
       return decodedInnerTransactionResultResult;
