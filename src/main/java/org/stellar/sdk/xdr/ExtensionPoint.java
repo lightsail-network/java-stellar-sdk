@@ -10,9 +10,10 @@ import com.google.common.base.Objects;
 
 // === xdr source ============================================================
 
-//  union ExtensionPoint switch (int v) {
+//  union ExtensionPoint switch (int v)
+//  {
 //  case 0:
-//       void;
+//      void;
 //  };
 
 //  ===========================================================================

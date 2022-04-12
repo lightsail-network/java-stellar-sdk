@@ -9,7 +9,8 @@ import java.io.IOException;
 
 // === xdr source ============================================================
 
-//  enum PreconditionType {
+//  enum PreconditionType
+//  {
 //      PRECOND_NONE = 0,
 //      PRECOND_TIME = 1,
 //      PRECOND_V2 = 2

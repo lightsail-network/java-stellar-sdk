@@ -31,7 +31,9 @@ import java.io.IOException;
 //      txNOT_SUPPORTED = -12,         // transaction type not supported
 //      txFEE_BUMP_INNER_FAILED = -13, // fee bump inner transaction failed
 //      txBAD_SPONSORSHIP = -14,       // sponsorship not confirmed
-//      txBAD_MIN_SEQ_AGE_OR_GAP = -15 //minSeqAge or minSeqLedgerGap conditions not met
+//      txBAD_MIN_SEQ_AGE_OR_GAP =
+//          -15, // minSeqAge or minSeqLedgerGap conditions not met
+//      txMALFORMED = -16 // precondition is invalid
 //  };
 
 //  ===========================================================================
@@ -53,6 +55,7 @@ public enum TransactionResultCode implements XdrElement {
   txFEE_BUMP_INNER_FAILED(-13),
   txBAD_SPONSORSHIP(-14),
   txBAD_MIN_SEQ_AGE_OR_GAP(-15),
+  txMALFORMED(-16),
   ;
   private int mValue;
 
@@ -84,6 +87,7 @@ public enum TransactionResultCode implements XdrElement {
       case -13: return txFEE_BUMP_INNER_FAILED;
       case -14: return txBAD_SPONSORSHIP;
       case -15: return txBAD_MIN_SEQ_AGE_OR_GAP;
+      case -16: return txMALFORMED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
