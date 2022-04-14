@@ -1,9 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.FeeBumpTransactionEnvelope;
@@ -118,7 +116,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
      * Construct a new fee bump transaction builder.
      *
      * @param accountConverter The AccountConverter which will be used to encode the fee account.
-     * @param inner The inner transaction which will be fee bumped.
+     * @param inner The inner transaction which will be fee bumped. read-only, the
      */
     public Builder(AccountConverter accountConverter, final Transaction inner) {
       checkNotNull(inner, "inner cannot be null");

@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Function;
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 import org.stellar.sdk.xdr.Int64;
@@ -58,7 +57,7 @@ public class TransactionBuilderTest {
         assertEquals(transaction.getFee(), 100);
 
         assertEquals(
-                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABAy5IvTou9NDetC6PIFJhBR2yr2BuEEql4iyLfU9K7tjuQaYVZf40fbWLRwA/lHg2IYFzYMFMakxLtVrpLxMmHAw==",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQLJxvwao6eyNHaDX2QFhgdqlxJUqkpgA03UUOqf4DwOXSV9GN4ZWut2uzRuza4DWyVGBEHmmnQX+SQKFo0Sb/wA=",
                 transaction.toEnvelopeXdrBase64());
 
         // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
@@ -99,7 +98,7 @@ public class TransactionBuilderTest {
         assertEquals(transaction, transaction2);
 
         assertEquals(
-                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAABAAAADEhlbGxvIHdvcmxkIQAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQMc6HwYaGsrlJ8/LdE9VDVq04JifpQofSmnjhrtqaTTs/VBsNGmxi4b/vaFkLLLWh8emI8FsS/vBgb8AVFVkZQU=",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAxIZWxsbyB3b3JsZCEAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEA2U3MBHRAxe/nYUTFsL14hgWxcq1Z0yFcEd2LSEt+TbXbVXHl77k/sjLdUGw/0qMZMOn2n50MY+w1pnx6mjfsM",
                 transaction.toEnvelopeXdrBase64());
     }
 
@@ -160,7 +159,7 @@ public class TransactionBuilderTest {
         assertEquals(transaction, transaction2);
 
         assertEquals(
-                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAMgAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABA9TG3dKKLtLHzRUbsbEqr68CfUc800p1/LE5pWzCnFdFdypdXgyqHqw/sWdaTUMDiWawBtsmqV8oOtD0Hw1HDDQ==",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAMgAClWjAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQAIeBLnUSyzqnFYWPm0Y06/v78VquGfjQokPrMBCeOZRM4WqPLOI5/Mgn1+djGFBOVCKB+HUevtqN2DMhnhYmg8=",
                 transaction.toEnvelopeXdrBase64());
     }
 
@@ -500,6 +499,7 @@ public class TransactionBuilderTest {
         try {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                     .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+                    .setBaseFee(Transaction.MIN_BASE_FEE)
                     .addTimeBounds(new TimeBounds(42, 1337))
                     .setTimeout(10)
                     .build();
@@ -516,6 +516,7 @@ public class TransactionBuilderTest {
         try {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                     .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+                    .setBaseFee(Transaction.MIN_BASE_FEE)
                     .setTimeout(10)
                     .addTimeBounds(new TimeBounds(42, 1337))
                     .build();
@@ -527,18 +528,88 @@ public class TransactionBuilderTest {
     }
 
     @Test
-    public void testBuilderTimeoutAndMaxTimeNotSet() throws IOException {
+    public void testBuilderFailsWhenNoTimeBoundsOrTimeoutSet() throws IOException {
         Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
-        long currentUnix = System.currentTimeMillis() / 1000L;
+        try {
+            new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+                    .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+                    .setBaseFee(Transaction.MIN_BASE_FEE)
+                    .build();
+            fail();
+        } catch (RuntimeException exception) {
+            assertTrue(exception.getMessage().contains("Invalid preconditions, must define timebounds"));
+            assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
+        }
+    }
+
+    @Test
+    public void testBuilderInfinteTimeoutOnly() throws IOException {
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
+
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
-                .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                .addTimeBounds(new TimeBounds(42, 0))
+                .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                .setBaseFee(Transaction.MIN_BASE_FEE)
+                .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
+                .build();
+
+        transaction.sign(source);
+
+        // Convert transaction to binary XDR and back again to make sure timeout is correctly de/serialized.
+        XdrDataInputStream is = new XdrDataInputStream(new ByteArrayInputStream(BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
+        org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+
+        assertEquals(decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 0);
+        assertEquals(decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue(), 0);
+    }
+
+    @Test
+    public void testBuilderTimeoutOnly() throws IOException {
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
+        long currentUnix = System.currentTimeMillis() / 1000L;
+
+        Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+                .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                .setBaseFee(Transaction.MIN_BASE_FEE)
+                .setTimeout(10)
+                .build();
+
+        transaction.sign(source);
+
+        // Convert transaction to binary XDR and back again to make sure timeout is correctly de/serialized.
+        XdrDataInputStream is = new XdrDataInputStream(new ByteArrayInputStream(BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
+        org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+
+        assertEquals(decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 0);
+        assertTrue(currentUnix + 10 <= decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue() );
+    }
+
+    @Test
+    public void testBuilderTimeoutAndMaxTimeNotSet() throws IOException {
+        KeyPair source = KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+        KeyPair destination = KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+        Account account = new Account(source.getAccountId(), 2908908335136768L);
+        long currentUnix = System.currentTimeMillis() / 1000L;
+
+        Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+                .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                .addTimeBounds(new TimeBounds(42, TransactionPreconditions.TIMEOUT_INFINITE))
                 .setTimeout(10)
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
-        assertEquals(42, transaction.getTimeBounds().getMinTime());
-        assertTrue(currentUnix + 10 <= transaction.getTimeBounds().getMaxTime());
+        transaction.sign(source);
+
+        // Convert transaction to binary XDR and back again to make sure timeout is correctly de/serialized.
+        XdrDataInputStream is = new XdrDataInputStream(new ByteArrayInputStream(BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
+        org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction = org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+
+        assertEquals(decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMinTime().getTimePoint().getUint64().longValue(), 42);
+        assertTrue(currentUnix + 10 <= decodedTransaction.getV1().getTx().getCond().getTimeBounds().getMaxTime().getTimePoint().getUint64().longValue() );
+
     }
 
     @Test
@@ -550,7 +621,7 @@ public class TransactionBuilderTest {
         Account account = new Account(source.getAccountId(), 2908908335136768L);
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-                .addTimeBounds(new TimeBounds(42, 0))
+                .addTimeBounds(new TimeBounds(42, TransactionPreconditions.TIMEOUT_INFINITE))
                 .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                 .addMemo(Memo.hash("abcdef"))
                 .setBaseFee(100)
@@ -584,7 +655,7 @@ public class TransactionBuilderTest {
 
         Transaction decodedTransaction = (Transaction) Transaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.PUBLIC);
         assertEquals(
-                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAbaHlWIAAABA830eT4ERYpuVnb6vSJnWTVhgcQVsGJED2vZeYogXbTy8wGb+qo/ojn0q6op7KBdF6y5MHSHGUFbad1UR4UaFBA==",
+                "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQOFMVS3lQ1gtqY0a3VPsZXCNVGC/h8dANFiUS7hYPWSbyzi4Ob1ir5R256mOwX+B6vE552+y8JAFaAFPR0bDyAw=",
                 transaction.toEnvelopeXdrBase64());
 
         assertEquals(decodedTransaction, transaction);
@@ -618,6 +689,7 @@ public class TransactionBuilderTest {
             Account account = new Account(source.getAccountId(), 2908908335136768L);
             new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                     .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                    .setBaseFee(Transaction.MIN_BASE_FEE)
                     .addMemo(Memo.none())
                     .addMemo(Memo.none());
             fail();
@@ -636,6 +708,7 @@ public class TransactionBuilderTest {
         try {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, null)
                     .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                    .setBaseFee(Transaction.MIN_BASE_FEE)
                     .addMemo(Memo.none())
                     .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
                     .build();
