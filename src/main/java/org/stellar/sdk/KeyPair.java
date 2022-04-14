@@ -235,7 +235,7 @@ public class KeyPair {
   /**
    * Sign the provided data with the keypair's private key and returns {@link DecoratedSignature}.
    *
-   * @param data the data to sign, typically the tx hash
+   * @param data the data to sign
    * @return          DecoratedSignature
    */
   public DecoratedSignature signDecorated(byte[] data) {
