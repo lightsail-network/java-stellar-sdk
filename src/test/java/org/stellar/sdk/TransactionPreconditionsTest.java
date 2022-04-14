@@ -167,14 +167,14 @@ public class TransactionPreconditionsTest {
     @Test
     public void itChecksValidityWhenTimebounds() {
         TransactionPreconditions preconditions = TransactionPreconditions.builder().timeBounds(new TimeBounds(1, 2)).build();
-        preconditions.isValid(false);
+        preconditions.isValid();
     }
 
     @Test
     public void itChecksNonValidityOfTimeBounds() {
         TransactionPreconditions preconditions = TransactionPreconditions.builder().build();
         try {
-            preconditions.isValid(false);
+            preconditions.isValid();
             fail();
         } catch (FormatException ignored) {}
     }
@@ -186,25 +186,19 @@ public class TransactionPreconditionsTest {
                 .extraSigners(newArrayList(new SignerKey.Builder().build(), new SignerKey.Builder().build(), new SignerKey.Builder().build()))
                 .build();
         try {
-            preconditions.isValid(false);
+            preconditions.isValid();
             fail();
         } catch (FormatException ignored) {}
     }
 
     @Test
-    public void itChecksValidityWhenNoTimeboundsButTimeoutSet() {
-        TransactionPreconditions preconditions = TransactionPreconditions.builder().build();
-        preconditions.isValid(true);
-    }
-
-    @Test
-    public void itChecksValidityWhenNoTimeboundsAndNoTimeoutSet() {
+    public void itChecksValidityWhenNoTimeboundsSet() {
         TransactionPreconditions preconditions = TransactionPreconditions.builder().build();
         try {
-            preconditions.isValid(false);
+            preconditions.isValid();
             fail();
         } catch (FormatException exception) {
-            assertTrue(exception.getMessage().contains("Invalid preconditions, must define timebounds or set infinite timeout"));
+            assertTrue(exception.getMessage().contains("Invalid preconditions, must define timebounds"));
         }
     }
 

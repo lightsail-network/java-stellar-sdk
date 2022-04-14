@@ -35,9 +35,9 @@ public class TransactionPreconditions {
     List<SignerKey> extraSigners;
     TimeBounds timeBounds;
 
-    public void isValid(boolean infiniteTimeoutWasSet) {
-        if (timeBounds == null && !infiniteTimeoutWasSet) {
-            throw new FormatException("Invalid preconditions, must define timebounds or set infinite timeout");
+    public void isValid() {
+        if (timeBounds == null) {
+            throw new FormatException("Invalid preconditions, must define timebounds");
         }
 
         if (extraSigners.size() > MAX_EXTRA_SIGNERS_COUNT) {

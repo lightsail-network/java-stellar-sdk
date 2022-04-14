@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
 /**
  * Builds a new Transaction object.
@@ -22,7 +23,6 @@ public class TransactionBuilder {
     private Integer mBaseFee;
     private Network mNetwork;
     private TransactionPreconditions mPreconditions;
-    private boolean mTimeoutSet;
 
     /**
      * Construct a new transaction builder.
@@ -150,7 +150,7 @@ public class TransactionBuilder {
      * set instead for more control over preconditions.
      */
     public TransactionBuilder setTimeout(long timeout) {
-        if (mPreconditions.getTimeBounds() != null && mPreconditions.getTimeBounds().getMaxTime() != TransactionPreconditions.TIMEOUT_INFINITE) {
+        if (mPreconditions.getTimeBounds() != null && mPreconditions.getTimeBounds().getMaxTime() != TIMEOUT_INFINITE) {
             throw new RuntimeException("TimeBounds.max_time has been already set - setting timeout would overwrite it.");
         }
 
@@ -158,17 +158,15 @@ public class TransactionBuilder {
             throw new RuntimeException("timeout cannot be negative");
         }
 
-        mTimeoutSet = true;
-        if (timeout > 0) {
-            long timeoutTimestamp = System.currentTimeMillis() / 1000L + timeout;
-            TransactionPreconditionsBuilder preconditionsBuilder = mPreconditions.toBuilder();
-            if (mPreconditions.getTimeBounds() == null) {
-                preconditionsBuilder.timeBounds(new TimeBounds(0, timeoutTimestamp));
-            } else {
-                preconditionsBuilder.timeBounds( new TimeBounds(mPreconditions.getTimeBounds().getMinTime(), timeoutTimestamp));
-            }
-            mPreconditions = preconditionsBuilder.build();
+        long timeoutTimestamp = timeout != TIMEOUT_INFINITE ?  System.currentTimeMillis() / 1000L + timeout : TIMEOUT_INFINITE;
+
+        TransactionPreconditionsBuilder preconditionsBuilder = mPreconditions.toBuilder();
+        if (mPreconditions.getTimeBounds() == null) {
+            preconditionsBuilder.timeBounds(new TimeBounds(0, timeoutTimestamp));
+        } else {
+            preconditionsBuilder.timeBounds( new TimeBounds(mPreconditions.getTimeBounds().getMinTime(), timeoutTimestamp));
         }
+        mPreconditions = preconditionsBuilder.build();
         return this;
     }
 
@@ -182,11 +180,10 @@ public class TransactionBuilder {
     }
 
     /**
-     * Builds a transaction. It will use the SequenceNumberStrategy if provided to determine how to update source account
-     * sequence number after transaction is constructed.
+     * Builds a transaction and increments the sequence number on the source account after transaction is constructed.
      */
     public Transaction build() {
-        mPreconditions.isValid(mTimeoutSet);
+        mPreconditions.isValid();
 
         if (mBaseFee == null) {
             throw new FormatException("mBaseFee has to be set. you must call setBaseFee().");
