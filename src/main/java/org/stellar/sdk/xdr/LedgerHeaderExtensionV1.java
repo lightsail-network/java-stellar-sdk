@@ -12,7 +12,7 @@ import com.google.common.base.Objects;
 
 //  struct LedgerHeaderExtensionV1
 //  {
-//      uint32 flags; // UpgradeFlags
+//      uint32 flags; // LedgerHeaderFlags
 //  
 //      union switch (int v)
 //      {

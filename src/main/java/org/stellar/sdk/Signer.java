@@ -4,6 +4,7 @@ import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -68,6 +69,25 @@ public class Signer {
 
         signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_PRE_AUTH_TX);
         signerKey.setPreAuthTx(value);
+
+        return signerKey;
+    }
+
+    /**
+     * Create <code>SignerKey</code> {@link org.stellar.sdk.xdr.SignerKey} from {@link org.stellar.sdk.SignedPayloadSigner}
+     *
+     * @param signedPayloadSigner - signed payload values
+     * @return org.stellar.sdk.xdr.SignerKey
+     */
+    public static SignerKey signedPayload(SignedPayloadSigner signedPayloadSigner) {
+
+        SignerKey signerKey = new SignerKey();
+        SignerKey.SignerKeyEd25519SignedPayload payloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
+        payloadSigner.setPayload(signedPayloadSigner.getPayload());
+        payloadSigner.setEd25519(signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
+
+        signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+        signerKey.setEd25519SignedPayload(payloadSigner);
 
         return signerKey;
     }

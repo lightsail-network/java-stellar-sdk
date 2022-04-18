@@ -13,7 +13,8 @@ import java.io.IOException;
 //  {
 //      SIGNER_KEY_TYPE_ED25519 = KEY_TYPE_ED25519,
 //      SIGNER_KEY_TYPE_PRE_AUTH_TX = KEY_TYPE_PRE_AUTH_TX,
-//      SIGNER_KEY_TYPE_HASH_X = KEY_TYPE_HASH_X
+//      SIGNER_KEY_TYPE_HASH_X = KEY_TYPE_HASH_X,
+//      SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD = KEY_TYPE_ED25519_SIGNED_PAYLOAD
 //  };
 
 //  ===========================================================================
@@ -21,6 +22,7 @@ public enum SignerKeyType implements XdrElement {
   SIGNER_KEY_TYPE_ED25519(0),
   SIGNER_KEY_TYPE_PRE_AUTH_TX(1),
   SIGNER_KEY_TYPE_HASH_X(2),
+  SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD(3),
   ;
   private int mValue;
 
@@ -38,6 +40,7 @@ public enum SignerKeyType implements XdrElement {
       case 0: return SIGNER_KEY_TYPE_ED25519;
       case 1: return SIGNER_KEY_TYPE_PRE_AUTH_TX;
       case 2: return SIGNER_KEY_TYPE_HASH_X;
+      case 3: return SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

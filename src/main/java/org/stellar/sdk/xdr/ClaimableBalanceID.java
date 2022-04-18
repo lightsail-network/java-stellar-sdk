@@ -14,8 +14,6 @@ import com.google.common.base.Objects;
 //  {
 //  case CLAIMABLE_BALANCE_ID_TYPE_V0:
 //      Hash v0;
-//  case CLAIMABLE_BALANCE_ID_TYPE_FROM_POOL_REVOKE:
-//      Hash fromPoolRevoke;
 //  };
 
 //  ===========================================================================
@@ -35,18 +33,10 @@ public class ClaimableBalanceID implements XdrElement {
   public void setV0(Hash value) {
     this.v0 = value;
   }
-  private Hash fromPoolRevoke;
-  public Hash getFromPoolRevoke() {
-    return this.fromPoolRevoke;
-  }
-  public void setFromPoolRevoke(Hash value) {
-    this.fromPoolRevoke = value;
-  }
 
   public static final class Builder {
     private ClaimableBalanceIDType discriminant;
     private Hash v0;
-    private Hash fromPoolRevoke;
 
     public Builder discriminant(ClaimableBalanceIDType discriminant) {
       this.discriminant = discriminant;
@@ -58,16 +48,10 @@ public class ClaimableBalanceID implements XdrElement {
       return this;
     }
 
-    public Builder fromPoolRevoke(Hash fromPoolRevoke) {
-      this.fromPoolRevoke = fromPoolRevoke;
-      return this;
-    }
-
     public ClaimableBalanceID build() {
       ClaimableBalanceID val = new ClaimableBalanceID();
       val.setDiscriminant(discriminant);
       val.setV0(v0);
-      val.setFromPoolRevoke(fromPoolRevoke);
       return val;
     }
   }
@@ -79,9 +63,6 @@ public class ClaimableBalanceID implements XdrElement {
   switch (encodedClaimableBalanceID.getDiscriminant()) {
   case CLAIMABLE_BALANCE_ID_TYPE_V0:
   Hash.encode(stream, encodedClaimableBalanceID.v0);
-  break;
-  case CLAIMABLE_BALANCE_ID_TYPE_FROM_POOL_REVOKE:
-  Hash.encode(stream, encodedClaimableBalanceID.fromPoolRevoke);
   break;
   }
   }
@@ -96,15 +77,12 @@ public class ClaimableBalanceID implements XdrElement {
   case CLAIMABLE_BALANCE_ID_TYPE_V0:
   decodedClaimableBalanceID.v0 = Hash.decode(stream);
   break;
-  case CLAIMABLE_BALANCE_ID_TYPE_FROM_POOL_REVOKE:
-  decodedClaimableBalanceID.fromPoolRevoke = Hash.decode(stream);
-  break;
   }
     return decodedClaimableBalanceID;
   }
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.v0, this.fromPoolRevoke, this.type);
+    return Objects.hashCode(this.v0, this.type);
   }
   @Override
   public boolean equals(Object object) {
@@ -113,6 +91,6 @@ public class ClaimableBalanceID implements XdrElement {
     }
 
     ClaimableBalanceID other = (ClaimableBalanceID) object;
-    return Objects.equal(this.v0, other.v0) && Objects.equal(this.fromPoolRevoke, other.fromPoolRevoke) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.v0, other.v0) && Objects.equal(this.type, other.type);
   }
 }

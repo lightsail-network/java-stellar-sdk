@@ -14,7 +14,7 @@ import com.google.common.base.Objects;
 //  {
 //      Asset assetA; // assetA < assetB
 //      Asset assetB;
-//      int32 fee;    // Fee is in basis points, so the actual rate is (fee/100)%
+//      int32 fee; // Fee is in basis points, so the actual rate is (fee/100)%
 //  };
 
 //  ===========================================================================

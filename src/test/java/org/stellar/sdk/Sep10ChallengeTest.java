@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
+import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 
@@ -13,7 +14,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class Sep10ChallengeTest {
 
@@ -218,7 +222,7 @@ public class Sep10ChallengeTest {
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
 
-    Transaction transaction = Sep10Challenge.newChallenge(
+    final Transaction transaction = Sep10Challenge.newChallenge(
         server,
         network,
         client.getAccountId(),
@@ -228,17 +232,16 @@ public class Sep10ChallengeTest {
     );
     Operation[] operations = transaction.getOperations();
     operations[0].setSourceAccount("MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG");
-    Transaction withMuxedClient = new Transaction(
-        AccountConverter.disableMuxed(),
-        transaction.getSourceAccount(),
-        transaction.getFee(),
-        transaction.getSequenceNumber(),
-        operations,
-        transaction.getMemo(),
-        transaction.getTimeBounds(),
-        transaction.getNetwork()
-    );
-    withMuxedClient.getSignatures().addAll(transaction.mSignatures);
+    Transaction withMuxedClient = new TransactionBuilder(AccountConverter.disableMuxed(), new Account(transaction.getSourceAccount(), 100L), transaction.getNetwork())
+            .setBaseFee((int)transaction.getFee())
+            .addMemo(transaction.getMemo())
+            .addOperations(Arrays.asList(operations))
+            .addPreconditions(transaction.getPreconditions())
+            .build();
+
+    for (DecoratedSignature signature : transaction.mSignatures) {
+      withMuxedClient.addSignature(signature);
+    }
 
     try {
       Sep10Challenge.readChallengeTransaction(
@@ -304,16 +307,12 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
 
     transaction.sign(client);
     try {
@@ -409,16 +408,13 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
+
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -454,16 +450,14 @@ public class Sep10ChallengeTest {
         .setSourceAccount(client.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
+
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -472,47 +466,6 @@ public class Sep10ChallengeTest {
       fail();
     } catch (InvalidSep10ChallengeException e) {
       assertEquals("Transaction requires non-infinite timebounds.", e.getMessage());
-    }
-  }
-
-  @Test
-  public void testReadChallengeTransactionInvalidNoTimeBounds() throws IOException {
-    KeyPair server = KeyPair.random();
-    KeyPair client = KeyPair.random();
-    String domainName = "example.com";
-    String webAuthDomain = "example.com";
-
-    Network network = Network.TESTNET;
-
-    byte[] nonce = new byte[48];
-    SecureRandom random = new SecureRandom();
-    random.nextBytes(nonce);
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
-
-    Account sourceAccount = new Account(server.getAccountId(), -1L);
-    ManageDataOperation operation = new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-        .setSourceAccount(client.getAccountId())
-        .build();
-    Operation[] operations = new Operation[]{operation};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        null,
-        network
-    );
-    transaction.sign(server);
-    String challenge = transaction.toEnvelopeXdrBase64();
-
-    try {
-      Sep10Challenge.readChallengeTransaction(challenge, server.getAccountId(), Network.TESTNET, domainName, webAuthDomain);
-      fail();
-    } catch (InvalidSep10ChallengeException e) {
-      assertEquals("Transaction requires timebounds.", e.getMessage());
     }
   }
 
@@ -620,16 +573,13 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{setOptionsOperation};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+                    .setBaseFee(100 * operations.length)
+                    .addOperations(Arrays.asList(operations))
+                    .addMemo(Memo.none())
+                    .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+                    .build();
+
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -664,16 +614,13 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
+
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -710,16 +657,12 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -751,16 +694,12 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -798,16 +737,12 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -838,16 +773,12 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -886,16 +817,12 @@ public class Sep10ChallengeTest {
         .setSourceAccount(server.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -930,16 +857,12 @@ public class Sep10ChallengeTest {
         .setSourceAccount(client.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction =new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -976,16 +899,12 @@ public class Sep10ChallengeTest {
         .build();
     ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes()).build();
     Operation[] operations = new Operation[]{operation1, operation2};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -1024,16 +943,12 @@ public class Sep10ChallengeTest {
         .setSourceAccount(server.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -1267,16 +1182,12 @@ public class Sep10ChallengeTest {
         .setSourceAccount(server.getAccountId())
         .build();
     Operation[] operations = new Operation[]{domainNameOperation, webAuthDomainOperation};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -1318,16 +1229,12 @@ public class Sep10ChallengeTest {
         .setSourceAccount(server.getAccountId())
         .build();
     Operation[] operations = new Operation[]{domainNameOperation, webAuthDomainOperation, otherDomainOperation};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     String challenge = transaction.toEnvelopeXdrBase64();
 
@@ -1539,16 +1446,12 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
 
     transaction.sign(masterClient);
 
@@ -1975,16 +1878,12 @@ public class Sep10ChallengeTest {
         .build();
 
     Operation[] operations = new Operation[]{manageDataOperation1};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
 
     transaction.sign(masterClient);
     transaction.sign(signerClient1);
@@ -2469,16 +2368,12 @@ public class Sep10ChallengeTest {
         .setSourceAccount(server.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     transaction.sign(masterClient);
 
@@ -2514,16 +2409,12 @@ public class Sep10ChallengeTest {
         .setSourceAccount(masterClient.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     transaction.sign(masterClient);
 
@@ -2561,16 +2452,12 @@ public class Sep10ChallengeTest {
         .build();
     ManageDataOperation operation2 = new ManageDataOperation.Builder("key", "value".getBytes()).build();
     Operation[] operations = new Operation[]{operation1, operation2};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     transaction.sign(masterClient);
 
@@ -2610,16 +2497,12 @@ public class Sep10ChallengeTest {
         .setSourceAccount(server.getAccountId())
         .build();
     Operation[] operations = new Operation[]{operation1, operation2};
-    Transaction transaction = new Transaction(
-        AccountConverter.disableMuxed(),
-        sourceAccount.getAccountId(),
-        100 * operations.length,
-        sourceAccount.getIncrementedSequenceNumber(),
-        operations,
-        Memo.none(),
-        timeBounds,
-        network
-    );
+    Transaction transaction = new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(Memo.none())
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
     transaction.sign(server);
     transaction.sign(masterClient);
 

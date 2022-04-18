@@ -1,13 +1,37 @@
 package org.stellar.sdk.responses;
 
 import junit.framework.TestCase;
-
 import org.junit.Test;
-import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Predicate;
-import org.stellar.sdk.responses.effects.*;
+import org.stellar.sdk.responses.effects.AccountCreatedEffectResponse;
+import org.stellar.sdk.responses.effects.AccountCreditedEffectResponse;
+import org.stellar.sdk.responses.effects.AccountDebitedEffectResponse;
+import org.stellar.sdk.responses.effects.AccountFlagsUpdatedEffectResponse;
+import org.stellar.sdk.responses.effects.AccountHomeDomainUpdatedEffectResponse;
+import org.stellar.sdk.responses.effects.AccountInflationDestinationUpdatedEffectResponse;
+import org.stellar.sdk.responses.effects.AccountRemovedEffectResponse;
+import org.stellar.sdk.responses.effects.AccountThresholdsUpdatedEffectResponse;
+import org.stellar.sdk.responses.effects.ClaimableBalanceClaimantCreatedEffectResponse;
+import org.stellar.sdk.responses.effects.ClaimableBalanceClawedBackEffectResponse;
+import org.stellar.sdk.responses.effects.DataCreatedEffectResponse;
+import org.stellar.sdk.responses.effects.DataRemovedEffectResponse;
+import org.stellar.sdk.responses.effects.DataUpdatedEffectResponse;
+import org.stellar.sdk.responses.effects.EffectResponse;
+import org.stellar.sdk.responses.effects.LiquidityPoolTradeEffectResponse;
+import org.stellar.sdk.responses.effects.SequenceBumpedEffectResponse;
+import org.stellar.sdk.responses.effects.SignerCreatedEffectResponse;
+import org.stellar.sdk.responses.effects.SignerRemovedEffectResponse;
+import org.stellar.sdk.responses.effects.SignerUpdatedEffectResponse;
+import org.stellar.sdk.responses.effects.TradeEffectResponse;
+import org.stellar.sdk.responses.effects.TrustlineAuthorizedEffectResponse;
+import org.stellar.sdk.responses.effects.TrustlineAuthorizedToMaintainLiabilitiesEffectResponse;
+import org.stellar.sdk.responses.effects.TrustlineCreatedEffectResponse;
+import org.stellar.sdk.responses.effects.TrustlineDeauthorizedEffectResponse;
+import org.stellar.sdk.responses.effects.TrustlineFlagsUpdatedEffectResponse;
+import org.stellar.sdk.responses.effects.TrustlineRemovedEffectResponse;
+import org.stellar.sdk.responses.effects.TrustlineUpdatedEffectResponse;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 import java.util.Arrays;

@@ -25,7 +25,7 @@ final public class TimeBounds {
 			throw new IllegalArgumentException("maxTime cannot be negative");
 		}
 
-		if (maxTime != 0 && minTime > maxTime) {
+		if (maxTime != TransactionPreconditions.TIMEOUT_INFINITE && minTime > maxTime) {
 			throw new IllegalArgumentException("minTime must be >= maxTime");
 		}
 

@@ -2,6 +2,22 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.32.0 (Pending)
+
+* Update XDR definitions and auto-generated classes to support upcoming protocol 19 release ([#416](https://github.com/stellar/java-stellar-sdk/pull/416)).
+* Extend StrKey implementation to handle [CAP 40 Payload Signer](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md).
+* Extended Transaction submission settings, additional new Preconditions can be added now, refer to [CAP 21 Transaction Preconditions](https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md).
+
+### Breaking changes
+
+* org.stellar.sdk.Transaction.Builder
+  * deprecated `addTimeBounds()` use `addPreconditions()` instead
+  * deprecated `setTimeout()` use `addPreconditions()` instead
+  * deprecated `Transaction.Builder` use TransactionBuilder instead
+* org.stellar.sdk.Transaction
+  * `getSignatures()` returns an ImmutableList of signatures, do NOT add signatures to the collection returned.
+    use `addSignature(DecoratedSignature signature)` instead.
+
 ## 0.31.0
 
 * Fixed NPE on TrustlineCreatedEffectResponse.getAsset() for liquidity pool asset type.
