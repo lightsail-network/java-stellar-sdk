@@ -46,7 +46,7 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
 
     AssetTypeCreditAlphaNum o = (AssetTypeCreditAlphaNum) other;
 
-    if (this.getCode() != o.getCode()) {
+    if (!this.getCode().equals(o.getCode())) {
       return this.getCode().compareTo(o.getCode());
     }
 

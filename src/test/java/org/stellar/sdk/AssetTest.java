@@ -148,7 +148,7 @@ public class AssetTest {
   @Test
   public void testAssetCompareToOrderingByIssuer() {
 		Asset assetIssuerA = create(null,
-			"ARST",
+			new String("ARST"),
 			"GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
 		);
 		Asset assetIssuerB = create(null,
@@ -174,7 +174,7 @@ public class AssetTest {
     Asset c = create(null,"ABCD1", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     // Code is >
-    Asset d = create(null,"ABCD2", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+    Asset d = create(null,new String("ABCD2"), "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     // Issuer is >
     Asset e = create(null,"ABCD2", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
