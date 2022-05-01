@@ -76,7 +76,11 @@ public class Util {
    * @param bytes
    */
   static String paddedByteArrayToString(byte[] bytes) {
-    return new String(bytes).split("\0")[0];
+      String[] strArray = new String(bytes).split("\0");
+      if (strArray.length > 0) {
+          return strArray[0];
+      }
+      return "";   
   }
 
   /**

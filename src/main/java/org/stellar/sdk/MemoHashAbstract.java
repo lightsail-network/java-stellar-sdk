@@ -54,7 +54,11 @@ abstract class MemoHashAbstract extends Memo {
    * </code>
    */
   public String getTrimmedHexValue() {
-    return this.getHexValue().split("00")[0];
+      String[] strArray = this.getHexValue().split("00");
+      if (strArray.length > 0) {
+          return strArray[0];
+      }
+      return "";
   }
 
   @Override

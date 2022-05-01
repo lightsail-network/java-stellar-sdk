@@ -74,7 +74,41 @@ public class MemoTest {
         MemoId memoId = (MemoId)transactionResponse.getMemo();
         assertEquals(longId, Long.toUnsignedString(memoId.getId()));
     }
+    
+    @Test
+    public void testParseMemoHash() {
+        String hash = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+        JsonElement element = new JsonParser().parse(String.format("{ \"memo_type\": \"hash\", \"memo\": \"%s\" }", hash));
+        TransactionResponse transactionResponse = new TransactionDeserializer().deserialize(element, null, null);
+        MemoHash memoHash = (MemoHash)transactionResponse.getMemo();
+        
+        assertEquals("", memoHash.getTrimmedHexValue());
+        assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memoHash.getHexValue());
+        assertEquals("", memoHash.toString());
+    }
 
+    @Test
+    public void testMemoNullHexHashSuccess() {
+        MemoHash memo = Memo.hash("0000000000000000000000000000000000000000000000000000000000000000");
+        assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
+        
+        assertEquals("", Util.paddedByteArrayToString(memo.getBytes()));
+        assertEquals("", memo.getTrimmedHexValue());
+        assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memo.getHexValue());
+        assertEquals("", memo.toString());
+    }
+    
+    @Test
+    public void testMemoEmptyHashSuccess() {
+        MemoHash memo = Memo.hash("");
+        assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
+        
+        assertEquals("", Util.paddedByteArrayToString(memo.getBytes()));
+        assertEquals("", memo.getTrimmedHexValue());
+        assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memo.getHexValue());
+        assertEquals("", memo.toString());
+    }
+    
     @Test
     public void testMemoHashSuccess() {
         MemoHash memo = Memo.hash("4142434445464748494a4b4c");
