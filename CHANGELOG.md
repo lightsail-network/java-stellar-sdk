@@ -2,6 +2,8 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.33.0 (Pending)
+
 ## 0.32.0
 
 * Update XDR definitions and auto-generated classes to support upcoming protocol 19 release ([#416](https://github.com/stellar/java-stellar-sdk/pull/416)).
