@@ -35,4 +35,14 @@ public class LiquidityPoolsRequestBuilderTest {
         .buildUri();
     assertEquals("https://horizon-testnet.stellar.org/liquidity_pools?account=GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S", uri.toString());
   }
+  
+  @Test
+  public void testForAccountClear() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    HttpUrl uri = server.liquidityPools()
+        .forAccount("GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S")
+        .forAccount(null)
+        .buildUri();
+    assertEquals("https://horizon-testnet.stellar.org/liquidity_pools?account", uri.toString());
+  }
 }
