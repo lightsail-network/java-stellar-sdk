@@ -76,18 +76,6 @@ public class MemoTest {
     }
     
     @Test
-    public void testParseMemoHash() {
-        String hash = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-        JsonElement element = new JsonParser().parse(String.format("{ \"memo_type\": \"hash\", \"memo\": \"%s\" }", hash));
-        TransactionResponse transactionResponse = new TransactionDeserializer().deserialize(element, null, null);
-        MemoHash memoHash = (MemoHash)transactionResponse.getMemo();
-        
-        assertEquals("", memoHash.getTrimmedHexValue());
-        assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memoHash.getHexValue());
-        assertEquals("", memoHash.toString());
-    }
-
-    @Test
     public void testMemoNullHexHashSuccess() {
         MemoHash memo = Memo.hash("0000000000000000000000000000000000000000000000000000000000000000");
         assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
