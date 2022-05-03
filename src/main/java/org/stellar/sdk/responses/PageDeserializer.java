@@ -10,6 +10,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
@@ -45,6 +46,7 @@ class PageDeserializer<E> implements JsonDeserializer<Page<E>> {
             .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
             .registerTypeAdapter(LiquidityPoolResponse.class, new LiquidityPoolDeserializer())
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
+            .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
             .create();
 
     return gson.fromJson(newJson, pageType.getType());
