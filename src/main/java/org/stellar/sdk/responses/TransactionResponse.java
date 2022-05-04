@@ -2,7 +2,6 @@ package org.stellar.sdk.responses;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
-
 import lombok.Value;
 import org.stellar.sdk.Memo;
 
@@ -181,7 +180,7 @@ public class TransactionResponse extends Response implements Pageable {
     @SerializedName("ledgerbounds")
     LedgerBounds ledgerBounds;
     @SerializedName("min_account_sequence")
-    long minAccountSequence;
+    Long minAccountSequence;
     @SerializedName("min_account_sequence_age")
     long minAccountSequenceAge;
     @SerializedName("min_account_sequence_ledger_gap")
