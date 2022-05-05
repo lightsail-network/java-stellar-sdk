@@ -8,10 +8,8 @@ abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
 
   public MemoHashAbstract(byte[] bytes) {
-    if (bytes.length < 32) {
-      bytes = Util.paddedByteArray(bytes, 32);
-    } else if (bytes.length > 32) {
-      throw new MemoTooLongException("MEMO_HASH can contain 32 bytes at max.");
+    if (bytes.length != 32) {
+        throw new MemoWrongSizeException("MEMO_HASH must contain 32 bytes.", bytes.length);
     }
 
     this.bytes = bytes;
@@ -34,31 +32,12 @@ abstract class MemoHashAbstract extends Memo {
    *
    * <p>Example:</p>
    * <code>
-   *   MemoHash memo = new MemoHash("4142434445");
-   *   memo.getHexValue(); // 4142434445000000000000000000000000000000000000000000000000000000
-   *   memo.getTrimmedHexValue(); // 4142434445
+   *   MemoHash memo = new MemoHash("e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526");
+   *   memo.getHexValue(); // e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526
    * </code>
    */
   public String getHexValue() {
     return BaseEncoding.base16().lowerCase().encode(this.bytes);
-  }
-
-  /**
-   * <p>Returns hex representation of bytes contained in this memo until null byte (0x00) is found.</p>
-   *
-   * <p>Example:</p>
-   * <code>
-   *   MemoHash memo = new MemoHash("4142434445");
-   *   memo.getHexValue(); // 4142434445000000000000000000000000000000000000000000000000000000
-   *   memo.getTrimmedHexValue(); // 4142434445
-   * </code>
-   */
-  public String getTrimmedHexValue() {
-      String[] strArray = this.getHexValue().split("00");
-      if (strArray.length > 0) {
-          return strArray[0];
-      }
-      return "";
   }
 
   @Override
@@ -79,6 +58,6 @@ abstract class MemoHashAbstract extends Memo {
 
     @Override
     public String toString() {
-        return bytes == null ? "" : Util.paddedByteArrayToString(bytes);
+        return bytes == null ? "" : getHexValue();
     }
 }

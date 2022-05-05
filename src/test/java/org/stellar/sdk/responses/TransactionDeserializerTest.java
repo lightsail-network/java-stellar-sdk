@@ -100,7 +100,6 @@ public class TransactionDeserializerTest extends TestCase {
     assertTrue(transaction.getMemo() instanceof MemoHash);
     MemoHash memoHash = (MemoHash)transaction.getMemo();
     
-    assertEquals("", memoHash.getTrimmedHexValue());
     assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memoHash.getHexValue());
     assertEquals("", memoHash.toString());
   }
