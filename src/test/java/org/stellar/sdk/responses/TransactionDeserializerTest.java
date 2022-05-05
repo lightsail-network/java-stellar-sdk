@@ -101,7 +101,7 @@ public class TransactionDeserializerTest extends TestCase {
     MemoHash memoHash = (MemoHash)transaction.getMemo();
     
     assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memoHash.getHexValue());
-    assertEquals("", memoHash.toString());
+    assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memoHash.toString());
   }
 
   String json = "{\n" +
