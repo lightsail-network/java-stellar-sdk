@@ -2,7 +2,10 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
-## 0.33.0 (Pending)
+## 0.33.0 
+* Update TransactionResponse to include new Protocol 19 Preconditions ([#428](https://github.com/stellar/java-stellar-sdk/pull/428)).
+* Fix asset compare to when asset code are equals ([#424](https://github.com/stellar/java-stellar-sdk/pull/424)).
+* LiquidityPoolIDDeserializer is missing from the PageDeserializer. ([#422](https://github.com/stellar/java-stellar-sdk/pull/422))
 
 ## 0.32.0
 
