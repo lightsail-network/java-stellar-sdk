@@ -1,7 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
-
 /**
  * <p>The memo contains optional extra information. It is the responsibility of the client to interpret this value. Memos can be one of the following types:</p>
  * <ul>
@@ -50,6 +48,8 @@ public abstract class Memo {
     /**
      * Creates new {@link MemoHash} instance from byte array.
      * @param bytes
+     * @throws NullPointerException if bytes is null
+     * @throws IncorrectMemoSizeException if bytes length is not 32 bytes
      */
     public static MemoHash hash(byte[] bytes) {
         return new MemoHash(bytes);
@@ -58,6 +58,8 @@ public abstract class Memo {
     /**
      * Creates new {@link MemoHash} instance from hex-encoded string
      * @param hexString
+     * @throws IllegalArgumentException if hexString contains non base16 characters
+     * @throws IncorrectMemoSizeException if the decoded hexString byte array length is not 32 bytes long
      */
     public static MemoHash hash(String hexString) {
         return new MemoHash(hexString);
@@ -66,6 +68,8 @@ public abstract class Memo {
     /**
      * Creates new {@link MemoReturnHash} instance from byte array.
      * @param bytes
+     * @throws NullPointerException if bytes is null
+     * @throws IncorrectMemoSizeException if bytes length is not 32 bytes
      */
     public static MemoReturnHash returnHash(byte[] bytes) {
         return new MemoReturnHash(bytes);
@@ -74,10 +78,11 @@ public abstract class Memo {
     /**
      * Creates new {@link MemoReturnHash} instance from hex-encoded string.
      * @param hexString
+     * @throws IllegalArgumentException if hexString contains non base16 characters
+     * @throws IncorrectMemoSizeException if the decoded hexString byte array length is not 32 bytes long
      */
     public static MemoReturnHash returnHash(String hexString) {
-        // We change to lowercase because we want to decode both: upper cased and lower cased alphabets.
-        return new MemoReturnHash(BaseEncoding.base16().lowerCase().decode(hexString.toLowerCase()));
+        return new MemoReturnHash(hexString);
     }
 
     public static Memo fromXdr(org.stellar.sdk.xdr.Memo memo) {

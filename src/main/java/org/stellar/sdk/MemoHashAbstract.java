@@ -9,7 +9,7 @@ abstract class MemoHashAbstract extends Memo {
 
   public MemoHashAbstract(byte[] bytes) {
     if (bytes.length != 32) {
-        throw new MemoWrongSizeException("MEMO_HASH must contain 32 bytes.", bytes.length);
+        throw new IncorrectMemoSizeException("MEMO_HASH must contain 32 bytes.", bytes.length);
     }
 
     this.bytes = bytes;

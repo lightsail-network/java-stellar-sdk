@@ -23,7 +23,7 @@ public class MemoText extends Memo {
     this.text = checkNotNull(text, "text cannot be null");
     int length = this.text.getBytes().length;
     if (length > 28) {
-      throw new MemoWrongSizeException("text must be <= 28 bytes. length=" + String.valueOf(length), length);
+      throw new MemoTooLongException("text must be <= 28 bytes. length=" + String.valueOf(length));
     }
   }
 

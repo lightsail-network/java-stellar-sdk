@@ -121,7 +121,7 @@ public class MemoTest {
         try {
             Memo.hash(longer);
             fail();
-        } catch (MemoWrongSizeException exception) {
+        } catch (IncorrectMemoSizeException exception) {
             assertTrue(exception.getMessage().contains("MEMO_HASH must contain 32 bytes."));
             assertEquals(33, exception.getActualSize());
         }
@@ -129,11 +129,10 @@ public class MemoTest {
     
     @Test
     public void testMemoHashTooShort() {
-        
         try {
             Memo.hash("");
             fail();
-        } catch (MemoWrongSizeException exception) {
+        } catch (IncorrectMemoSizeException exception) {
             assertTrue(exception.getMessage().contains("MEMO_HASH must contain 32 bytes."));
             assertEquals(0, exception.getActualSize());
         }
@@ -144,7 +143,7 @@ public class MemoTest {
         try {
             Memo.hash("test");
             fail();
-        } catch (MemoWrongSizeException e1) {
+        } catch (IncorrectMemoSizeException e1) {
             fail();
         } catch (IllegalArgumentException e2) {
             // Success
