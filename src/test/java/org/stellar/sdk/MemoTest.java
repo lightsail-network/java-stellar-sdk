@@ -1,18 +1,21 @@
 package org.stellar.sdk;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
+
+import org.junit.Test;
+import org.stellar.sdk.responses.TransactionDeserializer;
+import org.stellar.sdk.responses.TransactionResponse;
+import org.stellar.sdk.xdr.MemoType;
+
 import com.google.common.base.Strings;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import org.junit.Test;
-import org.stellar.sdk.xdr.MemoType;
-import org.stellar.sdk.MemoId;
-import org.stellar.sdk.responses.TransactionDeserializer;
-import org.stellar.sdk.responses.TransactionResponse;
-
-import java.util.Arrays;
-
-import static org.junit.Assert.*;
 
 public class MemoTest {
     @Test
@@ -44,7 +47,7 @@ public class MemoTest {
             Memo.text("12345678901234567890123456789");
             fail();
         } catch (RuntimeException exception) {
-            assertTrue(exception.getMessage().contains("text must be <= 28 bytes."));
+            assertTrue(exception.getMessage().contains("text cannot be more than 28-bytes long."));
         }
     }
 
@@ -54,7 +57,7 @@ public class MemoTest {
             Memo.text("价值交易的开源协议!!");
             fail();
         } catch (RuntimeException exception) {
-            assertTrue(exception.getMessage().contains("text must be <= 28 bytes."));
+            assertTrue(exception.getMessage().contains("text cannot be more than 28-bytes long."));
         }
     }
 
@@ -121,9 +124,8 @@ public class MemoTest {
         try {
             Memo.hash(longer);
             fail();
-        } catch (IncorrectMemoSizeException exception) {
-            assertTrue(exception.getMessage().contains("MEMO_HASH must contain 32 bytes."));
-            assertEquals(33, exception.getActualSize());
+        } catch (Exception exception) {
+            assertTrue(exception.getMessage().contains("bytes must be 32-bytes long."));
         }
     }
     
@@ -132,9 +134,8 @@ public class MemoTest {
         try {
             Memo.hash("");
             fail();
-        } catch (IncorrectMemoSizeException exception) {
-            assertTrue(exception.getMessage().contains("MEMO_HASH must contain 32 bytes."));
-            assertEquals(0, exception.getActualSize());
+        } catch (Exception exception) {
+            assertTrue(exception.getMessage().contains("bytes must be 32-bytes long."));
         }
     }
 
@@ -143,12 +144,8 @@ public class MemoTest {
         try {
             Memo.hash("test");
             fail();
-        } catch (IncorrectMemoSizeException e1) {
-            fail();
-        } catch (IllegalArgumentException e2) {
+        } catch (Exception e) {
             // Success
-        } catch (Exception e3) {
-            fail();
         }
     }
 

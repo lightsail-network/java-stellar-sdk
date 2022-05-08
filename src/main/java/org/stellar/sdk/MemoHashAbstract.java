@@ -1,17 +1,18 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
+
+import com.google.common.io.BaseEncoding;
 
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
 
   public MemoHashAbstract(byte[] bytes) {
-    if (bytes.length != 32) {
-        throw new IncorrectMemoSizeException("MEMO_HASH must contain 32 bytes.", bytes.length);
-    }
-
+    checkNotNull(bytes, "bytes cannot be null");
+    checkArgument(bytes.length == 32, "bytes must be 32-bytes long.");
     this.bytes = bytes;
   }
 
