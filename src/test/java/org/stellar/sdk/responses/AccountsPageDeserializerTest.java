@@ -1,10 +1,12 @@
 package org.stellar.sdk.responses;
 
+import org.junit.Test;
+import org.stellar.sdk.LiquidityPoolID;
+
+import com.google.common.base.Optional;
 import com.google.gson.reflect.TypeToken;
 
 import junit.framework.TestCase;
-
-import org.junit.Test;
 
 public class AccountsPageDeserializerTest extends TestCase {
   @Test
@@ -16,6 +18,15 @@ public class AccountsPageDeserializerTest extends TestCase {
     assertEquals(accountsPage.getLinks().getNext().getHref(), "/accounts?order=asc&limit=10&cursor=86861418598401");
     assertEquals(accountsPage.getLinks().getPrev().getHref(), "/accounts?order=desc&limit=10&cursor=1");
     assertEquals(accountsPage.getLinks().getSelf().getHref(), "/accounts?order=asc&limit=10&cursor=");
+  }
+  
+  @Test
+  public void testDeserializeWithLiquidityPoolBalance() {
+    Page<AccountResponse> accountsPage = GsonSingleton.getInstance().fromJson(jsonLiquidityPool, new TypeToken<Page<AccountResponse>>() {}.getType());
+
+    assertEquals(accountsPage.getRecords().get(0).getAccountId(), "GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST");
+    assertEquals(accountsPage.getRecords().get(0).getBalances()[0].getLiquidityPoolID(), Optional.of(new LiquidityPoolID("a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088")));
+    assertEquals(accountsPage.getRecords().get(0).getBalances()[1].getLiquidityPoolID(), Optional.absent());
   }
 
   String json = "{\n" +
@@ -85,4 +96,116 @@ public class AccountsPageDeserializerTest extends TestCase {
         "    }\n" +
         "  }\n" +
         "}";
+  
+  String jsonLiquidityPool = "{\n" + 
+          "  \"_links\": {\n" + 
+          "    \"self\": {\n" + 
+          "      \"href\": \"https://horizon.publicnode.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=&limit=1&order=desc\"\n" + 
+          "    },\n" + 
+          "    \"next\": {\n" + 
+          "      \"href\": \"https://horizon.publicnode.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST&limit=1&order=desc\"\n" + 
+          "    },\n" + 
+          "    \"prev\": {\n" + 
+          "      \"href\": \"https://horizon.publicnode.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST&limit=1&order=asc\"\n" + 
+          "    }\n" + 
+          "  },\n" + 
+          "  \"_embedded\": {\n" + 
+          "    \"records\": [\n" + 
+          "      {\n" + 
+          "        \"_links\": {\n" + 
+          "          \"self\": {\n" + 
+          "            \"href\": \"https://horizon.publicnode.org/accounts/GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST\"\n" + 
+          "          },\n" + 
+          "          \"transactions\": {\n" + 
+          "            \"href\": \"https://horizon.publicnode.org/accounts/GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST/transactions{?cursor,limit,order}\",\n" + 
+          "            \"templated\": true\n" + 
+          "          },\n" + 
+          "          \"operations\": {\n" + 
+          "            \"href\": \"https://horizon.publicnode.org/accounts/GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST/operations{?cursor,limit,order}\",\n" + 
+          "            \"templated\": true\n" + 
+          "          },\n" + 
+          "          \"payments\": {\n" + 
+          "            \"href\": \"https://horizon.publicnode.org/accounts/GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST/payments{?cursor,limit,order}\",\n" + 
+          "            \"templated\": true\n" + 
+          "          },\n" + 
+          "          \"effects\": {\n" + 
+          "            \"href\": \"https://horizon.publicnode.org/accounts/GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST/effects{?cursor,limit,order}\",\n" + 
+          "            \"templated\": true\n" + 
+          "          },\n" + 
+          "          \"offers\": {\n" + 
+          "            \"href\": \"https://horizon.publicnode.org/accounts/GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST/offers{?cursor,limit,order}\",\n" + 
+          "            \"templated\": true\n" + 
+          "          },\n" + 
+          "          \"trades\": {\n" + 
+          "            \"href\": \"https://horizon.publicnode.org/accounts/GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST/trades{?cursor,limit,order}\",\n" + 
+          "            \"templated\": true\n" + 
+          "          },\n" + 
+          "          \"data\": {\n" + 
+          "            \"href\": \"https://horizon.publicnode.org/accounts/GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST/data/{key}\",\n" + 
+          "            \"templated\": true\n" + 
+          "          }\n" + 
+          "        },\n" + 
+          "        \"id\": \"GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST\",\n" + 
+          "        \"account_id\": \"GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST\",\n" + 
+          "        \"sequence\": \"166506652181200896\",\n" + 
+          "        \"subentry_count\": 5,\n" + 
+          "        \"last_modified_ledger\": 38767851,\n" + 
+          "        \"last_modified_time\": \"2021-12-17T20:22:00Z\",\n" + 
+          "        \"thresholds\": {\n" + 
+          "          \"low_threshold\": 20,\n" + 
+          "          \"med_threshold\": 20,\n" + 
+          "          \"high_threshold\": 20\n" + 
+          "        },\n" + 
+          "        \"flags\": {\n" + 
+          "          \"auth_required\": false,\n" + 
+          "          \"auth_revocable\": false,\n" + 
+          "          \"auth_immutable\": false,\n" + 
+          "          \"auth_clawback_enabled\": false\n" + 
+          "        },\n" + 
+          "        \"balances\": [\n" + 
+          "        {\n" + 
+          "            \"balance\": \"974462.6017340\",\n" + 
+          "            \"liquidity_pool_id\": \"a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088\",\n" + 
+          "            \"limit\": \"922337203685.4775807\",\n" + 
+          "            \"last_modified_ledger\": 38809512,\n" + 
+          "            \"is_authorized\": false,\n" + 
+          "            \"is_authorized_to_maintain_liabilities\": false,\n" + 
+          "            \"asset_type\": \"liquidity_pool_shares\"\n" + 
+          "            },\n" + 
+          "          {\n" + 
+          "            \"balance\": \"0.0000000\",\n" + 
+          "            \"limit\": \"922337203685.4775807\",\n" + 
+          "            \"buying_liabilities\": \"0.0000000\",\n" + 
+          "            \"selling_liabilities\": \"0.0000000\",\n" + 
+          "            \"sponsor\": \"GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRPBP53SXSCALTEST\",\n" + 
+          "            \"last_modified_ledger\": 38767851,\n" + 
+          "            \"is_authorized\": true,\n" + 
+          "            \"is_authorized_to_maintain_liabilities\": true,\n" + 
+          "            \"asset_type\": \"credit_alphanum4\",\n" + 
+          "            \"asset_code\": \"USDC\",\n" + 
+          "            \"asset_issuer\": \"GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN\"\n" + 
+          "          },\n" + 
+          "          {\n" + 
+          "            \"balance\": \"0.0000000\",\n" + 
+          "            \"buying_liabilities\": \"0.0000000\",\n" + 
+          "            \"selling_liabilities\": \"0.0000000\",\n" + 
+          "            \"asset_type\": \"native\"\n" + 
+          "          }\n" + 
+          "        ],\n" + 
+          "        \"signers\": [\n" + 
+          "          {\n" + 
+          "            \"weight\": 10,\n" + 
+          "            \"key\": \"GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST\",\n" + 
+          "            \"type\": \"ed25519_public_key\"\n" + 
+          "          }\n" + 
+          "        ],\n" + 
+          "        \"data\": {},\n" + 
+          "        \"num_sponsoring\": 0,\n" + 
+          "        \"num_sponsored\": 7,\n" + 
+          "        \"sponsor\": \"GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRPBP53SXSCALTEST\",\n" + 
+          "        \"paging_token\": \"GDZZYLIIJ24HWAVWAQ2PJVNKHUJLJVVLFY2SSLYINBHDY5KZTLPTEST\"\n" + 
+          "      }\n" + 
+          "    ]\n" + 
+          "  }\n" + 
+          "}";
 }

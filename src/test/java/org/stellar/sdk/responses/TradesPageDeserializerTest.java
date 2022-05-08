@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.LiquidityPoolID;
 
 import static java.lang.Long.valueOf;
 import static org.stellar.sdk.Asset.create;
@@ -28,8 +29,20 @@ public class TradesPageDeserializerTest extends TestCase {
         assertEquals(tradesPage.getRecords().get(0).getCounterAsset(), create(null,"JPY", "GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM"));
         assertEquals(tradesPage.getRecords().get(0).getPrice().getNumerator(), valueOf(267));
         assertEquals(tradesPage.getRecords().get(0).getPrice().getDenominator(), valueOf(1000));
+        assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.absent());
+        assertEquals(tradesPage.getRecords().get(0).getBaseLiquidityPoolID(), Optional.absent());
 
         assertEquals(tradesPage.getRecords().get(1).getBaseAccount(), Optional.of("GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G"));
+    }
+    @Test
+    public void testDeserializeLiquidityPool() {
+        Page<TradeResponse> tradesPage = GsonSingleton.getInstance().fromJson(jsonLiquidityPool, new TypeToken<Page<TradeResponse>>() {}.getType());
+        
+        
+        assertEquals(tradesPage.getRecords().get(0).getBaseLiquidityPoolID(), Optional.of(new LiquidityPoolID("a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7bbase")));
+        assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.absent());
+        assertEquals(tradesPage.getRecords().get(1).getBaseLiquidityPoolID(), Optional.absent());
+        assertEquals(tradesPage.getRecords().get(1).getCounterLiquidityPoolID(), Optional.of(new LiquidityPoolID("a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088")));
     }
 
     String json = "{\n" +
@@ -381,4 +394,97 @@ public class TradesPageDeserializerTest extends TestCase {
             "    ]\n" +
             "  }\n" +
             "}";
+    
+    
+    String jsonLiquidityPool = 
+            "{\n" + 
+            "  \"_links\": {\n" + 
+            "    \"self\": {\n" + 
+            "      \"href\": \"https://horizon.stellar.org/liquidity_pools/a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088/trades?cursor=&limit=10&order=asc\"\n" + 
+            "    },\n" + 
+            "    \"next\": {\n" + 
+            "      \"href\": \"https://horizon.stellar.org/liquidity_pools/a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088/trades?cursor=163706513893126145-0&limit=10&order=asc\"\n" + 
+            "    },\n" + 
+            "    \"prev\": {\n" + 
+            "      \"href\": \"https://horizon.stellar.org/liquidity_pools/a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088/trades?cursor=163706170297630721-3&limit=10&order=desc\"\n" + 
+            "    }\n" + 
+            "  },\n" + 
+            "  \"_embedded\": {\n" + 
+            "    \"records\": [\n" + 
+            "      {\n" + 
+            "        \"_links\": {\n" + 
+            "          \"self\": {\n" + 
+            "            \"href\": \"\"\n" + 
+            "          },\n" + 
+            "          \"base\": {\n" + 
+            "            \"href\": \"https://horizon.stellar.org/liquidity_pools/a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088\"\n" + 
+            "          },\n" + 
+            "          \"counter\": {\n" + 
+            "            \"href\": \"https://horizon.stellar.org/accounts/GAVYIUWQFQX2GJ7FWNGVXSSLMJO75V5XY5M2YON4DKYD24LPB6QLCERP\"\n" + 
+            "          },\n" + 
+            "          \"operation\": {\n" + 
+            "            \"href\": \"https://horizon.stellar.org/operations/163706170297630721\"\n" + 
+            "          }\n" + 
+            "        },\n" + 
+            "        \"id\": \"163706170297630721-3\",\n" + 
+            "        \"paging_token\": \"163706170297630721-3\",\n" + 
+            "        \"ledger_close_time\": \"2021-11-03T15:00:52Z\",\n" + 
+            "        \"trade_type\": \"liquidity_pool\",\n" + 
+            "        \"liquidity_pool_fee_bp\": 30,\n" + 
+            "        \"base_liquidity_pool_id\": \"a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7bbase\",\n" + 
+            "        \"base_amount\": \"0.0010000\",\n" + 
+            "        \"base_asset_type\": \"native\",\n" + 
+            "        \"counter_offer_id\": \"4775392188725018625\",\n" + 
+            "        \"counter_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" + 
+            "        \"counter_amount\": \"0.0003679\",\n" + 
+            "        \"counter_asset_type\": \"credit_alphanum4\",\n" + 
+            "        \"counter_asset_code\": \"USDC\",\n" + 
+            "        \"counter_asset_issuer\": \"GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN\",\n" + 
+            "        \"base_is_seller\": true,\n" + 
+            "        \"price\": {\n" + 
+            "          \"n\": \"3679\",\n" + 
+            "          \"d\": \"10000\"\n" + 
+            "        }\n" + 
+            "      },\n" + 
+            
+            "      {\n" + 
+            "        \"_links\": {\n" + 
+            "          \"self\": {\n" + 
+            "            \"href\": \"\"\n" + 
+            "          },\n" + 
+            "          \"base\": {\n" + 
+            "            \"href\": \"https://horizon.stellar.org/accounts/GA7BRV2K3OM27NLVY2IJQGYZEQ7AEZSPR3Y3XA6COHPMOPOEUHQBDYBC\"\n" + 
+            "          },\n" + 
+            "          \"counter\": {\n" + 
+            "            \"href\": \"https://horizon.stellar.org/liquidity_pools/a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088\"\n" + 
+            "          },\n" + 
+            "          \"operation\": {\n" + 
+            "            \"href\": \"https://horizon.stellar.org/operations/163706436584558593\"\n" + 
+            "          }\n" + 
+            "        },\n" + 
+            "        \"id\": \"163706436584558593-1\",\n" + 
+            "        \"paging_token\": \"163706436584558593-1\",\n" + 
+            "        \"ledger_close_time\": \"2021-11-03T15:07:00Z\",\n" + 
+            "        \"trade_type\": \"liquidity_pool\",\n" + 
+            "        \"liquidity_pool_fee_bp\": 30,\n" + 
+            "        \"base_offer_id\": \"4775392455011946497\",\n" + 
+            "        \"base_account\": \"GAVH5JM5OKXGMQDS7YPRJ4MQCPXJUGH26LYQPQJ4SOMOJ4SXY472ZM7G\",\n" + 
+            "        \"base_amount\": \"0.0002207\",\n" + 
+            "        \"base_asset_type\": \"native\",\n" + 
+            "        \"counter_liquidity_pool_id\": \"a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088\",\n" + 
+            "        \"counter_amount\": \"0.0000831\",\n" + 
+            "        \"counter_asset_type\": \"credit_alphanum4\",\n" + 
+            "        \"counter_asset_code\": \"USDC\",\n" + 
+            "        \"counter_asset_issuer\": \"GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN\",\n" + 
+            "        \"base_is_seller\": false,\n" + 
+            "        \"price\": {\n" + 
+            "          \"n\": \"831\",\n" + 
+            "          \"d\": \"2207\"\n" + 
+            "        }\n" + 
+            "      },\n" + 
+            "    ]\n" + 
+            "  }\n" + 
+            "}\n" + 
+            "\n";
+
 }

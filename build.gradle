@@ -34,7 +34,7 @@ shadowJar {
     }
     duplicatesStrategy DuplicatesStrategy.EXCLUDE
     archiveClassifier.set('')
-    archiveBaseName.set('stellar-sdk')
+    archiveFileName.set('stellar-sdk.jar')
     relocate 'com.','shadow.com.'
     relocate 'net.','shadow.net.'
     relocate 'javax.annotation', 'shadow.javax.annotation'
