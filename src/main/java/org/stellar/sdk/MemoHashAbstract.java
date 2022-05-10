@@ -1,19 +1,18 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
+
+import com.google.common.io.BaseEncoding;
 
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
 
   public MemoHashAbstract(byte[] bytes) {
-    if (bytes.length < 32) {
-      bytes = Util.paddedByteArray(bytes, 32);
-    } else if (bytes.length > 32) {
-      throw new MemoTooLongException("MEMO_HASH can contain 32 bytes at max.");
-    }
-
+    checkNotNull(bytes, "bytes cannot be null");
+    checkArgument(bytes.length == 32, "bytes must be 32-bytes long.");
     this.bytes = bytes;
   }
 
@@ -34,27 +33,12 @@ abstract class MemoHashAbstract extends Memo {
    *
    * <p>Example:</p>
    * <code>
-   *   MemoHash memo = new MemoHash("4142434445");
-   *   memo.getHexValue(); // 4142434445000000000000000000000000000000000000000000000000000000
-   *   memo.getTrimmedHexValue(); // 4142434445
+   *   MemoHash memo = new MemoHash("e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526");
+   *   memo.getHexValue(); // e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526
    * </code>
    */
   public String getHexValue() {
     return BaseEncoding.base16().lowerCase().encode(this.bytes);
-  }
-
-  /**
-   * <p>Returns hex representation of bytes contained in this memo until null byte (0x00) is found.</p>
-   *
-   * <p>Example:</p>
-   * <code>
-   *   MemoHash memo = new MemoHash("4142434445");
-   *   memo.getHexValue(); // 4142434445000000000000000000000000000000000000000000000000000000
-   *   memo.getTrimmedHexValue(); // 4142434445
-   * </code>
-   */
-  public String getTrimmedHexValue() {
-    return this.getHexValue().split("00")[0];
   }
 
   @Override
@@ -75,6 +59,6 @@ abstract class MemoHashAbstract extends Memo {
 
     @Override
     public String toString() {
-        return bytes == null ? "" : Util.paddedByteArrayToString(bytes);
+        return bytes == null ? "" : getHexValue();
     }
 }
