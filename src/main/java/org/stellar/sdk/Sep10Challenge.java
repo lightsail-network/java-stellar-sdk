@@ -49,18 +49,19 @@ public class Sep10Challenge {
     return newChallenge(signer, network, clientAccountId, domainName, webAuthDomain, timebounds, "", "");
   }
 
-  /**
-   * Returns a valid <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#response" target="_blank">SEP 10</a> challenge, for use in web authentication.
-   *
-   * @param signer           The server's signing account.
-   * @param network          The Stellar network used by the server.
-   * @param clientAccountId  The stellar account belonging to the client.
-   * @param domainName       The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
-   * @param webAuthDomain    The fully qualified domain name of the service issuing the challenge.
-   * @param timebounds       The lifetime of the challenge token.
-   * @param clientDomain     The domain of the client application requesting authentication.
-   * @param clientSigningKey The stellar account listed as the SIGNING_KEY on the client domain's TOML file.
-   */
+    /**
+     * Returns a valid <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#response" target="_blank">SEP 10</a> challenge, for use in web authentication.
+     *
+     * @param signer           The server's signing account.
+     * @param network          The Stellar network used by the server.
+     * @param clientAccountId  The stellar account belonging to the client.
+     * @param domainName       The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+     * @param webAuthDomain    The fully qualified domain name of the service issuing the challenge.
+     * @param timebounds       The lifetime of the challenge token.
+     * @param clientDomain     The domain of the client application requesting authentication.
+     * @param clientSigningKey The stellar account listed as the SIGNING_KEY on the client domain's TOML file.
+     * @param memo             The memo of the challenge transaction.
+     */
   public static Transaction newChallenge(
       KeyPair signer,
       Network network,
@@ -69,7 +70,8 @@ public class Sep10Challenge {
       String webAuthDomain,
       TimeBounds timebounds,
       String clientDomain,
-      String clientSigningKey
+      String clientSigningKey,
+      Memo memo
   ) throws InvalidSep10ChallengeException {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
@@ -99,6 +101,13 @@ public class Sep10Challenge {
         .addOperation(domainNameOperation)
         .addOperation(webAuthDomainOperation);
 
+    if (memo != null) {
+      if (!(memo instanceof MemoId)) {
+        throw new InvalidSep10ChallengeException("only memo type `id` is supported");
+      }
+      builder.addMemo(memo);
+    }
+
     if (!clientSigningKey.isEmpty()) {
       if (StrKey.decodeVersionByte(clientSigningKey) != StrKey.VersionByte.ACCOUNT_ID) {
         throw new InvalidSep10ChallengeException(clientSigningKey + " is not a valid account id");
@@ -112,6 +121,32 @@ public class Sep10Challenge {
     transaction.sign(signer);
 
     return transaction;
+  }
+
+
+  /**
+   * Returns a valid <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#response" target="_blank">SEP 10</a> challenge, for use in web authentication.
+   *
+   * @param signer           The server's signing account.
+   * @param network          The Stellar network used by the server.
+   * @param clientAccountId  The stellar account belonging to the client.
+   * @param domainName       The <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">fully qualified domain name</a> of the service requiring authentication.
+   * @param webAuthDomain    The fully qualified domain name of the service issuing the challenge.
+   * @param timebounds       The lifetime of the challenge token.
+   * @param clientDomain     The domain of the client application requesting authentication.
+   * @param clientSigningKey The stellar account listed as the SIGNING_KEY on the client domain's TOML file.
+   */
+  public static Transaction newChallenge(
+          KeyPair signer,
+          Network network,
+          String clientAccountId,
+          String domainName,
+          String webAuthDomain,
+          TimeBounds timebounds,
+          String clientDomain,
+          String clientSigningKey
+  ) throws InvalidSep10ChallengeException {
+    return newChallenge(signer, network, clientAccountId, domainName, webAuthDomain, timebounds, clientDomain, clientSigningKey, null);
   }
 
   /**
@@ -160,6 +195,11 @@ public class Sep10Challenge {
     // verify that transaction sequenceNumber is equal to zero
     if (transaction.getSequenceNumber() != 0L) {
       throw new InvalidSep10ChallengeException("The transaction sequence number should be zero.");
+    }
+
+    Memo memo = transaction.getMemo();
+    if (memo != null && !(memo instanceof MemoNone || memo instanceof MemoId)) {
+      throw new InvalidSep10ChallengeException("only memo type `id` is supported");
     }
 
     long maxTime = transaction.getTimeBounds().getMaxTime();
