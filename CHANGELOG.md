@@ -4,6 +4,9 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.34.0
+* Add memo to `Sep10Challenge.newChallenge()` and `Sep10Challenge.readChallengeTransaction`. ([#435](https://github.com/stellar/java-stellar-sdk/pull/435))
+
 ## 0.33.0 
 * Update TransactionResponse to include new Protocol 19 Preconditions ([#428](https://github.com/stellar/java-stellar-sdk/pull/428)).
 * Fix asset compare to when asset code are equals ([#424](https://github.com/stellar/java-stellar-sdk/pull/424)).
