@@ -552,7 +552,14 @@ public class Sep10Challenge {
     }
 
     for (String signer : signers) {
-      KeyPair keyPair = KeyPair.fromAccountId(signer);
+      KeyPair keyPair;
+      try {
+        keyPair = KeyPair.fromAccountId(signer);
+      } catch (RuntimeException e) {
+        System.out.printf("Couldn't parse the signer \"%s\" as a valid Public Key.", signer);
+        e.printStackTrace();
+        continue;
+      }
       SignatureHint hint = keyPair.getSignatureHint();
 
       for (Signature signature : signatures.get(hint)) {
