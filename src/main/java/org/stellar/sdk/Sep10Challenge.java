@@ -552,7 +552,12 @@ public class Sep10Challenge {
     }
 
     for (String signer : signers) {
-      KeyPair keyPair = KeyPair.fromAccountId(signer);
+      KeyPair keyPair;
+      try {
+        keyPair = KeyPair.fromAccountId(signer);
+      } catch (RuntimeException e) {
+        continue;
+      }
       SignatureHint hint = keyPair.getSignatureHint();
 
       for (Signature signature : signatures.get(hint)) {

@@ -13,7 +13,7 @@ plugins {
 }
 
 sourceCompatibility = 1.6
-version = '0.34.0'
+version = '0.34.1'
 group = 'stellar'
 jar.enabled = false
 
