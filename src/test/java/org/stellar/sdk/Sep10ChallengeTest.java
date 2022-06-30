@@ -1609,12 +1609,10 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdValidServerAndMultipleClientKeyMeetingThresholdSomeUnusedAndOneNotEd25519Compliant() throws IOException, InvalidSep10ChallengeException {
+  public void testVerifyChallengeTransactionWithAccountIdNonCompliantWithEd25519() throws IOException, InvalidSep10ChallengeException {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
-    KeyPair signerClient1 = KeyPair.random();
-    KeyPair signerClient2 = KeyPair.random();
     long now = System.currentTimeMillis() / 1000L;
     long end = now + 300;
     TimeBounds timeBounds = new TimeBounds(now, end);
@@ -1631,18 +1629,15 @@ public class Sep10ChallengeTest {
     );
 
     transaction.sign(masterClient);
-    transaction.sign(signerClient1);
 
     Set<Sep10Challenge.Signer> signers = new HashSet<Sep10Challenge.Signer>(Arrays.asList(
-        new Sep10Challenge.Signer(masterClient.getAccountId(), 1),
-        new Sep10Challenge.Signer(signerClient1.getAccountId(), 2),
-        new Sep10Challenge.Signer(signerClient2.getAccountId(), 4),
+        new Sep10Challenge.Signer(masterClient.getAccountId(), 2),
         new Sep10Challenge.Signer("GA2T6GR7VXXXBETTERSAFETHANSORRYXXXPROTECTEDBYLOBSTRVAULT", 1)
     ));
 
-    int threshold = 3;
+    int threshold = 2;
     Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, webAuthDomain, threshold, signers);
-    assertEquals(new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId())), signersFound);
+    assertEquals(new HashSet<String>(Collections.singletonList(masterClient.getAccountId())), signersFound);
   }
 
   @Test
