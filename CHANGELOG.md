@@ -5,7 +5,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## Pending
 
 ## 0.34.1
-* Fix the `Sep10Challenge.verifyChallengeTransactionThreshold` flow so it can handle/ignore signers that are not ed25519 compliant. ([#440](https://github.com/stellar/java-stellar-sdk/pull/440))
+
+* Fix the `Sep10Challenge.verifyTransactionSignatures` method to handle/ignore signers that are not ed25519 compliant. ([#440](https://github.com/stellar/java-stellar-sdk/pull/440))
 
 ## 0.34.0
 * Add memo to `Sep10Challenge.newChallenge()` and `Sep10Challenge.readChallengeTransaction`. ([#435](https://github.com/stellar/java-stellar-sdk/pull/435))
