@@ -4,6 +4,10 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.34.2
+
+* Bump gson version from `v2.8.5` to `v2.9.0`. ([#443](https://github.com/stellar/java-stellar-sdk/pull/443))
+
 ## 0.34.1
 
 * Fix the `Sep10Challenge.verifyTransactionSignatures` method to handle/ignore signers that are not ed25519 compliant. ([#440](https://github.com/stellar/java-stellar-sdk/pull/440))
