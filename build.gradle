@@ -61,7 +61,7 @@ dependencies {
     implementation 'com.moandjiezana.toml:toml4j:0.7.2'
     // use the android version because we don't want java 8 stuff
     implementation 'com.google.guava:guava:26.0-android'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'commons-io:commons-io:2.6'
     implementation 'net.i2p.crypto:eddsa:0.3.0'
     implementation 'org.threeten:threetenbp:1.4.4'
