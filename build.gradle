@@ -1,5 +1,5 @@
 buildscript {
-    ext.okhttpclientVersion= '3.11.0'
+    ext.okhttpclientVersion= '4.10.0'
 }
 
 plugins {
@@ -12,7 +12,7 @@ plugins {
     id "java-library"
 }
 
-sourceCompatibility = 1.6
+sourceCompatibility = JavaVersion.VERSION_1_8.toString()
 version = '0.34.2'
 group = 'stellar'
 jar.enabled = false
