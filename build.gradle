@@ -64,12 +64,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'net.i2p.crypto:eddsa:0.3.0'
-    implementation 'org.threeten:threetenbp:1.4.4'
+    implementation 'org.threeten:threetenbp:1.6.0'
 
-    testImplementation 'org.mockito:mockito-core:2.21.0'
+    testImplementation 'org.mockito:mockito-core:4.6.1'
     testImplementation "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'javax.xml.bind:jaxb-api:2.3.0'
+    testImplementation 'javax.xml.bind:jaxb-api:2.3.1'
     testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '4.12.1'
 }
 tasks.named('test') { task ->
