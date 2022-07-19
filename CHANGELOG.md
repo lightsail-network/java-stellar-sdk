@@ -4,6 +4,16 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.35.0
+
+* Update JDK compatibility version from Java 1.6 to Java 1.8 and bump the version of few libraries ([#?](https://github.com/stellar/java-stellar-sdk/pull/?)):
+  * com.squareup.okhttp3 from `v3.11.0` to `v4.10.0`. 
+  * commons-io:commons-io from `v2.6` to `v2.11.0`.
+  * junit:junit from `v4.12` to `v4.13.2`.
+  * org.threeten:threetenbp from `v1.4.4` to `v1.6.0`.
+  * org.mockito:mockito-core from `v2.21.0` to `v4.6.1`.
+  * javax.xml.bind:jaxb-api from `v2.3.0` to `v2.3.1`.
+
 ## 0.34.2
 
 * Bump gson version from `v2.8.5` to `v2.9.0`. ([#443](https://github.com/stellar/java-stellar-sdk/pull/443))
