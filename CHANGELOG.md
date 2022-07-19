@@ -6,7 +6,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## 0.35.0
 
-* Update JDK compatibility version from Java 1.6 to Java 1.8 and bump the version of few libraries ([#?](https://github.com/stellar/java-stellar-sdk/pull/?)):
+* Update JDK compatibility version from Java 1.6 to Java 1.8 and bump the version of few libraries ([#444](https://github.com/stellar/java-stellar-sdk/pull/444)):
   * com.squareup.okhttp3 from `v3.11.0` to `v4.10.0`. 
   * commons-io:commons-io from `v2.6` to `v2.11.0`.
   * junit:junit from `v4.12` to `v4.13.2`.
