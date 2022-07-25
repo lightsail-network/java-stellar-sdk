@@ -49,6 +49,9 @@ shadowJar {
     relocate 'org.checkerframework','shadow.org.checkerframework'
     relocate 'okhttp3','shadow.okhttp3'
     relocate 'okio','shadow.okio'
+    relocate 'kotlin','shadow.kotlin'
+    relocate 'org.intellij','shadow.org.intellij'
+    relocate 'org.jetbrains','shadow.org.jetbrains'
 }
 
 repositories {
