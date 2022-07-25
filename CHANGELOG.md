@@ -4,6 +4,11 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.36.0
+
+* Fix bug in `KeyPair.fromSecretSeed(char[] seed)`. ([#447](https://github.com/stellar/java-stellar-sdk/pull/447))
+* Shade kotlin dependencies to prevent 'Duplicate class' errors. ([#448](https://github.com/stellar/java-stellar-sdk/pull/448))
+
 ## 0.35.0
 
 * Update JDK compatibility version from Java 1.6 to Java 1.8 and bump the version of few libraries ([#444](https://github.com/stellar/java-stellar-sdk/pull/444)):
