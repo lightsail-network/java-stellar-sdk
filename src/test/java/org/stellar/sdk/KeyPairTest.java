@@ -7,14 +7,22 @@ import org.stellar.sdk.xdr.DecoratedSignature;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class KeyPairTest {
 
   private static final String SEED = "1123740522f11bfef6b3671f51e159ccf589ccf8965262dd5f97d1721d383dd4";
+
+  @Test
+  public void testFromSecretSeedCharArray() {
+    KeyPair original = KeyPair.fromSecretSeed("SDMMJC2BSGESMFQ53MF3WECMCQGJVRY3TJ45J7PYZ53GZZ36NDDDWEDM");
+
+    char[] seed = original.getSecretSeed();
+    KeyPair newPair = KeyPair.fromSecretSeed(seed);
+
+    assertArrayEquals(original.getSecretSeed(), newPair.getSecretSeed());
+    assertEquals(original.getAccountId(), newPair.getAccountId());
+  }
 
   @Test
   public void testInvalidPublicKey() {
