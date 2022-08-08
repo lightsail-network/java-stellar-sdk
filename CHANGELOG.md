@@ -4,6 +4,10 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.37.1
+
+* Fix the deployment CI that uploads the jar to the GitHub release. ([#452](https://github.com/stellar/java-stellar-sdk/pull/452))
+
 ## 0.37.0
 
 * Fix missing `auth_clawback_enabled` field in AccountResponse class. ([#449](https://github.com/stellar/java-stellar-sdk/pull/449))

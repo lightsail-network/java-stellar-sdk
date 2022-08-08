@@ -19,7 +19,7 @@ jobs:
             - libs/stellar-sdk.jar
   deploy:
     docker:
-      - image: cibuilds/github:0.10
+      - image: cibuilds/github:0.13
     steps:
       - attach_workspace:
           at: ./build
