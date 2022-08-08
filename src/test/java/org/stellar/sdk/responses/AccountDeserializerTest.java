@@ -265,7 +265,8 @@ public class AccountDeserializerTest extends TestCase {
           "  \"flags\": {\n" +
           "    \"auth_required\": false,\n" +
           "    \"auth_revocable\": true,\n" +
-          "    \"auth_immutable\": true\n" +
+          "    \"auth_immutable\": true,\n" +
+          "    \"auth_clawback_enabled\": true\n" +
           "  },\n" +
           "  \"balances\": [\n" +
           "    {\n" +
