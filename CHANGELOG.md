@@ -4,6 +4,10 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.37.2
+
+* Fix the deployment CI that uploads the jar to the GitHub release [2]. ([#453](https://github.com/stellar/java-stellar-sdk/pull/453))
+
 ## 0.37.1
 
 * Fix the deployment CI that uploads the jar to the GitHub release. ([#452](https://github.com/stellar/java-stellar-sdk/pull/452))
