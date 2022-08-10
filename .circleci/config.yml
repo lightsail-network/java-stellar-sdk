@@ -24,9 +24,9 @@ jobs:
       - attach_workspace:
           at: ./build
       - run:
-          name: "Install github.com/github-release/github-release"
+          name: "Install github.com/github-release/github-release v0.10.0"
           command: |
-            go get github.com/github-release/github-release
+            go get github.com/github-release/github-release@v0.10.0
       - run:
           name: "Upload JAR to GitHub Release"
           command: |
