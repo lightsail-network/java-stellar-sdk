@@ -19,14 +19,18 @@ jobs:
             - libs/stellar-sdk.jar
   deploy:
     docker:
-      - image: cibuilds/github:0.13
+      - image: cimg/go:1.17
     steps:
       - attach_workspace:
           at: ./build
       - run:
-          name: "Publish Release on GitHub"
+          name: "Install github.com/github-release/github-release v0.10.0"
           command: |
-            ghr -replace -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./build/libs
+            go get github.com/github-release/github-release@v0.10.0
+      - run:
+          name: "Upload JAR to GitHub Release"
+          command: |
+            github-release upload -s ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -t ${CIRCLE_TAG} -f ./build/libs/stellar-sdk.jar -n java-stellar-sdk.jar
 
   after_deploy:
     docker:
