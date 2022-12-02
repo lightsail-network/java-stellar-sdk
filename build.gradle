@@ -39,7 +39,11 @@ shadowJar {
     duplicatesStrategy DuplicatesStrategy.EXCLUDE
     archiveClassifier.set('')
     archiveFileName.set('stellar-sdk.jar')
-    relocate 'com.','shadow.com.'
+    relocate('com.', 'shadow.com.') {
+      // okhttp hardcodes android platform class loading to this package, shadowing would attempt to rewrite the hardcode
+      // to be 'shadow.com.android.org.conscrypt' which we don't want to happen.
+      exclude 'com.android.org.conscrypt'
+    }
     relocate 'net.','shadow.net.'
     relocate 'javax.annotation', 'shadow.javax.annotation'
     relocate 'org.apache','shadow.org.apache'
