@@ -2,7 +2,8 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
-## Pending
+## 0.38.0
+* Fix android crashing related to okhttp3 ([#457](https://github.com/stellar/java-stellar-sdk/pull/457))
 
 ## 0.37.2
 

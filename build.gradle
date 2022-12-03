@@ -13,7 +13,7 @@ plugins {
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-version = '0.37.2'
+version = '0.38.0'
 group = 'stellar'
 jar.enabled = false
 
