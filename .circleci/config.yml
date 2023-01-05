@@ -7,6 +7,10 @@ jobs:
     steps:
       - checkout
       - run: ./gradlew check
+      - run:
+          name: "Check user"
+          command: |
+            curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/user
   shadow_jar:
     docker:
       - image: circleci/openjdk:8
