@@ -4,6 +4,14 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.39.0
+
+* Add SubmitTransactionResponse.ResultCodes.innerTransactionResultCode ([#466](https://github.com/stellar/java-stellar-sdk/pull/466)) 
+
+## 0.38.0
+
+* Fix android crashing related to okhttp3 ([#457](https://github.com/stellar/java-stellar-sdk/pull/457))
+
 ## 0.37.2
 
 * Fix the deployment CI that uploads the jar to the GitHub release [2]. ([#453](https://github.com/stellar/java-stellar-sdk/pull/453))
