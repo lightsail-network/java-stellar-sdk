@@ -201,16 +201,23 @@ public class SubmitTransactionResponse extends Response {
         public static class ResultCodes {
             @SerializedName("transaction")
             private final String transactionResultCode;
+            @SerializedName("inner_transaction")
+            private final String innerTransactionResultCode;
             @SerializedName("operations")
             private final ArrayList<String> operationsResultCodes;
 
-            public ResultCodes(String transactionResultCode, ArrayList<String> operationsResultCodes) {
+            public ResultCodes(String transactionResultCode, String innerTransactionResultCode, ArrayList<String> operationsResultCodes) {
                 this.transactionResultCode = transactionResultCode;
+                this.innerTransactionResultCode = innerTransactionResultCode;
                 this.operationsResultCodes = operationsResultCodes;
             }
 
             public String getTransactionResultCode() {
                 return transactionResultCode;
+            }
+            
+            public String getInnerTransactionResultCode() {
+                return innerTransactionResultCode;
             }
 
             public ArrayList<String> getOperationsResultCodes() {
