@@ -47,7 +47,7 @@ public class SubmitTransactionResponseTest extends TestCase {
             "  \"extras\": {\n" +
             "    \"envelope_xdr\": \"AAAAAKpmDL6Z4hvZmkTBkYpHftan4ogzTaO4XTB7joLgQnYYAAAAZAAAAAAABeoyAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAA=\",\n" +
             "    \"result_codes\": {\n" +
-            "      \"transaction\": \"tx_fee_bump_inner_failed\"\n" +
+            "      \"transaction\": \"tx_fee_bump_inner_failed\",\n" +
             "      \"inner_transaction\": \"tx_no_source_account\"\n" +
             "    },\n" +
             "    \"result_xdr\": \"AAAAAAAAAMj////zxZjN9tKJLJ6diZuWBitlMJ/4MXX1Akm9M5CqZt10ogoAAAAAAAAAAP////8AAAABAAAAAAAAAAb/////AAAAAAAAAAA=\"\n" +
