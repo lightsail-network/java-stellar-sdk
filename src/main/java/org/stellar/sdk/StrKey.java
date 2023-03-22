@@ -32,7 +32,10 @@ class StrKey {
         SEED((byte)(18 << 3)), // S
         PRE_AUTH_TX((byte)(19 << 3)), // T
         SHA256_HASH((byte)(23 << 3)), // X
-        SIGNED_PAYLOAD((byte)(15 << 3)); // P
+        SIGNED_PAYLOAD((byte)(15 << 3)), // P
+
+        CONTRACT((byte)(2 << 3)); // C
+
         private final byte value;
         VersionByte(byte value) {
             this.value = value;
@@ -52,6 +55,11 @@ class StrKey {
     }
 
     private static BaseEncoding base32Encoding = BaseEncoding.base32().upperCase().omitPadding();
+
+    public static String encodeContractId(byte[] data) {
+        char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
+        return String.valueOf(encoded);
+    }
 
     public static String encodeStellarAccountId(byte[] data) {
         char[] encoded = encodeCheck(VersionByte.ACCOUNT_ID, data);
@@ -174,6 +182,10 @@ class StrKey {
 
     public static byte[] decodeStellarAccountId(String data) {
         return decodeCheck(VersionByte.ACCOUNT_ID, data.toCharArray());
+    }
+
+    public static byte[] decodeContractId(String data) {
+        return decodeCheck(VersionByte.CONTRACT, data.toCharArray());
     }
 
     public static char[] encodeStellarSecretSeed(byte[] data) {
