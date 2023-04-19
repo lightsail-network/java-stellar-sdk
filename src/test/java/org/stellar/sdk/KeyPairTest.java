@@ -127,4 +127,18 @@ public class KeyPairTest {
     KeyPair keypairCopy = KeyPair.fromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ");
     Assert.assertEquals(keypairCopy, keypair);
   }
+
+  @Test
+  public void testPublicPrivateNotEquals() {
+    KeyPair keypair = KeyPair.random();
+    KeyPair keypairPublicCopy = KeyPair.fromAccountId(keypair.getAccountId());
+    Assert.assertNotEquals(keypairPublicCopy, keypair);
+  }
+
+  @Test
+  public void testPrivateEquals() {
+    KeyPair keyPair = KeyPair.random();
+    KeyPair keypairCopy = KeyPair.fromSecretSeed(keyPair.getSecretSeed());
+    Assert.assertEquals(keyPair, keypairCopy);
+  }
 }
