@@ -120,4 +120,11 @@ public class KeyPairTest {
     // the hint could only be derived off of 3 bytes from payload
     Assert.assertArrayEquals(sig.getHint().getSignatureHint(), new byte[]{(byte)(255), 64, 7, 55});
   }
+
+  @Test
+  public void testPublicEqual() {
+    KeyPair keypair = KeyPair.fromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ");
+    KeyPair keypairCopy = KeyPair.fromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ");
+    Assert.assertEquals(keypairCopy, keypair);
+  }
 }
