@@ -308,7 +308,7 @@ public class KeyPair {
     }
 
     KeyPair other = (KeyPair) object;
-    return this.mPrivateKey.equals(other.mPrivateKey) &&
+    return Objects.equal(this.mPrivateKey, other.mPrivateKey) &&
             this.mPublicKey.equals(other.mPublicKey);
 
   }
