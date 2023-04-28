@@ -1,12 +1,12 @@
 package org.stellar.sdk.requests;
 
+import com.google.common.base.Optional;
 import com.google.gson.reflect.TypeToken;
 
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.TypedResponse;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import okhttp3.Response;
 
@@ -29,8 +29,8 @@ public class ResponseHandler<T> {
     try {
       // Too Many Requests
       if (response.code() == 429) {
-        
-        Optional<Integer> retryAfter = Optional.empty();
+
+        Optional<Integer> retryAfter = Optional.absent();
         String header = response.header("Retry-After");
         if (header != null) {
           try {

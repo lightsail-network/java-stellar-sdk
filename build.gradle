@@ -82,4 +82,3 @@ dependencies {
 tasks.named('test') { task ->
     useJUnitPlatform()
 }
-targetCompatibility = JavaVersion.VERSION_1_8

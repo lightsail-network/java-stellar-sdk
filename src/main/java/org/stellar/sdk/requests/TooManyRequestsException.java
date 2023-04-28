@@ -1,6 +1,7 @@
 package org.stellar.sdk.requests;
 
-import java.util.Optional;
+
+import com.google.common.base.Optional;
 
 /**
  * Exception thrown when too many requests were sent to the Horizon server.
