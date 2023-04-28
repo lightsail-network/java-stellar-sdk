@@ -37,6 +37,34 @@ public class SubmitTransactionResponseTest extends TestCase {
   }
 
   @Test
+  public void testDeserializeFeeBumpTransactionFailureResponse() throws IOException {
+    String json = "{\n" +
+            "  \"type\": \"https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/transaction-failed/\",\n" +
+            "  \"title\": \"Transaction Failed\",\n" +
+            "  \"status\": 400,\n" +
+            "  \"detail\": \"The transaction failed when submitted to the stellar network. The `extras.result_codes` field on this response contains further details.  Descriptions of each code can be found at: https://developers.stellar.org/docs/start/list-of-operations/\",\n" +
+            "  \"instance\": \"horizon-testnet-001.prd.stellar001.internal.stellar-ops.com/4elYz2fHhC-528285\",\n" +
+            "  \"extras\": {\n" +
+            "    \"envelope_xdr\": \"AAAAAKpmDL6Z4hvZmkTBkYpHftan4ogzTaO4XTB7joLgQnYYAAAAZAAAAAAABeoyAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAA=\",\n" +
+            "    \"result_codes\": {\n" +
+            "      \"transaction\": \"tx_fee_bump_inner_failed\",\n" +
+            "      \"inner_transaction\": \"tx_no_source_account\"\n" +
+            "    },\n" +
+            "    \"result_xdr\": \"AAAAAAAAAMj////zxZjN9tKJLJ6diZuWBitlMJ/4MXX1Akm9M5CqZt10ogoAAAAAAAAAAP////8AAAABAAAAAAAAAAb/////AAAAAAAAAAA=\"\n" +
+            "  }\n" +
+            "}";
+
+    SubmitTransactionResponse submitTransactionResponse = GsonSingleton.getInstance().fromJson(json, SubmitTransactionResponse.class);
+    assertEquals(submitTransactionResponse.isSuccess(), false);
+    assertEquals(submitTransactionResponse.getEnvelopeXdr().get(), "AAAAAKpmDL6Z4hvZmkTBkYpHftan4ogzTaO4XTB7joLgQnYYAAAAZAAAAAAABeoyAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAD3sEVVGZGi/NoC3ta/8f/YZKMzyi9ZJpOi0H47x7IqYAAAAAAAAAAAF9eEAAAAAAAAAAAA=");
+    assertEquals(submitTransactionResponse.getResultXdr().get(), "AAAAAAAAAMj////zxZjN9tKJLJ6diZuWBitlMJ/4MXX1Akm9M5CqZt10ogoAAAAAAAAAAP////8AAAABAAAAAAAAAAb/////AAAAAAAAAAA=");
+    assertFalse(submitTransactionResponse.getOfferIdFromResult(0).isPresent());
+    assertFalse(submitTransactionResponse.getDecodedTransactionResult().isPresent());
+    assertEquals(submitTransactionResponse.getExtras().getResultCodes().getTransactionResultCode(), "tx_fee_bump_inner_failed");
+    assertEquals(submitTransactionResponse.getExtras().getResultCodes().getInnerTransactionResultCode(), "tx_no_source_account");
+  }
+
+  @Test
   public void testDeserializeOperationFailureResponse() throws IOException {
     String json = "{\n" +
             "  \"type\": \"https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/transaction-failed/\",\n" +

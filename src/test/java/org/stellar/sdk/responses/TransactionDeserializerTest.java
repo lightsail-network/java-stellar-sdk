@@ -3,9 +3,14 @@ package org.stellar.sdk.responses;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import junit.framework.TestCase;
+
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.stellar.sdk.MemoHash;
 import org.stellar.sdk.MemoNone;
+
+import java.util.Arrays;
 
 import static java.math.BigInteger.valueOf;
 
@@ -61,6 +66,7 @@ public class TransactionDeserializerTest extends TestCase {
     assertTrue(transaction.getMemo() instanceof MemoHash);
     MemoHash memo = (MemoHash) transaction.getMemo();
     assertEquals("51041644e83d6ac868c849418b6392ddbe9df53f000000000000000000000000", memo.getHexValue());
+    assertFalse(transaction.getPreconditions().isPresent());
 
     assertEquals(transaction.getLinks().getAccount().getHref(), "/accounts/GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK");
     assertEquals(transaction.getLinks().getEffects().getHref(), "/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b/effects{?cursor,limit,order}");
@@ -84,11 +90,47 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(transaction.getFeeAccountMuxed().get().getId(), valueOf(420l));
   }
 
-    @Test
+  @Test
   public void testDeserializeWithoutMemo() {
     TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonMemoNone, TransactionResponse.class);
     assertTrue(transaction.getMemo() instanceof MemoNone);
     assertEquals(transaction.isSuccessful().booleanValue(), false);
+  }
+    
+  @Test
+  public void testDeserializeNullMemo() {
+    TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonNullMemoHash, TransactionResponse.class);
+    assertTrue(transaction.getMemo() instanceof MemoHash);
+    MemoHash memoHash = (MemoHash)transaction.getMemo();
+    
+    assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memoHash.getHexValue());
+    assertEquals("0000000000000000000000000000000000000000000000000000000000000000", memoHash.toString());
+  }
+
+  @Test
+  public void testDeserializePreconditions() {
+    TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonPreconditions, TransactionResponse.class);
+    assertTrue(transaction.getPreconditions().isPresent());
+    assertEquals(transaction.getPreconditions().get().getMinAccountSequence(), Long.valueOf(1));
+    assertEquals(transaction.getPreconditions().get().getMinAccountSequenceAge(), 2);
+    assertEquals(transaction.getPreconditions().get().getMinAccountSequenceLedgerGap(), 3);
+    assertEquals(transaction.getPreconditions().get().getTimeBounds(), new TransactionResponse.Preconditions.TimeBounds(4,5));
+    assertEquals(transaction.getPreconditions().get().getLedgerBounds(), new TransactionResponse.Preconditions.LedgerBounds(6,7));
+    assertEquals(transaction.getPreconditions().get().getSignatures(), Arrays.asList("GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK"));
+  }
+
+  @Test
+  public void testDeserializePreconditionsEmptySigners() {
+    TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonPreconditionsEmptySigners, TransactionResponse.class);
+    assertTrue(transaction.getPreconditions().isPresent());
+    assertEquals(transaction.getPreconditions().get().getSignatures().size(), 0);
+  }
+
+  @Test
+  public void testDeserializePreconditionsUnsetMinAccountSequence() {
+    TransactionResponse transaction = GsonSingleton.getInstance().fromJson(jsonPreconditionsUnsetMinAccountSeq, TransactionResponse.class);
+    assertTrue(transaction.getPreconditions().isPresent());
+    assertNull(transaction.getPreconditions().get().getMinAccountSequence());
   }
 
   String json = "{\n" +
@@ -182,6 +224,187 @@ public class TransactionDeserializerTest extends TestCase {
           "  \"signatures\": [\n" +
           "    \"b/noKPYnxb8oJmv6gLixY0PUJMZZ9pxwc226JtAfyRkhv6oFINj3iDuGJoBeuUh6D1vujP9e4/fH0xZjDaO3Aw==\"\n" +
           "  ]\n" +
+          "}";
+
+  String jsonPreconditions = "{\n" +
+          "  \"_links\": {\n" +
+          "    \"account\": {\n" +
+          "      \"href\": \"/accounts/GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK\"\n" +
+          "    },\n" +
+          "    \"effects\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b/effects{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"ledger\": {\n" +
+          "      \"href\": \"/ledgers/915744\"\n" +
+          "    },\n" +
+          "    \"operations\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b/operations{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"precedes\": {\n" +
+          "      \"href\": \"/transactions?cursor=3933090531512320\\u0026order=asc\"\n" +
+          "    },\n" +
+          "    \"self\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\"\n" +
+          "    },\n" +
+          "    \"succeeds\": {\n" +
+          "      \"href\": \"/transactions?cursor=3933090531512320\\u0026order=desc\"\n" +
+          "    }\n" +
+          "  },\n" +
+          "  \"id\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
+          "  \"paging_token\": \"3933090531512320\",\n" +
+          "  \"successful\": false,\n" +
+          "  \"hash\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
+          "  \"ledger\": 915744,\n" +
+          "  \"created_at\": \"2015-11-20T17:01:28Z\",\n" +
+          "  \"source_account\": \"GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK\",\n" +
+          "  \"source_account_sequence\": 2373051035426646,\n" +
+          "  \"max_fee\": 200,\n" +
+          "  \"fee_charged\": 100,\n" +
+          "  \"operation_count\": 1,\n" +
+          "  \"envelope_xdr\": \"AAAAAKgfpXwD1fWpPmZL+GkzWcBmhRQH7ouPsoTN3RoaGCfrAAAAZAAIbkcAAB9WAAAAAAAAAANRBBZE6D1qyGjISUGLY5Ldvp31PwAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAAAAAAAAADA7RnarSzCwj3OT+M2btCMFpVBdqxJS+Sr00qBjtFv7gAAAABLCs/QAAAAAAAAAAEaGCfrAAAAQG/56Cj2J8W/KCZr+oC4sWND1CTGWfaccHNtuibQH8kZIb+qBSDY94g7hiaAXrlIeg9b7oz/XuP3x9MWYw2jtwM=\",\n" +
+          "  \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=\",\n" +
+          "  \"result_meta_xdr\": \"AAAAAAAAAAEAAAACAAAAAAAN+SAAAAAAAAAAAMDtGdqtLMLCPc5P4zZu0IwWlUF2rElL5KvTSoGO0W/uAAAAAEsKz9AADfkgAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAN+SAAAAAAAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAHp6WMr55YACD1BAAAAHgAAAAoAAAAAAAAAAAAAAAABAAAAAAAACgAAAAARC07BokpLTOF+/vVKBwiAlop7hHGJTNeGGlY4MoPykwAAAAEAAAAAK+Lzfd3yDD+Ov0GbYu1g7SaIBrKZeBUxoCunkLuI7aoAAAABAAAAAERmsKL73CyLV/HvjyQCERDXXpWE70Xhyb6MR5qPO3yQAAAAAQAAAABSORGwAdyuanN3sNOHqNSpACyYdkUM3L8VafUu69EvEgAAAAEAAAAAeCzqJNkMM/jLvyuMIfyFHljBlLCtDyj17RMycPuNtRMAAAABAAAAAIEi4R7juq15ymL00DNlAddunyFT4FyUD4muC4t3bobdAAAAAQAAAACaNpLL5YMfjOTdXVEqrAh99LM12sN6He6pHgCRAa1f1QAAAAEAAAAAqB+lfAPV9ak+Zkv4aTNZwGaFFAfui4+yhM3dGhoYJ+sAAAABAAAAAMNJrEvdMg6M+M+n4BDIdzsVSj/ZI9SvAp7mOOsvAD/WAAAAAQAAAADbHA6xiKB1+G79mVqpsHMOleOqKa5mxDpP5KEp/Xdz9wAAAAEAAAAAAAAAAA==\",\n" +
+          "  \"memo_type\": \"none\",\n" +
+          "  \"signatures\": [\n" +
+          "    \"b/noKPYnxb8oJmv6gLixY0PUJMZZ9pxwc226JtAfyRkhv6oFINj3iDuGJoBeuUh6D1vujP9e4/fH0xZjDaO3Aw==\"\n" +
+          "  ],\n" +
+          "  \"preconditions\": {\n" +
+          "    \"timebounds\": {\n" +
+          "      \"min_time\": \"4\",\n" +
+          "      \"max_time\": \"5\"\n" +
+          "    },\n" +
+          "    \"ledgerbounds\": {\n" +
+          "      \"min_ledger\": 6,\n" +
+          "      \"max_ledger\": 7\n" +
+          "    },\n" +
+          "    \"min_account_sequence\": \"1\",\n" +
+          "    \"min_account_sequence_age\": \"2\",\n" +
+          "    \"min_account_sequence_ledger_gap\": 3,\n" +
+          "    \"extra_signers\": [\n" +
+          "    \"GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK\"\n" +
+          "    ]\n" +
+          "  }\n" +
+          "}";
+
+  String jsonPreconditionsEmptySigners = "{\n" +
+          "  \"_links\": {\n" +
+          "    \"account\": {\n" +
+          "      \"href\": \"/accounts/GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK\"\n" +
+          "    },\n" +
+          "    \"effects\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b/effects{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"ledger\": {\n" +
+          "      \"href\": \"/ledgers/915744\"\n" +
+          "    },\n" +
+          "    \"operations\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b/operations{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"precedes\": {\n" +
+          "      \"href\": \"/transactions?cursor=3933090531512320\\u0026order=asc\"\n" +
+          "    },\n" +
+          "    \"self\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\"\n" +
+          "    },\n" +
+          "    \"succeeds\": {\n" +
+          "      \"href\": \"/transactions?cursor=3933090531512320\\u0026order=desc\"\n" +
+          "    }\n" +
+          "  },\n" +
+          "  \"id\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
+          "  \"paging_token\": \"3933090531512320\",\n" +
+          "  \"successful\": false,\n" +
+          "  \"hash\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
+          "  \"ledger\": 915744,\n" +
+          "  \"created_at\": \"2015-11-20T17:01:28Z\",\n" +
+          "  \"source_account\": \"GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK\",\n" +
+          "  \"source_account_sequence\": 2373051035426646,\n" +
+          "  \"max_fee\": 200,\n" +
+          "  \"fee_charged\": 100,\n" +
+          "  \"operation_count\": 1,\n" +
+          "  \"envelope_xdr\": \"AAAAAKgfpXwD1fWpPmZL+GkzWcBmhRQH7ouPsoTN3RoaGCfrAAAAZAAIbkcAAB9WAAAAAAAAAANRBBZE6D1qyGjISUGLY5Ldvp31PwAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAAAAAAAAADA7RnarSzCwj3OT+M2btCMFpVBdqxJS+Sr00qBjtFv7gAAAABLCs/QAAAAAAAAAAEaGCfrAAAAQG/56Cj2J8W/KCZr+oC4sWND1CTGWfaccHNtuibQH8kZIb+qBSDY94g7hiaAXrlIeg9b7oz/XuP3x9MWYw2jtwM=\",\n" +
+          "  \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=\",\n" +
+          "  \"result_meta_xdr\": \"AAAAAAAAAAEAAAACAAAAAAAN+SAAAAAAAAAAAMDtGdqtLMLCPc5P4zZu0IwWlUF2rElL5KvTSoGO0W/uAAAAAEsKz9AADfkgAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAN+SAAAAAAAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAHp6WMr55YACD1BAAAAHgAAAAoAAAAAAAAAAAAAAAABAAAAAAAACgAAAAARC07BokpLTOF+/vVKBwiAlop7hHGJTNeGGlY4MoPykwAAAAEAAAAAK+Lzfd3yDD+Ov0GbYu1g7SaIBrKZeBUxoCunkLuI7aoAAAABAAAAAERmsKL73CyLV/HvjyQCERDXXpWE70Xhyb6MR5qPO3yQAAAAAQAAAABSORGwAdyuanN3sNOHqNSpACyYdkUM3L8VafUu69EvEgAAAAEAAAAAeCzqJNkMM/jLvyuMIfyFHljBlLCtDyj17RMycPuNtRMAAAABAAAAAIEi4R7juq15ymL00DNlAddunyFT4FyUD4muC4t3bobdAAAAAQAAAACaNpLL5YMfjOTdXVEqrAh99LM12sN6He6pHgCRAa1f1QAAAAEAAAAAqB+lfAPV9ak+Zkv4aTNZwGaFFAfui4+yhM3dGhoYJ+sAAAABAAAAAMNJrEvdMg6M+M+n4BDIdzsVSj/ZI9SvAp7mOOsvAD/WAAAAAQAAAADbHA6xiKB1+G79mVqpsHMOleOqKa5mxDpP5KEp/Xdz9wAAAAEAAAAAAAAAAA==\",\n" +
+          "  \"memo_type\": \"none\",\n" +
+          "  \"signatures\": [\n" +
+          "    \"b/noKPYnxb8oJmv6gLixY0PUJMZZ9pxwc226JtAfyRkhv6oFINj3iDuGJoBeuUh6D1vujP9e4/fH0xZjDaO3Aw==\"\n" +
+          "  ],\n" +
+          "  \"preconditions\": {\n" +
+          "    \"timebounds\": {\n" +
+          "      \"min_time\": \"4\",\n" +
+          "      \"max_time\": \"5\"\n" +
+          "    },\n" +
+          "    \"ledgerbounds\": {\n" +
+          "      \"min_ledger\": 6,\n" +
+          "      \"max_ledger\": 7\n" +
+          "    },\n" +
+          "    \"min_account_sequence\": \"1\",\n" +
+          "    \"min_account_sequence_age\": \"2\",\n" +
+          "    \"min_account_sequence_ledger_gap\": 3,\n" +
+          "    \"extra_signers\": [\n]\n" +
+          "  }\n" +
+          "}";
+
+  String jsonPreconditionsUnsetMinAccountSeq = "{\n" +
+          "  \"_links\": {\n" +
+          "    \"account\": {\n" +
+          "      \"href\": \"/accounts/GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK\"\n" +
+          "    },\n" +
+          "    \"effects\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b/effects{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"ledger\": {\n" +
+          "      \"href\": \"/ledgers/915744\"\n" +
+          "    },\n" +
+          "    \"operations\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b/operations{?cursor,limit,order}\",\n" +
+          "      \"templated\": true\n" +
+          "    },\n" +
+          "    \"precedes\": {\n" +
+          "      \"href\": \"/transactions?cursor=3933090531512320\\u0026order=asc\"\n" +
+          "    },\n" +
+          "    \"self\": {\n" +
+          "      \"href\": \"/transactions/5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\"\n" +
+          "    },\n" +
+          "    \"succeeds\": {\n" +
+          "      \"href\": \"/transactions?cursor=3933090531512320\\u0026order=desc\"\n" +
+          "    }\n" +
+          "  },\n" +
+          "  \"id\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
+          "  \"paging_token\": \"3933090531512320\",\n" +
+          "  \"successful\": false,\n" +
+          "  \"hash\": \"5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b\",\n" +
+          "  \"ledger\": 915744,\n" +
+          "  \"created_at\": \"2015-11-20T17:01:28Z\",\n" +
+          "  \"source_account\": \"GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK\",\n" +
+          "  \"source_account_sequence\": 2373051035426646,\n" +
+          "  \"max_fee\": 200,\n" +
+          "  \"fee_charged\": 100,\n" +
+          "  \"operation_count\": 1,\n" +
+          "  \"envelope_xdr\": \"AAAAAKgfpXwD1fWpPmZL+GkzWcBmhRQH7ouPsoTN3RoaGCfrAAAAZAAIbkcAAB9WAAAAAAAAAANRBBZE6D1qyGjISUGLY5Ldvp31PwAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAAAAAAAAADA7RnarSzCwj3OT+M2btCMFpVBdqxJS+Sr00qBjtFv7gAAAABLCs/QAAAAAAAAAAEaGCfrAAAAQG/56Cj2J8W/KCZr+oC4sWND1CTGWfaccHNtuibQH8kZIb+qBSDY94g7hiaAXrlIeg9b7oz/XuP3x9MWYw2jtwM=\",\n" +
+          "  \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=\",\n" +
+          "  \"result_meta_xdr\": \"AAAAAAAAAAEAAAACAAAAAAAN+SAAAAAAAAAAAMDtGdqtLMLCPc5P4zZu0IwWlUF2rElL5KvTSoGO0W/uAAAAAEsKz9AADfkgAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAN+SAAAAAAAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAHp6WMr55YACD1BAAAAHgAAAAoAAAAAAAAAAAAAAAABAAAAAAAACgAAAAARC07BokpLTOF+/vVKBwiAlop7hHGJTNeGGlY4MoPykwAAAAEAAAAAK+Lzfd3yDD+Ov0GbYu1g7SaIBrKZeBUxoCunkLuI7aoAAAABAAAAAERmsKL73CyLV/HvjyQCERDXXpWE70Xhyb6MR5qPO3yQAAAAAQAAAABSORGwAdyuanN3sNOHqNSpACyYdkUM3L8VafUu69EvEgAAAAEAAAAAeCzqJNkMM/jLvyuMIfyFHljBlLCtDyj17RMycPuNtRMAAAABAAAAAIEi4R7juq15ymL00DNlAddunyFT4FyUD4muC4t3bobdAAAAAQAAAACaNpLL5YMfjOTdXVEqrAh99LM12sN6He6pHgCRAa1f1QAAAAEAAAAAqB+lfAPV9ak+Zkv4aTNZwGaFFAfui4+yhM3dGhoYJ+sAAAABAAAAAMNJrEvdMg6M+M+n4BDIdzsVSj/ZI9SvAp7mOOsvAD/WAAAAAQAAAADbHA6xiKB1+G79mVqpsHMOleOqKa5mxDpP5KEp/Xdz9wAAAAEAAAAAAAAAAA==\",\n" +
+          "  \"memo_type\": \"none\",\n" +
+          "  \"signatures\": [\n" +
+          "    \"b/noKPYnxb8oJmv6gLixY0PUJMZZ9pxwc226JtAfyRkhv6oFINj3iDuGJoBeuUh6D1vujP9e4/fH0xZjDaO3Aw==\"\n" +
+          "  ],\n" +
+          "  \"preconditions\": {\n" +
+          "    \"timebounds\": {\n" +
+          "      \"min_time\": \"4\",\n" +
+          "      \"max_time\": \"5\"\n" +
+          "    },\n" +
+          "    \"ledgerbounds\": {\n" +
+          "      \"min_ledger\": 6,\n" +
+          "      \"max_ledger\": 7\n" +
+          "    },\n" +
+          "    \"min_account_sequence_age\": \"2\",\n" +
+          "    \"min_account_sequence_ledger_gap\": 3,\n" +
+          "    \"extra_signers\": [\n]\n" +
+          "  }\n" +
           "}";
 
   String jsonFeeBump = "{\n" +
@@ -319,4 +542,56 @@ public class TransactionDeserializerTest extends TestCase {
       "    \"max_fee\": \"99\"\n" +
       "  }\n" +
       "}";
+  
+      String jsonNullMemoHash = "{\n" + 
+              "  \"memo\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\",\n" + 
+              "  \"_links\": {\n" + 
+              "    \"self\": {\n" + 
+              "      \"href\": \"https://horizon.stellar.org/transactions/b8084d1cf9b44ac9b84b4064a6b0919ed9251b1ead000a89e7abd483d1165b17\"\n" + 
+              "    },\n" + 
+              "    \"account\": {\n" + 
+              "      \"href\": \"https://horizon.stellar.org/accounts/GBM7VIKSHFBR5SRXM7YMIM7RGVAEOPWBQRLCHGRGTE4NGYVJQAXGZLTB\"\n" + 
+              "    },\n" + 
+              "    \"ledger\": {\n" + 
+              "      \"href\": \"https://horizon.stellar.org/ledgers/38840744\"\n" + 
+              "    },\n" + 
+              "    \"operations\": {\n" + 
+              "      \"href\": \"https://horizon.stellar.org/transactions/b8084d1cf9b44ac9b84b4064a6b0919ed9251b1ead000a89e7abd483d1165b17/operations{?cursor,limit,order}\",\n" + 
+              "      \"templated\": true\n" + 
+              "    },\n" + 
+              "    \"effects\": {\n" + 
+              "      \"href\": \"https://horizon.stellar.org/transactions/b8084d1cf9b44ac9b84b4064a6b0919ed9251b1ead000a89e7abd483d1165b17/effects{?cursor,limit,order}\",\n" + 
+              "      \"templated\": true\n" + 
+              "    },\n" + 
+              "    \"precedes\": {\n" + 
+              "      \"href\": \"https://horizon.stellar.org/transactions?order=asc\\u0026cursor=166819725233311744\"\n" + 
+              "    },\n" + 
+              "    \"succeeds\": {\n" + 
+              "      \"href\": \"https://horizon.stellar.org/transactions?order=desc\\u0026cursor=166819725233311744\"\n" + 
+              "    },\n" + 
+              "    \"transaction\": {\n" + 
+              "      \"href\": \"https://horizon.stellar.org/transactions/b8084d1cf9b44ac9b84b4064a6b0919ed9251b1ead000a89e7abd483d1165b17\"\n" + 
+              "    }\n" + 
+              "  },\n" + 
+              "  \"id\": \"b8084d1cf9b44ac9b84b4064a6b0919ed9251b1ead000a89e7abd483d1165b17\",\n" + 
+              "  \"paging_token\": \"166819725233311744\",\n" + 
+              "  \"successful\": true,\n" + 
+              "  \"hash\": \"b8084d1cf9b44ac9b84b4064a6b0919ed9251b1ead000a89e7abd483d1165b17\",\n" + 
+              "  \"ledger\": 38840744,\n" + 
+              "  \"created_at\": \"2021-12-22T18:25:16Z\",\n" + 
+              "  \"source_account\": \"GBM7VIKSHFBR5SRXM7YMIM7RGVAEOPWBQRLCHGRGTE4NGYVJQAXGZLTB\",\n" + 
+              "  \"source_account_sequence\": \"67793464607117159\",\n" + 
+              "  \"fee_account\": \"GBM7VIKSHFBR5SRXM7YMIM7RGVAEOPWBQRLCHGRGTE4NGYVJQAXGZLTB\",\n" + 
+              "  \"fee_charged\": \"100\",\n" + 
+              "  \"max_fee\": \"100\",\n" + 
+              "  \"operation_count\": 1,\n" + 
+              "  \"envelope_xdr\": \"AAAAAgAAAABZ+qFSOUMeyjdn8MQz8TVARz7BhFYjmiaZONNiqYAubAAAAGQA8NnMAAAPZwAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAABZ+qFSOUMeyjdn8MQz8TVARz7BhFYjmiaZONNiqYAubAAAAAEAAAAAZNE/IGhLRo0JMrqUrEHTWVgEWA3Xm3kCn6KWkURc/v8AAAABWFJQAAAAAABvF6+da84qsKUGM1pUpaqkjO/azcr/o0SbYbgrLCrfEQAAAAGnvy38AAAAAAAAAAGpgC5sAAAAQCGGpiPBIRoYr6LNNxZwYgvxG625pdPmsM6+wffOgOEwcO7KrUFQwakRlsMKmMbz/gyBF0b2wyOJjvA4qFQYjwc=\",\n" + 
+              "  \"result_xdr\": \"AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAA=\",\n" + 
+              "  \"result_meta_xdr\": \"AAAAAgAAAAIAAAADAlCpqAAAAAAAAAAAWfqhUjlDHso3Z/DEM/E1QEc+wYRWI5ommTjTYqmALmwAAAMAxxbtJADw2cwAAA9mAAAAGQAAAAEAAAAAxHHGQ3BiyVBqiTQuU4oa2kBNL0HPHTolX0Mh98bg4XUAAAAAAAAACWxvYnN0ci5jbwAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAABAlCpqAAAAAAAAAAAWfqhUjlDHso3Z/DEM/E1QEc+wYRWI5ommTjTYqmALmwAAAMAxxbtJADw2cwAAA9nAAAAGQAAAAEAAAAAxHHGQ3BiyVBqiTQuU4oa2kBNL0HPHTolX0Mh98bg4XUAAAAAAAAACWxvYnN0ci5jbwAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAABAAAABAAAAAMCUKmWAAAAAQAAAABZ+qFSOUMeyjdn8MQz8TVARz7BhFYjmiaZONNiqYAubAAAAAFYUlAAAAAAAG8Xr51rziqwpQYzWlSlqqSM79rNyv+jRJthuCssKt8RAAAAAae/LfxiK0gms0IAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQJQqagAAAABAAAAAFn6oVI5Qx7KN2fwxDPxNUBHPsGEViOaJpk402KpgC5sAAAAAVhSUAAAAAAAbxevnWvOKrClBjNaVKWqpIzv2s3K/6NEm2G4Kywq3xEAAAAAAAAAAGIrSCazQgAAAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAlCpngAAAAEAAAAAZNE/IGhLRo0JMrqUrEHTWVgEWA3Xm3kCn6KWkURc/v8AAAABWFJQAAAAAABvF6+da84qsKUGM1pUpaqkjO/azcr/o0SbYbgrLCrfEQAAHpbvooLrAAONfqTGgAAAAAABAAAAAAAAAAAAAAABAlCpqAAAAAEAAAAAZNE/IGhLRo0JMrqUrEHTWVgEWA3Xm3kCn6KWkURc/v8AAAABWFJQAAAAAABvF6+da84qsKUGM1pUpaqkjO/azcr/o0SbYbgrLCrfEQAAHpiXYbDnAAONfqTGgAAAAAABAAAAAAAAAAAAAAAA\",\n" + 
+              "  \"fee_meta_xdr\": \"AAAAAgAAAAMCUKmWAAAAAAAAAABZ+qFSOUMeyjdn8MQz8TVARz7BhFYjmiaZONNiqYAubAAAAwDHFu2IAPDZzAAAD2YAAAAZAAAAAQAAAADEccZDcGLJUGqJNC5TihraQE0vQc8dOiVfQyH3xuDhdQAAAAAAAAAJbG9ic3RyLmNvAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAECUKmoAAAAAAAAAABZ+qFSOUMeyjdn8MQz8TVARz7BhFYjmiaZONNiqYAubAAAAwDHFu0kAPDZzAAAD2YAAAAZAAAAAQAAAADEccZDcGLJUGqJNC5TihraQE0vQc8dOiVfQyH3xuDhdQAAAAAAAAAJbG9ic3RyLmNvAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAAA==\",\n" + 
+              "  \"memo_type\": \"hash\",\n" + 
+              "  \"signatures\": [\n" + 
+              "    \"IYamI8EhGhivos03FnBiC/Ebrbml0+awzr7B986A4TBw7sqtQVDBqRGWwwqYxvP+DIEXRvbDI4mO8DioVBiPBw==\"\n" + 
+              "  ]\n" + 
+              "}";
 }

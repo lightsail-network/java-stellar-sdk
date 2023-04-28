@@ -69,7 +69,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testNewChallengeRejectsMuxedClientAccount() throws InvalidSep10ChallengeException {
+  public void testNewChallengeRejectsMuxedClientAccount() {
     try {
       KeyPair server = KeyPair.random();
 
@@ -1606,6 +1606,38 @@ public class Sep10ChallengeTest {
     int threshold = 3;
     Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, webAuthDomain, threshold, signers);
     assertEquals(new HashSet<String>(Arrays.asList(masterClient.getAccountId(), signerClient1.getAccountId())), signersFound);
+  }
+
+  @Test
+  public void testVerifyChallengeTransactionWithAccountIdNonCompliantWithEd25519() throws IOException, InvalidSep10ChallengeException {
+    Network network = Network.TESTNET;
+    KeyPair server = KeyPair.random();
+    KeyPair masterClient = KeyPair.random();
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+    String webAuthDomain = "example.com";
+
+    Transaction transaction = Sep10Challenge.newChallenge(
+        server,
+        network,
+        masterClient.getAccountId(),
+        domainName,
+        webAuthDomain,
+        timeBounds
+    );
+
+    transaction.sign(masterClient);
+
+    Set<Sep10Challenge.Signer> signers = new HashSet<Sep10Challenge.Signer>(Arrays.asList(
+        new Sep10Challenge.Signer(masterClient.getAccountId(), 2),
+        new Sep10Challenge.Signer("GA2T6GR7VXXXBETTERSAFETHANSORRYXXXPROTECTEDBYLOBSTRVAULT", 1)
+    ));
+
+    int threshold = 2;
+    Set<String> signersFound = Sep10Challenge.verifyChallengeTransactionThreshold(transaction.toEnvelopeXdrBase64(), server.getAccountId(), network, domainName, webAuthDomain, threshold, signers);
+    assertEquals(new HashSet<String>(Collections.singletonList(masterClient.getAccountId())), signersFound);
   }
 
   @Test

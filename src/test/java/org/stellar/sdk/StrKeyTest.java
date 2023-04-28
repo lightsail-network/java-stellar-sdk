@@ -50,6 +50,7 @@ public class StrKeyTest {
     assertEquals(StrKey.decodeVersionByte("TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4"), StrKey.VersionByte.PRE_AUTH_TX);
     assertEquals(StrKey.decodeVersionByte("XDRPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD"), StrKey.VersionByte.SHA256_HASH);
     assertEquals(StrKey.decodeVersionByte("PDPYP7E6NEYZSVOTV6M23OFM2XRIMPDUJABHGHHH2Y67X7JL25GW6AAAAAAAAAAAAAAJEVA"), StrKey.VersionByte.SIGNED_PAYLOAD);
+    assertEquals(StrKey.decodeVersionByte("CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA"), StrKey.VersionByte.CONTRACT);
   }
 
   @Test()
@@ -171,6 +172,19 @@ public class StrKeyTest {
             String.valueOf(StrKey.encodeCheck(StrKey.VersionByte.SIGNED_PAYLOAD, data))
     );
     assertArrayEquals(data, StrKey.decodeCheck(StrKey.VersionByte.SIGNED_PAYLOAD, hashX.toCharArray()));
+  }
+
+  @Test
+  public void testRoundTripContract() {
+    byte[] data = rawBytes(
+        0x3f, 0x0c, 0x34, 0xbf, 0x93, 0xad, 0x0d, 0x99,
+        0x71, 0xd0, 0x4c, 0xcc, 0x90, 0xf7, 0x05, 0x51,
+        0x1c, 0x83, 0x8a, 0xad, 0x97, 0x34, 0xa4, 0xa2,
+        0xfb, 0x0d, 0x7a, 0x03, 0xfc, 0x7f, 0xe8, 0x9a);
+
+    String encoded = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
+    assertEquals(encoded, StrKey.encodeContractId(data));
+    assertArrayEquals(data, StrKey.decodeContractId(encoded));
   }
 
   @Test

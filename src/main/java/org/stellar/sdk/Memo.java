@@ -1,7 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
-
 /**
  * <p>The memo contains optional extra information. It is the responsibility of the client to interpret this value. Memos can be one of the following types:</p>
  * <ul>
@@ -76,8 +74,7 @@ public abstract class Memo {
      * @param hexString
      */
     public static MemoReturnHash returnHash(String hexString) {
-        // We change to lowercase because we want to decode both: upper cased and lower cased alphabets.
-        return new MemoReturnHash(BaseEncoding.base16().lowerCase().decode(hexString.toLowerCase()));
+        return new MemoReturnHash(hexString);
     }
 
     public static Memo fromXdr(org.stellar.sdk.xdr.Memo memo) {

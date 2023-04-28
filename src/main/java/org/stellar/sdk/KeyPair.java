@@ -73,7 +73,6 @@ public class KeyPair {
   public static KeyPair fromSecretSeed(char[] seed) {
     byte[] decoded = StrKey.decodeStellarSecretSeed(seed);
     KeyPair keypair = fromSecretSeed(decoded);
-    Arrays.fill(decoded, (byte) 0);
     return keypair;
   }
 
@@ -309,7 +308,7 @@ public class KeyPair {
     }
 
     KeyPair other = (KeyPair) object;
-    return this.mPrivateKey.equals(other.mPrivateKey) &&
+    return Objects.equal(this.mPrivateKey, other.mPrivateKey) &&
             this.mPublicKey.equals(other.mPublicKey);
 
   }

@@ -112,7 +112,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addTimeBounds(new TimeBounds(42, 1337))
-                .addMemo(Memo.hash("abcdef"))
+                .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
@@ -184,7 +184,7 @@ public class TransactionBuilderTest {
         Transaction transaction = new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                 .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
                 .addTimeBounds(new TimeBounds(42, 1337))
-                .addMemo(Memo.hash("abcdef"))
+                .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
                 .setBaseFee(Transaction.MIN_BASE_FEE)
                 .build();
 
@@ -208,7 +208,7 @@ public class TransactionBuilderTest {
         try {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                     .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                    .addMemo(Memo.hash("abcdef"))
+                    .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
                     .setBaseFee(Transaction.MIN_BASE_FEE)
                     .build();
             fail();
@@ -222,7 +222,7 @@ public class TransactionBuilderTest {
         try {
             new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
                     .addOperation(new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
-                    .addMemo(Memo.hash("abcdef"))
+                    .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
                     .setTimeout(-1)
                     .build();
             fail();
@@ -623,7 +623,7 @@ public class TransactionBuilderTest {
                 .addOperation(new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
                 .addTimeBounds(new TimeBounds(42, TransactionPreconditions.TIMEOUT_INFINITE))
                 .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
-                .addMemo(Memo.hash("abcdef"))
+                .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
                 .setBaseFee(100)
                 .build();
 

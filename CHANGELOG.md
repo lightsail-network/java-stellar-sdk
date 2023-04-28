@@ -2,7 +2,58 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
-## 0.33.0 (Pending)
+## Pending
+
+## 0.39.0
+
+* Add SubmitTransactionResponse.ResultCodes.innerTransactionResultCode ([#466](https://github.com/stellar/java-stellar-sdk/pull/466)) 
+
+## 0.38.0
+
+* Fix android crashing related to okhttp3 ([#457](https://github.com/stellar/java-stellar-sdk/pull/457))
+
+## 0.37.2
+
+* Fix the deployment CI that uploads the jar to the GitHub release [2]. ([#453](https://github.com/stellar/java-stellar-sdk/pull/453))
+
+## 0.37.1
+
+* Fix the deployment CI that uploads the jar to the GitHub release. ([#452](https://github.com/stellar/java-stellar-sdk/pull/452))
+
+## 0.37.0
+
+* Fix missing `auth_clawback_enabled` field in AccountResponse class. ([#449](https://github.com/stellar/java-stellar-sdk/pull/449))
+
+## 0.36.0
+
+* Fix bug in `KeyPair.fromSecretSeed(char[] seed)`. ([#447](https://github.com/stellar/java-stellar-sdk/pull/447))
+* Shade kotlin dependencies to prevent 'Duplicate class' errors. ([#448](https://github.com/stellar/java-stellar-sdk/pull/448))
+
+## 0.35.0
+
+* Update JDK compatibility version from Java 1.6 to Java 1.8 and bump the version of few libraries ([#444](https://github.com/stellar/java-stellar-sdk/pull/444)):
+  * com.squareup.okhttp3 from `v3.11.0` to `v4.10.0`. 
+  * commons-io:commons-io from `v2.6` to `v2.11.0`.
+  * junit:junit from `v4.12` to `v4.13.2`.
+  * org.threeten:threetenbp from `v1.4.4` to `v1.6.0`.
+  * org.mockito:mockito-core from `v2.21.0` to `v4.6.1`.
+  * javax.xml.bind:jaxb-api from `v2.3.0` to `v2.3.1`.
+
+## 0.34.2
+
+* Bump gson version from `v2.8.5` to `v2.9.0`. ([#443](https://github.com/stellar/java-stellar-sdk/pull/443))
+
+## 0.34.1
+
+* Fix the `Sep10Challenge.verifyTransactionSignatures` method to handle/ignore signers that are not ed25519 compliant. ([#440](https://github.com/stellar/java-stellar-sdk/pull/440))
+
+## 0.34.0
+* Add memo to `Sep10Challenge.newChallenge()` and `Sep10Challenge.readChallengeTransaction`. ([#435](https://github.com/stellar/java-stellar-sdk/pull/435))
+
+## 0.33.0 
+* Update TransactionResponse to include new Protocol 19 Preconditions ([#428](https://github.com/stellar/java-stellar-sdk/pull/428)).
+* Fix asset compare to when asset code are equals ([#424](https://github.com/stellar/java-stellar-sdk/pull/424)).
+* LiquidityPoolIDDeserializer is missing from the PageDeserializer. ([#422](https://github.com/stellar/java-stellar-sdk/pull/422))
 
 ## 0.32.0
 

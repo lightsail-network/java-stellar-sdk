@@ -7,14 +7,22 @@ import org.stellar.sdk.xdr.DecoratedSignature;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class KeyPairTest {
 
   private static final String SEED = "1123740522f11bfef6b3671f51e159ccf589ccf8965262dd5f97d1721d383dd4";
+
+  @Test
+  public void testFromSecretSeedCharArray() {
+    KeyPair original = KeyPair.fromSecretSeed("SDMMJC2BSGESMFQ53MF3WECMCQGJVRY3TJ45J7PYZ53GZZ36NDDDWEDM");
+
+    char[] seed = original.getSecretSeed();
+    KeyPair newPair = KeyPair.fromSecretSeed(seed);
+
+    assertArrayEquals(original.getSecretSeed(), newPair.getSecretSeed());
+    assertEquals(original.getAccountId(), newPair.getAccountId());
+  }
 
   @Test
   public void testInvalidPublicKey() {
@@ -111,5 +119,26 @@ public class KeyPairTest {
     DecoratedSignature sig = keypair.signPayloadDecorated(payload);
     // the hint could only be derived off of 3 bytes from payload
     Assert.assertArrayEquals(sig.getHint().getSignatureHint(), new byte[]{(byte)(255), 64, 7, 55});
+  }
+
+  @Test
+  public void testPublicEqual() {
+    KeyPair keypair = KeyPair.fromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ");
+    KeyPair keypairCopy = KeyPair.fromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ");
+    Assert.assertEquals(keypairCopy, keypair);
+  }
+
+  @Test
+  public void testPublicPrivateNotEquals() {
+    KeyPair keypair = KeyPair.random();
+    KeyPair keypairPublicCopy = KeyPair.fromAccountId(keypair.getAccountId());
+    Assert.assertNotEquals(keypairPublicCopy, keypair);
+  }
+
+  @Test
+  public void testPrivateEquals() {
+    KeyPair keyPair = KeyPair.random();
+    KeyPair keypairCopy = KeyPair.fromSecretSeed(keyPair.getSecretSeed());
+    Assert.assertEquals(keyPair, keypairCopy);
   }
 }

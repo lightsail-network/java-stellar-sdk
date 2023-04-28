@@ -1,5 +1,5 @@
 buildscript {
-    ext.okhttpclientVersion= '3.11.0'
+    ext.okhttpclientVersion= '4.10.0'
 }
 
 plugins {
@@ -12,10 +12,14 @@ plugins {
     id "java-library"
 }
 
-sourceCompatibility = 1.8
-version = '0.32.0'
+sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+version = '0.39.0'
 group = 'stellar'
 jar.enabled = false
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+javadoc.options.encoding = 'UTF-8'
 
 publishing {
     publications {
@@ -35,7 +39,11 @@ shadowJar {
     duplicatesStrategy DuplicatesStrategy.EXCLUDE
     archiveClassifier.set('')
     archiveFileName.set('stellar-sdk.jar')
-    relocate 'com.','shadow.com.'
+    relocate('com.', 'shadow.com.') {
+      // okhttp hardcodes android platform class loading to this package, shadowing would attempt to rewrite the hardcode
+      // to be 'shadow.com.android.org.conscrypt' which we don't want to happen.
+      exclude 'com.android.org.conscrypt'
+    }
     relocate 'net.','shadow.net.'
     relocate 'javax.annotation', 'shadow.javax.annotation'
     relocate 'org.apache','shadow.org.apache'
@@ -45,6 +53,9 @@ shadowJar {
     relocate 'org.checkerframework','shadow.org.checkerframework'
     relocate 'okhttp3','shadow.okhttp3'
     relocate 'okio','shadow.okio'
+    relocate 'kotlin','shadow.kotlin'
+    relocate 'org.intellij','shadow.org.intellij'
+    relocate 'org.jetbrains','shadow.org.jetbrains'
 }
 
 repositories {
@@ -57,15 +68,15 @@ dependencies {
     implementation 'com.moandjiezana.toml:toml4j:0.7.2'
     // use the android version because we don't want java 8 stuff
     implementation 'com.google.guava:guava:26.0-android'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'commons-io:commons-io:2.6'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'commons-io:commons-io:2.11.0'
     implementation 'net.i2p.crypto:eddsa:0.3.0'
-    implementation 'org.threeten:threetenbp:1.4.4'
+    implementation 'org.threeten:threetenbp:1.6.0'
 
-    testImplementation 'org.mockito:mockito-core:2.21.0'
+    testImplementation 'org.mockito:mockito-core:4.6.1'
     testImplementation "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'javax.xml.bind:jaxb-api:2.3.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'javax.xml.bind:jaxb-api:2.3.1'
     testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '4.12.1'
 }
 tasks.named('test') { task ->
