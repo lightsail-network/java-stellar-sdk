@@ -30,11 +30,11 @@ public class ResponseHandler<T> {
       // Too Many Requests
       if (response.code() == 429) {
 
-        Optional<Integer> retryAfter = Optional.absent();
+        Integer retryAfter = null;
         String header = response.header("Retry-After");
         if (header != null) {
           try {
-            retryAfter = Optional.of(Integer.parseInt(header));
+            retryAfter = Integer.parseInt(header);
           } catch (NumberFormatException ignored) {}
         }
         throw new TooManyRequestsException(retryAfter);
