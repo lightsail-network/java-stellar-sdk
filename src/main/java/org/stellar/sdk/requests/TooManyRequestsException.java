@@ -5,17 +5,7 @@ package org.stellar.sdk.requests;
  * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/" target="_blank">Rate Limiting</a>
  */
 public class TooManyRequestsException extends RuntimeException {
-  private int retryAfter;
-
-  public TooManyRequestsException(int retryAfter) {
+  public TooManyRequestsException() {
     super("The rate limit for the requesting IP address is over its alloted limit.");
-    this.retryAfter = retryAfter;
-  }
-
-  /**
-   * Returns number of seconds a client should wait before sending requests again.
-   */
-  public int getRetryAfter() {
-    return retryAfter;
   }
 }

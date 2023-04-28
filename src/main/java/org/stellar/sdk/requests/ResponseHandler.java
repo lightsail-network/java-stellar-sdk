@@ -28,8 +28,7 @@ public class ResponseHandler<T> {
     try {
       // Too Many Requests
       if (response.code() == 429) {
-        int retryAfter = Integer.parseInt(response.header("Retry-After"));
-        throw new TooManyRequestsException(retryAfter);
+        throw new TooManyRequestsException();
       }
 
       String content = response.body().string();
