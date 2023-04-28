@@ -12,7 +12,7 @@ plugins {
     id "java-library"
 }
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 version = '0.32.0'
 group = 'stellar'
 jar.enabled = false
@@ -71,3 +71,4 @@ dependencies {
 tasks.named('test') { task ->
     useJUnitPlatform()
 }
+targetCompatibility = JavaVersion.VERSION_1_8

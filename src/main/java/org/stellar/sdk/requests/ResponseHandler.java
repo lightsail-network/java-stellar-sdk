@@ -6,6 +6,7 @@ import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.TypedResponse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import okhttp3.Response;
 
@@ -29,9 +30,12 @@ public class ResponseHandler<T> {
       // Too Many Requests
       if (response.code() == 429) {
         
-        int retryAfter = -1;
-        if (response.header("Retry-After") != null) {
-            retryAfter = Integer.parseInt(response.header("Retry-After"));
+        Optional<Integer> retryAfter = Optional.empty();
+        String header = response.header("Retry-After");
+        if (header != null) {
+          try {
+            retryAfter = Optional.of(Integer.parseInt(header));
+          } catch (NumberFormatException ignored) {}
         }
         throw new TooManyRequestsException(retryAfter);
       }
