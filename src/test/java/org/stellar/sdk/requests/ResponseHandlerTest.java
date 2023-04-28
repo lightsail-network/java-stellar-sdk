@@ -3,6 +3,7 @@ package org.stellar.sdk.requests;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class ResponseHandlerTest {
             AccountsRequestBuilder.execute(okHttpClient, mockWebServer.url("/"));
             Assert.fail();
         } catch (TooManyRequestsException tmre) {
-            assertEquals(10, tmre.getRetryAfter());
+            assertEquals(Optional.of(10), tmre.getRetryAfter());
         } finally {
             
             mockWebServer.shutdown();
@@ -55,7 +56,7 @@ public class ResponseHandlerTest {
             AccountsRequestBuilder.execute(okHttpClient, mockWebServer.url("/"));
             Assert.fail();
         } catch (TooManyRequestsException tmre) {
-            assertEquals(-1, tmre.getRetryAfter());
+            assertEquals(Optional.empty(), tmre.getRetryAfter());
         } finally {
             
             mockWebServer.shutdown();
