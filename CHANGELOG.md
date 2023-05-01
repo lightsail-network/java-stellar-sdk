@@ -4,6 +4,11 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.40.0
+* Add strkey support for contract ids ([#471](https://github.com/stellar/java-stellar-sdk/pull/471))
+* Fix NPE in `KeyPair.equals()` method ([#474](https://github.com/stellar/java-stellar-sdk/pull/474))
+* Avoid to have unexpected exception on status code 429 TooManyRequests ([#433](https://github.com/stellar/java-stellar-sdk/pull/433))
+
 ## 0.39.0
 
 * Add SubmitTransactionResponse.ResultCodes.innerTransactionResultCode ([#466](https://github.com/stellar/java-stellar-sdk/pull/466)) 
