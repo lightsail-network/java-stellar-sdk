@@ -1,14 +1,11 @@
 package org.stellar.sdk.requests;
 
-import com.google.common.base.Optional;
 import com.google.gson.reflect.TypeToken;
-
+import okhttp3.Response;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.TypedResponse;
 
 import java.io.IOException;
-
-import okhttp3.Response;
 
 public class ResponseHandler<T> {
 
