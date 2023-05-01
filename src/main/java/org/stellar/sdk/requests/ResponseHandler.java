@@ -1,13 +1,11 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-
+import okhttp3.Response;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.TypedResponse;
 
 import java.io.IOException;
-
-import okhttp3.Response;
 
 public class ResponseHandler<T> {
 
@@ -28,7 +26,14 @@ public class ResponseHandler<T> {
     try {
       // Too Many Requests
       if (response.code() == 429) {
-        int retryAfter = Integer.parseInt(response.header("Retry-After"));
+
+        Integer retryAfter = null;
+        String header = response.header("Retry-After");
+        if (header != null) {
+          try {
+            retryAfter = Integer.parseInt(header);
+          } catch (NumberFormatException ignored) {}
+        }
         throw new TooManyRequestsException(retryAfter);
       }
 
