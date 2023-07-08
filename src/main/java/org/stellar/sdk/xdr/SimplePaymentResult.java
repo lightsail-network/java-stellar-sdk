@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -19,36 +17,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class SimplePaymentResult implements XdrElement {
-  public SimplePaymentResult () {}
+  public SimplePaymentResult() {}
+
   private AccountID destination;
+
   public AccountID getDestination() {
     return this.destination;
   }
+
   public void setDestination(AccountID value) {
     this.destination = value;
   }
+
   private Asset asset;
+
   public Asset getAsset() {
     return this.asset;
   }
+
   public void setAsset(Asset value) {
     this.asset = value;
   }
+
   private Int64 amount;
+
   public Int64 getAmount() {
     return this.amount;
   }
+
   public void setAmount(Int64 value) {
     this.amount = value;
   }
-  public static void encode(XdrDataOutputStream stream, SimplePaymentResult encodedSimplePaymentResult) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, SimplePaymentResult encodedSimplePaymentResult)
+      throws IOException {
     AccountID.encode(stream, encodedSimplePaymentResult.destination);
     Asset.encode(stream, encodedSimplePaymentResult.asset);
     Int64.encode(stream, encodedSimplePaymentResult.amount);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SimplePaymentResult decode(XdrDataInputStream stream) throws IOException {
     SimplePaymentResult decodedSimplePaymentResult = new SimplePaymentResult();
     decodedSimplePaymentResult.destination = AccountID.decode(stream);
@@ -56,10 +68,12 @@ public class SimplePaymentResult implements XdrElement {
     decodedSimplePaymentResult.amount = Int64.decode(stream);
     return decodedSimplePaymentResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.destination, this.asset, this.amount);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SimplePaymentResult)) {
@@ -67,7 +81,9 @@ public class SimplePaymentResult implements XdrElement {
     }
 
     SimplePaymentResult other = (SimplePaymentResult) object;
-    return Objects.equal(this.destination, other.destination) && Objects.equal(this.asset, other.asset) && Objects.equal(this.amount, other.amount);
+    return Objects.equal(this.destination, other.destination)
+        && Objects.equal(this.asset, other.asset)
+        && Objects.equal(this.amount, other.amount);
   }
 
   public static final class Builder {

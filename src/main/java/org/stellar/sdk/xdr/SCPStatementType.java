@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -27,20 +25,24 @@ public enum SCPStatementType implements XdrElement {
   private int mValue;
 
   SCPStatementType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static SCPStatementType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return SCP_ST_PREPARE;
-      case 1: return SCP_ST_CONFIRM;
-      case 2: return SCP_ST_EXTERNALIZE;
-      case 3: return SCP_ST_NOMINATE;
+      case 0:
+        return SCP_ST_PREPARE;
+      case 1:
+        return SCP_ST_CONFIRM;
+      case 2:
+        return SCP_ST_EXTERNALIZE;
+      case 3:
+        return SCP_ST_NOMINATE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

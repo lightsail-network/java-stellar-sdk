@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class SCPEnvelope implements XdrElement {
-  public SCPEnvelope () {}
+  public SCPEnvelope() {}
+
   private SCPStatement statement;
+
   public SCPStatement getStatement() {
     return this.statement;
   }
+
   public void setStatement(SCPStatement value) {
     this.statement = value;
   }
+
   private Signature signature;
+
   public Signature getSignature() {
     return this.signature;
   }
+
   public void setSignature(Signature value) {
     this.signature = value;
   }
-  public static void encode(XdrDataOutputStream stream, SCPEnvelope encodedSCPEnvelope) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, SCPEnvelope encodedSCPEnvelope)
+      throws IOException {
     SCPStatement.encode(stream, encodedSCPEnvelope.statement);
     Signature.encode(stream, encodedSCPEnvelope.signature);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SCPEnvelope decode(XdrDataInputStream stream) throws IOException {
     SCPEnvelope decodedSCPEnvelope = new SCPEnvelope();
     decodedSCPEnvelope.statement = SCPStatement.decode(stream);
     decodedSCPEnvelope.signature = Signature.decode(stream);
     return decodedSCPEnvelope;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.statement, this.signature);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SCPEnvelope)) {
@@ -57,7 +67,8 @@ public class SCPEnvelope implements XdrElement {
     }
 
     SCPEnvelope other = (SCPEnvelope) object;
-    return Objects.equal(this.statement, other.statement) && Objects.equal(this.signature, other.signature);
+    return Objects.equal(this.statement, other.statement)
+        && Objects.equal(this.signature, other.signature);
   }
 
   public static final class Builder {

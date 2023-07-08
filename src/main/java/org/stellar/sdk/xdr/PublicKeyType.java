@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -21,17 +19,18 @@ public enum PublicKeyType implements XdrElement {
   private int mValue;
 
   PublicKeyType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static PublicKeyType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return PUBLIC_KEY_TYPE_ED25519;
+      case 0:
+        return PUBLIC_KEY_TYPE_ED25519;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

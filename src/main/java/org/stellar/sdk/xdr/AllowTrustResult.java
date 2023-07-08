@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,11 +18,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class AllowTrustResult implements XdrElement {
-  public AllowTrustResult () {}
+  public AllowTrustResult() {}
+
   AllowTrustResultCode code;
+
   public AllowTrustResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(AllowTrustResultCode value) {
     this.code = value;
   }
@@ -44,36 +45,41 @@ public class AllowTrustResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, AllowTrustResult encodedAllowTrustResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //AllowTrustResultCode
-  stream.writeInt(encodedAllowTrustResult.getDiscriminant().getValue());
-  switch (encodedAllowTrustResult.getDiscriminant()) {
-  case ALLOW_TRUST_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(XdrDataOutputStream stream, AllowTrustResult encodedAllowTrustResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // AllowTrustResultCode
+    stream.writeInt(encodedAllowTrustResult.getDiscriminant().getValue());
+    switch (encodedAllowTrustResult.getDiscriminant()) {
+      case ALLOW_TRUST_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static AllowTrustResult decode(XdrDataInputStream stream) throws IOException {
-  AllowTrustResult decodedAllowTrustResult = new AllowTrustResult();
-  AllowTrustResultCode discriminant = AllowTrustResultCode.decode(stream);
-  decodedAllowTrustResult.setDiscriminant(discriminant);
-  switch (decodedAllowTrustResult.getDiscriminant()) {
-  case ALLOW_TRUST_SUCCESS:
-  break;
-  default:
-  break;
-  }
+    AllowTrustResult decodedAllowTrustResult = new AllowTrustResult();
+    AllowTrustResultCode discriminant = AllowTrustResultCode.decode(stream);
+    decodedAllowTrustResult.setDiscriminant(discriminant);
+    switch (decodedAllowTrustResult.getDiscriminant()) {
+      case ALLOW_TRUST_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedAllowTrustResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof AllowTrustResult)) {

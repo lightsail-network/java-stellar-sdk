@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -29,21 +27,26 @@ public enum MemoType implements XdrElement {
   private int mValue;
 
   MemoType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static MemoType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return MEMO_NONE;
-      case 1: return MEMO_TEXT;
-      case 2: return MEMO_ID;
-      case 3: return MEMO_HASH;
-      case 4: return MEMO_RETURN;
+      case 0:
+        return MEMO_NONE;
+      case 1:
+        return MEMO_TEXT;
+      case 2:
+        return MEMO_ID;
+      case 3:
+        return MEMO_HASH;
+      case 4:
+        return MEMO_RETURN;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

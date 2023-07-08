@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -27,20 +25,24 @@ public enum SignerKeyType implements XdrElement {
   private int mValue;
 
   SignerKeyType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static SignerKeyType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return SIGNER_KEY_TYPE_ED25519;
-      case 1: return SIGNER_KEY_TYPE_PRE_AUTH_TX;
-      case 2: return SIGNER_KEY_TYPE_HASH_X;
-      case 3: return SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
+      case 0:
+        return SIGNER_KEY_TYPE_ED25519;
+      case 1:
+        return SIGNER_KEY_TYPE_PRE_AUTH_TX;
+      case 2:
+        return SIGNER_KEY_TYPE_HASH_X;
+      case 3:
+        return SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

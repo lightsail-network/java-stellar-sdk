@@ -1,6 +1,8 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.util.List;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -9,9 +11,6 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
-
-import java.io.IOException;
-import java.util.List;
 
 public class StrictSendPathsRequestBuilder extends RequestBuilder {
   public StrictSendPathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
@@ -54,9 +53,11 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<PathResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static Page<PathResponse> execute(OkHttpClient httpClient, HttpUrl uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<PathResponse>>() {};
-    ResponseHandler<Page<PathResponse>> responseHandler = new ResponseHandler<Page<PathResponse>>(type);
+    ResponseHandler<Page<PathResponse>> responseHandler =
+        new ResponseHandler<Page<PathResponse>>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();

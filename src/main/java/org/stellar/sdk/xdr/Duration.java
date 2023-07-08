@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -30,13 +28,15 @@ public class Duration implements XdrElement {
     this.Duration = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, Duration  encodedDuration) throws IOException {
+  public static void encode(XdrDataOutputStream stream, Duration encodedDuration)
+      throws IOException {
     Uint64.encode(stream, encodedDuration.Duration);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Duration decode(XdrDataInputStream stream) throws IOException {
     Duration decodedDuration = new Duration();
     decodedDuration.Duration = Uint64.decode(stream);

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -17,29 +15,38 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class SendMore implements XdrElement {
-  public SendMore () {}
+  public SendMore() {}
+
   private Uint32 numMessages;
+
   public Uint32 getNumMessages() {
     return this.numMessages;
   }
+
   public void setNumMessages(Uint32 value) {
     this.numMessages = value;
   }
-  public static void encode(XdrDataOutputStream stream, SendMore encodedSendMore) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, SendMore encodedSendMore)
+      throws IOException {
     Uint32.encode(stream, encodedSendMore.numMessages);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SendMore decode(XdrDataInputStream stream) throws IOException {
     SendMore decodedSendMore = new SendMore();
     decodedSendMore.numMessages = Uint32.decode(stream);
     return decodedSendMore;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.numMessages);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SendMore)) {

@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -25,19 +23,22 @@ public enum ClaimAtomType implements XdrElement {
   private int mValue;
 
   ClaimAtomType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static ClaimAtomType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return CLAIM_ATOM_TYPE_V0;
-      case 1: return CLAIM_ATOM_TYPE_ORDER_BOOK;
-      case 2: return CLAIM_ATOM_TYPE_LIQUIDITY_POOL;
+      case 0:
+        return CLAIM_ATOM_TYPE_V0;
+      case 1:
+        return CLAIM_ATOM_TYPE_ORDER_BOOK;
+      case 2:
+        return CLAIM_ATOM_TYPE_LIQUIDITY_POOL;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

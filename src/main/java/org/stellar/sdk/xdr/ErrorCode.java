@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -29,21 +27,26 @@ public enum ErrorCode implements XdrElement {
   private int mValue;
 
   ErrorCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static ErrorCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return ERR_MISC;
-      case 1: return ERR_DATA;
-      case 2: return ERR_CONF;
-      case 3: return ERR_AUTH;
-      case 4: return ERR_LOAD;
+      case 0:
+        return ERR_MISC;
+      case 1:
+        return ERR_DATA;
+      case 2:
+        return ERR_CONF;
+      case 3:
+        return ERR_AUTH;
+      case 4:
+        return ERR_LOAD;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

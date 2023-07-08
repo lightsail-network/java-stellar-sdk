@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,11 +18,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LiquidityPoolWithdrawResult implements XdrElement {
-  public LiquidityPoolWithdrawResult () {}
+  public LiquidityPoolWithdrawResult() {}
+
   LiquidityPoolWithdrawResultCode code;
+
   public LiquidityPoolWithdrawResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(LiquidityPoolWithdrawResultCode value) {
     this.code = value;
   }
@@ -44,36 +45,43 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LiquidityPoolWithdrawResult encodedLiquidityPoolWithdrawResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //LiquidityPoolWithdrawResultCode
-  stream.writeInt(encodedLiquidityPoolWithdrawResult.getDiscriminant().getValue());
-  switch (encodedLiquidityPoolWithdrawResult.getDiscriminant()) {
-  case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(
+      XdrDataOutputStream stream, LiquidityPoolWithdrawResult encodedLiquidityPoolWithdrawResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // LiquidityPoolWithdrawResultCode
+    stream.writeInt(encodedLiquidityPoolWithdrawResult.getDiscriminant().getValue());
+    switch (encodedLiquidityPoolWithdrawResult.getDiscriminant()) {
+      case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LiquidityPoolWithdrawResult decode(XdrDataInputStream stream) throws IOException {
-  LiquidityPoolWithdrawResult decodedLiquidityPoolWithdrawResult = new LiquidityPoolWithdrawResult();
-  LiquidityPoolWithdrawResultCode discriminant = LiquidityPoolWithdrawResultCode.decode(stream);
-  decodedLiquidityPoolWithdrawResult.setDiscriminant(discriminant);
-  switch (decodedLiquidityPoolWithdrawResult.getDiscriminant()) {
-  case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
-  break;
-  default:
-  break;
-  }
+    LiquidityPoolWithdrawResult decodedLiquidityPoolWithdrawResult =
+        new LiquidityPoolWithdrawResult();
+    LiquidityPoolWithdrawResultCode discriminant = LiquidityPoolWithdrawResultCode.decode(stream);
+    decodedLiquidityPoolWithdrawResult.setDiscriminant(discriminant);
+    switch (decodedLiquidityPoolWithdrawResult.getDiscriminant()) {
+      case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedLiquidityPoolWithdrawResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LiquidityPoolWithdrawResult)) {

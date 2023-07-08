@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -31,21 +29,26 @@ public enum CryptoKeyType implements XdrElement {
   private int mValue;
 
   CryptoKeyType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static CryptoKeyType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return KEY_TYPE_ED25519;
-      case 1: return KEY_TYPE_PRE_AUTH_TX;
-      case 2: return KEY_TYPE_HASH_X;
-      case 3: return KEY_TYPE_ED25519_SIGNED_PAYLOAD;
-      case 256: return KEY_TYPE_MUXED_ED25519;
+      case 0:
+        return KEY_TYPE_ED25519;
+      case 1:
+        return KEY_TYPE_PRE_AUTH_TX;
+      case 2:
+        return KEY_TYPE_HASH_X;
+      case 3:
+        return KEY_TYPE_ED25519_SIGNED_PAYLOAD;
+      case 256:
+        return KEY_TYPE_MUXED_ED25519;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

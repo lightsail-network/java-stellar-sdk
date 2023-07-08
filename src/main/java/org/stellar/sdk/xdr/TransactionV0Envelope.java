@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -21,22 +19,31 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class TransactionV0Envelope implements XdrElement {
-  public TransactionV0Envelope () {}
+  public TransactionV0Envelope() {}
+
   private TransactionV0 tx;
+
   public TransactionV0 getTx() {
     return this.tx;
   }
+
   public void setTx(TransactionV0 value) {
     this.tx = value;
   }
+
   private DecoratedSignature[] signatures;
+
   public DecoratedSignature[] getSignatures() {
     return this.signatures;
   }
+
   public void setSignatures(DecoratedSignature[] value) {
     this.signatures = value;
   }
-  public static void encode(XdrDataOutputStream stream, TransactionV0Envelope encodedTransactionV0Envelope) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, TransactionV0Envelope encodedTransactionV0Envelope)
+      throws IOException {
     TransactionV0.encode(stream, encodedTransactionV0Envelope.tx);
     int signaturessize = encodedTransactionV0Envelope.getSignatures().length;
     stream.writeInt(signaturessize);
@@ -44,9 +51,11 @@ public class TransactionV0Envelope implements XdrElement {
       DecoratedSignature.encode(stream, encodedTransactionV0Envelope.signatures[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TransactionV0Envelope decode(XdrDataInputStream stream) throws IOException {
     TransactionV0Envelope decodedTransactionV0Envelope = new TransactionV0Envelope();
     decodedTransactionV0Envelope.tx = TransactionV0.decode(stream);
@@ -57,10 +66,12 @@ public class TransactionV0Envelope implements XdrElement {
     }
     return decodedTransactionV0Envelope;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.tx, Arrays.hashCode(this.signatures));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TransactionV0Envelope)) {

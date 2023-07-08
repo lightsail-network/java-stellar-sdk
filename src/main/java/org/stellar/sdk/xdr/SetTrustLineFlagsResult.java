@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,11 +18,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class SetTrustLineFlagsResult implements XdrElement {
-  public SetTrustLineFlagsResult () {}
+  public SetTrustLineFlagsResult() {}
+
   SetTrustLineFlagsResultCode code;
+
   public SetTrustLineFlagsResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(SetTrustLineFlagsResultCode value) {
     this.code = value;
   }
@@ -44,36 +45,42 @@ public class SetTrustLineFlagsResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, SetTrustLineFlagsResult encodedSetTrustLineFlagsResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //SetTrustLineFlagsResultCode
-  stream.writeInt(encodedSetTrustLineFlagsResult.getDiscriminant().getValue());
-  switch (encodedSetTrustLineFlagsResult.getDiscriminant()) {
-  case SET_TRUST_LINE_FLAGS_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(
+      XdrDataOutputStream stream, SetTrustLineFlagsResult encodedSetTrustLineFlagsResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // SetTrustLineFlagsResultCode
+    stream.writeInt(encodedSetTrustLineFlagsResult.getDiscriminant().getValue());
+    switch (encodedSetTrustLineFlagsResult.getDiscriminant()) {
+      case SET_TRUST_LINE_FLAGS_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SetTrustLineFlagsResult decode(XdrDataInputStream stream) throws IOException {
-  SetTrustLineFlagsResult decodedSetTrustLineFlagsResult = new SetTrustLineFlagsResult();
-  SetTrustLineFlagsResultCode discriminant = SetTrustLineFlagsResultCode.decode(stream);
-  decodedSetTrustLineFlagsResult.setDiscriminant(discriminant);
-  switch (decodedSetTrustLineFlagsResult.getDiscriminant()) {
-  case SET_TRUST_LINE_FLAGS_SUCCESS:
-  break;
-  default:
-  break;
-  }
+    SetTrustLineFlagsResult decodedSetTrustLineFlagsResult = new SetTrustLineFlagsResult();
+    SetTrustLineFlagsResultCode discriminant = SetTrustLineFlagsResultCode.decode(stream);
+    decodedSetTrustLineFlagsResult.setDiscriminant(discriminant);
+    switch (decodedSetTrustLineFlagsResult.getDiscriminant()) {
+      case SET_TRUST_LINE_FLAGS_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedSetTrustLineFlagsResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SetTrustLineFlagsResult)) {

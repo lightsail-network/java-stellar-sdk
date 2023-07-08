@@ -6,21 +6,27 @@ import org.stellar.sdk.Predicate;
 
 /**
  * Represents claimable_balance_claimant_created effect response.
- * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect documentation</a>
+ *
+ * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect
+ *     documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
 public class ClaimableBalanceClaimantCreatedEffectResponse extends EffectResponse {
   @SerializedName("asset")
   private final String assetString;
+
   @SerializedName("amount")
   protected final String amount;
+
   @SerializedName("balance_id")
   protected final String balanceId;
+
   @SerializedName("predicate")
   protected final Predicate predicate;
 
-  public ClaimableBalanceClaimantCreatedEffectResponse(String assetString, String amount, String balanceId, Predicate predicate) {
+  public ClaimableBalanceClaimantCreatedEffectResponse(
+      String assetString, String amount, String balanceId, Predicate predicate) {
     this.assetString = assetString;
     this.amount = amount;
     this.balanceId = balanceId;

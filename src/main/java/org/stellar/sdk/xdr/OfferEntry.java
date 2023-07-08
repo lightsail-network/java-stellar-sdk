@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -17,7 +15,7 @@ import com.google.common.base.Objects;
 //      Asset selling; // A
 //      Asset buying;  // B
 //      int64 amount;  // amount of A
-//  
+//
 //      /* price for this offer:
 //          price of A in terms of B
 //          price=AmountB/AmountA=priceNumerator/priceDenominator
@@ -25,7 +23,7 @@ import com.google.common.base.Objects;
 //      */
 //      Price price;
 //      uint32 flags; // see OfferEntryFlags
-//  
+//
 //      // reserved for future use
 //      union switch (int v)
 //      {
@@ -37,64 +35,90 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class OfferEntry implements XdrElement {
-  public OfferEntry () {}
+  public OfferEntry() {}
+
   private AccountID sellerID;
+
   public AccountID getSellerID() {
     return this.sellerID;
   }
+
   public void setSellerID(AccountID value) {
     this.sellerID = value;
   }
+
   private Int64 offerID;
+
   public Int64 getOfferID() {
     return this.offerID;
   }
+
   public void setOfferID(Int64 value) {
     this.offerID = value;
   }
+
   private Asset selling;
+
   public Asset getSelling() {
     return this.selling;
   }
+
   public void setSelling(Asset value) {
     this.selling = value;
   }
+
   private Asset buying;
+
   public Asset getBuying() {
     return this.buying;
   }
+
   public void setBuying(Asset value) {
     this.buying = value;
   }
+
   private Int64 amount;
+
   public Int64 getAmount() {
     return this.amount;
   }
+
   public void setAmount(Int64 value) {
     this.amount = value;
   }
+
   private Price price;
+
   public Price getPrice() {
     return this.price;
   }
+
   public void setPrice(Price value) {
     this.price = value;
   }
+
   private Uint32 flags;
+
   public Uint32 getFlags() {
     return this.flags;
   }
+
   public void setFlags(Uint32 value) {
     this.flags = value;
   }
+
   private OfferEntryExt ext;
+
   public OfferEntryExt getExt() {
     return this.ext;
   }
+
   public void setExt(OfferEntryExt value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, OfferEntry encodedOfferEntry) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, OfferEntry encodedOfferEntry)
+      throws IOException {
     AccountID.encode(stream, encodedOfferEntry.sellerID);
     Int64.encode(stream, encodedOfferEntry.offerID);
     Asset.encode(stream, encodedOfferEntry.selling);
@@ -104,9 +128,11 @@ public class OfferEntry implements XdrElement {
     Uint32.encode(stream, encodedOfferEntry.flags);
     OfferEntryExt.encode(stream, encodedOfferEntry.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static OfferEntry decode(XdrDataInputStream stream) throws IOException {
     OfferEntry decodedOfferEntry = new OfferEntry();
     decodedOfferEntry.sellerID = AccountID.decode(stream);
@@ -119,10 +145,20 @@ public class OfferEntry implements XdrElement {
     decodedOfferEntry.ext = OfferEntryExt.decode(stream);
     return decodedOfferEntry;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.sellerID, this.offerID, this.selling, this.buying, this.amount, this.price, this.flags, this.ext);
+    return Objects.hashCode(
+        this.sellerID,
+        this.offerID,
+        this.selling,
+        this.buying,
+        this.amount,
+        this.price,
+        this.flags,
+        this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof OfferEntry)) {
@@ -130,7 +166,14 @@ public class OfferEntry implements XdrElement {
     }
 
     OfferEntry other = (OfferEntry) object;
-    return Objects.equal(this.sellerID, other.sellerID) && Objects.equal(this.offerID, other.offerID) && Objects.equal(this.selling, other.selling) && Objects.equal(this.buying, other.buying) && Objects.equal(this.amount, other.amount) && Objects.equal(this.price, other.price) && Objects.equal(this.flags, other.flags) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.sellerID, other.sellerID)
+        && Objects.equal(this.offerID, other.offerID)
+        && Objects.equal(this.selling, other.selling)
+        && Objects.equal(this.buying, other.buying)
+        && Objects.equal(this.amount, other.amount)
+        && Objects.equal(this.price, other.price)
+        && Objects.equal(this.flags, other.flags)
+        && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
@@ -198,11 +241,14 @@ public class OfferEntry implements XdrElement {
   }
 
   public static class OfferEntryExt {
-    public OfferEntryExt () {}
+    public OfferEntryExt() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
@@ -222,32 +268,37 @@ public class OfferEntry implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, OfferEntryExt encodedOfferEntryExt) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedOfferEntryExt.getDiscriminant().intValue());
-    switch (encodedOfferEntryExt.getDiscriminant()) {
-    case 0:
-    break;
+    public static void encode(XdrDataOutputStream stream, OfferEntryExt encodedOfferEntryExt)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedOfferEntryExt.getDiscriminant().intValue());
+      switch (encodedOfferEntryExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static OfferEntryExt decode(XdrDataInputStream stream) throws IOException {
-    OfferEntryExt decodedOfferEntryExt = new OfferEntryExt();
-    Integer discriminant = stream.readInt();
-    decodedOfferEntryExt.setDiscriminant(discriminant);
-    switch (decodedOfferEntryExt.getDiscriminant()) {
-    case 0:
-    break;
-    }
+      OfferEntryExt decodedOfferEntryExt = new OfferEntryExt();
+      Integer discriminant = stream.readInt();
+      decodedOfferEntryExt.setDiscriminant(discriminant);
+      switch (decodedOfferEntryExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
       return decodedOfferEntryExt;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof OfferEntryExt)) {
@@ -257,6 +308,5 @@ public class OfferEntry implements XdrElement {
       OfferEntryExt other = (OfferEntryExt) object;
       return Objects.equal(this.v, other.v);
     }
-
   }
 }

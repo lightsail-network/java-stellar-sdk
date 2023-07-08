@@ -1,14 +1,15 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
- *
  * Represents a Clawback operation.
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List of Operations</a>
+ *
+ * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
+ *     of Operations</a>
  */
 public class ClawbackOperation extends Operation {
   private final String mFrom;
@@ -21,23 +22,17 @@ public class ClawbackOperation extends Operation {
     mAmount = checkNotNull(amount, "amount cannot be null");
   }
 
-  /**
-   * The account owning of the trustline.
-   */
+  /** The account owning of the trustline. */
   public String getFrom() {
     return mFrom;
   }
 
-  /**
-   * The amount to be clawed back.
-   */
+  /** The amount to be clawed back. */
   public String getAmount() {
     return mAmount;
   }
 
-  /**
-   * The asset to be clawed back.
-   */
+  /** The asset to be clawed back. */
   public Asset getAsset() {
     return mAsset;
   }
@@ -54,8 +49,8 @@ public class ClawbackOperation extends Operation {
     op.setAmount(amount);
     op.setAsset(mAsset.toXdr());
 
-
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.CLAWBACK);
     body.setClawbackOp(op);
     return body;
@@ -63,6 +58,7 @@ public class ClawbackOperation extends Operation {
 
   /**
    * Builds ClawbackOperation operation.
+   *
    * @see ClawbackOperation
    */
   public static class Builder {
@@ -80,6 +76,7 @@ public class ClawbackOperation extends Operation {
 
     /**
      * Creates a new ClawbackOperation builder.
+     *
      * @param from The account holding the trustline.
      * @param asset The asset held in the trustline.
      * @param amount The amount to be clawed back.
@@ -92,6 +89,7 @@ public class ClawbackOperation extends Operation {
 
     /**
      * Set source account of this operation
+     *
      * @param sourceAccount Source account
      * @return Builder object so you can chain methods.
      */
@@ -100,13 +98,9 @@ public class ClawbackOperation extends Operation {
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public ClawbackOperation build() {
-      ClawbackOperation operation = new ClawbackOperation(
-          from, asset, amount
-      );
+      ClawbackOperation operation = new ClawbackOperation(from, asset, amount);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -116,12 +110,7 @@ public class ClawbackOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
-        this.getSourceAccount(),
-        this.mFrom,
-        this.mAsset,
-        this.mAmount
-    );
+    return Objects.hashCode(this.getSourceAccount(), this.mFrom, this.mAsset, this.mAmount);
   }
 
   @Override
@@ -131,9 +120,9 @@ public class ClawbackOperation extends Operation {
     }
 
     ClawbackOperation other = (ClawbackOperation) object;
-    return Objects.equal(this.mFrom, other.mFrom) &&
-        Objects.equal(this.mAsset, other.mAsset) &&
-        Objects.equal(this.mAmount, other.mAmount) &&
-        Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.mFrom, other.mFrom)
+        && Objects.equal(this.mAsset, other.mAsset)
+        && Objects.equal(this.mAmount, other.mAmount)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,49 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class Price implements XdrElement {
-  public Price () {}
+  public Price() {}
+
   private Int32 n;
+
   public Int32 getN() {
     return this.n;
   }
+
   public void setN(Int32 value) {
     this.n = value;
   }
+
   private Int32 d;
+
   public Int32 getD() {
     return this.d;
   }
+
   public void setD(Int32 value) {
     this.d = value;
   }
-  public static void encode(XdrDataOutputStream stream, Price encodedPrice) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, Price encodedPrice) throws IOException {
     Int32.encode(stream, encodedPrice.n);
     Int32.encode(stream, encodedPrice.d);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Price decode(XdrDataInputStream stream) throws IOException {
     Price decodedPrice = new Price();
     decodedPrice.n = Int32.decode(stream);
     decodedPrice.d = Int32.decode(stream);
     return decodedPrice;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.n, this.d);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof Price)) {

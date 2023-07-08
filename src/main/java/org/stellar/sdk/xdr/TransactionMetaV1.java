@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -19,22 +17,30 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class TransactionMetaV1 implements XdrElement {
-  public TransactionMetaV1 () {}
+  public TransactionMetaV1() {}
+
   private LedgerEntryChanges txChanges;
+
   public LedgerEntryChanges getTxChanges() {
     return this.txChanges;
   }
+
   public void setTxChanges(LedgerEntryChanges value) {
     this.txChanges = value;
   }
+
   private OperationMeta[] operations;
+
   public OperationMeta[] getOperations() {
     return this.operations;
   }
+
   public void setOperations(OperationMeta[] value) {
     this.operations = value;
   }
-  public static void encode(XdrDataOutputStream stream, TransactionMetaV1 encodedTransactionMetaV1) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, TransactionMetaV1 encodedTransactionMetaV1)
+      throws IOException {
     LedgerEntryChanges.encode(stream, encodedTransactionMetaV1.txChanges);
     int operationssize = encodedTransactionMetaV1.getOperations().length;
     stream.writeInt(operationssize);
@@ -42,9 +48,11 @@ public class TransactionMetaV1 implements XdrElement {
       OperationMeta.encode(stream, encodedTransactionMetaV1.operations[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TransactionMetaV1 decode(XdrDataInputStream stream) throws IOException {
     TransactionMetaV1 decodedTransactionMetaV1 = new TransactionMetaV1();
     decodedTransactionMetaV1.txChanges = LedgerEntryChanges.decode(stream);
@@ -55,10 +63,12 @@ public class TransactionMetaV1 implements XdrElement {
     }
     return decodedTransactionMetaV1;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.txChanges, Arrays.hashCode(this.operations));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TransactionMetaV1)) {
@@ -66,7 +76,8 @@ public class TransactionMetaV1 implements XdrElement {
     }
 
     TransactionMetaV1 other = (TransactionMetaV1) object;
-    return Objects.equal(this.txChanges, other.txChanges) && Arrays.equals(this.operations, other.operations);
+    return Objects.equal(this.txChanges, other.txChanges)
+        && Arrays.equals(this.operations, other.operations);
   }
 
   public static final class Builder {

@@ -1,9 +1,9 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RevokeAccountSponsorshipOperation extends Operation {
   private final String accountId;
@@ -27,7 +27,8 @@ public class RevokeAccountSponsorshipOperation extends Operation {
     op.setLedgerKey(key);
     op.setDiscriminant(RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY);
 
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.REVOKE_SPONSORSHIP);
     body.setRevokeSponsorshipOp(op);
 
@@ -41,6 +42,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
 
     /**
      * Construct a new RevokeAccountSponsorshipOperation builder from a RevokeSponsorship XDR.
+     *
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
@@ -49,6 +51,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
 
     /**
      * Creates a new RevokeAccountSponsorshipOperation builder.
+     *
      * @param accountId The id of the account whose sponsorship will be revoked.
      */
     public Builder(String accountId) {
@@ -57,6 +60,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
 
     /**
      * Sets the source account for this operation.
+     *
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
@@ -65,11 +69,10 @@ public class RevokeAccountSponsorshipOperation extends Operation {
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public RevokeAccountSponsorshipOperation build() {
-      RevokeAccountSponsorshipOperation operation = new RevokeAccountSponsorshipOperation(accountId);
+      RevokeAccountSponsorshipOperation operation =
+          new RevokeAccountSponsorshipOperation(accountId);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -89,7 +92,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
     }
 
     RevokeAccountSponsorshipOperation other = (RevokeAccountSponsorshipOperation) object;
-    return Objects.equal(this.accountId, other.accountId) &&
-        Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.accountId, other.accountId)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

@@ -3,7 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -17,7 +16,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum ThresholdIndices  {
+public enum ThresholdIndices {
   THRESHOLD_MASTER_WEIGHT(0),
   THRESHOLD_LOW(1),
   THRESHOLD_MED(2),
@@ -26,20 +25,24 @@ public enum ThresholdIndices  {
   private int mValue;
 
   ThresholdIndices(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   static ThresholdIndices decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return THRESHOLD_MASTER_WEIGHT;
-      case 1: return THRESHOLD_LOW;
-      case 2: return THRESHOLD_MED;
-      case 3: return THRESHOLD_HIGH;
+      case 0:
+        return THRESHOLD_MASTER_WEIGHT;
+      case 1:
+        return THRESHOLD_LOW;
+      case 2:
+        return THRESHOLD_MED;
+      case 3:
+        return THRESHOLD_HIGH;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

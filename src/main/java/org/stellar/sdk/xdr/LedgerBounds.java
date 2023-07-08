@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LedgerBounds implements XdrElement {
-  public LedgerBounds () {}
+  public LedgerBounds() {}
+
   private Uint32 minLedger;
+
   public Uint32 getMinLedger() {
     return this.minLedger;
   }
+
   public void setMinLedger(Uint32 value) {
     this.minLedger = value;
   }
+
   private Uint32 maxLedger;
+
   public Uint32 getMaxLedger() {
     return this.maxLedger;
   }
+
   public void setMaxLedger(Uint32 value) {
     this.maxLedger = value;
   }
-  public static void encode(XdrDataOutputStream stream, LedgerBounds encodedLedgerBounds) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, LedgerBounds encodedLedgerBounds)
+      throws IOException {
     Uint32.encode(stream, encodedLedgerBounds.minLedger);
     Uint32.encode(stream, encodedLedgerBounds.maxLedger);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerBounds decode(XdrDataInputStream stream) throws IOException {
     LedgerBounds decodedLedgerBounds = new LedgerBounds();
     decodedLedgerBounds.minLedger = Uint32.decode(stream);
     decodedLedgerBounds.maxLedger = Uint32.decode(stream);
     return decodedLedgerBounds;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.minLedger, this.maxLedger);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerBounds)) {
@@ -57,7 +67,8 @@ public class LedgerBounds implements XdrElement {
     }
 
     LedgerBounds other = (LedgerBounds) object;
-    return Objects.equal(this.minLedger, other.minLedger) && Objects.equal(this.maxLedger, other.maxLedger);
+    return Objects.equal(this.minLedger, other.minLedger)
+        && Objects.equal(this.maxLedger, other.maxLedger);
   }
 
   public static final class Builder {

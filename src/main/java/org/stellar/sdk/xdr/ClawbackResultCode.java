@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -13,7 +11,7 @@ import java.io.IOException;
 //  {
 //      // codes considered as "success" for the operation
 //      CLAWBACK_SUCCESS = 0,
-//  
+//
 //      // codes considered as "failure" for the operation
 //      CLAWBACK_MALFORMED = -1,
 //      CLAWBACK_NOT_CLAWBACK_ENABLED = -2,
@@ -32,27 +30,33 @@ public enum ClawbackResultCode implements XdrElement {
   private int mValue;
 
   ClawbackResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static ClawbackResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return CLAWBACK_SUCCESS;
-      case -1: return CLAWBACK_MALFORMED;
-      case -2: return CLAWBACK_NOT_CLAWBACK_ENABLED;
-      case -3: return CLAWBACK_NO_TRUST;
-      case -4: return CLAWBACK_UNDERFUNDED;
+      case 0:
+        return CLAWBACK_SUCCESS;
+      case -1:
+        return CLAWBACK_MALFORMED;
+      case -2:
+        return CLAWBACK_NOT_CLAWBACK_ENABLED;
+      case -3:
+        return CLAWBACK_NO_TRUST;
+      case -4:
+        return CLAWBACK_UNDERFUNDED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ClawbackResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ClawbackResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

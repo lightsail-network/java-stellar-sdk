@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -21,18 +19,24 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class InflationResult implements XdrElement {
-  public InflationResult () {}
+  public InflationResult() {}
+
   InflationResultCode code;
+
   public InflationResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(InflationResultCode value) {
     this.code = value;
   }
+
   private InflationPayout[] payouts;
+
   public InflationPayout[] getPayouts() {
     return this.payouts;
   }
+
   public void setPayouts(InflationPayout[] value) {
     this.payouts = value;
   }
@@ -59,46 +63,51 @@ public class InflationResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, InflationResult encodedInflationResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //InflationResultCode
-  stream.writeInt(encodedInflationResult.getDiscriminant().getValue());
-  switch (encodedInflationResult.getDiscriminant()) {
-  case INFLATION_SUCCESS:
-  int payoutssize = encodedInflationResult.getPayouts().length;
-  stream.writeInt(payoutssize);
-  for (int i = 0; i < payoutssize; i++) {
-    InflationPayout.encode(stream, encodedInflationResult.payouts[i]);
+  public static void encode(XdrDataOutputStream stream, InflationResult encodedInflationResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // InflationResultCode
+    stream.writeInt(encodedInflationResult.getDiscriminant().getValue());
+    switch (encodedInflationResult.getDiscriminant()) {
+      case INFLATION_SUCCESS:
+        int payoutssize = encodedInflationResult.getPayouts().length;
+        stream.writeInt(payoutssize);
+        for (int i = 0; i < payoutssize; i++) {
+          InflationPayout.encode(stream, encodedInflationResult.payouts[i]);
+        }
+        break;
+      default:
+        break;
+    }
   }
-  break;
-  default:
-  break;
-  }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static InflationResult decode(XdrDataInputStream stream) throws IOException {
-  InflationResult decodedInflationResult = new InflationResult();
-  InflationResultCode discriminant = InflationResultCode.decode(stream);
-  decodedInflationResult.setDiscriminant(discriminant);
-  switch (decodedInflationResult.getDiscriminant()) {
-  case INFLATION_SUCCESS:
-  int payoutssize = stream.readInt();
-  decodedInflationResult.payouts = new InflationPayout[payoutssize];
-  for (int i = 0; i < payoutssize; i++) {
-    decodedInflationResult.payouts[i] = InflationPayout.decode(stream);
-  }
-  break;
-  default:
-  break;
-  }
+    InflationResult decodedInflationResult = new InflationResult();
+    InflationResultCode discriminant = InflationResultCode.decode(stream);
+    decodedInflationResult.setDiscriminant(discriminant);
+    switch (decodedInflationResult.getDiscriminant()) {
+      case INFLATION_SUCCESS:
+        int payoutssize = stream.readInt();
+        decodedInflationResult.payouts = new InflationPayout[payoutssize];
+        for (int i = 0; i < payoutssize; i++) {
+          decodedInflationResult.payouts[i] = InflationPayout.decode(stream);
+        }
+        break;
+      default:
+        break;
+    }
     return decodedInflationResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(Arrays.hashCode(this.payouts), this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof InflationResult)) {

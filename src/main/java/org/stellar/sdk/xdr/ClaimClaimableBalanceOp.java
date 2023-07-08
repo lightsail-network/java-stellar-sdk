@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -17,29 +15,39 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ClaimClaimableBalanceOp implements XdrElement {
-  public ClaimClaimableBalanceOp () {}
+  public ClaimClaimableBalanceOp() {}
+
   private ClaimableBalanceID balanceID;
+
   public ClaimableBalanceID getBalanceID() {
     return this.balanceID;
   }
+
   public void setBalanceID(ClaimableBalanceID value) {
     this.balanceID = value;
   }
-  public static void encode(XdrDataOutputStream stream, ClaimClaimableBalanceOp encodedClaimClaimableBalanceOp) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, ClaimClaimableBalanceOp encodedClaimClaimableBalanceOp)
+      throws IOException {
     ClaimableBalanceID.encode(stream, encodedClaimClaimableBalanceOp.balanceID);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ClaimClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
     ClaimClaimableBalanceOp decodedClaimClaimableBalanceOp = new ClaimClaimableBalanceOp();
     decodedClaimClaimableBalanceOp.balanceID = ClaimableBalanceID.decode(stream);
     return decodedClaimClaimableBalanceOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.balanceID);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ClaimClaimableBalanceOp)) {

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class Liabilities implements XdrElement {
-  public Liabilities () {}
+  public Liabilities() {}
+
   private Int64 buying;
+
   public Int64 getBuying() {
     return this.buying;
   }
+
   public void setBuying(Int64 value) {
     this.buying = value;
   }
+
   private Int64 selling;
+
   public Int64 getSelling() {
     return this.selling;
   }
+
   public void setSelling(Int64 value) {
     this.selling = value;
   }
-  public static void encode(XdrDataOutputStream stream, Liabilities encodedLiabilities) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, Liabilities encodedLiabilities)
+      throws IOException {
     Int64.encode(stream, encodedLiabilities.buying);
     Int64.encode(stream, encodedLiabilities.selling);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Liabilities decode(XdrDataInputStream stream) throws IOException {
     Liabilities decodedLiabilities = new Liabilities();
     decodedLiabilities.buying = Int64.decode(stream);
     decodedLiabilities.selling = Int64.decode(stream);
     return decodedLiabilities;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.buying, this.selling);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof Liabilities)) {

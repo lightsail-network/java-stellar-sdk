@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -17,29 +15,38 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class BumpSequenceOp implements XdrElement {
-  public BumpSequenceOp () {}
+  public BumpSequenceOp() {}
+
   private SequenceNumber bumpTo;
+
   public SequenceNumber getBumpTo() {
     return this.bumpTo;
   }
+
   public void setBumpTo(SequenceNumber value) {
     this.bumpTo = value;
   }
-  public static void encode(XdrDataOutputStream stream, BumpSequenceOp encodedBumpSequenceOp) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, BumpSequenceOp encodedBumpSequenceOp)
+      throws IOException {
     SequenceNumber.encode(stream, encodedBumpSequenceOp.bumpTo);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static BumpSequenceOp decode(XdrDataInputStream stream) throws IOException {
     BumpSequenceOp decodedBumpSequenceOp = new BumpSequenceOp();
     decodedBumpSequenceOp.bumpTo = SequenceNumber.decode(stream);
     return decodedBumpSequenceOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.bumpTo);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof BumpSequenceOp)) {

@@ -10,5 +10,4 @@ import com.google.gson.reflect.TypeToken;
 public interface TypedResponse<T> {
 
   void setType(TypeToken<T> type);
-
 }

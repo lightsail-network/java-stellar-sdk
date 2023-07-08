@@ -3,17 +3,15 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
 //  struct LedgerEntryExtensionV1
 //  {
 //      SponsorshipDescriptor sponsoringID;
-//  
+//
 //      union switch (int v)
 //      {
 //      case 0:
@@ -24,38 +22,51 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LedgerEntryExtensionV1 implements XdrElement {
-  public LedgerEntryExtensionV1 () {}
+  public LedgerEntryExtensionV1() {}
+
   private SponsorshipDescriptor sponsoringID;
+
   public SponsorshipDescriptor getSponsoringID() {
     return this.sponsoringID;
   }
+
   public void setSponsoringID(SponsorshipDescriptor value) {
     this.sponsoringID = value;
   }
+
   private LedgerEntryExtensionV1Ext ext;
+
   public LedgerEntryExtensionV1Ext getExt() {
     return this.ext;
   }
+
   public void setExt(LedgerEntryExtensionV1Ext value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, LedgerEntryExtensionV1 encodedLedgerEntryExtensionV1) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, LedgerEntryExtensionV1 encodedLedgerEntryExtensionV1)
+      throws IOException {
     SponsorshipDescriptor.encode(stream, encodedLedgerEntryExtensionV1.sponsoringID);
     LedgerEntryExtensionV1Ext.encode(stream, encodedLedgerEntryExtensionV1.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerEntryExtensionV1 decode(XdrDataInputStream stream) throws IOException {
     LedgerEntryExtensionV1 decodedLedgerEntryExtensionV1 = new LedgerEntryExtensionV1();
     decodedLedgerEntryExtensionV1.sponsoringID = SponsorshipDescriptor.decode(stream);
     decodedLedgerEntryExtensionV1.ext = LedgerEntryExtensionV1Ext.decode(stream);
     return decodedLedgerEntryExtensionV1;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.sponsoringID, this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerEntryExtensionV1)) {
@@ -63,7 +74,8 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     }
 
     LedgerEntryExtensionV1 other = (LedgerEntryExtensionV1) object;
-    return Objects.equal(this.sponsoringID, other.sponsoringID) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.sponsoringID, other.sponsoringID)
+        && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
@@ -89,11 +101,14 @@ public class LedgerEntryExtensionV1 implements XdrElement {
   }
 
   public static class LedgerEntryExtensionV1Ext {
-    public LedgerEntryExtensionV1Ext () {}
+    public LedgerEntryExtensionV1Ext() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
@@ -113,32 +128,38 @@ public class LedgerEntryExtensionV1 implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, LedgerEntryExtensionV1Ext encodedLedgerEntryExtensionV1Ext) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedLedgerEntryExtensionV1Ext.getDiscriminant().intValue());
-    switch (encodedLedgerEntryExtensionV1Ext.getDiscriminant()) {
-    case 0:
-    break;
+    public static void encode(
+        XdrDataOutputStream stream, LedgerEntryExtensionV1Ext encodedLedgerEntryExtensionV1Ext)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedLedgerEntryExtensionV1Ext.getDiscriminant().intValue());
+      switch (encodedLedgerEntryExtensionV1Ext.getDiscriminant()) {
+        case 0:
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static LedgerEntryExtensionV1Ext decode(XdrDataInputStream stream) throws IOException {
-    LedgerEntryExtensionV1Ext decodedLedgerEntryExtensionV1Ext = new LedgerEntryExtensionV1Ext();
-    Integer discriminant = stream.readInt();
-    decodedLedgerEntryExtensionV1Ext.setDiscriminant(discriminant);
-    switch (decodedLedgerEntryExtensionV1Ext.getDiscriminant()) {
-    case 0:
-    break;
-    }
+      LedgerEntryExtensionV1Ext decodedLedgerEntryExtensionV1Ext = new LedgerEntryExtensionV1Ext();
+      Integer discriminant = stream.readInt();
+      decodedLedgerEntryExtensionV1Ext.setDiscriminant(discriminant);
+      switch (decodedLedgerEntryExtensionV1Ext.getDiscriminant()) {
+        case 0:
+          break;
+      }
       return decodedLedgerEntryExtensionV1Ext;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof LedgerEntryExtensionV1Ext)) {
@@ -148,6 +169,5 @@ public class LedgerEntryExtensionV1 implements XdrElement {
       LedgerEntryExtensionV1Ext other = (LedgerEntryExtensionV1Ext) object;
       return Objects.equal(this.v, other.v);
     }
-
   }
 }

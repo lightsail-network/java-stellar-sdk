@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -14,51 +12,68 @@ import com.google.common.base.Objects;
 //  {
 //      AccountID trustor;
 //      Asset asset;
-//  
+//
 //      uint32 clearFlags; // which flags to clear
 //      uint32 setFlags;   // which flags to set
 //  };
 
 //  ===========================================================================
 public class SetTrustLineFlagsOp implements XdrElement {
-  public SetTrustLineFlagsOp () {}
+  public SetTrustLineFlagsOp() {}
+
   private AccountID trustor;
+
   public AccountID getTrustor() {
     return this.trustor;
   }
+
   public void setTrustor(AccountID value) {
     this.trustor = value;
   }
+
   private Asset asset;
+
   public Asset getAsset() {
     return this.asset;
   }
+
   public void setAsset(Asset value) {
     this.asset = value;
   }
+
   private Uint32 clearFlags;
+
   public Uint32 getClearFlags() {
     return this.clearFlags;
   }
+
   public void setClearFlags(Uint32 value) {
     this.clearFlags = value;
   }
+
   private Uint32 setFlags;
+
   public Uint32 getSetFlags() {
     return this.setFlags;
   }
+
   public void setSetFlags(Uint32 value) {
     this.setFlags = value;
   }
-  public static void encode(XdrDataOutputStream stream, SetTrustLineFlagsOp encodedSetTrustLineFlagsOp) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, SetTrustLineFlagsOp encodedSetTrustLineFlagsOp)
+      throws IOException {
     AccountID.encode(stream, encodedSetTrustLineFlagsOp.trustor);
     Asset.encode(stream, encodedSetTrustLineFlagsOp.asset);
     Uint32.encode(stream, encodedSetTrustLineFlagsOp.clearFlags);
     Uint32.encode(stream, encodedSetTrustLineFlagsOp.setFlags);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SetTrustLineFlagsOp decode(XdrDataInputStream stream) throws IOException {
     SetTrustLineFlagsOp decodedSetTrustLineFlagsOp = new SetTrustLineFlagsOp();
     decodedSetTrustLineFlagsOp.trustor = AccountID.decode(stream);
@@ -67,10 +82,12 @@ public class SetTrustLineFlagsOp implements XdrElement {
     decodedSetTrustLineFlagsOp.setFlags = Uint32.decode(stream);
     return decodedSetTrustLineFlagsOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.trustor, this.asset, this.clearFlags, this.setFlags);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SetTrustLineFlagsOp)) {
@@ -78,7 +95,10 @@ public class SetTrustLineFlagsOp implements XdrElement {
     }
 
     SetTrustLineFlagsOp other = (SetTrustLineFlagsOp) object;
-    return Objects.equal(this.trustor, other.trustor) && Objects.equal(this.asset, other.asset) && Objects.equal(this.clearFlags, other.clearFlags) && Objects.equal(this.setFlags, other.setFlags);
+    return Objects.equal(this.trustor, other.trustor)
+        && Objects.equal(this.asset, other.asset)
+        && Objects.equal(this.clearFlags, other.clearFlags)
+        && Objects.equal(this.setFlags, other.setFlags);
   }
 
   public static final class Builder {

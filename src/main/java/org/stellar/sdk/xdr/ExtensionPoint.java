@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,11 +16,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ExtensionPoint implements XdrElement {
-  public ExtensionPoint () {}
+  public ExtensionPoint() {}
+
   Integer v;
+
   public Integer getDiscriminant() {
     return this.v;
   }
+
   public void setDiscriminant(Integer value) {
     this.v = value;
   }
@@ -42,32 +43,37 @@ public class ExtensionPoint implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ExtensionPoint encodedExtensionPoint) throws IOException {
-  //Xdrgen::AST::Typespecs::Int
-  //Integer
-  stream.writeInt(encodedExtensionPoint.getDiscriminant().intValue());
-  switch (encodedExtensionPoint.getDiscriminant()) {
-  case 0:
-  break;
+  public static void encode(XdrDataOutputStream stream, ExtensionPoint encodedExtensionPoint)
+      throws IOException {
+    // Xdrgen::AST::Typespecs::Int
+    // Integer
+    stream.writeInt(encodedExtensionPoint.getDiscriminant().intValue());
+    switch (encodedExtensionPoint.getDiscriminant()) {
+      case 0:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ExtensionPoint decode(XdrDataInputStream stream) throws IOException {
-  ExtensionPoint decodedExtensionPoint = new ExtensionPoint();
-  Integer discriminant = stream.readInt();
-  decodedExtensionPoint.setDiscriminant(discriminant);
-  switch (decodedExtensionPoint.getDiscriminant()) {
-  case 0:
-  break;
-  }
+    ExtensionPoint decodedExtensionPoint = new ExtensionPoint();
+    Integer discriminant = stream.readInt();
+    decodedExtensionPoint.setDiscriminant(discriminant);
+    switch (decodedExtensionPoint.getDiscriminant()) {
+      case 0:
+        break;
+    }
     return decodedExtensionPoint;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.v);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ExtensionPoint)) {

@@ -1,9 +1,9 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
   private final String balanceId;
@@ -21,14 +21,16 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
     key.setDiscriminant(LedgerEntryType.CLAIMABLE_BALANCE);
-    LedgerKey.LedgerKeyClaimableBalance claimableBalance = new LedgerKey.LedgerKeyClaimableBalance();
+    LedgerKey.LedgerKeyClaimableBalance claimableBalance =
+        new LedgerKey.LedgerKeyClaimableBalance();
 
     claimableBalance.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
     key.setClaimableBalance(claimableBalance);
     op.setLedgerKey(key);
     op.setDiscriminant(RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY);
 
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.REVOKE_SPONSORSHIP);
     body.setRevokeSponsorshipOp(op);
 
@@ -41,15 +43,19 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
     private String mSourceAccount;
 
     /**
-     * Construct a new RevokeClaimableBalanceSponsorshipOperation builder from a RevokeSponsorship XDR.
+     * Construct a new RevokeClaimableBalanceSponsorshipOperation builder from a RevokeSponsorship
+     * XDR.
+     *
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
-      balanceId = Util.xdrToClaimableBalanceId(op.getLedgerKey().getClaimableBalance().getBalanceID());
+      balanceId =
+          Util.xdrToClaimableBalanceId(op.getLedgerKey().getClaimableBalance().getBalanceID());
     }
 
     /**
      * Creates a new RevokeClaimableBalanceSponsorshipOperation builder.
+     *
      * @param balanceId The id of the claimable balance whose sponsorship will be revoked.
      */
     public Builder(String balanceId) {
@@ -58,19 +64,20 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
 
     /**
      * Sets the source account for this operation.
+     *
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public RevokeClaimableBalanceSponsorshipOperation.Builder setSourceAccount(String sourceAccount) {
+    public RevokeClaimableBalanceSponsorshipOperation.Builder setSourceAccount(
+        String sourceAccount) {
       mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public RevokeClaimableBalanceSponsorshipOperation build() {
-      RevokeClaimableBalanceSponsorshipOperation operation = new RevokeClaimableBalanceSponsorshipOperation(balanceId);
+      RevokeClaimableBalanceSponsorshipOperation operation =
+          new RevokeClaimableBalanceSponsorshipOperation(balanceId);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -89,8 +96,9 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
       return false;
     }
 
-    RevokeClaimableBalanceSponsorshipOperation other = (RevokeClaimableBalanceSponsorshipOperation) object;
-    return Objects.equal(this.balanceId, other.balanceId) &&
-        Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    RevokeClaimableBalanceSponsorshipOperation other =
+        (RevokeClaimableBalanceSponsorshipOperation) object;
+    return Objects.equal(this.balanceId, other.balanceId)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

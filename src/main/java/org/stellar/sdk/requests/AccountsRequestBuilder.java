@@ -1,6 +1,7 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -10,11 +11,7 @@ import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 
-import java.io.IOException;
-
-/**
- * Builds requests connected to accounts.
- */
+/** Builds requests connected to accounts. */
 public class AccountsRequestBuilder extends RequestBuilder {
   private static final String ASSET_PARAMETER_NAME = "asset";
   private static final String LIQUIDITY_POOL_PARAMETER_NAME = "liquidity_pool";
@@ -26,8 +23,9 @@ public class AccountsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link AccountResponse}.
-   * This method is helpful for getting the links.
+   * Requests specific <code>uri</code> and returns {@link AccountResponse}. This method is helpful
+   * for getting the links.
+   *
    * @throws IOException
    */
   public AccountResponse account(HttpUrl uri) throws IOException {
@@ -42,7 +40,9 @@ public class AccountsRequestBuilder extends RequestBuilder {
 
   /**
    * Requests <code>GET /accounts/{account}</code>
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/single/">Account Details</a>
+   *
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/single/">Account
+   *     Details</a>
    * @param account Account to fetch
    * @throws IOException
    */
@@ -126,7 +126,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Returns all accounts who are sponsored by a given account or have subentries which are sponsored by a given account.
+   * Returns all accounts who are sponsored by a given account or have subentries which are
+   * sponsored by a given account.
    *
    * @param sponsor Account ID
    * @return current {@link AccountsRequestBuilder} instance
@@ -147,15 +148,18 @@ public class AccountsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link AccountResponse}.
-   * This method is helpful for getting the next set of results.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link AccountResponse}. This
+   * method is helpful for getting the next set of results.
+   *
    * @return {@link Page} of {@link AccountResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<AccountResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static Page<AccountResponse> execute(OkHttpClient httpClient, HttpUrl uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<AccountResponse>>() {};
-    ResponseHandler<Page<AccountResponse>> responseHandler = new ResponseHandler<Page<AccountResponse>>(type);
+    ResponseHandler<Page<AccountResponse>> responseHandler =
+        new ResponseHandler<Page<AccountResponse>>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -164,22 +168,25 @@ public class AccountsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Allows to stream SSE events from horizon.
-   * Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
-   * This mode will keep the connection to horizon open and horizon will continue to return
-   * responses as ledgers close.
+   * Allows to stream SSE events from horizon. Certain endpoints in Horizon can be called in
+   * streaming mode using Server-Sent Events. This mode will keep the connection to horizon open and
+   * horizon will continue to return responses as ledgers close.
+   *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link AccountResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
   public SSEStream<AccountResponse> stream(final EventListener<AccountResponse> listener) {
 
-    return SSEStream.create(httpClient,this,AccountResponse.class,listener);
+    return SSEStream.create(httpClient, this, AccountResponse.class, listener);
   }
 
   /**
-   * Build and execute request. <strong>Warning!</strong> {@link AccountResponse}s in {@link Page} will contain only <code>keypair</code> field.
+   * Build and execute request. <strong>Warning!</strong> {@link AccountResponse}s in {@link Page}
+   * will contain only <code>keypair</code> field.
+   *
    * @return {@link Page} of {@link AccountResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException

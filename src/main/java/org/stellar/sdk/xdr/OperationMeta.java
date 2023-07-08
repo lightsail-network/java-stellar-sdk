@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -17,29 +15,38 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class OperationMeta implements XdrElement {
-  public OperationMeta () {}
+  public OperationMeta() {}
+
   private LedgerEntryChanges changes;
+
   public LedgerEntryChanges getChanges() {
     return this.changes;
   }
+
   public void setChanges(LedgerEntryChanges value) {
     this.changes = value;
   }
-  public static void encode(XdrDataOutputStream stream, OperationMeta encodedOperationMeta) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, OperationMeta encodedOperationMeta)
+      throws IOException {
     LedgerEntryChanges.encode(stream, encodedOperationMeta.changes);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static OperationMeta decode(XdrDataInputStream stream) throws IOException {
     OperationMeta decodedOperationMeta = new OperationMeta();
     decodedOperationMeta.changes = LedgerEntryChanges.decode(stream);
     return decodedOperationMeta;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.changes);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof OperationMeta)) {

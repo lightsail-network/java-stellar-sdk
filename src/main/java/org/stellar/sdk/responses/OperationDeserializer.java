@@ -7,7 +7,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-
+import java.lang.reflect.Type;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
@@ -15,14 +15,16 @@ import org.stellar.sdk.responses.operations.*;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 import org.stellar.sdk.xdr.OperationType;
 
-import java.lang.reflect.Type;
-
 class OperationDeserializer implements JsonDeserializer<OperationResponse> {
   private static final OperationType[] AllOperationTypes = OperationType.values();
+
   @Override
-  public OperationResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+  public OperationResponse deserialize(
+      JsonElement json, Type typeOfT, JsonDeserializationContext context)
+      throws JsonParseException {
     // Create new Gson object with adapters needed in Operation
-    Gson gson = new GsonBuilder()
+    Gson gson =
+        new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())

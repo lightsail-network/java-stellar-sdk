@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,18 +16,24 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LiquidityPoolParameters implements XdrElement {
-  public LiquidityPoolParameters () {}
+  public LiquidityPoolParameters() {}
+
   LiquidityPoolType type;
+
   public LiquidityPoolType getDiscriminant() {
     return this.type;
   }
+
   public void setDiscriminant(LiquidityPoolType value) {
     this.type = value;
   }
+
   private LiquidityPoolConstantProductParameters constantProduct;
+
   public LiquidityPoolConstantProductParameters getConstantProduct() {
     return this.constantProduct;
   }
+
   public void setConstantProduct(LiquidityPoolConstantProductParameters value) {
     this.constantProduct = value;
   }
@@ -56,34 +60,42 @@ public class LiquidityPoolParameters implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LiquidityPoolParameters encodedLiquidityPoolParameters) throws IOException {
-  //Xdrgen::AST::Identifier
-  //LiquidityPoolType
-  stream.writeInt(encodedLiquidityPoolParameters.getDiscriminant().getValue());
-  switch (encodedLiquidityPoolParameters.getDiscriminant()) {
-  case LIQUIDITY_POOL_CONSTANT_PRODUCT:
-  LiquidityPoolConstantProductParameters.encode(stream, encodedLiquidityPoolParameters.constantProduct);
-  break;
+  public static void encode(
+      XdrDataOutputStream stream, LiquidityPoolParameters encodedLiquidityPoolParameters)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // LiquidityPoolType
+    stream.writeInt(encodedLiquidityPoolParameters.getDiscriminant().getValue());
+    switch (encodedLiquidityPoolParameters.getDiscriminant()) {
+      case LIQUIDITY_POOL_CONSTANT_PRODUCT:
+        LiquidityPoolConstantProductParameters.encode(
+            stream, encodedLiquidityPoolParameters.constantProduct);
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LiquidityPoolParameters decode(XdrDataInputStream stream) throws IOException {
-  LiquidityPoolParameters decodedLiquidityPoolParameters = new LiquidityPoolParameters();
-  LiquidityPoolType discriminant = LiquidityPoolType.decode(stream);
-  decodedLiquidityPoolParameters.setDiscriminant(discriminant);
-  switch (decodedLiquidityPoolParameters.getDiscriminant()) {
-  case LIQUIDITY_POOL_CONSTANT_PRODUCT:
-  decodedLiquidityPoolParameters.constantProduct = LiquidityPoolConstantProductParameters.decode(stream);
-  break;
-  }
+    LiquidityPoolParameters decodedLiquidityPoolParameters = new LiquidityPoolParameters();
+    LiquidityPoolType discriminant = LiquidityPoolType.decode(stream);
+    decodedLiquidityPoolParameters.setDiscriminant(discriminant);
+    switch (decodedLiquidityPoolParameters.getDiscriminant()) {
+      case LIQUIDITY_POOL_CONSTANT_PRODUCT:
+        decodedLiquidityPoolParameters.constantProduct =
+            LiquidityPoolConstantProductParameters.decode(stream);
+        break;
+    }
     return decodedLiquidityPoolParameters;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.constantProduct, this.type);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LiquidityPoolParameters)) {
@@ -91,6 +103,7 @@ public class LiquidityPoolParameters implements XdrElement {
     }
 
     LiquidityPoolParameters other = (LiquidityPoolParameters) object;
-    return Objects.equal(this.constantProduct, other.constantProduct) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.constantProduct, other.constantProduct)
+        && Objects.equal(this.type, other.type);
   }
 }

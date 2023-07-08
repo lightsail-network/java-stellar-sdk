@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -23,18 +21,20 @@ public enum StellarValueType implements XdrElement {
   private int mValue;
 
   StellarValueType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static StellarValueType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return STELLAR_VALUE_BASIC;
-      case 1: return STELLAR_VALUE_SIGNED;
+      case 0:
+        return STELLAR_VALUE_BASIC;
+      case 1:
+        return STELLAR_VALUE_SIGNED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

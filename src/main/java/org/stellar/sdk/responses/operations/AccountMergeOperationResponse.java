@@ -2,28 +2,33 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
-import org.stellar.sdk.responses.MuxedAccount;
-
 import java.math.BigInteger;
+import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents AccountMerge operation response.
- * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation documentation</a>
+ *
+ * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation
+ *     documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
 public class AccountMergeOperationResponse extends OperationResponse {
   @SerializedName("account")
   private String account;
+
   @SerializedName("account_muxed")
   private String accountMuxed;
+
   @SerializedName("account_muxed_id")
   private BigInteger accountMuxedId;
 
   @SerializedName("into")
   private String into;
+
   @SerializedName("into_muxed")
   private String intoMuxed;
+
   @SerializedName("into_muxed_id")
   private BigInteger intoMuxedId;
 

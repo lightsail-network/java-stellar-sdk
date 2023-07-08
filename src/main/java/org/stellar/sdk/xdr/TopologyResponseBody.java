@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -14,51 +12,68 @@ import com.google.common.base.Objects;
 //  {
 //      PeerStatList inboundPeers;
 //      PeerStatList outboundPeers;
-//  
+//
 //      uint32 totalInboundPeerCount;
 //      uint32 totalOutboundPeerCount;
 //  };
 
 //  ===========================================================================
 public class TopologyResponseBody implements XdrElement {
-  public TopologyResponseBody () {}
+  public TopologyResponseBody() {}
+
   private PeerStatList inboundPeers;
+
   public PeerStatList getInboundPeers() {
     return this.inboundPeers;
   }
+
   public void setInboundPeers(PeerStatList value) {
     this.inboundPeers = value;
   }
+
   private PeerStatList outboundPeers;
+
   public PeerStatList getOutboundPeers() {
     return this.outboundPeers;
   }
+
   public void setOutboundPeers(PeerStatList value) {
     this.outboundPeers = value;
   }
+
   private Uint32 totalInboundPeerCount;
+
   public Uint32 getTotalInboundPeerCount() {
     return this.totalInboundPeerCount;
   }
+
   public void setTotalInboundPeerCount(Uint32 value) {
     this.totalInboundPeerCount = value;
   }
+
   private Uint32 totalOutboundPeerCount;
+
   public Uint32 getTotalOutboundPeerCount() {
     return this.totalOutboundPeerCount;
   }
+
   public void setTotalOutboundPeerCount(Uint32 value) {
     this.totalOutboundPeerCount = value;
   }
-  public static void encode(XdrDataOutputStream stream, TopologyResponseBody encodedTopologyResponseBody) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, TopologyResponseBody encodedTopologyResponseBody)
+      throws IOException {
     PeerStatList.encode(stream, encodedTopologyResponseBody.inboundPeers);
     PeerStatList.encode(stream, encodedTopologyResponseBody.outboundPeers);
     Uint32.encode(stream, encodedTopologyResponseBody.totalInboundPeerCount);
     Uint32.encode(stream, encodedTopologyResponseBody.totalOutboundPeerCount);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TopologyResponseBody decode(XdrDataInputStream stream) throws IOException {
     TopologyResponseBody decodedTopologyResponseBody = new TopologyResponseBody();
     decodedTopologyResponseBody.inboundPeers = PeerStatList.decode(stream);
@@ -67,10 +82,16 @@ public class TopologyResponseBody implements XdrElement {
     decodedTopologyResponseBody.totalOutboundPeerCount = Uint32.decode(stream);
     return decodedTopologyResponseBody;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.inboundPeers, this.outboundPeers, this.totalInboundPeerCount, this.totalOutboundPeerCount);
+    return Objects.hashCode(
+        this.inboundPeers,
+        this.outboundPeers,
+        this.totalInboundPeerCount,
+        this.totalOutboundPeerCount);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TopologyResponseBody)) {
@@ -78,7 +99,10 @@ public class TopologyResponseBody implements XdrElement {
     }
 
     TopologyResponseBody other = (TopologyResponseBody) object;
-    return Objects.equal(this.inboundPeers, other.inboundPeers) && Objects.equal(this.outboundPeers, other.outboundPeers) && Objects.equal(this.totalInboundPeerCount, other.totalInboundPeerCount) && Objects.equal(this.totalOutboundPeerCount, other.totalOutboundPeerCount);
+    return Objects.equal(this.inboundPeers, other.inboundPeers)
+        && Objects.equal(this.outboundPeers, other.outboundPeers)
+        && Objects.equal(this.totalInboundPeerCount, other.totalInboundPeerCount)
+        && Objects.equal(this.totalOutboundPeerCount, other.totalOutboundPeerCount);
   }
 
   public static final class Builder {

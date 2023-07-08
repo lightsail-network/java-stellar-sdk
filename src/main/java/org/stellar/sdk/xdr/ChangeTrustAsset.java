@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -14,47 +12,59 @@ import com.google.common.base.Objects;
 //  {
 //  case ASSET_TYPE_NATIVE: // Not credit
 //      void;
-//  
+//
 //  case ASSET_TYPE_CREDIT_ALPHANUM4:
 //      AlphaNum4 alphaNum4;
-//  
+//
 //  case ASSET_TYPE_CREDIT_ALPHANUM12:
 //      AlphaNum12 alphaNum12;
-//  
+//
 //  case ASSET_TYPE_POOL_SHARE:
 //      LiquidityPoolParameters liquidityPool;
-//  
+//
 //      // add other asset types here in the future
 //  };
 
 //  ===========================================================================
 public class ChangeTrustAsset implements XdrElement {
-  public ChangeTrustAsset () {}
+  public ChangeTrustAsset() {}
+
   AssetType type;
+
   public AssetType getDiscriminant() {
     return this.type;
   }
+
   public void setDiscriminant(AssetType value) {
     this.type = value;
   }
+
   private AlphaNum4 alphaNum4;
+
   public AlphaNum4 getAlphaNum4() {
     return this.alphaNum4;
   }
+
   public void setAlphaNum4(AlphaNum4 value) {
     this.alphaNum4 = value;
   }
+
   private AlphaNum12 alphaNum12;
+
   public AlphaNum12 getAlphaNum12() {
     return this.alphaNum12;
   }
+
   public void setAlphaNum12(AlphaNum12 value) {
     this.alphaNum12 = value;
   }
+
   private LiquidityPoolParameters liquidityPool;
+
   public LiquidityPoolParameters getLiquidityPool() {
     return this.liquidityPool;
   }
+
   public void setLiquidityPool(LiquidityPoolParameters value) {
     this.liquidityPool = value;
   }
@@ -95,50 +105,55 @@ public class ChangeTrustAsset implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ChangeTrustAsset encodedChangeTrustAsset) throws IOException {
-  //Xdrgen::AST::Identifier
-  //AssetType
-  stream.writeInt(encodedChangeTrustAsset.getDiscriminant().getValue());
-  switch (encodedChangeTrustAsset.getDiscriminant()) {
-  case ASSET_TYPE_NATIVE:
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM4:
-  AlphaNum4.encode(stream, encodedChangeTrustAsset.alphaNum4);
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM12:
-  AlphaNum12.encode(stream, encodedChangeTrustAsset.alphaNum12);
-  break;
-  case ASSET_TYPE_POOL_SHARE:
-  LiquidityPoolParameters.encode(stream, encodedChangeTrustAsset.liquidityPool);
-  break;
+  public static void encode(XdrDataOutputStream stream, ChangeTrustAsset encodedChangeTrustAsset)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // AssetType
+    stream.writeInt(encodedChangeTrustAsset.getDiscriminant().getValue());
+    switch (encodedChangeTrustAsset.getDiscriminant()) {
+      case ASSET_TYPE_NATIVE:
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        AlphaNum4.encode(stream, encodedChangeTrustAsset.alphaNum4);
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        AlphaNum12.encode(stream, encodedChangeTrustAsset.alphaNum12);
+        break;
+      case ASSET_TYPE_POOL_SHARE:
+        LiquidityPoolParameters.encode(stream, encodedChangeTrustAsset.liquidityPool);
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ChangeTrustAsset decode(XdrDataInputStream stream) throws IOException {
-  ChangeTrustAsset decodedChangeTrustAsset = new ChangeTrustAsset();
-  AssetType discriminant = AssetType.decode(stream);
-  decodedChangeTrustAsset.setDiscriminant(discriminant);
-  switch (decodedChangeTrustAsset.getDiscriminant()) {
-  case ASSET_TYPE_NATIVE:
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM4:
-  decodedChangeTrustAsset.alphaNum4 = AlphaNum4.decode(stream);
-  break;
-  case ASSET_TYPE_CREDIT_ALPHANUM12:
-  decodedChangeTrustAsset.alphaNum12 = AlphaNum12.decode(stream);
-  break;
-  case ASSET_TYPE_POOL_SHARE:
-  decodedChangeTrustAsset.liquidityPool = LiquidityPoolParameters.decode(stream);
-  break;
-  }
+    ChangeTrustAsset decodedChangeTrustAsset = new ChangeTrustAsset();
+    AssetType discriminant = AssetType.decode(stream);
+    decodedChangeTrustAsset.setDiscriminant(discriminant);
+    switch (decodedChangeTrustAsset.getDiscriminant()) {
+      case ASSET_TYPE_NATIVE:
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        decodedChangeTrustAsset.alphaNum4 = AlphaNum4.decode(stream);
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        decodedChangeTrustAsset.alphaNum12 = AlphaNum12.decode(stream);
+        break;
+      case ASSET_TYPE_POOL_SHARE:
+        decodedChangeTrustAsset.liquidityPool = LiquidityPoolParameters.decode(stream);
+        break;
+    }
     return decodedChangeTrustAsset;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.alphaNum4, this.alphaNum12, this.liquidityPool, this.type);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ChangeTrustAsset)) {
@@ -146,6 +161,9 @@ public class ChangeTrustAsset implements XdrElement {
     }
 
     ChangeTrustAsset other = (ChangeTrustAsset) object;
-    return Objects.equal(this.alphaNum4, other.alphaNum4) && Objects.equal(this.alphaNum12, other.alphaNum12) && Objects.equal(this.liquidityPool, other.liquidityPool) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.alphaNum4, other.alphaNum4)
+        && Objects.equal(this.alphaNum12, other.alphaNum12)
+        && Objects.equal(this.liquidityPool, other.liquidityPool)
+        && Objects.equal(this.type, other.type);
   }
 }

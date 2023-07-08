@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -27,26 +25,31 @@ public enum LedgerEntryChangeType implements XdrElement {
   private int mValue;
 
   LedgerEntryChangeType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static LedgerEntryChangeType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return LEDGER_ENTRY_CREATED;
-      case 1: return LEDGER_ENTRY_UPDATED;
-      case 2: return LEDGER_ENTRY_REMOVED;
-      case 3: return LEDGER_ENTRY_STATE;
+      case 0:
+        return LEDGER_ENTRY_CREATED;
+      case 1:
+        return LEDGER_ENTRY_UPDATED;
+      case 2:
+        return LEDGER_ENTRY_REMOVED;
+      case 3:
+        return LEDGER_ENTRY_STATE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LedgerEntryChangeType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LedgerEntryChangeType value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

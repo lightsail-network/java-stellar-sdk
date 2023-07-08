@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -23,32 +21,44 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class TransactionMeta implements XdrElement {
-  public TransactionMeta () {}
+  public TransactionMeta() {}
+
   Integer v;
+
   public Integer getDiscriminant() {
     return this.v;
   }
+
   public void setDiscriminant(Integer value) {
     this.v = value;
   }
+
   private OperationMeta[] operations;
+
   public OperationMeta[] getOperations() {
     return this.operations;
   }
+
   public void setOperations(OperationMeta[] value) {
     this.operations = value;
   }
+
   private TransactionMetaV1 v1;
+
   public TransactionMetaV1 getV1() {
     return this.v1;
   }
+
   public void setV1(TransactionMetaV1 value) {
     this.v1 = value;
   }
+
   private TransactionMetaV2 v2;
+
   public TransactionMetaV2 getV2() {
     return this.v2;
   }
+
   public void setV2(TransactionMetaV2 value) {
     this.v2 = value;
   }
@@ -89,54 +99,59 @@ public class TransactionMeta implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, TransactionMeta encodedTransactionMeta) throws IOException {
-  //Xdrgen::AST::Typespecs::Int
-  //Integer
-  stream.writeInt(encodedTransactionMeta.getDiscriminant().intValue());
-  switch (encodedTransactionMeta.getDiscriminant()) {
-  case 0:
-  int operationssize = encodedTransactionMeta.getOperations().length;
-  stream.writeInt(operationssize);
-  for (int i = 0; i < operationssize; i++) {
-    OperationMeta.encode(stream, encodedTransactionMeta.operations[i]);
+  public static void encode(XdrDataOutputStream stream, TransactionMeta encodedTransactionMeta)
+      throws IOException {
+    // Xdrgen::AST::Typespecs::Int
+    // Integer
+    stream.writeInt(encodedTransactionMeta.getDiscriminant().intValue());
+    switch (encodedTransactionMeta.getDiscriminant()) {
+      case 0:
+        int operationssize = encodedTransactionMeta.getOperations().length;
+        stream.writeInt(operationssize);
+        for (int i = 0; i < operationssize; i++) {
+          OperationMeta.encode(stream, encodedTransactionMeta.operations[i]);
+        }
+        break;
+      case 1:
+        TransactionMetaV1.encode(stream, encodedTransactionMeta.v1);
+        break;
+      case 2:
+        TransactionMetaV2.encode(stream, encodedTransactionMeta.v2);
+        break;
+    }
   }
-  break;
-  case 1:
-  TransactionMetaV1.encode(stream, encodedTransactionMeta.v1);
-  break;
-  case 2:
-  TransactionMetaV2.encode(stream, encodedTransactionMeta.v2);
-  break;
-  }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TransactionMeta decode(XdrDataInputStream stream) throws IOException {
-  TransactionMeta decodedTransactionMeta = new TransactionMeta();
-  Integer discriminant = stream.readInt();
-  decodedTransactionMeta.setDiscriminant(discriminant);
-  switch (decodedTransactionMeta.getDiscriminant()) {
-  case 0:
-  int operationssize = stream.readInt();
-  decodedTransactionMeta.operations = new OperationMeta[operationssize];
-  for (int i = 0; i < operationssize; i++) {
-    decodedTransactionMeta.operations[i] = OperationMeta.decode(stream);
-  }
-  break;
-  case 1:
-  decodedTransactionMeta.v1 = TransactionMetaV1.decode(stream);
-  break;
-  case 2:
-  decodedTransactionMeta.v2 = TransactionMetaV2.decode(stream);
-  break;
-  }
+    TransactionMeta decodedTransactionMeta = new TransactionMeta();
+    Integer discriminant = stream.readInt();
+    decodedTransactionMeta.setDiscriminant(discriminant);
+    switch (decodedTransactionMeta.getDiscriminant()) {
+      case 0:
+        int operationssize = stream.readInt();
+        decodedTransactionMeta.operations = new OperationMeta[operationssize];
+        for (int i = 0; i < operationssize; i++) {
+          decodedTransactionMeta.operations[i] = OperationMeta.decode(stream);
+        }
+        break;
+      case 1:
+        decodedTransactionMeta.v1 = TransactionMetaV1.decode(stream);
+        break;
+      case 2:
+        decodedTransactionMeta.v2 = TransactionMetaV2.decode(stream);
+        break;
+    }
     return decodedTransactionMeta;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(Arrays.hashCode(this.operations), this.v1, this.v2, this.v);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TransactionMeta)) {
@@ -144,6 +159,9 @@ public class TransactionMeta implements XdrElement {
     }
 
     TransactionMeta other = (TransactionMeta) object;
-    return Arrays.equals(this.operations, other.operations) && Objects.equal(this.v1, other.v1) && Objects.equal(this.v2, other.v2) && Objects.equal(this.v, other.v);
+    return Arrays.equals(this.operations, other.operations)
+        && Objects.equal(this.v1, other.v1)
+        && Objects.equal(this.v2, other.v2)
+        && Objects.equal(this.v, other.v);
   }
 }

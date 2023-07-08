@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -25,24 +23,27 @@ public enum BumpSequenceResultCode implements XdrElement {
   private int mValue;
 
   BumpSequenceResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static BumpSequenceResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return BUMP_SEQUENCE_SUCCESS;
-      case -1: return BUMP_SEQUENCE_BAD_SEQ;
+      case 0:
+        return BUMP_SEQUENCE_SUCCESS;
+      case -1:
+        return BUMP_SEQUENCE_BAD_SEQ;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, BumpSequenceResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, BumpSequenceResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

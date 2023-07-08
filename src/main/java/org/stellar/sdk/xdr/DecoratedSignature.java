@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class DecoratedSignature implements XdrElement {
-  public DecoratedSignature () {}
+  public DecoratedSignature() {}
+
   private SignatureHint hint;
+
   public SignatureHint getHint() {
     return this.hint;
   }
+
   public void setHint(SignatureHint value) {
     this.hint = value;
   }
+
   private Signature signature;
+
   public Signature getSignature() {
     return this.signature;
   }
+
   public void setSignature(Signature value) {
     this.signature = value;
   }
-  public static void encode(XdrDataOutputStream stream, DecoratedSignature encodedDecoratedSignature) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, DecoratedSignature encodedDecoratedSignature) throws IOException {
     SignatureHint.encode(stream, encodedDecoratedSignature.hint);
     Signature.encode(stream, encodedDecoratedSignature.signature);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static DecoratedSignature decode(XdrDataInputStream stream) throws IOException {
     DecoratedSignature decodedDecoratedSignature = new DecoratedSignature();
     decodedDecoratedSignature.hint = SignatureHint.decode(stream);
     decodedDecoratedSignature.signature = Signature.decode(stream);
     return decodedDecoratedSignature;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.hint, this.signature);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof DecoratedSignature)) {

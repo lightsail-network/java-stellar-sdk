@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,18 +16,24 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class SurveyResponseBody implements XdrElement {
-  public SurveyResponseBody () {}
+  public SurveyResponseBody() {}
+
   SurveyMessageCommandType type;
+
   public SurveyMessageCommandType getDiscriminant() {
     return this.type;
   }
+
   public void setDiscriminant(SurveyMessageCommandType value) {
     this.type = value;
   }
+
   private TopologyResponseBody topologyResponseBody;
+
   public TopologyResponseBody getTopologyResponseBody() {
     return this.topologyResponseBody;
   }
+
   public void setTopologyResponseBody(TopologyResponseBody value) {
     this.topologyResponseBody = value;
   }
@@ -56,34 +60,39 @@ public class SurveyResponseBody implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, SurveyResponseBody encodedSurveyResponseBody) throws IOException {
-  //Xdrgen::AST::Identifier
-  //SurveyMessageCommandType
-  stream.writeInt(encodedSurveyResponseBody.getDiscriminant().getValue());
-  switch (encodedSurveyResponseBody.getDiscriminant()) {
-  case SURVEY_TOPOLOGY:
-  TopologyResponseBody.encode(stream, encodedSurveyResponseBody.topologyResponseBody);
-  break;
+  public static void encode(
+      XdrDataOutputStream stream, SurveyResponseBody encodedSurveyResponseBody) throws IOException {
+    // Xdrgen::AST::Identifier
+    // SurveyMessageCommandType
+    stream.writeInt(encodedSurveyResponseBody.getDiscriminant().getValue());
+    switch (encodedSurveyResponseBody.getDiscriminant()) {
+      case SURVEY_TOPOLOGY:
+        TopologyResponseBody.encode(stream, encodedSurveyResponseBody.topologyResponseBody);
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SurveyResponseBody decode(XdrDataInputStream stream) throws IOException {
-  SurveyResponseBody decodedSurveyResponseBody = new SurveyResponseBody();
-  SurveyMessageCommandType discriminant = SurveyMessageCommandType.decode(stream);
-  decodedSurveyResponseBody.setDiscriminant(discriminant);
-  switch (decodedSurveyResponseBody.getDiscriminant()) {
-  case SURVEY_TOPOLOGY:
-  decodedSurveyResponseBody.topologyResponseBody = TopologyResponseBody.decode(stream);
-  break;
-  }
+    SurveyResponseBody decodedSurveyResponseBody = new SurveyResponseBody();
+    SurveyMessageCommandType discriminant = SurveyMessageCommandType.decode(stream);
+    decodedSurveyResponseBody.setDiscriminant(discriminant);
+    switch (decodedSurveyResponseBody.getDiscriminant()) {
+      case SURVEY_TOPOLOGY:
+        decodedSurveyResponseBody.topologyResponseBody = TopologyResponseBody.decode(stream);
+        break;
+    }
     return decodedSurveyResponseBody;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.topologyResponseBody, this.type);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SurveyResponseBody)) {
@@ -91,6 +100,7 @@ public class SurveyResponseBody implements XdrElement {
     }
 
     SurveyResponseBody other = (SurveyResponseBody) object;
-    return Objects.equal(this.topologyResponseBody, other.topologyResponseBody) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.topologyResponseBody, other.topologyResponseBody)
+        && Objects.equal(this.type, other.type);
   }
 }

@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -23,23 +21,25 @@ public enum ClaimableBalanceFlags implements XdrElement {
   private int mValue;
 
   ClaimableBalanceFlags(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static ClaimableBalanceFlags decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 1: return CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG;
+      case 1:
+        return CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ClaimableBalanceFlags value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ClaimableBalanceFlags value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

@@ -1,13 +1,15 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.AssetType;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Class for LiquidityPoolShareChangeTrustAsset
- * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/" target="_blank">Liquidity Pool</a>
+ *
+ * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/"
+ *     target="_blank">Liquidity Pool</a>
  */
 public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
   protected final LiquidityPoolParameters mParams;
@@ -58,7 +60,7 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
   @Override
   public boolean equals(Object object) {
     if (object == null || !this.getClass().equals(object.getClass())) {
-        return false;
+      return false;
     }
 
     LiquidityPoolShareChangeTrustAsset o = (LiquidityPoolShareChangeTrustAsset) object;

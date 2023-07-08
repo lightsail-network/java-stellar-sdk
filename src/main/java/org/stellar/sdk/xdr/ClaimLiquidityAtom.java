@@ -3,21 +3,19 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
 //  struct ClaimLiquidityAtom
 //  {
 //      PoolID liquidityPoolID;
-//  
+//
 //      // amount and asset taken from the pool
 //      Asset assetSold;
 //      int64 amountSold;
-//  
+//
 //      // amount and asset sent to the pool
 //      Asset assetBought;
 //      int64 amountBought;
@@ -25,52 +23,71 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ClaimLiquidityAtom implements XdrElement {
-  public ClaimLiquidityAtom () {}
+  public ClaimLiquidityAtom() {}
+
   private PoolID liquidityPoolID;
+
   public PoolID getLiquidityPoolID() {
     return this.liquidityPoolID;
   }
+
   public void setLiquidityPoolID(PoolID value) {
     this.liquidityPoolID = value;
   }
+
   private Asset assetSold;
+
   public Asset getAssetSold() {
     return this.assetSold;
   }
+
   public void setAssetSold(Asset value) {
     this.assetSold = value;
   }
+
   private Int64 amountSold;
+
   public Int64 getAmountSold() {
     return this.amountSold;
   }
+
   public void setAmountSold(Int64 value) {
     this.amountSold = value;
   }
+
   private Asset assetBought;
+
   public Asset getAssetBought() {
     return this.assetBought;
   }
+
   public void setAssetBought(Asset value) {
     this.assetBought = value;
   }
+
   private Int64 amountBought;
+
   public Int64 getAmountBought() {
     return this.amountBought;
   }
+
   public void setAmountBought(Int64 value) {
     this.amountBought = value;
   }
-  public static void encode(XdrDataOutputStream stream, ClaimLiquidityAtom encodedClaimLiquidityAtom) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, ClaimLiquidityAtom encodedClaimLiquidityAtom) throws IOException {
     PoolID.encode(stream, encodedClaimLiquidityAtom.liquidityPoolID);
     Asset.encode(stream, encodedClaimLiquidityAtom.assetSold);
     Int64.encode(stream, encodedClaimLiquidityAtom.amountSold);
     Asset.encode(stream, encodedClaimLiquidityAtom.assetBought);
     Int64.encode(stream, encodedClaimLiquidityAtom.amountBought);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ClaimLiquidityAtom decode(XdrDataInputStream stream) throws IOException {
     ClaimLiquidityAtom decodedClaimLiquidityAtom = new ClaimLiquidityAtom();
     decodedClaimLiquidityAtom.liquidityPoolID = PoolID.decode(stream);
@@ -80,10 +97,13 @@ public class ClaimLiquidityAtom implements XdrElement {
     decodedClaimLiquidityAtom.amountBought = Int64.decode(stream);
     return decodedClaimLiquidityAtom;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.liquidityPoolID, this.assetSold, this.amountSold, this.assetBought, this.amountBought);
+    return Objects.hashCode(
+        this.liquidityPoolID, this.assetSold, this.amountSold, this.assetBought, this.amountBought);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ClaimLiquidityAtom)) {
@@ -91,7 +111,11 @@ public class ClaimLiquidityAtom implements XdrElement {
     }
 
     ClaimLiquidityAtom other = (ClaimLiquidityAtom) object;
-    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID) && Objects.equal(this.assetSold, other.assetSold) && Objects.equal(this.amountSold, other.amountSold) && Objects.equal(this.assetBought, other.assetBought) && Objects.equal(this.amountBought, other.amountBought);
+    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
+        && Objects.equal(this.assetSold, other.assetSold)
+        && Objects.equal(this.amountSold, other.amountSold)
+        && Objects.equal(this.assetBought, other.assetBought)
+        && Objects.equal(this.amountBought, other.amountBought);
   }
 
   public static final class Builder {

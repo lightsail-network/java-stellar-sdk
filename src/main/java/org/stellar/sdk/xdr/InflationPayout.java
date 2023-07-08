@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class InflationPayout implements XdrElement {
-  public InflationPayout () {}
+  public InflationPayout() {}
+
   private AccountID destination;
+
   public AccountID getDestination() {
     return this.destination;
   }
+
   public void setDestination(AccountID value) {
     this.destination = value;
   }
+
   private Int64 amount;
+
   public Int64 getAmount() {
     return this.amount;
   }
+
   public void setAmount(Int64 value) {
     this.amount = value;
   }
-  public static void encode(XdrDataOutputStream stream, InflationPayout encodedInflationPayout) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, InflationPayout encodedInflationPayout)
+      throws IOException {
     AccountID.encode(stream, encodedInflationPayout.destination);
     Int64.encode(stream, encodedInflationPayout.amount);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static InflationPayout decode(XdrDataInputStream stream) throws IOException {
     InflationPayout decodedInflationPayout = new InflationPayout();
     decodedInflationPayout.destination = AccountID.decode(stream);
     decodedInflationPayout.amount = Int64.decode(stream);
     return decodedInflationPayout;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.destination, this.amount);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof InflationPayout)) {
@@ -57,7 +67,8 @@ public class InflationPayout implements XdrElement {
     }
 
     InflationPayout other = (InflationPayout) object;
-    return Objects.equal(this.destination, other.destination) && Objects.equal(this.amount, other.amount);
+    return Objects.equal(this.destination, other.destination)
+        && Objects.equal(this.amount, other.amount);
   }
 
   public static final class Builder {

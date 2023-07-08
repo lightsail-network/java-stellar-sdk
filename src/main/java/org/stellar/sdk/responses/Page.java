@@ -1,27 +1,26 @@
 package org.stellar.sdk.responses;
 
-
 import com.google.common.base.Preconditions;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-
-import org.stellar.sdk.requests.ResponseHandler;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import org.stellar.sdk.requests.ResponseHandler;
 
 /**
  * Represents page of objects.
- * @see <a href="https://developers.stellar.org/api/introduction/pagination/" target="_blank">Page documentation</a>
+ *
+ * @see <a href="https://developers.stellar.org/api/introduction/pagination/" target="_blank">Page
+ *     documentation</a>
  */
 public class Page<T> extends Response implements TypedResponse<Page<T>> {
 
   @SerializedName("records")
   private ArrayList<T> records;
+
   @SerializedName("links")
   private Links links;
 
@@ -46,7 +45,12 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
     if (this.getLinks().getNext() == null) {
       return null;
     }
-    TypeToken<Page<T>> type = Preconditions.checkNotNull(this.type, "type cannot be null, is it being correctly set after the creation of this " + getClass().getSimpleName() + "?");
+    TypeToken<Page<T>> type =
+        Preconditions.checkNotNull(
+            this.type,
+            "type cannot be null, is it being correctly set after the creation of this "
+                + getClass().getSimpleName()
+                + "?");
     ResponseHandler<Page<T>> responseHandler = new ResponseHandler<Page<T>>(type);
     String url = this.getLinks().getNext().getHref();
 
@@ -58,17 +62,17 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
 
   @Override
   public void setType(TypeToken<Page<T>> type) {
-	this.type = type;
+    this.type = type;
   }
 
-  /**
-   * Links connected to page response.
-   */
+  /** Links connected to page response. */
   public static class Links {
     @SerializedName("next")
     private final Link next;
+
     @SerializedName("prev")
     private final Link prev;
+
     @SerializedName("self")
     private final Link self;
 

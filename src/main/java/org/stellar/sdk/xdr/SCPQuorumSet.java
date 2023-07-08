@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -20,29 +18,40 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class SCPQuorumSet implements XdrElement {
-  public SCPQuorumSet () {}
+  public SCPQuorumSet() {}
+
   private Uint32 threshold;
+
   public Uint32 getThreshold() {
     return this.threshold;
   }
+
   public void setThreshold(Uint32 value) {
     this.threshold = value;
   }
+
   private NodeID[] validators;
+
   public NodeID[] getValidators() {
     return this.validators;
   }
+
   public void setValidators(NodeID[] value) {
     this.validators = value;
   }
+
   private SCPQuorumSet[] innerSets;
+
   public SCPQuorumSet[] getInnerSets() {
     return this.innerSets;
   }
+
   public void setInnerSets(SCPQuorumSet[] value) {
     this.innerSets = value;
   }
-  public static void encode(XdrDataOutputStream stream, SCPQuorumSet encodedSCPQuorumSet) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, SCPQuorumSet encodedSCPQuorumSet)
+      throws IOException {
     Uint32.encode(stream, encodedSCPQuorumSet.threshold);
     int validatorssize = encodedSCPQuorumSet.getValidators().length;
     stream.writeInt(validatorssize);
@@ -55,9 +64,11 @@ public class SCPQuorumSet implements XdrElement {
       SCPQuorumSet.encode(stream, encodedSCPQuorumSet.innerSets[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SCPQuorumSet decode(XdrDataInputStream stream) throws IOException {
     SCPQuorumSet decodedSCPQuorumSet = new SCPQuorumSet();
     decodedSCPQuorumSet.threshold = Uint32.decode(stream);
@@ -73,10 +84,13 @@ public class SCPQuorumSet implements XdrElement {
     }
     return decodedSCPQuorumSet;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.threshold, Arrays.hashCode(this.validators), Arrays.hashCode(this.innerSets));
+    return Objects.hashCode(
+        this.threshold, Arrays.hashCode(this.validators), Arrays.hashCode(this.innerSets));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SCPQuorumSet)) {
@@ -84,7 +98,9 @@ public class SCPQuorumSet implements XdrElement {
     }
 
     SCPQuorumSet other = (SCPQuorumSet) object;
-    return Objects.equal(this.threshold, other.threshold) && Arrays.equals(this.validators, other.validators) && Arrays.equals(this.innerSets, other.innerSets);
+    return Objects.equal(this.threshold, other.threshold)
+        && Arrays.equals(this.validators, other.validators)
+        && Arrays.equals(this.innerSets, other.innerSets);
   }
 
   public static final class Builder {

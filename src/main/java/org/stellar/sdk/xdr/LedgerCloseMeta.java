@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,18 +16,24 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LedgerCloseMeta implements XdrElement {
-  public LedgerCloseMeta () {}
+  public LedgerCloseMeta() {}
+
   Integer v;
+
   public Integer getDiscriminant() {
     return this.v;
   }
+
   public void setDiscriminant(Integer value) {
     this.v = value;
   }
+
   private LedgerCloseMetaV0 v0;
+
   public LedgerCloseMetaV0 getV0() {
     return this.v0;
   }
+
   public void setV0(LedgerCloseMetaV0 value) {
     this.v0 = value;
   }
@@ -56,34 +60,39 @@ public class LedgerCloseMeta implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LedgerCloseMeta encodedLedgerCloseMeta) throws IOException {
-  //Xdrgen::AST::Typespecs::Int
-  //Integer
-  stream.writeInt(encodedLedgerCloseMeta.getDiscriminant().intValue());
-  switch (encodedLedgerCloseMeta.getDiscriminant()) {
-  case 0:
-  LedgerCloseMetaV0.encode(stream, encodedLedgerCloseMeta.v0);
-  break;
+  public static void encode(XdrDataOutputStream stream, LedgerCloseMeta encodedLedgerCloseMeta)
+      throws IOException {
+    // Xdrgen::AST::Typespecs::Int
+    // Integer
+    stream.writeInt(encodedLedgerCloseMeta.getDiscriminant().intValue());
+    switch (encodedLedgerCloseMeta.getDiscriminant()) {
+      case 0:
+        LedgerCloseMetaV0.encode(stream, encodedLedgerCloseMeta.v0);
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerCloseMeta decode(XdrDataInputStream stream) throws IOException {
-  LedgerCloseMeta decodedLedgerCloseMeta = new LedgerCloseMeta();
-  Integer discriminant = stream.readInt();
-  decodedLedgerCloseMeta.setDiscriminant(discriminant);
-  switch (decodedLedgerCloseMeta.getDiscriminant()) {
-  case 0:
-  decodedLedgerCloseMeta.v0 = LedgerCloseMetaV0.decode(stream);
-  break;
-  }
+    LedgerCloseMeta decodedLedgerCloseMeta = new LedgerCloseMeta();
+    Integer discriminant = stream.readInt();
+    decodedLedgerCloseMeta.setDiscriminant(discriminant);
+    switch (decodedLedgerCloseMeta.getDiscriminant()) {
+      case 0:
+        decodedLedgerCloseMeta.v0 = LedgerCloseMetaV0.decode(stream);
+        break;
+    }
     return decodedLedgerCloseMeta;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.v0, this.v);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerCloseMeta)) {

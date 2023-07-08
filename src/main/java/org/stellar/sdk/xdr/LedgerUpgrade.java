@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -26,46 +24,64 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LedgerUpgrade implements XdrElement {
-  public LedgerUpgrade () {}
+  public LedgerUpgrade() {}
+
   LedgerUpgradeType type;
+
   public LedgerUpgradeType getDiscriminant() {
     return this.type;
   }
+
   public void setDiscriminant(LedgerUpgradeType value) {
     this.type = value;
   }
+
   private Uint32 newLedgerVersion;
+
   public Uint32 getNewLedgerVersion() {
     return this.newLedgerVersion;
   }
+
   public void setNewLedgerVersion(Uint32 value) {
     this.newLedgerVersion = value;
   }
+
   private Uint32 newBaseFee;
+
   public Uint32 getNewBaseFee() {
     return this.newBaseFee;
   }
+
   public void setNewBaseFee(Uint32 value) {
     this.newBaseFee = value;
   }
+
   private Uint32 newMaxTxSetSize;
+
   public Uint32 getNewMaxTxSetSize() {
     return this.newMaxTxSetSize;
   }
+
   public void setNewMaxTxSetSize(Uint32 value) {
     this.newMaxTxSetSize = value;
   }
+
   private Uint32 newBaseReserve;
+
   public Uint32 getNewBaseReserve() {
     return this.newBaseReserve;
   }
+
   public void setNewBaseReserve(Uint32 value) {
     this.newBaseReserve = value;
   }
+
   private Uint32 newFlags;
+
   public Uint32 getNewFlags() {
     return this.newFlags;
   }
+
   public void setNewFlags(Uint32 value) {
     this.newFlags = value;
   }
@@ -120,58 +136,69 @@ public class LedgerUpgrade implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LedgerUpgrade encodedLedgerUpgrade) throws IOException {
-  //Xdrgen::AST::Identifier
-  //LedgerUpgradeType
-  stream.writeInt(encodedLedgerUpgrade.getDiscriminant().getValue());
-  switch (encodedLedgerUpgrade.getDiscriminant()) {
-  case LEDGER_UPGRADE_VERSION:
-  Uint32.encode(stream, encodedLedgerUpgrade.newLedgerVersion);
-  break;
-  case LEDGER_UPGRADE_BASE_FEE:
-  Uint32.encode(stream, encodedLedgerUpgrade.newBaseFee);
-  break;
-  case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
-  Uint32.encode(stream, encodedLedgerUpgrade.newMaxTxSetSize);
-  break;
-  case LEDGER_UPGRADE_BASE_RESERVE:
-  Uint32.encode(stream, encodedLedgerUpgrade.newBaseReserve);
-  break;
-  case LEDGER_UPGRADE_FLAGS:
-  Uint32.encode(stream, encodedLedgerUpgrade.newFlags);
-  break;
+  public static void encode(XdrDataOutputStream stream, LedgerUpgrade encodedLedgerUpgrade)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // LedgerUpgradeType
+    stream.writeInt(encodedLedgerUpgrade.getDiscriminant().getValue());
+    switch (encodedLedgerUpgrade.getDiscriminant()) {
+      case LEDGER_UPGRADE_VERSION:
+        Uint32.encode(stream, encodedLedgerUpgrade.newLedgerVersion);
+        break;
+      case LEDGER_UPGRADE_BASE_FEE:
+        Uint32.encode(stream, encodedLedgerUpgrade.newBaseFee);
+        break;
+      case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
+        Uint32.encode(stream, encodedLedgerUpgrade.newMaxTxSetSize);
+        break;
+      case LEDGER_UPGRADE_BASE_RESERVE:
+        Uint32.encode(stream, encodedLedgerUpgrade.newBaseReserve);
+        break;
+      case LEDGER_UPGRADE_FLAGS:
+        Uint32.encode(stream, encodedLedgerUpgrade.newFlags);
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerUpgrade decode(XdrDataInputStream stream) throws IOException {
-  LedgerUpgrade decodedLedgerUpgrade = new LedgerUpgrade();
-  LedgerUpgradeType discriminant = LedgerUpgradeType.decode(stream);
-  decodedLedgerUpgrade.setDiscriminant(discriminant);
-  switch (decodedLedgerUpgrade.getDiscriminant()) {
-  case LEDGER_UPGRADE_VERSION:
-  decodedLedgerUpgrade.newLedgerVersion = Uint32.decode(stream);
-  break;
-  case LEDGER_UPGRADE_BASE_FEE:
-  decodedLedgerUpgrade.newBaseFee = Uint32.decode(stream);
-  break;
-  case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
-  decodedLedgerUpgrade.newMaxTxSetSize = Uint32.decode(stream);
-  break;
-  case LEDGER_UPGRADE_BASE_RESERVE:
-  decodedLedgerUpgrade.newBaseReserve = Uint32.decode(stream);
-  break;
-  case LEDGER_UPGRADE_FLAGS:
-  decodedLedgerUpgrade.newFlags = Uint32.decode(stream);
-  break;
-  }
+    LedgerUpgrade decodedLedgerUpgrade = new LedgerUpgrade();
+    LedgerUpgradeType discriminant = LedgerUpgradeType.decode(stream);
+    decodedLedgerUpgrade.setDiscriminant(discriminant);
+    switch (decodedLedgerUpgrade.getDiscriminant()) {
+      case LEDGER_UPGRADE_VERSION:
+        decodedLedgerUpgrade.newLedgerVersion = Uint32.decode(stream);
+        break;
+      case LEDGER_UPGRADE_BASE_FEE:
+        decodedLedgerUpgrade.newBaseFee = Uint32.decode(stream);
+        break;
+      case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
+        decodedLedgerUpgrade.newMaxTxSetSize = Uint32.decode(stream);
+        break;
+      case LEDGER_UPGRADE_BASE_RESERVE:
+        decodedLedgerUpgrade.newBaseReserve = Uint32.decode(stream);
+        break;
+      case LEDGER_UPGRADE_FLAGS:
+        decodedLedgerUpgrade.newFlags = Uint32.decode(stream);
+        break;
+    }
     return decodedLedgerUpgrade;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.newLedgerVersion, this.newBaseFee, this.newMaxTxSetSize, this.newBaseReserve, this.newFlags, this.type);
+    return Objects.hashCode(
+        this.newLedgerVersion,
+        this.newBaseFee,
+        this.newMaxTxSetSize,
+        this.newBaseReserve,
+        this.newFlags,
+        this.type);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerUpgrade)) {
@@ -179,6 +206,11 @@ public class LedgerUpgrade implements XdrElement {
     }
 
     LedgerUpgrade other = (LedgerUpgrade) object;
-    return Objects.equal(this.newLedgerVersion, other.newLedgerVersion) && Objects.equal(this.newBaseFee, other.newBaseFee) && Objects.equal(this.newMaxTxSetSize, other.newMaxTxSetSize) && Objects.equal(this.newBaseReserve, other.newBaseReserve) && Objects.equal(this.newFlags, other.newFlags) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.newLedgerVersion, other.newLedgerVersion)
+        && Objects.equal(this.newBaseFee, other.newBaseFee)
+        && Objects.equal(this.newMaxTxSetSize, other.newMaxTxSetSize)
+        && Objects.equal(this.newBaseReserve, other.newBaseReserve)
+        && Objects.equal(this.newFlags, other.newFlags)
+        && Objects.equal(this.type, other.type);
   }
 }

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,51 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LedgerCloseValueSignature implements XdrElement {
-  public LedgerCloseValueSignature () {}
+  public LedgerCloseValueSignature() {}
+
   private NodeID nodeID;
+
   public NodeID getNodeID() {
     return this.nodeID;
   }
+
   public void setNodeID(NodeID value) {
     this.nodeID = value;
   }
+
   private Signature signature;
+
   public Signature getSignature() {
     return this.signature;
   }
+
   public void setSignature(Signature value) {
     this.signature = value;
   }
-  public static void encode(XdrDataOutputStream stream, LedgerCloseValueSignature encodedLedgerCloseValueSignature) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, LedgerCloseValueSignature encodedLedgerCloseValueSignature)
+      throws IOException {
     NodeID.encode(stream, encodedLedgerCloseValueSignature.nodeID);
     Signature.encode(stream, encodedLedgerCloseValueSignature.signature);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerCloseValueSignature decode(XdrDataInputStream stream) throws IOException {
     LedgerCloseValueSignature decodedLedgerCloseValueSignature = new LedgerCloseValueSignature();
     decodedLedgerCloseValueSignature.nodeID = NodeID.decode(stream);
     decodedLedgerCloseValueSignature.signature = Signature.decode(stream);
     return decodedLedgerCloseValueSignature;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.nodeID, this.signature);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerCloseValueSignature)) {
@@ -57,7 +68,8 @@ public class LedgerCloseValueSignature implements XdrElement {
     }
 
     LedgerCloseValueSignature other = (LedgerCloseValueSignature) object;
-    return Objects.equal(this.nodeID, other.nodeID) && Objects.equal(this.signature, other.signature);
+    return Objects.equal(this.nodeID, other.nodeID)
+        && Objects.equal(this.signature, other.signature);
   }
 
   public static final class Builder {

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -24,25 +22,34 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class RevokeSponsorshipOp implements XdrElement {
-  public RevokeSponsorshipOp () {}
+  public RevokeSponsorshipOp() {}
+
   RevokeSponsorshipType type;
+
   public RevokeSponsorshipType getDiscriminant() {
     return this.type;
   }
+
   public void setDiscriminant(RevokeSponsorshipType value) {
     this.type = value;
   }
+
   private LedgerKey ledgerKey;
+
   public LedgerKey getLedgerKey() {
     return this.ledgerKey;
   }
+
   public void setLedgerKey(LedgerKey value) {
     this.ledgerKey = value;
   }
+
   private RevokeSponsorshipOpSigner signer;
+
   public RevokeSponsorshipOpSigner getSigner() {
     return this.signer;
   }
+
   public void setSigner(RevokeSponsorshipOpSigner value) {
     this.signer = value;
   }
@@ -76,40 +83,46 @@ public class RevokeSponsorshipOp implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, RevokeSponsorshipOp encodedRevokeSponsorshipOp) throws IOException {
-  //Xdrgen::AST::Identifier
-  //RevokeSponsorshipType
-  stream.writeInt(encodedRevokeSponsorshipOp.getDiscriminant().getValue());
-  switch (encodedRevokeSponsorshipOp.getDiscriminant()) {
-  case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
-  LedgerKey.encode(stream, encodedRevokeSponsorshipOp.ledgerKey);
-  break;
-  case REVOKE_SPONSORSHIP_SIGNER:
-  RevokeSponsorshipOpSigner.encode(stream, encodedRevokeSponsorshipOp.signer);
-  break;
+  public static void encode(
+      XdrDataOutputStream stream, RevokeSponsorshipOp encodedRevokeSponsorshipOp)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // RevokeSponsorshipType
+    stream.writeInt(encodedRevokeSponsorshipOp.getDiscriminant().getValue());
+    switch (encodedRevokeSponsorshipOp.getDiscriminant()) {
+      case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
+        LedgerKey.encode(stream, encodedRevokeSponsorshipOp.ledgerKey);
+        break;
+      case REVOKE_SPONSORSHIP_SIGNER:
+        RevokeSponsorshipOpSigner.encode(stream, encodedRevokeSponsorshipOp.signer);
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static RevokeSponsorshipOp decode(XdrDataInputStream stream) throws IOException {
-  RevokeSponsorshipOp decodedRevokeSponsorshipOp = new RevokeSponsorshipOp();
-  RevokeSponsorshipType discriminant = RevokeSponsorshipType.decode(stream);
-  decodedRevokeSponsorshipOp.setDiscriminant(discriminant);
-  switch (decodedRevokeSponsorshipOp.getDiscriminant()) {
-  case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
-  decodedRevokeSponsorshipOp.ledgerKey = LedgerKey.decode(stream);
-  break;
-  case REVOKE_SPONSORSHIP_SIGNER:
-  decodedRevokeSponsorshipOp.signer = RevokeSponsorshipOpSigner.decode(stream);
-  break;
-  }
+    RevokeSponsorshipOp decodedRevokeSponsorshipOp = new RevokeSponsorshipOp();
+    RevokeSponsorshipType discriminant = RevokeSponsorshipType.decode(stream);
+    decodedRevokeSponsorshipOp.setDiscriminant(discriminant);
+    switch (decodedRevokeSponsorshipOp.getDiscriminant()) {
+      case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
+        decodedRevokeSponsorshipOp.ledgerKey = LedgerKey.decode(stream);
+        break;
+      case REVOKE_SPONSORSHIP_SIGNER:
+        decodedRevokeSponsorshipOp.signer = RevokeSponsorshipOpSigner.decode(stream);
+        break;
+    }
     return decodedRevokeSponsorshipOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.ledgerKey, this.signer, this.type);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof RevokeSponsorshipOp)) {
@@ -117,42 +130,57 @@ public class RevokeSponsorshipOp implements XdrElement {
     }
 
     RevokeSponsorshipOp other = (RevokeSponsorshipOp) object;
-    return Objects.equal(this.ledgerKey, other.ledgerKey) && Objects.equal(this.signer, other.signer) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.ledgerKey, other.ledgerKey)
+        && Objects.equal(this.signer, other.signer)
+        && Objects.equal(this.type, other.type);
   }
 
   public static class RevokeSponsorshipOpSigner {
-    public RevokeSponsorshipOpSigner () {}
+    public RevokeSponsorshipOpSigner() {}
+
     private AccountID accountID;
+
     public AccountID getAccountID() {
       return this.accountID;
     }
+
     public void setAccountID(AccountID value) {
       this.accountID = value;
     }
+
     private SignerKey signerKey;
+
     public SignerKey getSignerKey() {
       return this.signerKey;
     }
+
     public void setSignerKey(SignerKey value) {
       this.signerKey = value;
     }
-    public static void encode(XdrDataOutputStream stream, RevokeSponsorshipOpSigner encodedRevokeSponsorshipOpSigner) throws IOException{
+
+    public static void encode(
+        XdrDataOutputStream stream, RevokeSponsorshipOpSigner encodedRevokeSponsorshipOpSigner)
+        throws IOException {
       AccountID.encode(stream, encodedRevokeSponsorshipOpSigner.accountID);
       SignerKey.encode(stream, encodedRevokeSponsorshipOpSigner.signerKey);
     }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static RevokeSponsorshipOpSigner decode(XdrDataInputStream stream) throws IOException {
       RevokeSponsorshipOpSigner decodedRevokeSponsorshipOpSigner = new RevokeSponsorshipOpSigner();
       decodedRevokeSponsorshipOpSigner.accountID = AccountID.decode(stream);
       decodedRevokeSponsorshipOpSigner.signerKey = SignerKey.decode(stream);
       return decodedRevokeSponsorshipOpSigner;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.accountID, this.signerKey);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof RevokeSponsorshipOpSigner)) {
@@ -160,7 +188,8 @@ public class RevokeSponsorshipOp implements XdrElement {
       }
 
       RevokeSponsorshipOpSigner other = (RevokeSponsorshipOpSigner) object;
-      return Objects.equal(this.accountID, other.accountID) && Objects.equal(this.signerKey, other.signerKey);
+      return Objects.equal(this.accountID, other.accountID)
+          && Objects.equal(this.signerKey, other.signerKey);
     }
 
     public static final class Builder {
@@ -184,6 +213,5 @@ public class RevokeSponsorshipOp implements XdrElement {
         return val;
       }
     }
-
   }
 }

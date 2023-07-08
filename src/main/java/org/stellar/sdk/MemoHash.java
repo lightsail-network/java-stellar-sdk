@@ -2,9 +2,7 @@ package org.stellar.sdk;
 
 import org.stellar.sdk.xdr.MemoType;
 
-/**
- * Represents MEMO_HASH.
- */
+/** Represents MEMO_HASH. */
 public class MemoHash extends MemoHashAbstract {
   public MemoHash(byte[] bytes) {
     super(bytes);

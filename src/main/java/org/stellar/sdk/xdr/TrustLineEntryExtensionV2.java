@@ -3,17 +3,15 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
 //  struct TrustLineEntryExtensionV2
 //  {
 //      int32 liquidityPoolUseCount;
-//  
+//
 //      union switch (int v)
 //      {
 //      case 0:
@@ -24,38 +22,51 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class TrustLineEntryExtensionV2 implements XdrElement {
-  public TrustLineEntryExtensionV2 () {}
+  public TrustLineEntryExtensionV2() {}
+
   private Int32 liquidityPoolUseCount;
+
   public Int32 getLiquidityPoolUseCount() {
     return this.liquidityPoolUseCount;
   }
+
   public void setLiquidityPoolUseCount(Int32 value) {
     this.liquidityPoolUseCount = value;
   }
+
   private TrustLineEntryExtensionV2Ext ext;
+
   public TrustLineEntryExtensionV2Ext getExt() {
     return this.ext;
   }
+
   public void setExt(TrustLineEntryExtensionV2Ext value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, TrustLineEntryExtensionV2 encodedTrustLineEntryExtensionV2) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, TrustLineEntryExtensionV2 encodedTrustLineEntryExtensionV2)
+      throws IOException {
     Int32.encode(stream, encodedTrustLineEntryExtensionV2.liquidityPoolUseCount);
     TrustLineEntryExtensionV2Ext.encode(stream, encodedTrustLineEntryExtensionV2.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TrustLineEntryExtensionV2 decode(XdrDataInputStream stream) throws IOException {
     TrustLineEntryExtensionV2 decodedTrustLineEntryExtensionV2 = new TrustLineEntryExtensionV2();
     decodedTrustLineEntryExtensionV2.liquidityPoolUseCount = Int32.decode(stream);
     decodedTrustLineEntryExtensionV2.ext = TrustLineEntryExtensionV2Ext.decode(stream);
     return decodedTrustLineEntryExtensionV2;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.liquidityPoolUseCount, this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TrustLineEntryExtensionV2)) {
@@ -63,7 +74,8 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
     }
 
     TrustLineEntryExtensionV2 other = (TrustLineEntryExtensionV2) object;
-    return Objects.equal(this.liquidityPoolUseCount, other.liquidityPoolUseCount) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.liquidityPoolUseCount, other.liquidityPoolUseCount)
+        && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
@@ -89,11 +101,14 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
   }
 
   public static class TrustLineEntryExtensionV2Ext {
-    public TrustLineEntryExtensionV2Ext () {}
+    public TrustLineEntryExtensionV2Ext() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
@@ -113,32 +128,41 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, TrustLineEntryExtensionV2Ext encodedTrustLineEntryExtensionV2Ext) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedTrustLineEntryExtensionV2Ext.getDiscriminant().intValue());
-    switch (encodedTrustLineEntryExtensionV2Ext.getDiscriminant()) {
-    case 0:
-    break;
+    public static void encode(
+        XdrDataOutputStream stream,
+        TrustLineEntryExtensionV2Ext encodedTrustLineEntryExtensionV2Ext)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedTrustLineEntryExtensionV2Ext.getDiscriminant().intValue());
+      switch (encodedTrustLineEntryExtensionV2Ext.getDiscriminant()) {
+        case 0:
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
-    public static TrustLineEntryExtensionV2Ext decode(XdrDataInputStream stream) throws IOException {
-    TrustLineEntryExtensionV2Ext decodedTrustLineEntryExtensionV2Ext = new TrustLineEntryExtensionV2Ext();
-    Integer discriminant = stream.readInt();
-    decodedTrustLineEntryExtensionV2Ext.setDiscriminant(discriminant);
-    switch (decodedTrustLineEntryExtensionV2Ext.getDiscriminant()) {
-    case 0:
-    break;
-    }
+
+    public static TrustLineEntryExtensionV2Ext decode(XdrDataInputStream stream)
+        throws IOException {
+      TrustLineEntryExtensionV2Ext decodedTrustLineEntryExtensionV2Ext =
+          new TrustLineEntryExtensionV2Ext();
+      Integer discriminant = stream.readInt();
+      decodedTrustLineEntryExtensionV2Ext.setDiscriminant(discriminant);
+      switch (decodedTrustLineEntryExtensionV2Ext.getDiscriminant()) {
+        case 0:
+          break;
+      }
       return decodedTrustLineEntryExtensionV2Ext;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof TrustLineEntryExtensionV2Ext)) {
@@ -148,6 +172,5 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
       TrustLineEntryExtensionV2Ext other = (TrustLineEntryExtensionV2Ext) object;
       return Objects.equal(this.v, other.v);
     }
-
   }
 }

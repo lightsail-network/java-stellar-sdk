@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -15,62 +13,83 @@ import java.util.Arrays;
 //  {
 //      Asset sendAsset;  // asset we pay with
 //      int64 sendAmount; // amount of sendAsset to send (excluding fees)
-//  
+//
 //      MuxedAccount destination; // recipient of the payment
 //      Asset destAsset;          // what they end up with
 //      int64 destMin;            // the minimum amount of dest asset to
 //                                // be received
 //                                // The operation will fail if it can't be met
-//  
+//
 //      Asset path<5>; // additional hops it must go through to get there
 //  };
 
 //  ===========================================================================
 public class PathPaymentStrictSendOp implements XdrElement {
-  public PathPaymentStrictSendOp () {}
+  public PathPaymentStrictSendOp() {}
+
   private Asset sendAsset;
+
   public Asset getSendAsset() {
     return this.sendAsset;
   }
+
   public void setSendAsset(Asset value) {
     this.sendAsset = value;
   }
+
   private Int64 sendAmount;
+
   public Int64 getSendAmount() {
     return this.sendAmount;
   }
+
   public void setSendAmount(Int64 value) {
     this.sendAmount = value;
   }
+
   private MuxedAccount destination;
+
   public MuxedAccount getDestination() {
     return this.destination;
   }
+
   public void setDestination(MuxedAccount value) {
     this.destination = value;
   }
+
   private Asset destAsset;
+
   public Asset getDestAsset() {
     return this.destAsset;
   }
+
   public void setDestAsset(Asset value) {
     this.destAsset = value;
   }
+
   private Int64 destMin;
+
   public Int64 getDestMin() {
     return this.destMin;
   }
+
   public void setDestMin(Int64 value) {
     this.destMin = value;
   }
+
   private Asset[] path;
+
   public Asset[] getPath() {
     return this.path;
   }
+
   public void setPath(Asset[] value) {
     this.path = value;
   }
-  public static void encode(XdrDataOutputStream stream, PathPaymentStrictSendOp encodedPathPaymentStrictSendOp) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, PathPaymentStrictSendOp encodedPathPaymentStrictSendOp)
+      throws IOException {
     Asset.encode(stream, encodedPathPaymentStrictSendOp.sendAsset);
     Int64.encode(stream, encodedPathPaymentStrictSendOp.sendAmount);
     MuxedAccount.encode(stream, encodedPathPaymentStrictSendOp.destination);
@@ -82,9 +101,11 @@ public class PathPaymentStrictSendOp implements XdrElement {
       Asset.encode(stream, encodedPathPaymentStrictSendOp.path[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static PathPaymentStrictSendOp decode(XdrDataInputStream stream) throws IOException {
     PathPaymentStrictSendOp decodedPathPaymentStrictSendOp = new PathPaymentStrictSendOp();
     decodedPathPaymentStrictSendOp.sendAsset = Asset.decode(stream);
@@ -99,10 +120,18 @@ public class PathPaymentStrictSendOp implements XdrElement {
     }
     return decodedPathPaymentStrictSendOp;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.sendAsset, this.sendAmount, this.destination, this.destAsset, this.destMin, Arrays.hashCode(this.path));
+    return Objects.hashCode(
+        this.sendAsset,
+        this.sendAmount,
+        this.destination,
+        this.destAsset,
+        this.destMin,
+        Arrays.hashCode(this.path));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof PathPaymentStrictSendOp)) {
@@ -110,7 +139,12 @@ public class PathPaymentStrictSendOp implements XdrElement {
     }
 
     PathPaymentStrictSendOp other = (PathPaymentStrictSendOp) object;
-    return Objects.equal(this.sendAsset, other.sendAsset) && Objects.equal(this.sendAmount, other.sendAmount) && Objects.equal(this.destination, other.destination) && Objects.equal(this.destAsset, other.destAsset) && Objects.equal(this.destMin, other.destMin) && Arrays.equals(this.path, other.path);
+    return Objects.equal(this.sendAsset, other.sendAsset)
+        && Objects.equal(this.sendAmount, other.sendAmount)
+        && Objects.equal(this.destination, other.destination)
+        && Objects.equal(this.destAsset, other.destAsset)
+        && Objects.equal(this.destMin, other.destMin)
+        && Arrays.equals(this.path, other.path);
   }
 
   public static final class Builder {

@@ -1,16 +1,14 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 
-/**
- * Represents links in responses.
- */
+/** Represents links in responses. */
 public class Link {
   @SerializedName("href")
   private final String href;
+
   @SerializedName("templated")
   private final boolean templated;
 

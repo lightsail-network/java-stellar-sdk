@@ -1,6 +1,7 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -9,24 +10,22 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.ClaimableBalanceResponse;
 import org.stellar.sdk.responses.Page;
 
-import java.io.IOException;
-
-/**
- * Builds requests connected to claimable balances.
- */
+/** Builds requests connected to claimable balances. */
 public class ClaimableBalancesRequestBuilder extends RequestBuilder {
   public ClaimableBalancesRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "claimable_balances");
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link ClaimableBalanceResponse}.
-   * This method is helpful for getting the links.
+   * Requests specific <code>uri</code> and returns {@link ClaimableBalanceResponse}. This method is
+   * helpful for getting the links.
+   *
    * @throws IOException
    */
   public ClaimableBalanceResponse claimableBalance(HttpUrl uri) throws IOException {
     TypeToken type = new TypeToken<ClaimableBalanceResponse>() {};
-    ResponseHandler<ClaimableBalanceResponse> responseHandler = new ResponseHandler<ClaimableBalanceResponse>(type);
+    ResponseHandler<ClaimableBalanceResponse> responseHandler =
+        new ResponseHandler<ClaimableBalanceResponse>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -36,6 +35,7 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
 
   /**
    * The claimable balance details endpoint provides information on a claimable balance.
+   *
    * @param id specifies which claimable balance to load.
    * @return The claimable balance details.
    * @throws IOException
@@ -79,15 +79,18 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link ClaimableBalanceResponse}.
-   * This method is helpful for getting the next set of results.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link
+   * ClaimableBalanceResponse}. This method is helpful for getting the next set of results.
+   *
    * @return {@link Page} of {@link ClaimableBalanceResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<ClaimableBalanceResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static Page<ClaimableBalanceResponse> execute(OkHttpClient httpClient, HttpUrl uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<ClaimableBalanceResponse>>() {};
-    ResponseHandler<Page<ClaimableBalanceResponse>> responseHandler = new ResponseHandler<Page<ClaimableBalanceResponse>>(type);
+    ResponseHandler<Page<ClaimableBalanceResponse>> responseHandler =
+        new ResponseHandler<Page<ClaimableBalanceResponse>>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -97,6 +100,7 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
 
   /**
    * Build and execute request.
+   *
    * @return {@link Page} of {@link ClaimableBalanceResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException

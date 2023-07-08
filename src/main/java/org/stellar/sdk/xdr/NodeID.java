@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -30,13 +28,14 @@ public class NodeID implements XdrElement {
     this.NodeID = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, NodeID  encodedNodeID) throws IOException {
+  public static void encode(XdrDataOutputStream stream, NodeID encodedNodeID) throws IOException {
     PublicKey.encode(stream, encodedNodeID.NodeID);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static NodeID decode(XdrDataInputStream stream) throws IOException {
     NodeID decodedNodeID = new NodeID();
     decodedNodeID.NodeID = PublicKey.decode(stream);

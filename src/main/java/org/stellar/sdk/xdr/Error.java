@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,49 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class Error implements XdrElement {
-  public Error () {}
+  public Error() {}
+
   private ErrorCode code;
+
   public ErrorCode getCode() {
     return this.code;
   }
+
   public void setCode(ErrorCode value) {
     this.code = value;
   }
+
   private XdrString msg;
+
   public XdrString getMsg() {
     return this.msg;
   }
+
   public void setMsg(XdrString value) {
     this.msg = value;
   }
-  public static void encode(XdrDataOutputStream stream, Error encodedError) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, Error encodedError) throws IOException {
     ErrorCode.encode(stream, encodedError.code);
     encodedError.msg.encode(stream);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Error decode(XdrDataInputStream stream) throws IOException {
     Error decodedError = new Error();
     decodedError.code = ErrorCode.decode(stream);
     decodedError.msg = XdrString.decode(stream, 100);
     return decodedError;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code, this.msg);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof Error)) {

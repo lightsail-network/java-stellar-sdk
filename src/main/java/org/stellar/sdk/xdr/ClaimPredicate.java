@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -30,46 +28,64 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class ClaimPredicate implements XdrElement {
-  public ClaimPredicate () {}
+  public ClaimPredicate() {}
+
   ClaimPredicateType type;
+
   public ClaimPredicateType getDiscriminant() {
     return this.type;
   }
+
   public void setDiscriminant(ClaimPredicateType value) {
     this.type = value;
   }
+
   private ClaimPredicate[] andPredicates;
+
   public ClaimPredicate[] getAndPredicates() {
     return this.andPredicates;
   }
+
   public void setAndPredicates(ClaimPredicate[] value) {
     this.andPredicates = value;
   }
+
   private ClaimPredicate[] orPredicates;
+
   public ClaimPredicate[] getOrPredicates() {
     return this.orPredicates;
   }
+
   public void setOrPredicates(ClaimPredicate[] value) {
     this.orPredicates = value;
   }
+
   private ClaimPredicate notPredicate;
+
   public ClaimPredicate getNotPredicate() {
     return this.notPredicate;
   }
+
   public void setNotPredicate(ClaimPredicate value) {
     this.notPredicate = value;
   }
+
   private Int64 absBefore;
+
   public Int64 getAbsBefore() {
     return this.absBefore;
   }
+
   public void setAbsBefore(Int64 value) {
     this.absBefore = value;
   }
+
   private Int64 relBefore;
+
   public Int64 getRelBefore() {
     return this.relBefore;
   }
+
   public void setRelBefore(Int64 value) {
     this.relBefore = value;
   }
@@ -124,86 +140,97 @@ public class ClaimPredicate implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ClaimPredicate encodedClaimPredicate) throws IOException {
-  //Xdrgen::AST::Identifier
-  //ClaimPredicateType
-  stream.writeInt(encodedClaimPredicate.getDiscriminant().getValue());
-  switch (encodedClaimPredicate.getDiscriminant()) {
-  case CLAIM_PREDICATE_UNCONDITIONAL:
-  break;
-  case CLAIM_PREDICATE_AND:
-  int andPredicatessize = encodedClaimPredicate.getAndPredicates().length;
-  stream.writeInt(andPredicatessize);
-  for (int i = 0; i < andPredicatessize; i++) {
-    ClaimPredicate.encode(stream, encodedClaimPredicate.andPredicates[i]);
+  public static void encode(XdrDataOutputStream stream, ClaimPredicate encodedClaimPredicate)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // ClaimPredicateType
+    stream.writeInt(encodedClaimPredicate.getDiscriminant().getValue());
+    switch (encodedClaimPredicate.getDiscriminant()) {
+      case CLAIM_PREDICATE_UNCONDITIONAL:
+        break;
+      case CLAIM_PREDICATE_AND:
+        int andPredicatessize = encodedClaimPredicate.getAndPredicates().length;
+        stream.writeInt(andPredicatessize);
+        for (int i = 0; i < andPredicatessize; i++) {
+          ClaimPredicate.encode(stream, encodedClaimPredicate.andPredicates[i]);
+        }
+        break;
+      case CLAIM_PREDICATE_OR:
+        int orPredicatessize = encodedClaimPredicate.getOrPredicates().length;
+        stream.writeInt(orPredicatessize);
+        for (int i = 0; i < orPredicatessize; i++) {
+          ClaimPredicate.encode(stream, encodedClaimPredicate.orPredicates[i]);
+        }
+        break;
+      case CLAIM_PREDICATE_NOT:
+        if (encodedClaimPredicate.notPredicate != null) {
+          stream.writeInt(1);
+          ClaimPredicate.encode(stream, encodedClaimPredicate.notPredicate);
+        } else {
+          stream.writeInt(0);
+        }
+        break;
+      case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
+        Int64.encode(stream, encodedClaimPredicate.absBefore);
+        break;
+      case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
+        Int64.encode(stream, encodedClaimPredicate.relBefore);
+        break;
+    }
   }
-  break;
-  case CLAIM_PREDICATE_OR:
-  int orPredicatessize = encodedClaimPredicate.getOrPredicates().length;
-  stream.writeInt(orPredicatessize);
-  for (int i = 0; i < orPredicatessize; i++) {
-    ClaimPredicate.encode(stream, encodedClaimPredicate.orPredicates[i]);
-  }
-  break;
-  case CLAIM_PREDICATE_NOT:
-  if (encodedClaimPredicate.notPredicate != null) {
-  stream.writeInt(1);
-  ClaimPredicate.encode(stream, encodedClaimPredicate.notPredicate);
-  } else {
-  stream.writeInt(0);
-  }
-  break;
-  case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-  Int64.encode(stream, encodedClaimPredicate.absBefore);
-  break;
-  case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-  Int64.encode(stream, encodedClaimPredicate.relBefore);
-  break;
-  }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ClaimPredicate decode(XdrDataInputStream stream) throws IOException {
-  ClaimPredicate decodedClaimPredicate = new ClaimPredicate();
-  ClaimPredicateType discriminant = ClaimPredicateType.decode(stream);
-  decodedClaimPredicate.setDiscriminant(discriminant);
-  switch (decodedClaimPredicate.getDiscriminant()) {
-  case CLAIM_PREDICATE_UNCONDITIONAL:
-  break;
-  case CLAIM_PREDICATE_AND:
-  int andPredicatessize = stream.readInt();
-  decodedClaimPredicate.andPredicates = new ClaimPredicate[andPredicatessize];
-  for (int i = 0; i < andPredicatessize; i++) {
-    decodedClaimPredicate.andPredicates[i] = ClaimPredicate.decode(stream);
-  }
-  break;
-  case CLAIM_PREDICATE_OR:
-  int orPredicatessize = stream.readInt();
-  decodedClaimPredicate.orPredicates = new ClaimPredicate[orPredicatessize];
-  for (int i = 0; i < orPredicatessize; i++) {
-    decodedClaimPredicate.orPredicates[i] = ClaimPredicate.decode(stream);
-  }
-  break;
-  case CLAIM_PREDICATE_NOT:
-  int notPredicatePresent = stream.readInt();
-  if (notPredicatePresent != 0) {
-  decodedClaimPredicate.notPredicate = ClaimPredicate.decode(stream);
-  }
-  break;
-  case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-  decodedClaimPredicate.absBefore = Int64.decode(stream);
-  break;
-  case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-  decodedClaimPredicate.relBefore = Int64.decode(stream);
-  break;
-  }
+    ClaimPredicate decodedClaimPredicate = new ClaimPredicate();
+    ClaimPredicateType discriminant = ClaimPredicateType.decode(stream);
+    decodedClaimPredicate.setDiscriminant(discriminant);
+    switch (decodedClaimPredicate.getDiscriminant()) {
+      case CLAIM_PREDICATE_UNCONDITIONAL:
+        break;
+      case CLAIM_PREDICATE_AND:
+        int andPredicatessize = stream.readInt();
+        decodedClaimPredicate.andPredicates = new ClaimPredicate[andPredicatessize];
+        for (int i = 0; i < andPredicatessize; i++) {
+          decodedClaimPredicate.andPredicates[i] = ClaimPredicate.decode(stream);
+        }
+        break;
+      case CLAIM_PREDICATE_OR:
+        int orPredicatessize = stream.readInt();
+        decodedClaimPredicate.orPredicates = new ClaimPredicate[orPredicatessize];
+        for (int i = 0; i < orPredicatessize; i++) {
+          decodedClaimPredicate.orPredicates[i] = ClaimPredicate.decode(stream);
+        }
+        break;
+      case CLAIM_PREDICATE_NOT:
+        int notPredicatePresent = stream.readInt();
+        if (notPredicatePresent != 0) {
+          decodedClaimPredicate.notPredicate = ClaimPredicate.decode(stream);
+        }
+        break;
+      case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
+        decodedClaimPredicate.absBefore = Int64.decode(stream);
+        break;
+      case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
+        decodedClaimPredicate.relBefore = Int64.decode(stream);
+        break;
+    }
     return decodedClaimPredicate;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.hashCode(this.andPredicates), Arrays.hashCode(this.orPredicates), this.notPredicate, this.absBefore, this.relBefore, this.type);
+    return Objects.hashCode(
+        Arrays.hashCode(this.andPredicates),
+        Arrays.hashCode(this.orPredicates),
+        this.notPredicate,
+        this.absBefore,
+        this.relBefore,
+        this.type);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ClaimPredicate)) {
@@ -211,6 +238,11 @@ public class ClaimPredicate implements XdrElement {
     }
 
     ClaimPredicate other = (ClaimPredicate) object;
-    return Arrays.equals(this.andPredicates, other.andPredicates) && Arrays.equals(this.orPredicates, other.orPredicates) && Objects.equal(this.notPredicate, other.notPredicate) && Objects.equal(this.absBefore, other.absBefore) && Objects.equal(this.relBefore, other.relBefore) && Objects.equal(this.type, other.type);
+    return Arrays.equals(this.andPredicates, other.andPredicates)
+        && Arrays.equals(this.orPredicates, other.orPredicates)
+        && Objects.equal(this.notPredicate, other.notPredicate)
+        && Objects.equal(this.absBefore, other.absBefore)
+        && Objects.equal(this.relBefore, other.relBefore)
+        && Objects.equal(this.type, other.type);
   }
 }

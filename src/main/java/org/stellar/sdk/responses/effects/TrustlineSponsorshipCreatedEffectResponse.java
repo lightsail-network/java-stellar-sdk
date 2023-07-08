@@ -5,13 +5,16 @@ import org.stellar.sdk.Asset;
 
 /**
  * Represents trustline_sponsorship_created effect response.
- * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect documentation</a>
+ *
+ * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect
+ *     documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
 public class TrustlineSponsorshipCreatedEffectResponse extends EffectResponse {
   @SerializedName("asset")
   private final String assetString;
+
   @SerializedName("sponsor")
   protected final String sponsor;
 

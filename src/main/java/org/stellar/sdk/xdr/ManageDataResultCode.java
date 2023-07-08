@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -33,27 +31,33 @@ public enum ManageDataResultCode implements XdrElement {
   private int mValue;
 
   ManageDataResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static ManageDataResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return MANAGE_DATA_SUCCESS;
-      case -1: return MANAGE_DATA_NOT_SUPPORTED_YET;
-      case -2: return MANAGE_DATA_NAME_NOT_FOUND;
-      case -3: return MANAGE_DATA_LOW_RESERVE;
-      case -4: return MANAGE_DATA_INVALID_NAME;
+      case 0:
+        return MANAGE_DATA_SUCCESS;
+      case -1:
+        return MANAGE_DATA_NOT_SUPPORTED_YET;
+      case -2:
+        return MANAGE_DATA_NAME_NOT_FOUND;
+      case -3:
+        return MANAGE_DATA_LOW_RESERVE;
+      case -4:
+        return MANAGE_DATA_INVALID_NAME;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ManageDataResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ManageDataResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

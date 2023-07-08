@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -29,27 +27,33 @@ public enum LedgerUpgradeType implements XdrElement {
   private int mValue;
 
   LedgerUpgradeType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static LedgerUpgradeType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 1: return LEDGER_UPGRADE_VERSION;
-      case 2: return LEDGER_UPGRADE_BASE_FEE;
-      case 3: return LEDGER_UPGRADE_MAX_TX_SET_SIZE;
-      case 4: return LEDGER_UPGRADE_BASE_RESERVE;
-      case 5: return LEDGER_UPGRADE_FLAGS;
+      case 1:
+        return LEDGER_UPGRADE_VERSION;
+      case 2:
+        return LEDGER_UPGRADE_BASE_FEE;
+      case 3:
+        return LEDGER_UPGRADE_MAX_TX_SET_SIZE;
+      case 4:
+        return LEDGER_UPGRADE_BASE_RESERVE;
+      case 5:
+        return LEDGER_UPGRADE_FLAGS;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LedgerUpgradeType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LedgerUpgradeType value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

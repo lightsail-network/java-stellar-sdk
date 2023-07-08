@@ -1,37 +1,46 @@
 package org.stellar.sdk.responses.operations;
 
+import static org.stellar.sdk.Asset.create;
+
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
+import java.math.BigInteger;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.MuxedAccount;
 
-import java.math.BigInteger;
-
-import static org.stellar.sdk.Asset.create;
-
 /**
  * Represents ChangeTrust operation response.
- * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation documentation</a>
+ *
+ * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation
+ *     documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
 public class ChangeTrustOperationResponse extends OperationResponse {
   @SerializedName("trustor")
   private String trustor;
+
   @SerializedName("trustor_muxed")
   private String trustorMuxed;
+
   @SerializedName("trustor_muxed_id")
   private BigInteger trustorMuxedId;
+
   @SerializedName("trustee")
   private String trustee;
+
   @SerializedName("asset_type")
   private String assetType;
+
   @SerializedName("asset_code")
   private String assetCode;
+
   @SerializedName("asset_issuer")
   private String assetIssuer;
+
   @SerializedName("limit")
   private String limit;
+
   @SerializedName("liquidity_pool_id")
   private String liquidityPoolId;
 
@@ -57,5 +66,4 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer, liquidityPoolId);
   }
-
 }

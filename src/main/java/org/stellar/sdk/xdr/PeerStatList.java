@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -30,7 +28,8 @@ public class PeerStatList implements XdrElement {
     this.PeerStatList = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, PeerStatList  encodedPeerStatList) throws IOException {
+  public static void encode(XdrDataOutputStream stream, PeerStatList encodedPeerStatList)
+      throws IOException {
     int PeerStatListsize = encodedPeerStatList.getPeerStatList().length;
     stream.writeInt(PeerStatListsize);
     for (int i = 0; i < PeerStatListsize; i++) {
@@ -41,6 +40,7 @@ public class PeerStatList implements XdrElement {
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static PeerStatList decode(XdrDataInputStream stream) throws IOException {
     PeerStatList decodedPeerStatList = new PeerStatList();
     int PeerStatListsize = stream.readInt();

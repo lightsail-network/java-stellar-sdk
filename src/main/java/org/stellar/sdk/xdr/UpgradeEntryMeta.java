@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class UpgradeEntryMeta implements XdrElement {
-  public UpgradeEntryMeta () {}
+  public UpgradeEntryMeta() {}
+
   private LedgerUpgrade upgrade;
+
   public LedgerUpgrade getUpgrade() {
     return this.upgrade;
   }
+
   public void setUpgrade(LedgerUpgrade value) {
     this.upgrade = value;
   }
+
   private LedgerEntryChanges changes;
+
   public LedgerEntryChanges getChanges() {
     return this.changes;
   }
+
   public void setChanges(LedgerEntryChanges value) {
     this.changes = value;
   }
-  public static void encode(XdrDataOutputStream stream, UpgradeEntryMeta encodedUpgradeEntryMeta) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, UpgradeEntryMeta encodedUpgradeEntryMeta)
+      throws IOException {
     LedgerUpgrade.encode(stream, encodedUpgradeEntryMeta.upgrade);
     LedgerEntryChanges.encode(stream, encodedUpgradeEntryMeta.changes);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static UpgradeEntryMeta decode(XdrDataInputStream stream) throws IOException {
     UpgradeEntryMeta decodedUpgradeEntryMeta = new UpgradeEntryMeta();
     decodedUpgradeEntryMeta.upgrade = LedgerUpgrade.decode(stream);
     decodedUpgradeEntryMeta.changes = LedgerEntryChanges.decode(stream);
     return decodedUpgradeEntryMeta;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.upgrade, this.changes);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof UpgradeEntryMeta)) {

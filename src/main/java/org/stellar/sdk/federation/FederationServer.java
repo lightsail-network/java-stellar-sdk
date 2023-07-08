@@ -2,43 +2,46 @@ package org.stellar.sdk.federation;
 
 import com.google.gson.reflect.TypeToken;
 import com.moandjiezana.toml.Toml;
-
-import okhttp3.*;
-import org.stellar.sdk.requests.ResponseHandler;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+import okhttp3.*;
+import org.stellar.sdk.requests.ResponseHandler;
 
 /**
- * FederationServer handles a network connection to a
- * <a href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">federation server</a>
- * instance and exposes an interface for requests to that instance.
+ * FederationServer handles a network connection to a <a
+ * href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">federation
+ * server</a> instance and exposes an interface for requests to that instance.
  *
- * For resolving a stellar address without knowing which federation server
- * to query use {@link Federation#resolve(String)}.
+ * <p>For resolving a stellar address without knowing which federation server to query use {@link
+ * Federation#resolve(String)}.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">Federation docs</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary/federation/"
+ *     target="_blank">Federation docs</a>
  */
 public class FederationServer {
   private final HttpUrl serverUri;
   private final String domain;
   private final OkHttpClient httpClient;
+
   /**
-   * Unfortunately, okhttp mocking methods make it super hard to mock https request.
-   * This is only used to switch to http in tests. To improve in a future.
+   * Unfortunately, okhttp mocking methods make it super hard to mock https request. This is only
+   * used to switch to http in tests. To improve in a future.
    */
   static boolean httpsConnection = true;
 
   /**
    * Creates a new <code>FederationServer</code> instance.
+   *
    * @param serverUri Federation Server URI
    * @param domain Domain name this federation server is responsible for
-   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
+   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not
+   *     HTTPS, etc.)
    */
   public FederationServer(URI serverUri, String domain) {
     this.serverUri = HttpUrl.get(serverUri);
-    if (this.serverUri == null || (this.serverUri != null && this.httpsConnection && !this.serverUri.isHttps())) {
+    if (this.serverUri == null
+        || (this.serverUri != null && this.httpsConnection && !this.serverUri.isHttps())) {
       throw new FederationServerInvalidException();
     }
     this.domain = domain;
@@ -47,30 +50,36 @@ public class FederationServer {
 
   private static OkHttpClient createHttpClient() {
     return new OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(false)
-            .build();
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(false)
+        .build();
   }
 
   /**
    * Creates a new <code>FederationServer</code> instance.
+   *
    * @param serverUri Federation Server URI
    * @param domain Domain name this federation server is responsible for
-   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
+   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not
+   *     HTTPS, etc.)
    */
   public FederationServer(String serverUri, String domain) {
     this(HttpUrl.parse(serverUri).uri(), domain);
   }
 
   /**
-   * Creates a <code>FederationServer</code> instance for a given domain.
-   * It tries to find a federation server URL in stellar.toml file.
-   * @see <a href="https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/#what-is-a-stellartoml" target="_blank">Stellar.toml docs</a>
+   * Creates a <code>FederationServer</code> instance for a given domain. It tries to find a
+   * federation server URL in stellar.toml file.
+   *
+   * @see <a
+   *     href="https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/#what-is-a-stellartoml"
+   *     target="_blank">Stellar.toml docs</a>
    * @param domain Domain to find a federation server for
    * @throws ConnectionErrorException Connection problems
    * @throws NoFederationServerException Stellar.toml does not contain federation server info
-   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not HTTPS, etc.)
+   * @throws FederationServerInvalidException Federation server is invalid (malformed URL, not
+   *     HTTPS, etc.)
    * @throws StellarTomlNotFoundInvalidException Stellar.toml file was not found or was malformed.
    * @return FederationServer
    */
@@ -110,6 +119,7 @@ public class FederationServer {
 
   /**
    * Resolves a stellar address using a given federation server.
+   *
    * @param address Stellar addres, like <code>bob*stellar.org</code>
    * @throws MalformedAddressException Address is malformed
    * @throws ConnectionErrorException Connection problems
@@ -129,7 +139,8 @@ public class FederationServer {
     HttpUrl uri = uriBuilder.build();
 
     TypeToken type = new TypeToken<FederationResponse>() {};
-    ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<FederationResponse>(type);
+    ResponseHandler<FederationResponse> responseHandler =
+        new ResponseHandler<FederationResponse>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = null;
@@ -151,6 +162,7 @@ public class FederationServer {
 
   /**
    * Returns a federation server URI.
+   *
    * @return URI
    */
   public HttpUrl getServerUri() {
@@ -159,6 +171,7 @@ public class FederationServer {
 
   /**
    * Returns a domain this server is responsible for.
+   *
    * @return String
    */
   public String getDomain() {

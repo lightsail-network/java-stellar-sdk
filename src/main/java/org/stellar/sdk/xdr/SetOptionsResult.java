@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,11 +18,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class SetOptionsResult implements XdrElement {
-  public SetOptionsResult () {}
+  public SetOptionsResult() {}
+
   SetOptionsResultCode code;
+
   public SetOptionsResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(SetOptionsResultCode value) {
     this.code = value;
   }
@@ -44,36 +45,41 @@ public class SetOptionsResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, SetOptionsResult encodedSetOptionsResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //SetOptionsResultCode
-  stream.writeInt(encodedSetOptionsResult.getDiscriminant().getValue());
-  switch (encodedSetOptionsResult.getDiscriminant()) {
-  case SET_OPTIONS_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(XdrDataOutputStream stream, SetOptionsResult encodedSetOptionsResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // SetOptionsResultCode
+    stream.writeInt(encodedSetOptionsResult.getDiscriminant().getValue());
+    switch (encodedSetOptionsResult.getDiscriminant()) {
+      case SET_OPTIONS_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SetOptionsResult decode(XdrDataInputStream stream) throws IOException {
-  SetOptionsResult decodedSetOptionsResult = new SetOptionsResult();
-  SetOptionsResultCode discriminant = SetOptionsResultCode.decode(stream);
-  decodedSetOptionsResult.setDiscriminant(discriminant);
-  switch (decodedSetOptionsResult.getDiscriminant()) {
-  case SET_OPTIONS_SUCCESS:
-  break;
-  default:
-  break;
-  }
+    SetOptionsResult decodedSetOptionsResult = new SetOptionsResult();
+    SetOptionsResultCode discriminant = SetOptionsResultCode.decode(stream);
+    decodedSetOptionsResult.setDiscriminant(discriminant);
+    switch (decodedSetOptionsResult.getDiscriminant()) {
+      case SET_OPTIONS_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedSetOptionsResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SetOptionsResult)) {

@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -21,23 +19,25 @@ public enum SurveyMessageCommandType implements XdrElement {
   private int mValue;
 
   SurveyMessageCommandType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static SurveyMessageCommandType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return SURVEY_TOPOLOGY;
+      case 0:
+        return SURVEY_TOPOLOGY;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, SurveyMessageCommandType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, SurveyMessageCommandType value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

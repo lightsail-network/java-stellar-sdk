@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -21,22 +19,31 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class FeeBumpTransactionEnvelope implements XdrElement {
-  public FeeBumpTransactionEnvelope () {}
+  public FeeBumpTransactionEnvelope() {}
+
   private FeeBumpTransaction tx;
+
   public FeeBumpTransaction getTx() {
     return this.tx;
   }
+
   public void setTx(FeeBumpTransaction value) {
     this.tx = value;
   }
+
   private DecoratedSignature[] signatures;
+
   public DecoratedSignature[] getSignatures() {
     return this.signatures;
   }
+
   public void setSignatures(DecoratedSignature[] value) {
     this.signatures = value;
   }
-  public static void encode(XdrDataOutputStream stream, FeeBumpTransactionEnvelope encodedFeeBumpTransactionEnvelope) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, FeeBumpTransactionEnvelope encodedFeeBumpTransactionEnvelope)
+      throws IOException {
     FeeBumpTransaction.encode(stream, encodedFeeBumpTransactionEnvelope.tx);
     int signaturessize = encodedFeeBumpTransactionEnvelope.getSignatures().length;
     stream.writeInt(signaturessize);
@@ -44,9 +51,11 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
       DecoratedSignature.encode(stream, encodedFeeBumpTransactionEnvelope.signatures[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static FeeBumpTransactionEnvelope decode(XdrDataInputStream stream) throws IOException {
     FeeBumpTransactionEnvelope decodedFeeBumpTransactionEnvelope = new FeeBumpTransactionEnvelope();
     decodedFeeBumpTransactionEnvelope.tx = FeeBumpTransaction.decode(stream);
@@ -57,10 +66,12 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
     }
     return decodedFeeBumpTransactionEnvelope;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.tx, Arrays.hashCode(this.signatures));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof FeeBumpTransactionEnvelope)) {

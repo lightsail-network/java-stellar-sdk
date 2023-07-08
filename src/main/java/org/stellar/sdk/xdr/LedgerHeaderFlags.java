@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -25,25 +23,29 @@ public enum LedgerHeaderFlags implements XdrElement {
   private int mValue;
 
   LedgerHeaderFlags(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static LedgerHeaderFlags decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 1: return DISABLE_LIQUIDITY_POOL_TRADING_FLAG;
-      case 2: return DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG;
-      case 4: return DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG;
+      case 1:
+        return DISABLE_LIQUIDITY_POOL_TRADING_FLAG;
+      case 2:
+        return DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG;
+      case 4:
+        return DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LedgerHeaderFlags value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LedgerHeaderFlags value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

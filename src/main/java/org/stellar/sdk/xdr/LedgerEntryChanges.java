@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -30,7 +28,8 @@ public class LedgerEntryChanges implements XdrElement {
     this.LedgerEntryChanges = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, LedgerEntryChanges  encodedLedgerEntryChanges) throws IOException {
+  public static void encode(
+      XdrDataOutputStream stream, LedgerEntryChanges encodedLedgerEntryChanges) throws IOException {
     int LedgerEntryChangessize = encodedLedgerEntryChanges.getLedgerEntryChanges().length;
     stream.writeInt(LedgerEntryChangessize);
     for (int i = 0; i < LedgerEntryChangessize; i++) {
@@ -41,6 +40,7 @@ public class LedgerEntryChanges implements XdrElement {
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerEntryChanges decode(XdrDataInputStream stream) throws IOException {
     LedgerEntryChanges decodedLedgerEntryChanges = new LedgerEntryChanges();
     int LedgerEntryChangessize = stream.readInt();

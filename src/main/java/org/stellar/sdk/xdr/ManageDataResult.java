@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,11 +18,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ManageDataResult implements XdrElement {
-  public ManageDataResult () {}
+  public ManageDataResult() {}
+
   ManageDataResultCode code;
+
   public ManageDataResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(ManageDataResultCode value) {
     this.code = value;
   }
@@ -44,36 +45,41 @@ public class ManageDataResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ManageDataResult encodedManageDataResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //ManageDataResultCode
-  stream.writeInt(encodedManageDataResult.getDiscriminant().getValue());
-  switch (encodedManageDataResult.getDiscriminant()) {
-  case MANAGE_DATA_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(XdrDataOutputStream stream, ManageDataResult encodedManageDataResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // ManageDataResultCode
+    stream.writeInt(encodedManageDataResult.getDiscriminant().getValue());
+    switch (encodedManageDataResult.getDiscriminant()) {
+      case MANAGE_DATA_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ManageDataResult decode(XdrDataInputStream stream) throws IOException {
-  ManageDataResult decodedManageDataResult = new ManageDataResult();
-  ManageDataResultCode discriminant = ManageDataResultCode.decode(stream);
-  decodedManageDataResult.setDiscriminant(discriminant);
-  switch (decodedManageDataResult.getDiscriminant()) {
-  case MANAGE_DATA_SUCCESS:
-  break;
-  default:
-  break;
-  }
+    ManageDataResult decodedManageDataResult = new ManageDataResult();
+    ManageDataResultCode discriminant = ManageDataResultCode.decode(stream);
+    decodedManageDataResult.setDiscriminant(discriminant);
+    switch (decodedManageDataResult.getDiscriminant()) {
+      case MANAGE_DATA_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedManageDataResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ManageDataResult)) {

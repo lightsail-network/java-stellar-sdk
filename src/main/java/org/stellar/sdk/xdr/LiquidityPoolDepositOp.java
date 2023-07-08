@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -21,52 +19,72 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LiquidityPoolDepositOp implements XdrElement {
-  public LiquidityPoolDepositOp () {}
+  public LiquidityPoolDepositOp() {}
+
   private PoolID liquidityPoolID;
+
   public PoolID getLiquidityPoolID() {
     return this.liquidityPoolID;
   }
+
   public void setLiquidityPoolID(PoolID value) {
     this.liquidityPoolID = value;
   }
+
   private Int64 maxAmountA;
+
   public Int64 getMaxAmountA() {
     return this.maxAmountA;
   }
+
   public void setMaxAmountA(Int64 value) {
     this.maxAmountA = value;
   }
+
   private Int64 maxAmountB;
+
   public Int64 getMaxAmountB() {
     return this.maxAmountB;
   }
+
   public void setMaxAmountB(Int64 value) {
     this.maxAmountB = value;
   }
+
   private Price minPrice;
+
   public Price getMinPrice() {
     return this.minPrice;
   }
+
   public void setMinPrice(Price value) {
     this.minPrice = value;
   }
+
   private Price maxPrice;
+
   public Price getMaxPrice() {
     return this.maxPrice;
   }
+
   public void setMaxPrice(Price value) {
     this.maxPrice = value;
   }
-  public static void encode(XdrDataOutputStream stream, LiquidityPoolDepositOp encodedLiquidityPoolDepositOp) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, LiquidityPoolDepositOp encodedLiquidityPoolDepositOp)
+      throws IOException {
     PoolID.encode(stream, encodedLiquidityPoolDepositOp.liquidityPoolID);
     Int64.encode(stream, encodedLiquidityPoolDepositOp.maxAmountA);
     Int64.encode(stream, encodedLiquidityPoolDepositOp.maxAmountB);
     Price.encode(stream, encodedLiquidityPoolDepositOp.minPrice);
     Price.encode(stream, encodedLiquidityPoolDepositOp.maxPrice);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LiquidityPoolDepositOp decode(XdrDataInputStream stream) throws IOException {
     LiquidityPoolDepositOp decodedLiquidityPoolDepositOp = new LiquidityPoolDepositOp();
     decodedLiquidityPoolDepositOp.liquidityPoolID = PoolID.decode(stream);
@@ -76,10 +94,13 @@ public class LiquidityPoolDepositOp implements XdrElement {
     decodedLiquidityPoolDepositOp.maxPrice = Price.decode(stream);
     return decodedLiquidityPoolDepositOp;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.liquidityPoolID, this.maxAmountA, this.maxAmountB, this.minPrice, this.maxPrice);
+    return Objects.hashCode(
+        this.liquidityPoolID, this.maxAmountA, this.maxAmountB, this.minPrice, this.maxPrice);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LiquidityPoolDepositOp)) {
@@ -87,7 +108,11 @@ public class LiquidityPoolDepositOp implements XdrElement {
     }
 
     LiquidityPoolDepositOp other = (LiquidityPoolDepositOp) object;
-    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID) && Objects.equal(this.maxAmountA, other.maxAmountA) && Objects.equal(this.maxAmountB, other.maxAmountB) && Objects.equal(this.minPrice, other.minPrice) && Objects.equal(this.maxPrice, other.maxPrice);
+    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
+        && Objects.equal(this.maxAmountA, other.maxAmountA)
+        && Objects.equal(this.maxAmountB, other.maxAmountB)
+        && Objects.equal(this.minPrice, other.minPrice)
+        && Objects.equal(this.maxPrice, other.maxPrice);
   }
 
   public static final class Builder {

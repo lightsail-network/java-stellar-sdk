@@ -4,14 +4,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * ChangeTrustAsset class.
+ *
  * @see <a href="https://developers.stellar.org/docs/glossary/assets/" target="_blank">Assets</a>
  */
 public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
   ChangeTrustAsset() {}
 
   /**
-   * Parses an asset string and returns the equivalent ChangeTrustAsset instance.
-   * The asset string is expected to either be "native" or a string of the form "CODE:ISSUER"
+   * Parses an asset string and returns the equivalent ChangeTrustAsset instance. The asset string
+   * is expected to either be "native" or a string of the form "CODE:ISSUER"
    *
    * @param canonicalForm Canonical string representation of an asset
    * @return ChangeTrustAsset
@@ -63,7 +64,9 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
   }
 
   /**
-   * Creates one of AssetTypeCreditAlphaNum4 or AssetTypeCreditAlphaNum12 object based on a <code>code</code> length
+   * Creates one of AssetTypeCreditAlphaNum4 or AssetTypeCreditAlphaNum12 object based on a <code>
+   * code</code> length
+   *
    * @param code ChangeTrustAsset code
    * @param issuer ChangeTrustAsset issuer
    */
@@ -75,7 +78,7 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
    * Generates ChangeTrustAsset object from a given XDR object
    *
    * @param xdr XDR object
-   * @return    ChangeTrustAsset
+   * @return ChangeTrustAsset
    */
   public static ChangeTrustAsset fromXdr(org.stellar.sdk.xdr.ChangeTrustAsset xdr) {
     // TODO: Figure out how we can re-use Asset.fromXdr here
@@ -84,15 +87,18 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
       case ASSET_TYPE_NATIVE:
         return ChangeTrustAsset.create(new AssetTypeNative());
       case ASSET_TYPE_CREDIT_ALPHANUM4:
-        String assetCode4 = Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode().getAssetCode4());
+        String assetCode4 =
+            Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode().getAssetCode4());
         accountId = StrKey.encodeStellarAccountId(xdr.getAlphaNum4().getIssuer());
         return ChangeTrustAsset.create(new AssetTypeCreditAlphaNum4(assetCode4, accountId));
       case ASSET_TYPE_CREDIT_ALPHANUM12:
-        String assetCode12 = Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode().getAssetCode12());
+        String assetCode12 =
+            Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode().getAssetCode12());
         accountId = StrKey.encodeStellarAccountId(xdr.getAlphaNum12().getIssuer());
         return ChangeTrustAsset.create(new AssetTypeCreditAlphaNum12(assetCode12, accountId));
       case ASSET_TYPE_POOL_SHARE:
-          return new LiquidityPoolShareChangeTrustAsset(LiquidityPoolParameters.fromXdr(xdr.getLiquidityPool()));
+        return new LiquidityPoolShareChangeTrustAsset(
+            LiquidityPoolParameters.fromXdr(xdr.getLiquidityPool()));
       default:
         throw new IllegalArgumentException("Unknown asset type " + xdr.getDiscriminant());
     }
@@ -106,12 +112,14 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
 
   /**
    * Get the asset type
+   *
    * @return the asset type
    */
   public abstract String getType();
 
   /**
    * Generates XDR object from a given ChangeTrustAsset object
+   *
    * @return xdr model
    */
   public abstract org.stellar.sdk.xdr.ChangeTrustAsset toXdr();
@@ -137,7 +145,7 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
     @Override
     public final boolean equals(Object object) {
       if (object == null || !this.getClass().equals(object.getClass())) {
-          return false;
+        return false;
       }
 
       ChangeTrustAsset.Wrapper o = (ChangeTrustAsset.Wrapper) object;

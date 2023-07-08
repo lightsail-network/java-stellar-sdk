@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -21,23 +19,25 @@ public enum LiquidityPoolType implements XdrElement {
   private int mValue;
 
   LiquidityPoolType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static LiquidityPoolType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return LIQUIDITY_POOL_CONSTANT_PRODUCT;
+      case 0:
+        return LIQUIDITY_POOL_CONSTANT_PRODUCT;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LiquidityPoolType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LiquidityPoolType value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

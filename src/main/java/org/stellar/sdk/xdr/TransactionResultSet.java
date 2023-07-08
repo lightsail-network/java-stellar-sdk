@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -17,24 +15,32 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class TransactionResultSet implements XdrElement {
-  public TransactionResultSet () {}
+  public TransactionResultSet() {}
+
   private TransactionResultPair[] results;
+
   public TransactionResultPair[] getResults() {
     return this.results;
   }
+
   public void setResults(TransactionResultPair[] value) {
     this.results = value;
   }
-  public static void encode(XdrDataOutputStream stream, TransactionResultSet encodedTransactionResultSet) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, TransactionResultSet encodedTransactionResultSet)
+      throws IOException {
     int resultssize = encodedTransactionResultSet.getResults().length;
     stream.writeInt(resultssize);
     for (int i = 0; i < resultssize; i++) {
       TransactionResultPair.encode(stream, encodedTransactionResultSet.results[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TransactionResultSet decode(XdrDataInputStream stream) throws IOException {
     TransactionResultSet decodedTransactionResultSet = new TransactionResultSet();
     int resultssize = stream.readInt();
@@ -44,10 +50,12 @@ public class TransactionResultSet implements XdrElement {
     }
     return decodedTransactionResultSet;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.results);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TransactionResultSet)) {

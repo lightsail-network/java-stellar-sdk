@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -13,7 +11,7 @@ import java.io.IOException;
 //  {
 //      // codes considered as "success" for the operation
 //      PATH_PAYMENT_STRICT_RECEIVE_SUCCESS = 0, // success
-//  
+//
 //      // codes considered as "failure" for the operation
 //      PATH_PAYMENT_STRICT_RECEIVE_MALFORMED = -1, // bad input
 //      PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED =
@@ -57,35 +55,50 @@ public enum PathPaymentStrictReceiveResultCode implements XdrElement {
   private int mValue;
 
   PathPaymentStrictReceiveResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
-  public static PathPaymentStrictReceiveResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static PathPaymentStrictReceiveResultCode decode(XdrDataInputStream stream)
+      throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return PATH_PAYMENT_STRICT_RECEIVE_SUCCESS;
-      case -1: return PATH_PAYMENT_STRICT_RECEIVE_MALFORMED;
-      case -2: return PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED;
-      case -3: return PATH_PAYMENT_STRICT_RECEIVE_SRC_NO_TRUST;
-      case -4: return PATH_PAYMENT_STRICT_RECEIVE_SRC_NOT_AUTHORIZED;
-      case -5: return PATH_PAYMENT_STRICT_RECEIVE_NO_DESTINATION;
-      case -6: return PATH_PAYMENT_STRICT_RECEIVE_NO_TRUST;
-      case -7: return PATH_PAYMENT_STRICT_RECEIVE_NOT_AUTHORIZED;
-      case -8: return PATH_PAYMENT_STRICT_RECEIVE_LINE_FULL;
-      case -9: return PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER;
-      case -10: return PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS;
-      case -11: return PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF;
-      case -12: return PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX;
+      case 0:
+        return PATH_PAYMENT_STRICT_RECEIVE_SUCCESS;
+      case -1:
+        return PATH_PAYMENT_STRICT_RECEIVE_MALFORMED;
+      case -2:
+        return PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED;
+      case -3:
+        return PATH_PAYMENT_STRICT_RECEIVE_SRC_NO_TRUST;
+      case -4:
+        return PATH_PAYMENT_STRICT_RECEIVE_SRC_NOT_AUTHORIZED;
+      case -5:
+        return PATH_PAYMENT_STRICT_RECEIVE_NO_DESTINATION;
+      case -6:
+        return PATH_PAYMENT_STRICT_RECEIVE_NO_TRUST;
+      case -7:
+        return PATH_PAYMENT_STRICT_RECEIVE_NOT_AUTHORIZED;
+      case -8:
+        return PATH_PAYMENT_STRICT_RECEIVE_LINE_FULL;
+      case -9:
+        return PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER;
+      case -10:
+        return PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS;
+      case -11:
+        return PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF;
+      case -12:
+        return PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, PathPaymentStrictReceiveResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, PathPaymentStrictReceiveResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -19,36 +17,49 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class AuthCert implements XdrElement {
-  public AuthCert () {}
+  public AuthCert() {}
+
   private Curve25519Public pubkey;
+
   public Curve25519Public getPubkey() {
     return this.pubkey;
   }
+
   public void setPubkey(Curve25519Public value) {
     this.pubkey = value;
   }
+
   private Uint64 expiration;
+
   public Uint64 getExpiration() {
     return this.expiration;
   }
+
   public void setExpiration(Uint64 value) {
     this.expiration = value;
   }
+
   private Signature sig;
+
   public Signature getSig() {
     return this.sig;
   }
+
   public void setSig(Signature value) {
     this.sig = value;
   }
-  public static void encode(XdrDataOutputStream stream, AuthCert encodedAuthCert) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, AuthCert encodedAuthCert)
+      throws IOException {
     Curve25519Public.encode(stream, encodedAuthCert.pubkey);
     Uint64.encode(stream, encodedAuthCert.expiration);
     Signature.encode(stream, encodedAuthCert.sig);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static AuthCert decode(XdrDataInputStream stream) throws IOException {
     AuthCert decodedAuthCert = new AuthCert();
     decodedAuthCert.pubkey = Curve25519Public.decode(stream);
@@ -56,10 +67,12 @@ public class AuthCert implements XdrElement {
     decodedAuthCert.sig = Signature.decode(stream);
     return decodedAuthCert;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.pubkey, this.expiration, this.sig);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof AuthCert)) {
@@ -67,7 +80,9 @@ public class AuthCert implements XdrElement {
     }
 
     AuthCert other = (AuthCert) object;
-    return Objects.equal(this.pubkey, other.pubkey) && Objects.equal(this.expiration, other.expiration) && Objects.equal(this.sig, other.sig);
+    return Objects.equal(this.pubkey, other.pubkey)
+        && Objects.equal(this.expiration, other.expiration)
+        && Objects.equal(this.sig, other.sig);
   }
 
   public static final class Builder {

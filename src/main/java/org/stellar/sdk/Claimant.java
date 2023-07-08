@@ -2,12 +2,11 @@ package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Represents an entity who is eligible to claim the claimable balance.
- */
+/** Represents an entity who is eligible to claim the claimable balance. */
 public class Claimant {
   @SerializedName("destination")
   private final String destination;
+
   @SerializedName("predicate")
   private final Predicate predicate;
 
@@ -23,5 +22,4 @@ public class Claimant {
   public Predicate getPredicate() {
     return predicate;
   }
-
 }

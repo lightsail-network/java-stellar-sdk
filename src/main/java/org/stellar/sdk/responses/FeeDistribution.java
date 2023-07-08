@@ -5,34 +5,61 @@ import com.google.gson.annotations.SerializedName;
 public class FeeDistribution {
   @SerializedName("min")
   private final Long min;
+
   @SerializedName("max")
   private final Long max;
+
   @SerializedName("mode")
   private final Long mode;
+
   @SerializedName("p10")
   private final Long p10;
+
   @SerializedName("p20")
   private final Long p20;
+
   @SerializedName("p30")
   private final Long p30;
+
   @SerializedName("p40")
   private final Long p40;
+
   @SerializedName("p50")
   private final Long p50;
+
   @SerializedName("p60")
   private final Long p60;
+
   @SerializedName("p70")
   private final Long p70;
+
   @SerializedName("p80")
   private final Long p80;
+
   @SerializedName("p90")
   private final Long p90;
+
   @SerializedName("p95")
   private final Long p95;
+
   @SerializedName("p99")
   private final Long p99;
 
-  public FeeDistribution(Long min, Long max, Long mode, Long p10, Long p20, Long p30, Long p40, Long p50, Long p60, Long p70, Long p80, Long p90, Long p95, Long p99) {
+  public FeeDistribution(
+      Long min,
+      Long max,
+      Long mode,
+      Long p10,
+      Long p20,
+      Long p30,
+      Long p40,
+      Long p50,
+      Long p60,
+      Long p70,
+      Long p80,
+      Long p90,
+      Long p95,
+      Long p99) {
     this.min = min;
     this.max = max;
     this.mode = mode;

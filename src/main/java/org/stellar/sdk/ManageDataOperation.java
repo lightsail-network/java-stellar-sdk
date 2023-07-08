@@ -1,15 +1,17 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
-import org.stellar.sdk.xdr.*;
-
-import java.util.Arrays;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Objects;
+import java.util.Arrays;
+import org.stellar.sdk.xdr.*;
+
 /**
- * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#manage-data" target="_blank">ManageData</a> operation.
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List of Operations</a>
+ * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#manage-data"
+ * target="_blank">ManageData</a> operation.
+ *
+ * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
+ *     of Operations</a>
  */
 public class ManageDataOperation extends Operation {
   private final String name;
@@ -24,16 +26,12 @@ public class ManageDataOperation extends Operation {
     }
   }
 
-  /**
-   * The name of the data value
-   */
+  /** The name of the data value */
   public String getName() {
     return name;
   }
 
-  /**
-   * Data value
-   */
+  /** Data value */
   public byte[] getValue() {
     return value;
   }
@@ -51,7 +49,8 @@ public class ManageDataOperation extends Operation {
       op.setDataValue(dataValue);
     }
 
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.MANAGE_DATA);
     body.setManageDataOp(op);
 
@@ -66,6 +65,7 @@ public class ManageDataOperation extends Operation {
 
     /**
      * Construct a new ManageOffer builder from a ManageDataOp XDR.
+     *
      * @param op {@link ManageDataOp}
      */
     Builder(ManageDataOp op) {
@@ -78,7 +78,9 @@ public class ManageDataOperation extends Operation {
     }
 
     /**
-     * Creates a new ManageData builder. If you want to delete data entry pass null as a <code>value</code> param.
+     * Creates a new ManageData builder. If you want to delete data entry pass null as a <code>value
+     * </code> param.
+     *
      * @param name The name of data entry
      * @param value The value of data entry. <code>null</code>null will delete data entry.
      */
@@ -89,6 +91,7 @@ public class ManageDataOperation extends Operation {
 
     /**
      * Sets the source account for this operation.
+     *
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
@@ -97,9 +100,7 @@ public class ManageDataOperation extends Operation {
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public ManageDataOperation build() {
       ManageDataOperation operation = new ManageDataOperation(name, value);
       if (mSourceAccount != null) {
@@ -111,11 +112,7 @@ public class ManageDataOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
-            this.getSourceAccount(),
-            this.name,
-            Arrays.hashCode(this.value)
-    );
+    return Objects.hashCode(this.getSourceAccount(), this.name, Arrays.hashCode(this.value));
   }
 
   @Override
@@ -125,8 +122,8 @@ public class ManageDataOperation extends Operation {
     }
 
     ManageDataOperation other = (ManageDataOperation) object;
-    return Objects.equal(this.getSourceAccount(), other.getSourceAccount()) &&
-            Objects.equal(this.name, other.name) &&
-            Arrays.equals(this.value, other.value);
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equal(this.name, other.name)
+        && Arrays.equals(this.value, other.value);
   }
 }

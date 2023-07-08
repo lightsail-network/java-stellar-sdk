@@ -1,6 +1,16 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.System.arraycopy;
+
 import com.google.common.base.Objects;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.util.Arrays;
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -18,20 +28,7 @@ import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.util.Arrays;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.lang.System.arraycopy;
-
-/**
- * Holds a Stellar keypair.
- */
+/** Holds a Stellar keypair. */
 public class KeyPair {
 
   private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.ED_25519_CURVE_SPEC;
@@ -40,8 +37,9 @@ public class KeyPair {
   private final EdDSAPrivateKey mPrivateKey;
 
   /**
-   * Creates a new KeyPair without a private key. Useful to simply verify a signature from a
-   * given public address.
+   * Creates a new KeyPair without a private key. Useful to simply verify a signature from a given
+   * public address.
+   *
    * @param publicKey
    */
   public KeyPair(EdDSAPublicKey publicKey) {
@@ -50,6 +48,7 @@ public class KeyPair {
 
   /**
    * Creates a new KeyPair from the given public and private keys.
+   *
    * @param publicKey
    * @param privateKey
    */
@@ -58,15 +57,14 @@ public class KeyPair {
     mPrivateKey = privateKey;
   }
 
-  /**
-   * Returns true if this Keypair is capable of signing
-   */
+  /** Returns true if this Keypair is capable of signing */
   public boolean canSign() {
     return mPrivateKey != null;
   }
 
   /**
    * Creates a new Stellar KeyPair from a strkey encoded Stellar secret seed.
+   *
    * @param seed Char array containing strkey encoded Stellar secret seed.
    * @return {@link KeyPair}
    */
@@ -77,9 +75,12 @@ public class KeyPair {
   }
 
   /**
-   * <strong>Insecure</strong> Creates a new Stellar KeyPair from a strkey encoded Stellar secret seed.
-   * This method is <u>insecure</u>. Use only if you are aware of security implications.
-   * @see <a href="http://docs.oracle.com/javase/1.5.0/docs/guide/security/jce/JCERefGuide.html#PBEEx" target="_blank">Using Password-Based Encryption</a>
+   * <strong>Insecure</strong> Creates a new Stellar KeyPair from a strkey encoded Stellar secret
+   * seed. This method is <u>insecure</u>. Use only if you are aware of security implications.
+   *
+   * @see <a
+   *     href="http://docs.oracle.com/javase/1.5.0/docs/guide/security/jce/JCERefGuide.html#PBEEx"
+   *     target="_blank">Using Password-Based Encryption</a>
    * @param seed The strkey encoded Stellar secret seed.
    * @return {@link KeyPair}
    */
@@ -93,17 +94,20 @@ public class KeyPair {
 
   /**
    * Creates a new Stellar keypair from a raw 32 byte secret seed.
+   *
    * @param seed The 32 byte secret seed.
    * @return {@link KeyPair}
    */
   public static KeyPair fromSecretSeed(byte[] seed) {
     EdDSAPrivateKeySpec privKeySpec = new EdDSAPrivateKeySpec(seed, ed25519);
-    EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(privKeySpec.getA().toByteArray(), ed25519);
+    EdDSAPublicKeySpec publicKeySpec =
+        new EdDSAPublicKeySpec(privKeySpec.getA().toByteArray(), ed25519);
     return new KeyPair(new EdDSAPublicKey(publicKeySpec), new EdDSAPrivateKey(privKeySpec));
   }
 
   /**
    * Creates a new Stellar KeyPair from a strkey encoded Stellar account ID.
+   *
    * @param accountId The strkey encoded Stellar account ID.
    * @return {@link KeyPair}
    */
@@ -114,6 +118,7 @@ public class KeyPair {
 
   /**
    * Creates a new Stellar keypair from a 32 byte address.
+   *
    * @param publicKey The 32 byte public key.
    * @return {@link KeyPair}
    */
@@ -128,16 +133,17 @@ public class KeyPair {
   }
 
   /**
-   * Finds the KeyPair for the path m/44'/148'/accountNumber' using the method described in
-   * <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md">SEP-0005</a>.
+   * Finds the KeyPair for the path m/44'/148'/accountNumber' using the method described in <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md">SEP-0005</a>.
    *
-   * @param bip39Seed     The output of BIP0039
+   * @param bip39Seed The output of BIP0039
    * @param accountNumber The number of the account
    * @return KeyPair with secret
    */
   public static KeyPair fromBip39Seed(byte[] bip39Seed, int accountNumber) {
     try {
-      return KeyPair.fromSecretSeed(SLIP10.deriveEd25519PrivateKey(bip39Seed, 44, 148, accountNumber));
+      return KeyPair.fromSecretSeed(
+          SLIP10.deriveEd25519PrivateKey(bip39Seed, 44, 148, accountNumber));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -145,23 +151,21 @@ public class KeyPair {
 
   /**
    * Generates a random Stellar keypair.
+   *
    * @return a random Stellar keypair.
    */
   public static KeyPair random() {
     java.security.KeyPair keypair = new KeyPairGenerator().generateKeyPair();
-    return new KeyPair((EdDSAPublicKey) keypair.getPublic(), (EdDSAPrivateKey) keypair.getPrivate());
+    return new KeyPair(
+        (EdDSAPublicKey) keypair.getPublic(), (EdDSAPrivateKey) keypair.getPrivate());
   }
 
-  /**
-   * Returns the human readable account ID encoded in strkey.
-   */
+  /** Returns the human readable account ID encoded in strkey. */
   public String getAccountId() {
     return StrKey.encodeStellarAccountId(mPublicKey.getAbyte());
   }
 
-  /**
-   * Returns the human readable secret seed encoded in strkey.
-   */
+  /** Returns the human readable secret seed encoded in strkey. */
   public char[] getSecretSeed() {
     return StrKey.encodeStellarSecretSeed(mPrivateKey.getSeed());
   }
@@ -176,7 +180,8 @@ public class KeyPair {
       XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(publicKeyBytesStream);
       PublicKey.encode(xdrOutputStream, this.getXdrPublicKey());
       byte[] publicKeyBytes = publicKeyBytesStream.toByteArray();
-      byte[] signatureHintBytes = Arrays.copyOfRange(publicKeyBytes, publicKeyBytes.length - 4, publicKeyBytes.length);
+      byte[] signatureHintBytes =
+          Arrays.copyOfRange(publicKeyBytes, publicKeyBytes.length - 4, publicKeyBytes.length);
 
       SignatureHint signatureHint = new SignatureHint();
       signatureHint.setSignatureHint(signatureHintBytes);
@@ -214,12 +219,14 @@ public class KeyPair {
 
   /**
    * Sign the provided data with the keypair's private key.
+   *
    * @param data The data to sign.
    * @return signed bytes, null if the private key for this keypair is null.
    */
   public byte[] sign(byte[] data) {
     if (mPrivateKey == null) {
-      throw new RuntimeException("KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
+      throw new RuntimeException(
+          "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
     }
     try {
       Signature sgr = new EdDSAEngine(MessageDigest.getInstance("SHA-512"));
@@ -235,7 +242,7 @@ public class KeyPair {
    * Sign the provided data with the keypair's private key and returns {@link DecoratedSignature}.
    *
    * @param data the data to sign
-   * @return          DecoratedSignature
+   * @return DecoratedSignature
    */
   public DecoratedSignature signDecorated(byte[] data) {
     byte[] signatureBytes = this.sign(data);
@@ -250,12 +257,13 @@ public class KeyPair {
   }
 
   /**
-   * Sign the provided payload data for payload signer where the input is the data being signed.
-   * Per the <a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint" CAP-40 Signature spec</a>
-   * {@link DecoratedSignature}.
+   * Sign the provided payload data for payload signer where the input is the data being signed. Per
+   * the <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint"
+   * CAP-40 Signature spec</a> {@link DecoratedSignature}.
    *
    * @param signerPayload the payload signers raw data to sign
-   * @return          DecoratedSignature
+   * @return DecoratedSignature
    */
   public DecoratedSignature signPayloadDecorated(byte[] signerPayload) {
     DecoratedSignature payloadSignature = signDecorated(signerPayload);
@@ -269,7 +277,7 @@ public class KeyPair {
       arraycopy(signerPayload, 0, hint, 0, signerPayload.length);
     }
 
-    //XOR the new hint with this keypair's public key hint
+    // XOR the new hint with this keypair's public key hint
     for (int i = 0; i < hint.length; i++) {
       hint[i] ^= payloadSignature.getHint().getSignatureHint()[i];
     }
@@ -279,6 +287,7 @@ public class KeyPair {
 
   /**
    * Verify the provided data and signature match this keypair's public key.
+   *
    * @param data The data that was signed.
    * @param signature The signature.
    * @return True if they match, false otherwise.
@@ -308,9 +317,7 @@ public class KeyPair {
     }
 
     KeyPair other = (KeyPair) object;
-    return Objects.equal(this.mPrivateKey, other.mPrivateKey) &&
-            this.mPublicKey.equals(other.mPublicKey);
-
+    return Objects.equal(this.mPrivateKey, other.mPrivateKey)
+        && this.mPublicKey.equals(other.mPublicKey);
   }
-
 }

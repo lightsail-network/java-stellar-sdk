@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,11 +18,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class BumpSequenceResult implements XdrElement {
-  public BumpSequenceResult () {}
+  public BumpSequenceResult() {}
+
   BumpSequenceResultCode code;
+
   public BumpSequenceResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(BumpSequenceResultCode value) {
     this.code = value;
   }
@@ -44,36 +45,41 @@ public class BumpSequenceResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, BumpSequenceResult encodedBumpSequenceResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //BumpSequenceResultCode
-  stream.writeInt(encodedBumpSequenceResult.getDiscriminant().getValue());
-  switch (encodedBumpSequenceResult.getDiscriminant()) {
-  case BUMP_SEQUENCE_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(
+      XdrDataOutputStream stream, BumpSequenceResult encodedBumpSequenceResult) throws IOException {
+    // Xdrgen::AST::Identifier
+    // BumpSequenceResultCode
+    stream.writeInt(encodedBumpSequenceResult.getDiscriminant().getValue());
+    switch (encodedBumpSequenceResult.getDiscriminant()) {
+      case BUMP_SEQUENCE_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static BumpSequenceResult decode(XdrDataInputStream stream) throws IOException {
-  BumpSequenceResult decodedBumpSequenceResult = new BumpSequenceResult();
-  BumpSequenceResultCode discriminant = BumpSequenceResultCode.decode(stream);
-  decodedBumpSequenceResult.setDiscriminant(discriminant);
-  switch (decodedBumpSequenceResult.getDiscriminant()) {
-  case BUMP_SEQUENCE_SUCCESS:
-  break;
-  default:
-  break;
-  }
+    BumpSequenceResult decodedBumpSequenceResult = new BumpSequenceResult();
+    BumpSequenceResultCode discriminant = BumpSequenceResultCode.decode(stream);
+    decodedBumpSequenceResult.setDiscriminant(discriminant);
+    switch (decodedBumpSequenceResult.getDiscriminant()) {
+      case BUMP_SEQUENCE_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedBumpSequenceResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof BumpSequenceResult)) {

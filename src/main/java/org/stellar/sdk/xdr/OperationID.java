@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -32,25 +30,34 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class OperationID implements XdrElement {
-  public OperationID () {}
+  public OperationID() {}
+
   EnvelopeType type;
+
   public EnvelopeType getDiscriminant() {
     return this.type;
   }
+
   public void setDiscriminant(EnvelopeType value) {
     this.type = value;
   }
+
   private OperationIDId id;
+
   public OperationIDId getId() {
     return this.id;
   }
+
   public void setId(OperationIDId value) {
     this.id = value;
   }
+
   private OperationIDRevokeId revokeId;
+
   public OperationIDRevokeId getRevokeId() {
     return this.revokeId;
   }
+
   public void setRevokeId(OperationIDRevokeId value) {
     this.revokeId = value;
   }
@@ -84,40 +91,45 @@ public class OperationID implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, OperationID encodedOperationID) throws IOException {
-  //Xdrgen::AST::Identifier
-  //EnvelopeType
-  stream.writeInt(encodedOperationID.getDiscriminant().getValue());
-  switch (encodedOperationID.getDiscriminant()) {
-  case ENVELOPE_TYPE_OP_ID:
-  OperationIDId.encode(stream, encodedOperationID.id);
-  break;
-  case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
-  OperationIDRevokeId.encode(stream, encodedOperationID.revokeId);
-  break;
+  public static void encode(XdrDataOutputStream stream, OperationID encodedOperationID)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // EnvelopeType
+    stream.writeInt(encodedOperationID.getDiscriminant().getValue());
+    switch (encodedOperationID.getDiscriminant()) {
+      case ENVELOPE_TYPE_OP_ID:
+        OperationIDId.encode(stream, encodedOperationID.id);
+        break;
+      case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
+        OperationIDRevokeId.encode(stream, encodedOperationID.revokeId);
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static OperationID decode(XdrDataInputStream stream) throws IOException {
-  OperationID decodedOperationID = new OperationID();
-  EnvelopeType discriminant = EnvelopeType.decode(stream);
-  decodedOperationID.setDiscriminant(discriminant);
-  switch (decodedOperationID.getDiscriminant()) {
-  case ENVELOPE_TYPE_OP_ID:
-  decodedOperationID.id = OperationIDId.decode(stream);
-  break;
-  case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
-  decodedOperationID.revokeId = OperationIDRevokeId.decode(stream);
-  break;
-  }
+    OperationID decodedOperationID = new OperationID();
+    EnvelopeType discriminant = EnvelopeType.decode(stream);
+    decodedOperationID.setDiscriminant(discriminant);
+    switch (decodedOperationID.getDiscriminant()) {
+      case ENVELOPE_TYPE_OP_ID:
+        decodedOperationID.id = OperationIDId.decode(stream);
+        break;
+      case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
+        decodedOperationID.revokeId = OperationIDRevokeId.decode(stream);
+        break;
+    }
     return decodedOperationID;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.id, this.revokeId, this.type);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof OperationID)) {
@@ -125,40 +137,55 @@ public class OperationID implements XdrElement {
     }
 
     OperationID other = (OperationID) object;
-    return Objects.equal(this.id, other.id) && Objects.equal(this.revokeId, other.revokeId) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.id, other.id)
+        && Objects.equal(this.revokeId, other.revokeId)
+        && Objects.equal(this.type, other.type);
   }
 
   public static class OperationIDId {
-    public OperationIDId () {}
+    public OperationIDId() {}
+
     private AccountID sourceAccount;
+
     public AccountID getSourceAccount() {
       return this.sourceAccount;
     }
+
     public void setSourceAccount(AccountID value) {
       this.sourceAccount = value;
     }
+
     private SequenceNumber seqNum;
+
     public SequenceNumber getSeqNum() {
       return this.seqNum;
     }
+
     public void setSeqNum(SequenceNumber value) {
       this.seqNum = value;
     }
+
     private Uint32 opNum;
+
     public Uint32 getOpNum() {
       return this.opNum;
     }
+
     public void setOpNum(Uint32 value) {
       this.opNum = value;
     }
-    public static void encode(XdrDataOutputStream stream, OperationIDId encodedOperationIDId) throws IOException{
+
+    public static void encode(XdrDataOutputStream stream, OperationIDId encodedOperationIDId)
+        throws IOException {
       AccountID.encode(stream, encodedOperationIDId.sourceAccount);
       SequenceNumber.encode(stream, encodedOperationIDId.seqNum);
       Uint32.encode(stream, encodedOperationIDId.opNum);
     }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static OperationIDId decode(XdrDataInputStream stream) throws IOException {
       OperationIDId decodedOperationIDId = new OperationIDId();
       decodedOperationIDId.sourceAccount = AccountID.decode(stream);
@@ -166,10 +193,12 @@ public class OperationID implements XdrElement {
       decodedOperationIDId.opNum = Uint32.decode(stream);
       return decodedOperationIDId;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.sourceAccount, this.seqNum, this.opNum);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof OperationIDId)) {
@@ -177,7 +206,9 @@ public class OperationID implements XdrElement {
       }
 
       OperationIDId other = (OperationIDId) object;
-      return Objects.equal(this.sourceAccount, other.sourceAccount) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.opNum, other.opNum);
+      return Objects.equal(this.sourceAccount, other.sourceAccount)
+          && Objects.equal(this.seqNum, other.seqNum)
+          && Objects.equal(this.opNum, other.opNum);
     }
 
     public static final class Builder {
@@ -208,55 +239,75 @@ public class OperationID implements XdrElement {
         return val;
       }
     }
-
   }
+
   public static class OperationIDRevokeId {
-    public OperationIDRevokeId () {}
+    public OperationIDRevokeId() {}
+
     private AccountID sourceAccount;
+
     public AccountID getSourceAccount() {
       return this.sourceAccount;
     }
+
     public void setSourceAccount(AccountID value) {
       this.sourceAccount = value;
     }
+
     private SequenceNumber seqNum;
+
     public SequenceNumber getSeqNum() {
       return this.seqNum;
     }
+
     public void setSeqNum(SequenceNumber value) {
       this.seqNum = value;
     }
+
     private Uint32 opNum;
+
     public Uint32 getOpNum() {
       return this.opNum;
     }
+
     public void setOpNum(Uint32 value) {
       this.opNum = value;
     }
+
     private PoolID liquidityPoolID;
+
     public PoolID getLiquidityPoolID() {
       return this.liquidityPoolID;
     }
+
     public void setLiquidityPoolID(PoolID value) {
       this.liquidityPoolID = value;
     }
+
     private Asset asset;
+
     public Asset getAsset() {
       return this.asset;
     }
+
     public void setAsset(Asset value) {
       this.asset = value;
     }
-    public static void encode(XdrDataOutputStream stream, OperationIDRevokeId encodedOperationIDRevokeId) throws IOException{
+
+    public static void encode(
+        XdrDataOutputStream stream, OperationIDRevokeId encodedOperationIDRevokeId)
+        throws IOException {
       AccountID.encode(stream, encodedOperationIDRevokeId.sourceAccount);
       SequenceNumber.encode(stream, encodedOperationIDRevokeId.seqNum);
       Uint32.encode(stream, encodedOperationIDRevokeId.opNum);
       PoolID.encode(stream, encodedOperationIDRevokeId.liquidityPoolID);
       Asset.encode(stream, encodedOperationIDRevokeId.asset);
     }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static OperationIDRevokeId decode(XdrDataInputStream stream) throws IOException {
       OperationIDRevokeId decodedOperationIDRevokeId = new OperationIDRevokeId();
       decodedOperationIDRevokeId.sourceAccount = AccountID.decode(stream);
@@ -266,10 +317,13 @@ public class OperationID implements XdrElement {
       decodedOperationIDRevokeId.asset = Asset.decode(stream);
       return decodedOperationIDRevokeId;
     }
+
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.sourceAccount, this.seqNum, this.opNum, this.liquidityPoolID, this.asset);
+      return Objects.hashCode(
+          this.sourceAccount, this.seqNum, this.opNum, this.liquidityPoolID, this.asset);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof OperationIDRevokeId)) {
@@ -277,7 +331,11 @@ public class OperationID implements XdrElement {
       }
 
       OperationIDRevokeId other = (OperationIDRevokeId) object;
-      return Objects.equal(this.sourceAccount, other.sourceAccount) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.opNum, other.opNum) && Objects.equal(this.liquidityPoolID, other.liquidityPoolID) && Objects.equal(this.asset, other.asset);
+      return Objects.equal(this.sourceAccount, other.sourceAccount)
+          && Objects.equal(this.seqNum, other.seqNum)
+          && Objects.equal(this.opNum, other.opNum)
+          && Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
+          && Objects.equal(this.asset, other.asset);
     }
 
     public static final class Builder {
@@ -322,6 +380,5 @@ public class OperationID implements XdrElement {
         return val;
       }
     }
-
   }
 }

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -17,29 +15,42 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class BeginSponsoringFutureReservesOp implements XdrElement {
-  public BeginSponsoringFutureReservesOp () {}
+  public BeginSponsoringFutureReservesOp() {}
+
   private AccountID sponsoredID;
+
   public AccountID getSponsoredID() {
     return this.sponsoredID;
   }
+
   public void setSponsoredID(AccountID value) {
     this.sponsoredID = value;
   }
-  public static void encode(XdrDataOutputStream stream, BeginSponsoringFutureReservesOp encodedBeginSponsoringFutureReservesOp) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream,
+      BeginSponsoringFutureReservesOp encodedBeginSponsoringFutureReservesOp)
+      throws IOException {
     AccountID.encode(stream, encodedBeginSponsoringFutureReservesOp.sponsoredID);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
-  public static BeginSponsoringFutureReservesOp decode(XdrDataInputStream stream) throws IOException {
-    BeginSponsoringFutureReservesOp decodedBeginSponsoringFutureReservesOp = new BeginSponsoringFutureReservesOp();
+
+  public static BeginSponsoringFutureReservesOp decode(XdrDataInputStream stream)
+      throws IOException {
+    BeginSponsoringFutureReservesOp decodedBeginSponsoringFutureReservesOp =
+        new BeginSponsoringFutureReservesOp();
     decodedBeginSponsoringFutureReservesOp.sponsoredID = AccountID.decode(stream);
     return decodedBeginSponsoringFutureReservesOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.sponsoredID);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof BeginSponsoringFutureReservesOp)) {

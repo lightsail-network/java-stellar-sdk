@@ -1,15 +1,14 @@
 package org.stellar.sdk.responses;
 
-
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Claimant;
 
-import java.util.List;
-
 /**
  * Represents a claimable balance response.
+ *
  * @see org.stellar.sdk.requests.ClaimableBalancesRequestBuilder
  * @see org.stellar.sdk.Server#claimableBalances()
  */
@@ -42,7 +41,16 @@ public class ClaimableBalanceResponse extends Response implements Pageable {
   @SerializedName("claimants")
   private final List<Claimant> claimants;
 
-  public ClaimableBalanceResponse(String id, String assetString, String amount, String sponsor, Integer lastModifiedLedger, String lastModifiedTime, String pagingToken, List<Claimant> claimants, Links links) {
+  public ClaimableBalanceResponse(
+      String id,
+      String assetString,
+      String amount,
+      String sponsor,
+      Integer lastModifiedLedger,
+      String lastModifiedTime,
+      String pagingToken,
+      List<Claimant> claimants,
+      Links links) {
     this.id = id;
     this.assetString = assetString;
     this.amount = amount;
@@ -94,10 +102,7 @@ public class ClaimableBalanceResponse extends Response implements Pageable {
     return claimants;
   }
 
-
-  /**
-   * Links connected to claimable balance.
-   */
+  /** Links connected to claimable balance. */
   public static class Links {
     @SerializedName("self")
     private final Link self;
@@ -110,5 +115,4 @@ public class ClaimableBalanceResponse extends Response implements Pageable {
       return self;
     }
   }
-
 }

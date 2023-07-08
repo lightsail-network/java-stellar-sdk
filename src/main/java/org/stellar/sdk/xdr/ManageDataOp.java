@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,46 +16,58 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ManageDataOp implements XdrElement {
-  public ManageDataOp () {}
+  public ManageDataOp() {}
+
   private String64 dataName;
+
   public String64 getDataName() {
     return this.dataName;
   }
+
   public void setDataName(String64 value) {
     this.dataName = value;
   }
+
   private DataValue dataValue;
+
   public DataValue getDataValue() {
     return this.dataValue;
   }
+
   public void setDataValue(DataValue value) {
     this.dataValue = value;
   }
-  public static void encode(XdrDataOutputStream stream, ManageDataOp encodedManageDataOp) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, ManageDataOp encodedManageDataOp)
+      throws IOException {
     String64.encode(stream, encodedManageDataOp.dataName);
     if (encodedManageDataOp.dataValue != null) {
-    stream.writeInt(1);
-    DataValue.encode(stream, encodedManageDataOp.dataValue);
+      stream.writeInt(1);
+      DataValue.encode(stream, encodedManageDataOp.dataValue);
     } else {
-    stream.writeInt(0);
+      stream.writeInt(0);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ManageDataOp decode(XdrDataInputStream stream) throws IOException {
     ManageDataOp decodedManageDataOp = new ManageDataOp();
     decodedManageDataOp.dataName = String64.decode(stream);
     int dataValuePresent = stream.readInt();
     if (dataValuePresent != 0) {
-    decodedManageDataOp.dataValue = DataValue.decode(stream);
+      decodedManageDataOp.dataValue = DataValue.decode(stream);
     }
     return decodedManageDataOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.dataName, this.dataValue);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ManageDataOp)) {
@@ -65,7 +75,8 @@ public class ManageDataOp implements XdrElement {
     }
 
     ManageDataOp other = (ManageDataOp) object;
-    return Objects.equal(this.dataName, other.dataName) && Objects.equal(this.dataValue, other.dataValue);
+    return Objects.equal(this.dataName, other.dataName)
+        && Objects.equal(this.dataValue, other.dataValue);
   }
 
   public static final class Builder {

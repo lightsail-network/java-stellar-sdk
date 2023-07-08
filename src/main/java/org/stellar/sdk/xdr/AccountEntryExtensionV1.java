@@ -3,17 +3,15 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
 //  struct AccountEntryExtensionV1
 //  {
 //      Liabilities liabilities;
-//  
+//
 //      union switch (int v)
 //      {
 //      case 0:
@@ -26,38 +24,51 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class AccountEntryExtensionV1 implements XdrElement {
-  public AccountEntryExtensionV1 () {}
+  public AccountEntryExtensionV1() {}
+
   private Liabilities liabilities;
+
   public Liabilities getLiabilities() {
     return this.liabilities;
   }
+
   public void setLiabilities(Liabilities value) {
     this.liabilities = value;
   }
+
   private AccountEntryExtensionV1Ext ext;
+
   public AccountEntryExtensionV1Ext getExt() {
     return this.ext;
   }
+
   public void setExt(AccountEntryExtensionV1Ext value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, AccountEntryExtensionV1 encodedAccountEntryExtensionV1) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, AccountEntryExtensionV1 encodedAccountEntryExtensionV1)
+      throws IOException {
     Liabilities.encode(stream, encodedAccountEntryExtensionV1.liabilities);
     AccountEntryExtensionV1Ext.encode(stream, encodedAccountEntryExtensionV1.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static AccountEntryExtensionV1 decode(XdrDataInputStream stream) throws IOException {
     AccountEntryExtensionV1 decodedAccountEntryExtensionV1 = new AccountEntryExtensionV1();
     decodedAccountEntryExtensionV1.liabilities = Liabilities.decode(stream);
     decodedAccountEntryExtensionV1.ext = AccountEntryExtensionV1Ext.decode(stream);
     return decodedAccountEntryExtensionV1;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.liabilities, this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof AccountEntryExtensionV1)) {
@@ -91,18 +102,24 @@ public class AccountEntryExtensionV1 implements XdrElement {
   }
 
   public static class AccountEntryExtensionV1Ext {
-    public AccountEntryExtensionV1Ext () {}
+    public AccountEntryExtensionV1Ext() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
+
     private AccountEntryExtensionV2 v2;
+
     public AccountEntryExtensionV2 getV2() {
       return this.v2;
     }
+
     public void setV2(AccountEntryExtensionV2 value) {
       this.v2 = value;
     }
@@ -129,38 +146,45 @@ public class AccountEntryExtensionV1 implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, AccountEntryExtensionV1Ext encodedAccountEntryExtensionV1Ext) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedAccountEntryExtensionV1Ext.getDiscriminant().intValue());
-    switch (encodedAccountEntryExtensionV1Ext.getDiscriminant()) {
-    case 0:
-    break;
-    case 2:
-    AccountEntryExtensionV2.encode(stream, encodedAccountEntryExtensionV1Ext.v2);
-    break;
+    public static void encode(
+        XdrDataOutputStream stream, AccountEntryExtensionV1Ext encodedAccountEntryExtensionV1Ext)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedAccountEntryExtensionV1Ext.getDiscriminant().intValue());
+      switch (encodedAccountEntryExtensionV1Ext.getDiscriminant()) {
+        case 0:
+          break;
+        case 2:
+          AccountEntryExtensionV2.encode(stream, encodedAccountEntryExtensionV1Ext.v2);
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static AccountEntryExtensionV1Ext decode(XdrDataInputStream stream) throws IOException {
-    AccountEntryExtensionV1Ext decodedAccountEntryExtensionV1Ext = new AccountEntryExtensionV1Ext();
-    Integer discriminant = stream.readInt();
-    decodedAccountEntryExtensionV1Ext.setDiscriminant(discriminant);
-    switch (decodedAccountEntryExtensionV1Ext.getDiscriminant()) {
-    case 0:
-    break;
-    case 2:
-    decodedAccountEntryExtensionV1Ext.v2 = AccountEntryExtensionV2.decode(stream);
-    break;
-    }
+      AccountEntryExtensionV1Ext decodedAccountEntryExtensionV1Ext =
+          new AccountEntryExtensionV1Ext();
+      Integer discriminant = stream.readInt();
+      decodedAccountEntryExtensionV1Ext.setDiscriminant(discriminant);
+      switch (decodedAccountEntryExtensionV1Ext.getDiscriminant()) {
+        case 0:
+          break;
+        case 2:
+          decodedAccountEntryExtensionV1Ext.v2 = AccountEntryExtensionV2.decode(stream);
+          break;
+      }
       return decodedAccountEntryExtensionV1Ext;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v2, this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof AccountEntryExtensionV1Ext)) {
@@ -170,6 +194,5 @@ public class AccountEntryExtensionV1 implements XdrElement {
       AccountEntryExtensionV1Ext other = (AccountEntryExtensionV1Ext) object;
       return Objects.equal(this.v2, other.v2) && Objects.equal(this.v, other.v);
     }
-
   }
 }

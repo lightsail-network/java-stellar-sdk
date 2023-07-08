@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -16,58 +14,75 @@ import java.util.Arrays;
 //      LedgerHeaderHistoryEntry ledgerHeader;
 //      // NB: txSet is sorted in "Hash order"
 //      TransactionSet txSet;
-//  
+//
 //      // NB: transactions are sorted in apply order here
 //      // fees for all transactions are processed first
 //      // followed by applying transactions
 //      TransactionResultMeta txProcessing<>;
-//  
+//
 //      // upgrades are applied last
 //      UpgradeEntryMeta upgradesProcessing<>;
-//  
+//
 //      // other misc information attached to the ledger close
 //      SCPHistoryEntry scpInfo<>;
 //  };
 
 //  ===========================================================================
 public class LedgerCloseMetaV0 implements XdrElement {
-  public LedgerCloseMetaV0 () {}
+  public LedgerCloseMetaV0() {}
+
   private LedgerHeaderHistoryEntry ledgerHeader;
+
   public LedgerHeaderHistoryEntry getLedgerHeader() {
     return this.ledgerHeader;
   }
+
   public void setLedgerHeader(LedgerHeaderHistoryEntry value) {
     this.ledgerHeader = value;
   }
+
   private TransactionSet txSet;
+
   public TransactionSet getTxSet() {
     return this.txSet;
   }
+
   public void setTxSet(TransactionSet value) {
     this.txSet = value;
   }
+
   private TransactionResultMeta[] txProcessing;
+
   public TransactionResultMeta[] getTxProcessing() {
     return this.txProcessing;
   }
+
   public void setTxProcessing(TransactionResultMeta[] value) {
     this.txProcessing = value;
   }
+
   private UpgradeEntryMeta[] upgradesProcessing;
+
   public UpgradeEntryMeta[] getUpgradesProcessing() {
     return this.upgradesProcessing;
   }
+
   public void setUpgradesProcessing(UpgradeEntryMeta[] value) {
     this.upgradesProcessing = value;
   }
+
   private SCPHistoryEntry[] scpInfo;
+
   public SCPHistoryEntry[] getScpInfo() {
     return this.scpInfo;
   }
+
   public void setScpInfo(SCPHistoryEntry[] value) {
     this.scpInfo = value;
   }
-  public static void encode(XdrDataOutputStream stream, LedgerCloseMetaV0 encodedLedgerCloseMetaV0) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, LedgerCloseMetaV0 encodedLedgerCloseMetaV0)
+      throws IOException {
     LedgerHeaderHistoryEntry.encode(stream, encodedLedgerCloseMetaV0.ledgerHeader);
     TransactionSet.encode(stream, encodedLedgerCloseMetaV0.txSet);
     int txProcessingsize = encodedLedgerCloseMetaV0.getTxProcessing().length;
@@ -86,9 +101,11 @@ public class LedgerCloseMetaV0 implements XdrElement {
       SCPHistoryEntry.encode(stream, encodedLedgerCloseMetaV0.scpInfo[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerCloseMetaV0 decode(XdrDataInputStream stream) throws IOException {
     LedgerCloseMetaV0 decodedLedgerCloseMetaV0 = new LedgerCloseMetaV0();
     decodedLedgerCloseMetaV0.ledgerHeader = LedgerHeaderHistoryEntry.decode(stream);
@@ -110,10 +127,17 @@ public class LedgerCloseMetaV0 implements XdrElement {
     }
     return decodedLedgerCloseMetaV0;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ledgerHeader, this.txSet, Arrays.hashCode(this.txProcessing), Arrays.hashCode(this.upgradesProcessing), Arrays.hashCode(this.scpInfo));
+    return Objects.hashCode(
+        this.ledgerHeader,
+        this.txSet,
+        Arrays.hashCode(this.txProcessing),
+        Arrays.hashCode(this.upgradesProcessing),
+        Arrays.hashCode(this.scpInfo));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerCloseMetaV0)) {
@@ -121,7 +145,11 @@ public class LedgerCloseMetaV0 implements XdrElement {
     }
 
     LedgerCloseMetaV0 other = (LedgerCloseMetaV0) object;
-    return Objects.equal(this.ledgerHeader, other.ledgerHeader) && Objects.equal(this.txSet, other.txSet) && Arrays.equals(this.txProcessing, other.txProcessing) && Arrays.equals(this.upgradesProcessing, other.upgradesProcessing) && Arrays.equals(this.scpInfo, other.scpInfo);
+    return Objects.equal(this.ledgerHeader, other.ledgerHeader)
+        && Objects.equal(this.txSet, other.txSet)
+        && Arrays.equals(this.txProcessing, other.txProcessing)
+        && Arrays.equals(this.upgradesProcessing, other.upgradesProcessing)
+        && Arrays.equals(this.scpInfo, other.scpInfo);
   }
 
   public static final class Builder {

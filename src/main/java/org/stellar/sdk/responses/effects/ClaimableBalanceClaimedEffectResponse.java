@@ -5,19 +5,24 @@ import org.stellar.sdk.Asset;
 
 /**
  * Represents claimable_balance_claimed effect response.
- * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect documentation</a>
+ *
+ * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect
+ *     documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
 public class ClaimableBalanceClaimedEffectResponse extends EffectResponse {
   @SerializedName("asset")
   private final String assetString;
+
   @SerializedName("amount")
   protected final String amount;
+
   @SerializedName("balance_id")
   protected final String balanceId;
 
-  public ClaimableBalanceClaimedEffectResponse(String assetString, String amount, String balanceId) {
+  public ClaimableBalanceClaimedEffectResponse(
+      String assetString, String amount, String balanceId) {
     this.assetString = assetString;
     this.amount = amount;
     this.balanceId = balanceId;

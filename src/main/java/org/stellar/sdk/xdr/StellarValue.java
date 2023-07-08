@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -15,14 +13,14 @@ import java.util.Arrays;
 //  {
 //      Hash txSetHash;      // transaction set to apply to previous ledger
 //      TimePoint closeTime; // network close time
-//  
+//
 //      // upgrades to apply to the previous ledger (usually empty)
 //      // this is a vector of encoded 'LedgerUpgrade' so that nodes can drop
 //      // unknown steps during consensus if needed.
 //      // see notes below on 'LedgerUpgrade' for more detail
 //      // max size is dictated by number of upgrade types (+ room for future)
 //      UpgradeType upgrades<6>;
-//  
+//
 //      // reserved for future use
 //      union switch (StellarValueType v)
 //      {
@@ -36,36 +34,50 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class StellarValue implements XdrElement {
-  public StellarValue () {}
+  public StellarValue() {}
+
   private Hash txSetHash;
+
   public Hash getTxSetHash() {
     return this.txSetHash;
   }
+
   public void setTxSetHash(Hash value) {
     this.txSetHash = value;
   }
+
   private TimePoint closeTime;
+
   public TimePoint getCloseTime() {
     return this.closeTime;
   }
+
   public void setCloseTime(TimePoint value) {
     this.closeTime = value;
   }
+
   private UpgradeType[] upgrades;
+
   public UpgradeType[] getUpgrades() {
     return this.upgrades;
   }
+
   public void setUpgrades(UpgradeType[] value) {
     this.upgrades = value;
   }
+
   private StellarValueExt ext;
+
   public StellarValueExt getExt() {
     return this.ext;
   }
+
   public void setExt(StellarValueExt value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, StellarValue encodedStellarValue) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, StellarValue encodedStellarValue)
+      throws IOException {
     Hash.encode(stream, encodedStellarValue.txSetHash);
     TimePoint.encode(stream, encodedStellarValue.closeTime);
     int upgradessize = encodedStellarValue.getUpgrades().length;
@@ -75,9 +87,11 @@ public class StellarValue implements XdrElement {
     }
     StellarValueExt.encode(stream, encodedStellarValue.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static StellarValue decode(XdrDataInputStream stream) throws IOException {
     StellarValue decodedStellarValue = new StellarValue();
     decodedStellarValue.txSetHash = Hash.decode(stream);
@@ -90,10 +104,13 @@ public class StellarValue implements XdrElement {
     decodedStellarValue.ext = StellarValueExt.decode(stream);
     return decodedStellarValue;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.txSetHash, this.closeTime, Arrays.hashCode(this.upgrades), this.ext);
+    return Objects.hashCode(
+        this.txSetHash, this.closeTime, Arrays.hashCode(this.upgrades), this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof StellarValue)) {
@@ -101,7 +118,10 @@ public class StellarValue implements XdrElement {
     }
 
     StellarValue other = (StellarValue) object;
-    return Objects.equal(this.txSetHash, other.txSetHash) && Objects.equal(this.closeTime, other.closeTime) && Arrays.equals(this.upgrades, other.upgrades) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.txSetHash, other.txSetHash)
+        && Objects.equal(this.closeTime, other.closeTime)
+        && Arrays.equals(this.upgrades, other.upgrades)
+        && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
@@ -141,18 +161,24 @@ public class StellarValue implements XdrElement {
   }
 
   public static class StellarValueExt {
-    public StellarValueExt () {}
+    public StellarValueExt() {}
+
     StellarValueType v;
+
     public StellarValueType getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(StellarValueType value) {
       this.v = value;
     }
+
     private LedgerCloseValueSignature lcValueSignature;
+
     public LedgerCloseValueSignature getLcValueSignature() {
       return this.lcValueSignature;
     }
+
     public void setLcValueSignature(LedgerCloseValueSignature value) {
       this.lcValueSignature = value;
     }
@@ -179,38 +205,43 @@ public class StellarValue implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, StellarValueExt encodedStellarValueExt) throws IOException {
-    //Xdrgen::AST::Identifier
-    //StellarValueType
-    stream.writeInt(encodedStellarValueExt.getDiscriminant().getValue());
-    switch (encodedStellarValueExt.getDiscriminant()) {
-    case STELLAR_VALUE_BASIC:
-    break;
-    case STELLAR_VALUE_SIGNED:
-    LedgerCloseValueSignature.encode(stream, encodedStellarValueExt.lcValueSignature);
-    break;
+    public static void encode(XdrDataOutputStream stream, StellarValueExt encodedStellarValueExt)
+        throws IOException {
+      // Xdrgen::AST::Identifier
+      // StellarValueType
+      stream.writeInt(encodedStellarValueExt.getDiscriminant().getValue());
+      switch (encodedStellarValueExt.getDiscriminant()) {
+        case STELLAR_VALUE_BASIC:
+          break;
+        case STELLAR_VALUE_SIGNED:
+          LedgerCloseValueSignature.encode(stream, encodedStellarValueExt.lcValueSignature);
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static StellarValueExt decode(XdrDataInputStream stream) throws IOException {
-    StellarValueExt decodedStellarValueExt = new StellarValueExt();
-    StellarValueType discriminant = StellarValueType.decode(stream);
-    decodedStellarValueExt.setDiscriminant(discriminant);
-    switch (decodedStellarValueExt.getDiscriminant()) {
-    case STELLAR_VALUE_BASIC:
-    break;
-    case STELLAR_VALUE_SIGNED:
-    decodedStellarValueExt.lcValueSignature = LedgerCloseValueSignature.decode(stream);
-    break;
-    }
+      StellarValueExt decodedStellarValueExt = new StellarValueExt();
+      StellarValueType discriminant = StellarValueType.decode(stream);
+      decodedStellarValueExt.setDiscriminant(discriminant);
+      switch (decodedStellarValueExt.getDiscriminant()) {
+        case STELLAR_VALUE_BASIC:
+          break;
+        case STELLAR_VALUE_SIGNED:
+          decodedStellarValueExt.lcValueSignature = LedgerCloseValueSignature.decode(stream);
+          break;
+      }
       return decodedStellarValueExt;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.lcValueSignature, this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof StellarValueExt)) {
@@ -218,8 +249,8 @@ public class StellarValue implements XdrElement {
       }
 
       StellarValueExt other = (StellarValueExt) object;
-      return Objects.equal(this.lcValueSignature, other.lcValueSignature) && Objects.equal(this.v, other.v);
+      return Objects.equal(this.lcValueSignature, other.lcValueSignature)
+          && Objects.equal(this.v, other.v);
     }
-
   }
 }

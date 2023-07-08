@@ -1,14 +1,15 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
-
-import org.stellar.sdk.xdr.LiquidityPoolType;
-
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 
 /**
  * Base LiquidityPoolConstantProductParameters class.
- * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/" target="_blank">Liquidity Pool</a>
+ *
+ * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/"
+ *     target="_blank">Liquidity Pool</a>
  */
 public final class LiquidityPoolConstantProductParameters extends LiquidityPoolParameters {
   protected final Asset assetA;
@@ -16,7 +17,8 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
   protected final int fee;
 
   /**
-   * LiquidityPoolConstantProductParameters represents the parameters specifying a constant-product liquidity pool.
+   * LiquidityPoolConstantProductParameters represents the parameters specifying a constant-product
+   * liquidity pool.
    *
    * @param a First asset in the liquidity pool
    * @param b Second asset in the liquidity pool
@@ -46,24 +48,24 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
   @Override
   public final boolean equals(Object object) {
     if (object == null || !this.getClass().equals(object.getClass())) {
-        return false;
+      return false;
     }
 
     LiquidityPoolConstantProductParameters o = (LiquidityPoolConstantProductParameters) object;
     return Objects.equal(this.getAssetA(), o.getAssetA())
-      && Objects.equal(this.getAssetB(), o.getAssetB())
-      && Objects.equal(this.getFee(), o.getFee());
+        && Objects.equal(this.getAssetB(), o.getAssetB())
+        && Objects.equal(this.getFee(), o.getFee());
   }
 
-  /**
-   * Generates XDR object from a given LiquidityPoolParameters object
-   */
+  /** Generates XDR object from a given LiquidityPoolParameters object */
   @Override
   public final org.stellar.sdk.xdr.LiquidityPoolParameters toXdr() {
-    org.stellar.sdk.xdr.LiquidityPoolParameters xdr = new org.stellar.sdk.xdr.LiquidityPoolParameters();
+    org.stellar.sdk.xdr.LiquidityPoolParameters xdr =
+        new org.stellar.sdk.xdr.LiquidityPoolParameters();
     xdr.setDiscriminant(LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT);
 
-    org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters params = new org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters();
+    org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters params =
+        new org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters();
     params.setAssetA(assetA.toXdr());
     params.setAssetB(assetB.toXdr());
     params.setFee(new org.stellar.sdk.xdr.Int32(fee));
@@ -75,24 +77,20 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
 
   /**
    * Generates LiquidityPoolConstantProductParameters object from a given XDR object
+   *
    * @param xdr XDR object
    */
-  public static LiquidityPoolConstantProductParameters fromXdr(org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters xdr) {
+  public static LiquidityPoolConstantProductParameters fromXdr(
+      org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters xdr) {
     return new LiquidityPoolConstantProductParameters(
-      Asset.fromXdr(xdr.getAssetA()),
-      Asset.fromXdr(xdr.getAssetB()),
-      xdr.getFee().getInt32().intValue()
-    );
+        Asset.fromXdr(xdr.getAssetA()),
+        Asset.fromXdr(xdr.getAssetB()),
+        xdr.getFee().getInt32().intValue());
   }
-
 
   @Override
   public final LiquidityPoolID getId() {
     return new LiquidityPoolID(
-      LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-      assetA,
-      assetB,
-      fee
-    );
+        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, assetA, assetB, fee);
   }
 }
