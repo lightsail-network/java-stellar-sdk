@@ -102,11 +102,4 @@ tasks.register('updateGitHook', Copy) {
     rename { fileName ->
         fileName.endsWith('.sh') ? fileName[0..-4] : fileName
     }
-    doLast {
-        if (OperatingSystem.current().isUnix()) {
-            project.exec {
-                commandLine 'chmod', '+x', '.git/hooks/pre-commit'
-            }
-        }
-    }
 }
