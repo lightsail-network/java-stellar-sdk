@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -32,7 +34,10 @@ import java.io.IOException;
 //      CLAWBACK_CLAIMABLE_BALANCE = 20,
 //      SET_TRUST_LINE_FLAGS = 21,
 //      LIQUIDITY_POOL_DEPOSIT = 22,
-//      LIQUIDITY_POOL_WITHDRAW = 23
+//      LIQUIDITY_POOL_WITHDRAW = 23,
+//      INVOKE_HOST_FUNCTION = 24,
+//      BUMP_FOOTPRINT_EXPIRATION = 25,
+//      RESTORE_FOOTPRINT = 26
 //  };
 
 //  ===========================================================================
@@ -61,6 +66,9 @@ public enum OperationType implements XdrElement {
   SET_TRUST_LINE_FLAGS(21),
   LIQUIDITY_POOL_DEPOSIT(22),
   LIQUIDITY_POOL_WITHDRAW(23),
+  INVOKE_HOST_FUNCTION(24),
+  BUMP_FOOTPRINT_EXPIRATION(25),
+  RESTORE_FOOTPRINT(26),
   ;
   private int mValue;
 
@@ -123,6 +131,12 @@ public enum OperationType implements XdrElement {
         return LIQUIDITY_POOL_DEPOSIT;
       case 23:
         return LIQUIDITY_POOL_WITHDRAW;
+      case 24:
+        return INVOKE_HOST_FUNCTION;
+      case 25:
+        return BUMP_FOOTPRINT_EXPIRATION;
+      case 26:
+        return RESTORE_FOOTPRINT;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

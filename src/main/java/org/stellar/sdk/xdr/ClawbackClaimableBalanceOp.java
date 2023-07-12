@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -68,7 +70,7 @@ public class ClawbackClaimableBalanceOp implements XdrElement {
 
     public ClawbackClaimableBalanceOp build() {
       ClawbackClaimableBalanceOp val = new ClawbackClaimableBalanceOp();
-      val.setBalanceID(balanceID);
+      val.setBalanceID(this.balanceID);
       return val;
     }
   }

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -60,7 +62,7 @@ public class AuthenticatedMessage implements XdrElement {
     public AuthenticatedMessage build() {
       AuthenticatedMessage val = new AuthenticatedMessage();
       val.setDiscriminant(discriminant);
-      val.setV0(v0);
+      val.setV0(this.v0);
       return val;
     }
   }
@@ -201,9 +203,9 @@ public class AuthenticatedMessage implements XdrElement {
 
       public AuthenticatedMessageV0 build() {
         AuthenticatedMessageV0 val = new AuthenticatedMessageV0();
-        val.setSequence(sequence);
-        val.setMessage(message);
-        val.setMac(mac);
+        val.setSequence(this.sequence);
+        val.setMessage(this.message);
+        val.setMac(this.mac);
         return val;
       }
     }

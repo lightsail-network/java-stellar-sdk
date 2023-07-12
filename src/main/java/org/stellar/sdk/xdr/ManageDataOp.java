@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -95,8 +97,8 @@ public class ManageDataOp implements XdrElement {
 
     public ManageDataOp build() {
       ManageDataOp val = new ManageDataOp();
-      val.setDataName(dataName);
-      val.setDataValue(dataValue);
+      val.setDataName(this.dataName);
+      val.setDataValue(this.dataValue);
       return val;
     }
   }

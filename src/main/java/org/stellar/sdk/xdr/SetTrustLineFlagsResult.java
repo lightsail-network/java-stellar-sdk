@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,11 @@ import java.io.IOException;
 //  {
 //  case SET_TRUST_LINE_FLAGS_SUCCESS:
 //      void;
-//  default:
+//  case SET_TRUST_LINE_FLAGS_MALFORMED:
+//  case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+//  case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+//  case SET_TRUST_LINE_FLAGS_INVALID_STATE:
+//  case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
 //      void;
 //  };
 
@@ -54,7 +60,11 @@ public class SetTrustLineFlagsResult implements XdrElement {
     switch (encodedSetTrustLineFlagsResult.getDiscriminant()) {
       case SET_TRUST_LINE_FLAGS_SUCCESS:
         break;
-      default:
+      case SET_TRUST_LINE_FLAGS_MALFORMED:
+      case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+      case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+      case SET_TRUST_LINE_FLAGS_INVALID_STATE:
+      case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
         break;
     }
   }
@@ -70,7 +80,11 @@ public class SetTrustLineFlagsResult implements XdrElement {
     switch (decodedSetTrustLineFlagsResult.getDiscriminant()) {
       case SET_TRUST_LINE_FLAGS_SUCCESS:
         break;
-      default:
+      case SET_TRUST_LINE_FLAGS_MALFORMED:
+      case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+      case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+      case SET_TRUST_LINE_FLAGS_INVALID_STATE:
+      case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
         break;
     }
     return decodedSetTrustLineFlagsResult;

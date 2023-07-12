@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -91,9 +93,9 @@ public class ClaimAtom implements XdrElement {
     public ClaimAtom build() {
       ClaimAtom val = new ClaimAtom();
       val.setDiscriminant(discriminant);
-      val.setV0(v0);
-      val.setOrderBook(orderBook);
-      val.setLiquidityPool(liquidityPool);
+      val.setV0(this.v0);
+      val.setOrderBook(this.orderBook);
+      val.setLiquidityPool(this.liquidityPool);
       return val;
     }
   }

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -87,8 +89,8 @@ public class InflationPayout implements XdrElement {
 
     public InflationPayout build() {
       InflationPayout val = new InflationPayout();
-      val.setDestination(destination);
-      val.setAmount(amount);
+      val.setDestination(this.destination);
+      val.setAmount(this.amount);
       return val;
     }
   }

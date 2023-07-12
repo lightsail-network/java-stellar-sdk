@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -228,14 +230,14 @@ public class OfferEntry implements XdrElement {
 
     public OfferEntry build() {
       OfferEntry val = new OfferEntry();
-      val.setSellerID(sellerID);
-      val.setOfferID(offerID);
-      val.setSelling(selling);
-      val.setBuying(buying);
-      val.setAmount(amount);
-      val.setPrice(price);
-      val.setFlags(flags);
-      val.setExt(ext);
+      val.setSellerID(this.sellerID);
+      val.setOfferID(this.offerID);
+      val.setSelling(this.selling);
+      val.setBuying(this.buying);
+      val.setAmount(this.amount);
+      val.setPrice(this.price);
+      val.setFlags(this.flags);
+      val.setExt(this.ext);
       return val;
     }
   }

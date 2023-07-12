@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -152,10 +154,10 @@ public class StellarValue implements XdrElement {
 
     public StellarValue build() {
       StellarValue val = new StellarValue();
-      val.setTxSetHash(txSetHash);
-      val.setCloseTime(closeTime);
-      val.setUpgrades(upgrades);
-      val.setExt(ext);
+      val.setTxSetHash(this.txSetHash);
+      val.setCloseTime(this.closeTime);
+      val.setUpgrades(this.upgrades);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -200,7 +202,7 @@ public class StellarValue implements XdrElement {
       public StellarValueExt build() {
         StellarValueExt val = new StellarValueExt();
         val.setDiscriminant(discriminant);
-        val.setLcValueSignature(lcValueSignature);
+        val.setLcValueSignature(this.lcValueSignature);
         return val;
       }
     }

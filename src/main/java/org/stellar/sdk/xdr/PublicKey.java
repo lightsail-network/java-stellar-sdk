@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -55,7 +57,7 @@ public class PublicKey implements XdrElement {
     public PublicKey build() {
       PublicKey val = new PublicKey();
       val.setDiscriminant(discriminant);
-      val.setEd25519(ed25519);
+      val.setEd25519(this.ed25519);
       return val;
     }
   }

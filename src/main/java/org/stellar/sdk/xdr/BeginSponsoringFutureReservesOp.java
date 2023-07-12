@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -71,7 +73,7 @@ public class BeginSponsoringFutureReservesOp implements XdrElement {
 
     public BeginSponsoringFutureReservesOp build() {
       BeginSponsoringFutureReservesOp val = new BeginSponsoringFutureReservesOp();
-      val.setSponsoredID(sponsoredID);
+      val.setSponsoredID(this.sponsoredID);
       return val;
     }
   }

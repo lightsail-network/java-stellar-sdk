@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -15,7 +17,6 @@ import java.io.IOException;
 //      CLAIM_CLAIMABLE_BALANCE_LINE_FULL = -3,
 //      CLAIM_CLAIMABLE_BALANCE_NO_TRUST = -4,
 //      CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -5
-//
 //  };
 
 //  ===========================================================================

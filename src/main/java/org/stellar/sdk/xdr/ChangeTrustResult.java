@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,14 @@ import java.io.IOException;
 //  {
 //  case CHANGE_TRUST_SUCCESS:
 //      void;
-//  default:
+//  case CHANGE_TRUST_MALFORMED:
+//  case CHANGE_TRUST_NO_ISSUER:
+//  case CHANGE_TRUST_INVALID_LIMIT:
+//  case CHANGE_TRUST_LOW_RESERVE:
+//  case CHANGE_TRUST_SELF_NOT_ALLOWED:
+//  case CHANGE_TRUST_TRUST_LINE_MISSING:
+//  case CHANGE_TRUST_CANNOT_DELETE:
+//  case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
 //      void;
 //  };
 
@@ -53,7 +62,14 @@ public class ChangeTrustResult implements XdrElement {
     switch (encodedChangeTrustResult.getDiscriminant()) {
       case CHANGE_TRUST_SUCCESS:
         break;
-      default:
+      case CHANGE_TRUST_MALFORMED:
+      case CHANGE_TRUST_NO_ISSUER:
+      case CHANGE_TRUST_INVALID_LIMIT:
+      case CHANGE_TRUST_LOW_RESERVE:
+      case CHANGE_TRUST_SELF_NOT_ALLOWED:
+      case CHANGE_TRUST_TRUST_LINE_MISSING:
+      case CHANGE_TRUST_CANNOT_DELETE:
+      case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
         break;
     }
   }
@@ -69,7 +85,14 @@ public class ChangeTrustResult implements XdrElement {
     switch (decodedChangeTrustResult.getDiscriminant()) {
       case CHANGE_TRUST_SUCCESS:
         break;
-      default:
+      case CHANGE_TRUST_MALFORMED:
+      case CHANGE_TRUST_NO_ISSUER:
+      case CHANGE_TRUST_INVALID_LIMIT:
+      case CHANGE_TRUST_LOW_RESERVE:
+      case CHANGE_TRUST_SELF_NOT_ALLOWED:
+      case CHANGE_TRUST_TRUST_LINE_MISSING:
+      case CHANGE_TRUST_CANNOT_DELETE:
+      case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
         break;
     }
     return decodedChangeTrustResult;

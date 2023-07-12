@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -216,13 +218,13 @@ public class TransactionV0 implements XdrElement {
 
     public TransactionV0 build() {
       TransactionV0 val = new TransactionV0();
-      val.setSourceAccountEd25519(sourceAccountEd25519);
-      val.setFee(fee);
-      val.setSeqNum(seqNum);
-      val.setTimeBounds(timeBounds);
-      val.setMemo(memo);
-      val.setOperations(operations);
-      val.setExt(ext);
+      val.setSourceAccountEd25519(this.sourceAccountEd25519);
+      val.setFee(this.fee);
+      val.setSeqNum(this.seqNum);
+      val.setTimeBounds(this.timeBounds);
+      val.setMemo(this.memo);
+      val.setOperations(this.operations);
+      val.setExt(this.ext);
       return val;
     }
   }

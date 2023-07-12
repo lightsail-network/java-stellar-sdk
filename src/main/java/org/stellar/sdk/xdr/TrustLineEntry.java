@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -191,12 +193,12 @@ public class TrustLineEntry implements XdrElement {
 
     public TrustLineEntry build() {
       TrustLineEntry val = new TrustLineEntry();
-      val.setAccountID(accountID);
-      val.setAsset(asset);
-      val.setBalance(balance);
-      val.setLimit(limit);
-      val.setFlags(flags);
-      val.setExt(ext);
+      val.setAccountID(this.accountID);
+      val.setAsset(this.asset);
+      val.setBalance(this.balance);
+      val.setLimit(this.limit);
+      val.setFlags(this.flags);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -241,7 +243,7 @@ public class TrustLineEntry implements XdrElement {
       public TrustLineEntryExt build() {
         TrustLineEntryExt val = new TrustLineEntryExt();
         val.setDiscriminant(discriminant);
-        val.setV1(v1);
+        val.setV1(this.v1);
         return val;
       }
     }
@@ -365,8 +367,8 @@ public class TrustLineEntry implements XdrElement {
 
         public TrustLineEntryV1 build() {
           TrustLineEntryV1 val = new TrustLineEntryV1();
-          val.setLiabilities(liabilities);
-          val.setExt(ext);
+          val.setLiabilities(this.liabilities);
+          val.setExt(this.ext);
           return val;
         }
       }
@@ -411,7 +413,7 @@ public class TrustLineEntry implements XdrElement {
           public TrustLineEntryV1Ext build() {
             TrustLineEntryV1Ext val = new TrustLineEntryV1Ext();
             val.setDiscriminant(discriminant);
-            val.setV2(v2);
+            val.setV2(this.v2);
             return val;
           }
         }

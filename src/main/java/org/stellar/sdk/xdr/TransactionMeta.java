@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,6 +19,8 @@ import java.util.Arrays;
 //      TransactionMetaV1 v1;
 //  case 2:
 //      TransactionMetaV2 v2;
+//  case 3:
+//      TransactionMetaV3 v3;
 //  };
 
 //  ===========================================================================
@@ -63,11 +67,22 @@ public class TransactionMeta implements XdrElement {
     this.v2 = value;
   }
 
+  private TransactionMetaV3 v3;
+
+  public TransactionMetaV3 getV3() {
+    return this.v3;
+  }
+
+  public void setV3(TransactionMetaV3 value) {
+    this.v3 = value;
+  }
+
   public static final class Builder {
     private Integer discriminant;
     private OperationMeta[] operations;
     private TransactionMetaV1 v1;
     private TransactionMetaV2 v2;
+    private TransactionMetaV3 v3;
 
     public Builder discriminant(Integer discriminant) {
       this.discriminant = discriminant;
@@ -89,12 +104,18 @@ public class TransactionMeta implements XdrElement {
       return this;
     }
 
+    public Builder v3(TransactionMetaV3 v3) {
+      this.v3 = v3;
+      return this;
+    }
+
     public TransactionMeta build() {
       TransactionMeta val = new TransactionMeta();
       val.setDiscriminant(discriminant);
-      val.setOperations(operations);
-      val.setV1(v1);
-      val.setV2(v2);
+      val.setOperations(this.operations);
+      val.setV1(this.v1);
+      val.setV2(this.v2);
+      val.setV3(this.v3);
       return val;
     }
   }
@@ -117,6 +138,9 @@ public class TransactionMeta implements XdrElement {
         break;
       case 2:
         TransactionMetaV2.encode(stream, encodedTransactionMeta.v2);
+        break;
+      case 3:
+        TransactionMetaV3.encode(stream, encodedTransactionMeta.v3);
         break;
     }
   }
@@ -143,13 +167,16 @@ public class TransactionMeta implements XdrElement {
       case 2:
         decodedTransactionMeta.v2 = TransactionMetaV2.decode(stream);
         break;
+      case 3:
+        decodedTransactionMeta.v3 = TransactionMetaV3.decode(stream);
+        break;
     }
     return decodedTransactionMeta;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.hashCode(this.operations), this.v1, this.v2, this.v);
+    return Objects.hashCode(Arrays.hashCode(this.operations), this.v1, this.v2, this.v3, this.v);
   }
 
   @Override
@@ -162,6 +189,7 @@ public class TransactionMeta implements XdrElement {
     return Arrays.equals(this.operations, other.operations)
         && Objects.equal(this.v1, other.v1)
         && Objects.equal(this.v2, other.v2)
+        && Objects.equal(this.v3, other.v3)
         && Objects.equal(this.v, other.v);
   }
 }

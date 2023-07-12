@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -86,8 +88,8 @@ public class SCPBallot implements XdrElement {
 
     public SCPBallot build() {
       SCPBallot val = new SCPBallot();
-      val.setCounter(counter);
-      val.setValue(value);
+      val.setCounter(this.counter);
+      val.setValue(this.value);
       return val;
     }
   }

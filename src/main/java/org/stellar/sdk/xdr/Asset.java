@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -79,8 +81,8 @@ public class Asset implements XdrElement {
     public Asset build() {
       Asset val = new Asset();
       val.setDiscriminant(discriminant);
-      val.setAlphaNum4(alphaNum4);
-      val.setAlphaNum12(alphaNum12);
+      val.setAlphaNum4(this.alphaNum4);
+      val.setAlphaNum12(this.alphaNum12);
       return val;
     }
   }

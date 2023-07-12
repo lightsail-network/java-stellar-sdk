@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -70,7 +72,7 @@ public class Curve25519Secret implements XdrElement {
 
     public Curve25519Secret build() {
       Curve25519Secret val = new Curve25519Secret();
-      val.setKey(key);
+      val.setKey(this.key);
       return val;
     }
   }

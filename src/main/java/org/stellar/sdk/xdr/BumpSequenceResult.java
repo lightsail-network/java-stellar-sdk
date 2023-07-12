@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,7 @@ import java.io.IOException;
 //  {
 //  case BUMP_SEQUENCE_SUCCESS:
 //      void;
-//  default:
+//  case BUMP_SEQUENCE_BAD_SEQ:
 //      void;
 //  };
 
@@ -53,7 +55,7 @@ public class BumpSequenceResult implements XdrElement {
     switch (encodedBumpSequenceResult.getDiscriminant()) {
       case BUMP_SEQUENCE_SUCCESS:
         break;
-      default:
+      case BUMP_SEQUENCE_BAD_SEQ:
         break;
     }
   }
@@ -69,7 +71,7 @@ public class BumpSequenceResult implements XdrElement {
     switch (decodedBumpSequenceResult.getDiscriminant()) {
       case BUMP_SEQUENCE_SUCCESS:
         break;
-      default:
+      case BUMP_SEQUENCE_BAD_SEQ:
         break;
     }
     return decodedBumpSequenceResult;

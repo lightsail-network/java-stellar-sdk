@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -86,8 +88,8 @@ public class Liabilities implements XdrElement {
 
     public Liabilities build() {
       Liabilities val = new Liabilities();
-      val.setBuying(buying);
-      val.setSelling(selling);
+      val.setBuying(this.buying);
+      val.setSelling(this.selling);
       return val;
     }
   }

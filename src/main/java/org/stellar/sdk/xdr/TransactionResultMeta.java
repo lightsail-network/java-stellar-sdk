@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -108,9 +110,9 @@ public class TransactionResultMeta implements XdrElement {
 
     public TransactionResultMeta build() {
       TransactionResultMeta val = new TransactionResultMeta();
-      val.setResult(result);
-      val.setFeeProcessing(feeProcessing);
-      val.setTxApplyProcessing(txApplyProcessing);
+      val.setResult(this.result);
+      val.setFeeProcessing(this.feeProcessing);
+      val.setTxApplyProcessing(this.txApplyProcessing);
       return val;
     }
   }

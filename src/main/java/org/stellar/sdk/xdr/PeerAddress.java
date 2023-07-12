@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -115,9 +117,9 @@ public class PeerAddress implements XdrElement {
 
     public PeerAddress build() {
       PeerAddress val = new PeerAddress();
-      val.setIp(ip);
-      val.setPort(port);
-      val.setNumFailures(numFailures);
+      val.setIp(this.ip);
+      val.setPort(this.port);
+      val.setNumFailures(this.numFailures);
       return val;
     }
   }
@@ -178,8 +180,8 @@ public class PeerAddress implements XdrElement {
       public PeerAddressIp build() {
         PeerAddressIp val = new PeerAddressIp();
         val.setDiscriminant(discriminant);
-        val.setIpv4(ipv4);
-        val.setIpv6(ipv6);
+        val.setIpv4(this.ipv4);
+        val.setIpv6(this.ipv6);
         return val;
       }
     }

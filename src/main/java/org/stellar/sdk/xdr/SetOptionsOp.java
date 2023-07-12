@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -315,15 +317,15 @@ public class SetOptionsOp implements XdrElement {
 
     public SetOptionsOp build() {
       SetOptionsOp val = new SetOptionsOp();
-      val.setInflationDest(inflationDest);
-      val.setClearFlags(clearFlags);
-      val.setSetFlags(setFlags);
-      val.setMasterWeight(masterWeight);
-      val.setLowThreshold(lowThreshold);
-      val.setMedThreshold(medThreshold);
-      val.setHighThreshold(highThreshold);
-      val.setHomeDomain(homeDomain);
-      val.setSigner(signer);
+      val.setInflationDest(this.inflationDest);
+      val.setClearFlags(this.clearFlags);
+      val.setSetFlags(this.setFlags);
+      val.setMasterWeight(this.masterWeight);
+      val.setLowThreshold(this.lowThreshold);
+      val.setMedThreshold(this.medThreshold);
+      val.setHighThreshold(this.highThreshold);
+      val.setHomeDomain(this.homeDomain);
+      val.setSigner(this.signer);
       return val;
     }
   }

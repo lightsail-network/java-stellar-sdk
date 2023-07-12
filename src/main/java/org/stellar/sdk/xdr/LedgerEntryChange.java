@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -109,10 +111,10 @@ public class LedgerEntryChange implements XdrElement {
     public LedgerEntryChange build() {
       LedgerEntryChange val = new LedgerEntryChange();
       val.setDiscriminant(discriminant);
-      val.setCreated(created);
-      val.setUpdated(updated);
-      val.setRemoved(removed);
-      val.setState(state);
+      val.setCreated(this.created);
+      val.setUpdated(this.updated);
+      val.setRemoved(this.removed);
+      val.setState(this.state);
       return val;
     }
   }

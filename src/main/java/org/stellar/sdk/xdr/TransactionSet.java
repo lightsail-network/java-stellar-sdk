@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -96,8 +98,8 @@ public class TransactionSet implements XdrElement {
 
     public TransactionSet build() {
       TransactionSet val = new TransactionSet();
-      val.setPreviousLedgerHash(previousLedgerHash);
-      val.setTxs(txs);
+      val.setPreviousLedgerHash(this.previousLedgerHash);
+      val.setTxs(this.txs);
       return val;
     }
   }

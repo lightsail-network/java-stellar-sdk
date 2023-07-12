@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -115,9 +117,9 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
 
     public LedgerHeaderHistoryEntry build() {
       LedgerHeaderHistoryEntry val = new LedgerHeaderHistoryEntry();
-      val.setHash(hash);
-      val.setHeader(header);
-      val.setExt(ext);
+      val.setHash(this.hash);
+      val.setHeader(this.header);
+      val.setExt(this.ext);
       return val;
     }
   }

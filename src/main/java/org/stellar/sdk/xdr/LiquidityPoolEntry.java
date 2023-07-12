@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -102,8 +104,8 @@ public class LiquidityPoolEntry implements XdrElement {
 
     public LiquidityPoolEntry build() {
       LiquidityPoolEntry val = new LiquidityPoolEntry();
-      val.setLiquidityPoolID(liquidityPoolID);
-      val.setBody(body);
+      val.setLiquidityPoolID(this.liquidityPoolID);
+      val.setBody(this.body);
       return val;
     }
   }
@@ -148,7 +150,7 @@ public class LiquidityPoolEntry implements XdrElement {
       public LiquidityPoolEntryBody build() {
         LiquidityPoolEntryBody val = new LiquidityPoolEntryBody();
         val.setDiscriminant(discriminant);
-        val.setConstantProduct(constantProduct);
+        val.setConstantProduct(this.constantProduct);
         return val;
       }
     }
@@ -340,11 +342,11 @@ public class LiquidityPoolEntry implements XdrElement {
 
         public LiquidityPoolEntryConstantProduct build() {
           LiquidityPoolEntryConstantProduct val = new LiquidityPoolEntryConstantProduct();
-          val.setParams(params);
-          val.setReserveA(reserveA);
-          val.setReserveB(reserveB);
-          val.setTotalPoolShares(totalPoolShares);
-          val.setPoolSharesTrustLineCount(poolSharesTrustLineCount);
+          val.setParams(this.params);
+          val.setReserveA(this.reserveA);
+          val.setReserveB(this.reserveB);
+          val.setTotalPoolShares(this.totalPoolShares);
+          val.setPoolSharesTrustLineCount(this.poolSharesTrustLineCount);
           return val;
         }
       }

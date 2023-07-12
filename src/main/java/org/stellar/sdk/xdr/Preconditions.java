@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -75,8 +77,8 @@ public class Preconditions implements XdrElement {
     public Preconditions build() {
       Preconditions val = new Preconditions();
       val.setDiscriminant(discriminant);
-      val.setTimeBounds(timeBounds);
-      val.setV2(v2);
+      val.setTimeBounds(this.timeBounds);
+      val.setV2(this.v2);
       return val;
     }
   }

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,12 @@ import java.io.IOException;
 //  {
 //  case ALLOW_TRUST_SUCCESS:
 //      void;
-//  default:
+//  case ALLOW_TRUST_MALFORMED:
+//  case ALLOW_TRUST_NO_TRUST_LINE:
+//  case ALLOW_TRUST_TRUST_NOT_REQUIRED:
+//  case ALLOW_TRUST_CANT_REVOKE:
+//  case ALLOW_TRUST_SELF_NOT_ALLOWED:
+//  case ALLOW_TRUST_LOW_RESERVE:
 //      void;
 //  };
 
@@ -53,7 +60,12 @@ public class AllowTrustResult implements XdrElement {
     switch (encodedAllowTrustResult.getDiscriminant()) {
       case ALLOW_TRUST_SUCCESS:
         break;
-      default:
+      case ALLOW_TRUST_MALFORMED:
+      case ALLOW_TRUST_NO_TRUST_LINE:
+      case ALLOW_TRUST_TRUST_NOT_REQUIRED:
+      case ALLOW_TRUST_CANT_REVOKE:
+      case ALLOW_TRUST_SELF_NOT_ALLOWED:
+      case ALLOW_TRUST_LOW_RESERVE:
         break;
     }
   }
@@ -69,7 +81,12 @@ public class AllowTrustResult implements XdrElement {
     switch (decodedAllowTrustResult.getDiscriminant()) {
       case ALLOW_TRUST_SUCCESS:
         break;
-      default:
+      case ALLOW_TRUST_MALFORMED:
+      case ALLOW_TRUST_NO_TRUST_LINE:
+      case ALLOW_TRUST_TRUST_NOT_REQUIRED:
+      case ALLOW_TRUST_CANT_REVOKE:
+      case ALLOW_TRUST_SELF_NOT_ALLOWED:
+      case ALLOW_TRUST_LOW_RESERVE:
         break;
     }
     return decodedAllowTrustResult;

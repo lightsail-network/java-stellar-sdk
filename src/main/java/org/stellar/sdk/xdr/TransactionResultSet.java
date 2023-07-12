@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -76,7 +78,7 @@ public class TransactionResultSet implements XdrElement {
 
     public TransactionResultSet build() {
       TransactionResultSet val = new TransactionResultSet();
-      val.setResults(results);
+      val.setResults(this.results);
       return val;
     }
   }

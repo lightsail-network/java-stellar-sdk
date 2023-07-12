@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -107,9 +109,9 @@ public class PaymentOp implements XdrElement {
 
     public PaymentOp build() {
       PaymentOp val = new PaymentOp();
-      val.setDestination(destination);
-      val.setAsset(asset);
-      val.setAmount(amount);
+      val.setDestination(this.destination);
+      val.setAsset(this.asset);
+      val.setAmount(this.amount);
       return val;
     }
   }

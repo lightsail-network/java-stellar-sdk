@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -93,9 +95,9 @@ public class BucketEntry implements XdrElement {
     public BucketEntry build() {
       BucketEntry val = new BucketEntry();
       val.setDiscriminant(discriminant);
-      val.setLiveEntry(liveEntry);
-      val.setDeadEntry(deadEntry);
-      val.setMetaEntry(metaEntry);
+      val.setLiveEntry(this.liveEntry);
+      val.setDeadEntry(this.deadEntry);
+      val.setMetaEntry(this.metaEntry);
       return val;
     }
   }

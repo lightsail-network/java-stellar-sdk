@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -87,8 +89,8 @@ public class LedgerBounds implements XdrElement {
 
     public LedgerBounds build() {
       LedgerBounds val = new LedgerBounds();
-      val.setMinLedger(minLedger);
-      val.setMaxLedger(maxLedger);
+      val.setMinLedger(this.minLedger);
+      val.setMaxLedger(this.maxLedger);
       return val;
     }
   }

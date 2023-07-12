@@ -3,17 +3,16 @@
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 %#include "xdr/Stellar-types.h"
+%#include "xdr/Stellar-contract.h"
+%#include "xdr/Stellar-contract-config-setting.h"
 
 namespace stellar
 {
 
-typedef PublicKey AccountID;
 typedef opaque Thresholds[4];
 typedef string string32<32>;
 typedef string string64<64>;
 typedef int64 SequenceNumber;
-typedef uint64 TimePoint;
-typedef uint64 Duration;
 typedef opaque DataValue<64>;
 typedef Hash PoolID; // SHA256(LiquidityPoolParameters)
 
@@ -98,7 +97,10 @@ enum LedgerEntryType
     OFFER = 2,
     DATA = 3,
     CLAIMABLE_BALANCE = 4,
-    LIQUIDITY_POOL = 5
+    LIQUIDITY_POOL = 5,
+    CONTRACT_DATA = 6,
+    CONTRACT_CODE = 7,
+    CONFIG_SETTING = 8
 };
 
 struct Signer
@@ -491,6 +493,60 @@ struct LiquidityPoolEntry
     body;
 };
 
+enum ContractEntryBodyType {
+    DATA_ENTRY = 0,
+    EXPIRATION_EXTENSION = 1
+};
+
+const MASK_CONTRACT_DATA_FLAGS_V20 = 0x1;
+
+enum ContractDataFlags {
+    // When set, the given entry does not recieve automatic expiration bumps
+    // on access. Note that entries can still be bumped manually via the footprint.
+    NO_AUTOBUMP = 0x1
+};
+
+enum ContractDataDurability {
+    TEMPORARY = 0,
+    PERSISTENT = 1
+};
+
+struct ContractDataEntry {
+    SCAddress contract;
+    SCVal key;
+    ContractDataDurability durability;
+
+    union switch (ContractEntryBodyType bodyType)
+    {
+    case DATA_ENTRY:
+    struct
+    {
+        uint32 flags;
+        SCVal val;
+    } data;
+    case EXPIRATION_EXTENSION:
+        void;
+    } body;
+
+    uint32 expirationLedgerSeq;
+};
+
+struct ContractCodeEntry {
+    ExtensionPoint ext;
+
+    Hash hash;
+    union switch (ContractEntryBodyType bodyType)
+    {
+    case DATA_ENTRY:
+        opaque code<>;
+    case EXPIRATION_EXTENSION:
+        void;
+    } body;
+
+    uint32 expirationLedgerSeq;
+};
+
+
 struct LedgerEntryExtensionV1
 {
     SponsorshipDescriptor sponsoringID;
@@ -521,6 +577,12 @@ struct LedgerEntry
         ClaimableBalanceEntry claimableBalance;
     case LIQUIDITY_POOL:
         LiquidityPoolEntry liquidityPool;
+    case CONTRACT_DATA:
+        ContractDataEntry contractData;
+    case CONTRACT_CODE:
+        ContractCodeEntry contractCode;
+    case CONFIG_SETTING:
+        ConfigSettingEntry configSetting;
     }
     data;
 
@@ -575,6 +637,25 @@ case LIQUIDITY_POOL:
     {
         PoolID liquidityPoolID;
     } liquidityPool;
+case CONTRACT_DATA:
+    struct
+    {
+        SCAddress contract;
+        SCVal key;
+        ContractDataDurability durability;
+        ContractEntryBodyType bodyType;
+    } contractData;
+case CONTRACT_CODE:
+    struct
+    {
+        Hash hash;
+        ContractEntryBodyType bodyType;
+    } contractCode;
+case CONFIG_SETTING:
+    struct
+    {
+        ConfigSettingID configSettingID;
+    } configSetting;
 };
 
 // list of all envelope types used in the application
@@ -589,6 +670,8 @@ enum EnvelopeType
     ENVELOPE_TYPE_SCPVALUE = 4,
     ENVELOPE_TYPE_TX_FEE_BUMP = 5,
     ENVELOPE_TYPE_OP_ID = 6,
-    ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7
+    ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
+    ENVELOPE_TYPE_CONTRACT_ID = 8,
+    ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
 };
 }

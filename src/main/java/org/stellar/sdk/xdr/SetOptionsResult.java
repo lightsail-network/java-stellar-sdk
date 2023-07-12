@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,16 @@ import java.io.IOException;
 //  {
 //  case SET_OPTIONS_SUCCESS:
 //      void;
-//  default:
+//  case SET_OPTIONS_LOW_RESERVE:
+//  case SET_OPTIONS_TOO_MANY_SIGNERS:
+//  case SET_OPTIONS_BAD_FLAGS:
+//  case SET_OPTIONS_INVALID_INFLATION:
+//  case SET_OPTIONS_CANT_CHANGE:
+//  case SET_OPTIONS_UNKNOWN_FLAG:
+//  case SET_OPTIONS_THRESHOLD_OUT_OF_RANGE:
+//  case SET_OPTIONS_BAD_SIGNER:
+//  case SET_OPTIONS_INVALID_HOME_DOMAIN:
+//  case SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
 //      void;
 //  };
 
@@ -53,7 +64,16 @@ public class SetOptionsResult implements XdrElement {
     switch (encodedSetOptionsResult.getDiscriminant()) {
       case SET_OPTIONS_SUCCESS:
         break;
-      default:
+      case SET_OPTIONS_LOW_RESERVE:
+      case SET_OPTIONS_TOO_MANY_SIGNERS:
+      case SET_OPTIONS_BAD_FLAGS:
+      case SET_OPTIONS_INVALID_INFLATION:
+      case SET_OPTIONS_CANT_CHANGE:
+      case SET_OPTIONS_UNKNOWN_FLAG:
+      case SET_OPTIONS_THRESHOLD_OUT_OF_RANGE:
+      case SET_OPTIONS_BAD_SIGNER:
+      case SET_OPTIONS_INVALID_HOME_DOMAIN:
+      case SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
         break;
     }
   }
@@ -69,7 +89,16 @@ public class SetOptionsResult implements XdrElement {
     switch (decodedSetOptionsResult.getDiscriminant()) {
       case SET_OPTIONS_SUCCESS:
         break;
-      default:
+      case SET_OPTIONS_LOW_RESERVE:
+      case SET_OPTIONS_TOO_MANY_SIGNERS:
+      case SET_OPTIONS_BAD_FLAGS:
+      case SET_OPTIONS_INVALID_INFLATION:
+      case SET_OPTIONS_CANT_CHANGE:
+      case SET_OPTIONS_UNKNOWN_FLAG:
+      case SET_OPTIONS_THRESHOLD_OUT_OF_RANGE:
+      case SET_OPTIONS_BAD_SIGNER:
+      case SET_OPTIONS_INVALID_HOME_DOMAIN:
+      case SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
         break;
     }
     return decodedSetOptionsResult;

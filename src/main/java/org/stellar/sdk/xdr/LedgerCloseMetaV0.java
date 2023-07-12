@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -186,11 +188,11 @@ public class LedgerCloseMetaV0 implements XdrElement {
 
     public LedgerCloseMetaV0 build() {
       LedgerCloseMetaV0 val = new LedgerCloseMetaV0();
-      val.setLedgerHeader(ledgerHeader);
-      val.setTxSet(txSet);
-      val.setTxProcessing(txProcessing);
-      val.setUpgradesProcessing(upgradesProcessing);
-      val.setScpInfo(scpInfo);
+      val.setLedgerHeader(this.ledgerHeader);
+      val.setTxSet(this.txSet);
+      val.setTxProcessing(this.txProcessing);
+      val.setUpgradesProcessing(this.upgradesProcessing);
+      val.setScpInfo(this.scpInfo);
       return val;
     }
   }

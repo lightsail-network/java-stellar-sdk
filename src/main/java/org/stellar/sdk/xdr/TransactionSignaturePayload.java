@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -100,8 +102,8 @@ public class TransactionSignaturePayload implements XdrElement {
 
     public TransactionSignaturePayload build() {
       TransactionSignaturePayload val = new TransactionSignaturePayload();
-      val.setNetworkId(networkId);
-      val.setTaggedTransaction(taggedTransaction);
+      val.setNetworkId(this.networkId);
+      val.setTaggedTransaction(this.taggedTransaction);
       return val;
     }
   }
@@ -163,8 +165,8 @@ public class TransactionSignaturePayload implements XdrElement {
         TransactionSignaturePayloadTaggedTransaction val =
             new TransactionSignaturePayloadTaggedTransaction();
         val.setDiscriminant(discriminant);
-        val.setTx(tx);
-        val.setFeeBump(feeBump);
+        val.setTx(this.tx);
+        val.setFeeBump(this.feeBump);
         return val;
       }
     }

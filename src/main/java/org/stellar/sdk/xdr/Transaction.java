@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -32,6 +34,8 @@ import java.util.Arrays;
 //      {
 //      case 0:
 //          void;
+//      case 1:
+//          SorobanTransactionData sorobanData;
 //      }
 //      ext;
 //  };
@@ -219,13 +223,13 @@ public class Transaction implements XdrElement {
 
     public Transaction build() {
       Transaction val = new Transaction();
-      val.setSourceAccount(sourceAccount);
-      val.setFee(fee);
-      val.setSeqNum(seqNum);
-      val.setCond(cond);
-      val.setMemo(memo);
-      val.setOperations(operations);
-      val.setExt(ext);
+      val.setSourceAccount(this.sourceAccount);
+      val.setFee(this.fee);
+      val.setSeqNum(this.seqNum);
+      val.setCond(this.cond);
+      val.setMemo(this.memo);
+      val.setOperations(this.operations);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -243,17 +247,34 @@ public class Transaction implements XdrElement {
       this.v = value;
     }
 
+    private SorobanTransactionData sorobanData;
+
+    public SorobanTransactionData getSorobanData() {
+      return this.sorobanData;
+    }
+
+    public void setSorobanData(SorobanTransactionData value) {
+      this.sorobanData = value;
+    }
+
     public static final class Builder {
       private Integer discriminant;
+      private SorobanTransactionData sorobanData;
 
       public Builder discriminant(Integer discriminant) {
         this.discriminant = discriminant;
         return this;
       }
 
+      public Builder sorobanData(SorobanTransactionData sorobanData) {
+        this.sorobanData = sorobanData;
+        return this;
+      }
+
       public TransactionExt build() {
         TransactionExt val = new TransactionExt();
         val.setDiscriminant(discriminant);
+        val.setSorobanData(this.sorobanData);
         return val;
       }
     }
@@ -265,6 +286,9 @@ public class Transaction implements XdrElement {
       stream.writeInt(encodedTransactionExt.getDiscriminant().intValue());
       switch (encodedTransactionExt.getDiscriminant()) {
         case 0:
+          break;
+        case 1:
+          SorobanTransactionData.encode(stream, encodedTransactionExt.sorobanData);
           break;
       }
     }
@@ -280,13 +304,16 @@ public class Transaction implements XdrElement {
       switch (decodedTransactionExt.getDiscriminant()) {
         case 0:
           break;
+        case 1:
+          decodedTransactionExt.sorobanData = SorobanTransactionData.decode(stream);
+          break;
       }
       return decodedTransactionExt;
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hashCode(this.sorobanData, this.v);
     }
 
     @Override
@@ -296,7 +323,7 @@ public class Transaction implements XdrElement {
       }
 
       TransactionExt other = (TransactionExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equal(this.sorobanData, other.sorobanData) && Objects.equal(this.v, other.v);
     }
   }
 }

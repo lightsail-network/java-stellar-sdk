@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -13,7 +15,7 @@ import java.util.Arrays;
 //  {
 //  case INFLATION_SUCCESS:
 //      InflationPayout payouts<>;
-//  default:
+//  case INFLATION_NOT_TIME:
 //      void;
 //  };
 
@@ -58,7 +60,7 @@ public class InflationResult implements XdrElement {
     public InflationResult build() {
       InflationResult val = new InflationResult();
       val.setDiscriminant(discriminant);
-      val.setPayouts(payouts);
+      val.setPayouts(this.payouts);
       return val;
     }
   }
@@ -76,7 +78,7 @@ public class InflationResult implements XdrElement {
           InflationPayout.encode(stream, encodedInflationResult.payouts[i]);
         }
         break;
-      default:
+      case INFLATION_NOT_TIME:
         break;
     }
   }
@@ -97,7 +99,7 @@ public class InflationResult implements XdrElement {
           decodedInflationResult.payouts[i] = InflationPayout.decode(stream);
         }
         break;
-      default:
+      case INFLATION_NOT_TIME:
         break;
     }
     return decodedInflationResult;

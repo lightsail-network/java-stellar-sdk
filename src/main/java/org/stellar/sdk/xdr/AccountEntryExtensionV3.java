@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -114,9 +116,9 @@ public class AccountEntryExtensionV3 implements XdrElement {
 
     public AccountEntryExtensionV3 build() {
       AccountEntryExtensionV3 val = new AccountEntryExtensionV3();
-      val.setExt(ext);
-      val.setSeqLedger(seqLedger);
-      val.setSeqTime(seqTime);
+      val.setExt(this.ext);
+      val.setSeqLedger(this.seqLedger);
+      val.setSeqTime(this.seqTime);
       return val;
     }
   }

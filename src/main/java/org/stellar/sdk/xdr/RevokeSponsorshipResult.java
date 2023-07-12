@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,11 @@ import java.io.IOException;
 //  {
 //  case REVOKE_SPONSORSHIP_SUCCESS:
 //      void;
-//  default:
+//  case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
+//  case REVOKE_SPONSORSHIP_NOT_SPONSOR:
+//  case REVOKE_SPONSORSHIP_LOW_RESERVE:
+//  case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
+//  case REVOKE_SPONSORSHIP_MALFORMED:
 //      void;
 //  };
 
@@ -54,7 +60,11 @@ public class RevokeSponsorshipResult implements XdrElement {
     switch (encodedRevokeSponsorshipResult.getDiscriminant()) {
       case REVOKE_SPONSORSHIP_SUCCESS:
         break;
-      default:
+      case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
+      case REVOKE_SPONSORSHIP_NOT_SPONSOR:
+      case REVOKE_SPONSORSHIP_LOW_RESERVE:
+      case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
+      case REVOKE_SPONSORSHIP_MALFORMED:
         break;
     }
   }
@@ -70,7 +80,11 @@ public class RevokeSponsorshipResult implements XdrElement {
     switch (decodedRevokeSponsorshipResult.getDiscriminant()) {
       case REVOKE_SPONSORSHIP_SUCCESS:
         break;
-      default:
+      case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
+      case REVOKE_SPONSORSHIP_NOT_SPONSOR:
+      case REVOKE_SPONSORSHIP_LOW_RESERVE:
+      case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
+      case REVOKE_SPONSORSHIP_MALFORMED:
         break;
     }
     return decodedRevokeSponsorshipResult;

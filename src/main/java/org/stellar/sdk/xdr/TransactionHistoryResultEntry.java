@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -117,9 +119,9 @@ public class TransactionHistoryResultEntry implements XdrElement {
 
     public TransactionHistoryResultEntry build() {
       TransactionHistoryResultEntry val = new TransactionHistoryResultEntry();
-      val.setLedgerSeq(ledgerSeq);
-      val.setTxResultSet(txResultSet);
-      val.setExt(ext);
+      val.setLedgerSeq(this.ledgerSeq);
+      val.setTxResultSet(this.txResultSet);
+      val.setExt(this.ext);
       return val;
     }
   }

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -96,8 +98,8 @@ public class SCPHistoryEntryV0 implements XdrElement {
 
     public SCPHistoryEntryV0 build() {
       SCPHistoryEntryV0 val = new SCPHistoryEntryV0();
-      val.setQuorumSets(quorumSets);
-      val.setLedgerMessages(ledgerMessages);
+      val.setQuorumSets(this.quorumSets);
+      val.setLedgerMessages(this.ledgerMessages);
       return val;
     }
   }

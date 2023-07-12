@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,10 @@ import java.io.IOException;
 //  {
 //  case CREATE_ACCOUNT_SUCCESS:
 //      void;
-//  default:
+//  case CREATE_ACCOUNT_MALFORMED:
+//  case CREATE_ACCOUNT_UNDERFUNDED:
+//  case CREATE_ACCOUNT_LOW_RESERVE:
+//  case CREATE_ACCOUNT_ALREADY_EXIST:
 //      void;
 //  };
 
@@ -54,7 +59,10 @@ public class CreateAccountResult implements XdrElement {
     switch (encodedCreateAccountResult.getDiscriminant()) {
       case CREATE_ACCOUNT_SUCCESS:
         break;
-      default:
+      case CREATE_ACCOUNT_MALFORMED:
+      case CREATE_ACCOUNT_UNDERFUNDED:
+      case CREATE_ACCOUNT_LOW_RESERVE:
+      case CREATE_ACCOUNT_ALREADY_EXIST:
         break;
     }
   }
@@ -70,7 +78,10 @@ public class CreateAccountResult implements XdrElement {
     switch (decodedCreateAccountResult.getDiscriminant()) {
       case CREATE_ACCOUNT_SUCCESS:
         break;
-      default:
+      case CREATE_ACCOUNT_MALFORMED:
+      case CREATE_ACCOUNT_UNDERFUNDED:
+      case CREATE_ACCOUNT_LOW_RESERVE:
+      case CREATE_ACCOUNT_ALREADY_EXIST:
         break;
     }
     return decodedCreateAccountResult;

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,11 @@ import java.io.IOException;
 //  {
 //  case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
 //      void;
-//  default:
+//  case LIQUIDITY_POOL_WITHDRAW_MALFORMED:
+//  case LIQUIDITY_POOL_WITHDRAW_NO_TRUST:
+//  case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
+//  case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
+//  case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
 //      void;
 //  };
 
@@ -54,7 +60,11 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     switch (encodedLiquidityPoolWithdrawResult.getDiscriminant()) {
       case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
         break;
-      default:
+      case LIQUIDITY_POOL_WITHDRAW_MALFORMED:
+      case LIQUIDITY_POOL_WITHDRAW_NO_TRUST:
+      case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
+      case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
+      case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
         break;
     }
   }
@@ -71,7 +81,11 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     switch (decodedLiquidityPoolWithdrawResult.getDiscriminant()) {
       case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
         break;
-      default:
+      case LIQUIDITY_POOL_WITHDRAW_MALFORMED:
+      case LIQUIDITY_POOL_WITHDRAW_NO_TRUST:
+      case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
+      case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
+      case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
         break;
     }
     return decodedLiquidityPoolWithdrawResult;

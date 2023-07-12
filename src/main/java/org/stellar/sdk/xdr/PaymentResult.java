@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,15 @@ import java.io.IOException;
 //  {
 //  case PAYMENT_SUCCESS:
 //      void;
-//  default:
+//  case PAYMENT_MALFORMED:
+//  case PAYMENT_UNDERFUNDED:
+//  case PAYMENT_SRC_NO_TRUST:
+//  case PAYMENT_SRC_NOT_AUTHORIZED:
+//  case PAYMENT_NO_DESTINATION:
+//  case PAYMENT_NO_TRUST:
+//  case PAYMENT_NOT_AUTHORIZED:
+//  case PAYMENT_LINE_FULL:
+//  case PAYMENT_NO_ISSUER:
 //      void;
 //  };
 
@@ -53,7 +63,15 @@ public class PaymentResult implements XdrElement {
     switch (encodedPaymentResult.getDiscriminant()) {
       case PAYMENT_SUCCESS:
         break;
-      default:
+      case PAYMENT_MALFORMED:
+      case PAYMENT_UNDERFUNDED:
+      case PAYMENT_SRC_NO_TRUST:
+      case PAYMENT_SRC_NOT_AUTHORIZED:
+      case PAYMENT_NO_DESTINATION:
+      case PAYMENT_NO_TRUST:
+      case PAYMENT_NOT_AUTHORIZED:
+      case PAYMENT_LINE_FULL:
+      case PAYMENT_NO_ISSUER:
         break;
     }
   }
@@ -69,7 +87,15 @@ public class PaymentResult implements XdrElement {
     switch (decodedPaymentResult.getDiscriminant()) {
       case PAYMENT_SUCCESS:
         break;
-      default:
+      case PAYMENT_MALFORMED:
+      case PAYMENT_UNDERFUNDED:
+      case PAYMENT_SRC_NO_TRUST:
+      case PAYMENT_SRC_NOT_AUTHORIZED:
+      case PAYMENT_NO_DESTINATION:
+      case PAYMENT_NO_TRUST:
+      case PAYMENT_NOT_AUTHORIZED:
+      case PAYMENT_LINE_FULL:
+      case PAYMENT_NO_ISSUER:
         break;
     }
     return decodedPaymentResult;

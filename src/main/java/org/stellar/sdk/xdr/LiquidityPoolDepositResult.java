@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,13 @@ import java.io.IOException;
 //  {
 //  case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
 //      void;
-//  default:
+//  case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
+//  case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
+//  case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
+//  case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
+//  case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
+//  case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
+//  case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
 //      void;
 //  };
 
@@ -54,7 +62,13 @@ public class LiquidityPoolDepositResult implements XdrElement {
     switch (encodedLiquidityPoolDepositResult.getDiscriminant()) {
       case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
         break;
-      default:
+      case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
+      case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
+      case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
+      case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
+      case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
+      case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
+      case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
         break;
     }
   }
@@ -70,7 +84,13 @@ public class LiquidityPoolDepositResult implements XdrElement {
     switch (decodedLiquidityPoolDepositResult.getDiscriminant()) {
       case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
         break;
-      default:
+      case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
+      case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
+      case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
+      case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
+      case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
+      case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
+      case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
         break;
     }
     return decodedLiquidityPoolDepositResult;

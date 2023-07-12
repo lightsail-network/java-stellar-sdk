@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -28,6 +30,8 @@ import java.util.Arrays;
 //      uint256 txSetHash;
 //  case TX_SET:
 //      TransactionSet txSet;
+//  case GENERALIZED_TX_SET:
+//      GeneralizedTransactionSet generalizedTxSet;
 //
 //  case TRANSACTION:
 //      TransactionEnvelope transaction;
@@ -49,6 +53,13 @@ import java.util.Arrays;
 //      uint32 getSCPLedgerSeq; // ledger seq requested ; if 0, requests the latest
 //  case SEND_MORE:
 //      SendMore sendMoreMessage;
+//  case SEND_MORE_EXTENDED:
+//      SendMoreExtended sendMoreExtendedMessage;
+//  // Pull mode
+//  case FLOOD_ADVERT:
+//       FloodAdvert floodAdvert;
+//  case FLOOD_DEMAND:
+//       FloodDemand floodDemand;
 //  };
 
 //  ===========================================================================
@@ -135,6 +146,16 @@ public class StellarMessage implements XdrElement {
     this.txSet = value;
   }
 
+  private GeneralizedTransactionSet generalizedTxSet;
+
+  public GeneralizedTransactionSet getGeneralizedTxSet() {
+    return this.generalizedTxSet;
+  }
+
+  public void setGeneralizedTxSet(GeneralizedTransactionSet value) {
+    this.generalizedTxSet = value;
+  }
+
   private TransactionEnvelope transaction;
 
   public TransactionEnvelope getTransaction() {
@@ -215,6 +236,36 @@ public class StellarMessage implements XdrElement {
     this.sendMoreMessage = value;
   }
 
+  private SendMoreExtended sendMoreExtendedMessage;
+
+  public SendMoreExtended getSendMoreExtendedMessage() {
+    return this.sendMoreExtendedMessage;
+  }
+
+  public void setSendMoreExtendedMessage(SendMoreExtended value) {
+    this.sendMoreExtendedMessage = value;
+  }
+
+  private FloodAdvert floodAdvert;
+
+  public FloodAdvert getFloodAdvert() {
+    return this.floodAdvert;
+  }
+
+  public void setFloodAdvert(FloodAdvert value) {
+    this.floodAdvert = value;
+  }
+
+  private FloodDemand floodDemand;
+
+  public FloodDemand getFloodDemand() {
+    return this.floodDemand;
+  }
+
+  public void setFloodDemand(FloodDemand value) {
+    this.floodDemand = value;
+  }
+
   public static final class Builder {
     private MessageType discriminant;
     private Error error;
@@ -224,6 +275,7 @@ public class StellarMessage implements XdrElement {
     private PeerAddress[] peers;
     private Uint256 txSetHash;
     private TransactionSet txSet;
+    private GeneralizedTransactionSet generalizedTxSet;
     private TransactionEnvelope transaction;
     private SignedSurveyRequestMessage signedSurveyRequestMessage;
     private SignedSurveyResponseMessage signedSurveyResponseMessage;
@@ -232,6 +284,9 @@ public class StellarMessage implements XdrElement {
     private SCPEnvelope envelope;
     private Uint32 getSCPLedgerSeq;
     private SendMore sendMoreMessage;
+    private SendMoreExtended sendMoreExtendedMessage;
+    private FloodAdvert floodAdvert;
+    private FloodDemand floodDemand;
 
     public Builder discriminant(MessageType discriminant) {
       this.discriminant = discriminant;
@@ -270,6 +325,11 @@ public class StellarMessage implements XdrElement {
 
     public Builder txSet(TransactionSet txSet) {
       this.txSet = txSet;
+      return this;
+    }
+
+    public Builder generalizedTxSet(GeneralizedTransactionSet generalizedTxSet) {
+      this.generalizedTxSet = generalizedTxSet;
       return this;
     }
 
@@ -315,24 +375,43 @@ public class StellarMessage implements XdrElement {
       return this;
     }
 
+    public Builder sendMoreExtendedMessage(SendMoreExtended sendMoreExtendedMessage) {
+      this.sendMoreExtendedMessage = sendMoreExtendedMessage;
+      return this;
+    }
+
+    public Builder floodAdvert(FloodAdvert floodAdvert) {
+      this.floodAdvert = floodAdvert;
+      return this;
+    }
+
+    public Builder floodDemand(FloodDemand floodDemand) {
+      this.floodDemand = floodDemand;
+      return this;
+    }
+
     public StellarMessage build() {
       StellarMessage val = new StellarMessage();
       val.setDiscriminant(discriminant);
-      val.setError(error);
-      val.setHello(hello);
-      val.setAuth(auth);
-      val.setDontHave(dontHave);
-      val.setPeers(peers);
-      val.setTxSetHash(txSetHash);
-      val.setTxSet(txSet);
-      val.setTransaction(transaction);
-      val.setSignedSurveyRequestMessage(signedSurveyRequestMessage);
-      val.setSignedSurveyResponseMessage(signedSurveyResponseMessage);
-      val.setQSetHash(qSetHash);
-      val.setQSet(qSet);
-      val.setEnvelope(envelope);
-      val.setGetSCPLedgerSeq(getSCPLedgerSeq);
-      val.setSendMoreMessage(sendMoreMessage);
+      val.setError(this.error);
+      val.setHello(this.hello);
+      val.setAuth(this.auth);
+      val.setDontHave(this.dontHave);
+      val.setPeers(this.peers);
+      val.setTxSetHash(this.txSetHash);
+      val.setTxSet(this.txSet);
+      val.setGeneralizedTxSet(this.generalizedTxSet);
+      val.setTransaction(this.transaction);
+      val.setSignedSurveyRequestMessage(this.signedSurveyRequestMessage);
+      val.setSignedSurveyResponseMessage(this.signedSurveyResponseMessage);
+      val.setQSetHash(this.qSetHash);
+      val.setQSet(this.qSet);
+      val.setEnvelope(this.envelope);
+      val.setGetSCPLedgerSeq(this.getSCPLedgerSeq);
+      val.setSendMoreMessage(this.sendMoreMessage);
+      val.setSendMoreExtendedMessage(this.sendMoreExtendedMessage);
+      val.setFloodAdvert(this.floodAdvert);
+      val.setFloodDemand(this.floodDemand);
       return val;
     }
   }
@@ -370,6 +449,9 @@ public class StellarMessage implements XdrElement {
       case TX_SET:
         TransactionSet.encode(stream, encodedStellarMessage.txSet);
         break;
+      case GENERALIZED_TX_SET:
+        GeneralizedTransactionSet.encode(stream, encodedStellarMessage.generalizedTxSet);
+        break;
       case TRANSACTION:
         TransactionEnvelope.encode(stream, encodedStellarMessage.transaction);
         break;
@@ -394,6 +476,15 @@ public class StellarMessage implements XdrElement {
         break;
       case SEND_MORE:
         SendMore.encode(stream, encodedStellarMessage.sendMoreMessage);
+        break;
+      case SEND_MORE_EXTENDED:
+        SendMoreExtended.encode(stream, encodedStellarMessage.sendMoreExtendedMessage);
+        break;
+      case FLOOD_ADVERT:
+        FloodAdvert.encode(stream, encodedStellarMessage.floodAdvert);
+        break;
+      case FLOOD_DEMAND:
+        FloodDemand.encode(stream, encodedStellarMessage.floodDemand);
         break;
     }
   }
@@ -434,6 +525,9 @@ public class StellarMessage implements XdrElement {
       case TX_SET:
         decodedStellarMessage.txSet = TransactionSet.decode(stream);
         break;
+      case GENERALIZED_TX_SET:
+        decodedStellarMessage.generalizedTxSet = GeneralizedTransactionSet.decode(stream);
+        break;
       case TRANSACTION:
         decodedStellarMessage.transaction = TransactionEnvelope.decode(stream);
         break;
@@ -460,6 +554,15 @@ public class StellarMessage implements XdrElement {
       case SEND_MORE:
         decodedStellarMessage.sendMoreMessage = SendMore.decode(stream);
         break;
+      case SEND_MORE_EXTENDED:
+        decodedStellarMessage.sendMoreExtendedMessage = SendMoreExtended.decode(stream);
+        break;
+      case FLOOD_ADVERT:
+        decodedStellarMessage.floodAdvert = FloodAdvert.decode(stream);
+        break;
+      case FLOOD_DEMAND:
+        decodedStellarMessage.floodDemand = FloodDemand.decode(stream);
+        break;
     }
     return decodedStellarMessage;
   }
@@ -474,6 +577,7 @@ public class StellarMessage implements XdrElement {
         Arrays.hashCode(this.peers),
         this.txSetHash,
         this.txSet,
+        this.generalizedTxSet,
         this.transaction,
         this.signedSurveyRequestMessage,
         this.signedSurveyResponseMessage,
@@ -482,6 +586,9 @@ public class StellarMessage implements XdrElement {
         this.envelope,
         this.getSCPLedgerSeq,
         this.sendMoreMessage,
+        this.sendMoreExtendedMessage,
+        this.floodAdvert,
+        this.floodDemand,
         this.type);
   }
 
@@ -499,6 +606,7 @@ public class StellarMessage implements XdrElement {
         && Arrays.equals(this.peers, other.peers)
         && Objects.equal(this.txSetHash, other.txSetHash)
         && Objects.equal(this.txSet, other.txSet)
+        && Objects.equal(this.generalizedTxSet, other.generalizedTxSet)
         && Objects.equal(this.transaction, other.transaction)
         && Objects.equal(this.signedSurveyRequestMessage, other.signedSurveyRequestMessage)
         && Objects.equal(this.signedSurveyResponseMessage, other.signedSurveyResponseMessage)
@@ -507,6 +615,9 @@ public class StellarMessage implements XdrElement {
         && Objects.equal(this.envelope, other.envelope)
         && Objects.equal(this.getSCPLedgerSeq, other.getSCPLedgerSeq)
         && Objects.equal(this.sendMoreMessage, other.sendMoreMessage)
+        && Objects.equal(this.sendMoreExtendedMessage, other.sendMoreExtendedMessage)
+        && Objects.equal(this.floodAdvert, other.floodAdvert)
+        && Objects.equal(this.floodDemand, other.floodDemand)
         && Objects.equal(this.type, other.type);
   }
 }

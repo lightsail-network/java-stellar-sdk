@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,18 @@ import java.io.IOException;
 //  {
 //  case MANAGE_SELL_OFFER_SUCCESS:
 //      ManageOfferSuccessResult success;
-//  default:
+//  case MANAGE_SELL_OFFER_MALFORMED:
+//  case MANAGE_SELL_OFFER_SELL_NO_TRUST:
+//  case MANAGE_SELL_OFFER_BUY_NO_TRUST:
+//  case MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED:
+//  case MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED:
+//  case MANAGE_SELL_OFFER_LINE_FULL:
+//  case MANAGE_SELL_OFFER_UNDERFUNDED:
+//  case MANAGE_SELL_OFFER_CROSS_SELF:
+//  case MANAGE_SELL_OFFER_SELL_NO_ISSUER:
+//  case MANAGE_SELL_OFFER_BUY_NO_ISSUER:
+//  case MANAGE_SELL_OFFER_NOT_FOUND:
+//  case MANAGE_SELL_OFFER_LOW_RESERVE:
 //      void;
 //  };
 
@@ -57,7 +70,7 @@ public class ManageSellOfferResult implements XdrElement {
     public ManageSellOfferResult build() {
       ManageSellOfferResult val = new ManageSellOfferResult();
       val.setDiscriminant(discriminant);
-      val.setSuccess(success);
+      val.setSuccess(this.success);
       return val;
     }
   }
@@ -72,7 +85,18 @@ public class ManageSellOfferResult implements XdrElement {
       case MANAGE_SELL_OFFER_SUCCESS:
         ManageOfferSuccessResult.encode(stream, encodedManageSellOfferResult.success);
         break;
-      default:
+      case MANAGE_SELL_OFFER_MALFORMED:
+      case MANAGE_SELL_OFFER_SELL_NO_TRUST:
+      case MANAGE_SELL_OFFER_BUY_NO_TRUST:
+      case MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED:
+      case MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED:
+      case MANAGE_SELL_OFFER_LINE_FULL:
+      case MANAGE_SELL_OFFER_UNDERFUNDED:
+      case MANAGE_SELL_OFFER_CROSS_SELF:
+      case MANAGE_SELL_OFFER_SELL_NO_ISSUER:
+      case MANAGE_SELL_OFFER_BUY_NO_ISSUER:
+      case MANAGE_SELL_OFFER_NOT_FOUND:
+      case MANAGE_SELL_OFFER_LOW_RESERVE:
         break;
     }
   }
@@ -89,7 +113,18 @@ public class ManageSellOfferResult implements XdrElement {
       case MANAGE_SELL_OFFER_SUCCESS:
         decodedManageSellOfferResult.success = ManageOfferSuccessResult.decode(stream);
         break;
-      default:
+      case MANAGE_SELL_OFFER_MALFORMED:
+      case MANAGE_SELL_OFFER_SELL_NO_TRUST:
+      case MANAGE_SELL_OFFER_BUY_NO_TRUST:
+      case MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED:
+      case MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED:
+      case MANAGE_SELL_OFFER_LINE_FULL:
+      case MANAGE_SELL_OFFER_UNDERFUNDED:
+      case MANAGE_SELL_OFFER_CROSS_SELF:
+      case MANAGE_SELL_OFFER_SELL_NO_ISSUER:
+      case MANAGE_SELL_OFFER_BUY_NO_ISSUER:
+      case MANAGE_SELL_OFFER_NOT_FOUND:
+      case MANAGE_SELL_OFFER_LOW_RESERVE:
         break;
     }
     return decodedManageSellOfferResult;

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -139,9 +141,9 @@ public class SCPStatement implements XdrElement {
 
     public SCPStatement build() {
       SCPStatement val = new SCPStatement();
-      val.setNodeID(nodeID);
-      val.setSlotIndex(slotIndex);
-      val.setPledges(pledges);
+      val.setNodeID(this.nodeID);
+      val.setSlotIndex(this.slotIndex);
+      val.setPledges(this.pledges);
       return val;
     }
   }
@@ -234,10 +236,10 @@ public class SCPStatement implements XdrElement {
       public SCPStatementPledges build() {
         SCPStatementPledges val = new SCPStatementPledges();
         val.setDiscriminant(discriminant);
-        val.setPrepare(prepare);
-        val.setConfirm(confirm);
-        val.setExternalize(externalize);
-        val.setNominate(nominate);
+        val.setPrepare(this.prepare);
+        val.setConfirm(this.confirm);
+        val.setExternalize(this.externalize);
+        val.setNominate(this.nominate);
         return val;
       }
     }
@@ -475,12 +477,12 @@ public class SCPStatement implements XdrElement {
 
         public SCPStatementPrepare build() {
           SCPStatementPrepare val = new SCPStatementPrepare();
-          val.setQuorumSetHash(quorumSetHash);
-          val.setBallot(ballot);
-          val.setPrepared(prepared);
-          val.setPreparedPrime(preparedPrime);
-          val.setNC(nC);
-          val.setNH(nH);
+          val.setQuorumSetHash(this.quorumSetHash);
+          val.setBallot(this.ballot);
+          val.setPrepared(this.prepared);
+          val.setPreparedPrime(this.preparedPrime);
+          val.setNC(this.nC);
+          val.setNH(this.nH);
           return val;
         }
       }
@@ -617,11 +619,11 @@ public class SCPStatement implements XdrElement {
 
         public SCPStatementConfirm build() {
           SCPStatementConfirm val = new SCPStatementConfirm();
-          val.setBallot(ballot);
-          val.setNPrepared(nPrepared);
-          val.setNCommit(nCommit);
-          val.setNH(nH);
-          val.setQuorumSetHash(quorumSetHash);
+          val.setBallot(this.ballot);
+          val.setNPrepared(this.nPrepared);
+          val.setNCommit(this.nCommit);
+          val.setNH(this.nH);
+          val.setQuorumSetHash(this.quorumSetHash);
           return val;
         }
       }
@@ -719,9 +721,9 @@ public class SCPStatement implements XdrElement {
 
         public SCPStatementExternalize build() {
           SCPStatementExternalize val = new SCPStatementExternalize();
-          val.setCommit(commit);
-          val.setNH(nH);
-          val.setCommitQuorumSetHash(commitQuorumSetHash);
+          val.setCommit(this.commit);
+          val.setNH(this.nH);
+          val.setCommitQuorumSetHash(this.commitQuorumSetHash);
           return val;
         }
       }

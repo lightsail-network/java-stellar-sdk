@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -77,8 +79,8 @@ public class RevokeSponsorshipOp implements XdrElement {
     public RevokeSponsorshipOp build() {
       RevokeSponsorshipOp val = new RevokeSponsorshipOp();
       val.setDiscriminant(discriminant);
-      val.setLedgerKey(ledgerKey);
-      val.setSigner(signer);
+      val.setLedgerKey(this.ledgerKey);
+      val.setSigner(this.signer);
       return val;
     }
   }
@@ -208,8 +210,8 @@ public class RevokeSponsorshipOp implements XdrElement {
 
       public RevokeSponsorshipOpSigner build() {
         RevokeSponsorshipOpSigner val = new RevokeSponsorshipOpSigner();
-        val.setAccountID(accountID);
-        val.setSignerKey(signerKey);
+        val.setAccountID(this.accountID);
+        val.setSignerKey(this.signerKey);
         return val;
       }
     }

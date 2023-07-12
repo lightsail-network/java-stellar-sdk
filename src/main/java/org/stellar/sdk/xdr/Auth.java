@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -10,27 +12,25 @@ import java.io.IOException;
 
 //  struct Auth
 //  {
-//      // Empty message, just to confirm
-//      // establishment of MAC keys.
-//      int unused;
+//      int flags;
 //  };
 
 //  ===========================================================================
 public class Auth implements XdrElement {
   public Auth() {}
 
-  private Integer unused;
+  private Integer flags;
 
-  public Integer getUnused() {
-    return this.unused;
+  public Integer getFlags() {
+    return this.flags;
   }
 
-  public void setUnused(Integer value) {
-    this.unused = value;
+  public void setFlags(Integer value) {
+    this.flags = value;
   }
 
   public static void encode(XdrDataOutputStream stream, Auth encodedAuth) throws IOException {
-    stream.writeInt(encodedAuth.unused);
+    stream.writeInt(encodedAuth.flags);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -39,13 +39,13 @@ public class Auth implements XdrElement {
 
   public static Auth decode(XdrDataInputStream stream) throws IOException {
     Auth decodedAuth = new Auth();
-    decodedAuth.unused = stream.readInt();
+    decodedAuth.flags = stream.readInt();
     return decodedAuth;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.unused);
+    return Objects.hashCode(this.flags);
   }
 
   @Override
@@ -55,20 +55,20 @@ public class Auth implements XdrElement {
     }
 
     Auth other = (Auth) object;
-    return Objects.equal(this.unused, other.unused);
+    return Objects.equal(this.flags, other.flags);
   }
 
   public static final class Builder {
-    private Integer unused;
+    private Integer flags;
 
-    public Builder unused(Integer unused) {
-      this.unused = unused;
+    public Builder flags(Integer flags) {
+      this.flags = flags;
       return this;
     }
 
     public Auth build() {
       Auth val = new Auth();
-      val.setUnused(unused);
+      val.setFlags(this.flags);
       return val;
     }
   }

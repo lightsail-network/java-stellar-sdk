@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -96,8 +98,8 @@ public class TransactionMetaV1 implements XdrElement {
 
     public TransactionMetaV1 build() {
       TransactionMetaV1 val = new TransactionMetaV1();
-      val.setTxChanges(txChanges);
-      val.setOperations(operations);
+      val.setTxChanges(this.txChanges);
+      val.setOperations(this.operations);
       return val;
     }
   }

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -111,9 +113,9 @@ public class LiquidityPoolConstantProductParameters implements XdrElement {
 
     public LiquidityPoolConstantProductParameters build() {
       LiquidityPoolConstantProductParameters val = new LiquidityPoolConstantProductParameters();
-      val.setAssetA(assetA);
-      val.setAssetB(assetB);
-      val.setFee(fee);
+      val.setAssetA(this.assetA);
+      val.setAssetB(this.assetB);
+      val.setFee(this.fee);
       return val;
     }
   }

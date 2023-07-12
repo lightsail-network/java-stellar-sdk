@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -89,8 +91,8 @@ public class SignedSurveyResponseMessage implements XdrElement {
 
     public SignedSurveyResponseMessage build() {
       SignedSurveyResponseMessage val = new SignedSurveyResponseMessage();
-      val.setResponseSignature(responseSignature);
-      val.setResponse(response);
+      val.setResponseSignature(this.responseSignature);
+      val.setResponse(this.response);
       return val;
     }
   }

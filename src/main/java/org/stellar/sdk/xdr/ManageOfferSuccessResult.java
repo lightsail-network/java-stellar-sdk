@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -19,7 +21,7 @@ import java.util.Arrays;
 //      case MANAGE_OFFER_CREATED:
 //      case MANAGE_OFFER_UPDATED:
 //          OfferEntry offer;
-//      default:
+//      case MANAGE_OFFER_DELETED:
 //          void;
 //      }
 //      offer;
@@ -107,8 +109,8 @@ public class ManageOfferSuccessResult implements XdrElement {
 
     public ManageOfferSuccessResult build() {
       ManageOfferSuccessResult val = new ManageOfferSuccessResult();
-      val.setOffersClaimed(offersClaimed);
-      val.setOffer(offer);
+      val.setOffersClaimed(this.offersClaimed);
+      val.setOffer(this.offer);
       return val;
     }
   }
@@ -153,7 +155,7 @@ public class ManageOfferSuccessResult implements XdrElement {
       public ManageOfferSuccessResultOffer build() {
         ManageOfferSuccessResultOffer val = new ManageOfferSuccessResultOffer();
         val.setDiscriminant(discriminant);
-        val.setOffer(offer);
+        val.setOffer(this.offer);
         return val;
       }
     }
@@ -170,7 +172,7 @@ public class ManageOfferSuccessResult implements XdrElement {
         case MANAGE_OFFER_UPDATED:
           OfferEntry.encode(stream, encodedManageOfferSuccessResultOffer.offer);
           break;
-        default:
+        case MANAGE_OFFER_DELETED:
           break;
       }
     }
@@ -190,7 +192,7 @@ public class ManageOfferSuccessResult implements XdrElement {
         case MANAGE_OFFER_UPDATED:
           decodedManageOfferSuccessResultOffer.offer = OfferEntry.decode(stream);
           break;
-        default:
+        case MANAGE_OFFER_DELETED:
           break;
       }
       return decodedManageOfferSuccessResultOffer;

@@ -42,5 +42,5 @@ java-stellar-sdk is licensed under an Apache-2.0 license. See the [LICENSE](http
 ## xdr to jave code generation
 All the java source files in org.stellar.sdk.xdr package are generated using the `xdrgen` command from the [stellar/xdrgen](https://github.com/stellar/xdrgen) 
 ```
-xdrgen -o ./src/main/java/org/stellar/sdk/xdr -l java -n org.stellar.sdk.xdr ./xdr/Stellar-types.x ./xdr/Stellar-SCP.x ./xdr/Stellar-overlay.x ./xdr/Stellar-ledger-entries.x ./xdr/Stellar-ledger.x ./xdr/Stellar-transaction.x
+xdrgen -o ./src/main/java/org/stellar/sdk/xdr -l java -n org.stellar.sdk.xdr ./xdr/*.x
 ```

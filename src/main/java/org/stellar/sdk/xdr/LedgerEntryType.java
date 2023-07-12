@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -14,7 +16,10 @@ import java.io.IOException;
 //      OFFER = 2,
 //      DATA = 3,
 //      CLAIMABLE_BALANCE = 4,
-//      LIQUIDITY_POOL = 5
+//      LIQUIDITY_POOL = 5,
+//      CONTRACT_DATA = 6,
+//      CONTRACT_CODE = 7,
+//      CONFIG_SETTING = 8
 //  };
 
 //  ===========================================================================
@@ -25,6 +30,9 @@ public enum LedgerEntryType implements XdrElement {
   DATA(3),
   CLAIMABLE_BALANCE(4),
   LIQUIDITY_POOL(5),
+  CONTRACT_DATA(6),
+  CONTRACT_CODE(7),
+  CONFIG_SETTING(8),
   ;
   private int mValue;
 
@@ -51,6 +59,12 @@ public enum LedgerEntryType implements XdrElement {
         return CLAIMABLE_BALANCE;
       case 5:
         return LIQUIDITY_POOL;
+      case 6:
+        return CONTRACT_DATA;
+      case 7:
+        return CONTRACT_CODE;
+      case 8:
+        return CONFIG_SETTING;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

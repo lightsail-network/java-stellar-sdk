@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -98,8 +100,8 @@ public class TransactionV1Envelope implements XdrElement {
 
     public TransactionV1Envelope build() {
       TransactionV1Envelope val = new TransactionV1Envelope();
-      val.setTx(tx);
-      val.setSignatures(signatures);
+      val.setTx(this.tx);
+      val.setSignatures(this.signatures);
       return val;
     }
   }

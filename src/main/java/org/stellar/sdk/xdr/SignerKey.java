@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -118,10 +120,10 @@ public class SignerKey implements XdrElement {
     public SignerKey build() {
       SignerKey val = new SignerKey();
       val.setDiscriminant(discriminant);
-      val.setEd25519(ed25519);
-      val.setPreAuthTx(preAuthTx);
-      val.setHashX(hashX);
-      val.setEd25519SignedPayload(ed25519SignedPayload);
+      val.setEd25519(this.ed25519);
+      val.setPreAuthTx(this.preAuthTx);
+      val.setHashX(this.hashX);
+      val.setEd25519SignedPayload(this.ed25519SignedPayload);
       return val;
     }
   }
@@ -272,8 +274,8 @@ public class SignerKey implements XdrElement {
 
       public SignerKeyEd25519SignedPayload build() {
         SignerKeyEd25519SignedPayload val = new SignerKeyEd25519SignedPayload();
-        val.setEd25519(ed25519);
-        val.setPayload(payload);
+        val.setEd25519(this.ed25519);
+        val.setPayload(this.payload);
         return val;
       }
     }
