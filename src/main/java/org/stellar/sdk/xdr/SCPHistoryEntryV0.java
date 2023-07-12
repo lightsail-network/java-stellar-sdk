@@ -3,11 +3,9 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
-import java.util.Arrays;
 import com.google.common.base.Objects;
+import java.io.IOException;
+import java.util.Arrays;
 
 // === xdr source ============================================================
 
@@ -19,22 +17,30 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class SCPHistoryEntryV0 implements XdrElement {
-  public SCPHistoryEntryV0 () {}
+  public SCPHistoryEntryV0() {}
+
   private SCPQuorumSet[] quorumSets;
+
   public SCPQuorumSet[] getQuorumSets() {
     return this.quorumSets;
   }
+
   public void setQuorumSets(SCPQuorumSet[] value) {
     this.quorumSets = value;
   }
+
   private LedgerSCPMessages ledgerMessages;
+
   public LedgerSCPMessages getLedgerMessages() {
     return this.ledgerMessages;
   }
+
   public void setLedgerMessages(LedgerSCPMessages value) {
     this.ledgerMessages = value;
   }
-  public static void encode(XdrDataOutputStream stream, SCPHistoryEntryV0 encodedSCPHistoryEntryV0) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, SCPHistoryEntryV0 encodedSCPHistoryEntryV0)
+      throws IOException {
     int quorumSetssize = encodedSCPHistoryEntryV0.getQuorumSets().length;
     stream.writeInt(quorumSetssize);
     for (int i = 0; i < quorumSetssize; i++) {
@@ -42,9 +48,11 @@ public class SCPHistoryEntryV0 implements XdrElement {
     }
     LedgerSCPMessages.encode(stream, encodedSCPHistoryEntryV0.ledgerMessages);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SCPHistoryEntryV0 decode(XdrDataInputStream stream) throws IOException {
     SCPHistoryEntryV0 decodedSCPHistoryEntryV0 = new SCPHistoryEntryV0();
     int quorumSetssize = stream.readInt();
@@ -55,10 +63,12 @@ public class SCPHistoryEntryV0 implements XdrElement {
     decodedSCPHistoryEntryV0.ledgerMessages = LedgerSCPMessages.decode(stream);
     return decodedSCPHistoryEntryV0;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(Arrays.hashCode(this.quorumSets), this.ledgerMessages);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SCPHistoryEntryV0)) {
@@ -66,7 +76,8 @@ public class SCPHistoryEntryV0 implements XdrElement {
     }
 
     SCPHistoryEntryV0 other = (SCPHistoryEntryV0) object;
-    return Arrays.equals(this.quorumSets, other.quorumSets) && Objects.equal(this.ledgerMessages, other.ledgerMessages);
+    return Arrays.equals(this.quorumSets, other.quorumSets)
+        && Objects.equal(this.ledgerMessages, other.ledgerMessages);
   }
 
   public static final class Builder {

@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -30,7 +28,8 @@ public class AssetCode12 implements XdrElement {
     this.AssetCode12 = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, AssetCode12  encodedAssetCode12) throws IOException {
+  public static void encode(XdrDataOutputStream stream, AssetCode12 encodedAssetCode12)
+      throws IOException {
     int AssetCode12size = encodedAssetCode12.AssetCode12.length;
     stream.write(encodedAssetCode12.getAssetCode12(), 0, AssetCode12size);
   }
@@ -38,6 +37,7 @@ public class AssetCode12 implements XdrElement {
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static AssetCode12 decode(XdrDataInputStream stream) throws IOException {
     AssetCode12 decodedAssetCode12 = new AssetCode12();
     int AssetCode12size = 12;

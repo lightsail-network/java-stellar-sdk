@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,11 +18,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class RevokeSponsorshipResult implements XdrElement {
-  public RevokeSponsorshipResult () {}
+  public RevokeSponsorshipResult() {}
+
   RevokeSponsorshipResultCode code;
+
   public RevokeSponsorshipResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(RevokeSponsorshipResultCode value) {
     this.code = value;
   }
@@ -44,36 +45,42 @@ public class RevokeSponsorshipResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, RevokeSponsorshipResult encodedRevokeSponsorshipResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //RevokeSponsorshipResultCode
-  stream.writeInt(encodedRevokeSponsorshipResult.getDiscriminant().getValue());
-  switch (encodedRevokeSponsorshipResult.getDiscriminant()) {
-  case REVOKE_SPONSORSHIP_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(
+      XdrDataOutputStream stream, RevokeSponsorshipResult encodedRevokeSponsorshipResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // RevokeSponsorshipResultCode
+    stream.writeInt(encodedRevokeSponsorshipResult.getDiscriminant().getValue());
+    switch (encodedRevokeSponsorshipResult.getDiscriminant()) {
+      case REVOKE_SPONSORSHIP_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static RevokeSponsorshipResult decode(XdrDataInputStream stream) throws IOException {
-  RevokeSponsorshipResult decodedRevokeSponsorshipResult = new RevokeSponsorshipResult();
-  RevokeSponsorshipResultCode discriminant = RevokeSponsorshipResultCode.decode(stream);
-  decodedRevokeSponsorshipResult.setDiscriminant(discriminant);
-  switch (decodedRevokeSponsorshipResult.getDiscriminant()) {
-  case REVOKE_SPONSORSHIP_SUCCESS:
-  break;
-  default:
-  break;
-  }
+    RevokeSponsorshipResult decodedRevokeSponsorshipResult = new RevokeSponsorshipResult();
+    RevokeSponsorshipResultCode discriminant = RevokeSponsorshipResultCode.decode(stream);
+    decodedRevokeSponsorshipResult.setDiscriminant(discriminant);
+    switch (decodedRevokeSponsorshipResult.getDiscriminant()) {
+      case REVOKE_SPONSORSHIP_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedRevokeSponsorshipResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof RevokeSponsorshipResult)) {

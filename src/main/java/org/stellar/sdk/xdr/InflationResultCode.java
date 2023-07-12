@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -25,24 +23,27 @@ public enum InflationResultCode implements XdrElement {
   private int mValue;
 
   InflationResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static InflationResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return INFLATION_SUCCESS;
-      case -1: return INFLATION_NOT_TIME;
+      case 0:
+        return INFLATION_SUCCESS;
+      case -1:
+        return INFLATION_NOT_TIME;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, InflationResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, InflationResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

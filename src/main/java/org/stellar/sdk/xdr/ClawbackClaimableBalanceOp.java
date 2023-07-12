@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -17,29 +15,39 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ClawbackClaimableBalanceOp implements XdrElement {
-  public ClawbackClaimableBalanceOp () {}
+  public ClawbackClaimableBalanceOp() {}
+
   private ClaimableBalanceID balanceID;
+
   public ClaimableBalanceID getBalanceID() {
     return this.balanceID;
   }
+
   public void setBalanceID(ClaimableBalanceID value) {
     this.balanceID = value;
   }
-  public static void encode(XdrDataOutputStream stream, ClawbackClaimableBalanceOp encodedClawbackClaimableBalanceOp) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, ClawbackClaimableBalanceOp encodedClawbackClaimableBalanceOp)
+      throws IOException {
     ClaimableBalanceID.encode(stream, encodedClawbackClaimableBalanceOp.balanceID);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ClawbackClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
     ClawbackClaimableBalanceOp decodedClawbackClaimableBalanceOp = new ClawbackClaimableBalanceOp();
     decodedClawbackClaimableBalanceOp.balanceID = ClaimableBalanceID.decode(stream);
     return decodedClawbackClaimableBalanceOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.balanceID);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ClawbackClaimableBalanceOp)) {

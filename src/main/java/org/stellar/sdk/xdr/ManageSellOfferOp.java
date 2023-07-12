@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -16,59 +14,78 @@ import com.google.common.base.Objects;
 //      Asset buying;
 //      int64 amount; // amount being sold. if set to 0, delete the offer
 //      Price price;  // price of thing being sold in terms of what you are buying
-//  
+//
 //      // 0=create a new offer, otherwise edit an existing offer
 //      int64 offerID;
 //  };
 
 //  ===========================================================================
 public class ManageSellOfferOp implements XdrElement {
-  public ManageSellOfferOp () {}
+  public ManageSellOfferOp() {}
+
   private Asset selling;
+
   public Asset getSelling() {
     return this.selling;
   }
+
   public void setSelling(Asset value) {
     this.selling = value;
   }
+
   private Asset buying;
+
   public Asset getBuying() {
     return this.buying;
   }
+
   public void setBuying(Asset value) {
     this.buying = value;
   }
+
   private Int64 amount;
+
   public Int64 getAmount() {
     return this.amount;
   }
+
   public void setAmount(Int64 value) {
     this.amount = value;
   }
+
   private Price price;
+
   public Price getPrice() {
     return this.price;
   }
+
   public void setPrice(Price value) {
     this.price = value;
   }
+
   private Int64 offerID;
+
   public Int64 getOfferID() {
     return this.offerID;
   }
+
   public void setOfferID(Int64 value) {
     this.offerID = value;
   }
-  public static void encode(XdrDataOutputStream stream, ManageSellOfferOp encodedManageSellOfferOp) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, ManageSellOfferOp encodedManageSellOfferOp)
+      throws IOException {
     Asset.encode(stream, encodedManageSellOfferOp.selling);
     Asset.encode(stream, encodedManageSellOfferOp.buying);
     Int64.encode(stream, encodedManageSellOfferOp.amount);
     Price.encode(stream, encodedManageSellOfferOp.price);
     Int64.encode(stream, encodedManageSellOfferOp.offerID);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ManageSellOfferOp decode(XdrDataInputStream stream) throws IOException {
     ManageSellOfferOp decodedManageSellOfferOp = new ManageSellOfferOp();
     decodedManageSellOfferOp.selling = Asset.decode(stream);
@@ -78,10 +95,12 @@ public class ManageSellOfferOp implements XdrElement {
     decodedManageSellOfferOp.offerID = Int64.decode(stream);
     return decodedManageSellOfferOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.selling, this.buying, this.amount, this.price, this.offerID);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ManageSellOfferOp)) {
@@ -89,7 +108,11 @@ public class ManageSellOfferOp implements XdrElement {
     }
 
     ManageSellOfferOp other = (ManageSellOfferOp) object;
-    return Objects.equal(this.selling, other.selling) && Objects.equal(this.buying, other.buying) && Objects.equal(this.amount, other.amount) && Objects.equal(this.price, other.price) && Objects.equal(this.offerID, other.offerID);
+    return Objects.equal(this.selling, other.selling)
+        && Objects.equal(this.buying, other.buying)
+        && Objects.equal(this.amount, other.amount)
+        && Objects.equal(this.price, other.price)
+        && Objects.equal(this.offerID, other.offerID);
   }
 
   public static final class Builder {

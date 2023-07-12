@@ -1,12 +1,13 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Objects;
+
 /**
- * Represents an account in Stellar network with it's sequence number.
- * Account object is required to build a {@link Transaction}.
+ * Represents an account in Stellar network with it's sequence number. Account object is required to
+ * build a {@link Transaction}.
+ *
  * @see TransactionBuilder
  */
 public class Account implements TransactionBuilderAccount {
@@ -15,8 +16,10 @@ public class Account implements TransactionBuilderAccount {
 
   /**
    * Class constructor.
+   *
    * @param accountId ID associated with this Account
-   * @param sequenceNumber Current sequence number of the account (can be obtained using java-stellar-sdk or horizon server)
+   * @param sequenceNumber Current sequence number of the account (can be obtained using
+   *     java-stellar-sdk or horizon server)
    */
   public Account(String accountId, Long sequenceNumber) {
     mAccountId = checkNotNull(accountId, "accountId cannot be null");
@@ -48,9 +51,7 @@ public class Account implements TransactionBuilderAccount {
     return mSequenceNumber + 1;
   }
 
-  /**
-   * Increments sequence number in this object by one.
-   */
+  /** Increments sequence number in this object by one. */
   public void incrementSequenceNumber() {
     mSequenceNumber++;
   }
@@ -66,8 +67,7 @@ public class Account implements TransactionBuilderAccount {
     }
 
     Account other = (Account) object;
-    return Objects.equal(this.mAccountId, other.mAccountId) &&
-            Objects.equal(this.mSequenceNumber, other.mSequenceNumber);
-
+    return Objects.equal(this.mAccountId, other.mAccountId)
+        && Objects.equal(this.mSequenceNumber, other.mSequenceNumber);
   }
 }

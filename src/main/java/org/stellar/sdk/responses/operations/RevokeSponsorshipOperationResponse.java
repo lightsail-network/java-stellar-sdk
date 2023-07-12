@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Represents RevokeSponsorship operation response.
+ *
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
@@ -36,8 +37,16 @@ public class RevokeSponsorshipOperationResponse extends OperationResponse {
   @SerializedName("signer_key")
   private final String signerKey;
 
-
-  public RevokeSponsorshipOperationResponse(String accountId, String claimableBalanceId, String dataAccountId, String dataName, Long offerId, String trustlineAccountId, String trustlineAsset, String signerAccountId, String signerKey) {
+  public RevokeSponsorshipOperationResponse(
+      String accountId,
+      String claimableBalanceId,
+      String dataAccountId,
+      String dataName,
+      Long offerId,
+      String trustlineAccountId,
+      String trustlineAsset,
+      String signerAccountId,
+      String signerKey) {
     this.accountId = accountId;
     this.claimableBalanceId = claimableBalanceId;
     this.dataAccountId = dataAccountId;
@@ -84,5 +93,4 @@ public class RevokeSponsorshipOperationResponse extends OperationResponse {
   public Optional<String> getSignerKey() {
     return Optional.fromNullable(signerKey);
   }
-
 }

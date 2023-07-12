@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -13,7 +11,7 @@ import java.io.IOException;
 //  {
 //      // codes considered as "success" for the operation
 //      LIQUIDITY_POOL_WITHDRAW_SUCCESS = 0,
-//  
+//
 //      // codes considered as "failure" for the operation
 //      LIQUIDITY_POOL_WITHDRAW_MALFORMED = -1,    // bad input
 //      LIQUIDITY_POOL_WITHDRAW_NO_TRUST = -2,     // no trust line for one of the
@@ -37,28 +35,36 @@ public enum LiquidityPoolWithdrawResultCode implements XdrElement {
   private int mValue;
 
   LiquidityPoolWithdrawResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
-  public static LiquidityPoolWithdrawResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static LiquidityPoolWithdrawResultCode decode(XdrDataInputStream stream)
+      throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return LIQUIDITY_POOL_WITHDRAW_SUCCESS;
-      case -1: return LIQUIDITY_POOL_WITHDRAW_MALFORMED;
-      case -2: return LIQUIDITY_POOL_WITHDRAW_NO_TRUST;
-      case -3: return LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED;
-      case -4: return LIQUIDITY_POOL_WITHDRAW_LINE_FULL;
-      case -5: return LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM;
+      case 0:
+        return LIQUIDITY_POOL_WITHDRAW_SUCCESS;
+      case -1:
+        return LIQUIDITY_POOL_WITHDRAW_MALFORMED;
+      case -2:
+        return LIQUIDITY_POOL_WITHDRAW_NO_TRUST;
+      case -3:
+        return LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED;
+      case -4:
+        return LIQUIDITY_POOL_WITHDRAW_LINE_FULL;
+      case -5:
+        return LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LiquidityPoolWithdrawResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LiquidityPoolWithdrawResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -19,22 +17,30 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class LedgerSCPMessages implements XdrElement {
-  public LedgerSCPMessages () {}
+  public LedgerSCPMessages() {}
+
   private Uint32 ledgerSeq;
+
   public Uint32 getLedgerSeq() {
     return this.ledgerSeq;
   }
+
   public void setLedgerSeq(Uint32 value) {
     this.ledgerSeq = value;
   }
+
   private SCPEnvelope[] messages;
+
   public SCPEnvelope[] getMessages() {
     return this.messages;
   }
+
   public void setMessages(SCPEnvelope[] value) {
     this.messages = value;
   }
-  public static void encode(XdrDataOutputStream stream, LedgerSCPMessages encodedLedgerSCPMessages) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, LedgerSCPMessages encodedLedgerSCPMessages)
+      throws IOException {
     Uint32.encode(stream, encodedLedgerSCPMessages.ledgerSeq);
     int messagessize = encodedLedgerSCPMessages.getMessages().length;
     stream.writeInt(messagessize);
@@ -42,9 +48,11 @@ public class LedgerSCPMessages implements XdrElement {
       SCPEnvelope.encode(stream, encodedLedgerSCPMessages.messages[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerSCPMessages decode(XdrDataInputStream stream) throws IOException {
     LedgerSCPMessages decodedLedgerSCPMessages = new LedgerSCPMessages();
     decodedLedgerSCPMessages.ledgerSeq = Uint32.decode(stream);
@@ -55,10 +63,12 @@ public class LedgerSCPMessages implements XdrElement {
     }
     return decodedLedgerSCPMessages;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.ledgerSeq, Arrays.hashCode(this.messages));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerSCPMessages)) {
@@ -66,7 +76,8 @@ public class LedgerSCPMessages implements XdrElement {
     }
 
     LedgerSCPMessages other = (LedgerSCPMessages) object;
-    return Objects.equal(this.ledgerSeq, other.ledgerSeq) && Arrays.equals(this.messages, other.messages);
+    return Objects.equal(this.ledgerSeq, other.ledgerSeq)
+        && Arrays.equals(this.messages, other.messages);
   }
 
   public static final class Builder {

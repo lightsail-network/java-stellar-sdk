@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -23,18 +21,20 @@ public enum IPAddrType implements XdrElement {
   private int mValue;
 
   IPAddrType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static IPAddrType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return IPv4;
-      case 1: return IPv6;
+      case 0:
+        return IPv4;
+      case 1:
+        return IPv6;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

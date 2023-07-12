@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,51 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class SignedSurveyRequestMessage implements XdrElement {
-  public SignedSurveyRequestMessage () {}
+  public SignedSurveyRequestMessage() {}
+
   private Signature requestSignature;
+
   public Signature getRequestSignature() {
     return this.requestSignature;
   }
+
   public void setRequestSignature(Signature value) {
     this.requestSignature = value;
   }
+
   private SurveyRequestMessage request;
+
   public SurveyRequestMessage getRequest() {
     return this.request;
   }
+
   public void setRequest(SurveyRequestMessage value) {
     this.request = value;
   }
-  public static void encode(XdrDataOutputStream stream, SignedSurveyRequestMessage encodedSignedSurveyRequestMessage) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, SignedSurveyRequestMessage encodedSignedSurveyRequestMessage)
+      throws IOException {
     Signature.encode(stream, encodedSignedSurveyRequestMessage.requestSignature);
     SurveyRequestMessage.encode(stream, encodedSignedSurveyRequestMessage.request);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SignedSurveyRequestMessage decode(XdrDataInputStream stream) throws IOException {
     SignedSurveyRequestMessage decodedSignedSurveyRequestMessage = new SignedSurveyRequestMessage();
     decodedSignedSurveyRequestMessage.requestSignature = Signature.decode(stream);
     decodedSignedSurveyRequestMessage.request = SurveyRequestMessage.decode(stream);
     return decodedSignedSurveyRequestMessage;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.requestSignature, this.request);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SignedSurveyRequestMessage)) {
@@ -57,7 +68,8 @@ public class SignedSurveyRequestMessage implements XdrElement {
     }
 
     SignedSurveyRequestMessage other = (SignedSurveyRequestMessage) object;
-    return Objects.equal(this.requestSignature, other.requestSignature) && Objects.equal(this.request, other.request);
+    return Objects.equal(this.requestSignature, other.requestSignature)
+        && Objects.equal(this.request, other.request);
   }
 
   public static final class Builder {

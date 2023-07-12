@@ -3,17 +3,15 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
 //  struct LedgerHeaderExtensionV1
 //  {
 //      uint32 flags; // LedgerHeaderFlags
-//  
+//
 //      union switch (int v)
 //      {
 //      case 0:
@@ -24,38 +22,51 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LedgerHeaderExtensionV1 implements XdrElement {
-  public LedgerHeaderExtensionV1 () {}
+  public LedgerHeaderExtensionV1() {}
+
   private Uint32 flags;
+
   public Uint32 getFlags() {
     return this.flags;
   }
+
   public void setFlags(Uint32 value) {
     this.flags = value;
   }
+
   private LedgerHeaderExtensionV1Ext ext;
+
   public LedgerHeaderExtensionV1Ext getExt() {
     return this.ext;
   }
+
   public void setExt(LedgerHeaderExtensionV1Ext value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, LedgerHeaderExtensionV1 encodedLedgerHeaderExtensionV1) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, LedgerHeaderExtensionV1 encodedLedgerHeaderExtensionV1)
+      throws IOException {
     Uint32.encode(stream, encodedLedgerHeaderExtensionV1.flags);
     LedgerHeaderExtensionV1Ext.encode(stream, encodedLedgerHeaderExtensionV1.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerHeaderExtensionV1 decode(XdrDataInputStream stream) throws IOException {
     LedgerHeaderExtensionV1 decodedLedgerHeaderExtensionV1 = new LedgerHeaderExtensionV1();
     decodedLedgerHeaderExtensionV1.flags = Uint32.decode(stream);
     decodedLedgerHeaderExtensionV1.ext = LedgerHeaderExtensionV1Ext.decode(stream);
     return decodedLedgerHeaderExtensionV1;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.flags, this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerHeaderExtensionV1)) {
@@ -89,11 +100,14 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
   }
 
   public static class LedgerHeaderExtensionV1Ext {
-    public LedgerHeaderExtensionV1Ext () {}
+    public LedgerHeaderExtensionV1Ext() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
@@ -113,32 +127,39 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, LedgerHeaderExtensionV1Ext encodedLedgerHeaderExtensionV1Ext) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedLedgerHeaderExtensionV1Ext.getDiscriminant().intValue());
-    switch (encodedLedgerHeaderExtensionV1Ext.getDiscriminant()) {
-    case 0:
-    break;
+    public static void encode(
+        XdrDataOutputStream stream, LedgerHeaderExtensionV1Ext encodedLedgerHeaderExtensionV1Ext)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedLedgerHeaderExtensionV1Ext.getDiscriminant().intValue());
+      switch (encodedLedgerHeaderExtensionV1Ext.getDiscriminant()) {
+        case 0:
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static LedgerHeaderExtensionV1Ext decode(XdrDataInputStream stream) throws IOException {
-    LedgerHeaderExtensionV1Ext decodedLedgerHeaderExtensionV1Ext = new LedgerHeaderExtensionV1Ext();
-    Integer discriminant = stream.readInt();
-    decodedLedgerHeaderExtensionV1Ext.setDiscriminant(discriminant);
-    switch (decodedLedgerHeaderExtensionV1Ext.getDiscriminant()) {
-    case 0:
-    break;
-    }
+      LedgerHeaderExtensionV1Ext decodedLedgerHeaderExtensionV1Ext =
+          new LedgerHeaderExtensionV1Ext();
+      Integer discriminant = stream.readInt();
+      decodedLedgerHeaderExtensionV1Ext.setDiscriminant(discriminant);
+      switch (decodedLedgerHeaderExtensionV1Ext.getDiscriminant()) {
+        case 0:
+          break;
+      }
       return decodedLedgerHeaderExtensionV1Ext;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof LedgerHeaderExtensionV1Ext)) {
@@ -148,6 +169,5 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
       LedgerHeaderExtensionV1Ext other = (LedgerHeaderExtensionV1Ext) object;
       return Objects.equal(this.v, other.v);
     }
-
   }
 }

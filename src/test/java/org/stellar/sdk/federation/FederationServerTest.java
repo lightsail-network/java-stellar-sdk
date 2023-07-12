@@ -1,7 +1,7 @@
 package org.stellar.sdk.federation;
 
+import java.io.IOException;
 import junit.framework.TestCase;
-
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -10,19 +10,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class FederationServerTest extends TestCase {
   private final String successResponse =
-          "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}";
+      "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}";
   private final String successResponseWithMemo =
-          "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\", \"memo_type\": \"text\", \"memo\": \"test\"}";
+      "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\", \"memo_type\": \"text\", \"memo\": \"test\"}";
 
   private final String notFoundResponse =
-          "{\"code\":\"not_found\",\"message\":\"Account not found\"}";
+      "{\"code\":\"not_found\",\"message\":\"Account not found\"}";
 
-  private final String stellarToml =
-          "FEDERATION_SERVER = \"https://api.stellar.org/federation\"";
+  private final String stellarToml = "FEDERATION_SERVER = \"https://api.stellar.org/federation\"";
 
   @Before
   public void setUp() throws IOException {
@@ -47,7 +44,9 @@ public class FederationServerTest extends TestCase {
     assertEquals(server.getDomain(), domain);
 
     RecordedRequest stellarTomlRequest = mockWebServer.takeRequest();
-    assertEquals("http://"+domain+"/.well-known/stellar.toml", stellarTomlRequest.getRequestUrl().toString());
+    assertEquals(
+        "http://" + domain + "/.well-known/stellar.toml",
+        stellarTomlRequest.getRequestUrl().toString());
   }
 
   @Test
@@ -57,14 +56,12 @@ public class FederationServerTest extends TestCase {
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
 
-    FederationServer server = new FederationServer(
-            baseUrl.toString(),
-            "stellar.org"
-    );
+    FederationServer server = new FederationServer(baseUrl.toString(), "stellar.org");
 
     FederationResponse response = server.resolveAddress("bob*stellar.org");
     assertEquals(response.getStellarAddress(), "bob*stellar.org");
-    assertEquals(response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
+    assertEquals(
+        response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
     assertNull(response.getMemoType());
     assertNull(response.getMemo());
   }
@@ -76,14 +73,12 @@ public class FederationServerTest extends TestCase {
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
 
-    FederationServer server = new FederationServer(
-            baseUrl.toString(),
-            "stellar.org"
-    );
+    FederationServer server = new FederationServer(baseUrl.toString(), "stellar.org");
 
     FederationResponse response = server.resolveAddress("bob*stellar.org");
     assertEquals(response.getStellarAddress(), "bob*stellar.org");
-    assertEquals(response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
+    assertEquals(
+        response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
     assertEquals(response.getMemoType(), "text");
     assertEquals(response.getMemo(), "test");
   }
@@ -95,14 +90,12 @@ public class FederationServerTest extends TestCase {
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
 
-    FederationServer server = new FederationServer(
-            baseUrl.toString(),
-            "stellar.org"
-    );
+    FederationServer server = new FederationServer(baseUrl.toString(), "stellar.org");
 
     try {
       FederationResponse response = server.resolveAddress("bob*stellar.org");
       fail("Expected exception");
-    } catch (NotFoundException e) {}
+    } catch (NotFoundException e) {
+    }
   }
 }

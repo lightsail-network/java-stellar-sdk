@@ -1,23 +1,25 @@
 package org.stellar.sdk;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class AccountTest  {
+import org.junit.Test;
+
+public class AccountTest {
   @Test
   public void testNullArguments() {
     try {
       new Account(null, 10L);
       fail();
-    } catch (NullPointerException e) {}
+    } catch (NullPointerException e) {
+    }
 
     try {
       KeyPair random = KeyPair.random();
       new Account(random.getAccountId(), null);
       fail();
-    } catch (NullPointerException e) {}
+    } catch (NullPointerException e) {
+    }
   }
 
   @Test

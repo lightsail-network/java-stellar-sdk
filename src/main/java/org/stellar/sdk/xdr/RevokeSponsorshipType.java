@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -23,24 +21,27 @@ public enum RevokeSponsorshipType implements XdrElement {
   private int mValue;
 
   RevokeSponsorshipType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static RevokeSponsorshipType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return REVOKE_SPONSORSHIP_LEDGER_ENTRY;
-      case 1: return REVOKE_SPONSORSHIP_SIGNER;
+      case 0:
+        return REVOKE_SPONSORSHIP_LEDGER_ENTRY;
+      case 1:
+        return REVOKE_SPONSORSHIP_SIGNER;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, RevokeSponsorshipType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, RevokeSponsorshipType value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

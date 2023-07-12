@@ -1,14 +1,11 @@
 package org.stellar.sdk;
 
-import com.google.common.primitives.UnsignedLongs;
 import com.google.common.base.Objects;
+import com.google.common.primitives.UnsignedLongs;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
 
-
-/**
- * Represents MEMO_ID.
- */
+/** Represents MEMO_ID. */
 public class MemoId extends Memo {
   private long id;
 

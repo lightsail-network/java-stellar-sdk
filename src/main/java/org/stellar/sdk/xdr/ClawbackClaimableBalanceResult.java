@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -21,11 +19,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ClawbackClaimableBalanceResult implements XdrElement {
-  public ClawbackClaimableBalanceResult () {}
+  public ClawbackClaimableBalanceResult() {}
+
   ClawbackClaimableBalanceResultCode code;
+
   public ClawbackClaimableBalanceResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(ClawbackClaimableBalanceResultCode value) {
     this.code = value;
   }
@@ -45,36 +46,46 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ClawbackClaimableBalanceResult encodedClawbackClaimableBalanceResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //ClawbackClaimableBalanceResultCode
-  stream.writeInt(encodedClawbackClaimableBalanceResult.getDiscriminant().getValue());
-  switch (encodedClawbackClaimableBalanceResult.getDiscriminant()) {
-  case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(
+      XdrDataOutputStream stream,
+      ClawbackClaimableBalanceResult encodedClawbackClaimableBalanceResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // ClawbackClaimableBalanceResultCode
+    stream.writeInt(encodedClawbackClaimableBalanceResult.getDiscriminant().getValue());
+    switch (encodedClawbackClaimableBalanceResult.getDiscriminant()) {
+      case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
-  public static ClawbackClaimableBalanceResult decode(XdrDataInputStream stream) throws IOException {
-  ClawbackClaimableBalanceResult decodedClawbackClaimableBalanceResult = new ClawbackClaimableBalanceResult();
-  ClawbackClaimableBalanceResultCode discriminant = ClawbackClaimableBalanceResultCode.decode(stream);
-  decodedClawbackClaimableBalanceResult.setDiscriminant(discriminant);
-  switch (decodedClawbackClaimableBalanceResult.getDiscriminant()) {
-  case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
-  break;
-  default:
-  break;
-  }
+
+  public static ClawbackClaimableBalanceResult decode(XdrDataInputStream stream)
+      throws IOException {
+    ClawbackClaimableBalanceResult decodedClawbackClaimableBalanceResult =
+        new ClawbackClaimableBalanceResult();
+    ClawbackClaimableBalanceResultCode discriminant =
+        ClawbackClaimableBalanceResultCode.decode(stream);
+    decodedClawbackClaimableBalanceResult.setDiscriminant(discriminant);
+    switch (decodedClawbackClaimableBalanceResult.getDiscriminant()) {
+      case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedClawbackClaimableBalanceResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ClawbackClaimableBalanceResult)) {

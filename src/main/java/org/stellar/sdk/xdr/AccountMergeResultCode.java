@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -38,30 +36,39 @@ public enum AccountMergeResultCode implements XdrElement {
   private int mValue;
 
   AccountMergeResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static AccountMergeResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return ACCOUNT_MERGE_SUCCESS;
-      case -1: return ACCOUNT_MERGE_MALFORMED;
-      case -2: return ACCOUNT_MERGE_NO_ACCOUNT;
-      case -3: return ACCOUNT_MERGE_IMMUTABLE_SET;
-      case -4: return ACCOUNT_MERGE_HAS_SUB_ENTRIES;
-      case -5: return ACCOUNT_MERGE_SEQNUM_TOO_FAR;
-      case -6: return ACCOUNT_MERGE_DEST_FULL;
-      case -7: return ACCOUNT_MERGE_IS_SPONSOR;
+      case 0:
+        return ACCOUNT_MERGE_SUCCESS;
+      case -1:
+        return ACCOUNT_MERGE_MALFORMED;
+      case -2:
+        return ACCOUNT_MERGE_NO_ACCOUNT;
+      case -3:
+        return ACCOUNT_MERGE_IMMUTABLE_SET;
+      case -4:
+        return ACCOUNT_MERGE_HAS_SUB_ENTRIES;
+      case -5:
+        return ACCOUNT_MERGE_SEQNUM_TOO_FAR;
+      case -6:
+        return ACCOUNT_MERGE_DEST_FULL;
+      case -7:
+        return ACCOUNT_MERGE_IS_SPONSOR;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, AccountMergeResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, AccountMergeResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

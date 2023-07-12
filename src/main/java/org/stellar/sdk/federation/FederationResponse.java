@@ -4,15 +4,20 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Object to hold a response from a federation server.
- * @see <a href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">Federation docs</a>
+ *
+ * @see <a href="https://developers.stellar.org/docs/glossary/federation/"
+ *     target="_blank">Federation docs</a>
  */
 public class FederationResponse {
   @SerializedName("stellar_address")
   private final String stellarAddress;
+
   @SerializedName("account_id")
   private final String accountId;
+
   @SerializedName("memo_type")
   private final String memoType;
+
   @SerializedName("memo")
   private final String memo;
 

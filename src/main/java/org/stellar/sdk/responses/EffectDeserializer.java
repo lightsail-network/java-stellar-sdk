@@ -6,30 +6,30 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-
+import java.lang.reflect.Type;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.effects.*;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
-import java.lang.reflect.Type;
-
 class EffectDeserializer implements JsonDeserializer<EffectResponse> {
   @Override
-  public EffectResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+  public EffectResponse deserialize(
+      JsonElement json, Type typeOfT, JsonDeserializationContext context)
+      throws JsonParseException {
     // Create new Gson object with adapters needed in Operation
-    Gson gson = new GsonBuilder()
-        .registerTypeAdapter(Asset.class, new AssetDeserializer())
-        .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
-        .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
-        .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
-        .create();
-
+    Gson gson =
+        new GsonBuilder()
+            .registerTypeAdapter(Asset.class, new AssetDeserializer())
+            .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
+            .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
+            .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
+            .create();
 
     int type = json.getAsJsonObject().get("type_i").getAsInt();
     switch (type) {
-      // Account effects
+        // Account effects
       case 0:
         return gson.fromJson(json, AccountCreatedEffectResponse.class);
       case 1:
@@ -46,14 +46,14 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         return gson.fromJson(json, AccountFlagsUpdatedEffectResponse.class);
       case 7:
         return gson.fromJson(json, AccountInflationDestinationUpdatedEffectResponse.class);
-      // Signer effects
+        // Signer effects
       case 10:
         return gson.fromJson(json, SignerCreatedEffectResponse.class);
       case 11:
         return gson.fromJson(json, SignerRemovedEffectResponse.class);
       case 12:
         return gson.fromJson(json, SignerUpdatedEffectResponse.class);
-      // Trustline effects
+        // Trustline effects
       case 20:
         return gson.fromJson(json, TrustlineCreatedEffectResponse.class);
       case 21:
@@ -68,7 +68,7 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         return gson.fromJson(json, TrustlineAuthorizedToMaintainLiabilitiesEffectResponse.class);
       case 26:
         return gson.fromJson(json, TrustlineFlagsUpdatedEffectResponse.class);
-      // Trading effects
+        // Trading effects
       case 30:
         return gson.fromJson(json, OfferCreatedEffectResponse.class);
       case 31:
@@ -77,24 +77,24 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         return gson.fromJson(json, OfferUpdatedEffectResponse.class);
       case 33:
         return gson.fromJson(json, TradeEffectResponse.class);
-      // Data effects
+        // Data effects
       case 40:
         return gson.fromJson(json, DataCreatedEffectResponse.class);
       case 41:
         return gson.fromJson(json, DataRemovedEffectResponse.class);
       case 42:
         return gson.fromJson(json, DataUpdatedEffectResponse.class);
-      // Bump Sequence effects
+        // Bump Sequence effects
       case 43:
         return gson.fromJson(json, SequenceBumpedEffectResponse.class);
-      // claimable balance effects
+        // claimable balance effects
       case 50:
         return gson.fromJson(json, ClaimableBalanceCreatedEffectResponse.class);
       case 51:
         return gson.fromJson(json, ClaimableBalanceClaimantCreatedEffectResponse.class);
       case 52:
         return gson.fromJson(json, ClaimableBalanceClaimedEffectResponse.class);
-      // sponsorship effects
+        // sponsorship effects
       case 60:
         return gson.fromJson(json, AccountSponsorshipCreatedEffectResponse.class);
       case 61:

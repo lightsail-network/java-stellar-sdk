@@ -1,9 +1,9 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BeginSponsoringFutureReservesOperation extends Operation {
   private final String sponsoredId;
@@ -21,7 +21,8 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
     BeginSponsoringFutureReservesOp op = new BeginSponsoringFutureReservesOp();
     op.setSponsoredID(StrKey.encodeToXDRAccountId(sponsoredId));
 
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.BEGIN_SPONSORING_FUTURE_RESERVES);
     body.setBeginSponsoringFutureReservesOp(op);
 
@@ -34,7 +35,9 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
     private String mSourceAccount;
 
     /**
-     * Construct a new BeginSponsoringFutureReserves builder from a BeginSponsoringFutureReserves XDR.
+     * Construct a new BeginSponsoringFutureReserves builder from a BeginSponsoringFutureReserves
+     * XDR.
+     *
      * @param op {@link BeginSponsoringFutureReservesOp}
      */
     Builder(BeginSponsoringFutureReservesOp op) {
@@ -43,6 +46,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
 
     /**
      * Creates a new BeginSponsoringFutureReserves builder.
+     *
      * @param sponsoredId account id to sponsor
      */
     public Builder(String sponsoredId) {
@@ -51,6 +55,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
 
     /**
      * Sets the source account for this operation.
+     *
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
@@ -59,11 +64,10 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public BeginSponsoringFutureReservesOperation build() {
-      BeginSponsoringFutureReservesOperation operation = new BeginSponsoringFutureReservesOperation(sponsoredId);
+      BeginSponsoringFutureReservesOperation operation =
+          new BeginSponsoringFutureReservesOperation(sponsoredId);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -83,8 +87,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
     }
 
     BeginSponsoringFutureReservesOperation other = (BeginSponsoringFutureReservesOperation) object;
-    return Objects.equal(this.sponsoredId, other.sponsoredId) &&
-        Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.sponsoredId, other.sponsoredId)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
-
 }

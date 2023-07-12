@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -20,29 +18,41 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class CreateClaimableBalanceOp implements XdrElement {
-  public CreateClaimableBalanceOp () {}
+  public CreateClaimableBalanceOp() {}
+
   private Asset asset;
+
   public Asset getAsset() {
     return this.asset;
   }
+
   public void setAsset(Asset value) {
     this.asset = value;
   }
+
   private Int64 amount;
+
   public Int64 getAmount() {
     return this.amount;
   }
+
   public void setAmount(Int64 value) {
     this.amount = value;
   }
+
   private Claimant[] claimants;
+
   public Claimant[] getClaimants() {
     return this.claimants;
   }
+
   public void setClaimants(Claimant[] value) {
     this.claimants = value;
   }
-  public static void encode(XdrDataOutputStream stream, CreateClaimableBalanceOp encodedCreateClaimableBalanceOp) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, CreateClaimableBalanceOp encodedCreateClaimableBalanceOp)
+      throws IOException {
     Asset.encode(stream, encodedCreateClaimableBalanceOp.asset);
     Int64.encode(stream, encodedCreateClaimableBalanceOp.amount);
     int claimantssize = encodedCreateClaimableBalanceOp.getClaimants().length;
@@ -51,9 +61,11 @@ public class CreateClaimableBalanceOp implements XdrElement {
       Claimant.encode(stream, encodedCreateClaimableBalanceOp.claimants[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static CreateClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
     CreateClaimableBalanceOp decodedCreateClaimableBalanceOp = new CreateClaimableBalanceOp();
     decodedCreateClaimableBalanceOp.asset = Asset.decode(stream);
@@ -65,10 +77,12 @@ public class CreateClaimableBalanceOp implements XdrElement {
     }
     return decodedCreateClaimableBalanceOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.asset, this.amount, Arrays.hashCode(this.claimants));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof CreateClaimableBalanceOp)) {
@@ -76,7 +90,9 @@ public class CreateClaimableBalanceOp implements XdrElement {
     }
 
     CreateClaimableBalanceOp other = (CreateClaimableBalanceOp) object;
-    return Objects.equal(this.asset, other.asset) && Objects.equal(this.amount, other.amount) && Arrays.equals(this.claimants, other.claimants);
+    return Objects.equal(this.asset, other.asset)
+        && Objects.equal(this.amount, other.amount)
+        && Arrays.equals(this.claimants, other.claimants);
   }
 
   public static final class Builder {

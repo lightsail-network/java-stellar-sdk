@@ -3,15 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
 //  enum AccountFlags
 //  { // masks for each flag
-//  
+//
 //      // Flags set on issuer accounts
 //      // TrustLines are created with authorized set to "false" requiring
 //      // the issuer to set it for each TrustLine
@@ -37,20 +35,24 @@ public enum AccountFlags implements XdrElement {
   private int mValue;
 
   AccountFlags(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static AccountFlags decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 1: return AUTH_REQUIRED_FLAG;
-      case 2: return AUTH_REVOCABLE_FLAG;
-      case 4: return AUTH_IMMUTABLE_FLAG;
-      case 8: return AUTH_CLAWBACK_ENABLED_FLAG;
+      case 1:
+        return AUTH_REQUIRED_FLAG;
+      case 2:
+        return AUTH_REVOCABLE_FLAG;
+      case 4:
+        return AUTH_IMMUTABLE_FLAG;
+      case 8:
+        return AUTH_CLAWBACK_ENABLED_FLAG;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

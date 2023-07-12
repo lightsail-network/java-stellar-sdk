@@ -1,11 +1,10 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import okhttp3.Response;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.TypedResponse;
-
-import java.io.IOException;
 
 public class ResponseHandler<T> {
 
@@ -14,8 +13,9 @@ public class ResponseHandler<T> {
   /**
    * "Generics on a type are typically erased at runtime, except when the type is compiled with the
    * generic parameter bound. In that case, the compiler inserts the generic type information into
-   * the compiled class. In other cases, that is not possible."
-   * More info: http://stackoverflow.com/a/14506181
+   * the compiled class. In other cases, that is not possible." More info:
+   * http://stackoverflow.com/a/14506181
+   *
    * @param type
    */
   public ResponseHandler(TypeToken<T> type) {
@@ -32,7 +32,8 @@ public class ResponseHandler<T> {
         if (header != null) {
           try {
             retryAfter = Integer.parseInt(header);
-          } catch (NumberFormatException ignored) {}
+          } catch (NumberFormatException ignored) {
+          }
         }
         throw new TooManyRequestsException(retryAfter);
       }
@@ -48,8 +49,8 @@ public class ResponseHandler<T> {
       if (object instanceof org.stellar.sdk.responses.Response) {
         ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
       }
-      if(object instanceof TypedResponse) {
-    	  	((TypedResponse) object).setType(type);
+      if (object instanceof TypedResponse) {
+        ((TypedResponse) object).setType(type);
       }
       return object;
     } finally {

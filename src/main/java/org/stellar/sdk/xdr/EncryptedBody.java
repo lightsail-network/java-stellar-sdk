@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -30,7 +28,8 @@ public class EncryptedBody implements XdrElement {
     this.EncryptedBody = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, EncryptedBody  encodedEncryptedBody) throws IOException {
+  public static void encode(XdrDataOutputStream stream, EncryptedBody encodedEncryptedBody)
+      throws IOException {
     int EncryptedBodysize = encodedEncryptedBody.EncryptedBody.length;
     stream.writeInt(EncryptedBodysize);
     stream.write(encodedEncryptedBody.getEncryptedBody(), 0, EncryptedBodysize);
@@ -39,6 +38,7 @@ public class EncryptedBody implements XdrElement {
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static EncryptedBody decode(XdrDataInputStream stream) throws IOException {
     EncryptedBody decodedEncryptedBody = new EncryptedBody();
     int EncryptedBodysize = stream.readInt();

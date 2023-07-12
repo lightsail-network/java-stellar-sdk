@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,49 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class Signer implements XdrElement {
-  public Signer () {}
+  public Signer() {}
+
   private SignerKey key;
+
   public SignerKey getKey() {
     return this.key;
   }
+
   public void setKey(SignerKey value) {
     this.key = value;
   }
+
   private Uint32 weight;
+
   public Uint32 getWeight() {
     return this.weight;
   }
+
   public void setWeight(Uint32 value) {
     this.weight = value;
   }
-  public static void encode(XdrDataOutputStream stream, Signer encodedSigner) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, Signer encodedSigner) throws IOException {
     SignerKey.encode(stream, encodedSigner.key);
     Uint32.encode(stream, encodedSigner.weight);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Signer decode(XdrDataInputStream stream) throws IOException {
     Signer decodedSigner = new Signer();
     decodedSigner.key = SignerKey.decode(stream);
     decodedSigner.weight = Uint32.decode(stream);
     return decodedSigner;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.key, this.weight);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof Signer)) {

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -21,11 +19,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class EndSponsoringFutureReservesResult implements XdrElement {
-  public EndSponsoringFutureReservesResult () {}
+  public EndSponsoringFutureReservesResult() {}
+
   EndSponsoringFutureReservesResultCode code;
+
   public EndSponsoringFutureReservesResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(EndSponsoringFutureReservesResultCode value) {
     this.code = value;
   }
@@ -45,36 +46,46 @@ public class EndSponsoringFutureReservesResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, EndSponsoringFutureReservesResult encodedEndSponsoringFutureReservesResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //EndSponsoringFutureReservesResultCode
-  stream.writeInt(encodedEndSponsoringFutureReservesResult.getDiscriminant().getValue());
-  switch (encodedEndSponsoringFutureReservesResult.getDiscriminant()) {
-  case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(
+      XdrDataOutputStream stream,
+      EndSponsoringFutureReservesResult encodedEndSponsoringFutureReservesResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // EndSponsoringFutureReservesResultCode
+    stream.writeInt(encodedEndSponsoringFutureReservesResult.getDiscriminant().getValue());
+    switch (encodedEndSponsoringFutureReservesResult.getDiscriminant()) {
+      case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
-  public static EndSponsoringFutureReservesResult decode(XdrDataInputStream stream) throws IOException {
-  EndSponsoringFutureReservesResult decodedEndSponsoringFutureReservesResult = new EndSponsoringFutureReservesResult();
-  EndSponsoringFutureReservesResultCode discriminant = EndSponsoringFutureReservesResultCode.decode(stream);
-  decodedEndSponsoringFutureReservesResult.setDiscriminant(discriminant);
-  switch (decodedEndSponsoringFutureReservesResult.getDiscriminant()) {
-  case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
-  break;
-  default:
-  break;
-  }
+
+  public static EndSponsoringFutureReservesResult decode(XdrDataInputStream stream)
+      throws IOException {
+    EndSponsoringFutureReservesResult decodedEndSponsoringFutureReservesResult =
+        new EndSponsoringFutureReservesResult();
+    EndSponsoringFutureReservesResultCode discriminant =
+        EndSponsoringFutureReservesResultCode.decode(stream);
+    decodedEndSponsoringFutureReservesResult.setDiscriminant(discriminant);
+    switch (decodedEndSponsoringFutureReservesResult.getDiscriminant()) {
+      case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedEndSponsoringFutureReservesResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof EndSponsoringFutureReservesResult)) {

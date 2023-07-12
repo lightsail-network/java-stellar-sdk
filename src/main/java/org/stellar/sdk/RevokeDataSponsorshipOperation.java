@@ -1,9 +1,9 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
   private final String accountId;
@@ -37,7 +37,8 @@ public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
     op.setLedgerKey(key);
     op.setDiscriminant(RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY);
 
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.REVOKE_SPONSORSHIP);
     body.setRevokeSponsorshipOp(op);
 
@@ -52,6 +53,7 @@ public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
 
     /**
      * Construct a new RevokeDataSponsorshipOperation builder from a RevokeSponsorship XDR.
+     *
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
@@ -61,6 +63,7 @@ public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
 
     /**
      * Creates a new RevokeDataSponsorshipOperation builder.
+     *
      * @param accountId The id of the account whose data entry will be revoked.
      * @param dataName The name of the data entry which will be revoked.
      */
@@ -71,6 +74,7 @@ public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
 
     /**
      * Sets the source account for this operation.
+     *
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
@@ -79,11 +83,10 @@ public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public RevokeDataSponsorshipOperation build() {
-      RevokeDataSponsorshipOperation operation = new RevokeDataSponsorshipOperation(accountId, dataName);
+      RevokeDataSponsorshipOperation operation =
+          new RevokeDataSponsorshipOperation(accountId, dataName);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -103,8 +106,8 @@ public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
     }
 
     RevokeDataSponsorshipOperation other = (RevokeDataSponsorshipOperation) object;
-    return Objects.equal(this.accountId, other.accountId) &&
-        Objects.equal(this.dataName, other.dataName) &&
-        Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.accountId, other.accountId)
+        && Objects.equal(this.dataName, other.dataName)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

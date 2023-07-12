@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -35,24 +33,32 @@ public enum EnvelopeType implements XdrElement {
   private int mValue;
 
   EnvelopeType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static EnvelopeType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return ENVELOPE_TYPE_TX_V0;
-      case 1: return ENVELOPE_TYPE_SCP;
-      case 2: return ENVELOPE_TYPE_TX;
-      case 3: return ENVELOPE_TYPE_AUTH;
-      case 4: return ENVELOPE_TYPE_SCPVALUE;
-      case 5: return ENVELOPE_TYPE_TX_FEE_BUMP;
-      case 6: return ENVELOPE_TYPE_OP_ID;
-      case 7: return ENVELOPE_TYPE_POOL_REVOKE_OP_ID;
+      case 0:
+        return ENVELOPE_TYPE_TX_V0;
+      case 1:
+        return ENVELOPE_TYPE_SCP;
+      case 2:
+        return ENVELOPE_TYPE_TX;
+      case 3:
+        return ENVELOPE_TYPE_AUTH;
+      case 4:
+        return ENVELOPE_TYPE_SCPVALUE;
+      case 5:
+        return ENVELOPE_TYPE_TX_FEE_BUMP;
+      case 6:
+        return ENVELOPE_TYPE_OP_ID;
+      case 7:
+        return ENVELOPE_TYPE_POOL_REVOKE_OP_ID;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

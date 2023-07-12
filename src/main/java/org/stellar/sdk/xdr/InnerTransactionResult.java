@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -15,7 +13,7 @@ import java.util.Arrays;
 //  {
 //      // Always 0. Here for binary compatibility.
 //      int64 feeCharged;
-//  
+//
 //      union switch (TransactionResultCode code)
 //      {
 //      // txFEE_BUMP_INNER_SUCCESS is not included
@@ -40,7 +38,7 @@ import java.util.Arrays;
 //          void;
 //      }
 //      result;
-//  
+//
 //      // reserved for future use
 //      union switch (int v)
 //      {
@@ -52,36 +50,50 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class InnerTransactionResult implements XdrElement {
-  public InnerTransactionResult () {}
+  public InnerTransactionResult() {}
+
   private Int64 feeCharged;
+
   public Int64 getFeeCharged() {
     return this.feeCharged;
   }
+
   public void setFeeCharged(Int64 value) {
     this.feeCharged = value;
   }
+
   private InnerTransactionResultResult result;
+
   public InnerTransactionResultResult getResult() {
     return this.result;
   }
+
   public void setResult(InnerTransactionResultResult value) {
     this.result = value;
   }
+
   private InnerTransactionResultExt ext;
+
   public InnerTransactionResultExt getExt() {
     return this.ext;
   }
+
   public void setExt(InnerTransactionResultExt value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, InnerTransactionResult encodedInnerTransactionResult) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, InnerTransactionResult encodedInnerTransactionResult)
+      throws IOException {
     Int64.encode(stream, encodedInnerTransactionResult.feeCharged);
     InnerTransactionResultResult.encode(stream, encodedInnerTransactionResult.result);
     InnerTransactionResultExt.encode(stream, encodedInnerTransactionResult.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static InnerTransactionResult decode(XdrDataInputStream stream) throws IOException {
     InnerTransactionResult decodedInnerTransactionResult = new InnerTransactionResult();
     decodedInnerTransactionResult.feeCharged = Int64.decode(stream);
@@ -89,10 +101,12 @@ public class InnerTransactionResult implements XdrElement {
     decodedInnerTransactionResult.ext = InnerTransactionResultExt.decode(stream);
     return decodedInnerTransactionResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.feeCharged, this.result, this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof InnerTransactionResult)) {
@@ -100,7 +114,9 @@ public class InnerTransactionResult implements XdrElement {
     }
 
     InnerTransactionResult other = (InnerTransactionResult) object;
-    return Objects.equal(this.feeCharged, other.feeCharged) && Objects.equal(this.result, other.result) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.feeCharged, other.feeCharged)
+        && Objects.equal(this.result, other.result)
+        && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
@@ -133,18 +149,24 @@ public class InnerTransactionResult implements XdrElement {
   }
 
   public static class InnerTransactionResultResult {
-    public InnerTransactionResultResult () {}
+    public InnerTransactionResultResult() {}
+
     TransactionResultCode code;
+
     public TransactionResultCode getDiscriminant() {
       return this.code;
     }
+
     public void setDiscriminant(TransactionResultCode value) {
       this.code = value;
     }
+
     private OperationResult[] results;
+
     public OperationResult[] getResults() {
       return this.results;
     }
+
     public void setResults(OperationResult[] value) {
       this.results = value;
     }
@@ -171,74 +193,83 @@ public class InnerTransactionResult implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, InnerTransactionResultResult encodedInnerTransactionResultResult) throws IOException {
-    //Xdrgen::AST::Identifier
-    //TransactionResultCode
-    stream.writeInt(encodedInnerTransactionResultResult.getDiscriminant().getValue());
-    switch (encodedInnerTransactionResultResult.getDiscriminant()) {
-    case txSUCCESS:
-    case txFAILED:
-    int resultssize = encodedInnerTransactionResultResult.getResults().length;
-    stream.writeInt(resultssize);
-    for (int i = 0; i < resultssize; i++) {
-      OperationResult.encode(stream, encodedInnerTransactionResultResult.results[i]);
+    public static void encode(
+        XdrDataOutputStream stream,
+        InnerTransactionResultResult encodedInnerTransactionResultResult)
+        throws IOException {
+      // Xdrgen::AST::Identifier
+      // TransactionResultCode
+      stream.writeInt(encodedInnerTransactionResultResult.getDiscriminant().getValue());
+      switch (encodedInnerTransactionResultResult.getDiscriminant()) {
+        case txSUCCESS:
+        case txFAILED:
+          int resultssize = encodedInnerTransactionResultResult.getResults().length;
+          stream.writeInt(resultssize);
+          for (int i = 0; i < resultssize; i++) {
+            OperationResult.encode(stream, encodedInnerTransactionResultResult.results[i]);
+          }
+          break;
+        case txTOO_EARLY:
+        case txTOO_LATE:
+        case txMISSING_OPERATION:
+        case txBAD_SEQ:
+        case txBAD_AUTH:
+        case txINSUFFICIENT_BALANCE:
+        case txNO_ACCOUNT:
+        case txINSUFFICIENT_FEE:
+        case txBAD_AUTH_EXTRA:
+        case txINTERNAL_ERROR:
+        case txNOT_SUPPORTED:
+        case txBAD_SPONSORSHIP:
+        case txBAD_MIN_SEQ_AGE_OR_GAP:
+        case txMALFORMED:
+          break;
+      }
     }
-    break;
-    case txTOO_EARLY:
-    case txTOO_LATE:
-    case txMISSING_OPERATION:
-    case txBAD_SEQ:
-    case txBAD_AUTH:
-    case txINSUFFICIENT_BALANCE:
-    case txNO_ACCOUNT:
-    case txINSUFFICIENT_FEE:
-    case txBAD_AUTH_EXTRA:
-    case txINTERNAL_ERROR:
-    case txNOT_SUPPORTED:
-    case txBAD_SPONSORSHIP:
-    case txBAD_MIN_SEQ_AGE_OR_GAP:
-    case txMALFORMED:
-    break;
-    }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
-    public static InnerTransactionResultResult decode(XdrDataInputStream stream) throws IOException {
-    InnerTransactionResultResult decodedInnerTransactionResultResult = new InnerTransactionResultResult();
-    TransactionResultCode discriminant = TransactionResultCode.decode(stream);
-    decodedInnerTransactionResultResult.setDiscriminant(discriminant);
-    switch (decodedInnerTransactionResultResult.getDiscriminant()) {
-    case txSUCCESS:
-    case txFAILED:
-    int resultssize = stream.readInt();
-    decodedInnerTransactionResultResult.results = new OperationResult[resultssize];
-    for (int i = 0; i < resultssize; i++) {
-      decodedInnerTransactionResultResult.results[i] = OperationResult.decode(stream);
-    }
-    break;
-    case txTOO_EARLY:
-    case txTOO_LATE:
-    case txMISSING_OPERATION:
-    case txBAD_SEQ:
-    case txBAD_AUTH:
-    case txINSUFFICIENT_BALANCE:
-    case txNO_ACCOUNT:
-    case txINSUFFICIENT_FEE:
-    case txBAD_AUTH_EXTRA:
-    case txINTERNAL_ERROR:
-    case txNOT_SUPPORTED:
-    case txBAD_SPONSORSHIP:
-    case txBAD_MIN_SEQ_AGE_OR_GAP:
-    case txMALFORMED:
-    break;
-    }
+
+    public static InnerTransactionResultResult decode(XdrDataInputStream stream)
+        throws IOException {
+      InnerTransactionResultResult decodedInnerTransactionResultResult =
+          new InnerTransactionResultResult();
+      TransactionResultCode discriminant = TransactionResultCode.decode(stream);
+      decodedInnerTransactionResultResult.setDiscriminant(discriminant);
+      switch (decodedInnerTransactionResultResult.getDiscriminant()) {
+        case txSUCCESS:
+        case txFAILED:
+          int resultssize = stream.readInt();
+          decodedInnerTransactionResultResult.results = new OperationResult[resultssize];
+          for (int i = 0; i < resultssize; i++) {
+            decodedInnerTransactionResultResult.results[i] = OperationResult.decode(stream);
+          }
+          break;
+        case txTOO_EARLY:
+        case txTOO_LATE:
+        case txMISSING_OPERATION:
+        case txBAD_SEQ:
+        case txBAD_AUTH:
+        case txINSUFFICIENT_BALANCE:
+        case txNO_ACCOUNT:
+        case txINSUFFICIENT_FEE:
+        case txBAD_AUTH_EXTRA:
+        case txINTERNAL_ERROR:
+        case txNOT_SUPPORTED:
+        case txBAD_SPONSORSHIP:
+        case txBAD_MIN_SEQ_AGE_OR_GAP:
+        case txMALFORMED:
+          break;
+      }
       return decodedInnerTransactionResultResult;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(Arrays.hashCode(this.results), this.code);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof InnerTransactionResultResult)) {
@@ -248,14 +279,17 @@ public class InnerTransactionResult implements XdrElement {
       InnerTransactionResultResult other = (InnerTransactionResultResult) object;
       return Arrays.equals(this.results, other.results) && Objects.equal(this.code, other.code);
     }
-
   }
+
   public static class InnerTransactionResultExt {
-    public InnerTransactionResultExt () {}
+    public InnerTransactionResultExt() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
@@ -275,32 +309,38 @@ public class InnerTransactionResult implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, InnerTransactionResultExt encodedInnerTransactionResultExt) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedInnerTransactionResultExt.getDiscriminant().intValue());
-    switch (encodedInnerTransactionResultExt.getDiscriminant()) {
-    case 0:
-    break;
+    public static void encode(
+        XdrDataOutputStream stream, InnerTransactionResultExt encodedInnerTransactionResultExt)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedInnerTransactionResultExt.getDiscriminant().intValue());
+      switch (encodedInnerTransactionResultExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static InnerTransactionResultExt decode(XdrDataInputStream stream) throws IOException {
-    InnerTransactionResultExt decodedInnerTransactionResultExt = new InnerTransactionResultExt();
-    Integer discriminant = stream.readInt();
-    decodedInnerTransactionResultExt.setDiscriminant(discriminant);
-    switch (decodedInnerTransactionResultExt.getDiscriminant()) {
-    case 0:
-    break;
-    }
+      InnerTransactionResultExt decodedInnerTransactionResultExt = new InnerTransactionResultExt();
+      Integer discriminant = stream.readInt();
+      decodedInnerTransactionResultExt.setDiscriminant(discriminant);
+      switch (decodedInnerTransactionResultExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
       return decodedInnerTransactionResultExt;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof InnerTransactionResultExt)) {
@@ -310,6 +350,5 @@ public class InnerTransactionResult implements XdrElement {
       InnerTransactionResultExt other = (InnerTransactionResultExt) object;
       return Objects.equal(this.v, other.v);
     }
-
   }
 }

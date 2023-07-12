@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 public final class AssetAmount {
   @SerializedName("asset")
   private final Asset asset;
+
   @SerializedName("amount")
   private final String amount;
 
@@ -22,7 +23,6 @@ public final class AssetAmount {
     return this.amount;
   }
 
-
   public int hashCode() {
     return Objects.hashCode(asset, amount);
   }
@@ -34,7 +34,7 @@ public final class AssetAmount {
     }
 
     AssetAmount o = (AssetAmount) object;
-    return Objects.equal(this.getAsset(), o.getAsset()) &&
-            Objects.equal(this.getAmount(), o.getAmount());
+    return Objects.equal(this.getAsset(), o.getAsset())
+        && Objects.equal(this.getAmount(), o.getAmount());
   }
 }

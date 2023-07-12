@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -19,36 +17,49 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class PaymentOp implements XdrElement {
-  public PaymentOp () {}
+  public PaymentOp() {}
+
   private MuxedAccount destination;
+
   public MuxedAccount getDestination() {
     return this.destination;
   }
+
   public void setDestination(MuxedAccount value) {
     this.destination = value;
   }
+
   private Asset asset;
+
   public Asset getAsset() {
     return this.asset;
   }
+
   public void setAsset(Asset value) {
     this.asset = value;
   }
+
   private Int64 amount;
+
   public Int64 getAmount() {
     return this.amount;
   }
+
   public void setAmount(Int64 value) {
     this.amount = value;
   }
-  public static void encode(XdrDataOutputStream stream, PaymentOp encodedPaymentOp) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, PaymentOp encodedPaymentOp)
+      throws IOException {
     MuxedAccount.encode(stream, encodedPaymentOp.destination);
     Asset.encode(stream, encodedPaymentOp.asset);
     Int64.encode(stream, encodedPaymentOp.amount);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static PaymentOp decode(XdrDataInputStream stream) throws IOException {
     PaymentOp decodedPaymentOp = new PaymentOp();
     decodedPaymentOp.destination = MuxedAccount.decode(stream);
@@ -56,10 +67,12 @@ public class PaymentOp implements XdrElement {
     decodedPaymentOp.amount = Int64.decode(stream);
     return decodedPaymentOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.destination, this.asset, this.amount);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof PaymentOp)) {
@@ -67,7 +80,9 @@ public class PaymentOp implements XdrElement {
     }
 
     PaymentOp other = (PaymentOp) object;
-    return Objects.equal(this.destination, other.destination) && Objects.equal(this.asset, other.asset) && Objects.equal(this.amount, other.amount);
+    return Objects.equal(this.destination, other.destination)
+        && Objects.equal(this.asset, other.asset)
+        && Objects.equal(this.amount, other.amount);
   }
 
   public static final class Builder {

@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -23,17 +21,18 @@ public enum OfferEntryFlags implements XdrElement {
   private int mValue;
 
   OfferEntryFlags(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static OfferEntryFlags decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 1: return PASSIVE_FLAG;
+      case 1:
+        return PASSIVE_FLAG;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

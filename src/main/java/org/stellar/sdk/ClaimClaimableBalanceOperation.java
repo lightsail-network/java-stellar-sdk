@@ -1,13 +1,12 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public class ClaimClaimableBalanceOperation extends Operation {
   private final String balanceId;
-
 
   private ClaimClaimableBalanceOperation(String balanceId) {
     this.balanceId = checkNotNull(balanceId, "balanceId cannot be null");
@@ -21,7 +20,8 @@ public class ClaimClaimableBalanceOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     ClaimClaimableBalanceOp op = new ClaimClaimableBalanceOp();
     op.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.CLAIM_CLAIMABLE_BALANCE);
     body.setClaimClaimableBalanceOp(op);
     return body;
@@ -34,6 +34,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
 
     /**
      * Construct a new ClaimClaimableBalance builder from a ClaimClaimableBalance XDR.
+     *
      * @param op {@link ClaimClaimableBalanceOp}
      */
     Builder(ClaimClaimableBalanceOp op) {
@@ -42,6 +43,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
 
     /**
      * Creates a new ClaimClaimableBalance builder.
+     *
      * @param balanceId The id of the claimable balance.
      */
     public Builder(String balanceId) {
@@ -50,6 +52,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
 
     /**
      * Sets the source account for this operation.
+     *
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
@@ -58,9 +61,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public ClaimClaimableBalanceOperation build() {
       ClaimClaimableBalanceOperation operation = new ClaimClaimableBalanceOperation(balanceId);
       if (mSourceAccount != null) {
@@ -82,8 +83,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
     }
 
     ClaimClaimableBalanceOperation other = (ClaimClaimableBalanceOperation) object;
-    return Objects.equal(this.balanceId, other.balanceId) &&
-        Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.balanceId, other.balanceId)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
-
 }

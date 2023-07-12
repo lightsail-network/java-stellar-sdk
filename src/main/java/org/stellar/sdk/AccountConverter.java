@@ -5,25 +5,24 @@ import org.stellar.sdk.xdr.MuxedAccount;
 
 public class AccountConverter {
   private final boolean enableMuxed;
+
   private AccountConverter(boolean enabled) {
     this.enableMuxed = enabled;
   }
 
-  /**
-   * Returns an AccountConverter which supports muxed accounts.
-   **/
+  /** Returns an AccountConverter which supports muxed accounts. */
   public static AccountConverter enableMuxed() {
     return new AccountConverter(true);
   }
 
   /**
-   * Returns an AccountConverter which does not support muxed accounts. When trying to encode or decode
-   * a muxed account the AccountConverter will first convert the muxed account into an ED25519 account id.
-   **/
+   * Returns an AccountConverter which does not support muxed accounts. When trying to encode or
+   * decode a muxed account the AccountConverter will first convert the muxed account into an
+   * ED25519 account id.
+   */
   public static AccountConverter disableMuxed() {
     return new AccountConverter(false);
   }
-
 
   /**
    * Encodes an account string into its XDR MuxedAccount representation.

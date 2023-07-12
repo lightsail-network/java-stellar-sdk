@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -14,7 +12,7 @@ import com.google.common.base.Objects;
 //  {
 //      Hash hash;
 //      LedgerHeader header;
-//  
+//
 //      // reserved for future use
 //      union switch (int v)
 //      {
@@ -26,36 +24,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LedgerHeaderHistoryEntry implements XdrElement {
-  public LedgerHeaderHistoryEntry () {}
+  public LedgerHeaderHistoryEntry() {}
+
   private Hash hash;
+
   public Hash getHash() {
     return this.hash;
   }
+
   public void setHash(Hash value) {
     this.hash = value;
   }
+
   private LedgerHeader header;
+
   public LedgerHeader getHeader() {
     return this.header;
   }
+
   public void setHeader(LedgerHeader value) {
     this.header = value;
   }
+
   private LedgerHeaderHistoryEntryExt ext;
+
   public LedgerHeaderHistoryEntryExt getExt() {
     return this.ext;
   }
+
   public void setExt(LedgerHeaderHistoryEntryExt value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, LedgerHeaderHistoryEntry encodedLedgerHeaderHistoryEntry) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, LedgerHeaderHistoryEntry encodedLedgerHeaderHistoryEntry)
+      throws IOException {
     Hash.encode(stream, encodedLedgerHeaderHistoryEntry.hash);
     LedgerHeader.encode(stream, encodedLedgerHeaderHistoryEntry.header);
     LedgerHeaderHistoryEntryExt.encode(stream, encodedLedgerHeaderHistoryEntry.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LedgerHeaderHistoryEntry decode(XdrDataInputStream stream) throws IOException {
     LedgerHeaderHistoryEntry decodedLedgerHeaderHistoryEntry = new LedgerHeaderHistoryEntry();
     decodedLedgerHeaderHistoryEntry.hash = Hash.decode(stream);
@@ -63,10 +75,12 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     decodedLedgerHeaderHistoryEntry.ext = LedgerHeaderHistoryEntryExt.decode(stream);
     return decodedLedgerHeaderHistoryEntry;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.hash, this.header, this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LedgerHeaderHistoryEntry)) {
@@ -74,7 +88,9 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     }
 
     LedgerHeaderHistoryEntry other = (LedgerHeaderHistoryEntry) object;
-    return Objects.equal(this.hash, other.hash) && Objects.equal(this.header, other.header) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.hash, other.hash)
+        && Objects.equal(this.header, other.header)
+        && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
@@ -107,11 +123,14 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
   }
 
   public static class LedgerHeaderHistoryEntryExt {
-    public LedgerHeaderHistoryEntryExt () {}
+    public LedgerHeaderHistoryEntryExt() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
@@ -131,32 +150,39 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, LedgerHeaderHistoryEntryExt encodedLedgerHeaderHistoryEntryExt) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedLedgerHeaderHistoryEntryExt.getDiscriminant().intValue());
-    switch (encodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
-    case 0:
-    break;
+    public static void encode(
+        XdrDataOutputStream stream, LedgerHeaderHistoryEntryExt encodedLedgerHeaderHistoryEntryExt)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedLedgerHeaderHistoryEntryExt.getDiscriminant().intValue());
+      switch (encodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static LedgerHeaderHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
-    LedgerHeaderHistoryEntryExt decodedLedgerHeaderHistoryEntryExt = new LedgerHeaderHistoryEntryExt();
-    Integer discriminant = stream.readInt();
-    decodedLedgerHeaderHistoryEntryExt.setDiscriminant(discriminant);
-    switch (decodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
-    case 0:
-    break;
-    }
+      LedgerHeaderHistoryEntryExt decodedLedgerHeaderHistoryEntryExt =
+          new LedgerHeaderHistoryEntryExt();
+      Integer discriminant = stream.readInt();
+      decodedLedgerHeaderHistoryEntryExt.setDiscriminant(discriminant);
+      switch (decodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
       return decodedLedgerHeaderHistoryEntryExt;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof LedgerHeaderHistoryEntryExt)) {
@@ -166,6 +192,5 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
       LedgerHeaderHistoryEntryExt other = (LedgerHeaderHistoryEntryExt) object;
       return Objects.equal(this.v, other.v);
     }
-
   }
 }

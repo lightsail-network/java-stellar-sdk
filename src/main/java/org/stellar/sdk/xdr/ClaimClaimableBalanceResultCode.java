@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -17,7 +15,7 @@ import java.io.IOException;
 //      CLAIM_CLAIMABLE_BALANCE_LINE_FULL = -3,
 //      CLAIM_CLAIMABLE_BALANCE_NO_TRUST = -4,
 //      CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -5
-//  
+//
 //  };
 
 //  ===========================================================================
@@ -32,28 +30,36 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
   private int mValue;
 
   ClaimClaimableBalanceResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
-  public static ClaimClaimableBalanceResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimClaimableBalanceResultCode decode(XdrDataInputStream stream)
+      throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return CLAIM_CLAIMABLE_BALANCE_SUCCESS;
-      case -1: return CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST;
-      case -2: return CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM;
-      case -3: return CLAIM_CLAIMABLE_BALANCE_LINE_FULL;
-      case -4: return CLAIM_CLAIMABLE_BALANCE_NO_TRUST;
-      case -5: return CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED;
+      case 0:
+        return CLAIM_CLAIMABLE_BALANCE_SUCCESS;
+      case -1:
+        return CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST;
+      case -2:
+        return CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM;
+      case -3:
+        return CLAIM_CLAIMABLE_BALANCE_LINE_FULL;
+      case -4:
+        return CLAIM_CLAIMABLE_BALANCE_NO_TRUST;
+      case -5:
+        return CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ClaimClaimableBalanceResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ClaimClaimableBalanceResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

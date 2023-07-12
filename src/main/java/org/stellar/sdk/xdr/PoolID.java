@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -30,13 +28,14 @@ public class PoolID implements XdrElement {
     this.PoolID = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, PoolID  encodedPoolID) throws IOException {
+  public static void encode(XdrDataOutputStream stream, PoolID encodedPoolID) throws IOException {
     Hash.encode(stream, encodedPoolID.PoolID);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static PoolID decode(XdrDataInputStream stream) throws IOException {
     PoolID decodedPoolID = new PoolID();
     decodedPoolID.PoolID = Hash.decode(stream);

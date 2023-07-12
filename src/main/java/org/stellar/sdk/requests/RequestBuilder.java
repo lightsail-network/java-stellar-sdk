@@ -2,19 +2,16 @@ package org.stellar.sdk.requests;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.AssetTypeNative;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * Abstract class for request builders.
- */
+/** Abstract class for request builders. */
 public abstract class RequestBuilder {
   protected HttpUrl.Builder uriBuilder;
   protected OkHttpClient httpClient;
@@ -45,10 +42,12 @@ public abstract class RequestBuilder {
   }
 
   /**
-   * Sets <code>cursor</code> parameter on the request.
-   * A cursor is a value that points to a specific location in a collection of resources.
-   * The cursor attribute itself is an opaque value meaning that users should not try to parse it.
-   * @see <a href="https://developers.stellar.org/api/introduction/pagination/">Page documentation</a>
+   * Sets <code>cursor</code> parameter on the request. A cursor is a value that points to a
+   * specific location in a collection of resources. The cursor attribute itself is an opaque value
+   * meaning that users should not try to parse it.
+   *
+   * @see <a href="https://developers.stellar.org/api/introduction/pagination/">Page
+   *     documentation</a>
    * @param cursor
    */
   public RequestBuilder cursor(String cursor) {
@@ -57,9 +56,9 @@ public abstract class RequestBuilder {
   }
 
   /**
-   * Sets <code>limit</code> parameter on the request.
-   * It defines maximum number of records to return.
-   * For range and default values check documentation of the endpoint requested.
+   * Sets <code>limit</code> parameter on the request. It defines maximum number of records to
+   * return. For range and default values check documentation of the endpoint requested.
+   *
    * @param number maxium number of records to return
    */
   public RequestBuilder limit(int number) {
@@ -69,6 +68,7 @@ public abstract class RequestBuilder {
 
   /**
    * Sets <code>order</code> parameter on the request.
+   *
    * @param direction {@link org.stellar.sdk.requests.RequestBuilder.Order}
    */
   public RequestBuilder order(Order direction) {
@@ -79,7 +79,7 @@ public abstract class RequestBuilder {
   /**
    * Sets a parameter consisting of a comma separated list of assets on the request.
    *
-   * @param name   the name of the query parameter
+   * @param name the name of the query parameter
    * @param assets the list of assets to be serialized into the query parameter value
    */
   public RequestBuilder setAssetsParameter(String name, List<Asset> assets) {
@@ -94,7 +94,7 @@ public abstract class RequestBuilder {
   /**
    * Sets a parameter consisting of an asset represented as "assetCode:assetIssue" on the request.
    *
-   * @param name  the name of the query parameter
+   * @param name the name of the query parameter
    * @param asset the asset to be serialized into the query parameter value
    */
   public RequestBuilder setAssetParameter(String name, Asset asset) {
@@ -122,16 +122,16 @@ public abstract class RequestBuilder {
     return uriBuilder.build();
   }
 
-  /**
-   * Represents possible <code>order</code> parameter values.
-   */
+  /** Represents possible <code>order</code> parameter values. */
   public enum Order {
     ASC("asc"),
     DESC("desc");
     private final String value;
+
     Order(String value) {
       this.value = value;
     }
+
     public String getValue() {
       return value;
     }

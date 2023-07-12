@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -15,20 +13,20 @@ import java.util.Arrays;
 //  {
 //      // account used to run the transaction
 //      MuxedAccount sourceAccount;
-//  
+//
 //      // the fee the sourceAccount will pay
 //      uint32 fee;
-//  
+//
 //      // sequence number to consume in the account
 //      SequenceNumber seqNum;
-//  
+//
 //      // validity conditions
 //      Preconditions cond;
-//  
+//
 //      Memo memo;
-//  
+//
 //      Operation operations<MAX_OPS_PER_TX>;
-//  
+//
 //      // reserved for future use
 //      union switch (int v)
 //      {
@@ -40,57 +38,80 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class Transaction implements XdrElement {
-  public Transaction () {}
+  public Transaction() {}
+
   private MuxedAccount sourceAccount;
+
   public MuxedAccount getSourceAccount() {
     return this.sourceAccount;
   }
+
   public void setSourceAccount(MuxedAccount value) {
     this.sourceAccount = value;
   }
+
   private Uint32 fee;
+
   public Uint32 getFee() {
     return this.fee;
   }
+
   public void setFee(Uint32 value) {
     this.fee = value;
   }
+
   private SequenceNumber seqNum;
+
   public SequenceNumber getSeqNum() {
     return this.seqNum;
   }
+
   public void setSeqNum(SequenceNumber value) {
     this.seqNum = value;
   }
+
   private Preconditions cond;
+
   public Preconditions getCond() {
     return this.cond;
   }
+
   public void setCond(Preconditions value) {
     this.cond = value;
   }
+
   private Memo memo;
+
   public Memo getMemo() {
     return this.memo;
   }
+
   public void setMemo(Memo value) {
     this.memo = value;
   }
+
   private Operation[] operations;
+
   public Operation[] getOperations() {
     return this.operations;
   }
+
   public void setOperations(Operation[] value) {
     this.operations = value;
   }
+
   private TransactionExt ext;
+
   public TransactionExt getExt() {
     return this.ext;
   }
+
   public void setExt(TransactionExt value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, Transaction encodedTransaction) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, Transaction encodedTransaction)
+      throws IOException {
     MuxedAccount.encode(stream, encodedTransaction.sourceAccount);
     Uint32.encode(stream, encodedTransaction.fee);
     SequenceNumber.encode(stream, encodedTransaction.seqNum);
@@ -103,9 +124,11 @@ public class Transaction implements XdrElement {
     }
     TransactionExt.encode(stream, encodedTransaction.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Transaction decode(XdrDataInputStream stream) throws IOException {
     Transaction decodedTransaction = new Transaction();
     decodedTransaction.sourceAccount = MuxedAccount.decode(stream);
@@ -121,10 +144,19 @@ public class Transaction implements XdrElement {
     decodedTransaction.ext = TransactionExt.decode(stream);
     return decodedTransaction;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.sourceAccount, this.fee, this.seqNum, this.cond, this.memo, Arrays.hashCode(this.operations), this.ext);
+    return Objects.hashCode(
+        this.sourceAccount,
+        this.fee,
+        this.seqNum,
+        this.cond,
+        this.memo,
+        Arrays.hashCode(this.operations),
+        this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof Transaction)) {
@@ -132,7 +164,13 @@ public class Transaction implements XdrElement {
     }
 
     Transaction other = (Transaction) object;
-    return Objects.equal(this.sourceAccount, other.sourceAccount) && Objects.equal(this.fee, other.fee) && Objects.equal(this.seqNum, other.seqNum) && Objects.equal(this.cond, other.cond) && Objects.equal(this.memo, other.memo) && Arrays.equals(this.operations, other.operations) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.sourceAccount, other.sourceAccount)
+        && Objects.equal(this.fee, other.fee)
+        && Objects.equal(this.seqNum, other.seqNum)
+        && Objects.equal(this.cond, other.cond)
+        && Objects.equal(this.memo, other.memo)
+        && Arrays.equals(this.operations, other.operations)
+        && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
@@ -193,11 +231,14 @@ public class Transaction implements XdrElement {
   }
 
   public static class TransactionExt {
-    public TransactionExt () {}
+    public TransactionExt() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
@@ -217,32 +258,37 @@ public class Transaction implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, TransactionExt encodedTransactionExt) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedTransactionExt.getDiscriminant().intValue());
-    switch (encodedTransactionExt.getDiscriminant()) {
-    case 0:
-    break;
+    public static void encode(XdrDataOutputStream stream, TransactionExt encodedTransactionExt)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedTransactionExt.getDiscriminant().intValue());
+      switch (encodedTransactionExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static TransactionExt decode(XdrDataInputStream stream) throws IOException {
-    TransactionExt decodedTransactionExt = new TransactionExt();
-    Integer discriminant = stream.readInt();
-    decodedTransactionExt.setDiscriminant(discriminant);
-    switch (decodedTransactionExt.getDiscriminant()) {
-    case 0:
-    break;
-    }
+      TransactionExt decodedTransactionExt = new TransactionExt();
+      Integer discriminant = stream.readInt();
+      decodedTransactionExt.setDiscriminant(discriminant);
+      switch (decodedTransactionExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
       return decodedTransactionExt;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof TransactionExt)) {
@@ -252,6 +298,5 @@ public class Transaction implements XdrElement {
       TransactionExt other = (TransactionExt) object;
       return Objects.equal(this.v, other.v);
     }
-
   }
 }

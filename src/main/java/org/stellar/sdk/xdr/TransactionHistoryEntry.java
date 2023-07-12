@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -14,7 +12,7 @@ import com.google.common.base.Objects;
 //  {
 //      uint32 ledgerSeq;
 //      TransactionSet txSet;
-//  
+//
 //      // reserved for future use
 //      union switch (int v)
 //      {
@@ -26,36 +24,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class TransactionHistoryEntry implements XdrElement {
-  public TransactionHistoryEntry () {}
+  public TransactionHistoryEntry() {}
+
   private Uint32 ledgerSeq;
+
   public Uint32 getLedgerSeq() {
     return this.ledgerSeq;
   }
+
   public void setLedgerSeq(Uint32 value) {
     this.ledgerSeq = value;
   }
+
   private TransactionSet txSet;
+
   public TransactionSet getTxSet() {
     return this.txSet;
   }
+
   public void setTxSet(TransactionSet value) {
     this.txSet = value;
   }
+
   private TransactionHistoryEntryExt ext;
+
   public TransactionHistoryEntryExt getExt() {
     return this.ext;
   }
+
   public void setExt(TransactionHistoryEntryExt value) {
     this.ext = value;
   }
-  public static void encode(XdrDataOutputStream stream, TransactionHistoryEntry encodedTransactionHistoryEntry) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, TransactionHistoryEntry encodedTransactionHistoryEntry)
+      throws IOException {
     Uint32.encode(stream, encodedTransactionHistoryEntry.ledgerSeq);
     TransactionSet.encode(stream, encodedTransactionHistoryEntry.txSet);
     TransactionHistoryEntryExt.encode(stream, encodedTransactionHistoryEntry.ext);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TransactionHistoryEntry decode(XdrDataInputStream stream) throws IOException {
     TransactionHistoryEntry decodedTransactionHistoryEntry = new TransactionHistoryEntry();
     decodedTransactionHistoryEntry.ledgerSeq = Uint32.decode(stream);
@@ -63,10 +75,12 @@ public class TransactionHistoryEntry implements XdrElement {
     decodedTransactionHistoryEntry.ext = TransactionHistoryEntryExt.decode(stream);
     return decodedTransactionHistoryEntry;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.ledgerSeq, this.txSet, this.ext);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TransactionHistoryEntry)) {
@@ -74,7 +88,9 @@ public class TransactionHistoryEntry implements XdrElement {
     }
 
     TransactionHistoryEntry other = (TransactionHistoryEntry) object;
-    return Objects.equal(this.ledgerSeq, other.ledgerSeq) && Objects.equal(this.txSet, other.txSet) && Objects.equal(this.ext, other.ext);
+    return Objects.equal(this.ledgerSeq, other.ledgerSeq)
+        && Objects.equal(this.txSet, other.txSet)
+        && Objects.equal(this.ext, other.ext);
   }
 
   public static final class Builder {
@@ -107,11 +123,14 @@ public class TransactionHistoryEntry implements XdrElement {
   }
 
   public static class TransactionHistoryEntryExt {
-    public TransactionHistoryEntryExt () {}
+    public TransactionHistoryEntryExt() {}
+
     Integer v;
+
     public Integer getDiscriminant() {
       return this.v;
     }
+
     public void setDiscriminant(Integer value) {
       this.v = value;
     }
@@ -131,32 +150,39 @@ public class TransactionHistoryEntry implements XdrElement {
       }
     }
 
-    public static void encode(XdrDataOutputStream stream, TransactionHistoryEntryExt encodedTransactionHistoryEntryExt) throws IOException {
-    //Xdrgen::AST::Typespecs::Int
-    //Integer
-    stream.writeInt(encodedTransactionHistoryEntryExt.getDiscriminant().intValue());
-    switch (encodedTransactionHistoryEntryExt.getDiscriminant()) {
-    case 0:
-    break;
+    public static void encode(
+        XdrDataOutputStream stream, TransactionHistoryEntryExt encodedTransactionHistoryEntryExt)
+        throws IOException {
+      // Xdrgen::AST::Typespecs::Int
+      // Integer
+      stream.writeInt(encodedTransactionHistoryEntryExt.getDiscriminant().intValue());
+      switch (encodedTransactionHistoryEntryExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
     }
-    }
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
+
     public static TransactionHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
-    TransactionHistoryEntryExt decodedTransactionHistoryEntryExt = new TransactionHistoryEntryExt();
-    Integer discriminant = stream.readInt();
-    decodedTransactionHistoryEntryExt.setDiscriminant(discriminant);
-    switch (decodedTransactionHistoryEntryExt.getDiscriminant()) {
-    case 0:
-    break;
-    }
+      TransactionHistoryEntryExt decodedTransactionHistoryEntryExt =
+          new TransactionHistoryEntryExt();
+      Integer discriminant = stream.readInt();
+      decodedTransactionHistoryEntryExt.setDiscriminant(discriminant);
+      switch (decodedTransactionHistoryEntryExt.getDiscriminant()) {
+        case 0:
+          break;
+      }
       return decodedTransactionHistoryEntryExt;
     }
+
     @Override
     public int hashCode() {
       return Objects.hashCode(this.v);
     }
+
     @Override
     public boolean equals(Object object) {
       if (!(object instanceof TransactionHistoryEntryExt)) {
@@ -166,6 +192,5 @@ public class TransactionHistoryEntry implements XdrElement {
       TransactionHistoryEntryExt other = (TransactionHistoryEntryExt) object;
       return Objects.equal(this.v, other.v);
     }
-
   }
 }

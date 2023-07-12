@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -37,29 +35,37 @@ public enum AllowTrustResultCode implements XdrElement {
   private int mValue;
 
   AllowTrustResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static AllowTrustResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return ALLOW_TRUST_SUCCESS;
-      case -1: return ALLOW_TRUST_MALFORMED;
-      case -2: return ALLOW_TRUST_NO_TRUST_LINE;
-      case -3: return ALLOW_TRUST_TRUST_NOT_REQUIRED;
-      case -4: return ALLOW_TRUST_CANT_REVOKE;
-      case -5: return ALLOW_TRUST_SELF_NOT_ALLOWED;
-      case -6: return ALLOW_TRUST_LOW_RESERVE;
+      case 0:
+        return ALLOW_TRUST_SUCCESS;
+      case -1:
+        return ALLOW_TRUST_MALFORMED;
+      case -2:
+        return ALLOW_TRUST_NO_TRUST_LINE;
+      case -3:
+        return ALLOW_TRUST_TRUST_NOT_REQUIRED;
+      case -4:
+        return ALLOW_TRUST_CANT_REVOKE;
+      case -5:
+        return ALLOW_TRUST_SELF_NOT_ALLOWED;
+      case -6:
+        return ALLOW_TRUST_LOW_RESERVE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, AllowTrustResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, AllowTrustResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

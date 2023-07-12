@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -19,22 +17,30 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class TransactionSet implements XdrElement {
-  public TransactionSet () {}
+  public TransactionSet() {}
+
   private Hash previousLedgerHash;
+
   public Hash getPreviousLedgerHash() {
     return this.previousLedgerHash;
   }
+
   public void setPreviousLedgerHash(Hash value) {
     this.previousLedgerHash = value;
   }
+
   private TransactionEnvelope[] txs;
+
   public TransactionEnvelope[] getTxs() {
     return this.txs;
   }
+
   public void setTxs(TransactionEnvelope[] value) {
     this.txs = value;
   }
-  public static void encode(XdrDataOutputStream stream, TransactionSet encodedTransactionSet) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, TransactionSet encodedTransactionSet)
+      throws IOException {
     Hash.encode(stream, encodedTransactionSet.previousLedgerHash);
     int txssize = encodedTransactionSet.getTxs().length;
     stream.writeInt(txssize);
@@ -42,9 +48,11 @@ public class TransactionSet implements XdrElement {
       TransactionEnvelope.encode(stream, encodedTransactionSet.txs[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TransactionSet decode(XdrDataInputStream stream) throws IOException {
     TransactionSet decodedTransactionSet = new TransactionSet();
     decodedTransactionSet.previousLedgerHash = Hash.decode(stream);
@@ -55,10 +63,12 @@ public class TransactionSet implements XdrElement {
     }
     return decodedTransactionSet;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.previousLedgerHash, Arrays.hashCode(this.txs));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TransactionSet)) {
@@ -66,7 +76,8 @@ public class TransactionSet implements XdrElement {
     }
 
     TransactionSet other = (TransactionSet) object;
-    return Objects.equal(this.previousLedgerHash, other.previousLedgerHash) && Arrays.equals(this.txs, other.txs);
+    return Objects.equal(this.previousLedgerHash, other.previousLedgerHash)
+        && Arrays.equals(this.txs, other.txs);
   }
 
   public static final class Builder {

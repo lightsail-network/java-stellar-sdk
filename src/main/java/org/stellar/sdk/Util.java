@@ -1,16 +1,15 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
-import org.stellar.sdk.xdr.ClaimableBalanceID;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import org.stellar.sdk.xdr.ClaimableBalanceID;
+import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 public class Util {
 
@@ -18,7 +17,7 @@ public class Util {
 
   public static String bytesToHex(byte[] bytes) {
     char[] hexChars = new char[bytes.length * 2];
-    for ( int j = 0; j < bytes.length; j++ ) {
+    for (int j = 0; j < bytes.length; j++) {
       int v = bytes[j] & 0xFF;
       hexChars[j * 2] = HEX_ARRAY[v >>> 4];
       hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
@@ -30,14 +29,15 @@ public class Util {
     int len = s.length();
     byte[] data = new byte[len / 2];
     for (int i = 0; i < len; i += 2) {
-      data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-          + Character.digit(s.charAt(i+1), 16));
+      data[i / 2] =
+          (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
     }
     return data;
   }
 
   /**
    * Returns SHA-256 hash of <code>data</code>.
+   *
    * @param data
    */
   public static byte[] hash(byte[] data) {
@@ -52,6 +52,7 @@ public class Util {
 
   /**
    * Pads <code>bytes</code> array to <code>length</code> with zeros.
+   *
    * @param bytes
    * @param length
    */
@@ -64,6 +65,7 @@ public class Util {
 
   /**
    * Pads <code>string</code> to <code>length</code> with zeros.
+   *
    * @param string
    * @param length
    */
@@ -73,18 +75,20 @@ public class Util {
 
   /**
    * Remove zeros from the end of <code>bytes</code> array.
+   *
    * @param bytes
    */
   static String paddedByteArrayToString(byte[] bytes) {
-      String[] strArray = new String(bytes).split("\0");
-      if (strArray.length > 0) {
-          return strArray[0];
-      }
-      return "";   
+    String[] strArray = new String(bytes).split("\0");
+    if (strArray.length > 0) {
+      return strArray[0];
+    }
+    return "";
   }
 
   /**
    * Get the version of the SDK
+   *
    * @return version
    */
   public static String getSdkVersion() {
@@ -98,7 +102,8 @@ public class Util {
 
   public static ClaimableBalanceID claimableBalanceIdToXDR(String balanceId) {
     byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase());
-    XdrDataInputStream balanceIdXdrDataInputStream = new XdrDataInputStream(new ByteArrayInputStream(balanceIdBytes));
+    XdrDataInputStream balanceIdXdrDataInputStream =
+        new XdrDataInputStream(new ByteArrayInputStream(balanceIdBytes));
 
     try {
       return ClaimableBalanceID.decode(balanceIdXdrDataInputStream);
@@ -124,5 +129,4 @@ public class Util {
     }
     throw new IllegalArgumentException("native assets are not supported");
   }
-
 }

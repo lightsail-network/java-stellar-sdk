@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -19,36 +17,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class TransactionResultMeta implements XdrElement {
-  public TransactionResultMeta () {}
+  public TransactionResultMeta() {}
+
   private TransactionResultPair result;
+
   public TransactionResultPair getResult() {
     return this.result;
   }
+
   public void setResult(TransactionResultPair value) {
     this.result = value;
   }
+
   private LedgerEntryChanges feeProcessing;
+
   public LedgerEntryChanges getFeeProcessing() {
     return this.feeProcessing;
   }
+
   public void setFeeProcessing(LedgerEntryChanges value) {
     this.feeProcessing = value;
   }
+
   private TransactionMeta txApplyProcessing;
+
   public TransactionMeta getTxApplyProcessing() {
     return this.txApplyProcessing;
   }
+
   public void setTxApplyProcessing(TransactionMeta value) {
     this.txApplyProcessing = value;
   }
-  public static void encode(XdrDataOutputStream stream, TransactionResultMeta encodedTransactionResultMeta) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, TransactionResultMeta encodedTransactionResultMeta)
+      throws IOException {
     TransactionResultPair.encode(stream, encodedTransactionResultMeta.result);
     LedgerEntryChanges.encode(stream, encodedTransactionResultMeta.feeProcessing);
     TransactionMeta.encode(stream, encodedTransactionResultMeta.txApplyProcessing);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TransactionResultMeta decode(XdrDataInputStream stream) throws IOException {
     TransactionResultMeta decodedTransactionResultMeta = new TransactionResultMeta();
     decodedTransactionResultMeta.result = TransactionResultPair.decode(stream);
@@ -56,10 +68,12 @@ public class TransactionResultMeta implements XdrElement {
     decodedTransactionResultMeta.txApplyProcessing = TransactionMeta.decode(stream);
     return decodedTransactionResultMeta;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.result, this.feeProcessing, this.txApplyProcessing);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TransactionResultMeta)) {
@@ -67,7 +81,9 @@ public class TransactionResultMeta implements XdrElement {
     }
 
     TransactionResultMeta other = (TransactionResultMeta) object;
-    return Objects.equal(this.result, other.result) && Objects.equal(this.feeProcessing, other.feeProcessing) && Objects.equal(this.txApplyProcessing, other.txApplyProcessing);
+    return Objects.equal(this.result, other.result)
+        && Objects.equal(this.feeProcessing, other.feeProcessing)
+        && Objects.equal(this.txApplyProcessing, other.txApplyProcessing);
   }
 
   public static final class Builder {

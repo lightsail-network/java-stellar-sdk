@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -19,29 +17,37 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class Auth implements XdrElement {
-  public Auth () {}
+  public Auth() {}
+
   private Integer unused;
+
   public Integer getUnused() {
     return this.unused;
   }
+
   public void setUnused(Integer value) {
     this.unused = value;
   }
-  public static void encode(XdrDataOutputStream stream, Auth encodedAuth) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, Auth encodedAuth) throws IOException {
     stream.writeInt(encodedAuth.unused);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Auth decode(XdrDataInputStream stream) throws IOException {
     Auth decodedAuth = new Auth();
     decodedAuth.unused = stream.readInt();
     return decodedAuth;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.unused);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof Auth)) {

@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Represents BeginSponsoringFutureReserves operation response.
+ *
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */

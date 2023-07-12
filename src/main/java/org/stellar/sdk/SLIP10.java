@@ -1,40 +1,40 @@
 package org.stellar.sdk;
 
-import javax.crypto.Mac;
-import javax.crypto.ShortBufferException;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
+import javax.crypto.ShortBufferException;
+import javax.crypto.spec.SecretKeySpec;
 
 final class SLIP10 {
 
-  private SLIP10() {
-  }
+  private SLIP10() {}
 
   private static final String hmacSHA512algorithm = "HmacSHA512";
 
   /**
-   * Derives only the private key for ED25519 in the manor defined in
-   * <a href="https://github.com/satoshilabs/slips/blob/master/slip-0010.md">SLIP-0010</a>.
+   * Derives only the private key for ED25519 in the manor defined in <a
+   * href="https://github.com/satoshilabs/slips/blob/master/slip-0010.md">SLIP-0010</a>.
    *
-   * @param seed    Seed, the BIP0039 output.
-   * @param indexes an array of indexes that define the path. E.g. for m/1'/2'/3', pass 1, 2, 3.
-   *                As with Ed25519 non-hardened child indexes are not supported, this function treats all indexes
-   *                as hardened.
+   * @param seed Seed, the BIP0039 output.
+   * @param indexes an array of indexes that define the path. E.g. for m/1'/2'/3', pass 1, 2, 3. As
+   *     with Ed25519 non-hardened child indexes are not supported, this function treats all indexes
+   *     as hardened.
    * @return Private key.
    * @throws NoSuchAlgorithmException If it cannot find the HmacSHA512 algorithm by name.
-   * @throws ShortBufferException     Occurrence not expected.
-   * @throws InvalidKeyException      Occurrence not expected.
+   * @throws ShortBufferException Occurrence not expected.
+   * @throws InvalidKeyException Occurrence not expected.
    */
   static byte[] deriveEd25519PrivateKey(final byte[] seed, final int... indexes)
-          throws NoSuchAlgorithmException, ShortBufferException, InvalidKeyException {
+      throws NoSuchAlgorithmException, ShortBufferException, InvalidKeyException {
 
     final byte[] I = new byte[64];
     final Mac mac = Mac.getInstance(hmacSHA512algorithm);
 
     // I = HMAC-SHA512(Key = bytes("ed25519 seed"), Data = seed)
-    mac.init(new SecretKeySpec("ed25519 seed".getBytes(Charset.forName("UTF-8")), hmacSHA512algorithm));
+    mac.init(
+        new SecretKeySpec("ed25519 seed".getBytes(Charset.forName("UTF-8")), hmacSHA512algorithm));
     mac.update(seed);
     mac.doFinal(I, 0);
 

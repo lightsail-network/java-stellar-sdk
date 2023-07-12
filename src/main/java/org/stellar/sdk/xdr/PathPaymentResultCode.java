@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -13,7 +11,7 @@ import java.io.IOException;
 //  {
 //      // codes considered as "success" for the operation
 //      PATH_PAYMENT_SUCCESS = 0, // success
-//  
+//
 //      // codes considered as "failure" for the operation
 //      PATH_PAYMENT_MALFORMED = -1,          // bad input
 //      PATH_PAYMENT_UNDERFUNDED = -2,        // not enough funds in source account
@@ -30,7 +28,7 @@ import java.io.IOException;
 //  };
 
 //  ===========================================================================
-public enum PathPaymentResultCode  {
+public enum PathPaymentResultCode {
   PATH_PAYMENT_SUCCESS(0),
   PATH_PAYMENT_MALFORMED(-1),
   PATH_PAYMENT_UNDERFUNDED(-2),
@@ -48,29 +46,42 @@ public enum PathPaymentResultCode  {
   private int mValue;
 
   PathPaymentResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   static PathPaymentResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return PATH_PAYMENT_SUCCESS;
-      case -1: return PATH_PAYMENT_MALFORMED;
-      case -2: return PATH_PAYMENT_UNDERFUNDED;
-      case -3: return PATH_PAYMENT_SRC_NO_TRUST;
-      case -4: return PATH_PAYMENT_SRC_NOT_AUTHORIZED;
-      case -5: return PATH_PAYMENT_NO_DESTINATION;
-      case -6: return PATH_PAYMENT_NO_TRUST;
-      case -7: return PATH_PAYMENT_NOT_AUTHORIZED;
-      case -8: return PATH_PAYMENT_LINE_FULL;
-      case -9: return PATH_PAYMENT_NO_ISSUER;
-      case -10: return PATH_PAYMENT_TOO_FEW_OFFERS;
-      case -11: return PATH_PAYMENT_OFFER_CROSS_SELF;
-      case -12: return PATH_PAYMENT_OVER_SENDMAX;
+      case 0:
+        return PATH_PAYMENT_SUCCESS;
+      case -1:
+        return PATH_PAYMENT_MALFORMED;
+      case -2:
+        return PATH_PAYMENT_UNDERFUNDED;
+      case -3:
+        return PATH_PAYMENT_SRC_NO_TRUST;
+      case -4:
+        return PATH_PAYMENT_SRC_NOT_AUTHORIZED;
+      case -5:
+        return PATH_PAYMENT_NO_DESTINATION;
+      case -6:
+        return PATH_PAYMENT_NO_TRUST;
+      case -7:
+        return PATH_PAYMENT_NOT_AUTHORIZED;
+      case -8:
+        return PATH_PAYMENT_LINE_FULL;
+      case -9:
+        return PATH_PAYMENT_NO_ISSUER;
+      case -10:
+        return PATH_PAYMENT_TOO_FEW_OFFERS;
+      case -11:
+        return PATH_PAYMENT_OFFER_CROSS_SELF;
+      case -12:
+        return PATH_PAYMENT_OVER_SENDMAX;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

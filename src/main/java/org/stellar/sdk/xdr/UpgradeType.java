@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -30,7 +28,8 @@ public class UpgradeType implements XdrElement {
     this.UpgradeType = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, UpgradeType  encodedUpgradeType) throws IOException {
+  public static void encode(XdrDataOutputStream stream, UpgradeType encodedUpgradeType)
+      throws IOException {
     int UpgradeTypesize = encodedUpgradeType.UpgradeType.length;
     stream.writeInt(UpgradeTypesize);
     stream.write(encodedUpgradeType.getUpgradeType(), 0, UpgradeTypesize);
@@ -39,6 +38,7 @@ public class UpgradeType implements XdrElement {
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static UpgradeType decode(XdrDataInputStream stream) throws IOException {
     UpgradeType decodedUpgradeType = new UpgradeType();
     int UpgradeTypesize = stream.readInt();

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class DontHave implements XdrElement {
-  public DontHave () {}
+  public DontHave() {}
+
   private MessageType type;
+
   public MessageType getType() {
     return this.type;
   }
+
   public void setType(MessageType value) {
     this.type = value;
   }
+
   private Uint256 reqHash;
+
   public Uint256 getReqHash() {
     return this.reqHash;
   }
+
   public void setReqHash(Uint256 value) {
     this.reqHash = value;
   }
-  public static void encode(XdrDataOutputStream stream, DontHave encodedDontHave) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, DontHave encodedDontHave)
+      throws IOException {
     MessageType.encode(stream, encodedDontHave.type);
     Uint256.encode(stream, encodedDontHave.reqHash);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static DontHave decode(XdrDataInputStream stream) throws IOException {
     DontHave decodedDontHave = new DontHave();
     decodedDontHave.type = MessageType.decode(stream);
     decodedDontHave.reqHash = Uint256.decode(stream);
     return decodedDontHave;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.type, this.reqHash);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof DontHave)) {

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -19,36 +17,49 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ClawbackOp implements XdrElement {
-  public ClawbackOp () {}
+  public ClawbackOp() {}
+
   private Asset asset;
+
   public Asset getAsset() {
     return this.asset;
   }
+
   public void setAsset(Asset value) {
     this.asset = value;
   }
+
   private MuxedAccount from;
+
   public MuxedAccount getFrom() {
     return this.from;
   }
+
   public void setFrom(MuxedAccount value) {
     this.from = value;
   }
+
   private Int64 amount;
+
   public Int64 getAmount() {
     return this.amount;
   }
+
   public void setAmount(Int64 value) {
     this.amount = value;
   }
-  public static void encode(XdrDataOutputStream stream, ClawbackOp encodedClawbackOp) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, ClawbackOp encodedClawbackOp)
+      throws IOException {
     Asset.encode(stream, encodedClawbackOp.asset);
     MuxedAccount.encode(stream, encodedClawbackOp.from);
     Int64.encode(stream, encodedClawbackOp.amount);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ClawbackOp decode(XdrDataInputStream stream) throws IOException {
     ClawbackOp decodedClawbackOp = new ClawbackOp();
     decodedClawbackOp.asset = Asset.decode(stream);
@@ -56,10 +67,12 @@ public class ClawbackOp implements XdrElement {
     decodedClawbackOp.amount = Int64.decode(stream);
     return decodedClawbackOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.asset, this.from, this.amount);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ClawbackOp)) {
@@ -67,7 +80,9 @@ public class ClawbackOp implements XdrElement {
     }
 
     ClawbackOp other = (ClawbackOp) object;
-    return Objects.equal(this.asset, other.asset) && Objects.equal(this.from, other.from) && Objects.equal(this.amount, other.amount);
+    return Objects.equal(this.asset, other.asset)
+        && Objects.equal(this.from, other.from)
+        && Objects.equal(this.amount, other.amount);
   }
 
   public static final class Builder {

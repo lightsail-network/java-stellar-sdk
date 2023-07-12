@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -20,29 +18,40 @@ import java.util.Arrays;
 
 //  ===========================================================================
 public class SCPNomination implements XdrElement {
-  public SCPNomination () {}
+  public SCPNomination() {}
+
   private Hash quorumSetHash;
+
   public Hash getQuorumSetHash() {
     return this.quorumSetHash;
   }
+
   public void setQuorumSetHash(Hash value) {
     this.quorumSetHash = value;
   }
+
   private Value[] votes;
+
   public Value[] getVotes() {
     return this.votes;
   }
+
   public void setVotes(Value[] value) {
     this.votes = value;
   }
+
   private Value[] accepted;
+
   public Value[] getAccepted() {
     return this.accepted;
   }
+
   public void setAccepted(Value[] value) {
     this.accepted = value;
   }
-  public static void encode(XdrDataOutputStream stream, SCPNomination encodedSCPNomination) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, SCPNomination encodedSCPNomination)
+      throws IOException {
     Hash.encode(stream, encodedSCPNomination.quorumSetHash);
     int votessize = encodedSCPNomination.getVotes().length;
     stream.writeInt(votessize);
@@ -55,9 +64,11 @@ public class SCPNomination implements XdrElement {
       Value.encode(stream, encodedSCPNomination.accepted[i]);
     }
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SCPNomination decode(XdrDataInputStream stream) throws IOException {
     SCPNomination decodedSCPNomination = new SCPNomination();
     decodedSCPNomination.quorumSetHash = Hash.decode(stream);
@@ -73,10 +84,13 @@ public class SCPNomination implements XdrElement {
     }
     return decodedSCPNomination;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.quorumSetHash, Arrays.hashCode(this.votes), Arrays.hashCode(this.accepted));
+    return Objects.hashCode(
+        this.quorumSetHash, Arrays.hashCode(this.votes), Arrays.hashCode(this.accepted));
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof SCPNomination)) {
@@ -84,7 +98,9 @@ public class SCPNomination implements XdrElement {
     }
 
     SCPNomination other = (SCPNomination) object;
-    return Objects.equal(this.quorumSetHash, other.quorumSetHash) && Arrays.equals(this.votes, other.votes) && Arrays.equals(this.accepted, other.accepted);
+    return Objects.equal(this.quorumSetHash, other.quorumSetHash)
+        && Arrays.equals(this.votes, other.votes)
+        && Arrays.equals(this.accepted, other.accepted);
   }
 
   public static final class Builder {

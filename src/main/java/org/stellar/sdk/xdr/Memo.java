@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -26,39 +24,54 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class Memo implements XdrElement {
-  public Memo () {}
+  public Memo() {}
+
   MemoType type;
+
   public MemoType getDiscriminant() {
     return this.type;
   }
+
   public void setDiscriminant(MemoType value) {
     this.type = value;
   }
+
   private XdrString text;
+
   public XdrString getText() {
     return this.text;
   }
+
   public void setText(XdrString value) {
     this.text = value;
   }
+
   private Uint64 id;
+
   public Uint64 getId() {
     return this.id;
   }
+
   public void setId(Uint64 value) {
     this.id = value;
   }
+
   private Hash hash;
+
   public Hash getHash() {
     return this.hash;
   }
+
   public void setHash(Hash value) {
     this.hash = value;
   }
+
   private Hash retHash;
+
   public Hash getRetHash() {
     return this.retHash;
   }
+
   public void setRetHash(Hash value) {
     this.retHash = value;
   }
@@ -107,55 +120,59 @@ public class Memo implements XdrElement {
   }
 
   public static void encode(XdrDataOutputStream stream, Memo encodedMemo) throws IOException {
-  //Xdrgen::AST::Identifier
-  //MemoType
-  stream.writeInt(encodedMemo.getDiscriminant().getValue());
-  switch (encodedMemo.getDiscriminant()) {
-  case MEMO_NONE:
-  break;
-  case MEMO_TEXT:
-  encodedMemo.text.encode(stream);
-  break;
-  case MEMO_ID:
-  Uint64.encode(stream, encodedMemo.id);
-  break;
-  case MEMO_HASH:
-  Hash.encode(stream, encodedMemo.hash);
-  break;
-  case MEMO_RETURN:
-  Hash.encode(stream, encodedMemo.retHash);
-  break;
+    // Xdrgen::AST::Identifier
+    // MemoType
+    stream.writeInt(encodedMemo.getDiscriminant().getValue());
+    switch (encodedMemo.getDiscriminant()) {
+      case MEMO_NONE:
+        break;
+      case MEMO_TEXT:
+        encodedMemo.text.encode(stream);
+        break;
+      case MEMO_ID:
+        Uint64.encode(stream, encodedMemo.id);
+        break;
+      case MEMO_HASH:
+        Hash.encode(stream, encodedMemo.hash);
+        break;
+      case MEMO_RETURN:
+        Hash.encode(stream, encodedMemo.retHash);
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Memo decode(XdrDataInputStream stream) throws IOException {
-  Memo decodedMemo = new Memo();
-  MemoType discriminant = MemoType.decode(stream);
-  decodedMemo.setDiscriminant(discriminant);
-  switch (decodedMemo.getDiscriminant()) {
-  case MEMO_NONE:
-  break;
-  case MEMO_TEXT:
-  decodedMemo.text = XdrString.decode(stream, 28);
-  break;
-  case MEMO_ID:
-  decodedMemo.id = Uint64.decode(stream);
-  break;
-  case MEMO_HASH:
-  decodedMemo.hash = Hash.decode(stream);
-  break;
-  case MEMO_RETURN:
-  decodedMemo.retHash = Hash.decode(stream);
-  break;
-  }
+    Memo decodedMemo = new Memo();
+    MemoType discriminant = MemoType.decode(stream);
+    decodedMemo.setDiscriminant(discriminant);
+    switch (decodedMemo.getDiscriminant()) {
+      case MEMO_NONE:
+        break;
+      case MEMO_TEXT:
+        decodedMemo.text = XdrString.decode(stream, 28);
+        break;
+      case MEMO_ID:
+        decodedMemo.id = Uint64.decode(stream);
+        break;
+      case MEMO_HASH:
+        decodedMemo.hash = Hash.decode(stream);
+        break;
+      case MEMO_RETURN:
+        decodedMemo.retHash = Hash.decode(stream);
+        break;
+    }
     return decodedMemo;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.text, this.id, this.hash, this.retHash, this.type);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof Memo)) {
@@ -163,6 +180,10 @@ public class Memo implements XdrElement {
     }
 
     Memo other = (Memo) object;
-    return Objects.equal(this.text, other.text) && Objects.equal(this.id, other.id) && Objects.equal(this.hash, other.hash) && Objects.equal(this.retHash, other.retHash) && Objects.equal(this.type, other.type);
+    return Objects.equal(this.text, other.text)
+        && Objects.equal(this.id, other.id)
+        && Objects.equal(this.hash, other.hash)
+        && Objects.equal(this.retHash, other.retHash)
+        && Objects.equal(this.type, other.type);
   }
 }

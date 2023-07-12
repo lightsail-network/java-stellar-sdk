@@ -1,7 +1,15 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.SignatureHint;
@@ -10,21 +18,11 @@ import org.stellar.sdk.xdr.TransactionSignaturePayload;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public abstract class AbstractTransaction {
   protected final Network mNetwork;
   protected final AccountConverter accountConverter;
   protected List<DecoratedSignature> mSignatures;
   public static final int MIN_BASE_FEE = 100;
-
 
   AbstractTransaction(AccountConverter accountConverter, Network network) {
     this.accountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
@@ -34,6 +32,7 @@ public abstract class AbstractTransaction {
 
   /**
    * Adds a new signature ed25519PublicKey to this transaction.
+   *
    * @param signer {@link KeyPair} object representing a signer
    */
   public void sign(KeyPair signer) {
@@ -44,6 +43,7 @@ public abstract class AbstractTransaction {
 
   /**
    * Adds a new sha256Hash signature to this transaction by revealing preimage.
+   *
    * @param preimage the sha256 hash of preimage should be equal to signer hash
    */
   public void sign(byte[] preimage) {
@@ -63,23 +63,17 @@ public abstract class AbstractTransaction {
     mSignatures.add(decoratedSignature);
   }
 
-  /**
-   * Returns transaction hash.
-   */
+  /** Returns transaction hash. */
   public byte[] hash() {
     return Util.hash(this.signatureBase());
   }
 
-  /**
-   * Returns transaction hash encoded as a hexadecimal string.
-   */
+  /** Returns transaction hash encoded as a hexadecimal string. */
   public String hashHex() {
     return BaseEncoding.base16().lowerCase().encode(this.hash());
   }
 
-  /**
-   * Returns signature base.
-   */
+  /** Returns signature base. */
   public abstract byte[] signatureBase();
 
   /**
@@ -109,11 +103,11 @@ public abstract class AbstractTransaction {
     mSignatures.add(signature);
   }
 
-
   public abstract TransactionEnvelope toEnvelopeXdr();
 
   /**
-   * Returns base64-encoded TransactionEnvelope XDR object. Transaction need to have at least one signature.
+   * Returns base64-encoded TransactionEnvelope XDR object. Transaction need to have at least one
+   * signature.
    */
   public String toEnvelopeXdrBase64() {
     try {
@@ -130,25 +124,32 @@ public abstract class AbstractTransaction {
   }
 
   /**
-   * Creates a <code>AbstractTransaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * Creates a <code>AbstractTransaction</code> instance from previously build <code>
+   * TransactionEnvelope</code>
+   *
    * @param envelope
    * @return
    */
-  public static AbstractTransaction fromEnvelopeXdr(AccountConverter accountConverter, TransactionEnvelope envelope, Network network) {
+  public static AbstractTransaction fromEnvelopeXdr(
+      AccountConverter accountConverter, TransactionEnvelope envelope, Network network) {
     switch (envelope.getDiscriminant()) {
       case ENVELOPE_TYPE_TX:
         return Transaction.fromV1EnvelopeXdr(accountConverter, envelope.getV1(), network);
       case ENVELOPE_TYPE_TX_V0:
         return Transaction.fromV0EnvelopeXdr(accountConverter, envelope.getV0(), network);
       case ENVELOPE_TYPE_TX_FEE_BUMP:
-        return FeeBumpTransaction.fromFeeBumpTransactionEnvelope(accountConverter, envelope.getFeeBump(), network);
+        return FeeBumpTransaction.fromFeeBumpTransactionEnvelope(
+            accountConverter, envelope.getFeeBump(), network);
       default:
-        throw new IllegalArgumentException("transaction type is not supported: "+envelope.getDiscriminant());
+        throw new IllegalArgumentException(
+            "transaction type is not supported: " + envelope.getDiscriminant());
     }
   }
 
   /**
-   * Creates a <code>AbstractTransaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * Creates a <code>AbstractTransaction</code> instance from previously build <code>
+   * TransactionEnvelope</code>
+   *
    * @param envelope
    * @return
    */
@@ -157,31 +158,39 @@ public abstract class AbstractTransaction {
   }
 
   /**
-   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope
+   * </code>
+   *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
    * @return
    * @throws IOException
    */
-  public static AbstractTransaction fromEnvelopeXdr(AccountConverter accountConverter, String envelope, Network network) throws IOException {
+  public static AbstractTransaction fromEnvelopeXdr(
+      AccountConverter accountConverter, String envelope, Network network) throws IOException {
     BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] bytes = base64Encoding.decode(envelope);
 
-    TransactionEnvelope transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+    TransactionEnvelope transactionEnvelope =
+        TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
     return fromEnvelopeXdr(accountConverter, transactionEnvelope, network);
   }
 
   /**
-   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope</code>
+   * Creates a <code>Transaction</code> instance from previously build <code>TransactionEnvelope
+   * </code>
+   *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
    * @return
    * @throws IOException
    */
-  public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network) throws IOException {
+  public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network)
+      throws IOException {
     return fromEnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
   }
 
-  public static byte[] getTransactionSignatureBase(TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,
-                                                   Network network) {
+  public static byte[] getTransactionSignatureBase(
+      TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,
+      Network network) {
     try {
       TransactionSignaturePayload payload = new TransactionSignaturePayload();
       Hash hash = new Hash();

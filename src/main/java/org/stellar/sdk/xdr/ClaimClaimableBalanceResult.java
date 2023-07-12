@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,11 +18,14 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ClaimClaimableBalanceResult implements XdrElement {
-  public ClaimClaimableBalanceResult () {}
+  public ClaimClaimableBalanceResult() {}
+
   ClaimClaimableBalanceResultCode code;
+
   public ClaimClaimableBalanceResultCode getDiscriminant() {
     return this.code;
   }
+
   public void setDiscriminant(ClaimClaimableBalanceResultCode value) {
     this.code = value;
   }
@@ -44,36 +45,43 @@ public class ClaimClaimableBalanceResult implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ClaimClaimableBalanceResult encodedClaimClaimableBalanceResult) throws IOException {
-  //Xdrgen::AST::Identifier
-  //ClaimClaimableBalanceResultCode
-  stream.writeInt(encodedClaimClaimableBalanceResult.getDiscriminant().getValue());
-  switch (encodedClaimClaimableBalanceResult.getDiscriminant()) {
-  case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
-  break;
-  default:
-  break;
+  public static void encode(
+      XdrDataOutputStream stream, ClaimClaimableBalanceResult encodedClaimClaimableBalanceResult)
+      throws IOException {
+    // Xdrgen::AST::Identifier
+    // ClaimClaimableBalanceResultCode
+    stream.writeInt(encodedClaimClaimableBalanceResult.getDiscriminant().getValue());
+    switch (encodedClaimClaimableBalanceResult.getDiscriminant()) {
+      case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
+        break;
+      default:
+        break;
+    }
   }
-  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ClaimClaimableBalanceResult decode(XdrDataInputStream stream) throws IOException {
-  ClaimClaimableBalanceResult decodedClaimClaimableBalanceResult = new ClaimClaimableBalanceResult();
-  ClaimClaimableBalanceResultCode discriminant = ClaimClaimableBalanceResultCode.decode(stream);
-  decodedClaimClaimableBalanceResult.setDiscriminant(discriminant);
-  switch (decodedClaimClaimableBalanceResult.getDiscriminant()) {
-  case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
-  break;
-  default:
-  break;
-  }
+    ClaimClaimableBalanceResult decodedClaimClaimableBalanceResult =
+        new ClaimClaimableBalanceResult();
+    ClaimClaimableBalanceResultCode discriminant = ClaimClaimableBalanceResultCode.decode(stream);
+    decodedClaimClaimableBalanceResult.setDiscriminant(discriminant);
+    switch (decodedClaimClaimableBalanceResult.getDiscriminant()) {
+      case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
+        break;
+      default:
+        break;
+    }
     return decodedClaimClaimableBalanceResult;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.code);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ClaimClaimableBalanceResult)) {

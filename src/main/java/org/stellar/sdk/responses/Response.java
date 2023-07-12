@@ -20,19 +20,22 @@ public abstract class Response {
   }
 
   /**
-   * Returns X-RateLimit-Limit header from the response.
-   * This number represents the he maximum number of requests that the current client can
-   * make in one hour.
-   * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/" target="_blank">Rate Limiting</a>
+   * Returns X-RateLimit-Limit header from the response. This number represents the he maximum
+   * number of requests that the current client can make in one hour.
+   *
+   * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/"
+   *     target="_blank">Rate Limiting</a>
    */
   public int getRateLimitLimit() {
     return rateLimitLimit;
   }
 
   /**
-   * Returns X-RateLimit-Remaining header from the response.
-   * The number of remaining requests for the current window.
-   * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/" target="_blank">Rate Limiting</a>
+   * Returns X-RateLimit-Remaining header from the response. The number of remaining requests for
+   * the current window.
+   *
+   * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/"
+   *     target="_blank">Rate Limiting</a>
    */
   public int getRateLimitRemaining() {
     return rateLimitRemaining;
@@ -40,7 +43,9 @@ public abstract class Response {
 
   /**
    * Returns X-RateLimit-Reset header from the response. Seconds until a new window starts.
-   * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/" target="_blank">Rate Limiting</a>
+   *
+   * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/"
+   *     target="_blank">Rate Limiting</a>
    */
   public int getRateLimitReset() {
     return rateLimitReset;

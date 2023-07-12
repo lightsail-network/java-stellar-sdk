@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 abstract class SignerEffectResponse extends EffectResponse {
   @SerializedName("weight")
   protected final Integer weight;
+
   @SerializedName("public_key")
   protected final String publicKey;
 

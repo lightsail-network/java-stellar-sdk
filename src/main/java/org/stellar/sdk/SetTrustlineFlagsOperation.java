@@ -1,14 +1,14 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
+import java.util.EnumSet;
 import org.stellar.sdk.xdr.*;
 
-import java.util.EnumSet;
-
 /**
- *
  * Represents a Set Trustline Flags operation.
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List of Operations</a>
+ *
+ * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
+ *     of Operations</a>
  */
 public class SetTrustlineFlagsOperation extends Operation {
   private final String trustor;
@@ -16,37 +16,33 @@ public class SetTrustlineFlagsOperation extends Operation {
   private final EnumSet<TrustLineFlags> clearFlags;
   private final EnumSet<TrustLineFlags> setFlags;
 
-  private SetTrustlineFlagsOperation(String trustor, AssetTypeCreditAlphaNum asset, EnumSet<TrustLineFlags> clearFlags, EnumSet<TrustLineFlags> setFlags) {
+  private SetTrustlineFlagsOperation(
+      String trustor,
+      AssetTypeCreditAlphaNum asset,
+      EnumSet<TrustLineFlags> clearFlags,
+      EnumSet<TrustLineFlags> setFlags) {
     this.trustor = trustor;
     this.asset = asset;
     this.clearFlags = clearFlags;
     this.setFlags = setFlags;
   }
 
-  /**
-   * The account owning of the trustline.
-   */
+  /** The account owning of the trustline. */
   public String getTrustor() {
     return trustor;
   }
 
-  /**
-   * The asset of the trustline.
-   */
+  /** The asset of the trustline. */
   public Asset getAsset() {
     return asset;
   }
 
-  /**
-   * The flags to be set.
-   */
+  /** The flags to be set. */
   public EnumSet<TrustLineFlags> getSetFlags() {
     return setFlags;
   }
 
-  /**
-   * The flags to be cleared.
-   */
+  /** The flags to be cleared. */
   public EnumSet<TrustLineFlags> getClearFlags() {
     return clearFlags;
   }
@@ -70,7 +66,8 @@ public class SetTrustlineFlagsOperation extends Operation {
     op.setClearFlags(bitwiseOr(clearFlags));
     op.setSetFlags(bitwiseOr(setFlags));
 
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.SET_TRUST_LINE_FLAGS);
     body.setSetTrustLineFlagsOp(op);
     return body;
@@ -78,6 +75,7 @@ public class SetTrustlineFlagsOperation extends Operation {
 
   /**
    * Builds SetTrustlineFlagsOperation operation.
+   *
    * @see SetTrustlineFlagsOperation
    */
   public static class Builder {
@@ -87,7 +85,6 @@ public class SetTrustlineFlagsOperation extends Operation {
     private final EnumSet<TrustLineFlags> setFlags;
 
     private String mSourceAccount;
-
 
     Builder(SetTrustLineFlagsOp op) {
       trustor = StrKey.encodeStellarAccountId(op.getTrustor());
@@ -108,12 +105,17 @@ public class SetTrustlineFlagsOperation extends Operation {
 
     /**
      * Creates a new SetTrustlineFlagsOperation builder.
+     *
      * @param trustor The account holding the trustline.
      * @param asset The asset held in the trustline.
      * @param clearFlags The flags to be cleared on the trustline.
      * @param setFlags The flags to be set on the trustline.
      */
-    public Builder(String trustor, Asset asset, EnumSet<TrustLineFlags> clearFlags, EnumSet<TrustLineFlags> setFlags) {
+    public Builder(
+        String trustor,
+        Asset asset,
+        EnumSet<TrustLineFlags> clearFlags,
+        EnumSet<TrustLineFlags> setFlags) {
       this.trustor = trustor;
       this.asset = Util.assertNonNativeAsset(asset);
       this.clearFlags = clearFlags;
@@ -122,6 +124,7 @@ public class SetTrustlineFlagsOperation extends Operation {
 
     /**
      * Set source account of this operation
+     *
      * @param sourceAccount Source account
      * @return Builder object so you can chain methods.
      */
@@ -130,13 +133,10 @@ public class SetTrustlineFlagsOperation extends Operation {
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public SetTrustlineFlagsOperation build() {
-      SetTrustlineFlagsOperation operation = new SetTrustlineFlagsOperation(
-          trustor, asset, clearFlags, setFlags
-      );
+      SetTrustlineFlagsOperation operation =
+          new SetTrustlineFlagsOperation(trustor, asset, clearFlags, setFlags);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -147,12 +147,7 @@ public class SetTrustlineFlagsOperation extends Operation {
   @Override
   public int hashCode() {
     return Objects.hashCode(
-        this.getSourceAccount(),
-        this.trustor,
-        this.asset,
-        this.clearFlags,
-        this.setFlags
-    );
+        this.getSourceAccount(), this.trustor, this.asset, this.clearFlags, this.setFlags);
   }
 
   @Override
@@ -162,10 +157,10 @@ public class SetTrustlineFlagsOperation extends Operation {
     }
 
     SetTrustlineFlagsOperation other = (SetTrustlineFlagsOperation) object;
-    return Objects.equal(this.trustor, other.trustor) &&
-        Objects.equal(this.asset, other.asset) &&
-        Objects.equal(this.clearFlags, other.clearFlags) &&
-        Objects.equal(this.setFlags, other.setFlags) &&
-        Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.trustor, other.trustor)
+        && Objects.equal(this.asset, other.asset)
+        && Objects.equal(this.clearFlags, other.clearFlags)
+        && Objects.equal(this.setFlags, other.setFlags)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

@@ -1,11 +1,10 @@
 package org.stellar.sdk.responses.operations;
 
-import com.google.gson.annotations.SerializedName;
-import org.stellar.sdk.Asset;
-
-import java.util.List;
-
 import static org.stellar.sdk.Asset.create;
+
+import com.google.gson.annotations.SerializedName;
+import java.util.List;
+import org.stellar.sdk.Asset;
 
 /**
  * Represents a Set Trustine Flags operation response.
@@ -16,25 +15,37 @@ import static org.stellar.sdk.Asset.create;
 public class SetTrustLineFlagsOperationResponse extends OperationResponse {
   @SerializedName("asset_type")
   protected final String assetType;
+
   @SerializedName("asset_code")
   protected final String assetCode;
+
   @SerializedName("asset_issuer")
   protected final String assetIssuer;
 
   @SerializedName("clear_flags")
   protected final List<Integer> clearFlags;
+
   @SerializedName("clear_flags_s")
   protected final List<String> clearFlagStings;
 
   @SerializedName("set_flags")
   protected final List<Integer> setFlags;
+
   @SerializedName("set_flags_s")
   protected final List<String> setFlagStrings;
 
   @SerializedName("trustor")
   private final String trustor;
 
-  public SetTrustLineFlagsOperationResponse(String assetType, String assetCode, String assetIssuer, List<Integer> clearFlags, List<String> clearFlagStings, List<Integer> setFlags, List<String> setFlagStrings, String trustor) {
+  public SetTrustLineFlagsOperationResponse(
+      String assetType,
+      String assetCode,
+      String assetIssuer,
+      List<Integer> clearFlags,
+      List<String> clearFlagStings,
+      List<Integer> setFlags,
+      List<String> setFlagStrings,
+      String trustor) {
     this.assetType = assetType;
     this.assetCode = assetCode;
     this.assetIssuer = assetIssuer;

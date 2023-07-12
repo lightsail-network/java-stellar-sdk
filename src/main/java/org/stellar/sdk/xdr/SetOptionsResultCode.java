@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -44,33 +42,45 @@ public enum SetOptionsResultCode implements XdrElement {
   private int mValue;
 
   SetOptionsResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static SetOptionsResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return SET_OPTIONS_SUCCESS;
-      case -1: return SET_OPTIONS_LOW_RESERVE;
-      case -2: return SET_OPTIONS_TOO_MANY_SIGNERS;
-      case -3: return SET_OPTIONS_BAD_FLAGS;
-      case -4: return SET_OPTIONS_INVALID_INFLATION;
-      case -5: return SET_OPTIONS_CANT_CHANGE;
-      case -6: return SET_OPTIONS_UNKNOWN_FLAG;
-      case -7: return SET_OPTIONS_THRESHOLD_OUT_OF_RANGE;
-      case -8: return SET_OPTIONS_BAD_SIGNER;
-      case -9: return SET_OPTIONS_INVALID_HOME_DOMAIN;
-      case -10: return SET_OPTIONS_AUTH_REVOCABLE_REQUIRED;
+      case 0:
+        return SET_OPTIONS_SUCCESS;
+      case -1:
+        return SET_OPTIONS_LOW_RESERVE;
+      case -2:
+        return SET_OPTIONS_TOO_MANY_SIGNERS;
+      case -3:
+        return SET_OPTIONS_BAD_FLAGS;
+      case -4:
+        return SET_OPTIONS_INVALID_INFLATION;
+      case -5:
+        return SET_OPTIONS_CANT_CHANGE;
+      case -6:
+        return SET_OPTIONS_UNKNOWN_FLAG;
+      case -7:
+        return SET_OPTIONS_THRESHOLD_OUT_OF_RANGE;
+      case -8:
+        return SET_OPTIONS_BAD_SIGNER;
+      case -9:
+        return SET_OPTIONS_INVALID_HOME_DOMAIN;
+      case -10:
+        return SET_OPTIONS_AUTH_REVOCABLE_REQUIRED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, SetOptionsResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, SetOptionsResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

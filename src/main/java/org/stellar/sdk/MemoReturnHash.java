@@ -3,9 +3,7 @@ package org.stellar.sdk;
 import org.stellar.sdk.xdr.Memo;
 import org.stellar.sdk.xdr.MemoType;
 
-/**
- * Represents MEMO_RETURN.
- */
+/** Represents MEMO_RETURN. */
 public class MemoReturnHash extends MemoHashAbstract {
   public MemoReturnHash(byte[] bytes) {
     super(bytes);

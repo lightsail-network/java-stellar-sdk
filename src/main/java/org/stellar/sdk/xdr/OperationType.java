@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -67,40 +65,64 @@ public enum OperationType implements XdrElement {
   private int mValue;
 
   OperationType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static OperationType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return CREATE_ACCOUNT;
-      case 1: return PAYMENT;
-      case 2: return PATH_PAYMENT_STRICT_RECEIVE;
-      case 3: return MANAGE_SELL_OFFER;
-      case 4: return CREATE_PASSIVE_SELL_OFFER;
-      case 5: return SET_OPTIONS;
-      case 6: return CHANGE_TRUST;
-      case 7: return ALLOW_TRUST;
-      case 8: return ACCOUNT_MERGE;
-      case 9: return INFLATION;
-      case 10: return MANAGE_DATA;
-      case 11: return BUMP_SEQUENCE;
-      case 12: return MANAGE_BUY_OFFER;
-      case 13: return PATH_PAYMENT_STRICT_SEND;
-      case 14: return CREATE_CLAIMABLE_BALANCE;
-      case 15: return CLAIM_CLAIMABLE_BALANCE;
-      case 16: return BEGIN_SPONSORING_FUTURE_RESERVES;
-      case 17: return END_SPONSORING_FUTURE_RESERVES;
-      case 18: return REVOKE_SPONSORSHIP;
-      case 19: return CLAWBACK;
-      case 20: return CLAWBACK_CLAIMABLE_BALANCE;
-      case 21: return SET_TRUST_LINE_FLAGS;
-      case 22: return LIQUIDITY_POOL_DEPOSIT;
-      case 23: return LIQUIDITY_POOL_WITHDRAW;
+      case 0:
+        return CREATE_ACCOUNT;
+      case 1:
+        return PAYMENT;
+      case 2:
+        return PATH_PAYMENT_STRICT_RECEIVE;
+      case 3:
+        return MANAGE_SELL_OFFER;
+      case 4:
+        return CREATE_PASSIVE_SELL_OFFER;
+      case 5:
+        return SET_OPTIONS;
+      case 6:
+        return CHANGE_TRUST;
+      case 7:
+        return ALLOW_TRUST;
+      case 8:
+        return ACCOUNT_MERGE;
+      case 9:
+        return INFLATION;
+      case 10:
+        return MANAGE_DATA;
+      case 11:
+        return BUMP_SEQUENCE;
+      case 12:
+        return MANAGE_BUY_OFFER;
+      case 13:
+        return PATH_PAYMENT_STRICT_SEND;
+      case 14:
+        return CREATE_CLAIMABLE_BALANCE;
+      case 15:
+        return CLAIM_CLAIMABLE_BALANCE;
+      case 16:
+        return BEGIN_SPONSORING_FUTURE_RESERVES;
+      case 17:
+        return END_SPONSORING_FUTURE_RESERVES;
+      case 18:
+        return REVOKE_SPONSORSHIP;
+      case 19:
+        return CLAWBACK;
+      case 20:
+        return CLAWBACK_CLAIMABLE_BALANCE;
+      case 21:
+        return SET_TRUST_LINE_FLAGS;
+      case 22:
+        return LIQUIDITY_POOL_DEPOSIT;
+      case 23:
+        return LIQUIDITY_POOL_WITHDRAW;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

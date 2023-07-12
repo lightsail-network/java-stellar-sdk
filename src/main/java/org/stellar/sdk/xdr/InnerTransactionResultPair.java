@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,51 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class InnerTransactionResultPair implements XdrElement {
-  public InnerTransactionResultPair () {}
+  public InnerTransactionResultPair() {}
+
   private Hash transactionHash;
+
   public Hash getTransactionHash() {
     return this.transactionHash;
   }
+
   public void setTransactionHash(Hash value) {
     this.transactionHash = value;
   }
+
   private InnerTransactionResult result;
+
   public InnerTransactionResult getResult() {
     return this.result;
   }
+
   public void setResult(InnerTransactionResult value) {
     this.result = value;
   }
-  public static void encode(XdrDataOutputStream stream, InnerTransactionResultPair encodedInnerTransactionResultPair) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, InnerTransactionResultPair encodedInnerTransactionResultPair)
+      throws IOException {
     Hash.encode(stream, encodedInnerTransactionResultPair.transactionHash);
     InnerTransactionResult.encode(stream, encodedInnerTransactionResultPair.result);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static InnerTransactionResultPair decode(XdrDataInputStream stream) throws IOException {
     InnerTransactionResultPair decodedInnerTransactionResultPair = new InnerTransactionResultPair();
     decodedInnerTransactionResultPair.transactionHash = Hash.decode(stream);
     decodedInnerTransactionResultPair.result = InnerTransactionResult.decode(stream);
     return decodedInnerTransactionResultPair;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.transactionHash, this.result);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof InnerTransactionResultPair)) {
@@ -57,7 +68,8 @@ public class InnerTransactionResultPair implements XdrElement {
     }
 
     InnerTransactionResultPair other = (InnerTransactionResultPair) object;
-    return Objects.equal(this.transactionHash, other.transactionHash) && Objects.equal(this.result, other.result);
+    return Objects.equal(this.transactionHash, other.transactionHash)
+        && Objects.equal(this.result, other.result);
   }
 
   public static final class Builder {

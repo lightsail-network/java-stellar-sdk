@@ -3,13 +3,13 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/openjdk:8
+      - image: circleci/openjdk:11
     steps:
       - checkout
       - run: ./gradlew check
   shadow_jar:
     docker:
-      - image: circleci/openjdk:8
+      - image: circleci/openjdk:11
     steps:
       - checkout
       - run: ./gradlew shadowJar
@@ -34,7 +34,7 @@ jobs:
 
   after_deploy:
     docker:
-      - image: circleci/openjdk:8
+      - image: circleci/openjdk:11
     steps:
       - checkout
       - run: ./after_deploy.sh

@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,50 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class AlphaNum4 implements XdrElement {
-  public AlphaNum4 () {}
+  public AlphaNum4() {}
+
   private AssetCode4 assetCode;
+
   public AssetCode4 getAssetCode() {
     return this.assetCode;
   }
+
   public void setAssetCode(AssetCode4 value) {
     this.assetCode = value;
   }
+
   private AccountID issuer;
+
   public AccountID getIssuer() {
     return this.issuer;
   }
+
   public void setIssuer(AccountID value) {
     this.issuer = value;
   }
-  public static void encode(XdrDataOutputStream stream, AlphaNum4 encodedAlphaNum4) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, AlphaNum4 encodedAlphaNum4)
+      throws IOException {
     AssetCode4.encode(stream, encodedAlphaNum4.assetCode);
     AccountID.encode(stream, encodedAlphaNum4.issuer);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static AlphaNum4 decode(XdrDataInputStream stream) throws IOException {
     AlphaNum4 decodedAlphaNum4 = new AlphaNum4();
     decodedAlphaNum4.assetCode = AssetCode4.decode(stream);
     decodedAlphaNum4.issuer = AccountID.decode(stream);
     return decodedAlphaNum4;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.assetCode, this.issuer);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof AlphaNum4)) {
@@ -57,7 +67,8 @@ public class AlphaNum4 implements XdrElement {
     }
 
     AlphaNum4 other = (AlphaNum4) object;
-    return Objects.equal(this.assetCode, other.assetCode) && Objects.equal(this.issuer, other.issuer);
+    return Objects.equal(this.assetCode, other.assetCode)
+        && Objects.equal(this.issuer, other.issuer);
   }
 
   public static final class Builder {

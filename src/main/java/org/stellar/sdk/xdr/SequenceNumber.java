@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -30,13 +28,15 @@ public class SequenceNumber implements XdrElement {
     this.SequenceNumber = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, SequenceNumber  encodedSequenceNumber) throws IOException {
+  public static void encode(XdrDataOutputStream stream, SequenceNumber encodedSequenceNumber)
+      throws IOException {
     Int64.encode(stream, encodedSequenceNumber.SequenceNumber);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SequenceNumber decode(XdrDataInputStream stream) throws IOException {
     SequenceNumber decodedSequenceNumber = new SequenceNumber();
     decodedSequenceNumber.SequenceNumber = Int64.decode(stream);

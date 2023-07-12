@@ -1,15 +1,17 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * @deprecated As of release 0.24.0, replaced by {@link SetTrustlineFlagsOperation}
- *
- * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#allow-trust" target="_blank">AllowTrust</a> operation.
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List of Operations</a>
+ *     <p>Represents <a
+ *     href="https://developers.stellar.org/docs/start/list-of-operations/#allow-trust"
+ *     target="_blank">AllowTrust</a> operation.
+ * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
+ *     of Operations</a>
  */
 public class AllowTrustOperation extends Operation {
 
@@ -18,30 +20,28 @@ public class AllowTrustOperation extends Operation {
   private final boolean authorize;
   private final boolean authorizeToMaintainLiabilities;
 
-  private AllowTrustOperation(String trustor, String assetCode, boolean authorize, boolean authorizeToMaintainLiabilities) {
+  private AllowTrustOperation(
+      String trustor, String assetCode, boolean authorize, boolean authorizeToMaintainLiabilities) {
     this.trustor = checkNotNull(trustor, "trustor cannot be null");
     this.assetCode = checkNotNull(assetCode, "assetCode cannot be null");
     this.authorize = authorize;
     this.authorizeToMaintainLiabilities = authorizeToMaintainLiabilities;
   }
 
-  /**
-   * The account of the recipient of the trustline.
-   */
+  /** The account of the recipient of the trustline. */
   public String getTrustor() {
     return trustor;
   }
 
   /**
-   * The asset of the trustline the source account is authorizing. For example, if a gateway wants to allow another account to hold its USD credit, the type is USD.
+   * The asset of the trustline the source account is authorizing. For example, if a gateway wants
+   * to allow another account to hold its USD credit, the type is USD.
    */
   public String getAssetCode() {
     return assetCode;
   }
 
-  /**
-   * Flag indicating whether the trustline is authorized.
-   */
+  /** Flag indicating whether the trustline is authorized. */
   public boolean getAuthorize() {
     return authorize;
   }
@@ -77,7 +77,8 @@ public class AllowTrustOperation extends Operation {
     }
     op.setAuthorize(flag);
 
-    org.stellar.sdk.xdr.Operation.OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
+    org.stellar.sdk.xdr.Operation.OperationBody body =
+        new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.ALLOW_TRUST);
     body.setAllowTrustOp(op);
     return body;
@@ -85,6 +86,7 @@ public class AllowTrustOperation extends Operation {
 
   /**
    * Builds AllowTrust operation.
+   *
    * @see AllowTrustOperation
    */
   public static class Builder {
@@ -116,17 +118,19 @@ public class AllowTrustOperation extends Operation {
         authorize = false;
         authorizeToMaintainLiabilities = true;
       } else if (flag != 0) {
-        throw new IllegalArgumentException("invalid authorize flag "+flag);
+        throw new IllegalArgumentException("invalid authorize flag " + flag);
       } else {
-          authorize = false;
-          authorizeToMaintainLiabilities = false;
+        authorize = false;
+        authorizeToMaintainLiabilities = false;
       }
     }
 
     /**
      * Creates a new AllowTrust builder.
+     *
      * @param trustor The account of the recipient of the trustline.
-     * @param assetCode The asset of the trustline the source account is authorizing. For example, if a gateway wants to allow another account to hold its USD credit, the type is USD.
+     * @param assetCode The asset of the trustline the source account is authorizing. For example,
+     *     if a gateway wants to allow another account to hold its USD credit, the type is USD.
      * @param authorize Flag indicating whether the trustline is authorized.
      */
     public Builder(String trustor, String assetCode, boolean authorize) {
@@ -137,6 +141,7 @@ public class AllowTrustOperation extends Operation {
 
     /**
      * Set source account of this operation
+     *
      * @param sourceAccount Source account
      * @return Builder object so you can chain methods.
      */
@@ -145,13 +150,10 @@ public class AllowTrustOperation extends Operation {
       return this;
     }
 
-    /**
-     * Builds an operation
-     */
+    /** Builds an operation */
     public AllowTrustOperation build() {
-      AllowTrustOperation operation = new AllowTrustOperation(
-          trustor, assetCode, authorize, authorizeToMaintainLiabilities
-      );
+      AllowTrustOperation operation =
+          new AllowTrustOperation(trustor, assetCode, authorize, authorizeToMaintainLiabilities);
       if (mSourceAccount != null) {
         operation.setSourceAccount(mSourceAccount);
       }
@@ -166,8 +168,7 @@ public class AllowTrustOperation extends Operation {
         this.assetCode,
         this.authorize,
         this.authorizeToMaintainLiabilities,
-        this.trustor
-    );
+        this.trustor);
   }
 
   @Override
@@ -177,10 +178,10 @@ public class AllowTrustOperation extends Operation {
     }
 
     AllowTrustOperation other = (AllowTrustOperation) object;
-    return Objects.equal(this.assetCode, other.assetCode) &&
-            Objects.equal(this.authorize, other.authorize) &&
-            Objects.equal(this.authorizeToMaintainLiabilities, other.authorizeToMaintainLiabilities) &&
-            Objects.equal(this.trustor, other.trustor) &&
-            Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.assetCode, other.assetCode)
+        && Objects.equal(this.authorize, other.authorize)
+        && Objects.equal(this.authorizeToMaintainLiabilities, other.authorizeToMaintainLiabilities)
+        && Objects.equal(this.trustor, other.trustor)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

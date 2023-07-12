@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -20,44 +18,61 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LiquidityPoolWithdrawOp implements XdrElement {
-  public LiquidityPoolWithdrawOp () {}
+  public LiquidityPoolWithdrawOp() {}
+
   private PoolID liquidityPoolID;
+
   public PoolID getLiquidityPoolID() {
     return this.liquidityPoolID;
   }
+
   public void setLiquidityPoolID(PoolID value) {
     this.liquidityPoolID = value;
   }
+
   private Int64 amount;
+
   public Int64 getAmount() {
     return this.amount;
   }
+
   public void setAmount(Int64 value) {
     this.amount = value;
   }
+
   private Int64 minAmountA;
+
   public Int64 getMinAmountA() {
     return this.minAmountA;
   }
+
   public void setMinAmountA(Int64 value) {
     this.minAmountA = value;
   }
+
   private Int64 minAmountB;
+
   public Int64 getMinAmountB() {
     return this.minAmountB;
   }
+
   public void setMinAmountB(Int64 value) {
     this.minAmountB = value;
   }
-  public static void encode(XdrDataOutputStream stream, LiquidityPoolWithdrawOp encodedLiquidityPoolWithdrawOp) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, LiquidityPoolWithdrawOp encodedLiquidityPoolWithdrawOp)
+      throws IOException {
     PoolID.encode(stream, encodedLiquidityPoolWithdrawOp.liquidityPoolID);
     Int64.encode(stream, encodedLiquidityPoolWithdrawOp.amount);
     Int64.encode(stream, encodedLiquidityPoolWithdrawOp.minAmountA);
     Int64.encode(stream, encodedLiquidityPoolWithdrawOp.minAmountB);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static LiquidityPoolWithdrawOp decode(XdrDataInputStream stream) throws IOException {
     LiquidityPoolWithdrawOp decodedLiquidityPoolWithdrawOp = new LiquidityPoolWithdrawOp();
     decodedLiquidityPoolWithdrawOp.liquidityPoolID = PoolID.decode(stream);
@@ -66,10 +81,12 @@ public class LiquidityPoolWithdrawOp implements XdrElement {
     decodedLiquidityPoolWithdrawOp.minAmountB = Int64.decode(stream);
     return decodedLiquidityPoolWithdrawOp;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.liquidityPoolID, this.amount, this.minAmountA, this.minAmountB);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LiquidityPoolWithdrawOp)) {
@@ -77,7 +94,10 @@ public class LiquidityPoolWithdrawOp implements XdrElement {
     }
 
     LiquidityPoolWithdrawOp other = (LiquidityPoolWithdrawOp) object;
-    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID) && Objects.equal(this.amount, other.amount) && Objects.equal(this.minAmountA, other.minAmountA) && Objects.equal(this.minAmountB, other.minAmountB);
+    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
+        && Objects.equal(this.amount, other.amount)
+        && Objects.equal(this.minAmountA, other.minAmountA)
+        && Objects.equal(this.minAmountB, other.minAmountB);
   }
 
   public static final class Builder {

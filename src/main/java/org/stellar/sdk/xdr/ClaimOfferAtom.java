@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -15,11 +13,11 @@ import com.google.common.base.Objects;
 //      // emitted to identify the offer
 //      AccountID sellerID; // Account that owns the offer
 //      int64 offerID;
-//  
+//
 //      // amount and asset taken from the owner
 //      Asset assetSold;
 //      int64 amountSold;
-//  
+//
 //      // amount and asset sent to the owner
 //      Asset assetBought;
 //      int64 amountBought;
@@ -27,50 +25,70 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class ClaimOfferAtom implements XdrElement {
-  public ClaimOfferAtom () {}
+  public ClaimOfferAtom() {}
+
   private AccountID sellerID;
+
   public AccountID getSellerID() {
     return this.sellerID;
   }
+
   public void setSellerID(AccountID value) {
     this.sellerID = value;
   }
+
   private Int64 offerID;
+
   public Int64 getOfferID() {
     return this.offerID;
   }
+
   public void setOfferID(Int64 value) {
     this.offerID = value;
   }
+
   private Asset assetSold;
+
   public Asset getAssetSold() {
     return this.assetSold;
   }
+
   public void setAssetSold(Asset value) {
     this.assetSold = value;
   }
+
   private Int64 amountSold;
+
   public Int64 getAmountSold() {
     return this.amountSold;
   }
+
   public void setAmountSold(Int64 value) {
     this.amountSold = value;
   }
+
   private Asset assetBought;
+
   public Asset getAssetBought() {
     return this.assetBought;
   }
+
   public void setAssetBought(Asset value) {
     this.assetBought = value;
   }
+
   private Int64 amountBought;
+
   public Int64 getAmountBought() {
     return this.amountBought;
   }
+
   public void setAmountBought(Int64 value) {
     this.amountBought = value;
   }
-  public static void encode(XdrDataOutputStream stream, ClaimOfferAtom encodedClaimOfferAtom) throws IOException{
+
+  public static void encode(XdrDataOutputStream stream, ClaimOfferAtom encodedClaimOfferAtom)
+      throws IOException {
     AccountID.encode(stream, encodedClaimOfferAtom.sellerID);
     Int64.encode(stream, encodedClaimOfferAtom.offerID);
     Asset.encode(stream, encodedClaimOfferAtom.assetSold);
@@ -78,9 +96,11 @@ public class ClaimOfferAtom implements XdrElement {
     Asset.encode(stream, encodedClaimOfferAtom.assetBought);
     Int64.encode(stream, encodedClaimOfferAtom.amountBought);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static ClaimOfferAtom decode(XdrDataInputStream stream) throws IOException {
     ClaimOfferAtom decodedClaimOfferAtom = new ClaimOfferAtom();
     decodedClaimOfferAtom.sellerID = AccountID.decode(stream);
@@ -91,10 +111,18 @@ public class ClaimOfferAtom implements XdrElement {
     decodedClaimOfferAtom.amountBought = Int64.decode(stream);
     return decodedClaimOfferAtom;
   }
+
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.sellerID, this.offerID, this.assetSold, this.amountSold, this.assetBought, this.amountBought);
+    return Objects.hashCode(
+        this.sellerID,
+        this.offerID,
+        this.assetSold,
+        this.amountSold,
+        this.assetBought,
+        this.amountBought);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof ClaimOfferAtom)) {
@@ -102,7 +130,12 @@ public class ClaimOfferAtom implements XdrElement {
     }
 
     ClaimOfferAtom other = (ClaimOfferAtom) object;
-    return Objects.equal(this.sellerID, other.sellerID) && Objects.equal(this.offerID, other.offerID) && Objects.equal(this.assetSold, other.assetSold) && Objects.equal(this.amountSold, other.amountSold) && Objects.equal(this.assetBought, other.assetBought) && Objects.equal(this.amountBought, other.amountBought);
+    return Objects.equal(this.sellerID, other.sellerID)
+        && Objects.equal(this.offerID, other.offerID)
+        && Objects.equal(this.assetSold, other.assetSold)
+        && Objects.equal(this.amountSold, other.amountSold)
+        && Objects.equal(this.assetBought, other.assetBought)
+        && Objects.equal(this.amountBought, other.amountBought);
   }
 
   public static final class Builder {

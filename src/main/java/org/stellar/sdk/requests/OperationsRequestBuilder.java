@@ -1,25 +1,21 @@
 package org.stellar.sdk.requests;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.util.Set;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
-import java.io.IOException;
-import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-/**
- * Builds requests connected to operations.
- */
+/** Builds requests connected to operations. */
 public class OperationsRequestBuilder extends RequestBuilder {
   protected Set<String> toJoin;
 
@@ -29,13 +25,15 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link OperationResponse}.
-   * This method is helpful for getting the links.
+   * Requests specific <code>uri</code> and returns {@link OperationResponse}. This method is
+   * helpful for getting the links.
+   *
    * @throws IOException
    */
   public OperationResponse operation(HttpUrl uri) throws IOException {
     TypeToken type = new TypeToken<OperationResponse>() {};
-    ResponseHandler<OperationResponse> responseHandler = new ResponseHandler<OperationResponse>(type);
+    ResponseHandler<OperationResponse> responseHandler =
+        new ResponseHandler<OperationResponse>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -45,7 +43,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
 
   /**
    * Requests <code>GET /operations/{operationId}</code>
-   * @see <a href="https://developers.stellar.org/api/resources/operations/single/">Operation Details</a>
+   *
+   * @see <a href="https://developers.stellar.org/api/resources/operations/single/">Operation
+   *     Details</a>
    * @param operationId Operation to fetch
    * @throws IOException
    */
@@ -56,7 +56,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /accounts/{account}/operations</code>
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/operations/">Operations for Account</a>
+   *
+   * @see <a href="https://developers.stellar.org/api/resources/accounts/operations/">Operations for
+   *     Account</a>
    * @param account Account for which to get operations
    */
   public OperationsRequestBuilder forAccount(String account) {
@@ -67,7 +69,10 @@ public class OperationsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /claimable_balances/{claimable_balance_id}/operations</code>
-   * @see <a href="https://developers.stellar.org/api/resources/claimablebalances/operations/">Operations for ClaimableBalance</a>
+   *
+   * @see <a
+   *     href="https://developers.stellar.org/api/resources/claimablebalances/operations/">Operations
+   *     for ClaimableBalance</a>
    * @param claimableBalance Claimable Balance for which to get operations
    */
   public OperationsRequestBuilder forClaimableBalance(String claimableBalance) {
@@ -78,7 +83,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /ledgers/{ledgerSeq}/operations</code>
-   * @see <a href="https://developers.stellar.org/api/resources/ledgers/operations/">Operations for Ledger</a>
+   *
+   * @see <a href="https://developers.stellar.org/api/resources/ledgers/operations/">Operations for
+   *     Ledger</a>
    * @param ledgerSeq Ledger for which to get operations
    */
   public OperationsRequestBuilder forLedger(long ledgerSeq) {
@@ -88,7 +95,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /transactions/{transactionId}/operations</code>
-   * @see <a href="https://developers.stellar.org/api/resources/ledgers/transactions/">Operations for Transaction</a>
+   *
+   * @see <a href="https://developers.stellar.org/api/resources/ledgers/transactions/">Operations
+   *     for Transaction</a>
    * @param transactionId Transaction ID for which to get operations
    */
   public OperationsRequestBuilder forTransaction(String transactionId) {
@@ -99,7 +108,10 @@ public class OperationsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /liquidity_pools/{poolID}/operations</code>
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/operations/">Operations for Liquidity Pool</a>
+   *
+   * @see <a
+   *     href="https://developers.stellar.org/api/resources/liquiditypools/operations/">Operations
+   *     for Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get operations
    */
   public OperationsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
@@ -108,7 +120,10 @@ public class OperationsRequestBuilder extends RequestBuilder {
 
   /**
    * Builds request to <code>GET /liquidity_pools/{poolID}/operations</code>
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/operations/">Operations for Liquidity Pool</a>
+   *
+   * @see <a
+   *     href="https://developers.stellar.org/api/resources/liquiditypools/operations/">Operations
+   *     for Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get operations
    */
   public OperationsRequestBuilder forLiquidityPool(String liquidityPoolID) {
@@ -117,8 +132,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Adds a parameter defining whether to include operations of failed transactions. By default only operations of
-   * successful transactions are returned.
+   * Adds a parameter defining whether to include operations of failed transactions. By default only
+   * operations of successful transactions are returned.
+   *
    * @param value Set to <code>true</code> to include operations of failed transactions.
    */
   public OperationsRequestBuilder includeFailed(boolean value) {
@@ -127,8 +143,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Adds a parameter defining whether to include transactions in the response. By default transaction data
-   * is not included.
+   * Adds a parameter defining whether to include transactions in the response. By default
+   * transaction data is not included.
+   *
    * @param include Set to <code>true</code> to include transaction data in the operations response.
    */
   public OperationsRequestBuilder includeTransactions(boolean include) {
@@ -150,15 +167,18 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Requests specific <code>uri</code> and returns {@link Page} of {@link OperationResponse}.
-   * This method is helpful for getting the next set of results.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link OperationResponse}. This
+   * method is helpful for getting the next set of results.
+   *
    * @return {@link Page} of {@link OperationResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException
    */
-  public static Page<OperationResponse> execute(OkHttpClient httpClient, HttpUrl uri) throws IOException, TooManyRequestsException {
+  public static Page<OperationResponse> execute(OkHttpClient httpClient, HttpUrl uri)
+      throws IOException, TooManyRequestsException {
     TypeToken type = new TypeToken<Page<OperationResponse>>() {};
-    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<Page<OperationResponse>>(type);
+    ResponseHandler<Page<OperationResponse>> responseHandler =
+        new ResponseHandler<Page<OperationResponse>>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -167,21 +187,23 @@ public class OperationsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * Allows to stream SSE events from horizon.
-   * Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
-   * This mode will keep the connection to horizon open and horizon will continue to return
-   * responses as ledgers close.
+   * Allows to stream SSE events from horizon. Certain endpoints in Horizon can be called in
+   * streaming mode using Server-Sent Events. This mode will keep the connection to horizon open and
+   * horizon will continue to return responses as ledgers close.
+   *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/" target="_blank">Response Format documentation</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   *     target="_blank">Response Format documentation</a>
    * @param listener {@link OperationResponse} implementation with {@link OperationResponse} type
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
   public SSEStream<OperationResponse> stream(final EventListener<OperationResponse> listener) {
-    return SSEStream.create(httpClient,this,OperationResponse.class,listener);
+    return SSEStream.create(httpClient, this, OperationResponse.class, listener);
   }
 
   /**
    * Build and execute request.
+   *
    * @return {@link Page} of {@link OperationResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @throws IOException

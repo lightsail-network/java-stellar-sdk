@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.stellar.sdk.xdr.ClaimPredicate;
 import org.stellar.sdk.xdr.ClaimPredicateType;
 import org.stellar.sdk.xdr.Duration;
@@ -9,8 +10,6 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.threeten.bp.Instant;
-
-import java.util.List;
 
 public abstract class Predicate {
 
@@ -24,6 +23,7 @@ public abstract class Predicate {
 
   /**
    * Generates Predicate object from a given XDR object
+   *
    * @param xdr XDR object
    */
   public static Predicate fromXdr(org.stellar.sdk.xdr.ClaimPredicate xdr) {
@@ -48,9 +48,7 @@ public abstract class Predicate {
   @Override
   public abstract boolean equals(Object object);
 
-  /**
-   * Generates XDR object from a given Asset object
-   */
+  /** Generates XDR object from a given Asset object */
   public abstract org.stellar.sdk.xdr.ClaimPredicate toXdr();
 
   public static class Unconditional extends Predicate {
@@ -74,6 +72,7 @@ public abstract class Predicate {
 
   public static class Not extends Predicate {
     private final Predicate inner;
+
     public Not(Predicate inner) {
       this.inner = inner;
     }
@@ -87,7 +86,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(inner, ((Not)o).inner);
+      return (getClass() == o.getClass()) && Objects.equal(inner, ((Not) o).inner);
     }
 
     @Override
@@ -120,7 +119,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(inner, ((Or)o).inner);
+      return (getClass() == o.getClass()) && Objects.equal(inner, ((Or) o).inner);
     }
 
     @Override
@@ -141,7 +140,6 @@ public abstract class Predicate {
     }
   }
 
-
   public static class And extends Predicate {
     private final List<Predicate> inner;
 
@@ -153,13 +151,12 @@ public abstract class Predicate {
       return inner;
     }
 
-
     @Override
     public boolean equals(Object o) {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(inner, ((And)o).inner);
+      return (getClass() == o.getClass()) && Objects.equal(inner, ((And) o).inner);
     }
 
     @Override
@@ -180,9 +177,7 @@ public abstract class Predicate {
     }
   }
 
-  /**
-   * Represents a predicate based on a maximum date and time.
-   */
+  /** Represents a predicate based on a maximum date and time. */
   public static class AbsBefore extends Predicate {
     private final TimePoint timePoint;
 
@@ -193,6 +188,7 @@ public abstract class Predicate {
     public AbsBefore(long epochSeconds) {
       this(new TimePoint(new Uint64(epochSeconds)));
     }
+
     public long getTimestampSeconds() {
       return timePoint.getTimePoint().getUint64();
     }
@@ -206,7 +202,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(timePoint, ((AbsBefore)o).timePoint);
+      return (getClass() == o.getClass()) && Objects.equal(timePoint, ((AbsBefore) o).timePoint);
     }
 
     @Override
@@ -223,9 +219,7 @@ public abstract class Predicate {
     }
   }
 
-  /**
-   * Represents predicate based on maximum length of time
-   */
+  /** Represents predicate based on maximum length of time */
   public static class RelBefore extends Predicate {
     private final Duration duration;
 
@@ -246,7 +240,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(duration, ((RelBefore)o).duration);
+      return (getClass() == o.getClass()) && Objects.equal(duration, ((RelBefore) o).duration);
     }
 
     @Override
@@ -262,5 +256,4 @@ public abstract class Predicate {
       return xdr;
     }
   }
-
-  }
+}

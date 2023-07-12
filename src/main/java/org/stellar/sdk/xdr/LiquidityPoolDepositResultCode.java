@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -13,7 +11,7 @@ import java.io.IOException;
 //  {
 //      // codes considered as "success" for the operation
 //      LIQUIDITY_POOL_DEPOSIT_SUCCESS = 0,
-//  
+//
 //      // codes considered as "failure" for the operation
 //      LIQUIDITY_POOL_DEPOSIT_MALFORMED = -1,      // bad input
 //      LIQUIDITY_POOL_DEPOSIT_NO_TRUST = -2,       // no trust line for one of the
@@ -42,30 +40,40 @@ public enum LiquidityPoolDepositResultCode implements XdrElement {
   private int mValue;
 
   LiquidityPoolDepositResultCode(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
-  public static LiquidityPoolDepositResultCode decode(XdrDataInputStream stream) throws IOException {
+  public static LiquidityPoolDepositResultCode decode(XdrDataInputStream stream)
+      throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return LIQUIDITY_POOL_DEPOSIT_SUCCESS;
-      case -1: return LIQUIDITY_POOL_DEPOSIT_MALFORMED;
-      case -2: return LIQUIDITY_POOL_DEPOSIT_NO_TRUST;
-      case -3: return LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED;
-      case -4: return LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED;
-      case -5: return LIQUIDITY_POOL_DEPOSIT_LINE_FULL;
-      case -6: return LIQUIDITY_POOL_DEPOSIT_BAD_PRICE;
-      case -7: return LIQUIDITY_POOL_DEPOSIT_POOL_FULL;
+      case 0:
+        return LIQUIDITY_POOL_DEPOSIT_SUCCESS;
+      case -1:
+        return LIQUIDITY_POOL_DEPOSIT_MALFORMED;
+      case -2:
+        return LIQUIDITY_POOL_DEPOSIT_NO_TRUST;
+      case -3:
+        return LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED;
+      case -4:
+        return LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED;
+      case -5:
+        return LIQUIDITY_POOL_DEPOSIT_LINE_FULL;
+      case -6:
+        return LIQUIDITY_POOL_DEPOSIT_BAD_PRICE;
+      case -7:
+        return LIQUIDITY_POOL_DEPOSIT_POOL_FULL;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, LiquidityPoolDepositResultCode value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, LiquidityPoolDepositResultCode value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

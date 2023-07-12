@@ -1,13 +1,15 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.AssetType;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Class for LiquidityPoolShareTrustLineAsset
- * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/" target="_blank">Liquidity Pool</a>
+ *
+ * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/"
+ *     target="_blank">Liquidity Pool</a>
  */
 public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
   protected final LiquidityPoolID mId;
@@ -59,7 +61,7 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
   @Override
   public boolean equals(Object object) {
     if (object == null || !this.getClass().equals(object.getClass())) {
-        return false;
+      return false;
     }
 
     LiquidityPoolShareTrustLineAsset o = (LiquidityPoolShareTrustLineAsset) object;

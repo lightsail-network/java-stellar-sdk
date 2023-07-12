@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -18,38 +16,51 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class TransactionResultPair implements XdrElement {
-  public TransactionResultPair () {}
+  public TransactionResultPair() {}
+
   private Hash transactionHash;
+
   public Hash getTransactionHash() {
     return this.transactionHash;
   }
+
   public void setTransactionHash(Hash value) {
     this.transactionHash = value;
   }
+
   private TransactionResult result;
+
   public TransactionResult getResult() {
     return this.result;
   }
+
   public void setResult(TransactionResult value) {
     this.result = value;
   }
-  public static void encode(XdrDataOutputStream stream, TransactionResultPair encodedTransactionResultPair) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream, TransactionResultPair encodedTransactionResultPair)
+      throws IOException {
     Hash.encode(stream, encodedTransactionResultPair.transactionHash);
     TransactionResult.encode(stream, encodedTransactionResultPair.result);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static TransactionResultPair decode(XdrDataInputStream stream) throws IOException {
     TransactionResultPair decodedTransactionResultPair = new TransactionResultPair();
     decodedTransactionResultPair.transactionHash = Hash.decode(stream);
     decodedTransactionResultPair.result = TransactionResult.decode(stream);
     return decodedTransactionResultPair;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.transactionHash, this.result);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof TransactionResultPair)) {
@@ -57,7 +68,8 @@ public class TransactionResultPair implements XdrElement {
     }
 
     TransactionResultPair other = (TransactionResultPair) object;
-    return Objects.equal(this.transactionHash, other.transactionHash) && Objects.equal(this.result, other.result);
+    return Objects.equal(this.transactionHash, other.transactionHash)
+        && Objects.equal(this.result, other.result);
   }
 
   public static final class Builder {

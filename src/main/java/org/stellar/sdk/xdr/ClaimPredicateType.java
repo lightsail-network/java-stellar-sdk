@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -31,28 +29,35 @@ public enum ClaimPredicateType implements XdrElement {
   private int mValue;
 
   ClaimPredicateType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static ClaimPredicateType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return CLAIM_PREDICATE_UNCONDITIONAL;
-      case 1: return CLAIM_PREDICATE_AND;
-      case 2: return CLAIM_PREDICATE_OR;
-      case 3: return CLAIM_PREDICATE_NOT;
-      case 4: return CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME;
-      case 5: return CLAIM_PREDICATE_BEFORE_RELATIVE_TIME;
+      case 0:
+        return CLAIM_PREDICATE_UNCONDITIONAL;
+      case 1:
+        return CLAIM_PREDICATE_AND;
+      case 2:
+        return CLAIM_PREDICATE_OR;
+      case 3:
+        return CLAIM_PREDICATE_NOT;
+      case 4:
+        return CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME;
+      case 5:
+        return CLAIM_PREDICATE_BEFORE_RELATIVE_TIME;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, ClaimPredicateType value) throws IOException {
+  public static void encode(XdrDataOutputStream stream, ClaimPredicateType value)
+      throws IOException {
     stream.writeInt(value.getValue());
   }
 

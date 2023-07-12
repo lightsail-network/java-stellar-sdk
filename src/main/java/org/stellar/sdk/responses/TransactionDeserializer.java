@@ -2,14 +2,12 @@ package org.stellar.sdk.responses;
 
 import com.google.common.io.BaseEncoding;
 import com.google.gson.*;
-
-import org.stellar.sdk.Memo;
-import org.stellar.sdk.xdr.TransactionEnvelope;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import org.stellar.sdk.Memo;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.XdrDataInputStream;
 
 public class TransactionDeserializer implements JsonDeserializer<TransactionResponse> {
 
@@ -21,19 +19,27 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
         return Memo.text(transactionEnvelope.getV0().getTx().getMemo().getText().getBytes());
       case ENVELOPE_TYPE_TX_FEE_BUMP:
         return Memo.text(
-            transactionEnvelope.getFeeBump().getTx().getInnerTx()
-            .getV1().getTx().getMemo().getText().getBytes()
-        );
-        default:
-          throw new IllegalArgumentException("invalid transaction type: "+transactionEnvelope.getDiscriminant());
+            transactionEnvelope
+                .getFeeBump()
+                .getTx()
+                .getInnerTx()
+                .getV1()
+                .getTx()
+                .getMemo()
+                .getText()
+                .getBytes());
+      default:
+        throw new IllegalArgumentException(
+            "invalid transaction type: " + transactionEnvelope.getDiscriminant());
     }
   }
 
   @Override
-  public TransactionResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+  public TransactionResponse deserialize(
+      JsonElement json, Type typeOfT, JsonDeserializationContext context)
+      throws JsonParseException {
     // Create new Gson object with adapters needed in Transaction
-    Gson gson = new GsonBuilder()
-            .create();
+    Gson gson = new GsonBuilder().create();
 
     TransactionResponse transaction = gson.fromJson(json, TransactionResponse.class);
 
@@ -51,7 +57,8 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
         JsonObject jsonResponse = json.getAsJsonObject();
 
         if (jsonResponse.has("memo_bytes")) {
-          // we obtain the memo text from the "memo_bytes" field because the original byte sequence may not be valid utf8
+          // we obtain the memo text from the "memo_bytes" field because the original byte sequence
+          // may not be valid utf8
           String memoBase64 = json.getAsJsonObject().get("memo_bytes").getAsString();
           memo = Memo.text(base64Encoding.decode(memoBase64));
         } else {
@@ -61,7 +68,8 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
           byte[] bytes = base64Encoding.decode(envelopeXdr);
           TransactionEnvelope transactionEnvelope = null;
           try {
-            transactionEnvelope = TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+            transactionEnvelope =
+                TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
           } catch (IOException e) {
             // JsonDeserializer<TransactionResponse> cannot throw IOExceptions
             // so we must throw it as a runtime exception

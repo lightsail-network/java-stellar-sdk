@@ -5,8 +5,10 @@ import com.google.gson.annotations.SerializedName;
 abstract class TrustlineAuthorizationResponse extends EffectResponse {
   @SerializedName("trustor")
   protected final String trustor;
+
   @SerializedName("asset_type")
   protected final String assetType;
+
   @SerializedName("asset_code")
   protected final String assetCode;
 

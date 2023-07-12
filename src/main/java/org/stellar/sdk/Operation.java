@@ -1,20 +1,16 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
-import org.stellar.sdk.xdr.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import org.stellar.sdk.xdr.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-/**
- * Abstract class for operations.
- */
+/** Abstract class for operations. */
 public abstract class Operation {
-  Operation() {
-  }
+  Operation() {}
 
   private String mSourceAccount;
 
@@ -31,9 +27,7 @@ public abstract class Operation {
     return amount.toPlainString();
   }
 
-  /**
-   * Generates Operation XDR object.
-   */
+  /** Generates Operation XDR object. */
   public org.stellar.sdk.xdr.Operation toXdr(AccountConverter accountConverter) {
     org.stellar.sdk.xdr.Operation xdr = new org.stellar.sdk.xdr.Operation();
     if (getSourceAccount() != null) {
@@ -43,16 +37,12 @@ public abstract class Operation {
     return xdr;
   }
 
-  /**
-   * Generates Operation XDR object.
-   */
+  /** Generates Operation XDR object. */
   public org.stellar.sdk.xdr.Operation toXdr() {
     return toXdr(AccountConverter.enableMuxed());
   }
 
-  /**
-   * Returns base64-encoded Operation XDR object.
-   */
+  /** Returns base64-encoded Operation XDR object. */
   public String toXdrBase64(AccountConverter accountConverter) {
     try {
       org.stellar.sdk.xdr.Operation operation = this.toXdr(accountConverter);
@@ -66,20 +56,18 @@ public abstract class Operation {
     }
   }
 
-  /**
-   * Returns base64-encoded Operation XDR object.
-   */
+  /** Returns base64-encoded Operation XDR object. */
   public String toXdrBase64() {
     return toXdrBase64(AccountConverter.enableMuxed());
   }
-
 
   /**
    * Returns new Operation object from Operation XDR object.
    *
    * @param xdr XDR object
    */
-  public static Operation fromXdr(AccountConverter accountConverter, org.stellar.sdk.xdr.Operation xdr) {
+  public static Operation fromXdr(
+      AccountConverter accountConverter, org.stellar.sdk.xdr.Operation xdr) {
     org.stellar.sdk.xdr.Operation.OperationBody body = xdr.getBody();
     Operation operation;
     switch (body.getDiscriminant()) {
@@ -90,7 +78,10 @@ public abstract class Operation {
         operation = new PaymentOperation.Builder(accountConverter, body.getPaymentOp()).build();
         break;
       case PATH_PAYMENT_STRICT_RECEIVE:
-        operation = new PathPaymentStrictReceiveOperation.Builder(accountConverter, body.getPathPaymentStrictReceiveOp()).build();
+        operation =
+            new PathPaymentStrictReceiveOperation.Builder(
+                    accountConverter, body.getPathPaymentStrictReceiveOp())
+                .build();
         break;
       case MANAGE_SELL_OFFER:
         operation = new ManageSellOfferOperation.Builder(body.getManageSellOfferOp()).build();
@@ -99,7 +90,8 @@ public abstract class Operation {
         operation = new ManageBuyOfferOperation.Builder(body.getManageBuyOfferOp()).build();
         break;
       case CREATE_PASSIVE_SELL_OFFER:
-        operation = new CreatePassiveSellOfferOperation.Builder(body.getCreatePassiveSellOfferOp()).build();
+        operation =
+            new CreatePassiveSellOfferOperation.Builder(body.getCreatePassiveSellOfferOp()).build();
         break;
       case SET_OPTIONS:
         operation = new SetOptionsOperation.Builder(body.getSetOptionsOp()).build();
@@ -123,16 +115,24 @@ public abstract class Operation {
         operation = new BumpSequenceOperation.Builder(body.getBumpSequenceOp()).build();
         break;
       case PATH_PAYMENT_STRICT_SEND:
-        operation = new PathPaymentStrictSendOperation.Builder(accountConverter, body.getPathPaymentStrictSendOp()).build();
+        operation =
+            new PathPaymentStrictSendOperation.Builder(
+                    accountConverter, body.getPathPaymentStrictSendOp())
+                .build();
         break;
       case CREATE_CLAIMABLE_BALANCE:
-        operation = new CreateClaimableBalanceOperation.Builder(body.getCreateClaimableBalanceOp()).build();
+        operation =
+            new CreateClaimableBalanceOperation.Builder(body.getCreateClaimableBalanceOp()).build();
         break;
       case CLAIM_CLAIMABLE_BALANCE:
-        operation = new ClaimClaimableBalanceOperation.Builder(body.getClaimClaimableBalanceOp()).build();
+        operation =
+            new ClaimClaimableBalanceOperation.Builder(body.getClaimClaimableBalanceOp()).build();
         break;
       case BEGIN_SPONSORING_FUTURE_RESERVES:
-        operation = new BeginSponsoringFutureReservesOperation.Builder(body.getBeginSponsoringFutureReservesOp()).build();
+        operation =
+            new BeginSponsoringFutureReservesOperation.Builder(
+                    body.getBeginSponsoringFutureReservesOp())
+                .build();
         break;
       case END_SPONSORING_FUTURE_RESERVES:
         operation = new EndSponsoringFutureReservesOperation();
@@ -140,38 +140,56 @@ public abstract class Operation {
       case REVOKE_SPONSORSHIP:
         switch (body.getRevokeSponsorshipOp().getDiscriminant()) {
           case REVOKE_SPONSORSHIP_SIGNER:
-            operation = new RevokeSignerSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+            operation =
+                new RevokeSignerSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
             break;
           case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
             switch (body.getRevokeSponsorshipOp().getLedgerKey().getDiscriminant()) {
               case DATA:
-                operation = new RevokeDataSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                operation =
+                    new RevokeDataSponsorshipOperation.Builder(body.getRevokeSponsorshipOp())
+                        .build();
                 break;
               case OFFER:
-                operation = new RevokeOfferSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                operation =
+                    new RevokeOfferSponsorshipOperation.Builder(body.getRevokeSponsorshipOp())
+                        .build();
                 break;
               case ACCOUNT:
-                operation = new RevokeAccountSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                operation =
+                    new RevokeAccountSponsorshipOperation.Builder(body.getRevokeSponsorshipOp())
+                        .build();
                 break;
               case TRUSTLINE:
-                operation = new RevokeTrustlineSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                operation =
+                    new RevokeTrustlineSponsorshipOperation.Builder(body.getRevokeSponsorshipOp())
+                        .build();
                 break;
               case CLAIMABLE_BALANCE:
-                operation = new RevokeClaimableBalanceSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+                operation =
+                    new RevokeClaimableBalanceSponsorshipOperation.Builder(
+                            body.getRevokeSponsorshipOp())
+                        .build();
                 break;
               default:
-                throw new RuntimeException("Unknown revoke sponsorship ledger entry type " + body.getRevokeSponsorshipOp().getLedgerKey().getDiscriminant());
+                throw new RuntimeException(
+                    "Unknown revoke sponsorship ledger entry type "
+                        + body.getRevokeSponsorshipOp().getLedgerKey().getDiscriminant());
             }
             break;
           default:
-            throw new RuntimeException("Unknown revoke sponsorship body " + body.getRevokeSponsorshipOp().getDiscriminant());
+            throw new RuntimeException(
+                "Unknown revoke sponsorship body "
+                    + body.getRevokeSponsorshipOp().getDiscriminant());
         }
         break;
       case CLAWBACK:
         operation = new ClawbackOperation.Builder(accountConverter, body.getClawbackOp()).build();
         break;
       case CLAWBACK_CLAIMABLE_BALANCE:
-        operation = new ClawbackClaimableBalanceOperation.Builder(body.getClawbackClaimableBalanceOp()).build();
+        operation =
+            new ClawbackClaimableBalanceOperation.Builder(body.getClawbackClaimableBalanceOp())
+                .build();
         break;
       case SET_TRUST_LINE_FLAGS:
         operation = new SetTrustlineFlagsOperation.Builder(body.getSetTrustLineFlagsOp()).build();
@@ -186,9 +204,7 @@ public abstract class Operation {
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }
     if (xdr.getSourceAccount() != null) {
-      operation.setSourceAccount(
-          accountConverter.decode(xdr.getSourceAccount())
-      );
+      operation.setSourceAccount(accountConverter.decode(xdr.getSourceAccount()));
     }
     return operation;
   }
@@ -202,9 +218,7 @@ public abstract class Operation {
     return fromXdr(AccountConverter.enableMuxed(), xdr);
   }
 
-  /**
-   * Returns operation source account.
-   */
+  /** Returns operation source account. */
   public String getSourceAccount() {
     return mSourceAccount;
   }
@@ -223,5 +237,6 @@ public abstract class Operation {
    *
    * @return OperationBody XDR object
    */
-  abstract org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter);
+  abstract org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(
+      AccountConverter accountConverter);
 }

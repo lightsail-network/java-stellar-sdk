@@ -1,14 +1,12 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.XdrString;
 
-/**
- * Represents MEMO_TEXT.
- */
+/** Represents MEMO_TEXT. */
 public class MemoText extends Memo {
   private XdrString text;
 
@@ -55,8 +53,8 @@ public class MemoText extends Memo {
     return this.text.equals(memoText.text);
   }
 
-    @Override
-    public String toString() {
-        return text == null ? "" : this.getText();
-    }
+  @Override
+  public String toString() {
+    return text == null ? "" : this.getText();
+  }
 }

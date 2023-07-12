@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -30,7 +28,8 @@ public class SignatureHint implements XdrElement {
     this.SignatureHint = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, SignatureHint  encodedSignatureHint) throws IOException {
+  public static void encode(XdrDataOutputStream stream, SignatureHint encodedSignatureHint)
+      throws IOException {
     int SignatureHintsize = encodedSignatureHint.SignatureHint.length;
     stream.write(encodedSignatureHint.getSignatureHint(), 0, SignatureHintsize);
   }
@@ -38,6 +37,7 @@ public class SignatureHint implements XdrElement {
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static SignatureHint decode(XdrDataInputStream stream) throws IOException {
     SignatureHint decodedSignatureHint = new SignatureHint();
     int SignatureHintsize = 4;

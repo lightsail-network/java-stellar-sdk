@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -30,13 +28,15 @@ public class String64 implements XdrElement {
     this.string64 = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, String64  encodedString64) throws IOException {
+  public static void encode(XdrDataOutputStream stream, String64 encodedString64)
+      throws IOException {
     encodedString64.string64.encode(stream);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static String64 decode(XdrDataInputStream stream) throws IOException {
     String64 decodedString64 = new String64();
     decodedString64.string64 = XdrString.decode(stream, 64);

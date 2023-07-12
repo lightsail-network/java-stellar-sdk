@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 
 // === xdr source ============================================================
@@ -30,7 +28,7 @@ public class Uint256 implements XdrElement {
     this.uint256 = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, Uint256  encodedUint256) throws IOException {
+  public static void encode(XdrDataOutputStream stream, Uint256 encodedUint256) throws IOException {
     int uint256size = encodedUint256.uint256.length;
     stream.write(encodedUint256.getUint256(), 0, uint256size);
   }
@@ -38,6 +36,7 @@ public class Uint256 implements XdrElement {
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
+
   public static Uint256 decode(XdrDataInputStream stream) throws IOException {
     Uint256 decodedUint256 = new Uint256();
     int uint256size = 32;

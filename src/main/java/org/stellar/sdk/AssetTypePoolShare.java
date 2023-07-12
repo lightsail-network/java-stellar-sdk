@@ -3,8 +3,12 @@ package org.stellar.sdk;
 import com.google.common.base.Objects;
 
 /**
- * Represents Stellar liquidity pool share asset - <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/#trustlines" target="_blank">lumens (XLM)</a>
- * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/#trustlines" target="_blank">Assets</a>
+ * Represents Stellar liquidity pool share asset - <a
+ * href="https://developers.stellar.org/docs/glossary/liquidity-pool/#trustlines"
+ * target="_blank">lumens (XLM)</a>
+ *
+ * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/#trustlines"
+ *     target="_blank">Assets</a>
  */
 public final class AssetTypePoolShare extends Asset {
 
@@ -30,17 +34,18 @@ public final class AssetTypePoolShare extends Asset {
       return false;
     }
 
-    return (Objects.equal(((AssetTypePoolShare)object).getPoolId(), poolId));
+    return (Objects.equal(((AssetTypePoolShare) object).getPoolId(), poolId));
   }
 
   @Override
   public int hashCode() {
-      return Objects.hashCode(poolId);
+    return Objects.hashCode(poolId);
   }
 
   @Override
   public org.stellar.sdk.xdr.Asset toXdr() {
-    throw new UnsupportedOperationException("liquidity_pool_shares are not defined as Asset in XDR");
+    throw new UnsupportedOperationException(
+        "liquidity_pool_shares are not defined as Asset in XDR");
   }
 
   @Override
@@ -49,7 +54,7 @@ public final class AssetTypePoolShare extends Asset {
       return -1;
     }
 
-    AssetTypePoolShare otherPoolShare = (AssetTypePoolShare)other;
+    AssetTypePoolShare otherPoolShare = (AssetTypePoolShare) other;
 
     if (poolId == null && otherPoolShare.getPoolId() == null) {
       return 0;
@@ -66,5 +71,7 @@ public final class AssetTypePoolShare extends Asset {
     return poolId.compareTo(otherPoolShare.getPoolId());
   }
 
-  public String getPoolId() { return poolId; }
+  public String getPoolId() {
+    return poolId;
+  }
 }

@@ -3,9 +3,8 @@ package org.stellar.sdk;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Arrays;
-
 import com.google.common.io.BaseEncoding;
+import java.util.Arrays;
 
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
@@ -21,18 +20,15 @@ abstract class MemoHashAbstract extends Memo {
     this(BaseEncoding.base16().lowerCase().decode(hexString.toLowerCase()));
   }
 
-  /**
-   * Returns 32 bytes long array contained in this memo.
-   */
+  /** Returns 32 bytes long array contained in this memo. */
   public byte[] getBytes() {
     return bytes;
   }
 
   /**
-   * <p>Returns hex representation of bytes contained in this memo.</p>
+   * Returns hex representation of bytes contained in this memo.
    *
-   * <p>Example:</p>
-   * <code>
+   * <p>Example: <code>
    *   MemoHash memo = new MemoHash("e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526");
    *   memo.getHexValue(); // e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526
    * </code>
@@ -57,8 +53,8 @@ abstract class MemoHashAbstract extends Memo {
     return Arrays.equals(this.bytes, that.bytes);
   }
 
-    @Override
-    public String toString() {
-        return bytes == null ? "" : getHexValue();
-    }
+  @Override
+  public String toString() {
+    return bytes == null ? "" : getHexValue();
+  }
 }

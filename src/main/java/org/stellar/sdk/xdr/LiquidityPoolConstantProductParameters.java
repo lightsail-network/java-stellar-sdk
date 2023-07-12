@@ -3,10 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
-
-import java.io.IOException;
-
 import com.google.common.base.Objects;
+import java.io.IOException;
 
 // === xdr source ============================================================
 
@@ -19,47 +17,66 @@ import com.google.common.base.Objects;
 
 //  ===========================================================================
 public class LiquidityPoolConstantProductParameters implements XdrElement {
-  public LiquidityPoolConstantProductParameters () {}
+  public LiquidityPoolConstantProductParameters() {}
+
   private Asset assetA;
+
   public Asset getAssetA() {
     return this.assetA;
   }
+
   public void setAssetA(Asset value) {
     this.assetA = value;
   }
+
   private Asset assetB;
+
   public Asset getAssetB() {
     return this.assetB;
   }
+
   public void setAssetB(Asset value) {
     this.assetB = value;
   }
+
   private Int32 fee;
+
   public Int32 getFee() {
     return this.fee;
   }
+
   public void setFee(Int32 value) {
     this.fee = value;
   }
-  public static void encode(XdrDataOutputStream stream, LiquidityPoolConstantProductParameters encodedLiquidityPoolConstantProductParameters) throws IOException{
+
+  public static void encode(
+      XdrDataOutputStream stream,
+      LiquidityPoolConstantProductParameters encodedLiquidityPoolConstantProductParameters)
+      throws IOException {
     Asset.encode(stream, encodedLiquidityPoolConstantProductParameters.assetA);
     Asset.encode(stream, encodedLiquidityPoolConstantProductParameters.assetB);
     Int32.encode(stream, encodedLiquidityPoolConstantProductParameters.fee);
   }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
-  public static LiquidityPoolConstantProductParameters decode(XdrDataInputStream stream) throws IOException {
-    LiquidityPoolConstantProductParameters decodedLiquidityPoolConstantProductParameters = new LiquidityPoolConstantProductParameters();
+
+  public static LiquidityPoolConstantProductParameters decode(XdrDataInputStream stream)
+      throws IOException {
+    LiquidityPoolConstantProductParameters decodedLiquidityPoolConstantProductParameters =
+        new LiquidityPoolConstantProductParameters();
     decodedLiquidityPoolConstantProductParameters.assetA = Asset.decode(stream);
     decodedLiquidityPoolConstantProductParameters.assetB = Asset.decode(stream);
     decodedLiquidityPoolConstantProductParameters.fee = Int32.decode(stream);
     return decodedLiquidityPoolConstantProductParameters;
   }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(this.assetA, this.assetB, this.fee);
   }
+
   @Override
   public boolean equals(Object object) {
     if (!(object instanceof LiquidityPoolConstantProductParameters)) {
@@ -67,7 +84,9 @@ public class LiquidityPoolConstantProductParameters implements XdrElement {
     }
 
     LiquidityPoolConstantProductParameters other = (LiquidityPoolConstantProductParameters) object;
-    return Objects.equal(this.assetA, other.assetA) && Objects.equal(this.assetB, other.assetB) && Objects.equal(this.fee, other.fee);
+    return Objects.equal(this.assetA, other.assetA)
+        && Objects.equal(this.assetB, other.assetB)
+        && Objects.equal(this.fee, other.fee);
   }
 
   public static final class Builder {

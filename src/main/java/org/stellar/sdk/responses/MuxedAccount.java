@@ -1,7 +1,6 @@
 package org.stellar.sdk.responses;
 
 import com.google.common.base.Objects;
-
 import java.math.BigInteger;
 
 public class MuxedAccount {
@@ -33,9 +32,10 @@ public class MuxedAccount {
     if (this == o) {
       return true;
     }
-    return (getClass() == o.getClass()) && Objects.equal(muxedAddress, ((MuxedAccount)o).muxedAddress)
-        && Objects.equal(unmuxedAddress, ((MuxedAccount)o).unmuxedAddress)
-        && Objects.equal(id, ((MuxedAccount)o).id);
+    return (getClass() == o.getClass())
+        && Objects.equal(muxedAddress, ((MuxedAccount) o).muxedAddress)
+        && Objects.equal(unmuxedAddress, ((MuxedAccount) o).unmuxedAddress)
+        && Objects.equal(id, ((MuxedAccount) o).id);
   }
 
   @Override

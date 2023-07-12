@@ -3,9 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-
 import java.io.IOException;
-
 
 // === xdr source ============================================================
 
@@ -25,19 +23,22 @@ public enum PreconditionType implements XdrElement {
   private int mValue;
 
   PreconditionType(int value) {
-      mValue = value;
+    mValue = value;
   }
 
   public int getValue() {
-      return mValue;
+    return mValue;
   }
 
   public static PreconditionType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0: return PRECOND_NONE;
-      case 1: return PRECOND_TIME;
-      case 2: return PRECOND_V2;
+      case 0:
+        return PRECOND_NONE;
+      case 1:
+        return PRECOND_TIME;
+      case 2:
+        return PRECOND_V2;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
