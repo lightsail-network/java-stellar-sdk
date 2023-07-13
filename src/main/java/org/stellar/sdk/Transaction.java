@@ -7,21 +7,7 @@ import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import org.stellar.sdk.xdr.ClaimableBalanceID;
-import org.stellar.sdk.xdr.ClaimableBalanceIDType;
-import org.stellar.sdk.xdr.DecoratedSignature;
-import org.stellar.sdk.xdr.EnvelopeType;
-import org.stellar.sdk.xdr.Hash;
-import org.stellar.sdk.xdr.Int64;
-import org.stellar.sdk.xdr.OperationID;
-import org.stellar.sdk.xdr.SequenceNumber;
-import org.stellar.sdk.xdr.TransactionEnvelope;
-import org.stellar.sdk.xdr.TransactionSignaturePayload;
-import org.stellar.sdk.xdr.TransactionV0;
-import org.stellar.sdk.xdr.TransactionV0Envelope;
-import org.stellar.sdk.xdr.TransactionV1Envelope;
-import org.stellar.sdk.xdr.Uint32;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.stellar.sdk.xdr.*;
 
 /**
  * Represents <a href="https://developers.stellar.org/docs/glossary/transactions/"
@@ -131,23 +117,29 @@ public class Transaction extends AbstractTransaction {
     //
     // Note that the source account must be *unmuxed* for this to work.
 
-    OperationID id = new OperationID();
-    id.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_OP_ID);
-    OperationID.OperationIDId body = new OperationID.OperationIDId();
-    body.setOpNum(new Uint32(index));
-    body.setSeqNum(new SequenceNumber(new Int64(getSequenceNumber())));
-    body.setSourceAccount(
-        StrKey.muxedAccountToAccountId(AccountConverter.disableMuxed().encode(getSourceAccount())));
-    id.setId(body);
-
+    Uint32 opIndex = new Uint32(index);
+    SequenceNumber sequenceNumber = new SequenceNumber(new Int64(getSequenceNumber()));
+    AccountID sourceAccount =
+        StrKey.muxedAccountToAccountId(AccountConverter.disableMuxed().encode(getSourceAccount()));
+    HashIDPreimage.HashIDPreimageOperationID operationID =
+        new HashIDPreimage.HashIDPreimageOperationID.Builder()
+            .opNum(opIndex)
+            .seqNum(sequenceNumber)
+            .sourceAccount(sourceAccount)
+            .build();
+    HashIDPreimage hashIDPreimage =
+        new HashIDPreimage.Builder()
+            .discriminant(EnvelopeType.ENVELOPE_TYPE_OP_ID)
+            .operationID(operationID)
+            .build();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    id.encode(new XdrDataOutputStream(outputStream));
+    hashIDPreimage.encode(new XdrDataOutputStream(outputStream));
+    Hash operationIDHash = new Hash(Util.hash(outputStream.toByteArray()));
+    outputStream.reset();
 
     ClaimableBalanceID result = new ClaimableBalanceID();
     result.setDiscriminant(ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0);
-    result.setV0(new Hash(Util.hash(outputStream.toByteArray())));
-
-    outputStream.reset();
+    result.setV0(operationIDHash);
     result.encode(new XdrDataOutputStream(outputStream));
     return Util.bytesToHex(outputStream.toByteArray()).toLowerCase();
   }
