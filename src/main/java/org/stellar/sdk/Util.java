@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
+import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
@@ -121,6 +122,43 @@ public class Util {
       throw new IllegalArgumentException("invalid claimClaimableBalanceOp.", e);
     }
     return BaseEncoding.base16().lowerCase().encode(byteArrayOutputStream.toByteArray());
+  }
+
+  /**
+   * Convert {@link SorobanTransactionData} XDR String representation to {@link
+   * SorobanTransactionData} object.
+   *
+   * @param sorobanData XDR String representation of a {@link SorobanTransactionData}
+   * @return {@link SorobanTransactionData}
+   */
+  public static SorobanTransactionData sorobanTransactionDataToXDR(String sorobanData) {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(sorobanData);
+    ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+    XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
+    try {
+      return SorobanTransactionData.decode(xdrInputStream);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("invalid sorobanData: " + sorobanData, e);
+    }
+  }
+
+  /**
+   * Convert {@link SorobanTransactionData} object to XDR String representation.
+   *
+   * @param sorobanData {@link SorobanTransactionData} object
+   * @return XDR String representation of a {@link SorobanTransactionData}
+   */
+  public static String xdrToSorobanTransactionData(SorobanTransactionData sorobanData) {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    try {
+      sorobanData.encode(xdrDataOutputStream);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("invalid sorobanData.", e);
+    }
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(byteArrayOutputStream.toByteArray());
   }
 
   public static AssetTypeCreditAlphaNum assertNonNativeAsset(Asset asset) {
