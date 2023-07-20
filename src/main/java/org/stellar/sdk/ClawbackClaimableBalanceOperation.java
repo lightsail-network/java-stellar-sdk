@@ -94,6 +94,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
     }
 
     ClawbackClaimableBalanceOperation other = (ClawbackClaimableBalanceOperation) object;
-    return Objects.equal(this.balanceId, other.balanceId);
+    return Objects.equal(this.balanceId, other.balanceId)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

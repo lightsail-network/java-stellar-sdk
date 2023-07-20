@@ -97,7 +97,8 @@ public class LiquidityPoolDepositOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hashCode(liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
+    return Objects.hashCode(
+        this.getSourceAccount(), liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
   }
 
   @Override
@@ -111,6 +112,7 @@ public class LiquidityPoolDepositOperation extends Operation {
         && Objects.equal(this.getMaxAmountA(), o.getMaxAmountA())
         && Objects.equal(this.getMaxAmountB(), o.getMaxAmountB())
         && Objects.equal(this.getMinPrice(), o.getMinPrice())
-        && Objects.equal(this.getMaxPrice(), o.getMaxPrice());
+        && Objects.equal(this.getMaxPrice(), o.getMaxPrice())
+        && Objects.equal(this.getSourceAccount(), o.getSourceAccount());
   }
 }
