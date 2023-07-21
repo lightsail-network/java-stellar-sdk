@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
-public class RevokeDataSponsorshipOperation extends org.stellar.sdk.Operation {
+public class RevokeDataSponsorshipOperation extends Operation {
   private final String accountId;
   private final String dataName;
 

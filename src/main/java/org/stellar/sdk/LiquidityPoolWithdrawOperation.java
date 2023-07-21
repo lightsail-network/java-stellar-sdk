@@ -80,7 +80,8 @@ public class LiquidityPoolWithdrawOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hashCode(liquidityPoolID, amount, minAmountA, minAmountB);
+    return Objects.hashCode(
+        this.getSourceAccount(), liquidityPoolID, amount, minAmountA, minAmountB);
   }
 
   @Override
@@ -93,6 +94,7 @@ public class LiquidityPoolWithdrawOperation extends Operation {
     return Objects.equal(this.getLiquidityPoolID(), o.getLiquidityPoolID())
         && Objects.equal(this.getAmount(), o.getAmount())
         && Objects.equal(this.getMinAmountA(), o.getMinAmountA())
-        && Objects.equal(this.getMinAmountB(), o.getMinAmountB());
+        && Objects.equal(this.getMinAmountB(), o.getMinAmountB())
+        && Objects.equal(this.getSourceAccount(), o.getSourceAccount());
   }
 }
