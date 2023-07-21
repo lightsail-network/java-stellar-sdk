@@ -16,6 +16,9 @@ public class AssetResponse extends Response implements Pageable {
   @SerializedName("paging_token")
   private final String pagingToken;
 
+  @SerializedName("contract_id")
+  private final String contractID;
+
   @SerializedName("accounts")
   private final AssetResponse.Accounts accounts;
 
@@ -31,6 +34,9 @@ public class AssetResponse extends Response implements Pageable {
   @SerializedName("liquidity_pools_amount")
   private final String liquidityPoolsAmount;
 
+  @SerializedName("contracts_amount")
+  private final String contractsAmount;
+
   @SerializedName("num_accounts")
   private final int numAccounts;
 
@@ -39,6 +45,9 @@ public class AssetResponse extends Response implements Pageable {
 
   @SerializedName("num_liquidity_pools")
   private final int numLiquidityPools;
+
+  @SerializedName("num_contracts")
+  private final int numContracts;
 
   @SerializedName("flags")
   private final AssetResponse.Flags flags;
@@ -51,28 +60,34 @@ public class AssetResponse extends Response implements Pageable {
       String assetCode,
       String assetIssuer,
       String pagingToken,
+      String contractID,
       Accounts accounts,
       Balances balances,
       String amount,
       String claimableBalancesAmount,
       String liquidityPoolsAmount,
+      String contractsAmount,
       int numAccounts,
       int numClaimableBalances,
       int numLiquidityPools,
+      int numContracts,
       Flags flags,
       Links links) {
     this.assetType = assetType;
     this.assetCode = assetCode;
     this.assetIssuer = assetIssuer;
     this.pagingToken = pagingToken;
+    this.contractID = contractID;
     this.accounts = accounts;
     this.balances = balances;
     this.amount = amount;
     this.claimableBalancesAmount = claimableBalancesAmount;
     this.liquidityPoolsAmount = liquidityPoolsAmount;
+    this.contractsAmount = contractsAmount;
     this.numAccounts = numAccounts;
     this.numClaimableBalances = numClaimableBalances;
     this.numLiquidityPools = numLiquidityPools;
+    this.numContracts = numContracts;
     this.flags = flags;
     this.links = links;
   }
@@ -127,6 +142,18 @@ public class AssetResponse extends Response implements Pageable {
 
   public int getNumAccounts() {
     return numAccounts;
+  }
+
+  public String getContractID() {
+    return contractID;
+  }
+
+  public String getContractsAmount() {
+    return contractsAmount;
+  }
+
+  public int getNumContracts() {
+    return numContracts;
   }
 
   public Flags getFlags() {
