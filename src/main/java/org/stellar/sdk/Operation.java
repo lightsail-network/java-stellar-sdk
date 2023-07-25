@@ -6,13 +6,19 @@ import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import org.stellar.sdk.xdr.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 /** Abstract class for operations. */
+@SuperBuilder(toBuilder = true)
+@EqualsAndHashCode
 public abstract class Operation {
   Operation() {}
 
-  private String mSourceAccount;
+  @Getter @Setter private String sourceAccount;
 
   private static final BigDecimal ONE = new BigDecimal(10).pow(7);
 
@@ -31,7 +37,7 @@ public abstract class Operation {
   public org.stellar.sdk.xdr.Operation toXdr(AccountConverter accountConverter) {
     org.stellar.sdk.xdr.Operation xdr = new org.stellar.sdk.xdr.Operation();
     if (getSourceAccount() != null) {
-      xdr.setSourceAccount(accountConverter.encode(mSourceAccount));
+      xdr.setSourceAccount(accountConverter.encode(sourceAccount));
     }
     xdr.setBody(toOperationBody(accountConverter));
     return xdr;
@@ -200,6 +206,9 @@ public abstract class Operation {
       case LIQUIDITY_POOL_WITHDRAW:
         operation = new LiquidityPoolWithdrawOperation(body.getLiquidityPoolWithdrawOp());
         break;
+      case INVOKE_HOST_FUNCTION:
+        operation = InvokeHostFunctionOperation.fromXdr(body.getInvokeHostFunctionOp());
+        break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }
@@ -216,20 +225,6 @@ public abstract class Operation {
    */
   public static Operation fromXdr(org.stellar.sdk.xdr.Operation xdr) {
     return fromXdr(AccountConverter.enableMuxed(), xdr);
-  }
-
-  /** Returns operation source account. */
-  public String getSourceAccount() {
-    return mSourceAccount;
-  }
-
-  /**
-   * Sets operation source account.
-   *
-   * @param sourceAccount
-   */
-  void setSourceAccount(String sourceAccount) {
-    mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
   }
 
   /**

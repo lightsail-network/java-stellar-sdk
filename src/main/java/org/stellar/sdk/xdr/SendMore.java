@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -67,7 +69,7 @@ public class SendMore implements XdrElement {
 
     public SendMore build() {
       SendMore val = new SendMore();
-      val.setNumMessages(numMessages);
+      val.setNumMessages(this.numMessages);
       return val;
     }
   }

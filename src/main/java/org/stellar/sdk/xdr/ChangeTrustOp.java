@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -88,8 +90,8 @@ public class ChangeTrustOp implements XdrElement {
 
     public ChangeTrustOp build() {
       ChangeTrustOp val = new ChangeTrustOp();
-      val.setLine(line);
-      val.setLimit(limit);
+      val.setLine(this.line);
+      val.setLimit(this.limit);
       return val;
     }
   }

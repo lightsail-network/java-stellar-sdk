@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -94,8 +96,8 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
 
     public TrustLineEntryExtensionV2 build() {
       TrustLineEntryExtensionV2 val = new TrustLineEntryExtensionV2();
-      val.setLiquidityPoolUseCount(liquidityPoolUseCount);
-      val.setExt(ext);
+      val.setLiquidityPoolUseCount(this.liquidityPoolUseCount);
+      val.setExt(this.ext);
       return val;
     }
   }

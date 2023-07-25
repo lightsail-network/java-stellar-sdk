@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -86,8 +88,8 @@ public class UpgradeEntryMeta implements XdrElement {
 
     public UpgradeEntryMeta build() {
       UpgradeEntryMeta val = new UpgradeEntryMeta();
-      val.setUpgrade(upgrade);
-      val.setChanges(changes);
+      val.setUpgrade(this.upgrade);
+      val.setChanges(this.changes);
       return val;
     }
   }

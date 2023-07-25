@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -125,9 +127,9 @@ public class SCPNomination implements XdrElement {
 
     public SCPNomination build() {
       SCPNomination val = new SCPNomination();
-      val.setQuorumSetHash(quorumSetHash);
-      val.setVotes(votes);
-      val.setAccepted(accepted);
+      val.setQuorumSetHash(this.quorumSetHash);
+      val.setVotes(this.votes);
+      val.setAccepted(this.accepted);
       return val;
     }
   }

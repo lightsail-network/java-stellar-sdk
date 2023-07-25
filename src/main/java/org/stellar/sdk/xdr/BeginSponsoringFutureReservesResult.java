@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -13,7 +15,9 @@ import java.io.IOException;
 //  {
 //  case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
 //      void;
-//  default:
+//  case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
+//  case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
+//  case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
 //      void;
 //  };
 
@@ -56,7 +60,9 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
     switch (encodedBeginSponsoringFutureReservesResult.getDiscriminant()) {
       case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
         break;
-      default:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
         break;
     }
   }
@@ -75,7 +81,9 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
     switch (decodedBeginSponsoringFutureReservesResult.getDiscriminant()) {
       case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
         break;
-      default:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
         break;
     }
     return decodedBeginSponsoringFutureReservesResult;

@@ -19,6 +19,7 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
@@ -198,6 +199,12 @@ public class KeyPair {
     uint256.setUint256(getPublicKey());
     publicKey.setEd25519(uint256);
     return publicKey;
+  }
+
+  public AccountID getXdrAccountId() {
+    AccountID accountID = new AccountID();
+    accountID.setAccountID(getXdrPublicKey());
+    return accountID;
   }
 
   public SignerKey getXdrSignerKey() {

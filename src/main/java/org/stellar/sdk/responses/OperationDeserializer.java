@@ -87,6 +87,8 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         return gson.fromJson(json, LiquidityPoolDepositOperationResponse.class);
       case LIQUIDITY_POOL_WITHDRAW:
         return gson.fromJson(json, LiquidityPoolWithdrawOperationResponse.class);
+      case INVOKE_HOST_FUNCTION:
+        return gson.fromJson(json, InvokeHostFunctionOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

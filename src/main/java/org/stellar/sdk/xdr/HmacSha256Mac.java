@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -70,7 +72,7 @@ public class HmacSha256Mac implements XdrElement {
 
     public HmacSha256Mac build() {
       HmacSha256Mac val = new HmacSha256Mac();
-      val.setMac(mac);
+      val.setMac(this.mac);
       return val;
     }
   }

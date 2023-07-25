@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -153,11 +155,11 @@ public class SurveyRequestMessage implements XdrElement {
 
     public SurveyRequestMessage build() {
       SurveyRequestMessage val = new SurveyRequestMessage();
-      val.setSurveyorPeerID(surveyorPeerID);
-      val.setSurveyedPeerID(surveyedPeerID);
-      val.setLedgerNum(ledgerNum);
-      val.setEncryptionKey(encryptionKey);
-      val.setCommandType(commandType);
+      val.setSurveyorPeerID(this.surveyorPeerID);
+      val.setSurveyedPeerID(this.surveyedPeerID);
+      val.setLedgerNum(this.ledgerNum);
+      val.setEncryptionKey(this.encryptionKey);
+      val.setCommandType(this.commandType);
       return val;
     }
   }

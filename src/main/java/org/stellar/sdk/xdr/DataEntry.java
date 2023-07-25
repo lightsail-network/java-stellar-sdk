@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -134,10 +136,10 @@ public class DataEntry implements XdrElement {
 
     public DataEntry build() {
       DataEntry val = new DataEntry();
-      val.setAccountID(accountID);
-      val.setDataName(dataName);
-      val.setDataValue(dataValue);
-      val.setExt(ext);
+      val.setAccountID(this.accountID);
+      val.setDataName(this.dataName);
+      val.setDataValue(this.dataValue);
+      val.setExt(this.ext);
       return val;
     }
   }

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -85,8 +87,8 @@ public class Error implements XdrElement {
 
     public Error build() {
       Error val = new Error();
-      val.setCode(code);
-      val.setMsg(msg);
+      val.setCode(this.code);
+      val.setMsg(this.msg);
       return val;
     }
   }

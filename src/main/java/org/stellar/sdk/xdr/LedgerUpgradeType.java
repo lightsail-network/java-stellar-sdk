@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -13,7 +15,8 @@ import java.io.IOException;
 //      LEDGER_UPGRADE_BASE_FEE = 2,
 //      LEDGER_UPGRADE_MAX_TX_SET_SIZE = 3,
 //      LEDGER_UPGRADE_BASE_RESERVE = 4,
-//      LEDGER_UPGRADE_FLAGS = 5
+//      LEDGER_UPGRADE_FLAGS = 5,
+//      LEDGER_UPGRADE_CONFIG = 6
 //  };
 
 //  ===========================================================================
@@ -23,6 +26,7 @@ public enum LedgerUpgradeType implements XdrElement {
   LEDGER_UPGRADE_MAX_TX_SET_SIZE(3),
   LEDGER_UPGRADE_BASE_RESERVE(4),
   LEDGER_UPGRADE_FLAGS(5),
+  LEDGER_UPGRADE_CONFIG(6),
   ;
   private int mValue;
 
@@ -47,6 +51,8 @@ public enum LedgerUpgradeType implements XdrElement {
         return LEDGER_UPGRADE_BASE_RESERVE;
       case 5:
         return LEDGER_UPGRADE_FLAGS;
+      case 6:
+        return LEDGER_UPGRADE_CONFIG;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

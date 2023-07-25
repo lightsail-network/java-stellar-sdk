@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -107,9 +109,9 @@ public class AuthCert implements XdrElement {
 
     public AuthCert build() {
       AuthCert val = new AuthCert();
-      val.setPubkey(pubkey);
-      val.setExpiration(expiration);
-      val.setSig(sig);
+      val.setPubkey(this.pubkey);
+      val.setExpiration(this.expiration);
+      val.setSig(this.sig);
       return val;
     }
   }

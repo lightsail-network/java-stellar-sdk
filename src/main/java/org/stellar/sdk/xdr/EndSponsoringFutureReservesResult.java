@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -13,7 +15,7 @@ import java.io.IOException;
 //  {
 //  case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
 //      void;
-//  default:
+//  case END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED:
 //      void;
 //  };
 
@@ -56,7 +58,7 @@ public class EndSponsoringFutureReservesResult implements XdrElement {
     switch (encodedEndSponsoringFutureReservesResult.getDiscriminant()) {
       case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
         break;
-      default:
+      case END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED:
         break;
     }
   }
@@ -75,7 +77,7 @@ public class EndSponsoringFutureReservesResult implements XdrElement {
     switch (decodedEndSponsoringFutureReservesResult.getDiscriminant()) {
       case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
         break;
-      default:
+      case END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED:
         break;
     }
     return decodedEndSponsoringFutureReservesResult;

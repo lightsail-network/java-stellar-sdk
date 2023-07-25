@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -16,7 +18,9 @@ import java.io.IOException;
 //      ENVELOPE_TYPE_SCPVALUE = 4,
 //      ENVELOPE_TYPE_TX_FEE_BUMP = 5,
 //      ENVELOPE_TYPE_OP_ID = 6,
-//      ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7
+//      ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
+//      ENVELOPE_TYPE_CONTRACT_ID = 8,
+//      ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
 //  };
 
 //  ===========================================================================
@@ -29,6 +33,8 @@ public enum EnvelopeType implements XdrElement {
   ENVELOPE_TYPE_TX_FEE_BUMP(5),
   ENVELOPE_TYPE_OP_ID(6),
   ENVELOPE_TYPE_POOL_REVOKE_OP_ID(7),
+  ENVELOPE_TYPE_CONTRACT_ID(8),
+  ENVELOPE_TYPE_SOROBAN_AUTHORIZATION(9),
   ;
   private int mValue;
 
@@ -59,6 +65,10 @@ public enum EnvelopeType implements XdrElement {
         return ENVELOPE_TYPE_OP_ID;
       case 7:
         return ENVELOPE_TYPE_POOL_REVOKE_OP_ID;
+      case 8:
+        return ENVELOPE_TYPE_CONTRACT_ID;
+      case 9:
+        return ENVELOPE_TYPE_SOROBAN_AUTHORIZATION;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -95,8 +97,8 @@ public class BucketMetadata implements XdrElement {
 
     public BucketMetadata build() {
       BucketMetadata val = new BucketMetadata();
-      val.setLedgerVersion(ledgerVersion);
-      val.setExt(ext);
+      val.setLedgerVersion(this.ledgerVersion);
+      val.setExt(this.ext);
       return val;
     }
   }

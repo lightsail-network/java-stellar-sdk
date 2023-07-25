@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -131,11 +133,11 @@ public class ClaimPredicate implements XdrElement {
     public ClaimPredicate build() {
       ClaimPredicate val = new ClaimPredicate();
       val.setDiscriminant(discriminant);
-      val.setAndPredicates(andPredicates);
-      val.setOrPredicates(orPredicates);
-      val.setNotPredicate(notPredicate);
-      val.setAbsBefore(absBefore);
-      val.setRelBefore(relBefore);
+      val.setAndPredicates(this.andPredicates);
+      val.setOrPredicates(this.orPredicates);
+      val.setNotPredicate(this.notPredicate);
+      val.setAbsBefore(this.absBefore);
+      val.setRelBefore(this.relBefore);
       return val;
     }
   }

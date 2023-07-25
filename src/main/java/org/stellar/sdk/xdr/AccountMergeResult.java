@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,13 @@ import java.io.IOException;
 //  {
 //  case ACCOUNT_MERGE_SUCCESS:
 //      int64 sourceAccountBalance; // how much got transferred from source account
-//  default:
+//  case ACCOUNT_MERGE_MALFORMED:
+//  case ACCOUNT_MERGE_NO_ACCOUNT:
+//  case ACCOUNT_MERGE_IMMUTABLE_SET:
+//  case ACCOUNT_MERGE_HAS_SUB_ENTRIES:
+//  case ACCOUNT_MERGE_SEQNUM_TOO_FAR:
+//  case ACCOUNT_MERGE_DEST_FULL:
+//  case ACCOUNT_MERGE_IS_SPONSOR:
 //      void;
 //  };
 
@@ -57,7 +65,7 @@ public class AccountMergeResult implements XdrElement {
     public AccountMergeResult build() {
       AccountMergeResult val = new AccountMergeResult();
       val.setDiscriminant(discriminant);
-      val.setSourceAccountBalance(sourceAccountBalance);
+      val.setSourceAccountBalance(this.sourceAccountBalance);
       return val;
     }
   }
@@ -71,7 +79,13 @@ public class AccountMergeResult implements XdrElement {
       case ACCOUNT_MERGE_SUCCESS:
         Int64.encode(stream, encodedAccountMergeResult.sourceAccountBalance);
         break;
-      default:
+      case ACCOUNT_MERGE_MALFORMED:
+      case ACCOUNT_MERGE_NO_ACCOUNT:
+      case ACCOUNT_MERGE_IMMUTABLE_SET:
+      case ACCOUNT_MERGE_HAS_SUB_ENTRIES:
+      case ACCOUNT_MERGE_SEQNUM_TOO_FAR:
+      case ACCOUNT_MERGE_DEST_FULL:
+      case ACCOUNT_MERGE_IS_SPONSOR:
         break;
     }
   }
@@ -88,7 +102,13 @@ public class AccountMergeResult implements XdrElement {
       case ACCOUNT_MERGE_SUCCESS:
         decodedAccountMergeResult.sourceAccountBalance = Int64.decode(stream);
         break;
-      default:
+      case ACCOUNT_MERGE_MALFORMED:
+      case ACCOUNT_MERGE_NO_ACCOUNT:
+      case ACCOUNT_MERGE_IMMUTABLE_SET:
+      case ACCOUNT_MERGE_HAS_SUB_ENTRIES:
+      case ACCOUNT_MERGE_SEQNUM_TOO_FAR:
+      case ACCOUNT_MERGE_DEST_FULL:
+      case ACCOUNT_MERGE_IS_SPONSOR:
         break;
     }
     return decodedAccountMergeResult;

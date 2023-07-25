@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,10 @@ import java.io.IOException;
 //  {
 //  case CLAWBACK_SUCCESS:
 //      void;
-//  default:
+//  case CLAWBACK_MALFORMED:
+//  case CLAWBACK_NOT_CLAWBACK_ENABLED:
+//  case CLAWBACK_NO_TRUST:
+//  case CLAWBACK_UNDERFUNDED:
 //      void;
 //  };
 
@@ -53,7 +58,10 @@ public class ClawbackResult implements XdrElement {
     switch (encodedClawbackResult.getDiscriminant()) {
       case CLAWBACK_SUCCESS:
         break;
-      default:
+      case CLAWBACK_MALFORMED:
+      case CLAWBACK_NOT_CLAWBACK_ENABLED:
+      case CLAWBACK_NO_TRUST:
+      case CLAWBACK_UNDERFUNDED:
         break;
     }
   }
@@ -69,7 +77,10 @@ public class ClawbackResult implements XdrElement {
     switch (decodedClawbackResult.getDiscriminant()) {
       case CLAWBACK_SUCCESS:
         break;
-      default:
+      case CLAWBACK_MALFORMED:
+      case CLAWBACK_NOT_CLAWBACK_ENABLED:
+      case CLAWBACK_NO_TRUST:
+      case CLAWBACK_UNDERFUNDED:
         break;
     }
     return decodedClawbackResult;

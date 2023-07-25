@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -137,10 +139,10 @@ public class FeeBumpTransaction implements XdrElement {
 
     public FeeBumpTransaction build() {
       FeeBumpTransaction val = new FeeBumpTransaction();
-      val.setFeeSource(feeSource);
-      val.setFee(fee);
-      val.setInnerTx(innerTx);
-      val.setExt(ext);
+      val.setFeeSource(this.feeSource);
+      val.setFee(this.fee);
+      val.setInnerTx(this.innerTx);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -185,7 +187,7 @@ public class FeeBumpTransaction implements XdrElement {
       public FeeBumpTransactionInnerTx build() {
         FeeBumpTransactionInnerTx val = new FeeBumpTransactionInnerTx();
         val.setDiscriminant(discriminant);
-        val.setV1(v1);
+        val.setV1(this.v1);
         return val;
       }
     }

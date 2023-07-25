@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -187,12 +189,12 @@ public class PathPaymentStrictSendOp implements XdrElement {
 
     public PathPaymentStrictSendOp build() {
       PathPaymentStrictSendOp val = new PathPaymentStrictSendOp();
-      val.setSendAsset(sendAsset);
-      val.setSendAmount(sendAmount);
-      val.setDestination(destination);
-      val.setDestAsset(destAsset);
-      val.setDestMin(destMin);
-      val.setPath(path);
+      val.setSendAsset(this.sendAsset);
+      val.setSendAmount(this.sendAmount);
+      val.setDestination(this.destination);
+      val.setDestAsset(this.destAsset);
+      val.setDestMin(this.destMin);
+      val.setPath(this.path);
       return val;
     }
   }

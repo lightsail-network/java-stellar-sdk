@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -21,7 +23,22 @@ import java.util.Arrays;
 //      case txSUCCESS:
 //      case txFAILED:
 //          OperationResult results<>;
-//      default:
+//      case txTOO_EARLY:
+//      case txTOO_LATE:
+//      case txMISSING_OPERATION:
+//      case txBAD_SEQ:
+//      case txBAD_AUTH:
+//      case txINSUFFICIENT_BALANCE:
+//      case txNO_ACCOUNT:
+//      case txINSUFFICIENT_FEE:
+//      case txBAD_AUTH_EXTRA:
+//      case txINTERNAL_ERROR:
+//      case txNOT_SUPPORTED:
+//      // case txFEE_BUMP_INNER_FAILED: handled above
+//      case txBAD_SPONSORSHIP:
+//      case txBAD_MIN_SEQ_AGE_OR_GAP:
+//      case txMALFORMED:
+//      case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
 //          void;
 //      }
 //      result;
@@ -127,9 +144,9 @@ public class TransactionResult implements XdrElement {
 
     public TransactionResult build() {
       TransactionResult val = new TransactionResult();
-      val.setFeeCharged(feeCharged);
-      val.setResult(result);
-      val.setExt(ext);
+      val.setFeeCharged(this.feeCharged);
+      val.setResult(this.result);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -190,8 +207,8 @@ public class TransactionResult implements XdrElement {
       public TransactionResultResult build() {
         TransactionResultResult val = new TransactionResultResult();
         val.setDiscriminant(discriminant);
-        val.setInnerResultPair(innerResultPair);
-        val.setResults(results);
+        val.setInnerResultPair(this.innerResultPair);
+        val.setResults(this.results);
         return val;
       }
     }
@@ -215,7 +232,21 @@ public class TransactionResult implements XdrElement {
             OperationResult.encode(stream, encodedTransactionResultResult.results[i]);
           }
           break;
-        default:
+        case txTOO_EARLY:
+        case txTOO_LATE:
+        case txMISSING_OPERATION:
+        case txBAD_SEQ:
+        case txBAD_AUTH:
+        case txINSUFFICIENT_BALANCE:
+        case txNO_ACCOUNT:
+        case txINSUFFICIENT_FEE:
+        case txBAD_AUTH_EXTRA:
+        case txINTERNAL_ERROR:
+        case txNOT_SUPPORTED:
+        case txBAD_SPONSORSHIP:
+        case txBAD_MIN_SEQ_AGE_OR_GAP:
+        case txMALFORMED:
+        case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
           break;
       }
     }
@@ -242,7 +273,21 @@ public class TransactionResult implements XdrElement {
             decodedTransactionResultResult.results[i] = OperationResult.decode(stream);
           }
           break;
-        default:
+        case txTOO_EARLY:
+        case txTOO_LATE:
+        case txMISSING_OPERATION:
+        case txBAD_SEQ:
+        case txBAD_AUTH:
+        case txINSUFFICIENT_BALANCE:
+        case txNO_ACCOUNT:
+        case txINSUFFICIENT_FEE:
+        case txBAD_AUTH_EXTRA:
+        case txINTERNAL_ERROR:
+        case txNOT_SUPPORTED:
+        case txBAD_SPONSORSHIP:
+        case txBAD_MIN_SEQ_AGE_OR_GAP:
+        case txMALFORMED:
+        case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
           break;
       }
       return decodedTransactionResultResult;

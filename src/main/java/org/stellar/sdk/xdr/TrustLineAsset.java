@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -98,9 +100,9 @@ public class TrustLineAsset implements XdrElement {
     public TrustLineAsset build() {
       TrustLineAsset val = new TrustLineAsset();
       val.setDiscriminant(discriminant);
-      val.setAlphaNum4(alphaNum4);
-      val.setAlphaNum12(alphaNum12);
-      val.setLiquidityPoolID(liquidityPoolID);
+      val.setAlphaNum4(this.alphaNum4);
+      val.setAlphaNum12(this.alphaNum12);
+      val.setLiquidityPoolID(this.liquidityPoolID);
       return val;
     }
   }

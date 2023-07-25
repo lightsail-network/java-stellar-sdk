@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -87,8 +89,8 @@ public class AlphaNum12 implements XdrElement {
 
     public AlphaNum12 build() {
       AlphaNum12 val = new AlphaNum12();
-      val.setAssetCode(assetCode);
-      val.setIssuer(issuer);
+      val.setAssetCode(this.assetCode);
+      val.setIssuer(this.issuer);
       return val;
     }
   }

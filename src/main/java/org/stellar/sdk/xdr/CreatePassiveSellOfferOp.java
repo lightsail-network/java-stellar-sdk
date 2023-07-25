@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -128,10 +130,10 @@ public class CreatePassiveSellOfferOp implements XdrElement {
 
     public CreatePassiveSellOfferOp build() {
       CreatePassiveSellOfferOp val = new CreatePassiveSellOfferOp();
-      val.setSelling(selling);
-      val.setBuying(buying);
-      val.setAmount(amount);
-      val.setPrice(price);
+      val.setSelling(this.selling);
+      val.setBuying(this.buying);
+      val.setAmount(this.amount);
+      val.setPrice(this.price);
       return val;
     }
   }

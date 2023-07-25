@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -129,10 +131,10 @@ public class SetTrustLineFlagsOp implements XdrElement {
 
     public SetTrustLineFlagsOp build() {
       SetTrustLineFlagsOp val = new SetTrustLineFlagsOp();
-      val.setTrustor(trustor);
-      val.setAsset(asset);
-      val.setClearFlags(clearFlags);
-      val.setSetFlags(setFlags);
+      val.setTrustor(this.trustor);
+      val.setAsset(this.asset);
+      val.setClearFlags(this.clearFlags);
+      val.setSetFlags(this.setFlags);
       return val;
     }
   }

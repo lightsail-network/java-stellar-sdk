@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -35,6 +37,7 @@ import java.util.Arrays;
 //      case txBAD_SPONSORSHIP:
 //      case txBAD_MIN_SEQ_AGE_OR_GAP:
 //      case txMALFORMED:
+//      case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
 //          void;
 //      }
 //      result;
@@ -141,9 +144,9 @@ public class InnerTransactionResult implements XdrElement {
 
     public InnerTransactionResult build() {
       InnerTransactionResult val = new InnerTransactionResult();
-      val.setFeeCharged(feeCharged);
-      val.setResult(result);
-      val.setExt(ext);
+      val.setFeeCharged(this.feeCharged);
+      val.setResult(this.result);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -188,7 +191,7 @@ public class InnerTransactionResult implements XdrElement {
       public InnerTransactionResultResult build() {
         InnerTransactionResultResult val = new InnerTransactionResultResult();
         val.setDiscriminant(discriminant);
-        val.setResults(results);
+        val.setResults(this.results);
         return val;
       }
     }
@@ -223,6 +226,7 @@ public class InnerTransactionResult implements XdrElement {
         case txBAD_SPONSORSHIP:
         case txBAD_MIN_SEQ_AGE_OR_GAP:
         case txMALFORMED:
+        case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
           break;
       }
     }
@@ -260,6 +264,7 @@ public class InnerTransactionResult implements XdrElement {
         case txBAD_SPONSORSHIP:
         case txBAD_MIN_SEQ_AGE_OR_GAP:
         case txMALFORMED:
+        case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
           break;
       }
       return decodedInnerTransactionResultResult;

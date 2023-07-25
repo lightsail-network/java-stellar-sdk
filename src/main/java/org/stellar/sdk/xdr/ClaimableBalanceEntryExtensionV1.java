@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -97,8 +99,8 @@ public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
 
     public ClaimableBalanceEntryExtensionV1 build() {
       ClaimableBalanceEntryExtensionV1 val = new ClaimableBalanceEntryExtensionV1();
-      val.setExt(ext);
-      val.setFlags(flags);
+      val.setExt(this.ext);
+      val.setFlags(this.flags);
       return val;
     }
   }

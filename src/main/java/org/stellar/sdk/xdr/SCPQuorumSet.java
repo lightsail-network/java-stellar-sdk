@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -125,9 +127,9 @@ public class SCPQuorumSet implements XdrElement {
 
     public SCPQuorumSet build() {
       SCPQuorumSet val = new SCPQuorumSet();
-      val.setThreshold(threshold);
-      val.setValidators(validators);
-      val.setInnerSets(innerSets);
+      val.setThreshold(this.threshold);
+      val.setValidators(this.validators);
+      val.setInnerSets(this.innerSets);
       return val;
     }
   }

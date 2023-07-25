@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -107,9 +109,9 @@ public class ClawbackOp implements XdrElement {
 
     public ClawbackOp build() {
       ClawbackOp val = new ClawbackOp();
-      val.setAsset(asset);
-      val.setFrom(from);
-      val.setAmount(amount);
+      val.setAsset(this.asset);
+      val.setFrom(this.from);
+      val.setAmount(this.amount);
       return val;
     }
   }

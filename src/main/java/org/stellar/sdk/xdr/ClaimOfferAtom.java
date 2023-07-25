@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -178,12 +180,12 @@ public class ClaimOfferAtom implements XdrElement {
 
     public ClaimOfferAtom build() {
       ClaimOfferAtom val = new ClaimOfferAtom();
-      val.setSellerID(sellerID);
-      val.setOfferID(offerID);
-      val.setAssetSold(assetSold);
-      val.setAmountSold(amountSold);
-      val.setAssetBought(assetBought);
-      val.setAmountBought(amountBought);
+      val.setSellerID(this.sellerID);
+      val.setOfferID(this.offerID);
+      val.setAssetSold(this.assetSold);
+      val.setAmountSold(this.amountSold);
+      val.setAssetBought(this.assetBought);
+      val.setAmountBought(this.amountBought);
       return val;
     }
   }

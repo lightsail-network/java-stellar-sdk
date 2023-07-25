@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -86,8 +88,8 @@ public class DontHave implements XdrElement {
 
     public DontHave build() {
       DontHave val = new DontHave();
-      val.setType(type);
-      val.setReqHash(reqHash);
+      val.setType(this.type);
+      val.setReqHash(this.reqHash);
       return val;
     }
   }

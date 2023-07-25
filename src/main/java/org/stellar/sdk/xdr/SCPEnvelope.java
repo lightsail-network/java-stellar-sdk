@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -87,8 +89,8 @@ public class SCPEnvelope implements XdrElement {
 
     public SCPEnvelope build() {
       SCPEnvelope val = new SCPEnvelope();
-      val.setStatement(statement);
-      val.setSignature(signature);
+      val.setStatement(this.statement);
+      val.setSignature(this.signature);
       return val;
     }
   }

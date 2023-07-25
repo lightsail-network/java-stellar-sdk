@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -11,7 +13,11 @@ import java.io.IOException;
 //  {
 //      DISABLE_LIQUIDITY_POOL_TRADING_FLAG = 0x1,
 //      DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG = 0x2,
-//      DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG = 0x4
+//      DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG = 0x4,
+//      DISABLE_CONTRACT_CREATE = 0x8,
+//      DISABLE_CONTRACT_UPDATE = 0x10,
+//      DISABLE_CONTRACT_REMOVE = 0x20,
+//      DISABLE_CONTRACT_INVOKE = 0x40
 //  };
 
 //  ===========================================================================
@@ -19,6 +25,10 @@ public enum LedgerHeaderFlags implements XdrElement {
   DISABLE_LIQUIDITY_POOL_TRADING_FLAG(1),
   DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG(2),
   DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG(4),
+  DISABLE_CONTRACT_CREATE(8),
+  DISABLE_CONTRACT_UPDATE(16),
+  DISABLE_CONTRACT_REMOVE(32),
+  DISABLE_CONTRACT_INVOKE(64),
   ;
   private int mValue;
 
@@ -39,6 +49,14 @@ public enum LedgerHeaderFlags implements XdrElement {
         return DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG;
       case 4:
         return DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG;
+      case 8:
+        return DISABLE_CONTRACT_CREATE;
+      case 16:
+        return DISABLE_CONTRACT_UPDATE;
+      case 32:
+        return DISABLE_CONTRACT_REMOVE;
+      case 64:
+        return DISABLE_CONTRACT_INVOKE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

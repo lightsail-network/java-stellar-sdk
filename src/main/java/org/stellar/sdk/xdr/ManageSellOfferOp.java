@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -149,11 +151,11 @@ public class ManageSellOfferOp implements XdrElement {
 
     public ManageSellOfferOp build() {
       ManageSellOfferOp val = new ManageSellOfferOp();
-      val.setSelling(selling);
-      val.setBuying(buying);
-      val.setAmount(amount);
-      val.setPrice(price);
-      val.setOfferID(offerID);
+      val.setSelling(this.selling);
+      val.setBuying(this.buying);
+      val.setAmount(this.amount);
+      val.setPrice(this.price);
+      val.setOfferID(this.offerID);
       return val;
     }
   }

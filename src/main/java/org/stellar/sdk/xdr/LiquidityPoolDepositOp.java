@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -149,11 +151,11 @@ public class LiquidityPoolDepositOp implements XdrElement {
 
     public LiquidityPoolDepositOp build() {
       LiquidityPoolDepositOp val = new LiquidityPoolDepositOp();
-      val.setLiquidityPoolID(liquidityPoolID);
-      val.setMaxAmountA(maxAmountA);
-      val.setMaxAmountB(maxAmountB);
-      val.setMinPrice(minPrice);
-      val.setMaxPrice(maxPrice);
+      val.setLiquidityPoolID(this.liquidityPoolID);
+      val.setMaxAmountA(this.maxAmountA);
+      val.setMaxAmountB(this.maxAmountB);
+      val.setMinPrice(this.minPrice);
+      val.setMaxPrice(this.maxPrice);
       return val;
     }
   }

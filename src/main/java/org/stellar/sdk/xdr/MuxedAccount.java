@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -77,8 +79,8 @@ public class MuxedAccount implements XdrElement {
     public MuxedAccount build() {
       MuxedAccount val = new MuxedAccount();
       val.setDiscriminant(discriminant);
-      val.setEd25519(ed25519);
-      val.setMed25519(med25519);
+      val.setEd25519(this.ed25519);
+      val.setMed25519(this.med25519);
       return val;
     }
   }
@@ -206,8 +208,8 @@ public class MuxedAccount implements XdrElement {
 
       public MuxedAccountMed25519 build() {
         MuxedAccountMed25519 val = new MuxedAccountMed25519();
-        val.setId(id);
-        val.setEd25519(ed25519);
+        val.setId(this.id);
+        val.setEd25519(this.ed25519);
         return val;
       }
     }

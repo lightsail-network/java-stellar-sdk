@@ -14,6 +14,9 @@ typedef int int32;
 typedef unsigned hyper uint64;
 typedef hyper int64;
 
+typedef uint64 TimePoint;
+typedef uint64 Duration;
+
 // An ExtensionPoint is always marshaled as a 32-bit 0 value.  At a
 // later point, it can be replaced by a different union so as to
 // extend a structure.
@@ -79,6 +82,7 @@ typedef opaque Signature<64>;
 typedef opaque SignatureHint[4];
 
 typedef PublicKey NodeID;
+typedef PublicKey AccountID;
 
 struct Curve25519Secret
 {

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -289,16 +291,16 @@ public class AccountEntry implements XdrElement {
 
     public AccountEntry build() {
       AccountEntry val = new AccountEntry();
-      val.setAccountID(accountID);
-      val.setBalance(balance);
-      val.setSeqNum(seqNum);
-      val.setNumSubEntries(numSubEntries);
-      val.setInflationDest(inflationDest);
-      val.setFlags(flags);
-      val.setHomeDomain(homeDomain);
-      val.setThresholds(thresholds);
-      val.setSigners(signers);
-      val.setExt(ext);
+      val.setAccountID(this.accountID);
+      val.setBalance(this.balance);
+      val.setSeqNum(this.seqNum);
+      val.setNumSubEntries(this.numSubEntries);
+      val.setInflationDest(this.inflationDest);
+      val.setFlags(this.flags);
+      val.setHomeDomain(this.homeDomain);
+      val.setThresholds(this.thresholds);
+      val.setSigners(this.signers);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -343,7 +345,7 @@ public class AccountEntry implements XdrElement {
       public AccountEntryExt build() {
         AccountEntryExt val = new AccountEntryExt();
         val.setDiscriminant(discriminant);
-        val.setV1(v1);
+        val.setV1(this.v1);
         return val;
       }
     }

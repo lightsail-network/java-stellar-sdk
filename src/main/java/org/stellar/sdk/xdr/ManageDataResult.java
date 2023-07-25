@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -12,7 +14,10 @@ import java.io.IOException;
 //  {
 //  case MANAGE_DATA_SUCCESS:
 //      void;
-//  default:
+//  case MANAGE_DATA_NOT_SUPPORTED_YET:
+//  case MANAGE_DATA_NAME_NOT_FOUND:
+//  case MANAGE_DATA_LOW_RESERVE:
+//  case MANAGE_DATA_INVALID_NAME:
 //      void;
 //  };
 
@@ -53,7 +58,10 @@ public class ManageDataResult implements XdrElement {
     switch (encodedManageDataResult.getDiscriminant()) {
       case MANAGE_DATA_SUCCESS:
         break;
-      default:
+      case MANAGE_DATA_NOT_SUPPORTED_YET:
+      case MANAGE_DATA_NAME_NOT_FOUND:
+      case MANAGE_DATA_LOW_RESERVE:
+      case MANAGE_DATA_INVALID_NAME:
         break;
     }
   }
@@ -69,7 +77,10 @@ public class ManageDataResult implements XdrElement {
     switch (decodedManageDataResult.getDiscriminant()) {
       case MANAGE_DATA_SUCCESS:
         break;
-      default:
+      case MANAGE_DATA_NOT_SUPPORTED_YET:
+      case MANAGE_DATA_NAME_NOT_FOUND:
+      case MANAGE_DATA_LOW_RESERVE:
+      case MANAGE_DATA_INVALID_NAME:
         break;
     }
     return decodedManageDataResult;

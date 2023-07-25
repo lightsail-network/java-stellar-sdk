@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -96,8 +98,8 @@ public class LedgerSCPMessages implements XdrElement {
 
     public LedgerSCPMessages build() {
       LedgerSCPMessages val = new LedgerSCPMessages();
-      val.setLedgerSeq(ledgerSeq);
-      val.setMessages(messages);
+      val.setLedgerSeq(this.ledgerSeq);
+      val.setMessages(this.messages);
       return val;
     }
   }

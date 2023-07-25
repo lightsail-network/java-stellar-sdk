@@ -24,38 +24,9 @@ import org.stellar.sdk.xdr.XdrDataOutputStream;
 class StrKey {
 
   public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
-
-  public enum VersionByte {
-    ACCOUNT_ID((byte) (6 << 3)), // G
-    MUXED((byte) (12 << 3)), // M
-    SEED((byte) (18 << 3)), // S
-    PRE_AUTH_TX((byte) (19 << 3)), // T
-    SHA256_HASH((byte) (23 << 3)), // X
-    SIGNED_PAYLOAD((byte) (15 << 3)), // P
-
-    CONTRACT((byte) (2 << 3)); // C
-
-    private final byte value;
-
-    VersionByte(byte value) {
-      this.value = value;
-    }
-
-    public int getValue() {
-      return value;
-    }
-
-    public static Optional<VersionByte> findByValue(byte value) {
-      for (VersionByte versionByte : values()) {
-        if (value == versionByte.value) {
-          return Optional.of(versionByte);
-        }
-      }
-      return Optional.absent();
-    }
-  }
-
-  private static BaseEncoding base32Encoding = BaseEncoding.base32().upperCase().omitPadding();
+  private static final byte[] b32Table = decodingTable();
+  private static final BaseEncoding base32Encoding =
+      BaseEncoding.base32().upperCase().omitPadding();
 
   public static String encodeContractId(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
@@ -237,6 +208,36 @@ class StrKey {
     return decodeCheck(VersionByte.SHA256_HASH, data.toCharArray());
   }
 
+  /**
+   * Checks validity of Stellar account ID (G...).
+   *
+   * @param accountID the account ID to check
+   * @return true if the given Stellar account ID is a valid Stellar account ID, false otherwise
+   */
+  public static boolean isValidStellarAccountId(String accountID) {
+    try {
+      decodeStellarAccountId(accountID);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * Checks validity of contract (C...) address.
+   *
+   * @param contractId the contract ID to check
+   * @return true if the given contract ID is a valid contract ID, false otherwise
+   */
+  public static boolean isValidContractId(String contractId) {
+    try {
+      decodeContractId(contractId);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   protected static char[] encodeCheck(VersionByte versionByte, byte[] data) {
     try {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -356,8 +357,6 @@ class StrKey {
     return new byte[] {(byte) crc, (byte) (crc >>> 8)};
   }
 
-  private static final byte[] b32Table = decodingTable();
-
   private static byte[] decodingTable() {
     byte[] table = new byte[256];
     for (int i = 0; i < 256; i++) {
@@ -365,8 +364,38 @@ class StrKey {
     }
     String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     for (int i = 0; i < alphabet.length(); i++) {
-      table[(int) alphabet.charAt(i)] = (byte) i;
+      table[alphabet.charAt(i)] = (byte) i;
     }
     return table;
+  }
+
+  public enum VersionByte {
+    ACCOUNT_ID((byte) (6 << 3)), // G
+    MUXED((byte) (12 << 3)), // M
+    SEED((byte) (18 << 3)), // S
+    PRE_AUTH_TX((byte) (19 << 3)), // T
+    SHA256_HASH((byte) (23 << 3)), // X
+    SIGNED_PAYLOAD((byte) (15 << 3)), // P
+
+    CONTRACT((byte) (2 << 3)); // C
+
+    private final byte value;
+
+    VersionByte(byte value) {
+      this.value = value;
+    }
+
+    public static Optional<VersionByte> findByValue(byte value) {
+      for (VersionByte versionByte : values()) {
+        if (value == versionByte.value) {
+          return Optional.of(versionByte);
+        }
+      }
+      return Optional.absent();
+    }
+
+    public int getValue() {
+      return value;
+    }
   }
 }

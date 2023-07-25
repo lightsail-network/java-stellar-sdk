@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -85,8 +87,8 @@ public class Price implements XdrElement {
 
     public Price build() {
       Price val = new Price();
-      val.setN(n);
-      val.setD(d);
+      val.setN(this.n);
+      val.setD(this.d);
       return val;
     }
   }

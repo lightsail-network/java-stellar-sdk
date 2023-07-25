@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -235,15 +237,15 @@ public class Hello implements XdrElement {
 
     public Hello build() {
       Hello val = new Hello();
-      val.setLedgerVersion(ledgerVersion);
-      val.setOverlayVersion(overlayVersion);
-      val.setOverlayMinVersion(overlayMinVersion);
-      val.setNetworkID(networkID);
-      val.setVersionStr(versionStr);
-      val.setListeningPort(listeningPort);
-      val.setPeerID(peerID);
-      val.setCert(cert);
-      val.setNonce(nonce);
+      val.setLedgerVersion(this.ledgerVersion);
+      val.setOverlayVersion(this.overlayVersion);
+      val.setOverlayMinVersion(this.overlayMinVersion);
+      val.setNetworkID(this.networkID);
+      val.setVersionStr(this.versionStr);
+      val.setListeningPort(this.listeningPort);
+      val.setPeerID(this.peerID);
+      val.setCert(this.cert);
+      val.setNonce(this.nonce);
       return val;
     }
   }

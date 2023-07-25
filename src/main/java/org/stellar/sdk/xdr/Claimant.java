@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -59,7 +61,7 @@ public class Claimant implements XdrElement {
     public Claimant build() {
       Claimant val = new Claimant();
       val.setDiscriminant(discriminant);
-      val.setV0(v0);
+      val.setV0(this.v0);
       return val;
     }
   }
@@ -179,8 +181,8 @@ public class Claimant implements XdrElement {
 
       public ClaimantV0 build() {
         ClaimantV0 val = new ClaimantV0();
-        val.setDestination(destination);
-        val.setPredicate(predicate);
+        val.setDestination(this.destination);
+        val.setPredicate(this.predicate);
         return val;
       }
     }

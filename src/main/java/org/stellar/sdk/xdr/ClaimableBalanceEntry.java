@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -174,11 +176,11 @@ public class ClaimableBalanceEntry implements XdrElement {
 
     public ClaimableBalanceEntry build() {
       ClaimableBalanceEntry val = new ClaimableBalanceEntry();
-      val.setBalanceID(balanceID);
-      val.setClaimants(claimants);
-      val.setAsset(asset);
-      val.setAmount(amount);
-      val.setExt(ext);
+      val.setBalanceID(this.balanceID);
+      val.setClaimants(this.claimants);
+      val.setAsset(this.asset);
+      val.setAmount(this.amount);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -223,7 +225,7 @@ public class ClaimableBalanceEntry implements XdrElement {
       public ClaimableBalanceEntryExt build() {
         ClaimableBalanceEntryExt val = new ClaimableBalanceEntryExt();
         val.setDiscriminant(discriminant);
-        val.setV1(v1);
+        val.setV1(this.v1);
         return val;
       }
     }

@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -88,8 +90,8 @@ public class LedgerCloseValueSignature implements XdrElement {
 
     public LedgerCloseValueSignature build() {
       LedgerCloseValueSignature val = new LedgerCloseValueSignature();
-      val.setNodeID(nodeID);
-      val.setSignature(signature);
+      val.setNodeID(this.nodeID);
+      val.setSignature(this.signature);
       return val;
     }
   }

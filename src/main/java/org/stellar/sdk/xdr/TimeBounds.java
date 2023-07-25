@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -86,8 +88,8 @@ public class TimeBounds implements XdrElement {
 
     public TimeBounds build() {
       TimeBounds val = new TimeBounds();
-      val.setMinTime(minTime);
-      val.setMaxTime(maxTime);
+      val.setMinTime(this.minTime);
+      val.setMaxTime(this.maxTime);
       return val;
     }
   }

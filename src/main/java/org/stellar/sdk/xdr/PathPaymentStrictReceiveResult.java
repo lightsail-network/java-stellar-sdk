@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,9 +20,20 @@ import java.util.Arrays;
 //          ClaimAtom offers<>;
 //          SimplePaymentResult last;
 //      } success;
+//  case PATH_PAYMENT_STRICT_RECEIVE_MALFORMED:
+//  case PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED:
+//  case PATH_PAYMENT_STRICT_RECEIVE_SRC_NO_TRUST:
+//  case PATH_PAYMENT_STRICT_RECEIVE_SRC_NOT_AUTHORIZED:
+//  case PATH_PAYMENT_STRICT_RECEIVE_NO_DESTINATION:
+//  case PATH_PAYMENT_STRICT_RECEIVE_NO_TRUST:
+//  case PATH_PAYMENT_STRICT_RECEIVE_NOT_AUTHORIZED:
+//  case PATH_PAYMENT_STRICT_RECEIVE_LINE_FULL:
+//      void;
 //  case PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER:
 //      Asset noIssuer; // the asset that caused the error
-//  default:
+//  case PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS:
+//  case PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF:
+//  case PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX:
 //      void;
 //  };
 
@@ -81,8 +94,8 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
     public PathPaymentStrictReceiveResult build() {
       PathPaymentStrictReceiveResult val = new PathPaymentStrictReceiveResult();
       val.setDiscriminant(discriminant);
-      val.setSuccess(success);
-      val.setNoIssuer(noIssuer);
+      val.setSuccess(this.success);
+      val.setNoIssuer(this.noIssuer);
       return val;
     }
   }
@@ -99,10 +112,21 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
         PathPaymentStrictReceiveResultSuccess.encode(
             stream, encodedPathPaymentStrictReceiveResult.success);
         break;
+      case PATH_PAYMENT_STRICT_RECEIVE_MALFORMED:
+      case PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED:
+      case PATH_PAYMENT_STRICT_RECEIVE_SRC_NO_TRUST:
+      case PATH_PAYMENT_STRICT_RECEIVE_SRC_NOT_AUTHORIZED:
+      case PATH_PAYMENT_STRICT_RECEIVE_NO_DESTINATION:
+      case PATH_PAYMENT_STRICT_RECEIVE_NO_TRUST:
+      case PATH_PAYMENT_STRICT_RECEIVE_NOT_AUTHORIZED:
+      case PATH_PAYMENT_STRICT_RECEIVE_LINE_FULL:
+        break;
       case PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER:
         Asset.encode(stream, encodedPathPaymentStrictReceiveResult.noIssuer);
         break;
-      default:
+      case PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS:
+      case PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF:
+      case PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX:
         break;
     }
   }
@@ -123,10 +147,21 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
         decodedPathPaymentStrictReceiveResult.success =
             PathPaymentStrictReceiveResultSuccess.decode(stream);
         break;
+      case PATH_PAYMENT_STRICT_RECEIVE_MALFORMED:
+      case PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED:
+      case PATH_PAYMENT_STRICT_RECEIVE_SRC_NO_TRUST:
+      case PATH_PAYMENT_STRICT_RECEIVE_SRC_NOT_AUTHORIZED:
+      case PATH_PAYMENT_STRICT_RECEIVE_NO_DESTINATION:
+      case PATH_PAYMENT_STRICT_RECEIVE_NO_TRUST:
+      case PATH_PAYMENT_STRICT_RECEIVE_NOT_AUTHORIZED:
+      case PATH_PAYMENT_STRICT_RECEIVE_LINE_FULL:
+        break;
       case PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER:
         decodedPathPaymentStrictReceiveResult.noIssuer = Asset.decode(stream);
         break;
-      default:
+      case PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS:
+      case PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF:
+      case PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX:
         break;
     }
     return decodedPathPaymentStrictReceiveResult;
@@ -232,8 +267,8 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
 
       public PathPaymentStrictReceiveResultSuccess build() {
         PathPaymentStrictReceiveResultSuccess val = new PathPaymentStrictReceiveResultSuccess();
-        val.setOffers(offers);
-        val.setLast(last);
+        val.setOffers(this.offers);
+        val.setLast(this.last);
         return val;
       }
     }

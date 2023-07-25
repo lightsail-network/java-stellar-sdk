@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Arrays;
@@ -391,21 +393,21 @@ public class LedgerHeader implements XdrElement {
 
     public LedgerHeader build() {
       LedgerHeader val = new LedgerHeader();
-      val.setLedgerVersion(ledgerVersion);
-      val.setPreviousLedgerHash(previousLedgerHash);
-      val.setScpValue(scpValue);
-      val.setTxSetResultHash(txSetResultHash);
-      val.setBucketListHash(bucketListHash);
-      val.setLedgerSeq(ledgerSeq);
-      val.setTotalCoins(totalCoins);
-      val.setFeePool(feePool);
-      val.setInflationSeq(inflationSeq);
-      val.setIdPool(idPool);
-      val.setBaseFee(baseFee);
-      val.setBaseReserve(baseReserve);
-      val.setMaxTxSetSize(maxTxSetSize);
-      val.setSkipList(skipList);
-      val.setExt(ext);
+      val.setLedgerVersion(this.ledgerVersion);
+      val.setPreviousLedgerHash(this.previousLedgerHash);
+      val.setScpValue(this.scpValue);
+      val.setTxSetResultHash(this.txSetResultHash);
+      val.setBucketListHash(this.bucketListHash);
+      val.setLedgerSeq(this.ledgerSeq);
+      val.setTotalCoins(this.totalCoins);
+      val.setFeePool(this.feePool);
+      val.setInflationSeq(this.inflationSeq);
+      val.setIdPool(this.idPool);
+      val.setBaseFee(this.baseFee);
+      val.setBaseReserve(this.baseReserve);
+      val.setMaxTxSetSize(this.maxTxSetSize);
+      val.setSkipList(this.skipList);
+      val.setExt(this.ext);
       return val;
     }
   }
@@ -450,7 +452,7 @@ public class LedgerHeader implements XdrElement {
       public LedgerHeaderExt build() {
         LedgerHeaderExt val = new LedgerHeaderExt();
         val.setDiscriminant(discriminant);
-        val.setV1(v1);
+        val.setV1(this.v1);
         return val;
       }
     }

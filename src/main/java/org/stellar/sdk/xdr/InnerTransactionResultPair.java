@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -88,8 +90,8 @@ public class InnerTransactionResultPair implements XdrElement {
 
     public InnerTransactionResultPair build() {
       InnerTransactionResultPair val = new InnerTransactionResultPair();
-      val.setTransactionHash(transactionHash);
-      val.setResult(result);
+      val.setTransactionHash(this.transactionHash);
+      val.setResult(this.result);
       return val;
     }
   }

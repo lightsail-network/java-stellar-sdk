@@ -1,22 +1,13 @@
 package org.stellar.sdk;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import org.junit.Test;
-import org.stellar.sdk.xdr.Int64;
-import org.stellar.sdk.xdr.PreconditionsV2;
-import org.stellar.sdk.xdr.SequenceNumber;
-import org.stellar.sdk.xdr.SignerKey;
-import org.stellar.sdk.xdr.SignerKeyType;
-import org.stellar.sdk.xdr.Uint256;
-import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.*;
 
 public class TransactionBuilderTest {
 
@@ -66,6 +57,10 @@ public class TransactionBuilderTest {
     assertEquals(
         "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQLJxvwao6eyNHaDX2QFhgdqlxJUqkpgA03UUOqf4DwOXSV9GN4ZWut2uzRuza4DWyVGBEHmmnQX+SQKFo0Sb/wA=",
         transaction.toEnvelopeXdrBase64());
+
+    org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
+        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder().discriminant(0).build();
+    assertEquals(expectedExt, transaction.toEnvelopeXdr().getV1().getTx().getExt());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
     XdrDataInputStream is =
@@ -994,5 +989,144 @@ public class TransactionBuilderTest {
     } catch (NullPointerException e) {
       assertTrue(e.getMessage().contains("Network cannot be null"));
     }
+  }
+
+  @Test
+  public void voidBuilderSorobanDataXdrString() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination =
+        KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    LedgerKey ledgerKey =
+        new LedgerKey.Builder()
+            .discriminant(LedgerEntryType.ACCOUNT)
+            .account(
+                new LedgerKey.LedgerKeyAccount.Builder()
+                    .accountID(
+                        KeyPair.fromAccountId(
+                                "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
+                            .getXdrAccountId())
+                    .build())
+            .build();
+    SorobanTransactionData sorobanData =
+        new SorobanTransactionData.Builder()
+            .resources(
+                new SorobanResources.Builder()
+                    .footprint(
+                        new LedgerFootprint.Builder()
+                            .readOnly(new LedgerKey[] {ledgerKey})
+                            .readWrite(new LedgerKey[] {})
+                            .build())
+                    .extendedMetaDataSizeBytes(new Uint32(216))
+                    .readBytes(new Uint32(699))
+                    .writeBytes(new Uint32(0))
+                    .instructions(new Uint32(34567))
+                    .build())
+            .refundableFee(new Int64(100L))
+            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .build();
+
+    long sequenceNumber = 2908908335136768L;
+    Account account = new Account(source.getAccountId(), sequenceNumber);
+    Transaction transaction =
+        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+            .addOperation(
+                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+            .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
+            .setBaseFee(Transaction.MIN_BASE_FEE)
+            .setSorobanData(sorobanData)
+            .build();
+
+    assertEquals(sorobanData, transaction.getSorobanData());
+    org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
+        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder()
+            .discriminant(1)
+            .sorobanData(sorobanData)
+            .build();
+    assertEquals(expectedExt, transaction.toEnvelopeXdr().getV1().getTx().getExt());
+  }
+
+  @Test
+  public void voidBuilderSorobanDataXdrObject() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination =
+        KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    LedgerKey ledgerKey =
+        new LedgerKey.Builder()
+            .discriminant(LedgerEntryType.ACCOUNT)
+            .account(
+                new LedgerKey.LedgerKeyAccount.Builder()
+                    .accountID(
+                        KeyPair.fromAccountId(
+                                "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
+                            .getXdrAccountId())
+                    .build())
+            .build();
+    SorobanTransactionData sorobanData =
+        new SorobanTransactionData.Builder()
+            .resources(
+                new SorobanResources.Builder()
+                    .footprint(
+                        new LedgerFootprint.Builder()
+                            .readOnly(new LedgerKey[] {ledgerKey})
+                            .readWrite(new LedgerKey[] {})
+                            .build())
+                    .extendedMetaDataSizeBytes(new Uint32(216))
+                    .readBytes(new Uint32(699))
+                    .writeBytes(new Uint32(0))
+                    .instructions(new Uint32(34567))
+                    .build())
+            .refundableFee(new Int64(100L))
+            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .build();
+    String sorobanDataString = Util.xdrToSorobanTransactionData(sorobanData);
+
+    CreateContractArgs createContractArgs =
+        new CreateContractArgs.Builder()
+            .contractIDPreimage(
+                new ContractIDPreimage.Builder()
+                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+                    .fromAddress(
+                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                            .address(
+                                new Address(
+                                        "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
+                                    .toSCAddress())
+                            .salt(new Uint256(new byte[32]))
+                            .build())
+                    .build())
+            .executable(
+                new ContractExecutable.Builder()
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .build())
+            .build();
+    HostFunction hostFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
+            .createContract(createContractArgs)
+            .build();
+    InvokeHostFunctionOperation invokeHostFunctionOperation =
+        InvokeHostFunctionOperation.builder().hostFunction(hostFunction).build();
+
+    long sequenceNumber = 2908908335136768L;
+    Account account = new Account(source.getAccountId(), sequenceNumber);
+    Transaction transaction =
+        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+            .addOperation(invokeHostFunctionOperation)
+            .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
+            .setBaseFee(Transaction.MIN_BASE_FEE)
+            .setSorobanData(sorobanDataString)
+            .build();
+
+    assertEquals(sorobanData, transaction.getSorobanData());
+    org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
+        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder()
+            .discriminant(1)
+            .sorobanData(sorobanData)
+            .build();
+    assertEquals(expectedExt, transaction.toEnvelopeXdr().getV1().getTx().getExt());
   }
 }

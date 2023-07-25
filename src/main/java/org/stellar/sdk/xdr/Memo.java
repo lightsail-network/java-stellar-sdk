@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -111,10 +113,10 @@ public class Memo implements XdrElement {
     public Memo build() {
       Memo val = new Memo();
       val.setDiscriminant(discriminant);
-      val.setText(text);
-      val.setId(id);
-      val.setHash(hash);
-      val.setRetHash(retHash);
+      val.setText(this.text);
+      val.setId(this.id);
+      val.setHash(this.hash);
+      val.setRetHash(this.retHash);
       return val;
     }
   }

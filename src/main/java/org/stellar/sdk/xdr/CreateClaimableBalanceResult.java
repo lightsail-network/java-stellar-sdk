@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -13,7 +15,11 @@ import java.io.IOException;
 //  {
 //  case CREATE_CLAIMABLE_BALANCE_SUCCESS:
 //      ClaimableBalanceID balanceID;
-//  default:
+//  case CREATE_CLAIMABLE_BALANCE_MALFORMED:
+//  case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
+//  case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
+//  case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+//  case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
 //      void;
 //  };
 
@@ -58,7 +64,7 @@ public class CreateClaimableBalanceResult implements XdrElement {
     public CreateClaimableBalanceResult build() {
       CreateClaimableBalanceResult val = new CreateClaimableBalanceResult();
       val.setDiscriminant(discriminant);
-      val.setBalanceID(balanceID);
+      val.setBalanceID(this.balanceID);
       return val;
     }
   }
@@ -73,7 +79,11 @@ public class CreateClaimableBalanceResult implements XdrElement {
       case CREATE_CLAIMABLE_BALANCE_SUCCESS:
         ClaimableBalanceID.encode(stream, encodedCreateClaimableBalanceResult.balanceID);
         break;
-      default:
+      case CREATE_CLAIMABLE_BALANCE_MALFORMED:
+      case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
+      case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
+      case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+      case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
         break;
     }
   }
@@ -91,7 +101,11 @@ public class CreateClaimableBalanceResult implements XdrElement {
       case CREATE_CLAIMABLE_BALANCE_SUCCESS:
         decodedCreateClaimableBalanceResult.balanceID = ClaimableBalanceID.decode(stream);
         break;
-      default:
+      case CREATE_CLAIMABLE_BALANCE_MALFORMED:
+      case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
+      case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
+      case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+      case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
         break;
     }
     return decodedCreateClaimableBalanceResult;

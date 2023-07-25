@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -13,7 +15,9 @@ import java.io.IOException;
 //  {
 //  case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
 //      void;
-//  default:
+//  case CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+//  case CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER:
+//  case CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
 //      void;
 //  };
 
@@ -56,7 +60,9 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
     switch (encodedClawbackClaimableBalanceResult.getDiscriminant()) {
       case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
         break;
-      default:
+      case CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+      case CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER:
+      case CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
         break;
     }
   }
@@ -75,7 +81,9 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
     switch (decodedClawbackClaimableBalanceResult.getDiscriminant()) {
       case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
         break;
-      default:
+      case CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+      case CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER:
+      case CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
         break;
     }
     return decodedClawbackClaimableBalanceResult;

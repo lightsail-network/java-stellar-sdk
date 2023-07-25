@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -109,9 +111,9 @@ public class AllowTrustOp implements XdrElement {
 
     public AllowTrustOp build() {
       AllowTrustOp val = new AllowTrustOp();
-      val.setTrustor(trustor);
-      val.setAsset(asset);
-      val.setAuthorize(authorize);
+      val.setTrustor(this.trustor);
+      val.setAsset(this.asset);
+      val.setAuthorize(this.authorize);
       return val;
     }
   }

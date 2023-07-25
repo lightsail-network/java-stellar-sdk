@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -86,8 +88,8 @@ public class DecoratedSignature implements XdrElement {
 
     public DecoratedSignature build() {
       DecoratedSignature val = new DecoratedSignature();
-      val.setHint(hint);
-      val.setSignature(signature);
+      val.setHint(this.hint);
+      val.setSignature(this.signature);
       return val;
     }
   }

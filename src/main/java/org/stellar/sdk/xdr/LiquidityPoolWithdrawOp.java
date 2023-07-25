@@ -3,6 +3,8 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
 import java.io.IOException;
 
@@ -128,10 +130,10 @@ public class LiquidityPoolWithdrawOp implements XdrElement {
 
     public LiquidityPoolWithdrawOp build() {
       LiquidityPoolWithdrawOp val = new LiquidityPoolWithdrawOp();
-      val.setLiquidityPoolID(liquidityPoolID);
-      val.setAmount(amount);
-      val.setMinAmountA(minAmountA);
-      val.setMinAmountB(minAmountB);
+      val.setLiquidityPoolID(this.liquidityPoolID);
+      val.setAmount(this.amount);
+      val.setMinAmountA(this.minAmountA);
+      val.setMinAmountB(this.minAmountB);
       return val;
     }
   }
