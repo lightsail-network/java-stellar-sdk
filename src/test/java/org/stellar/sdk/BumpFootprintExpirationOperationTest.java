@@ -88,4 +88,24 @@ public class BumpFootprintExpirationOperationTest {
         BumpFootprintExpirationOperation.builder().ledgersToExpire(123).build();
     Assert.assertNotEquals(operation1, operation2);
   }
+
+  @Test
+  public void testLedgersToExpireIsInvalidThrows() {
+    try {
+      BumpFootprintExpirationOperation.builder().ledgersToExpire(-1).build();
+      Assert.fail();
+    } catch (IllegalArgumentException e) {
+      Assert.assertEquals("ledgersToExpire isn't a ledger quantity (uint32)", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testLedgersToExpireIsNullThrows() {
+    try {
+      BumpFootprintExpirationOperation.builder().build();
+      Assert.fail();
+    } catch (NullPointerException e) {
+      Assert.assertEquals("ledgersToExpire is marked non-null but is null", e.getMessage());
+    }
+  }
 }

@@ -1,6 +1,8 @@
 package org.stellar.sdk;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.xdr.ExtensionPoint;
@@ -18,10 +20,8 @@ import org.stellar.sdk.xdr.RestoreFootprintOp;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Value
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RestoreFootprintOperation extends Operation {
-
-  private RestoreFootprintOperation() {}
-
   /**
    * Constructs a new RestoreFootprintOperation object from the XDR representation of the {@link
    * RestoreFootprintOperation}.
