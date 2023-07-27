@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.RestoreFootprintOp;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#restore-footprint"
+ * href="https://github.com/stellar/go/blob/7ff6ffae29d278f979fcd6c6bed8cd0d4b4d2e08/txnbuild/restore_footprint.go#L8-L11"
  * target="_blank">RestoreFootprint</a> operation.
  *
  * @see <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations"

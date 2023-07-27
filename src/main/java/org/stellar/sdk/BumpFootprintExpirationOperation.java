@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.Uint32;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#bump-footprint-expiration"
+ * href="https://github.com/stellar/go/blob/7ff6ffae29d278f979fcd6c6bed8cd0d4b4d2e08/txnbuild/bump_footprint_expiration.go#L8-L12"
  * target="_blank">BumpFootprintExpiration</a> operation.
  *
  * <p>Bump the expiration of a footprint (read and written ledger keys).

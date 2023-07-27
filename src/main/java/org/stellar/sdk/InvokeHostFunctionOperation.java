@@ -14,7 +14,7 @@ import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#invoke-host-function"
+ * href="https://github.com/stellar/go/blob/7ff6ffae29d278f979fcd6c6bed8cd0d4b4d2e08/txnbuild/invoke_host_function.go#L8-L13"
  * target="_blank">InvokeHostFunction</a> operation.
  *
  * @see <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations"
