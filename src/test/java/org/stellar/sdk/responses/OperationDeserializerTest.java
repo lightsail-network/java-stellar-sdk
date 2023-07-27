@@ -2006,7 +2006,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(
         operation.getTransactionHash(),
         "c452cd9d1ff9692499d0d2aa2f8e898b8c38025300c0f293f4a2adde7295c82f");
-    assertEquals(operation.getLedgers_to_expire().longValue(), 2343241);
+    assertEquals(operation.getLedgersToExpire().longValue(), 2343241);
   }
 
   @Test

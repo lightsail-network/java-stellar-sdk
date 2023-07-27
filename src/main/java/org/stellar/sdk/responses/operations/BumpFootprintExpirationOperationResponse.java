@@ -15,13 +15,13 @@ import com.google.gson.annotations.SerializedName;
  */
 public class BumpFootprintExpirationOperationResponse extends OperationResponse {
   @SerializedName("ledgers_to_expire")
-  private final Long ledgers_to_expire;
+  private final Long ledgersToExpire;
 
   public BumpFootprintExpirationOperationResponse(Long ledgersToExpire) {
-    ledgers_to_expire = ledgersToExpire;
+    this.ledgersToExpire = ledgersToExpire;
   }
 
-  public Long getLedgers_to_expire() {
-    return ledgers_to_expire;
+  public Long getLedgersToExpire() {
+    return ledgersToExpire;
   }
 }
