@@ -209,6 +209,12 @@ public abstract class Operation {
       case INVOKE_HOST_FUNCTION:
         operation = InvokeHostFunctionOperation.fromXdr(body.getInvokeHostFunctionOp());
         break;
+      case BUMP_FOOTPRINT_EXPIRATION:
+        operation = BumpFootprintExpirationOperation.fromXdr(body.getBumpFootprintExpirationOp());
+        break;
+      case RESTORE_FOOTPRINT:
+        operation = RestoreFootprintOperation.fromXdr(body.getRestoreFootprintOp());
+        break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }
