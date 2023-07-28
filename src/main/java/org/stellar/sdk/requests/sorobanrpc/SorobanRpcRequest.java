@@ -10,12 +10,9 @@ public class SorobanRpcRequest<T> {
   @SerializedName("jsonrpc")
   String jsonRpc = "2.0";
 
-  @SerializedName("id")
   String id;
 
-  @SerializedName("method")
   String method;
 
-  @SerializedName("params")
   T params;
 }

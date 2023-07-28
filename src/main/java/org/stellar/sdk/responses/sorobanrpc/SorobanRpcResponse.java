@@ -12,25 +12,19 @@ public class SorobanRpcResponse<T> extends Response {
   @SerializedName("jsonrpc")
   private final String jsonRpc;
 
-  @SerializedName("id")
   private final String id;
 
-  @SerializedName("result")
   private final T result;
 
-  @SerializedName("error")
   private final Error error;
 
   @AllArgsConstructor
   @Value
   public static class Error {
-    @SerializedName("code")
     Integer code;
 
-    @SerializedName("message")
     String message;
 
-    @SerializedName("data")
     String data;
   }
 }

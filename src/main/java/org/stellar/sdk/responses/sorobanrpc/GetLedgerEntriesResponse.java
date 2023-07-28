@@ -8,19 +8,15 @@ import lombok.Value;
 @AllArgsConstructor
 @Value
 public class GetLedgerEntriesResponse {
-  @SerializedName("entries")
   ImmutableList<LedgerEntryResult> entries;
 
-  @SerializedName("latestLedger")
   Long latestLedger;
 
   @AllArgsConstructor
   @Value
   public static class LedgerEntryResult {
-    @SerializedName("key")
     String key;
 
-    @SerializedName("xdr")
     String xdr;
 
     @SerializedName("lastModifiedLedgerSeq")
