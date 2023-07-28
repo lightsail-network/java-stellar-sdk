@@ -3,7 +3,7 @@ package org.stellar.sdk.requests.sorobanrpc;
 import lombok.Getter;
 
 @Getter
-public class SorobanRpcErrorResponse extends RuntimeException {
+public class SorobanRpcErrorResponse extends Exception {
   private final Integer code;
 
   private final String message;

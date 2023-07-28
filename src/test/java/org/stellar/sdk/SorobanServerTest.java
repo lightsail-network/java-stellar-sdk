@@ -11,13 +11,14 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.stellar.sdk.requests.sorobanrpc.GetTransactionRequest;
+import org.stellar.sdk.requests.sorobanrpc.SorobanRpcErrorResponse;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
 
 public class SorobanServerTest {
   private final Gson gson = new Gson();
 
   @Test
-  public void testGetTransaction() throws IOException {
+  public void testGetTransaction() throws IOException, SorobanRpcErrorResponse {
     String hash = "06dd9ee70bf93bbfe219e2b31363ab5a0361cc6285328592e4d3d1fed4c9025c";
     String json =
         "{\n"
