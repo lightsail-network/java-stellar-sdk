@@ -417,7 +417,8 @@ public class SorobanServer implements Closeable {
               .build();
     }
 
-    SorobanTransactionData sorobanData = Util.sorobanTransactionDataToXDR(simulateTransactionResponse.getTransactionData());
+    SorobanTransactionData sorobanData =
+        Util.sorobanTransactionDataToXDR(simulateTransactionResponse.getTransactionData());
 
     return new Transaction(
         transaction.getAccountConverter(),
