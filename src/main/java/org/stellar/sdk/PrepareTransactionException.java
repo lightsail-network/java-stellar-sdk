@@ -1,22 +1,17 @@
 package org.stellar.sdk;
 
-public class PrepareTransactionException extends RuntimeException {
-  public PrepareTransactionException() {}
+import lombok.Getter;
+import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 
-  public PrepareTransactionException(String message) {
-    super(message);
-  }
-
-  public PrepareTransactionException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  public PrepareTransactionException(Throwable cause) {
-    super(cause);
-  }
+/** Exception thrown when preparing a transaction failed. */
+@Getter
+public class PrepareTransactionException extends Exception {
+  // The response returned by the Soroban-RPC instance when simulating the transaction.
+  private final SimulateTransactionResponse simulateTransactionResponse;
 
   public PrepareTransactionException(
-      String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-    super(message, cause, enableSuppression, writableStackTrace);
+      String message, SimulateTransactionResponse simulateTransactionResponse) {
+    super(message);
+    this.simulateTransactionResponse = simulateTransactionResponse;
   }
 }

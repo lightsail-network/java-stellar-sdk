@@ -333,25 +333,30 @@ public class SorobanServer implements Closeable {
    * @param transaction The transaction to prepare. It should include exactly one operation, which
    *     must be one of {@link InvokeHostFunctionOperation}, {@link
    *     BumpFootprintExpirationOperation}, or {@link RestoreFootprintOperation}. Any provided
-   *     footprint will be ignored.
+   *     footprint will be ignored. You can use {@link Transaction#isSorobanTransaction()} to check
+   *     if a transaction is a Soroban transaction.
    * @return Returns a copy of the {@link Transaction}, with the expected authorizations (in the
    *     case of invocation) and ledger footprint added. The transaction fee will also automatically
    *     be padded with the contract's minimum resource fees discovered from the simulation.
+   * @throws PrepareTransactionException If preparing the transaction fails.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
    *     problem or timeout. Because networks can fail during an exchange, it is possible that the
    *     remote server accepted the request before the failure.
    * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
    */
   public Transaction prepareTransaction(Transaction transaction)
-      throws IOException, SorobanRpcErrorResponse {
+      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
     SimulateTransactionResponse simulateTransactionResponse = this.simulateTransaction(transaction);
     if (simulateTransactionResponse.getError() != null) {
-      throw new PrepareTransactionException(simulateTransactionResponse.getError());
+      throw new PrepareTransactionException(
+          "simulation transaction failed, the response contains error information.",
+          simulateTransactionResponse);
     }
     if (simulateTransactionResponse.getResults() == null
         || simulateTransactionResponse.getResults().size() != 1) {
       throw new PrepareTransactionException(
-          "unexpected response: " + simulateTransactionResponse.getResults());
+          "simulation transaction failed, the \"Results\" field contains multiple records, but it should only contain one.",
+          simulateTransactionResponse);
     }
     return assembleTransaction(transaction, simulateTransactionResponse);
   }
@@ -380,10 +385,10 @@ public class SorobanServer implements Closeable {
 
   private Transaction assembleTransaction(
       Transaction transaction, SimulateTransactionResponse simulateTransactionResponse) {
-    if (!isSorobanTransaction(transaction)) {
+    if (!transaction.isSorobanTransaction()) {
       throw new IllegalArgumentException(
           "unsupported transaction: must contain exactly one InvokeHostFunctionOperation, BumpSequenceOperation, or RestoreFootprintOperation");
-    } // TODO: Throw the appropriate exception.
+    }
 
     SimulateTransactionResponse.SimulateHostFunctionResult simulateHostFunctionResult =
         simulateTransactionResponse.getResults().get(0);
@@ -489,17 +494,6 @@ public class SorobanServer implements Closeable {
       throw new IllegalArgumentException(
           "invalid ledgerEntryData: " + sorobanAuthorizationEntry, e);
     }
-  }
-
-  private static boolean isSorobanTransaction(Transaction transaction) {
-    if (transaction.getOperations().length != 1) {
-      return false;
-    }
-
-    Operation op = transaction.getOperations()[0];
-    return op instanceof InvokeHostFunctionOperation
-        || op instanceof BumpSequenceOperation
-        || op instanceof RestoreFootprintOperation;
   }
 
   /**
