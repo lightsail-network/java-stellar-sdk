@@ -7,7 +7,7 @@ import lombok.Singular;
 import lombok.Value;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class GetEventsRequest {
   @NonNull String startLedger;
 
@@ -17,14 +17,14 @@ public class GetEventsRequest {
   PaginationOptions pagination;
 
   @Value
-  @Builder
+  @Builder(toBuilder = true)
   public static class PaginationOptions {
     Long limit;
 
     String cursor;
   }
 
-  @Builder
+  @Builder(toBuilder = true)
   @Value
   public static class EventFilter {
     EventFilterType type;

@@ -47,6 +47,7 @@ import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerKey;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
+import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
@@ -416,6 +417,8 @@ public class SorobanServer implements Closeable {
               .build();
     }
 
+    SorobanTransactionData sorobanData = Util.sorobanTransactionDataToXDR(simulateTransactionResponse.getTransactionData());
+
     return new Transaction(
         transaction.getAccountConverter(),
         transaction.getSourceAccount(),
@@ -424,7 +427,7 @@ public class SorobanServer implements Closeable {
         new Operation[] {operation},
         transaction.getMemo(),
         transaction.getPreconditions(),
-        transaction.getSorobanData(),
+        sorobanData,
         transaction.getNetwork());
   }
 
