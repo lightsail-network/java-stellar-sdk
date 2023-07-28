@@ -15,8 +15,8 @@ public class Network {
   public static final Network TESTNET = new Network("Test SDF Network ; September 2015");
   public static final Network FUTURENET = new Network("Test SDF Future Network ; October 2022");
   public static final Network STANDALONE = new Network("Standalone Network ; February 2017");
-  public static final Network SANDBOX = new Network("Local Sandbox Stellar Network ; September 2022");
-
+  public static final Network SANDBOX =
+      new Network("Local Sandbox Stellar Network ; September 2022");
 
   private final String networkPassphrase;
 
