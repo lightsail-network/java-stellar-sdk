@@ -149,7 +149,7 @@ public class SorobanServer implements Closeable {
    *     Address. e.g. "CCJZ5DGASBWQXR5MPFCJXMBI333XE5U3FSJTNQU7RIKE3P5GN2K2WYD5"
    * @param key The key of the contract data to load.
    * @param durability The "durability keyspace" that this ledger key belongs to, which is either
-   *     {@link Durability#TEMPORARY} or '{@link Durability#PERSISTENT}'.
+   *     {@link Durability#TEMPORARY} or {@link Durability#PERSISTENT}.
    * @return A {@link GetLedgerEntriesResponse.LedgerEntryResult} object containing the ledger entry
    *     result.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
@@ -203,7 +203,7 @@ public class SorobanServer implements Closeable {
    * <p>Allows you to directly inspect the current state of contracts, contract's code, or any other
    * ledger entries.
    *
-   * @param keys The key of the contract data to load.
+   * @param keys The key of the contract data to load, at least one key must be provided.
    * @return A {@link GetLedgerEntriesResponse} object containing the current values.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
    *     problem or timeout. Because networks can fail during an exchange, it is possible that the
@@ -212,6 +212,10 @@ public class SorobanServer implements Closeable {
    */
   public GetLedgerEntriesResponse getLedgerEntries(Collection<LedgerKey> keys)
       throws IOException, SorobanRpcErrorResponse {
+    if (keys.isEmpty()) {
+      throw new IllegalArgumentException("At least one key must be provided.");
+    }
+
     List<String> xdrKeys =
         keys.stream().map(SorobanServer::ledgerKeyToXdrBase64).collect(Collectors.toList());
     GetLedgerEntriesRequest params = new GetLedgerEntriesRequest(xdrKeys);
