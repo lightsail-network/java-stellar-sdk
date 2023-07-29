@@ -12,7 +12,9 @@ import com.google.gson.reflect.TypeToken;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import okhttp3.HttpUrl;
@@ -39,16 +41,31 @@ import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.ContractEntryBodyType;
+import org.stellar.sdk.xdr.ContractExecutable;
+import org.stellar.sdk.xdr.ContractExecutableType;
+import org.stellar.sdk.xdr.ContractIDPreimage;
+import org.stellar.sdk.xdr.ContractIDPreimageType;
+import org.stellar.sdk.xdr.CreateContractArgs;
+import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.HostFunction;
 import org.stellar.sdk.xdr.HostFunctionType;
+import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerEntryType;
+import org.stellar.sdk.xdr.LedgerFootprint;
 import org.stellar.sdk.xdr.LedgerKey;
 import org.stellar.sdk.xdr.SCSymbol;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.SCVec;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
+import org.stellar.sdk.xdr.SorobanAuthorizedFunction;
+import org.stellar.sdk.xdr.SorobanAuthorizedFunctionType;
+import org.stellar.sdk.xdr.SorobanAuthorizedInvocation;
+import org.stellar.sdk.xdr.SorobanCredentials;
+import org.stellar.sdk.xdr.SorobanCredentialsType;
+import org.stellar.sdk.xdr.SorobanResources;
 import org.stellar.sdk.xdr.SorobanTransactionData;
+import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
@@ -709,7 +726,7 @@ public class SorobanServerTest {
             + "    }\n"
             + "}";
 
-    Transaction transaction = buildSorobanTransaction();
+    Transaction transaction = buildSorobanTransaction(null, null);
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -793,7 +810,7 @@ public class SorobanServerTest {
             + "    }\n"
             + "}";
 
-    Transaction transaction = buildSorobanTransaction();
+    Transaction transaction = buildSorobanTransaction(null, null);
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -855,6 +872,379 @@ public class SorobanServerTest {
   }
 
   @Test
+  public void testPrepareTransactionWithSorobanData()
+      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+    // soroban data will be overwritten
+    String json =
+        "{\n"
+            + "    \"jsonrpc\": \"2.0\",\n"
+            + "    \"id\": \"e1fabdcdf0244a2a9adfab94d7748b6c\",\n"
+            + "    \"result\": {\n"
+            + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=\",\n"
+            + "        \"events\": [\n"
+            + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "        ],\n"
+            + "        \"minResourceFee\": \"58595\",\n"
+            + "        \"results\": [\n"
+            + "            {\n"
+            + "                \"auth\": [\n"
+            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
+            + "                ],\n"
+            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "            }\n"
+            + "        ],\n"
+            + "        \"cost\": {\n"
+            + "            \"cpuInsns\": \"1240100\",\n"
+            + "            \"memBytes\": \"161637\"\n"
+            + "        },\n"
+            + "        \"latestLedger\": \"1479\"\n"
+            + "    }\n"
+            + "}";
+    LedgerKey ledgerKey =
+        new LedgerKey.Builder()
+            .discriminant(LedgerEntryType.ACCOUNT)
+            .account(
+                new LedgerKey.LedgerKeyAccount.Builder()
+                    .accountID(
+                        KeyPair.fromAccountId(
+                                "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
+                            .getXdrAccountId())
+                    .build())
+            .build();
+    SorobanTransactionData originSorobanData =
+        new SorobanTransactionData.Builder()
+            .resources(
+                new SorobanResources.Builder()
+                    .footprint(
+                        new LedgerFootprint.Builder()
+                            .readOnly(new LedgerKey[] {ledgerKey})
+                            .readWrite(new LedgerKey[] {})
+                            .build())
+                    .extendedMetaDataSizeBytes(new Uint32(216))
+                    .readBytes(new Uint32(699))
+                    .writeBytes(new Uint32(0))
+                    .instructions(new Uint32(34567))
+                    .build())
+            .refundableFee(new Int64(100L))
+            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .build();
+    Transaction transaction = buildSorobanTransaction(originSorobanData, null);
+
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    Transaction newTx = server.prepareTransaction(transaction);
+
+    SorobanTransactionData sorobanData =
+        Util.sorobanTransactionDataToXDR(
+            "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.builder()
+            .hostFunction(
+                ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
+            .sourceAccount(transaction.getOperations()[0].getSourceAccount())
+            .auth(
+                Collections.singletonList(
+                    sorobanAuthorizationEntryFromXdrBase64(
+                        "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
+            .build();
+    Transaction expectedTx =
+        new Transaction(
+            transaction.getAccountConverter(),
+            transaction.getSourceAccount(),
+            transaction.getFee() + 58595L,
+            transaction.getSequenceNumber(),
+            new Operation[] {operation},
+            transaction.getMemo(),
+            transaction.getPreconditions(),
+            sorobanData,
+            transaction.getNetwork());
+    assertEquals(expectedTx, newTx);
+
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testPrepareTransactionWithAuth()
+      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+    // origin auth will not be overwritten
+    String json =
+        "{\n"
+            + "    \"jsonrpc\": \"2.0\",\n"
+            + "    \"id\": \"e1fabdcdf0244a2a9adfab94d7748b6c\",\n"
+            + "    \"result\": {\n"
+            + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=\",\n"
+            + "        \"events\": [\n"
+            + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "        ],\n"
+            + "        \"minResourceFee\": \"58595\",\n"
+            + "        \"results\": [\n"
+            + "            {\n"
+            + "                \"auth\": [\n"
+            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
+            + "                ],\n"
+            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "            }\n"
+            + "        ],\n"
+            + "        \"cost\": {\n"
+            + "            \"cpuInsns\": \"1240100\",\n"
+            + "            \"memBytes\": \"161637\"\n"
+            + "        },\n"
+            + "        \"latestLedger\": \"1479\"\n"
+            + "    }\n"
+            + "}";
+    CreateContractArgs createContractArgs =
+        new CreateContractArgs.Builder()
+            .contractIDPreimage(
+                new ContractIDPreimage.Builder()
+                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+                    .fromAddress(
+                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                            .address(
+                                new Address(
+                                        "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
+                                    .toSCAddress())
+                            .salt(new Uint256(new byte[32]))
+                            .build())
+                    .build())
+            .executable(
+                new ContractExecutable.Builder()
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .build())
+            .build();
+    SorobanAuthorizationEntry auth =
+        new SorobanAuthorizationEntry.Builder()
+            .credentials(
+                new SorobanCredentials.Builder()
+                    .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)
+                    .build())
+            .rootInvocation(
+                new SorobanAuthorizedInvocation.Builder()
+                    .subInvocations(new SorobanAuthorizedInvocation[] {})
+                    .function(
+                        new SorobanAuthorizedFunction.Builder()
+                            .discriminant(
+                                SorobanAuthorizedFunctionType
+                                    .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN)
+                            .createContractHostFn(createContractArgs)
+                            .build())
+                    .build())
+            .build();
+
+    Transaction transaction = buildSorobanTransaction(null, Collections.singletonList(auth));
+
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    Transaction newTx = server.prepareTransaction(transaction);
+
+    SorobanTransactionData sorobanData =
+        Util.sorobanTransactionDataToXDR(
+            "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.builder()
+            .hostFunction(
+                ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
+            .sourceAccount(transaction.getOperations()[0].getSourceAccount())
+            .auth(
+                Arrays.asList(
+                    auth,
+                    sorobanAuthorizationEntryFromXdrBase64(
+                        "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
+            .build();
+    Transaction expectedTx =
+        new Transaction(
+            transaction.getAccountConverter(),
+            transaction.getSourceAccount(),
+            transaction.getFee() + 58595L,
+            transaction.getSequenceNumber(),
+            new Operation[] {operation},
+            transaction.getMemo(),
+            transaction.getPreconditions(),
+            sorobanData,
+            transaction.getNetwork());
+    assertEquals(expectedTx, newTx);
+
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test(expected = PrepareTransactionException.class)
+  public void testPrepareTransactionWithPrepareTransactionExceptionThrowsErrorResponse()
+      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+    String json =
+        "{\n"
+            + "    \"jsonrpc\": \"2.0\",\n"
+            + "    \"id\": \"7b6ada2bdec04ee28147d1557aadc3cf\",\n"
+            + "    \"result\": {\n"
+            + "        \"error\": \"HostError: Error(WasmVm, MissingValue)\\n\\nEvent log (newest first):\\n   0: [Diagnostic Event] contract:607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0, topics:[error, Error(WasmVm, MissingValue)], data:[\\\"invoking unknown export\\\", increment]\\n   1: [Diagnostic Event] topics:[fn_call, Bytes(607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0), increment], data:[Address(Account(58b7c4a2c8f297aa8f3d2471281fdfccecafe48e5663313ec18e12a73eca98a1)), 10]\\n\\nBacktrace (newest first):\\n   0: soroban_env_host::vm::Vm::invoke_function_raw\\n   1: soroban_env_host::host::frame::<impl soroban_env_host::host::Host>::call_n_internal\\n   2: soroban_env_host::host::frame::<impl soroban_env_host::host::Host>::invoke_function\\n   3: preflight::preflight_invoke_hf_op::{{closure}}\\n   4: preflight::catch_preflight_panic\\n   5: _cgo_a3255893d7fd_Cfunc_preflight_invoke_hf_op\\n             at /tmp/go-build/cgo-gcc-prolog:99:11\\n   6: runtime.asmcgocall\\n             at ./runtime/asm_amd64.s:848\\n\\n\",\n"
+            + "        \"transactionData\": \"\",\n"
+            + "        \"events\": null,\n"
+            + "        \"minResourceFee\": \"0\",\n"
+            + "        \"cost\": {\n"
+            + "            \"cpuInsns\": \"0\",\n"
+            + "            \"memBytes\": \"0\"\n"
+            + "        },\n"
+            + "        \"latestLedger\": \"898\"\n"
+            + "    }\n"
+            + "}";
+
+    Transaction transaction = buildSorobanTransaction(null, null);
+
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    server.prepareTransaction(transaction);
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test(expected = PrepareTransactionException.class)
+  public void testPrepareTransactionWithPrepareTransactionExceptionThrowsErrorInvalidResults()
+      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+    String json =
+        "{\n"
+            + "    \"jsonrpc\": \"2.0\",\n"
+            + "    \"id\": \"e1fabdcdf0244a2a9adfab94d7748b6c\",\n"
+            + "    \"result\": {\n"
+            + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=\",\n"
+            + "        \"events\": [\n"
+            + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "        ],\n"
+            + "        \"minResourceFee\": \"58595\",\n"
+            + "        \"results\": [\n"
+            + "            {\n"
+            + "                \"auth\": [\n"
+            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
+            + "                ],\n"
+            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "            },\n"
+            + "            {\n"
+            + "                \"auth\": [\n"
+            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
+            + "                ],\n"
+            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "            }\n"
+            + "        ],\n"
+            + "        \"cost\": {\n"
+            + "            \"cpuInsns\": \"1240100\",\n"
+            + "            \"memBytes\": \"161637\"\n"
+            + "        },\n"
+            + "        \"latestLedger\": \"1479\"\n"
+            + "    }\n"
+            + "}";
+
+    Transaction transaction = buildSorobanTransaction(null, null);
+
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    server.prepareTransaction(transaction);
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
   public void testSendTransaction()
       throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
     String json =
@@ -869,7 +1259,7 @@ public class SorobanServerTest {
             + "    }\n"
             + "}";
 
-    Transaction transaction = buildSorobanTransaction();
+    Transaction transaction = buildSorobanTransaction(null, null);
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -909,7 +1299,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testSorobanRpcErrorResponseThrow() throws IOException {
+  public void testSorobanRpcErrorResponseThrows() throws IOException {
     String json =
         "{\n"
             + "    \"jsonrpc\": \"2.0\",\n"
@@ -957,7 +1347,8 @@ public class SorobanServerTest {
     mockWebServer.close();
   }
 
-  private Transaction buildSorobanTransaction() {
+  private Transaction buildSorobanTransaction(
+      SorobanTransactionData sorobanData, Collection<SorobanAuthorizationEntry> auth) {
     String contractId = "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK";
     KeyPair txSubmitterKp =
         KeyPair.fromSecretSeed("SAAPYAPTTRZMCUZFPG3G66V4ZMHTK4TWA6NS7U4F7Z3IMUD52EK4DDEV");
@@ -965,6 +1356,10 @@ public class SorobanServerTest {
         KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
 
     TransactionBuilderAccount source = new Account(txSubmitterKp.getAccountId(), 6171868004355L);
+
+    if (auth == null) {
+      auth = new ArrayList<>();
+    }
 
     return new TransactionBuilder(AccountConverter.enableMuxed(), source, Network.STANDALONE)
         .setBaseFee(50000)
@@ -991,7 +1386,9 @@ public class SorobanServerTest {
                                       .build()
                                 }))
                         .build())
+                .auth(auth)
                 .build())
+        .setSorobanData(sorobanData)
         .build();
   }
 
