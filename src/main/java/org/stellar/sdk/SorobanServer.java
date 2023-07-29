@@ -369,7 +369,7 @@ public class SorobanServer implements Closeable {
     if (simulateTransactionResponse.getResults() == null
         || simulateTransactionResponse.getResults().size() != 1) {
       throw new PrepareTransactionException(
-          "simulation transaction failed, the \"Results\" field contains multiple records, but it should only contain one.",
+          "simulation transaction failed, the \"results\" field contains multiple records, but it should only contain one.",
           simulateTransactionResponse);
     }
     return assembleTransaction(transaction, simulateTransactionResponse);
