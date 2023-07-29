@@ -6,7 +6,12 @@ import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
-/** Response for JSON-RPC method simulateTransaction. */
+/**
+ * Response for JSON-RPC method simulateTransaction.
+ *
+ * @see <a href="https://soroban.stellar.org/api/methods/simulateTransaction#returns"
+ *     target="_blank">simulateTransaction documentation</a>
+ */
 @AllArgsConstructor
 @Value
 public class SimulateTransactionResponse {

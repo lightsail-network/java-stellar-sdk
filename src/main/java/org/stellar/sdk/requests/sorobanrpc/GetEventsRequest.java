@@ -6,6 +6,12 @@ import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
 
+/**
+ * Request for JSON-RPC method getEvents.
+ *
+ * @see <a href="https://soroban.stellar.org/api/methods/getEvents#parameters"
+ *     target="_blank">getEvents documentation</a>
+ */
 @Value
 @Builder(toBuilder = true)
 public class GetEventsRequest {

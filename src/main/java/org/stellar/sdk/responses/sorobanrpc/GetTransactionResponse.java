@@ -3,7 +3,12 @@ package org.stellar.sdk.responses.sorobanrpc;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
-/** Response for JSON-RPC method getTransaction. */
+/**
+ * Response for JSON-RPC method getTransaction.
+ *
+ * @see <a href="https://soroban.stellar.org/api/methods/getTransaction#returns"
+ *     target="_blank">getTransaction documentation</a>
+ */
 @AllArgsConstructor
 @Value
 public class GetTransactionResponse {
