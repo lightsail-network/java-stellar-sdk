@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
+/** Response for JSON-RPC method getLedgerEntries. */
 @AllArgsConstructor
 @Value
 public class GetLedgerEntriesResponse {

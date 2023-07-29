@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
 
+/** Response for JSON-RPC method getEvents. */
 @AllArgsConstructor
 @Value
 public class GetEventsResponse {

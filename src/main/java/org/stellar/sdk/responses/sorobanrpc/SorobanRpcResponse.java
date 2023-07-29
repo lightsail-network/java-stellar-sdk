@@ -6,6 +6,12 @@ import lombok.Getter;
 import lombok.Value;
 import org.stellar.sdk.responses.Response;
 
+/**
+ * Represent the response returned by Soroban-RPC.
+ *
+ * @see <a href="https://www.jsonrpc.org/specification#response_object" target="_blank">JSON-RPC 2.0
+ *     Specification - Response object<a>
+ */
 @AllArgsConstructor
 @Getter
 public class SorobanRpcResponse<T> extends Response {

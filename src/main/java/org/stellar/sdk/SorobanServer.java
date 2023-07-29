@@ -132,6 +132,8 @@ public class SorobanServer implements Closeable {
   /**
    * General node health check.
    *
+   * @see <a href="https://soroban.stellar.org/api/methods/getHealth" target="_blank">getHealth
+   *     documentation</a>
    * @return A {@link GetHealthResponse} object containing the health check result.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
    *     problem or timeout. Because networks can fail during an exchange, it is possible that the
@@ -204,6 +206,8 @@ public class SorobanServer implements Closeable {
    * <p>Allows you to directly inspect the current state of contracts, contract's code, or any other
    * ledger entries.
    *
+   * @see <a href="https://soroban.stellar.org/api/methods/getLedgerEntries"
+   *     target="_blank">getLedgerEntries documentation</a>
    * @param keys The key of the contract data to load, at least one key must be provided.
    * @return A {@link GetLedgerEntriesResponse} object containing the current values.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
@@ -232,6 +236,8 @@ public class SorobanServer implements Closeable {
    * <p>When submitting a transaction, client should poll this to tell when the transaction has
    * completed.
    *
+   * @see <a href="https://soroban.stellar.org/api/methods/getTransaction"
+   *     target="_blank">getTransaction documentation</a>
    * @param hash The hash of the transaction to check. Encoded as a hex string.
    * @return A {@link GetTransactionResponse} object containing the transaction status, result, and
    *     other details.
@@ -250,6 +256,8 @@ public class SorobanServer implements Closeable {
   /**
    * Fetches all events that match the given {@link GetEventsRequest}.
    *
+   * @see <a href="https://soroban.stellar.org/api/methods/getEvents" target="_blank">getEvents
+   *     documentation</a>
    * @param getEventsRequest The {@link GetEventsRequest} to use for the request.
    * @return A {@link GetEventsResponse} object containing the events that match the request.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
@@ -266,6 +274,8 @@ public class SorobanServer implements Closeable {
   /**
    * Fetches metadata about the network which Soroban-RPC is connected to.
    *
+   * @see <a href="https://soroban.stellar.org/api/methods/getNetwork" target="_blank">getNetwork
+   *     documentation</a>
    * @return A {@link GetNetworkResponse} object containing the network metadata.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
    *     problem or timeout. Because networks can fail during an exchange, it is possible that the
@@ -280,6 +290,8 @@ public class SorobanServer implements Closeable {
   /**
    * Fetches the latest ledger meta info from network which Soroban-RPC is connected to.
    *
+   * @see <a href="https://soroban.stellar.org/api/methods/getLatestLedger"
+   *     target="_blank">getLatestLedger documentation</a>
    * @return A {@link GetLatestLedgerResponse} object containing the latest ledger meta info.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
    *     problem or timeout. Because networks can fail during an exchange, it is possible that the
@@ -295,6 +307,8 @@ public class SorobanServer implements Closeable {
    * Submit a trial contract invocation to get back return values, expected ledger footprint,
    * expected authorizations, and expected costs.
    *
+   * @see <a href="https://soroban.stellar.org/api/methods/simulateTransaction"
+   *     target="_blank">simulateTransaction documentation</a>
    * @param transaction The transaction to simulate. It should include exactly one operation, which
    *     must be one of {@link InvokeHostFunctionOperation}, {@link
    *     BumpFootprintExpirationOperation}, or {@link RestoreFootprintOperation}. Any provided
@@ -368,6 +382,8 @@ public class SorobanServer implements Closeable {
    * validates the transaction and enqueues it. Clients should call {@link
    * SorobanServer#getTransaction} to learn about transaction's status.
    *
+   * @see <a href="https://soroban.stellar.org/api/methods/sendTransaction"
+   *     target="_blank">sendTransaction documentation</a>
    * @param transaction The transaction to submit.
    * @return A {@link SendTransactionResponse} object containing some details about the transaction
    *     that was submitted.

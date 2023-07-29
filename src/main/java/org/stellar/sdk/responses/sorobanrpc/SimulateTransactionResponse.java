@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
+/** Response for JSON-RPC method simulateTransaction. */
 @AllArgsConstructor
 @Value
 public class SimulateTransactionResponse {
