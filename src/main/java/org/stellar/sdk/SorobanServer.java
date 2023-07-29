@@ -55,7 +55,6 @@ import org.stellar.sdk.xdr.XdrDataOutputStream;
  * Main class used to connect to the Soroban-RPC instance and exposes an interface for requests to
  * that instance.
  */
-@SuppressWarnings("KotlinInternalInJava")
 public class SorobanServer implements Closeable {
   private static final int SUBMIT_TRANSACTION_TIMEOUT = 60; // seconds
   private static final int CONNECT_TIMEOUT = 10; // seconds
