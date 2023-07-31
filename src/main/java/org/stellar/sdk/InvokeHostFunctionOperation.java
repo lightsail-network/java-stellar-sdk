@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -245,9 +246,17 @@ public class InvokeHostFunctionOperation extends Operation {
             .sym(new SCSymbol(new XdrString(functionName)))
             .build();
 
-    List<SCVal> invokeContractParams = Arrays.asList(contractIdScVal, functionNameScVal);
+    List<SCVal> invokeContractParams =
+        new ArrayList<>(2 + (parameters != null ? parameters.size() : 0));
+    invokeContractParams.add(contractIdScVal);
+    invokeContractParams.add(functionNameScVal);
     if (parameters != null) {
-      invokeContractParams.addAll(parameters);
+      for (SCVal parameter : parameters) {
+        if (parameter == null) {
+          throw new IllegalArgumentException("Parameter list contains null element");
+        }
+        invokeContractParams.add(parameter);
+      }
     }
 
     HostFunction hostFunction =

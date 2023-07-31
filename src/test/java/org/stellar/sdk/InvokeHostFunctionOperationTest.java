@@ -1,10 +1,37 @@
 package org.stellar.sdk;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.xdr.ContractExecutable;
+import org.stellar.sdk.xdr.ContractExecutableType;
+import org.stellar.sdk.xdr.ContractIDPreimage;
+import org.stellar.sdk.xdr.ContractIDPreimageType;
+import org.stellar.sdk.xdr.CreateContractArgs;
+import org.stellar.sdk.xdr.Hash;
+import org.stellar.sdk.xdr.HostFunction;
+import org.stellar.sdk.xdr.HostFunctionType;
+import org.stellar.sdk.xdr.Int64;
+import org.stellar.sdk.xdr.SCSymbol;
+import org.stellar.sdk.xdr.SCVal;
+import org.stellar.sdk.xdr.SCValType;
+import org.stellar.sdk.xdr.SCVec;
+import org.stellar.sdk.xdr.SorobanAddressCredentials;
+import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
+import org.stellar.sdk.xdr.SorobanAuthorizedFunction;
+import org.stellar.sdk.xdr.SorobanAuthorizedFunctionType;
+import org.stellar.sdk.xdr.SorobanAuthorizedInvocation;
+import org.stellar.sdk.xdr.SorobanCredentials;
+import org.stellar.sdk.xdr.SorobanCredentialsType;
+import org.stellar.sdk.xdr.Uint256;
+import org.stellar.sdk.xdr.Uint32;
+import org.stellar.sdk.xdr.XdrString;
 
 public class InvokeHostFunctionOperationTest {
   CreateContractArgs createContractArgs =
@@ -254,5 +281,203 @@ public class InvokeHostFunctionOperationTest {
     InvokeHostFunctionOperation operation2 =
         InvokeHostFunctionOperation.builder().hostFunction(hostFunction).build();
     assertNotEquals(operation1, operation2);
+  }
+
+  @Test
+  public void testUploadContractWasmOperationBuilder() {
+    byte[] wasm = new byte[] {0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46};
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.uploadContractWasmOperationBuilder(wasm).build();
+    HostFunction expectedFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM)
+            .wasm(wasm)
+            .build();
+    assertEquals(operation.getHostFunction(), expectedFunction);
+    assertTrue(operation.getAuth().isEmpty());
+    assertNull(operation.getSourceAccount());
+  }
+
+  @Test
+  public void createContractOperationBuilderWithWasmIdString() {
+    byte[] wasmId =
+        new byte[] {
+          0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e,
+          0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d,
+          0x1e, 0x1f
+        };
+    String wasmIdString = Util.bytesToHex(wasmId);
+    byte[] salt = new byte[32];
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.createContractOperationBuilder(wasmIdString, address, salt)
+            .build();
+
+    CreateContractArgs createContractArgs =
+        new CreateContractArgs.Builder()
+            .contractIDPreimage(
+                new ContractIDPreimage.Builder()
+                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+                    .fromAddress(
+                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                            .address(address.toSCAddress())
+                            .salt(new Uint256(salt))
+                            .build())
+                    .build())
+            .executable(
+                new ContractExecutable.Builder()
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_WASM)
+                    .wasm_hash(new Hash(wasmId))
+                    .build())
+            .build();
+    HostFunction expectedFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
+            .createContract(createContractArgs)
+            .build();
+
+    assertEquals(operation.getHostFunction(), expectedFunction);
+    assertTrue(operation.getAuth().isEmpty());
+    assertNull(operation.getSourceAccount());
+  }
+
+  @Test
+  public void createContractOperationBuilderWithWasmIdBytes() {
+    byte[] wasmId =
+        new byte[] {
+          0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e,
+          0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d,
+          0x1e, 0x1f
+        };
+    byte[] salt = new byte[32];
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.createContractOperationBuilder(wasmId, address, salt).build();
+
+    CreateContractArgs createContractArgs =
+        new CreateContractArgs.Builder()
+            .contractIDPreimage(
+                new ContractIDPreimage.Builder()
+                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+                    .fromAddress(
+                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                            .address(address.toSCAddress())
+                            .salt(new Uint256(salt))
+                            .build())
+                    .build())
+            .executable(
+                new ContractExecutable.Builder()
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_WASM)
+                    .wasm_hash(new Hash(wasmId))
+                    .build())
+            .build();
+    HostFunction expectedFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
+            .createContract(createContractArgs)
+            .build();
+
+    assertEquals(operation.getHostFunction(), expectedFunction);
+    assertTrue(operation.getAuth().isEmpty());
+    assertNull(operation.getSourceAccount());
+  }
+
+  @Test
+  public void createTokenContractOperationBuilderWithAddress() {
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    byte[] salt = new byte[32];
+
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.createTokenContractOperationBuilder(address, salt).build();
+    CreateContractArgs createContractArgs =
+        new CreateContractArgs.Builder()
+            .contractIDPreimage(
+                new ContractIDPreimage.Builder()
+                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+                    .fromAddress(
+                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                            .address(address.toSCAddress())
+                            .salt(new Uint256(salt))
+                            .build())
+                    .build())
+            .executable(
+                new ContractExecutable.Builder()
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .build())
+            .build();
+    HostFunction expectedFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
+            .createContract(createContractArgs)
+            .build();
+
+    assertEquals(operation.getHostFunction(), expectedFunction);
+    assertTrue(operation.getAuth().isEmpty());
+    assertNull(operation.getSourceAccount());
+  }
+
+  @Test
+  public void createTokenContractOperationBuilderWithAsset() {
+    Asset asset =
+        new AssetTypeCreditAlphaNum4(
+            "CAT", "GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.createTokenContractOperationBuilder(asset).build();
+    CreateContractArgs createContractArgs =
+        new CreateContractArgs.Builder()
+            .contractIDPreimage(
+                new ContractIDPreimage.Builder()
+                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
+                    .fromAsset(asset.toXdr())
+                    .build())
+            .executable(
+                new ContractExecutable.Builder()
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .build())
+            .build();
+    HostFunction expectedFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
+            .createContract(createContractArgs)
+            .build();
+
+    assertEquals(operation.getHostFunction(), expectedFunction);
+    assertTrue(operation.getAuth().isEmpty());
+    assertNull(operation.getSourceAccount());
+  }
+
+  @Test
+  public void invokeContractFunctionOperationBuilder() {
+    String contractId = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
+    String funcName = "hello";
+    List<SCVal> parameters =
+        Collections.singletonList(
+            new SCVal.Builder()
+                .discriminant(SCValType.SCV_SYMBOL)
+                .sym(new SCSymbol(new XdrString("world")))
+                .build());
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.invokeContractFunctionOperationBuilder(
+                contractId, funcName, parameters)
+            .build();
+
+    SCVal contractIdScVal = new Address(contractId).toSCVal();
+    SCVal functionNameScVal =
+        new SCVal.Builder()
+            .discriminant(SCValType.SCV_SYMBOL)
+            .sym(new SCSymbol(new XdrString(funcName)))
+            .build();
+    SCVal paramScVal = parameters.get(0);
+    List<SCVal> invokeContractParams =
+        Arrays.asList(contractIdScVal, functionNameScVal, paramScVal);
+    HostFunction expectedFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
+            .invokeContract(new SCVec(invokeContractParams.toArray(new SCVal[0])))
+            .build();
+
+    assertEquals(operation.getHostFunction(), expectedFunction);
+    assertTrue(operation.getAuth().isEmpty());
+    assertNull(operation.getSourceAccount());
   }
 }
