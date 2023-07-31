@@ -296,6 +296,8 @@ public class InvokeHostFunctionOperationTest {
     assertEquals(operation.getHostFunction(), expectedFunction);
     assertTrue(operation.getAuth().isEmpty());
     assertNull(operation.getSourceAccount());
+    String expectedXdr = "AAAAAAAAABgAAAACAAAACAABAgM0RWZGAAAAAA==";
+    assertEquals(expectedXdr, operation.toXdrBase64());
   }
 
   @Test
@@ -344,6 +346,9 @@ public class InvokeHostFunctionOperationTest {
     assertEquals(operation.getHostFunction(), expectedFunction);
     assertTrue(operation.getAuth().isEmpty());
     assertNull(operation.getSourceAccount());
+    String expectedXdr =
+        "AAAAAAAAABgAAAABAAAAAAAAAAAAAAAADpSlTHKwTkavyS2ZqP0tUceDdV/MrSytoGRg185L/zgRMwIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAAAAAAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAAAAA=";
+    assertEquals(expectedXdr, operation.toXdrBase64());
   }
 
   @Test
@@ -390,13 +395,20 @@ public class InvokeHostFunctionOperationTest {
     assertEquals(operation.getHostFunction(), expectedFunction);
     assertTrue(operation.getAuth().isEmpty());
     assertNull(operation.getSourceAccount());
+    String expectedXdr =
+        "AAAAAAAAABgAAAABAAAAAAAAAAAAAAAADpSlTHKwTkavyS2ZqP0tUceDdV/MrSytoGRg185L/zgRMwIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAAAAAAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAAAAA=";
+    assertEquals(expectedXdr, operation.toXdrBase64());
   }
 
   @Test
   public void createTokenContractOperationBuilderWithAddress() {
     Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
-    byte[] salt = new byte[32];
-
+    byte[] salt =
+        new byte[] {
+          0x11, 0x33, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e,
+          0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d,
+          0x1e, 0x1f
+        };
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.createTokenContractOperationBuilder(address, salt).build();
     CreateContractArgs createContractArgs =
@@ -424,6 +436,9 @@ public class InvokeHostFunctionOperationTest {
     assertEquals(operation.getHostFunction(), expectedFunction);
     assertTrue(operation.getAuth().isEmpty());
     assertNull(operation.getSourceAccount());
+    String expectedXdr =
+        "AAAAAAAAABgAAAABAAAAAAAAAAAAAAAADpSlTHKwTkavyS2ZqP0tUceDdV/MrSytoGRg185L/zgRMwIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAAAAEAAAAA";
+    assertEquals(expectedXdr, operation.toXdrBase64());
   }
 
   @Test
@@ -454,6 +469,9 @@ public class InvokeHostFunctionOperationTest {
     assertEquals(operation.getHostFunction(), expectedFunction);
     assertTrue(operation.getAuth().isEmpty());
     assertNull(operation.getSourceAccount());
+    String expectedXdr =
+        "AAAAAAAAABgAAAABAAAAAQAAAAFDQVQAAAAAAA6UpUxysE5Gr8ktmaj9LVHHg3VfzK0sraBkYNfOS/84AAAAAQAAAAA=";
+    assertEquals(expectedXdr, operation.toXdrBase64());
   }
 
   @Test
@@ -489,5 +507,8 @@ public class InvokeHostFunctionOperationTest {
     assertEquals(operation.getHostFunction(), expectedFunction);
     assertTrue(operation.getAuth().isEmpty());
     assertNull(operation.getSourceAccount());
+    String expectedXdr =
+        "AAAAAAAAABgAAAAAAAAAAwAAABIAAAABPww0v5OtDZlx0EzMkPcFURyDiq2XNKSi+w16A/x/6JoAAAAPAAAABWhlbGxvAAAAAAAADwAAAAV3b3JsZAAAAAAAAAA=";
+    assertEquals(expectedXdr, operation.toXdrBase64());
   }
 }
