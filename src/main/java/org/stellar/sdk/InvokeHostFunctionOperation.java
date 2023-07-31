@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -19,8 +20,13 @@ import org.stellar.sdk.xdr.HostFunction;
 import org.stellar.sdk.xdr.HostFunctionType;
 import org.stellar.sdk.xdr.InvokeHostFunctionOp;
 import org.stellar.sdk.xdr.OperationType;
+import org.stellar.sdk.xdr.SCSymbol;
+import org.stellar.sdk.xdr.SCVal;
+import org.stellar.sdk.xdr.SCValType;
+import org.stellar.sdk.xdr.SCVec;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 import org.stellar.sdk.xdr.Uint256;
+import org.stellar.sdk.xdr.XdrString;
 
 /**
  * Represents <a
@@ -56,6 +62,14 @@ public class InvokeHostFunctionOperation extends Operation {
         .build();
   }
 
+  /**
+   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
+   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
+   * upload contract wasm.
+   *
+   * @param wasm The wasm bytes to upload.
+   * @return {@link InvokeHostFunctionOperationBuilder}
+   */
   public static InvokeHostFunctionOperationBuilder<?, ?> uploadContractWasmOperationBuilder(
       byte[] wasm) {
     HostFunction hostFunction =
@@ -66,12 +80,34 @@ public class InvokeHostFunctionOperation extends Operation {
     return builder().hostFunction(hostFunction);
   }
 
+  /**
+   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
+   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
+   * create contract.
+   *
+   * @param wasmId The hex-encoded wasm id to use for contract creation.
+   * @param address The address to use to derive the contract ID.
+   * @param salt The 32-byte salt to use to derive the contract ID, if null, a random salt will be
+   *     generated.
+   * @return {@link InvokeHostFunctionOperationBuilder}
+   */
   public static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
       String wasmId, Address address, @Nullable byte[] salt) {
     byte[] wasmIdBytes = Util.hexToBytes(wasmId);
     return createContractOperationBuilder(wasmIdBytes, address, salt);
   }
 
+  /**
+   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
+   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
+   * create contract.
+   *
+   * @param wasmId The wasm id to use for contract creation.
+   * @param address The address to use to derive the contract ID.
+   * @param salt The 32-byte salt to use to derive the contract ID, if null, a random salt will be
+   *     generated.
+   * @return {@link InvokeHostFunctionOperationBuilder}
+   */
   public static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
       byte[] wasmId, Address address, @Nullable byte[] salt) {
     if (salt == null) {
@@ -110,6 +146,14 @@ public class InvokeHostFunctionOperation extends Operation {
     return builder().hostFunction(hostFunction);
   }
 
+  /**
+   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
+   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
+   * create a token contract wrapping a classic asset.
+   *
+   * @param asset The classic asset to wrap.
+   * @return {@link InvokeHostFunctionOperationBuilder}
+   */
   public static InvokeHostFunctionOperationBuilder<?, ?> deployCreateTokenContractOperationBuilder(
       Asset asset) {
     CreateContractArgs createContractArgs =
@@ -132,6 +176,16 @@ public class InvokeHostFunctionOperation extends Operation {
     return builder().hostFunction(hostFunction);
   }
 
+  /**
+   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
+   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
+   * create a token contract wrapping a classic asset.
+   *
+   * @param address The address to use to derive the contract ID.
+   * @param salt The 32-byte salt to use to derive the contract ID, if null, a random salt will be
+   *     generated.
+   * @return {@link InvokeHostFunctionOperationBuilder}
+   */
   public static InvokeHostFunctionOperationBuilder<?, ?> deployCreateTokenContractOperationBuilder(
       Address address, @Nullable byte[] salt) {
     if (salt == null) {
@@ -161,6 +215,45 @@ public class InvokeHostFunctionOperation extends Operation {
         new HostFunction.Builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
+            .build();
+    return builder().hostFunction(hostFunction);
+  }
+
+  /**
+   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
+   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
+   * invoke a contract function.
+   *
+   * @see <a
+   *     href="https://soroban.stellar.org/docs/fundamentals-and-concepts/interacting-with-contracts"
+   *     target="_blank">Interacting with Contracts</a>
+   * @param contractId The ID of the contract to invoke.
+   * @param functionName The name of the function to invoke.
+   * @param parameters The parameters to pass to the method.
+   * @return {@link InvokeHostFunctionOperationBuilder}
+   */
+  public static InvokeHostFunctionOperationBuilder<?, ?> invokeContractFunctionOperationBuilder(
+      String contractId, String functionName, @Nullable Collection<SCVal> parameters) {
+    Address address = new Address(contractId);
+    if (address.getType() != Address.AddressType.CONTRACT) {
+      throw new IllegalArgumentException("\"contractId\" must be a contract address");
+    }
+    SCVal contractIdScVal = address.toSCVal();
+    SCVal functionNameScVal =
+        new SCVal.Builder()
+            .discriminant(SCValType.SCV_SYMBOL)
+            .sym(new SCSymbol(new XdrString(functionName)))
+            .build();
+
+    List<SCVal> invokeContractParams = Arrays.asList(contractIdScVal, functionNameScVal);
+    if (parameters != null) {
+      invokeContractParams.addAll(parameters);
+    }
+
+    HostFunction hostFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
+            .invokeContract(new SCVec(invokeContractParams.toArray(new SCVal[0])))
             .build();
     return builder().hostFunction(hostFunction);
   }
