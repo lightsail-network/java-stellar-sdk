@@ -11,6 +11,7 @@ import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
+import org.stellar.sdk.scval.ScvAddress;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -93,7 +94,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
-      String wasmId, Address address, @Nullable byte[] salt) {
+      String wasmId, ScvAddress address, @Nullable byte[] salt) {
     byte[] wasmIdBytes = Util.hexToBytes(wasmId);
     return createContractOperationBuilder(wasmIdBytes, address, salt);
   }
@@ -110,7 +111,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
-      byte[] wasmId, Address address, @Nullable byte[] salt) {
+      byte[] wasmId, ScvAddress address, @Nullable byte[] salt) {
     if (salt == null) {
       salt = new byte[32];
       new SecureRandom().nextBytes(salt);
@@ -188,7 +189,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> createTokenContractOperationBuilder(
-      Address address, @Nullable byte[] salt) {
+      ScvAddress address, @Nullable byte[] salt) {
     if (salt == null) {
       salt = new byte[32];
       new SecureRandom().nextBytes(salt);
@@ -235,8 +236,8 @@ public class InvokeHostFunctionOperation extends Operation {
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> invokeContractFunctionOperationBuilder(
       String contractId, String functionName, @Nullable Collection<SCVal> parameters) {
-    Address address = new Address(contractId);
-    if (address.getType() != Address.AddressType.CONTRACT) {
+    ScvAddress address = new ScvAddress(contractId);
+    if (address.getAddressType() != ScvAddress.AddressType.CONTRACT) {
       throw new IllegalArgumentException("\"contractId\" must be a contract address");
     }
     SCVal contractIdScVal = address.toSCVal();

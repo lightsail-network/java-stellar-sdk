@@ -13,6 +13,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
+import org.stellar.sdk.scval.ScvAddress;
 import org.stellar.sdk.xdr.*;
 
 public class TransactionTest {
@@ -220,7 +221,7 @@ public class TransactionTest {
                     .fromAddress(
                         new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
                             .address(
-                                new Address(
+                                new ScvAddress(
                                         "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
                                     .toSCAddress())
                             .salt(new Uint256(new byte[32]))

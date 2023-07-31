@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+import org.stellar.sdk.scval.ScvAddress;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -43,7 +44,7 @@ public class InvokeHostFunctionOperationTest {
                   .fromAddress(
                       new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
                           .address(
-                              new Address(
+                              new ScvAddress(
                                       "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
                                   .toSCAddress())
                           .salt(new Uint256(new byte[32]))
@@ -172,7 +173,7 @@ public class InvokeHostFunctionOperationTest {
                     .fromAddress(
                         new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
                             .address(
-                                new Address(
+                                new ScvAddress(
                                         "GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX")
                                     .toSCAddress())
                             .salt(new Uint256(new byte[32]))
@@ -212,7 +213,7 @@ public class InvokeHostFunctionOperationTest {
                     .address(
                         new SorobanAddressCredentials.Builder()
                             .address(
-                                new Address(
+                                new ScvAddress(
                                         "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW")
                                     .toSCAddress())
                             .nonce(new Int64(123123432L))
@@ -316,7 +317,7 @@ public class InvokeHostFunctionOperationTest {
           0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d,
           0x1e, 0x1f
         };
-    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    ScvAddress address = new ScvAddress("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.createContractOperationBuilder(wasmIdString, address, salt)
             .build();
@@ -366,7 +367,7 @@ public class InvokeHostFunctionOperationTest {
           0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d,
           0x1e, 0x1f
         };
-    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    ScvAddress address = new ScvAddress("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.createContractOperationBuilder(wasmId, address, salt).build();
 
@@ -403,7 +404,7 @@ public class InvokeHostFunctionOperationTest {
 
   @Test
   public void createTokenContractOperationBuilderWithAddress() {
-    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    ScvAddress address = new ScvAddress("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
     byte[] salt =
         new byte[] {
           0x11, 0x33, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e,
@@ -490,7 +491,7 @@ public class InvokeHostFunctionOperationTest {
                 contractId, funcName, parameters)
             .build();
 
-    SCVal contractIdScVal = new Address(contractId).toSCVal();
+    SCVal contractIdScVal = new ScvAddress(contractId).toSCVal();
     SCVal functionNameScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_SYMBOL)
