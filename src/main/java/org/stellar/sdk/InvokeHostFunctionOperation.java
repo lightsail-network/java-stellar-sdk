@@ -253,7 +253,7 @@ public class InvokeHostFunctionOperation extends Operation {
     if (parameters != null) {
       for (SCVal parameter : parameters) {
         if (parameter == null) {
-          throw new IllegalArgumentException("Parameter list contains null element");
+          throw new IllegalArgumentException("\"parameters\" contains null element");
         }
         invokeContractParams.add(parameter);
       }
