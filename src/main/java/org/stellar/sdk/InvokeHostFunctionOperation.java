@@ -154,7 +154,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @param asset The classic asset to wrap.
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
-  public static InvokeHostFunctionOperationBuilder<?, ?> deployCreateTokenContractOperationBuilder(
+  public static InvokeHostFunctionOperationBuilder<?, ?> createTokenContractOperationBuilder(
       Asset asset) {
     CreateContractArgs createContractArgs =
         new CreateContractArgs.Builder()
@@ -186,7 +186,7 @@ public class InvokeHostFunctionOperation extends Operation {
    *     generated.
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
-  public static InvokeHostFunctionOperationBuilder<?, ?> deployCreateTokenContractOperationBuilder(
+  public static InvokeHostFunctionOperationBuilder<?, ?> createTokenContractOperationBuilder(
       Address address, @Nullable byte[] salt) {
     if (salt == null) {
       salt = new byte[32];
