@@ -8,6 +8,7 @@ import org.stellar.sdk.xdr.BumpFootprintExpirationOp;
 import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.Uint32;
+import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 /**
  * Represents <a
@@ -28,7 +29,7 @@ public class BumpFootprintExpirationOperation extends Operation {
    * the number of ledgers past the LCL (last closed ledger) by which to extend the validity of the
    * ledger keys in this transaction
    */
-  @NonNull Integer ledgersToExpire;
+  @NonNull Long ledgersToExpire;
 
   /**
    * Constructs a new BumpFootprintExpirationOperation object from the XDR representation of the
@@ -38,7 +39,7 @@ public class BumpFootprintExpirationOperation extends Operation {
    */
   public static BumpFootprintExpirationOperation fromXdr(BumpFootprintExpirationOp op) {
     return BumpFootprintExpirationOperation.builder()
-        .ledgersToExpire(op.getLedgersToExpire().getUint32())
+        .ledgersToExpire(op.getLedgersToExpire().getUint32().getNumber())
         .build();
   }
 
@@ -46,7 +47,7 @@ public class BumpFootprintExpirationOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     BumpFootprintExpirationOp op = new BumpFootprintExpirationOp();
     op.setExt(new ExtensionPoint.Builder().discriminant(0).build());
-    op.setLedgersToExpire(new Uint32(ledgersToExpire));
+    op.setLedgersToExpire(new Uint32(new XdrUnsignedInteger(ledgersToExpire)));
 
     org.stellar.sdk.xdr.Operation.OperationBody body =
         new org.stellar.sdk.xdr.Operation.OperationBody();
@@ -60,8 +61,8 @@ public class BumpFootprintExpirationOperation extends Operation {
           C extends BumpFootprintExpirationOperation,
           B extends BumpFootprintExpirationOperationBuilder<C, B>>
       extends OperationBuilder<C, B> {
-    public B ledgersToExpire(Integer ledgersToExpire) {
-      if (ledgersToExpire <= 0) {
+    public B ledgersToExpire(Long ledgersToExpire) {
+      if (ledgersToExpire <= 0 || ledgersToExpire > 0xFFFFFFFFL) {
         throw new IllegalArgumentException("ledgersToExpire isn't a ledger quantity (uint32)");
       }
       this.ledgersToExpire = ledgersToExpire;

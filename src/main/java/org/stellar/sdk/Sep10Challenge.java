@@ -6,6 +6,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,7 +19,7 @@ import org.stellar.sdk.xdr.Signature;
 import org.stellar.sdk.xdr.SignatureHint;
 
 public class Sep10Challenge {
-  static final int GRACE_PERIOD_SECONDS = 5 * 60;
+  static final BigInteger GRACE_PERIOD_SECONDS = BigInteger.valueOf(5 * 60);
   static final String CLIENT_DOMAIN_DATA_NAME = "client_domain";
   private static final String HOME_DOMAIN_MANAGER_DATA_NAME_FLAG = "auth";
   private static final String WEB_AUTH_DOMAIN_MANAGER_DATA_NAME = "web_auth_domain";
@@ -247,14 +248,15 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("only memo type `id` is supported");
     }
 
-    long maxTime = transaction.getTimeBounds().getMaxTime();
-    long minTime = transaction.getTimeBounds().getMinTime();
-    if (maxTime == 0L) {
+    BigInteger maxTime = transaction.getTimeBounds().getMaxTime();
+    BigInteger minTime = transaction.getTimeBounds().getMinTime();
+    if (maxTime.equals(BigInteger.ZERO)) {
       throw new InvalidSep10ChallengeException("Transaction requires non-infinite timebounds.");
     }
 
-    long currentTime = System.currentTimeMillis() / 1000L;
-    if ((currentTime + GRACE_PERIOD_SECONDS) < minTime || currentTime > maxTime) {
+    BigInteger currentTime = BigInteger.valueOf(System.currentTimeMillis() / 1000L);
+    if (currentTime.add(GRACE_PERIOD_SECONDS).compareTo(minTime) < 0
+        || currentTime.compareTo(maxTime) > 0) {
       throw new InvalidSep10ChallengeException(
           "Transaction is not within range of the specified timebounds.");
     }

@@ -70,6 +70,7 @@ import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 import org.stellar.sdk.xdr.XdrString;
+import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class SorobanServerTest {
   private final Gson gson = new Gson();
@@ -921,10 +922,10 @@ public class SorobanServerTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(216))
-                    .readBytes(new Uint32(699))
-                    .writeBytes(new Uint32(0))
-                    .instructions(new Uint32(34567))
+                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
+                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
+                    .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .refundableFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -1382,7 +1383,7 @@ public class SorobanServerTest {
                                   new Address(opInvokerKp.getAccountId()).toSCVal(),
                                   new SCVal.Builder()
                                       .discriminant(SCValType.SCV_U32)
-                                      .u32(new Uint32(10))
+                                      .u32(new Uint32(new XdrUnsignedInteger(10)))
                                       .build()
                                 }))
                         .build())

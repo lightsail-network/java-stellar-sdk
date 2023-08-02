@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +38,8 @@ public class TransactionTest {
               new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
             },
             null,
-            new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(), null),
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
             null,
             Network.PUBLIC);
 
@@ -84,7 +86,8 @@ public class TransactionTest {
               new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
             },
             null,
-            new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(), null),
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
             null,
             Network.PUBLIC);
 
@@ -122,7 +125,8 @@ public class TransactionTest {
                   .build()
             },
             null,
-            new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(), null),
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
             null,
             Network.PUBLIC);
 
@@ -158,7 +162,8 @@ public class TransactionTest {
               new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
             },
             null,
-            new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(), null),
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
             null,
             Network.TESTNET);
 
@@ -198,10 +203,10 @@ public class TransactionTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(216))
-                    .readBytes(new Uint32(699))
-                    .writeBytes(new Uint32(0))
-                    .instructions(new Uint32(34567))
+                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
+                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
+                    .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .refundableFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -241,7 +246,8 @@ public class TransactionTest {
             account.getIncrementedSequenceNumber(),
             new org.stellar.sdk.Operation[] {invokeHostFunctionOperation},
             null,
-            new TransactionPreconditions(null, null, 0, 0, new ArrayList<SignerKey>(), null),
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
             sorobanData,
             Network.TESTNET);
 

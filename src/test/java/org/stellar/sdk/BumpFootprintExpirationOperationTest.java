@@ -12,10 +12,10 @@ public class BumpFootprintExpirationOperationTest {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     BumpFootprintExpirationOperation op =
         BumpFootprintExpirationOperation.builder()
-            .ledgersToExpire(123)
+            .ledgersToExpire(123L)
             .sourceAccount(source)
             .build();
-    assertEquals(Integer.valueOf(123), op.getLedgersToExpire());
+    assertEquals(Long.valueOf(123), op.getLedgersToExpire());
     assertEquals(source, op.getSourceAccount());
     String expectXdr = "AAAAAQAAAAAk4TTtavBWsGnEN3KxHw4Ohwi22ZJHWi8hlamN5pm0TgAAABkAAAAAAAAAew==";
     assertEquals(expectXdr, op.toXdrBase64());
@@ -24,8 +24,8 @@ public class BumpFootprintExpirationOperationTest {
   @Test
   public void testBuilderWithoutSource() {
     BumpFootprintExpirationOperation op =
-        BumpFootprintExpirationOperation.builder().ledgersToExpire(123).build();
-    assertEquals(Integer.valueOf(123), op.getLedgersToExpire());
+        BumpFootprintExpirationOperation.builder().ledgersToExpire(123L).build();
+    assertEquals(Long.valueOf(123), op.getLedgersToExpire());
     assertNull(op.getSourceAccount());
     String expectXdr = "AAAAAAAAABkAAAAAAAAAew==";
     assertEquals(expectXdr, op.toXdrBase64());
@@ -36,7 +36,7 @@ public class BumpFootprintExpirationOperationTest {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     BumpFootprintExpirationOperation originOp =
         BumpFootprintExpirationOperation.builder()
-            .ledgersToExpire(123)
+            .ledgersToExpire(123L)
             .sourceAccount(source)
             .build();
     org.stellar.sdk.xdr.Operation xdrObject = originOp.toXdr();
@@ -49,12 +49,12 @@ public class BumpFootprintExpirationOperationTest {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     BumpFootprintExpirationOperation operation1 =
         BumpFootprintExpirationOperation.builder()
-            .ledgersToExpire(123)
+            .ledgersToExpire(123L)
             .sourceAccount(source)
             .build();
     BumpFootprintExpirationOperation operation2 =
         BumpFootprintExpirationOperation.builder()
-            .ledgersToExpire(123)
+            .ledgersToExpire(123L)
             .sourceAccount(source)
             .build();
     assertEquals(operation1, operation2);
@@ -65,12 +65,12 @@ public class BumpFootprintExpirationOperationTest {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     BumpFootprintExpirationOperation operation1 =
         BumpFootprintExpirationOperation.builder()
-            .ledgersToExpire(123)
+            .ledgersToExpire(123L)
             .sourceAccount(source)
             .build();
     BumpFootprintExpirationOperation operation2 =
         BumpFootprintExpirationOperation.builder()
-            .ledgersToExpire(124)
+            .ledgersToExpire(124L)
             .sourceAccount(source)
             .build();
     Assert.assertNotEquals(operation1, operation2);
@@ -81,18 +81,28 @@ public class BumpFootprintExpirationOperationTest {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     BumpFootprintExpirationOperation operation1 =
         BumpFootprintExpirationOperation.builder()
-            .ledgersToExpire(123)
+            .ledgersToExpire(123L)
             .sourceAccount(source)
             .build();
     BumpFootprintExpirationOperation operation2 =
-        BumpFootprintExpirationOperation.builder().ledgersToExpire(123).build();
+        BumpFootprintExpirationOperation.builder().ledgersToExpire(123L).build();
     Assert.assertNotEquals(operation1, operation2);
   }
 
   @Test
-  public void testLedgersToExpireIsInvalidThrows() {
+  public void testLedgersToExpireIsInvalidThrowsLessThanZero() {
     try {
-      BumpFootprintExpirationOperation.builder().ledgersToExpire(-1).build();
+      BumpFootprintExpirationOperation.builder().ledgersToExpire(-1L).build();
+      Assert.fail();
+    } catch (IllegalArgumentException e) {
+      Assert.assertEquals("ledgersToExpire isn't a ledger quantity (uint32)", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testLedgersToExpireIsInvalidThrowsGreatThanMaxUint32() {
+    try {
+      BumpFootprintExpirationOperation.builder().ledgersToExpire(4294967296L).build();
       Assert.fail();
     } catch (IllegalArgumentException e) {
       Assert.assertEquals("ledgersToExpire isn't a ledger quantity (uint32)", e.getMessage());

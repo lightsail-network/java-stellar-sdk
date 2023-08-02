@@ -5,12 +5,14 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
 import com.google.common.base.Function;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import org.stellar.sdk.TransactionPreconditions.TransactionPreconditionsBuilder;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /** Builds a new Transaction object. */
 public class TransactionBuilder {
@@ -18,7 +20,7 @@ public class TransactionBuilder {
   private final AccountConverter mAccountConverter;
   private Memo mMemo;
   private List<Operation> mOperations;
-  private Integer mBaseFee;
+  private Long mBaseFee;
   private Network mNetwork;
   private TransactionPreconditions mPreconditions;
   private SorobanTransactionData mSorobanData;
@@ -155,25 +157,25 @@ public class TransactionBuilder {
    * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
    *     </code> with TimeBound set instead for more control over preconditions.
    */
-  public TransactionBuilder setTimeout(long timeout) {
+  public TransactionBuilder setTimeout(BigInteger timeout) {
     if (mPreconditions.getTimeBounds() != null
-        && mPreconditions.getTimeBounds().getMaxTime() != TIMEOUT_INFINITE) {
+        && !TIMEOUT_INFINITE.equals(mPreconditions.getTimeBounds().getMaxTime())) {
       throw new RuntimeException(
           "TimeBounds.max_time has been already set - setting timeout would overwrite it.");
     }
 
-    if (timeout < 0) {
+    if (timeout.compareTo(BigInteger.ZERO) < 0) {
       throw new RuntimeException("timeout cannot be negative");
     }
 
-    long timeoutTimestamp =
-        timeout != TIMEOUT_INFINITE
-            ? System.currentTimeMillis() / 1000L + timeout
+    BigInteger timeoutTimestamp =
+        !TIMEOUT_INFINITE.equals(timeout)
+            ? timeout.add(BigInteger.valueOf(System.currentTimeMillis() / 1000L))
             : TIMEOUT_INFINITE;
 
     TransactionPreconditionsBuilder preconditionsBuilder = mPreconditions.toBuilder();
     if (mPreconditions.getTimeBounds() == null) {
-      preconditionsBuilder.timeBounds(new TimeBounds(0, timeoutTimestamp));
+      preconditionsBuilder.timeBounds(new TimeBounds(BigInteger.ZERO, timeoutTimestamp));
     } else {
       preconditionsBuilder.timeBounds(
           new TimeBounds(mPreconditions.getTimeBounds().getMinTime(), timeoutTimestamp));
@@ -182,7 +184,19 @@ public class TransactionBuilder {
     return this;
   }
 
-  public TransactionBuilder setBaseFee(int baseFee) {
+  /**
+   * An alias for {@link #setTimeout(BigInteger)} with <code>timeout</code> in seconds.
+   *
+   * @param timeout Timeout in seconds.
+   * @return updated Builder
+   * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
+   *     </code> with TimeBound set instead for more control over preconditions.
+   */
+  public TransactionBuilder setTimeout(long timeout) {
+    return setTimeout(BigInteger.valueOf(timeout));
+  }
+
+  public TransactionBuilder setBaseFee(long baseFee) {
     if (baseFee < AbstractTransaction.MIN_BASE_FEE) {
       throw new IllegalArgumentException(
           "baseFee cannot be smaller than the BASE_FEE ("
@@ -240,10 +254,11 @@ public class TransactionBuilder {
         }
       };
 
+  @Deprecated
   public static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(long minTime, long maxTime) {
     return new org.stellar.sdk.xdr.TimeBounds.Builder()
-        .minTime(new TimePoint(new Uint64(minTime)))
-        .maxTime(new TimePoint(new Uint64(maxTime)))
+        .minTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(minTime))))
+        .maxTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(maxTime))))
         .build();
   }
 

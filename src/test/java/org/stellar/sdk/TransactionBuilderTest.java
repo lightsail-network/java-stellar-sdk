@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import org.junit.Test;
 import org.stellar.sdk.xdr.*;
 
@@ -155,6 +156,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         42);
     assertEquals(
@@ -166,6 +168,7 @@ public class TransactionBuilderTest {
             .getMaxTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         1337);
 
@@ -243,8 +246,8 @@ public class TransactionBuilderTest {
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
 
-    assertEquals(42, transaction.getTimeBounds().getMinTime());
-    assertEquals(1337, transaction.getTimeBounds().getMaxTime());
+    assertEquals(42, transaction.getTimeBounds().getMinTime().intValue());
+    assertEquals(1337, transaction.getTimeBounds().getMaxTime().intValue());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
     XdrDataInputStream is =
@@ -305,8 +308,8 @@ public class TransactionBuilderTest {
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
 
-    assertEquals(0, transaction.getTimeBounds().getMinTime());
-    assertTrue(currentUnix + 10 <= transaction.getTimeBounds().getMaxTime());
+    assertEquals(0, transaction.getTimeBounds().getMinTime().longValue());
+    assertTrue(currentUnix + 10 <= transaction.getTimeBounds().getMaxTime().longValue());
 
     // Convert transaction to binary XDR and back again to make sure timebounds are correctly
     // de/serialized.
@@ -338,7 +341,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .ledgerBounds(LedgerBounds.builder().minLedger(1).maxLedger(2).build())
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -377,7 +381,7 @@ public class TransactionBuilderTest {
     SequenceNumber seqNum = new SequenceNumber();
     seqNum.setSequenceNumber(new Int64(5L));
     preconditionsV2.timeBounds(
-        TransactionBuilder.buildTimeBounds(0, TransactionPreconditions.TIMEOUT_INFINITE));
+        buildTimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE));
     preconditionsV2.minSeqNum(seqNum);
 
     Transaction transaction =
@@ -386,7 +390,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .minSeqNumber(5L)
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -427,13 +432,14 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
-                    .minSeqAge(5L)
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .minSeqAge(BigInteger.valueOf(5L))
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
 
-    assertEquals(5, transaction.getPreconditions().getMinSeqAge());
+    assertEquals(5, transaction.getPreconditions().getMinSeqAge().intValue());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
     XdrDataInputStream is =
@@ -468,7 +474,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .minSeqLedgerGap(5)
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -525,7 +532,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .extraSigners(newArrayList(signerKey))
                     .minSeqLedgerGap(5)
                     .build())
@@ -571,7 +579,8 @@ public class TransactionBuilderTest {
               new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
           .addPreconditions(
               TransactionPreconditions.builder()
-                  .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                  .timeBounds(
+                      new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                   .extraSigners(
                       newArrayList(
                           new SignerKey.Builder().build(),
@@ -599,14 +608,14 @@ public class TransactionBuilderTest {
                   // set min time to 120 seconds from now
                   .timeBounds(
                       new TimeBounds(
-                          (System.currentTimeMillis() / 1000) + 120,
+                          BigInteger.valueOf((System.currentTimeMillis() / 1000) + 120),
                           TransactionPreconditions.TIMEOUT_INFINITE))
                   .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .setTimeout(1); // sat max time to 1 second from now
       fail();
     } catch (IllegalArgumentException exception) {
-      assertTrue(exception.getMessage().contains("minTime must be >= maxTime"));
+      assertTrue(exception.getMessage().contains("minTime must be <= maxTime"));
     }
   }
 
@@ -619,7 +628,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
@@ -721,6 +731,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         0);
     assertEquals(
@@ -732,6 +743,7 @@ public class TransactionBuilderTest {
             .getMaxTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         0);
   }
@@ -773,6 +785,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         0);
     assertTrue(
@@ -785,6 +798,7 @@ public class TransactionBuilderTest {
                 .getMaxTime()
                 .getTimePoint()
                 .getUint64()
+                .getNumber()
                 .longValue());
   }
 
@@ -801,7 +815,8 @@ public class TransactionBuilderTest {
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
                 new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-            .addTimeBounds(new TimeBounds(42, TransactionPreconditions.TIMEOUT_INFINITE))
+            .addTimeBounds(
+                new TimeBounds(BigInteger.valueOf(42), TransactionPreconditions.TIMEOUT_INFINITE))
             .setTimeout(10)
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
@@ -826,6 +841,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         42);
     assertTrue(
@@ -838,6 +854,7 @@ public class TransactionBuilderTest {
                 .getMaxTime()
                 .getTimePoint()
                 .getUint64()
+                .getNumber()
                 .longValue());
   }
 
@@ -854,7 +871,8 @@ public class TransactionBuilderTest {
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
                 new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-            .addTimeBounds(new TimeBounds(42, TransactionPreconditions.TIMEOUT_INFINITE))
+            .addTimeBounds(
+                new TimeBounds(BigInteger.valueOf(42), TransactionPreconditions.TIMEOUT_INFINITE))
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
             .setBaseFee(100)
@@ -880,6 +898,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         42);
     assertEquals(
@@ -891,6 +910,7 @@ public class TransactionBuilderTest {
             .getMaxTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         0);
   }
@@ -1018,10 +1038,10 @@ public class TransactionBuilderTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(216))
-                    .readBytes(new Uint32(699))
-                    .writeBytes(new Uint32(0))
-                    .instructions(new Uint32(34567))
+                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
+                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
+                    .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .refundableFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -1074,10 +1094,10 @@ public class TransactionBuilderTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(216))
-                    .readBytes(new Uint32(699))
-                    .writeBytes(new Uint32(0))
-                    .instructions(new Uint32(34567))
+                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
+                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
+                    .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .refundableFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -1128,5 +1148,13 @@ public class TransactionBuilderTest {
             .sorobanData(sorobanData)
             .build();
     assertEquals(expectedExt, transaction.toEnvelopeXdr().getV1().getTx().getExt());
+  }
+
+  private static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(
+      BigInteger minTime, BigInteger maxTime) {
+    return new org.stellar.sdk.xdr.TimeBounds.Builder()
+        .minTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(minTime))))
+        .maxTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(maxTime))))
+        .build();
   }
 }

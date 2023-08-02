@@ -3,7 +3,6 @@ package org.stellar.sdk;
 import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.Bytes;
-import com.google.common.primitives.Longs;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
@@ -20,6 +19,7 @@ import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 class StrKey {
 
@@ -66,11 +66,7 @@ class StrKey {
     switch (muxedAccount.getDiscriminant()) {
       case KEY_TYPE_MUXED_ED25519:
         return String.valueOf(
-            encodeCheck(
-                VersionByte.MUXED,
-                Bytes.concat(
-                    muxedAccount.getMed25519().getEd25519().getUint256(),
-                    Longs.toByteArray(muxedAccount.getMed25519().getId().getUint64()))));
+            encodeCheck(VersionByte.MUXED, getMuxedEd25519AccountBytes(muxedAccount)));
       case KEY_TYPE_ED25519:
         return String.valueOf(
             encodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.getEd25519().getUint256()));
@@ -137,7 +133,7 @@ class StrKey {
         MuxedAccount.MuxedAccountMed25519 med = new MuxedAccount.MuxedAccountMed25519();
         try {
           med.setEd25519(Uint256.decode(input));
-          med.setId(Uint64.decode(input));
+          med.setId(new Uint64(XdrUnsignedHyperInteger.decode(input)));
         } catch (IOException e) {
           throw new IllegalArgumentException("invalid address: " + data, e);
         }
@@ -397,5 +393,16 @@ class StrKey {
     public int getValue() {
       return value;
     }
+  }
+
+  private static byte[] getMuxedEd25519AccountBytes(MuxedAccount muxedAccount) {
+    byte[] accountBytes = muxedAccount.getMed25519().getEd25519().getUint256();
+    byte[] idBytes = muxedAccount.getMed25519().getId().getUint64().getNumber().toByteArray();
+    byte[] idPaddedBytes = new byte[8];
+    int idNumBytesToCopy = Math.min(idBytes.length, 8);
+    int idCopyStartIndex = idBytes.length - idNumBytesToCopy;
+    System.arraycopy(
+        idBytes, idCopyStartIndex, idPaddedBytes, 8 - idNumBytesToCopy, idNumBytesToCopy);
+    return Bytes.concat(accountBytes, idPaddedBytes);
   }
 }

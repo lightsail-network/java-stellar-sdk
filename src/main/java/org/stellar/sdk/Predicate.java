@@ -9,6 +9,7 @@ import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 import org.threeten.bp.Instant;
 
 public abstract class Predicate {
@@ -186,15 +187,15 @@ public abstract class Predicate {
     }
 
     public AbsBefore(long epochSeconds) {
-      this(new TimePoint(new Uint64(epochSeconds)));
+      this(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(epochSeconds))));
     }
 
     public long getTimestampSeconds() {
-      return timePoint.getTimePoint().getUint64();
+      return timePoint.getTimePoint().getUint64().getNumber().longValue();
     }
 
     public Instant getDate() {
-      return Instant.ofEpochSecond(timePoint.getTimePoint().getUint64());
+      return Instant.ofEpochSecond(timePoint.getTimePoint().getUint64().getNumber().longValue());
     }
 
     @Override
@@ -214,7 +215,7 @@ public abstract class Predicate {
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME);
-      xdr.setAbsBefore(new Int64(timePoint.getTimePoint().getUint64()));
+      xdr.setAbsBefore(new Int64(timePoint.getTimePoint().getUint64().getNumber().longValue()));
       return xdr;
     }
   }
@@ -228,11 +229,11 @@ public abstract class Predicate {
     }
 
     public RelBefore(long secondsSinceClose) {
-      this(new Duration(new Uint64(secondsSinceClose)));
+      this(new Duration(new Uint64(new XdrUnsignedHyperInteger(secondsSinceClose))));
     }
 
     public long getSecondsSinceClose() {
-      return duration.getDuration().getUint64();
+      return duration.getDuration().getUint64().getNumber().longValue();
     }
 
     @Override
@@ -252,7 +253,7 @@ public abstract class Predicate {
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME);
-      xdr.setRelBefore(new Int64(duration.getDuration().getUint64()));
+      xdr.setRelBefore(new Int64(duration.getDuration().getUint64().getNumber().longValue()));
       return xdr;
     }
   }

@@ -69,11 +69,13 @@ public class AllowTrustOperation extends Operation {
     Uint32 flag = new Uint32();
     // authorize
     if (authorize) {
-      flag.setUint32(TrustLineFlags.AUTHORIZED_FLAG.getValue());
+      flag.setUint32(new XdrUnsignedInteger(TrustLineFlags.AUTHORIZED_FLAG.getValue()));
     } else if (authorizeToMaintainLiabilities) {
-      flag.setUint32(TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue());
+      flag.setUint32(
+          new XdrUnsignedInteger(
+              TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue()));
     } else {
-      flag.setUint32(0);
+      flag.setUint32(new XdrUnsignedInteger(0));
     }
     op.setAuthorize(flag);
 
@@ -110,7 +112,7 @@ public class AllowTrustOperation extends Operation {
           throw new RuntimeException("Unknown asset code");
       }
 
-      int flag = op.getAuthorize().getUint32().intValue();
+      int flag = op.getAuthorize().getUint32().getNumber().intValue();
       if (flag == TrustLineFlags.AUTHORIZED_FLAG.getValue()) {
         authorize = true;
         authorizeToMaintainLiabilities = false;
