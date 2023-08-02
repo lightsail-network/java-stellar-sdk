@@ -388,4 +388,20 @@ public class Transaction extends AbstractTransaction {
       super(sourceAccount, network);
     }
   }
+
+  /**
+   * Returns true if this transaction is a Soroban transaction.
+   *
+   * @return true if this transaction is a Soroban transaction.
+   */
+  public boolean isSorobanTransaction() {
+    if (mOperations.length != 1) {
+      return false;
+    }
+
+    Operation op = mOperations[0];
+    return op instanceof InvokeHostFunctionOperation
+        || op instanceof BumpSequenceOperation
+        || op instanceof RestoreFootprintOperation;
+  }
 }

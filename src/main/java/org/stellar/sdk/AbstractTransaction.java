@@ -86,6 +86,15 @@ public abstract class AbstractTransaction {
   }
 
   /**
+   * Gets the {@link AccountConverter} for this transaction.
+   *
+   * @return the {@link AccountConverter} object
+   */
+  public AccountConverter getAccountConverter() {
+    return accountConverter;
+  }
+
+  /**
    * Gets read only list(immutable) of the signatures on transaction.
    *
    * @return immutable list of signatures
