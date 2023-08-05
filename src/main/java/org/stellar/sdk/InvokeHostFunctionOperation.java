@@ -37,6 +37,7 @@ import org.stellar.sdk.xdr.XdrString;
  *
  * @see <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations"
  *     target="_blank">List of Operations</a>
+ * @see org.stellar.sdk.scval
  */
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -226,6 +227,10 @@ public class InvokeHostFunctionOperation extends Operation {
    * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
    * invoke a contract function.
    *
+   * <p>We also provide some ways for you to conveniently build {@link SCVal}. Please check {@link
+   * org.stellar.sdk.scval}.
+   *
+   * @see org.stellar.sdk.scval
    * @see <a
    *     href="https://soroban.stellar.org/docs/fundamentals-and-concepts/interacting-with-contracts"
    *     target="_blank">Interacting with Contracts</a>
