@@ -10,6 +10,7 @@ import org.stellar.sdk.xdr.SCMapEntry;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_MAP}. */
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)

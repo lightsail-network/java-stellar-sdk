@@ -7,6 +7,7 @@ import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.XdrString;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_STRING}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class ScvString extends Scv {

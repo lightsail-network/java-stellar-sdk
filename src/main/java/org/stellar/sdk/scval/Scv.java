@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
-/** Abstract class for all SCV types. */
+/** Abstract class for all {@link Scv} types. */
 public abstract class Scv {
 
   /**

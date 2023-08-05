@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_VOID}. */
 @EqualsAndHashCode(callSuper = false)
 public class ScvVoid extends Scv {
   private static final SCValType TYPE = SCValType.SCV_VOID;

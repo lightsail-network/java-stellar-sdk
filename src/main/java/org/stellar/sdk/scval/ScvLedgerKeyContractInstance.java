@@ -7,6 +7,7 @@ import org.stellar.sdk.xdr.SCContractInstance;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_CONTRACT_INSTANCE}. */
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)

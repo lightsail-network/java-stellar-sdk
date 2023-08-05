@@ -8,6 +8,7 @@ import org.stellar.sdk.xdr.SCNonceKey;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_LEDGER_KEY_NONCE}. */
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)

@@ -6,6 +6,7 @@ import lombok.Value;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_BOOL}. */
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)

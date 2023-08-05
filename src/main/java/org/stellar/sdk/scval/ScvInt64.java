@@ -7,6 +7,7 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_I64}. */
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)

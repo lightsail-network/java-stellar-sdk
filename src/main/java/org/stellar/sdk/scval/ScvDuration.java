@@ -9,6 +9,7 @@ import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_DURATION}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class ScvDuration extends Scv {

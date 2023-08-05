@@ -8,6 +8,7 @@ import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
+/** Represents an {@link SCVal} with the type of {@link SCValType#SCV_U64}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class ScvUint64 extends Scv {
