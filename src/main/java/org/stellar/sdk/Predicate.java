@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+
+import java.math.BigInteger;
 import java.util.List;
 import org.stellar.sdk.xdr.ClaimPredicate;
 import org.stellar.sdk.xdr.ClaimPredicateType;
@@ -190,8 +192,8 @@ public abstract class Predicate {
       this(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(epochSeconds))));
     }
 
-    public long getTimestampSeconds() {
-      return timePoint.getTimePoint().getUint64().getNumber().longValue();
+    public BigInteger getTimestampSeconds() {
+      return timePoint.getTimePoint().getUint64().getNumber();
     }
 
     public Instant getDate() {
