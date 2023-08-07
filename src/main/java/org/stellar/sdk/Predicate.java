@@ -191,11 +191,34 @@ public abstract class Predicate {
       this(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(epochSeconds))));
     }
 
+    public AbsBefore(BigInteger epochSeconds) {
+      this(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(epochSeconds))));
+    }
+
+    /**
+     * Gets the Predicate epoch in seconds.
+     *
+     * @return BigInteger the predicate epoch in seconds
+     */
     public BigInteger getTimestampSeconds() {
       return timePoint.getTimePoint().getUint64().getNumber();
     }
 
+    /**
+     * Gets the java date representation of a Predicate. If the Predicate specifies an epoch larger
+     * than 31556889864403199, it will coerce to {@link Instant#MAX} instead as no greater value can
+     * be represented.
+     *
+     * <p>If you want to get the real epoch, use {@link #getTimestampSeconds()} instead.
+     *
+     * @return Instant the java date representation of the predicate
+     */
     public Instant getDate() {
+      Instant instantMax = Instant.MAX;
+      if (getTimestampSeconds().compareTo(BigInteger.valueOf(instantMax.getEpochSecond())) > 0) {
+        return instantMax;
+      }
+
       return Instant.ofEpochSecond(timePoint.getTimePoint().getUint64().getNumber().longValue());
     }
 
