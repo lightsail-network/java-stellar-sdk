@@ -1829,7 +1829,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(
         ((Predicate.AbsBefore) operation.getClaimants().get(0).getPredicate())
             .getTimestampSeconds(),
-        1234567890982222222L);
+        BigInteger.valueOf(1234567890982222222L));
     assertEquals(
         operation.getClaimants().get(1).getDestination(),
         "GAKFBRS24U3PEN6XDMEX4JEV5NGBARS2ZFF5O4CF3JL464SQSD4MDCPF");

@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import java.math.BigInteger;
 import java.util.List;
 import org.stellar.sdk.xdr.ClaimPredicate;
 import org.stellar.sdk.xdr.ClaimPredicateType;
@@ -9,6 +10,7 @@ import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 import org.threeten.bp.Instant;
 
 public abstract class Predicate {
@@ -186,15 +188,38 @@ public abstract class Predicate {
     }
 
     public AbsBefore(long epochSeconds) {
-      this(new TimePoint(new Uint64(epochSeconds)));
+      this(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(epochSeconds))));
     }
 
-    public long getTimestampSeconds() {
-      return timePoint.getTimePoint().getUint64();
+    public AbsBefore(BigInteger epochSeconds) {
+      this(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(epochSeconds))));
     }
 
+    /**
+     * Gets the Predicate epoch in seconds.
+     *
+     * @return BigInteger the predicate epoch in seconds
+     */
+    public BigInteger getTimestampSeconds() {
+      return timePoint.getTimePoint().getUint64().getNumber();
+    }
+
+    /**
+     * Gets the java date representation of a Predicate. If the Predicate specifies an epoch larger
+     * than 31556889864403199, it will coerce to {@link Instant#MAX} instead as no greater value can
+     * be represented.
+     *
+     * <p>If you want to get the real epoch, use {@link #getTimestampSeconds()} instead.
+     *
+     * @return Instant the java date representation of the predicate
+     */
     public Instant getDate() {
-      return Instant.ofEpochSecond(timePoint.getTimePoint().getUint64());
+      Instant instantMax = Instant.MAX;
+      if (getTimestampSeconds().compareTo(BigInteger.valueOf(instantMax.getEpochSecond())) > 0) {
+        return instantMax;
+      }
+
+      return Instant.ofEpochSecond(timePoint.getTimePoint().getUint64().getNumber().longValue());
     }
 
     @Override
@@ -214,7 +239,7 @@ public abstract class Predicate {
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME);
-      xdr.setAbsBefore(new Int64(timePoint.getTimePoint().getUint64()));
+      xdr.setAbsBefore(new Int64(timePoint.getTimePoint().getUint64().getNumber().longValue()));
       return xdr;
     }
   }
@@ -228,11 +253,11 @@ public abstract class Predicate {
     }
 
     public RelBefore(long secondsSinceClose) {
-      this(new Duration(new Uint64(secondsSinceClose)));
+      this(new Duration(new Uint64(new XdrUnsignedHyperInteger(secondsSinceClose))));
     }
 
     public long getSecondsSinceClose() {
-      return duration.getDuration().getUint64();
+      return duration.getDuration().getUint64().getNumber().longValue();
     }
 
     @Override
@@ -252,7 +277,7 @@ public abstract class Predicate {
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME);
-      xdr.setRelBefore(new Int64(duration.getDuration().getUint64()));
+      xdr.setRelBefore(new Int64(duration.getDuration().getUint64().getNumber().longValue()));
       return xdr;
     }
   }

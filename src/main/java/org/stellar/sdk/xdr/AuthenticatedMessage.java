@@ -72,8 +72,9 @@ public class AuthenticatedMessage implements XdrElement {
       throws IOException {
     // Xdrgen::AST::Identifier
     // Uint32
-    stream.writeInt(encodedAuthenticatedMessage.getDiscriminant().getUint32());
-    switch (encodedAuthenticatedMessage.getDiscriminant().getUint32()) {
+    stream.writeInt(
+        encodedAuthenticatedMessage.getDiscriminant().getUint32().getNumber().intValue());
+    switch (encodedAuthenticatedMessage.getDiscriminant().getUint32().getNumber().intValue()) {
       case 0:
         AuthenticatedMessageV0.encode(stream, encodedAuthenticatedMessage.v0);
         break;
@@ -88,7 +89,7 @@ public class AuthenticatedMessage implements XdrElement {
     AuthenticatedMessage decodedAuthenticatedMessage = new AuthenticatedMessage();
     Uint32 discriminant = Uint32.decode(stream);
     decodedAuthenticatedMessage.setDiscriminant(discriminant);
-    switch (decodedAuthenticatedMessage.getDiscriminant().getUint32()) {
+    switch (decodedAuthenticatedMessage.getDiscriminant().getUint32().getNumber().intValue()) {
       case 0:
         decodedAuthenticatedMessage.v0 = AuthenticatedMessageV0.decode(stream);
         break;

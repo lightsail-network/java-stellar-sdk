@@ -480,7 +480,7 @@ public class Sep10ChallengeTest {
     KeyPair client = KeyPair.random();
 
     long current = System.currentTimeMillis() / 1000L;
-    long start = current + Sep10Challenge.GRACE_PERIOD_SECONDS + 30;
+    long start = current + Sep10Challenge.GRACE_PERIOD_SECONDS.longValue() + 30;
     long end = current + 600;
     TimeBounds timeBounds = new TimeBounds(start, end);
     String domainName = "example.com";
@@ -510,7 +510,7 @@ public class Sep10ChallengeTest {
     KeyPair client = KeyPair.random();
 
     long current = System.currentTimeMillis() / 1000L;
-    long start = current + Sep10Challenge.GRACE_PERIOD_SECONDS - 30;
+    long start = current + Sep10Challenge.GRACE_PERIOD_SECONDS.longValue() - 30;
     long end = current + 600;
     TimeBounds timeBounds = new TimeBounds(start, end);
     String domainName = "example.com";

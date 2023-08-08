@@ -5,6 +5,7 @@ import com.google.gson.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.math.BigInteger;
 import org.stellar.sdk.Memo;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.XdrDataInputStream;
@@ -81,7 +82,7 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
         String memoValue = json.getAsJsonObject().get("memo").getAsString();
         BaseEncoding base64Encoding = BaseEncoding.base64();
         if (memoType.equals("id")) {
-          memo = Memo.id(Long.parseUnsignedLong(memoValue));
+          memo = Memo.id(new BigInteger(memoValue));
         } else if (memoType.equals("hash")) {
           memo = Memo.hash(base64Encoding.decode(memoValue));
         } else if (memoType.equals("return")) {

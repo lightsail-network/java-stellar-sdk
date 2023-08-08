@@ -24,6 +24,7 @@ import org.stellar.sdk.xdr.TransactionV0Envelope;
 import org.stellar.sdk.xdr.TransactionV1Envelope;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 /**
  * Represents <a href="https://developers.stellar.org/docs/glossary/transactions/"
@@ -145,7 +146,7 @@ public class Transaction extends AbstractTransaction {
     //
     // Note that the source account must be *unmuxed* for this to work.
 
-    Uint32 opIndex = new Uint32(index);
+    Uint32 opIndex = new Uint32(new XdrUnsignedInteger(index));
     SequenceNumber sequenceNumber = new SequenceNumber(new Int64(getSequenceNumber()));
     AccountID sourceAccount =
         StrKey.muxedAccountToAccountId(AccountConverter.disableMuxed().encode(getSourceAccount()));
@@ -176,7 +177,7 @@ public class Transaction extends AbstractTransaction {
   private TransactionV0 toXdr() {
     // fee
     Uint32 fee = new Uint32();
-    fee.setUint32((int) mFee);
+    fee.setUint32(new XdrUnsignedInteger(mFee));
     // sequenceNumber
     Int64 sequenceNumberUint = new Int64();
     sequenceNumberUint.setInt64(mSequenceNumber);
@@ -208,7 +209,7 @@ public class Transaction extends AbstractTransaction {
 
     // fee
     Uint32 fee = new Uint32();
-    fee.setUint32((int) mFee);
+    fee.setUint32((new XdrUnsignedInteger(mFee)));
     // sequenceNumber
     Int64 sequenceNumberUint = new Int64();
     sequenceNumberUint.setInt64(mSequenceNumber);
@@ -244,7 +245,7 @@ public class Transaction extends AbstractTransaction {
 
   public static Transaction fromV0EnvelopeXdr(
       AccountConverter accountConverter, TransactionV0Envelope envelope, Network network) {
-    int mFee = envelope.getTx().getFee().getUint32();
+    long mFee = envelope.getTx().getFee().getUint32().getNumber();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
     TimeBounds mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getTimeBounds());
@@ -278,7 +279,7 @@ public class Transaction extends AbstractTransaction {
 
   public static Transaction fromV1EnvelopeXdr(
       AccountConverter accountConverter, TransactionV1Envelope envelope, Network network) {
-    int mFee = envelope.getTx().getFee().getUint32();
+    long mFee = envelope.getTx().getFee().getUint32().getNumber();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
 

@@ -53,7 +53,7 @@ public class SetTrustlineFlagsOperation extends Operation {
       v |= f.getValue();
     }
     Uint32 combined = new Uint32();
-    combined.setUint32(v);
+    combined.setUint32(new XdrUnsignedInteger(v));
     return combined;
   }
 
@@ -89,8 +89,8 @@ public class SetTrustlineFlagsOperation extends Operation {
     Builder(SetTrustLineFlagsOp op) {
       trustor = StrKey.encodeStellarAccountId(op.getTrustor());
       asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
-      clearFlags = flagSetFromInt(op.getClearFlags().getUint32());
-      setFlags = flagSetFromInt(op.getSetFlags().getUint32());
+      clearFlags = flagSetFromInt(op.getClearFlags().getUint32().getNumber().intValue());
+      setFlags = flagSetFromInt(op.getSetFlags().getUint32().getNumber().intValue());
     }
 
     private static EnumSet<TrustLineFlags> flagSetFromInt(int x) {

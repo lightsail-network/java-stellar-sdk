@@ -14,24 +14,24 @@ import java.io.IOException;
 
 //  ===========================================================================
 public class Uint32 implements XdrElement {
-  private Integer uint32;
+  private XdrUnsignedInteger uint32;
 
   public Uint32() {}
 
-  public Uint32(Integer uint32) {
+  public Uint32(XdrUnsignedInteger uint32) {
     this.uint32 = uint32;
   }
 
-  public Integer getUint32() {
+  public XdrUnsignedInteger getUint32() {
     return this.uint32;
   }
 
-  public void setUint32(Integer value) {
+  public void setUint32(XdrUnsignedInteger value) {
     this.uint32 = value;
   }
 
   public static void encode(XdrDataOutputStream stream, Uint32 encodedUint32) throws IOException {
-    stream.writeInt(encodedUint32.uint32);
+    encodedUint32.uint32.encode(stream);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -40,7 +40,7 @@ public class Uint32 implements XdrElement {
 
   public static Uint32 decode(XdrDataInputStream stream) throws IOException {
     Uint32 decodedUint32 = new Uint32();
-    decodedUint32.uint32 = stream.readInt();
+    decodedUint32.uint32 = XdrUnsignedInteger.decode(stream);
     return decodedUint32;
   }
 

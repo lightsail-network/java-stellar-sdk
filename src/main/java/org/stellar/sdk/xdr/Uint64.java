@@ -14,24 +14,24 @@ import java.io.IOException;
 
 //  ===========================================================================
 public class Uint64 implements XdrElement {
-  private Long uint64;
+  private XdrUnsignedHyperInteger uint64;
 
   public Uint64() {}
 
-  public Uint64(Long uint64) {
+  public Uint64(XdrUnsignedHyperInteger uint64) {
     this.uint64 = uint64;
   }
 
-  public Long getUint64() {
+  public XdrUnsignedHyperInteger getUint64() {
     return this.uint64;
   }
 
-  public void setUint64(Long value) {
+  public void setUint64(XdrUnsignedHyperInteger value) {
     this.uint64 = value;
   }
 
   public static void encode(XdrDataOutputStream stream, Uint64 encodedUint64) throws IOException {
-    stream.writeLong(encodedUint64.uint64);
+    encodedUint64.uint64.encode(stream);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -40,7 +40,7 @@ public class Uint64 implements XdrElement {
 
   public static Uint64 decode(XdrDataInputStream stream) throws IOException {
     Uint64 decodedUint64 = new Uint64();
-    decodedUint64.uint64 = stream.readLong();
+    decodedUint64.uint64 = XdrUnsignedHyperInteger.decode(stream);
     return decodedUint64;
   }
 

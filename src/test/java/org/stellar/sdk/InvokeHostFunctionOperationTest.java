@@ -32,6 +32,7 @@ import org.stellar.sdk.xdr.SorobanCredentialsType;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrString;
+import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class InvokeHostFunctionOperationTest {
   CreateContractArgs createContractArgs =
@@ -215,7 +216,7 @@ public class InvokeHostFunctionOperationTest {
                                         "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW")
                                     .toSCAddress())
                             .nonce(new Int64(123123432L))
-                            .signatureExpirationLedger(new Uint32(10))
+                            .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(10)))
                             .signatureArgs(new SCVec(new SCVal[] {}))
                             .build())
                     .build())

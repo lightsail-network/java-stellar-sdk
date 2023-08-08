@@ -1329,11 +1329,11 @@ public class OperationTest {
     org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
     assertEquals(
         TrustLineFlags.AUTHORIZED_FLAG.getValue(),
-        xdr.getBody().getSetTrustLineFlagsOp().getClearFlags().getUint32().intValue());
+        xdr.getBody().getSetTrustLineFlagsOp().getClearFlags().getUint32().getNumber().intValue());
     assertEquals(
         TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue()
             | TrustLineFlags.TRUSTLINE_CLAWBACK_ENABLED_FLAG.getValue(),
-        xdr.getBody().getSetTrustLineFlagsOp().getSetFlags().getUint32().intValue());
+        xdr.getBody().getSetTrustLineFlagsOp().getSetFlags().getUint32().getNumber().intValue());
     SetTrustlineFlagsOperation parsedOperation =
         (SetTrustlineFlagsOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
     assertEquals(accountId, parsedOperation.getTrustor());
