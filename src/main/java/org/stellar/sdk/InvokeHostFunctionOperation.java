@@ -11,6 +11,7 @@ import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
+import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.scval.ScvAddress;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
@@ -227,9 +228,6 @@ public class InvokeHostFunctionOperation extends Operation {
    * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
    * invoke a contract function.
    *
-   * <p>We also provide some ways for you to conveniently build {@link SCVal}. Please check {@link
-   * org.stellar.sdk.scval}.
-   *
    * @see org.stellar.sdk.scval
    * @see <a
    *     href="https://soroban.stellar.org/docs/fundamentals-and-concepts/interacting-with-contracts"
@@ -240,7 +238,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> invokeContractFunctionOperationBuilder(
-      String contractId, String functionName, @Nullable Collection<SCVal> parameters) {
+      String contractId, String functionName, @Nullable Collection<Scv> parameters) {
     ScvAddress address = new ScvAddress(contractId);
     if (address.getAddressType() != ScvAddress.AddressType.CONTRACT) {
       throw new IllegalArgumentException("\"contractId\" must be a contract address");
@@ -257,11 +255,11 @@ public class InvokeHostFunctionOperation extends Operation {
     invokeContractParams.add(contractIdScVal);
     invokeContractParams.add(functionNameScVal);
     if (parameters != null) {
-      for (SCVal parameter : parameters) {
+      for (Scv parameter : parameters) {
         if (parameter == null) {
           throw new IllegalArgumentException("\"parameters\" contains null element");
         }
-        invokeContractParams.add(parameter);
+        invokeContractParams.add(parameter.toSCVal());
       }
     }
 
