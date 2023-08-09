@@ -6,6 +6,9 @@ package org.stellar.sdk.xdr;
 import static org.stellar.sdk.xdr.Constants.*;
 
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -209,7 +212,33 @@ public class HashIDPreimage implements XdrElement {
         && Objects.equal(this.type, other.type);
   }
 
-  public static class HashIDPreimageOperationID {
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static HashIDPreimage fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static HashIDPreimage fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class HashIDPreimageOperationID implements XdrElement {
     public HashIDPreimageOperationID() {}
 
     private AccountID sourceAccount;
@@ -279,6 +308,32 @@ public class HashIDPreimage implements XdrElement {
           && Objects.equal(this.opNum, other.opNum);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static HashIDPreimageOperationID fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageOperationID fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID sourceAccount;
       private SequenceNumber seqNum;
@@ -309,7 +364,7 @@ public class HashIDPreimage implements XdrElement {
     }
   }
 
-  public static class HashIDPreimageRevokeID {
+  public static class HashIDPreimageRevokeID implements XdrElement {
     public HashIDPreimageRevokeID() {}
 
     private AccountID sourceAccount;
@@ -406,6 +461,32 @@ public class HashIDPreimage implements XdrElement {
           && Objects.equal(this.asset, other.asset);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static HashIDPreimageRevokeID fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageRevokeID fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID sourceAccount;
       private SequenceNumber seqNum;
@@ -450,7 +531,7 @@ public class HashIDPreimage implements XdrElement {
     }
   }
 
-  public static class HashIDPreimageContractID {
+  public static class HashIDPreimageContractID implements XdrElement {
     public HashIDPreimageContractID() {}
 
     private Hash networkID;
@@ -507,6 +588,32 @@ public class HashIDPreimage implements XdrElement {
           && Objects.equal(this.contractIDPreimage, other.contractIDPreimage);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static HashIDPreimageContractID fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageContractID fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private Hash networkID;
       private ContractIDPreimage contractIDPreimage;
@@ -530,7 +637,7 @@ public class HashIDPreimage implements XdrElement {
     }
   }
 
-  public static class HashIDPreimageSorobanAuthorization {
+  public static class HashIDPreimageSorobanAuthorization implements XdrElement {
     public HashIDPreimageSorobanAuthorization() {}
 
     private Hash networkID;
@@ -617,6 +724,33 @@ public class HashIDPreimage implements XdrElement {
           && Objects.equal(this.nonce, other.nonce)
           && Objects.equal(this.signatureExpirationLedger, other.signatureExpirationLedger)
           && Objects.equal(this.invocation, other.invocation);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static HashIDPreimageSorobanAuthorization fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageSorobanAuthorization fromXdrByteArray(byte[] xdr)
+        throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
 
     public static final class Builder {

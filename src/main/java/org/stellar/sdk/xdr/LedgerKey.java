@@ -6,6 +6,9 @@ package org.stellar.sdk.xdr;
 import static org.stellar.sdk.xdr.Constants.*;
 
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -363,7 +366,33 @@ public class LedgerKey implements XdrElement {
         && Objects.equal(this.type, other.type);
   }
 
-  public static class LedgerKeyAccount {
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerKey fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerKey fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class LedgerKeyAccount implements XdrElement {
     public LedgerKeyAccount() {}
 
     private AccountID accountID;
@@ -406,6 +435,32 @@ public class LedgerKey implements XdrElement {
       return Objects.equal(this.accountID, other.accountID);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyAccount fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyAccount fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID accountID;
 
@@ -422,7 +477,7 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyTrustLine {
+  public static class LedgerKeyTrustLine implements XdrElement {
     public LedgerKeyTrustLine() {}
 
     private AccountID accountID;
@@ -479,6 +534,32 @@ public class LedgerKey implements XdrElement {
           && Objects.equal(this.asset, other.asset);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyTrustLine fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyTrustLine fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID accountID;
       private TrustLineAsset asset;
@@ -502,7 +583,7 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyOffer {
+  public static class LedgerKeyOffer implements XdrElement {
     public LedgerKeyOffer() {}
 
     private AccountID sellerID;
@@ -558,6 +639,32 @@ public class LedgerKey implements XdrElement {
           && Objects.equal(this.offerID, other.offerID);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyOffer fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyOffer fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID sellerID;
       private Int64 offerID;
@@ -581,7 +688,7 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyData {
+  public static class LedgerKeyData implements XdrElement {
     public LedgerKeyData() {}
 
     private AccountID accountID;
@@ -637,6 +744,32 @@ public class LedgerKey implements XdrElement {
           && Objects.equal(this.dataName, other.dataName);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyData fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyData fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID accountID;
       private String64 dataName;
@@ -660,7 +793,7 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyClaimableBalance {
+  public static class LedgerKeyClaimableBalance implements XdrElement {
     public LedgerKeyClaimableBalance() {}
 
     private ClaimableBalanceID balanceID;
@@ -704,6 +837,32 @@ public class LedgerKey implements XdrElement {
       return Objects.equal(this.balanceID, other.balanceID);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyClaimableBalance fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyClaimableBalance fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private ClaimableBalanceID balanceID;
 
@@ -720,7 +879,7 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyLiquidityPool {
+  public static class LedgerKeyLiquidityPool implements XdrElement {
     public LedgerKeyLiquidityPool() {}
 
     private PoolID liquidityPoolID;
@@ -764,6 +923,32 @@ public class LedgerKey implements XdrElement {
       return Objects.equal(this.liquidityPoolID, other.liquidityPoolID);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyLiquidityPool fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyLiquidityPool fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private PoolID liquidityPoolID;
 
@@ -780,7 +965,7 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyContractData {
+  public static class LedgerKeyContractData implements XdrElement {
     public LedgerKeyContractData() {}
 
     private SCAddress contract;
@@ -863,6 +1048,32 @@ public class LedgerKey implements XdrElement {
           && Objects.equal(this.bodyType, other.bodyType);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyContractData fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyContractData fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private SCAddress contract;
       private SCVal key;
@@ -900,7 +1111,7 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyContractCode {
+  public static class LedgerKeyContractCode implements XdrElement {
     public LedgerKeyContractCode() {}
 
     private Hash hash;
@@ -956,6 +1167,32 @@ public class LedgerKey implements XdrElement {
       return Objects.equal(this.hash, other.hash) && Objects.equal(this.bodyType, other.bodyType);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyContractCode fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyContractCode fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private Hash hash;
       private ContractEntryBodyType bodyType;
@@ -979,7 +1216,7 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyConfigSetting {
+  public static class LedgerKeyConfigSetting implements XdrElement {
     public LedgerKeyConfigSetting() {}
 
     private ConfigSettingID configSettingID;
@@ -1021,6 +1258,32 @@ public class LedgerKey implements XdrElement {
 
       LedgerKeyConfigSetting other = (LedgerKeyConfigSetting) object;
       return Objects.equal(this.configSettingID, other.configSettingID);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyConfigSetting fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyConfigSetting fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
 
     public static final class Builder {
