@@ -9,13 +9,6 @@ import org.stellar.sdk.xdr.SCValType;
 public abstract class Scv {
 
   /**
-   * Create {@link Scv} with the type of {@link SCValType#SCV_VOID}.
-   */
-  public static SCVal booleanSCVal(boolean value) {
-    return new ScvBoolean(value).toSCVal();
-  }
-
-  /**
    * Convert this object to {@link SCVal}.
    *
    * @return {@link SCVal}
