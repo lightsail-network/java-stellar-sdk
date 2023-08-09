@@ -98,9 +98,7 @@ class StrKey {
     PublicKey publicKey = new PublicKey();
     publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
     try {
-      publicKey.setEd25519(
-          Uint256.decode(
-              new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))));
+      publicKey.setEd25519(Uint256.fromXdrByteArray(decodeStellarAccountId(data)));
     } catch (IOException e) {
       throw new IllegalArgumentException("invalid address: " + data, e);
     }
@@ -118,9 +116,7 @@ class StrKey {
       case ACCOUNT_ID:
         muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
         try {
-          muxed.setEd25519(
-              Uint256.decode(
-                  new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))));
+          muxed.setEd25519(Uint256.fromXdrByteArray(decodeStellarAccountId(data)));
         } catch (IOException e) {
           throw new IllegalArgumentException("invalid address: " + data, e);
         }
@@ -176,8 +172,7 @@ class StrKey {
       byte[] signedPayloadRaw = decodeCheck(VersionByte.SIGNED_PAYLOAD, data);
 
       SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner =
-          SignerKey.SignerKeyEd25519SignedPayload.decode(
-              new XdrDataInputStream(new ByteArrayInputStream(signedPayloadRaw)));
+          SignerKey.SignerKeyEd25519SignedPayload.fromXdrByteArray(signedPayloadRaw);
 
       return new SignedPayloadSigner(
           xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
