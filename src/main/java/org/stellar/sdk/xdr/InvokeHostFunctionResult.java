@@ -6,6 +6,9 @@ package org.stellar.sdk.xdr;
 import static org.stellar.sdk.xdr.Constants.*;
 
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -17,7 +20,6 @@ import java.io.IOException;
 //  case INVOKE_HOST_FUNCTION_MALFORMED:
 //  case INVOKE_HOST_FUNCTION_TRAPPED:
 //  case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
-//  case INVOKE_HOST_FUNCTION_ENTRY_EXPIRED:
 //      void;
 //  };
 
@@ -80,7 +82,6 @@ public class InvokeHostFunctionResult implements XdrElement {
       case INVOKE_HOST_FUNCTION_MALFORMED:
       case INVOKE_HOST_FUNCTION_TRAPPED:
       case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
-      case INVOKE_HOST_FUNCTION_ENTRY_EXPIRED:
         break;
     }
   }
@@ -100,7 +101,6 @@ public class InvokeHostFunctionResult implements XdrElement {
       case INVOKE_HOST_FUNCTION_MALFORMED:
       case INVOKE_HOST_FUNCTION_TRAPPED:
       case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
-      case INVOKE_HOST_FUNCTION_ENTRY_EXPIRED:
         break;
     }
     return decodedInvokeHostFunctionResult;
@@ -119,5 +119,31 @@ public class InvokeHostFunctionResult implements XdrElement {
 
     InvokeHostFunctionResult other = (InvokeHostFunctionResult) object;
     return Objects.equal(this.success, other.success) && Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static InvokeHostFunctionResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static InvokeHostFunctionResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

@@ -1068,7 +1068,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void voidBuilderSorobanDataXdrObject() {
+  public void voidBuilderSorobanDataXdrObject() throws IOException {
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair destination =
@@ -1102,7 +1102,7 @@ public class TransactionBuilderTest {
             .refundableFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
             .build();
-    String sorobanDataString = Util.xdrToSorobanTransactionData(sorobanData);
+    String sorobanDataString = sorobanData.toXdrBase64();
 
     CreateContractArgs createContractArgs =
         new CreateContractArgs.Builder()

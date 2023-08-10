@@ -1,5 +1,8 @@
 package org.stellar.sdk.xdr;
 
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.nio.charset.Charset;
@@ -34,6 +37,40 @@ public class XdrString implements XdrElement {
 
   public byte[] getBytes() {
     return this.bytes;
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static XdrString fromXdrBase64(String xdr, int maxSize) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes, maxSize);
+  }
+
+  public static XdrString fromXdrBase64(String xdr) throws IOException {
+    return fromXdrBase64(xdr, Integer.MAX_VALUE);
+  }
+
+  public static XdrString fromXdrByteArray(byte[] xdr, int maxSize) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream, maxSize);
+  }
+
+  public static XdrString fromXdrByteArray(byte[] xdr) throws IOException {
+    return fromXdrByteArray(xdr, Integer.MAX_VALUE);
   }
 
   @Override
