@@ -1098,11 +1098,7 @@ public class SorobanServerTest {
             .hostFunction(
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
-            .auth(
-                Arrays.asList(
-                    auth,
-                    sorobanAuthorizationEntryFromXdrBase64(
-                        "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
+            .auth(Collections.singletonList(auth))
             .build();
     Transaction expectedTx =
         new Transaction(
