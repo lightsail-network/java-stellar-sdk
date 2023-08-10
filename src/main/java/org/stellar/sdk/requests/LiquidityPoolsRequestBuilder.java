@@ -13,6 +13,7 @@ import org.stellar.sdk.responses.Page;
 /** Builds requests connected to liquidity pools. */
 public class LiquidityPoolsRequestBuilder extends RequestBuilder {
   private static final String RESERVES_PARAMETER_NAME = "reserves";
+  private static final String ACCOUNT_PARAMETER_NAME = "account";
 
   public LiquidityPoolsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "liquidity_pools");
@@ -71,6 +72,18 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
   public LiquidityPoolsRequestBuilder forReserves(String... reserves) {
     uriBuilder.setQueryParameter(RESERVES_PARAMETER_NAME, String.join(",", reserves));
     return this;
+  }
+  
+  /**
+   * Returns all liquidity pools the specified account is participating in.
+   *
+   * @param account Account ID to filter liquidity pools
+   * @return current {@link LiquidityPoolsRequestBuilder} instance
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/list/">LiquidityPools</a>
+   */
+  public LiquidityPoolsRequestBuilder forAccount(String account) {
+      uriBuilder.setQueryParameter(ACCOUNT_PARAMETER_NAME, account);
+      return this;
   }
 
   /**
