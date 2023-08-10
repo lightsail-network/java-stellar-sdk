@@ -838,7 +838,7 @@ public class SorobanServerTest {
     Transaction newTx = server.prepareTransaction(transaction);
 
     SorobanTransactionData sorobanData =
-        Util.sorobanTransactionDataToXDR(
+        SorobanTransactionData.fromXdrBase64(
             "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.builder()
@@ -957,7 +957,7 @@ public class SorobanServerTest {
     Transaction newTx = server.prepareTransaction(transaction);
 
     SorobanTransactionData sorobanData =
-        Util.sorobanTransactionDataToXDR(
+        SorobanTransactionData.fromXdrBase64(
             "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.builder()
@@ -1086,7 +1086,7 @@ public class SorobanServerTest {
     Transaction newTx = server.prepareTransaction(transaction);
 
     SorobanTransactionData sorobanData =
-        Util.sorobanTransactionDataToXDR(
+        SorobanTransactionData.fromXdrBase64(
             "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.builder()

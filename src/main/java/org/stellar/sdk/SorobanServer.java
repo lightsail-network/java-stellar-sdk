@@ -1,10 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -48,8 +44,6 @@ import org.stellar.sdk.xdr.LedgerKey;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 import org.stellar.sdk.xdr.SorobanTransactionData;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 /**
  * Main class used to connect to the Soroban-RPC instance and exposes an interface for requests to
@@ -122,8 +116,12 @@ public class SorobanServer implements Closeable {
     if (entries == null || entries.isEmpty()) {
       throw new AccountNotFoundException(accountId);
     }
-    LedgerEntry.LedgerEntryData ledgerEntryData =
-        ledgerEntryDataFromXdrBase64(entries.get(0).getXdr());
+    LedgerEntry.LedgerEntryData ledgerEntryData;
+    try {
+      ledgerEntryData = LedgerEntry.LedgerEntryData.fromXdrBase64(entries.get(0).getXdr());
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Invalid ledgerEntryData: " + entries.get(0).getXdr(), e);
+    }
     long sequence = ledgerEntryData.getAccount().getSeqNum().getSequenceNumber().getInt64();
     return new Account(accountId, sequence);
   }
@@ -220,8 +218,16 @@ public class SorobanServer implements Closeable {
       throw new IllegalArgumentException("At least one key must be provided.");
     }
 
-    List<String> xdrKeys =
-        keys.stream().map(SorobanServer::ledgerKeyToXdrBase64).collect(Collectors.toList());
+    List<String> xdrKeys = new ArrayList<>(keys.size());
+    for (LedgerKey key : keys) {
+      String xdrBase64;
+      try {
+        xdrBase64 = key.toXdrBase64();
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Invalid ledgerKey: " + key, e);
+      }
+      xdrKeys.add(xdrBase64);
+    }
     GetLedgerEntriesRequest params = new GetLedgerEntriesRequest(xdrKeys);
     return this.sendRequest(
         "getLedgerEntries",
@@ -430,7 +436,11 @@ public class SorobanServer implements Closeable {
         List<SorobanAuthorizationEntry> authorizationEntries =
             new ArrayList<>(simulateHostFunctionResult.getAuth().size());
         for (String auth : simulateHostFunctionResult.getAuth()) {
-          authorizationEntries.add(sorobanAuthorizationEntryFromXdrBase64(auth));
+          try {
+            authorizationEntries.add(SorobanAuthorizationEntry.fromXdrBase64(auth));
+          } catch (IOException e) {
+            throw new IllegalArgumentException("Invalid auth: " + auth, e);
+          }
         }
 
         operation =
@@ -442,8 +452,14 @@ public class SorobanServer implements Closeable {
       }
     }
 
-    SorobanTransactionData sorobanData =
-        Util.sorobanTransactionDataToXDR(simulateTransactionResponse.getTransactionData());
+    SorobanTransactionData sorobanData;
+    try {
+      sorobanData =
+          SorobanTransactionData.fromXdrBase64(simulateTransactionResponse.getTransactionData());
+    } catch (IOException e) {
+      throw new IllegalArgumentException(
+          "Invalid transactionData: " + simulateTransactionResponse.getTransactionData(), e);
+    }
 
     return new Transaction(
         transaction.getAccountConverter(),
@@ -485,44 +501,6 @@ public class SorobanServer implements Closeable {
 
   private static String generateRequestId() {
     return UUID.randomUUID().toString();
-  }
-
-  private static String ledgerKeyToXdrBase64(LedgerKey ledgerKey) {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    try {
-      ledgerKey.encode(xdrDataOutputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid ledgerKey.", e);
-    }
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(byteArrayOutputStream.toByteArray());
-  }
-
-  private static LedgerEntry.LedgerEntryData ledgerEntryDataFromXdrBase64(String ledgerEntryData) {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(ledgerEntryData);
-    ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-    XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
-    try {
-      return LedgerEntry.LedgerEntryData.decode(xdrInputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid ledgerEntryData: " + ledgerEntryData, e);
-    }
-  }
-
-  private static SorobanAuthorizationEntry sorobanAuthorizationEntryFromXdrBase64(
-      String sorobanAuthorizationEntry) {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(sorobanAuthorizationEntry);
-    ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-    XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
-    try {
-      return SorobanAuthorizationEntry.decode(xdrInputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException(
-          "invalid ledgerEntryData: " + sorobanAuthorizationEntry, e);
-    }
   }
 
   /**

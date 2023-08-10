@@ -3,6 +3,8 @@ package org.stellar.sdk;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.IOException;
 import org.stellar.sdk.xdr.*;
 
 public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
@@ -18,13 +20,21 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(this.balanceId.toLowerCase());
+    ClaimableBalanceID balanceId;
+    try {
+      balanceId = ClaimableBalanceID.fromXdrByteArray(balanceIdBytes);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("invalid balanceId: " + this.balanceId, e);
+    }
+
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
     key.setDiscriminant(LedgerEntryType.CLAIMABLE_BALANCE);
     LedgerKey.LedgerKeyClaimableBalance claimableBalance =
         new LedgerKey.LedgerKeyClaimableBalance();
 
-    claimableBalance.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
+    claimableBalance.setBalanceID(balanceId);
     key.setClaimableBalance(claimableBalance);
     op.setLedgerKey(key);
     op.setDiscriminant(RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY);
@@ -49,8 +59,14 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
-      balanceId =
-          Util.xdrToClaimableBalanceId(op.getLedgerKey().getClaimableBalance().getBalanceID());
+      try {
+        balanceId =
+            BaseEncoding.base16()
+                .lowerCase()
+                .encode(op.getLedgerKey().getClaimableBalance().getBalanceID().toXdrByteArray());
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Invalid claimableBalance in the operation", e);
+      }
     }
 
     /**

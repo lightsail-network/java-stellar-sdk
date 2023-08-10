@@ -2,15 +2,12 @@ package org.stellar.sdk;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 /** Abstract class for operations. */
 @SuperBuilder(toBuilder = true)
@@ -51,12 +48,7 @@ public abstract class Operation {
   /** Returns base64-encoded Operation XDR object. */
   public String toXdrBase64(AccountConverter accountConverter) {
     try {
-      org.stellar.sdk.xdr.Operation operation = this.toXdr(accountConverter);
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
-      org.stellar.sdk.xdr.Operation.encode(xdrOutputStream, operation);
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(outputStream.toByteArray());
+      return toXdr(accountConverter).toXdrBase64();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
