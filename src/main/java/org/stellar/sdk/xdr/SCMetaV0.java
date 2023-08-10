@@ -55,8 +55,8 @@ public class SCMetaV0 implements XdrElement {
 
   public static SCMetaV0 decode(XdrDataInputStream stream) throws IOException {
     SCMetaV0 decodedSCMetaV0 = new SCMetaV0();
-    decodedSCMetaV0.key = XdrString.decode(stream, 2147483647);
-    decodedSCMetaV0.val = XdrString.decode(stream, 2147483647);
+    decodedSCMetaV0.key = XdrString.decode(stream, Integer.MAX_VALUE);
+    decodedSCMetaV0.val = XdrString.decode(stream, Integer.MAX_VALUE);
     return decodedSCMetaV0;
   }
 

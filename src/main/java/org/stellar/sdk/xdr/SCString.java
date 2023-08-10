@@ -44,7 +44,7 @@ public class SCString implements XdrElement {
 
   public static SCString decode(XdrDataInputStream stream) throws IOException {
     SCString decodedSCString = new SCString();
-    decodedSCString.SCString = XdrString.decode(stream, 2147483647);
+    decodedSCString.SCString = XdrString.decode(stream, Integer.MAX_VALUE);
     return decodedSCString;
   }
 
