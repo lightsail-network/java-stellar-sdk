@@ -6,6 +6,9 @@ package org.stellar.sdk.xdr;
 import static org.stellar.sdk.xdr.Constants.*;
 
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -57,6 +60,32 @@ public class SCSpecTypeVec implements XdrElement {
 
     SCSpecTypeVec other = (SCSpecTypeVec) object;
     return Objects.equal(this.elementType, other.elementType);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SCSpecTypeVec fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SCSpecTypeVec fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {

@@ -5,6 +5,9 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -17,8 +20,7 @@ import java.io.IOException;
 //      // codes considered as "failure" for the operation
 //      INVOKE_HOST_FUNCTION_MALFORMED = -1,
 //      INVOKE_HOST_FUNCTION_TRAPPED = -2,
-//      INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED = -3,
-//      INVOKE_HOST_FUNCTION_ENTRY_EXPIRED = -4
+//      INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED = -3
 //  };
 
 //  ===========================================================================
@@ -27,7 +29,6 @@ public enum InvokeHostFunctionResultCode implements XdrElement {
   INVOKE_HOST_FUNCTION_MALFORMED(-1),
   INVOKE_HOST_FUNCTION_TRAPPED(-2),
   INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED(-3),
-  INVOKE_HOST_FUNCTION_ENTRY_EXPIRED(-4),
   ;
   private int mValue;
 
@@ -50,8 +51,6 @@ public enum InvokeHostFunctionResultCode implements XdrElement {
         return INVOKE_HOST_FUNCTION_TRAPPED;
       case -3:
         return INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED;
-      case -4:
-        return INVOKE_HOST_FUNCTION_ENTRY_EXPIRED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
@@ -64,5 +63,31 @@ public enum InvokeHostFunctionResultCode implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static InvokeHostFunctionResultCode fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static InvokeHostFunctionResultCode fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

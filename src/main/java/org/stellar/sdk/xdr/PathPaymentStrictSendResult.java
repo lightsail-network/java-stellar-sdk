@@ -6,6 +6,9 @@ package org.stellar.sdk.xdr;
 import static org.stellar.sdk.xdr.Constants.*;
 
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -180,7 +183,33 @@ public class PathPaymentStrictSendResult implements XdrElement {
         && Objects.equal(this.code, other.code);
   }
 
-  public static class PathPaymentStrictSendResultSuccess {
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static PathPaymentStrictSendResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static PathPaymentStrictSendResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class PathPaymentStrictSendResultSuccess implements XdrElement {
     public PathPaymentStrictSendResultSuccess() {}
 
     private ClaimAtom[] offers;
@@ -245,6 +274,33 @@ public class PathPaymentStrictSendResult implements XdrElement {
 
       PathPaymentStrictSendResultSuccess other = (PathPaymentStrictSendResultSuccess) object;
       return Arrays.equals(this.offers, other.offers) && Objects.equal(this.last, other.last);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static PathPaymentStrictSendResultSuccess fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static PathPaymentStrictSendResultSuccess fromXdrByteArray(byte[] xdr)
+        throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
 
     public static final class Builder {
