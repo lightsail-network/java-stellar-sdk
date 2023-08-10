@@ -3,6 +3,8 @@ package org.stellar.sdk;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.IOException;
 import org.stellar.sdk.xdr.*;
 
 public class ClaimClaimableBalanceOperation extends Operation {
@@ -18,8 +20,16 @@ public class ClaimClaimableBalanceOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(this.balanceId.toLowerCase());
+    ClaimableBalanceID balanceId;
+    try {
+      balanceId = ClaimableBalanceID.fromXdrByteArray(balanceIdBytes);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("invalid balanceId: " + this.balanceId, e);
+    }
+
     ClaimClaimableBalanceOp op = new ClaimClaimableBalanceOp();
-    op.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
+    op.setBalanceID(balanceId);
     org.stellar.sdk.xdr.Operation.OperationBody body =
         new org.stellar.sdk.xdr.Operation.OperationBody();
     body.setDiscriminant(OperationType.CLAIM_CLAIMABLE_BALANCE);
@@ -38,7 +48,11 @@ public class ClaimClaimableBalanceOperation extends Operation {
      * @param op {@link ClaimClaimableBalanceOp}
      */
     Builder(ClaimClaimableBalanceOp op) {
-      balanceId = Util.xdrToClaimableBalanceId(op.getBalanceID());
+      try {
+        balanceId = BaseEncoding.base16().lowerCase().encode(op.getBalanceID().toXdrByteArray());
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Invalid balanceId in the operation", e);
+      }
     }
 
     /**

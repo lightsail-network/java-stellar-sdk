@@ -1,11 +1,8 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import org.stellar.sdk.xdr.ClaimableBalanceID;
 
 public class Util {
 
@@ -94,23 +91,6 @@ public class Util {
       clientVersion = implementationVersion;
     }
     return clientVersion;
-  }
-
-  public static ClaimableBalanceID claimableBalanceIdToXDR(String balanceId) {
-    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase());
-    try {
-      return ClaimableBalanceID.fromXdrByteArray(balanceIdBytes);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid balanceId: " + balanceId, e);
-    }
-  }
-
-  public static String xdrToClaimableBalanceId(ClaimableBalanceID balanceId) {
-    try {
-      return BaseEncoding.base16().lowerCase().encode(balanceId.toXdrByteArray());
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid claimClaimableBalanceOp.", e);
-    }
   }
 
   public static AssetTypeCreditAlphaNum assertNonNativeAsset(Asset asset) {
