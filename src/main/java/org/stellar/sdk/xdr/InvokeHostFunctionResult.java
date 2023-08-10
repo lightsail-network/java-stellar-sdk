@@ -20,7 +20,6 @@ import java.io.IOException;
 //  case INVOKE_HOST_FUNCTION_MALFORMED:
 //  case INVOKE_HOST_FUNCTION_TRAPPED:
 //  case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
-//  case INVOKE_HOST_FUNCTION_ENTRY_EXPIRED:
 //      void;
 //  };
 
@@ -83,7 +82,6 @@ public class InvokeHostFunctionResult implements XdrElement {
       case INVOKE_HOST_FUNCTION_MALFORMED:
       case INVOKE_HOST_FUNCTION_TRAPPED:
       case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
-      case INVOKE_HOST_FUNCTION_ENTRY_EXPIRED:
         break;
     }
   }
@@ -103,7 +101,6 @@ public class InvokeHostFunctionResult implements XdrElement {
       case INVOKE_HOST_FUNCTION_MALFORMED:
       case INVOKE_HOST_FUNCTION_TRAPPED:
       case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
-      case INVOKE_HOST_FUNCTION_ENTRY_EXPIRED:
         break;
     }
     return decodedInvokeHostFunctionResult;

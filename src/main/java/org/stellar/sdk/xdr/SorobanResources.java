@@ -26,7 +26,7 @@ import java.io.IOException;
 //      uint32 writeBytes;
 //
 //      // Maximum size of dynamic metadata produced by this contract (
-//      // bytes read from ledger + bytes written to ledger + event bytes written to meta).
+//      // currently only includes the events).
 //      uint32 extendedMetaDataSizeBytes;
 //  };
 
