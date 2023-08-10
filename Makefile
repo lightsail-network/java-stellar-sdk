@@ -1,6 +1,3 @@
-# Docker build targets use an optional "TAG" environment
-# variable can be set to use custom tag name. For example:
-#   TAG=my-registry.example.com/keystore:dev make keystore
 XDRS = xdr/Stellar-SCP.x \
 xdr/Stellar-ledger-entries.x \
 xdr/Stellar-ledger.x \
