@@ -21,7 +21,7 @@ import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
-public class StrKey {
+class StrKey {
 
   public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
   private static final byte[] b32Table = decodingTable();
