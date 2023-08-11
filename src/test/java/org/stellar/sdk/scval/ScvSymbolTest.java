@@ -15,11 +15,8 @@ public class ScvSymbolTest {
     ScvSymbol scvSymbol = new ScvSymbol(value);
     SCVal scVal = scvSymbol.toSCVal();
 
-    assertEquals(scvSymbol.getSCValType(), SCValType.SCV_SYMBOL);
     assertEquals(scvSymbol.getValue(), value);
-
     assertEquals(ScvSymbol.fromSCVal(scVal), scvSymbol);
-    assertEquals(Scv.fromSCVal(scVal), scvSymbol);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -27,5 +24,8 @@ public class ScvSymbolTest {
             .sym(new SCSymbol(new XdrString(value)))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toSymbol(value), scVal);
+    assertEquals(Scv.fromSymbol(scVal), value);
   }
 }

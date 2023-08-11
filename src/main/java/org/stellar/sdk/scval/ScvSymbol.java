@@ -12,7 +12,7 @@ import org.stellar.sdk.xdr.XdrString;
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ScvSymbol extends Scv {
+class ScvSymbol extends Scv {
   private static final SCValType TYPE = SCValType.SCV_SYMBOL;
 
   String value;
@@ -20,11 +20,6 @@ public class ScvSymbol extends Scv {
   @Override
   public SCVal toSCVal() {
     return new SCVal.Builder().discriminant(TYPE).sym(new SCSymbol(new XdrString(value))).build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvSymbol fromSCVal(SCVal scVal) {

@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import org.junit.Test;
-import org.stellar.sdk.scval.ScvAddress;
 import org.stellar.sdk.xdr.*;
 
 public class TransactionBuilderTest {
@@ -1113,7 +1112,7 @@ public class TransactionBuilderTest {
                     .fromAddress(
                         new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
                             .address(
-                                new ScvAddress(
+                                new Address(
                                         "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
                                     .toSCAddress())
                             .salt(new Uint256(new byte[32]))

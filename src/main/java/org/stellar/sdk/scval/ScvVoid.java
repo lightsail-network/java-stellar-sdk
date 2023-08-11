@@ -6,17 +6,12 @@ import org.stellar.sdk.xdr.SCValType;
 
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_VOID}. */
 @EqualsAndHashCode(callSuper = false)
-public class ScvVoid extends Scv {
+class ScvVoid extends Scv {
   private static final SCValType TYPE = SCValType.SCV_VOID;
 
   @Override
   public SCVal toSCVal() {
     return new SCVal.Builder().discriminant(TYPE).build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvVoid fromSCVal(SCVal scVal) {

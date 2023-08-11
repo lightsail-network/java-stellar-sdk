@@ -12,13 +12,14 @@ public class ScvBooleanTest {
     ScvBoolean scvBoolean = new ScvBoolean(true);
     SCVal scVal = scvBoolean.toSCVal();
 
-    assertEquals(scvBoolean.getSCValType(), SCValType.SCV_BOOL);
     assertEquals(scvBoolean.getValue(), true);
-
     assertEquals(ScvBoolean.fromSCVal(scVal), scvBoolean);
-    assertEquals(Scv.fromSCVal(scVal), scvBoolean);
 
     SCVal expectedScVal = new SCVal.Builder().discriminant(SCValType.SCV_BOOL).b(true).build();
     assertEquals(expectedScVal, scVal);
+    assertEquals(Scv.toBoolean(true), scVal);
+
+    assertEquals(Scv.toBoolean(true), scVal);
+    assertEquals(Scv.fromBoolean(scVal), true);
   }
 }

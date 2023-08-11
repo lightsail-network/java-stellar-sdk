@@ -10,7 +10,7 @@ import org.stellar.sdk.xdr.XdrString;
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_STRING}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
-public class ScvString extends Scv {
+class ScvString extends Scv {
   private static final SCValType TYPE = SCValType.SCV_STRING;
 
   byte[] value;
@@ -26,11 +26,6 @@ public class ScvString extends Scv {
   @Override
   public SCVal toSCVal() {
     return new SCVal.Builder().discriminant(TYPE).str(new SCString(new XdrString(value))).build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvString fromSCVal(SCVal scVal) {

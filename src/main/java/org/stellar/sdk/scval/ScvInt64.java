@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.SCValType;
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ScvInt64 extends Scv {
+class ScvInt64 extends Scv {
   private static final SCValType TYPE = SCValType.SCV_I64;
 
   public static final long MAX_VALUE = Long.MAX_VALUE;
@@ -22,11 +22,6 @@ public class ScvInt64 extends Scv {
   @Override
   public SCVal toSCVal() {
     return new SCVal.Builder().discriminant(TYPE).i64(new Int64(value)).build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvInt64 fromSCVal(SCVal scVal) {

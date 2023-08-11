@@ -14,14 +14,14 @@ public class ScvBytesTest {
     ScvBytes scvBytes = new ScvBytes(data);
     SCVal scVal = scvBytes.toSCVal();
 
-    assertEquals(scvBytes.getSCValType(), SCValType.SCV_BYTES);
     assertEquals(scvBytes.getValue(), data);
-
     assertEquals(ScvBytes.fromSCVal(scVal), scvBytes);
-    assertEquals(Scv.fromSCVal(scVal), scvBytes);
 
     SCVal expectedScVal =
         new SCVal.Builder().discriminant(SCValType.SCV_BYTES).bytes(new SCBytes(data)).build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toBytes(data), scVal);
+    assertEquals(Scv.fromBytes(scVal), data);
   }
 }

@@ -12,7 +12,7 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_TIMEPOINT}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
-public class ScvTimePoint extends Scv {
+class ScvTimePoint extends Scv {
   private static final SCValType TYPE = SCValType.SCV_TIMEPOINT;
 
   public static final BigInteger MAX_VALUE = XdrUnsignedHyperInteger.MAX_VALUE;
@@ -36,11 +36,6 @@ public class ScvTimePoint extends Scv {
         .discriminant(TYPE)
         .timepoint(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(value))))
         .build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvTimePoint fromSCVal(SCVal scVal) {

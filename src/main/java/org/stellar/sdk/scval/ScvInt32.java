@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.SCValType;
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ScvInt32 extends Scv {
+class ScvInt32 extends Scv {
   private static final SCValType TYPE = SCValType.SCV_I32;
   public static final int MAX_VALUE = Integer.MAX_VALUE;
   public static final int MIN_VALUE = Integer.MIN_VALUE;
@@ -21,11 +21,6 @@ public class ScvInt32 extends Scv {
   @Override
   public SCVal toSCVal() {
     return new SCVal.Builder().discriminant(TYPE).i32(new Int32(value)).build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvInt32 fromSCVal(SCVal scVal) {

@@ -2,52 +2,46 @@ package org.stellar.sdk.scval;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import org.junit.Test;
+import org.stellar.sdk.xdr.SCMap;
+import org.stellar.sdk.xdr.SCMapEntry;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
 public class ScvMapTest {
   @Test
-  public void testScvMap() {
-    Map<Scv, Scv> value = new HashMap<>();
-    value.put(new ScvSymbol("key1"), new ScvString("value1"));
-    value.put(new ScvString("key2"), new ScvInt32(123));
-
-    Map<Scv, Scv> map = new HashMap<>();
-    map.put(new ScvSymbol("mapKey1"), new ScvString("mapValue1"));
-    map.put(new ScvString("mapKey2"), new ScvInt32(23434));
-
-    value.put(
-        new ScvString("key3"),
-        new ScvVec(
-            Arrays.asList(
-                new ScvInt32(1),
-                new ScvInt32(2),
-                new ScvMap(map),
-                new ScvVec(Arrays.asList(new ScvBoolean(true), new ScvBoolean(false))))));
+  public void testScvMap() throws IOException {
+    LinkedHashMap<SCVal, SCVal> value = new LinkedHashMap<>();
+    value.put(new ScvSymbol("key1").toSCVal(), new ScvString("value1").toSCVal());
+    value.put(new ScvString("key2").toSCVal(), new ScvInt32(123).toSCVal());
 
     ScvMap scvMap = new ScvMap(value);
     SCVal scVal = scvMap.toSCVal();
 
-    assertEquals(scvMap.getSCValType(), SCValType.SCV_MAP);
     assertEquals(scvMap.getValue(), value);
-
     assertEquals(ScvMap.fromSCVal(scVal), scvMap);
-    assertEquals(Scv.fromSCVal(scVal), scvMap);
 
-    assertEquals(
-        ScvMap.fromSCVal(scVal).getValue().get(new ScvSymbol("key1")), new ScvString("value1"));
-    assertEquals(ScvMap.fromSCVal(scVal).getValue().get(new ScvString("key2")), new ScvInt32(123));
-    assertEquals(
-        ScvMap.fromSCVal(scVal).getValue().get(new ScvString("key3")),
-        new ScvVec(
-            Arrays.asList(
-                new ScvInt32(1),
-                new ScvInt32(2),
-                new ScvMap(map),
-                new ScvVec(Arrays.asList(new ScvBoolean(true), new ScvBoolean(false))))));
+    SCVal expectedScVal =
+        new SCVal.Builder()
+            .discriminant(SCValType.SCV_MAP)
+            .map(
+                new SCMap(
+                    new SCMapEntry[] {
+                      new SCMapEntry.Builder()
+                          .key(new ScvSymbol("key1").toSCVal())
+                          .val(new ScvString("value1").toSCVal())
+                          .build(),
+                      new SCMapEntry.Builder()
+                          .key(new ScvString("key2").toSCVal())
+                          .val(new ScvInt32(123).toSCVal())
+                          .build(),
+                    }))
+            .build();
+    assertEquals(expectedScVal.toXdrBase64(), scVal.toXdrBase64());
+
+    assertEquals(Scv.toMap(value), scVal);
+    assertEquals(Scv.fromMap(scVal), value);
   }
 }

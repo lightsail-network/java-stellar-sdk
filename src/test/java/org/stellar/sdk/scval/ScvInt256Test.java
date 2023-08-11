@@ -3,7 +3,6 @@ package org.stellar.sdk.scval;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -11,15 +10,12 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.Test;
-import org.stellar.sdk.xdr.Int256Parts;
 import org.stellar.sdk.xdr.SCVal;
-import org.stellar.sdk.xdr.SCValType;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 public class ScvInt256Test {
 
   @Test
-  public void testScvInt256() {
+  public void testScvInt256() throws IOException {
     List<TestCase> values =
         Arrays.asList(
             new TestCase(BigInteger.ZERO, new byte[32]),
@@ -283,36 +279,24 @@ public class ScvInt256Test {
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvInt256GreaterThanMaxValueThrows() {
-    new ScvInt256(ScvInt256.MAX_VALUE.add(BigInteger.ONE));
+    Scv.toInt256(ScvInt256.MAX_VALUE.add(BigInteger.ONE));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvInt256LessThanMinValueThrows() {
-    new ScvInt256(ScvInt256.MIN_VALUE.subtract(BigInteger.ONE));
+    Scv.toInt256(ScvInt256.MIN_VALUE.subtract(BigInteger.ONE));
   }
 
-  private void checkScvInt256(TestCase value) {
+  private void checkScvInt256(TestCase value) throws IOException {
     ScvInt256 scvInt256 = new ScvInt256(value.v);
     SCVal scVal = scvInt256.toSCVal();
 
-    assertEquals(scvInt256.getSCValType(), SCValType.SCV_I256);
     assertEquals(scvInt256.getValue(), value.v);
-
     assertEquals(ScvInt256.fromSCVal(scVal), scvInt256);
-    assertEquals(Scv.fromSCVal(scVal), scvInt256);
+    assertArrayEquals(scVal.getI256().toXdrByteArray(), value.getExpectedBytes());
 
-    assertArrayEquals(getInt256PartsBytes(scVal.getI256()), value.getExpectedBytes());
-  }
-
-  private byte[] getInt256PartsBytes(Int256Parts int256Parts) {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    try {
-      int256Parts.encode(xdrDataOutputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid int256Parts.", e);
-    }
-    return byteArrayOutputStream.toByteArray();
+    assertEquals(Scv.toInt256(value.v), scVal);
+    assertEquals(Scv.fromInt256(scVal), value.v);
   }
 
   @Value

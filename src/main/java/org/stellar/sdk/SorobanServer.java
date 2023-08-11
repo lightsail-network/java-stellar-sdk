@@ -36,7 +36,6 @@ import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SorobanRpcResponse;
-import org.stellar.sdk.scval.ScvAddress;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.ContractEntryBodyType;
 import org.stellar.sdk.xdr.LedgerEntry;
@@ -174,7 +173,7 @@ public class SorobanServer implements Closeable {
         throw new IllegalArgumentException("Invalid durability: " + durability);
     }
 
-    ScvAddress address = new ScvAddress(contractId);
+    Address address = new Address(contractId);
     LedgerKey.LedgerKeyContractData ledgerKeyContractData =
         new LedgerKey.LedgerKeyContractData.Builder()
             .contract(address.toSCAddress())

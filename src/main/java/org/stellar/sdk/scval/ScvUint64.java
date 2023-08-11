@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_U64}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
-public class ScvUint64 extends Scv {
+class ScvUint64 extends Scv {
   private static final SCValType TYPE = SCValType.SCV_U64;
 
   public static final BigInteger MAX_VALUE = XdrUnsignedHyperInteger.MAX_VALUE;
@@ -35,11 +35,6 @@ public class ScvUint64 extends Scv {
         .discriminant(TYPE)
         .u64(new Uint64(new XdrUnsignedHyperInteger(value)))
         .build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvUint64 fromSCVal(SCVal scVal) {

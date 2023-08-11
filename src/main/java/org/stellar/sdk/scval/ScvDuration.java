@@ -12,7 +12,7 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_DURATION}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
-public class ScvDuration extends Scv {
+class ScvDuration extends Scv {
   private static final SCValType TYPE = SCValType.SCV_DURATION;
   public static final BigInteger MAX_VALUE = XdrUnsignedHyperInteger.MAX_VALUE;
   public static final BigInteger MIN_VALUE = XdrUnsignedHyperInteger.MIN_VALUE;
@@ -32,11 +32,6 @@ public class ScvDuration extends Scv {
         .discriminant(TYPE)
         .duration(new Duration(new Uint64(new XdrUnsignedHyperInteger(value))))
         .build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvDuration fromSCVal(SCVal scVal) {

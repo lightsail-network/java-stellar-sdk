@@ -16,11 +16,9 @@ public class ScvStringTest {
     ScvString scvString = new ScvString(value);
     SCVal scVal = scvString.toSCVal();
 
-    assertEquals(scvString.getSCValType(), SCValType.SCV_STRING);
     assertArrayEquals(scvString.getValue(), value.getBytes());
 
     assertEquals(ScvString.fromSCVal(scVal), scvString);
-    assertEquals(Scv.fromSCVal(scVal), scvString);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -28,6 +26,9 @@ public class ScvStringTest {
             .str(new SCString(new XdrString(value)))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toString(value), scVal);
+    assertArrayEquals(Scv.fromString(scVal), value.getBytes());
   }
 
   @Test
@@ -36,11 +37,8 @@ public class ScvStringTest {
     ScvString scvString = new ScvString(value);
     SCVal scVal = scvString.toSCVal();
 
-    assertEquals(scvString.getSCValType(), SCValType.SCV_STRING);
     assertArrayEquals(scvString.getValue(), value);
-
     assertEquals(ScvString.fromSCVal(scVal), scvString);
-    assertEquals(Scv.fromSCVal(scVal), scvString);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -48,5 +46,8 @@ public class ScvStringTest {
             .str(new SCString(new XdrString(value)))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toString(value), scVal);
+    assertArrayEquals(Scv.fromString(scVal), value);
   }
 }

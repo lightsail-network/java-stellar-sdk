@@ -15,7 +15,7 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_I256}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
-public class ScvInt256 extends Scv {
+class ScvInt256 extends Scv {
   private static final SCValType TYPE = SCValType.SCV_I256;
 
   public static final BigInteger MIN_VALUE = BigInteger.valueOf(-2).pow(255);
@@ -88,10 +88,5 @@ public class ScvInt256 extends Scv {
 
     BigInteger value = new BigInteger(fullBytes);
     return new ScvInt256(value);
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return SCValType.SCV_I256;
   }
 }

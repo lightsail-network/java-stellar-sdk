@@ -15,11 +15,8 @@ public class ScvLedgerKeyNonceTest {
     ScvLedgerKeyNonce scvLedgerKeyNonce = new ScvLedgerKeyNonce(value);
     SCVal scVal = scvLedgerKeyNonce.toSCVal();
 
-    assertEquals(scvLedgerKeyNonce.getSCValType(), SCValType.SCV_LEDGER_KEY_NONCE);
     assertEquals(scvLedgerKeyNonce.getValue(), value);
-
     assertEquals(ScvLedgerKeyNonce.fromSCVal(scVal), scvLedgerKeyNonce);
-    assertEquals(Scv.fromSCVal(scVal), scvLedgerKeyNonce);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -27,5 +24,8 @@ public class ScvLedgerKeyNonceTest {
             .nonce_key(new SCNonceKey.Builder().nonce(new Int64(value)).build())
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toLedgerKeyNonce(value), scVal);
+    assertEquals(Scv.fromLedgerKeyNonce(scVal), value);
   }
 }

@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.SCValType;
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ScvBytes extends Scv {
+class ScvBytes extends Scv {
   private static final SCValType TYPE = SCValType.SCV_BYTES;
 
   byte[] value;
@@ -19,11 +19,6 @@ public class ScvBytes extends Scv {
   @Override
   public SCVal toSCVal() {
     return new SCVal.Builder().discriminant(TYPE).bytes(new SCBytes(value)).build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvBytes fromSCVal(SCVal scVal) {

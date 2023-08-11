@@ -10,7 +10,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_U32}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
-public class ScvUint32 extends Scv {
+class ScvUint32 extends Scv {
   private static final SCValType TYPE = SCValType.SCV_U32;
 
   public static final long MAX_VALUE = XdrUnsignedInteger.MAX_VALUE;
@@ -34,11 +34,6 @@ public class ScvUint32 extends Scv {
         .discriminant(TYPE)
         .u32(new Uint32(new XdrUnsignedInteger(value)))
         .build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvUint32 fromSCVal(SCVal scVal) {

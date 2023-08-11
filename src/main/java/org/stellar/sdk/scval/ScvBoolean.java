@@ -10,7 +10,7 @@ import org.stellar.sdk.xdr.SCValType;
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ScvBoolean extends Scv {
+class ScvBoolean extends Scv {
   private static final SCValType TYPE = SCValType.SCV_BOOL;
 
   Boolean value;
@@ -18,11 +18,6 @@ public class ScvBoolean extends Scv {
   @Override
   public SCVal toSCVal() {
     return new SCVal.Builder().discriminant(TYPE).b(value).build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvBoolean fromSCVal(SCVal scVal) {

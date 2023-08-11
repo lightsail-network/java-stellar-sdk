@@ -12,12 +12,12 @@ public class ScvVoidTest {
     ScvVoid scvVoid = new ScvVoid();
     SCVal scVal = scvVoid.toSCVal();
 
-    assertEquals(scvVoid.getSCValType(), SCValType.SCV_VOID);
-
     assertEquals(ScvVoid.fromSCVal(scVal), scvVoid);
-    assertEquals(Scv.fromSCVal(scVal), scvVoid);
 
     SCVal expectedScVal = new SCVal.Builder().discriminant(SCValType.SCV_VOID).build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toVoid(), scVal);
+    Scv.fromVoid(scVal);
   }
 }

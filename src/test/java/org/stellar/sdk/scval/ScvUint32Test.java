@@ -15,11 +15,8 @@ public class ScvUint32Test {
     ScvUint32 scvUint32 = new ScvUint32(value);
     SCVal scVal = scvUint32.toSCVal();
 
-    assertEquals(scvUint32.getSCValType(), SCValType.SCV_U32);
     assertEquals(scvUint32.getValue(), value);
-
     assertEquals(ScvUint32.fromSCVal(scVal), scvUint32);
-    assertEquals(Scv.fromSCVal(scVal), scvUint32);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -27,6 +24,9 @@ public class ScvUint32Test {
             .u32(new Uint32(new XdrUnsignedInteger((1L << 32) - 1)))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toUint32(value), scVal);
+    assertEquals(Scv.fromUint32(scVal), value);
   }
 
   @Test
@@ -35,11 +35,8 @@ public class ScvUint32Test {
     ScvUint32 scvUint32 = new ScvUint32(value);
     SCVal scVal = scvUint32.toSCVal();
 
-    assertEquals(scvUint32.getSCValType(), SCValType.SCV_U32);
     assertEquals(scvUint32.getValue(), value);
-
     assertEquals(ScvUint32.fromSCVal(scVal), scvUint32);
-    assertEquals(Scv.fromSCVal(scVal), scvUint32);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -47,17 +44,20 @@ public class ScvUint32Test {
             .u32(new Uint32(new XdrUnsignedInteger(0)))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toUint32(value), scVal);
+    assertEquals(Scv.fromUint32(scVal), value);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvUint32Overflow() {
     long value = ScvUint32.MAX_VALUE + 1;
-    new ScvUint32(value);
+    Scv.toUint32(value);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvUint32Underflow() {
     long value = ScvUint32.MIN_VALUE - 1;
-    new ScvUint32(value);
+    Scv.toUint32(value);
   }
 }

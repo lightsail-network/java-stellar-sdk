@@ -39,7 +39,6 @@ import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
-import org.stellar.sdk.scval.ScvAddress;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.ContractEntryBodyType;
 import org.stellar.sdk.xdr.ContractExecutable;
@@ -242,7 +241,7 @@ public class SorobanServerTest {
           public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
               throws InterruptedException {
 
-            ScvAddress address = new ScvAddress(contractId);
+            Address address = new Address(contractId);
             LedgerKey.LedgerKeyContractData ledgerKeyContractData =
                 new LedgerKey.LedgerKeyContractData.Builder()
                     .contract(address.toSCAddress())
@@ -312,7 +311,7 @@ public class SorobanServerTest {
           public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
               throws InterruptedException {
 
-            ScvAddress address = new ScvAddress(contractId);
+            Address address = new Address(contractId);
             LedgerKey.LedgerKeyContractData ledgerKeyContractData =
                 new LedgerKey.LedgerKeyContractData.Builder()
                     .contract(address.toSCAddress())
@@ -1030,7 +1029,7 @@ public class SorobanServerTest {
                     .fromAddress(
                         new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
                             .address(
-                                new ScvAddress(
+                                new Address(
                                         "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
                                     .toSCAddress())
                             .salt(new Uint256(new byte[32]))
@@ -1376,12 +1375,12 @@ public class SorobanServerTest {
                         .invokeContract(
                             new SCVec(
                                 new SCVal[] {
-                                  new ScvAddress(contractId).toSCVal(),
+                                  new Address(contractId).toSCVal(),
                                   new SCVal.Builder()
                                       .discriminant(SCValType.SCV_SYMBOL)
                                       .sym(new SCSymbol(new XdrString("increment")))
                                       .build(),
-                                  new ScvAddress(opInvokerKp.getAccountId()).toSCVal(),
+                                  new Address(opInvokerKp.getAccountId()).toSCVal(),
                                   new SCVal.Builder()
                                       .discriminant(SCValType.SCV_U32)
                                       .u32(new Uint32(new XdrUnsignedInteger(10)))

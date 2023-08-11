@@ -12,7 +12,7 @@ import org.stellar.sdk.xdr.SCValType;
 @Value
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ScvLedgerKeyNonce extends Scv {
+class ScvLedgerKeyNonce extends Scv {
   private static final SCValType TYPE = SCValType.SCV_LEDGER_KEY_NONCE;
 
   long value;
@@ -23,11 +23,6 @@ public class ScvLedgerKeyNonce extends Scv {
         .discriminant(TYPE)
         .nonce_key(new SCNonceKey.Builder().nonce(new Int64(value)).build())
         .build();
-  }
-
-  @Override
-  public SCValType getSCValType() {
-    return TYPE;
   }
 
   public static ScvLedgerKeyNonce fromSCVal(SCVal scVal) {

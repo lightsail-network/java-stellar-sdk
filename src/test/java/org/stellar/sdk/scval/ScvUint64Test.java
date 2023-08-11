@@ -17,11 +17,8 @@ public class ScvUint64Test {
     ScvUint64 scvUint64 = new ScvUint64(value);
     SCVal scVal = scvUint64.toSCVal();
 
-    assertEquals(scvUint64.getSCValType(), SCValType.SCV_U64);
     assertEquals(scvUint64.getValue(), value);
-
     assertEquals(ScvUint64.fromSCVal(scVal), scvUint64);
-    assertEquals(Scv.fromSCVal(scVal), scvUint64);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -29,6 +26,9 @@ public class ScvUint64Test {
             .u64(new Uint64(new XdrUnsignedHyperInteger(XdrUnsignedHyperInteger.MAX_VALUE)))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toUint64(value), scVal);
+    assertEquals(Scv.fromUint64(scVal), value);
   }
 
   @Test
@@ -37,11 +37,8 @@ public class ScvUint64Test {
     ScvUint64 scvUint64 = new ScvUint64(value);
     SCVal scVal = scvUint64.toSCVal();
 
-    assertEquals(scvUint64.getSCValType(), SCValType.SCV_U64);
     assertEquals(scvUint64.getValue(), value);
-
     assertEquals(ScvUint64.fromSCVal(scVal), scvUint64);
-    assertEquals(Scv.fromSCVal(scVal), scvUint64);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -49,15 +46,18 @@ public class ScvUint64Test {
             .u64(new Uint64(new XdrUnsignedHyperInteger(XdrUnsignedInteger.MIN_VALUE)))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toUint64(value), scVal);
+    assertEquals(Scv.fromUint64(scVal), value);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvUint64GreaterThanMaxValueThrows() {
-    new ScvUint64(ScvUint64.MAX_VALUE.add(BigInteger.ONE));
+    Scv.toUint64(ScvUint64.MAX_VALUE.add(BigInteger.ONE));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvUint64LessThanMinValueThrows() {
-    new ScvUint64(ScvUint64.MIN_VALUE.subtract(BigInteger.ONE));
+    Scv.toUint64(ScvUint64.MIN_VALUE.subtract(BigInteger.ONE));
   }
 }

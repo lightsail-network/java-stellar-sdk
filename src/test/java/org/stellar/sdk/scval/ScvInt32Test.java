@@ -14,14 +14,14 @@ public class ScvInt32Test {
     ScvInt32 scvInt32 = new ScvInt32(value);
     SCVal scVal = scvInt32.toSCVal();
 
-    assertEquals(scvInt32.getSCValType(), SCValType.SCV_I32);
     assertEquals(scvInt32.getValue(), value);
-
     assertEquals(ScvInt32.fromSCVal(scVal), scvInt32);
-    assertEquals(Scv.fromSCVal(scVal), scvInt32);
 
     SCVal expectedScVal =
         new SCVal.Builder().discriminant(SCValType.SCV_I32).i32(new Int32(value)).build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toInt32(value), scVal);
+    assertEquals(Scv.fromInt32(scVal), value);
   }
 }

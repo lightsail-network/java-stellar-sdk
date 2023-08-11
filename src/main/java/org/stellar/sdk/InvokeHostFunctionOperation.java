@@ -11,8 +11,6 @@ import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.scval.Scv;
-import org.stellar.sdk.scval.ScvAddress;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -38,7 +36,7 @@ import org.stellar.sdk.xdr.XdrString;
  *
  * @see <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations"
  *     target="_blank">List of Operations</a>
- * @see org.stellar.sdk.scval
+ * @see org.stellar.sdk.scval.Scv
  */
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -96,7 +94,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
-      String wasmId, ScvAddress address, @Nullable byte[] salt) {
+      String wasmId, Address address, @Nullable byte[] salt) {
     byte[] wasmIdBytes = Util.hexToBytes(wasmId);
     return createContractOperationBuilder(wasmIdBytes, address, salt);
   }
@@ -113,7 +111,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
-      byte[] wasmId, ScvAddress address, @Nullable byte[] salt) {
+      byte[] wasmId, Address address, @Nullable byte[] salt) {
     if (salt == null) {
       salt = new byte[32];
       new SecureRandom().nextBytes(salt);
@@ -191,7 +189,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> createTokenContractOperationBuilder(
-      ScvAddress address, @Nullable byte[] salt) {
+      Address address, @Nullable byte[] salt) {
     if (salt == null) {
       salt = new byte[32];
       new SecureRandom().nextBytes(salt);
@@ -228,7 +226,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
    * invoke a contract function.
    *
-   * @see org.stellar.sdk.scval
+   * @see org.stellar.sdk.scval.Scv
    * @see <a
    *     href="https://soroban.stellar.org/docs/fundamentals-and-concepts/interacting-with-contracts"
    *     target="_blank">Interacting with Contracts</a>
@@ -238,9 +236,9 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> invokeContractFunctionOperationBuilder(
-      String contractId, String functionName, @Nullable Collection<Scv> parameters) {
-    ScvAddress address = new ScvAddress(contractId);
-    if (address.getAddressType() != ScvAddress.AddressType.CONTRACT) {
+      String contractId, String functionName, @Nullable Collection<SCVal> parameters) {
+    Address address = new Address(contractId);
+    if (address.getAddressType() != Address.AddressType.CONTRACT) {
       throw new IllegalArgumentException("\"contractId\" must be a contract address");
     }
     SCVal contractIdScVal = address.toSCVal();
@@ -255,11 +253,11 @@ public class InvokeHostFunctionOperation extends Operation {
     invokeContractParams.add(contractIdScVal);
     invokeContractParams.add(functionNameScVal);
     if (parameters != null) {
-      for (Scv parameter : parameters) {
+      for (SCVal parameter : parameters) {
         if (parameter == null) {
           throw new IllegalArgumentException("\"parameters\" contains null element");
         }
-        invokeContractParams.add(parameter.toSCVal());
+        invokeContractParams.add(parameter);
       }
     }
 

@@ -17,11 +17,9 @@ public class ScvDurationTest {
     ScvDuration scvDuration = new ScvDuration(value);
     SCVal scVal = scvDuration.toSCVal();
 
-    assertEquals(scvDuration.getSCValType(), SCValType.SCV_DURATION);
     assertEquals(scvDuration.getValue(), XdrUnsignedHyperInteger.MAX_VALUE);
 
     assertEquals(ScvDuration.fromSCVal(scVal), scvDuration);
-    assertEquals(Scv.fromSCVal(scVal), scvDuration);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -29,6 +27,9 @@ public class ScvDurationTest {
             .duration(new Duration(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toDuration(value), scVal);
+    assertEquals(Scv.fromDuration(scVal), value);
   }
 
   @Test
@@ -37,11 +38,9 @@ public class ScvDurationTest {
     ScvDuration scvDuration = new ScvDuration(value);
     SCVal scVal = scvDuration.toSCVal();
 
-    assertEquals(scvDuration.getSCValType(), SCValType.SCV_DURATION);
     assertEquals(scvDuration.getValue(), XdrUnsignedHyperInteger.MIN_VALUE);
 
     assertEquals(ScvDuration.fromSCVal(scVal), scvDuration);
-    assertEquals(Scv.fromSCVal(scVal), scvDuration);
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -49,17 +48,20 @@ public class ScvDurationTest {
             .duration(new Duration(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();
     assertEquals(expectedScVal, scVal);
+
+    assertEquals(Scv.toDuration(value), scVal);
+    assertEquals(Scv.fromDuration(scVal), value);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvDurationMoreThanMaxThrows() {
     BigInteger value = ScvDuration.MAX_VALUE.add(BigInteger.ONE);
-    new ScvDuration(value);
+    Scv.toDuration(value);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvDurationLessThanMinThrows() {
     BigInteger value = ScvDuration.MIN_VALUE.subtract(BigInteger.ONE);
-    new ScvDuration(value);
+    Scv.toDuration(value);
   }
 }
