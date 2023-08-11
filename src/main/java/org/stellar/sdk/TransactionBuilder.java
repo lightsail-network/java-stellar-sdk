@@ -5,6 +5,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
 import com.google.common.base.Function;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
@@ -280,7 +281,12 @@ public class TransactionBuilder {
    * @return Builder object so you can chain methods.
    */
   public TransactionBuilder setSorobanData(String sorobanData) {
-    SorobanTransactionData data = Util.sorobanTransactionDataToXDR(sorobanData);
+    SorobanTransactionData data;
+    try {
+      data = SorobanTransactionData.fromXdrBase64(sorobanData);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Invalid Soroban data: " + sorobanData, e);
+    }
     return setSorobanData(data);
   }
 }
