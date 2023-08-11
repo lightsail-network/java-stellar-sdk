@@ -236,10 +236,8 @@ public abstract class Scv {
   }
 
   /**
-   * Convert from {@link SCVal} with the type of {@link SCValType#SCV_LEDGER_KEY_NONCE} to {@link
-   * SCContractInstance}.
-   *
-   * <p>This function returns void if conversion succeeds.
+   * Parse from {@link SCVal} with the type of {@link SCValType#SCV_LEDGER_KEY_CONTRACT_INSTANCE},
+   * this function returns void if conversion succeeds.
    *
    * @param scVal {@link SCVal} to convert
    */
@@ -468,9 +466,8 @@ public abstract class Scv {
   }
 
   /**
-   * Convert from {@link SCVal} with the type of {@link SCValType#SCV_VOID} to {@link SCVal}.
-   *
-   * <p>This function returns void if conversion succeeds.
+   * Parse from {@link SCVal} with the type of {@link SCValType#SCV_VOID}, this function returns
+   * void if conversion succeeds.
    *
    * @param scVal {@link SCVal} to convert
    */
