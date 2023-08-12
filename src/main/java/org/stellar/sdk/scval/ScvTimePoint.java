@@ -1,8 +1,6 @@
 package org.stellar.sdk.scval;
 
 import java.math.BigInteger;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.TimePoint;

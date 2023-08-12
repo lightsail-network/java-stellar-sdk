@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Address;
 import org.stellar.sdk.xdr.SCContractInstance;

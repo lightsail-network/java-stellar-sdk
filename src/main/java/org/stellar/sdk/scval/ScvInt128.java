@@ -5,8 +5,6 @@ import static org.stellar.sdk.Util.getBytes;
 import com.google.common.primitives.Longs;
 import java.math.BigInteger;
 import java.util.Arrays;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 import org.stellar.sdk.xdr.Int128Parts;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.SCVal;

@@ -7,7 +7,7 @@ import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_U64}. */
-class ScvUint64 extends Scv {
+class ScvUint64 {
   private static final SCValType TYPE = SCValType.SCV_U64;
 
   private static final BigInteger MAX_VALUE = XdrUnsignedHyperInteger.MAX_VALUE;
