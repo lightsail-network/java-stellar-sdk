@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Address;
 import org.stellar.sdk.xdr.SCContractInstance;
 import org.stellar.sdk.xdr.SCError;
@@ -11,6 +13,7 @@ import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
 /** Provides a range of methods to help you build and parse {@link SCVal} more conveniently. */
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class Scv {
 
   /**
