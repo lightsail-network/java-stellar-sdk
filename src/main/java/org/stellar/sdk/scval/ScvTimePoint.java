@@ -10,8 +10,6 @@ import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_TIMEPOINT}. */
-@Value
-@EqualsAndHashCode(callSuper = false)
 class ScvTimePoint {
   private static final SCValType TYPE = SCValType.SCV_TIMEPOINT;
 
