@@ -26,7 +26,7 @@ class ScvUint32 {
         .build();
   }
 
-  static Long fromSCVal(SCVal scVal) {
+  static long fromSCVal(SCVal scVal) {
     if (scVal.getDiscriminant() != TYPE) {
       throw new IllegalArgumentException(
           String.format(
