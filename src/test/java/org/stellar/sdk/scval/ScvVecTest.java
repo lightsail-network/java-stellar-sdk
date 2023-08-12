@@ -12,25 +12,19 @@ public class ScvVecTest {
   @Test
   public void testScvVec() {
     List<SCVal> value = new ArrayList<>();
-    value.add(new ScvInt32(123).toSCVal());
-    value.add(new ScvString("value1").toSCVal());
-
-    ScvVec scvVec = new ScvVec(value);
-    SCVal scVal = scvVec.toSCVal();
-
-    assertEquals(scvVec.getValue(), value);
-    assertEquals(ScvVec.fromSCVal(scVal), scvVec);
+    value.add(Scv.toInt32(123));
+    value.add(Scv.toString("value1"));
 
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_VEC)
             .vec(
                 new org.stellar.sdk.xdr.SCVec(
-                    new SCVal[] {new ScvInt32(123).toSCVal(), new ScvString("value1").toSCVal()}))
+                    new SCVal[] {Scv.toInt32(123), Scv.toString("value1")}))
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toVec(value), scVal);
-    assertEquals(Scv.fromVec(scVal), value);
+    SCVal actualScVal = Scv.toVec(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromVec(actualScVal));
   }
 }

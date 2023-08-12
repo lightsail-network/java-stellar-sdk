@@ -11,8 +11,12 @@ import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.Test;
 import org.stellar.sdk.xdr.SCVal;
+import org.stellar.sdk.xdr.SCValType;
 
 public class ScvInt128Test {
+  private static final BigInteger MIN_VALUE = BigInteger.valueOf(-2).pow(127);
+  private static final BigInteger MAX_VALUE =
+      BigInteger.valueOf(2).pow(127).subtract(BigInteger.ONE);
 
   @Test
   public void testScvInt128() throws IOException {
@@ -66,7 +70,7 @@ public class ScvInt128Test {
                   0
                 }),
             new TestCase(
-                ScvInt128.MAX_VALUE,
+                MAX_VALUE,
                 new byte[] {
                   (byte) 0x7f,
                   (byte) 0xff,
@@ -86,8 +90,7 @@ public class ScvInt128Test {
                   (byte) 0xff
                 }),
             new TestCase(
-                ScvInt128.MIN_VALUE,
-                new byte[] {(byte) 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+                MIN_VALUE, new byte[] {(byte) 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     for (TestCase value : values) {
       checkScvInt128(value);
@@ -96,24 +99,20 @@ public class ScvInt128Test {
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvInt128GreaterThanMaxValueThrows() {
-    Scv.toInt128(ScvInt128.MAX_VALUE.add(BigInteger.ONE));
+    Scv.toInt128(MAX_VALUE.add(BigInteger.ONE));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvInt128LessThanMinValueThrows() {
-    Scv.toInt128(ScvInt128.MIN_VALUE.subtract(BigInteger.ONE));
+    Scv.toInt128(MIN_VALUE.subtract(BigInteger.ONE));
   }
 
   private void checkScvInt128(TestCase value) throws IOException {
-    ScvInt128 scvInt128 = new ScvInt128(value.v);
-    SCVal scVal = scvInt128.toSCVal();
 
-    assertEquals(scvInt128.getValue(), value.v);
-    assertEquals(ScvInt128.fromSCVal(scVal), scvInt128);
-    assertArrayEquals(scVal.getI128().toXdrByteArray(), value.getExpectedBytes());
-
-    assertEquals(Scv.toInt128(value.v), scVal);
+    SCVal scVal = Scv.toInt128(value.v);
+    assertEquals(scVal.getDiscriminant(), SCValType.SCV_I128);
     assertEquals(Scv.fromInt128(scVal), value.v);
+    assertArrayEquals(scVal.getI128().toXdrByteArray(), value.getExpectedBytes());
   }
 
   @Value

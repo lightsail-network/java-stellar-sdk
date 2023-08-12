@@ -13,53 +13,43 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 public class ScvTimePointTest {
   @Test
   public void testScvTimePointMax() {
-    BigInteger value = ScvTimePoint.MAX_VALUE;
-    ScvTimePoint scvTimePoint = new ScvTimePoint(value);
-    SCVal scVal = scvTimePoint.toSCVal();
-
-    assertEquals(scvTimePoint.getValue(), value);
-    assertEquals(ScvTimePoint.fromSCVal(scVal), scvTimePoint);
+    BigInteger value = XdrUnsignedHyperInteger.MAX_VALUE;
 
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_TIMEPOINT)
             .timepoint(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toTimePoint(value), scVal);
-    assertEquals(Scv.fromTimePoint(scVal), value);
+    SCVal actualScVal = Scv.toTimePoint(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromTimePoint(actualScVal));
   }
 
   @Test
   public void testScvTimePointMin() {
-    BigInteger value = ScvTimePoint.MIN_VALUE;
-    ScvTimePoint scvTimePoint = new ScvTimePoint(value);
-    SCVal scVal = scvTimePoint.toSCVal();
-
-    assertEquals(scvTimePoint.getValue(), value);
-    assertEquals(ScvTimePoint.fromSCVal(scVal), scvTimePoint);
+    BigInteger value = XdrUnsignedHyperInteger.MIN_VALUE;
 
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_TIMEPOINT)
             .timepoint(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toTimePoint(value), scVal);
-    assertEquals(Scv.fromTimePoint(scVal), value);
+    SCVal actualScVal = Scv.toTimePoint(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromTimePoint(actualScVal));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvTimePointMoreThanMaxThrows() {
-    BigInteger value = ScvDuration.MAX_VALUE.add(BigInteger.ONE);
+    BigInteger value = XdrUnsignedHyperInteger.MAX_VALUE.add(BigInteger.ONE);
     Scv.toTimePoint(value);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvTimePointLessThanMinThrows() {
-    BigInteger value = ScvDuration.MIN_VALUE.subtract(BigInteger.ONE);
+    BigInteger value = XdrUnsignedHyperInteger.MIN_VALUE.subtract(BigInteger.ONE);
     Scv.toTimePoint(value);
   }
 }

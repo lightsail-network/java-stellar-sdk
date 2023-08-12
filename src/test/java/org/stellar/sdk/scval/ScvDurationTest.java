@@ -13,55 +13,43 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 public class ScvDurationTest {
   @Test
   public void testScvDurationMax() {
-    BigInteger value = ScvDuration.MAX_VALUE;
-    ScvDuration scvDuration = new ScvDuration(value);
-    SCVal scVal = scvDuration.toSCVal();
-
-    assertEquals(scvDuration.getValue(), XdrUnsignedHyperInteger.MAX_VALUE);
-
-    assertEquals(ScvDuration.fromSCVal(scVal), scvDuration);
+    BigInteger value = XdrUnsignedHyperInteger.MAX_VALUE;
 
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_DURATION)
             .duration(new Duration(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toDuration(value), scVal);
-    assertEquals(Scv.fromDuration(scVal), value);
+    SCVal actualScVal = Scv.toDuration(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromDuration(actualScVal));
   }
 
   @Test
   public void testScvDurationMin() {
-    BigInteger value = ScvDuration.MIN_VALUE;
-    ScvDuration scvDuration = new ScvDuration(value);
-    SCVal scVal = scvDuration.toSCVal();
-
-    assertEquals(scvDuration.getValue(), XdrUnsignedHyperInteger.MIN_VALUE);
-
-    assertEquals(ScvDuration.fromSCVal(scVal), scvDuration);
+    BigInteger value = XdrUnsignedHyperInteger.MIN_VALUE;
 
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_DURATION)
             .duration(new Duration(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toDuration(value), scVal);
-    assertEquals(Scv.fromDuration(scVal), value);
+    SCVal actualScVal = Scv.toDuration(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromDuration(actualScVal));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvDurationMoreThanMaxThrows() {
-    BigInteger value = ScvDuration.MAX_VALUE.add(BigInteger.ONE);
-    Scv.toDuration(value);
+    BigInteger value = XdrUnsignedHyperInteger.MAX_VALUE.add(BigInteger.ONE);
+    ScvDuration.toSCVal(value);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvDurationLessThanMinThrows() {
-    BigInteger value = ScvDuration.MIN_VALUE.subtract(BigInteger.ONE);
-    Scv.toDuration(value);
+    BigInteger value = XdrUnsignedHyperInteger.MIN_VALUE.subtract(BigInteger.ONE);
+    ScvDuration.toSCVal(value);
   }
 }

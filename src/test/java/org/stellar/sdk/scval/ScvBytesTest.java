@@ -11,17 +11,12 @@ public class ScvBytesTest {
   @Test
   public void testScvBytes() {
     byte[] data = new byte[] {0x01, 0x02, 0x03};
-    ScvBytes scvBytes = new ScvBytes(data);
-    SCVal scVal = scvBytes.toSCVal();
-
-    assertEquals(scvBytes.getValue(), data);
-    assertEquals(ScvBytes.fromSCVal(scVal), scvBytes);
 
     SCVal expectedScVal =
         new SCVal.Builder().discriminant(SCValType.SCV_BYTES).bytes(new SCBytes(data)).build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toBytes(data), scVal);
-    assertEquals(Scv.fromBytes(scVal), data);
+    SCVal actualScVal = Scv.toBytes(data);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(data, Scv.fromBytes(actualScVal));
   }
 }

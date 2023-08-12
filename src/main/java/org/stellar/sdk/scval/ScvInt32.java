@@ -1,35 +1,26 @@
 package org.stellar.sdk.scval;
 
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.stellar.sdk.xdr.Int32;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_I32}. */
-@Value
-@RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-class ScvInt32 extends Scv {
+class ScvInt32 {
   private static final SCValType TYPE = SCValType.SCV_I32;
-  public static final int MAX_VALUE = Integer.MAX_VALUE;
-  public static final int MIN_VALUE = Integer.MIN_VALUE;
+  private static final int MAX_VALUE = Integer.MAX_VALUE;
+  private static final int MIN_VALUE = Integer.MIN_VALUE;
 
-  int value;
-
-  @Override
-  public SCVal toSCVal() {
+  static SCVal toSCVal(int value) {
     return new SCVal.Builder().discriminant(TYPE).i32(new Int32(value)).build();
   }
 
-  public static ScvInt32 fromSCVal(SCVal scVal) {
+  static int fromSCVal(SCVal scVal) {
     if (scVal.getDiscriminant() != TYPE) {
       throw new IllegalArgumentException(
           String.format(
               "invalid scVal type, expected %s, but got %s", TYPE, scVal.getDiscriminant()));
     }
 
-    return new ScvInt32(scVal.getI32().getInt32());
+    return scVal.getI32().getInt32();
   }
 }

@@ -2,27 +2,18 @@ package org.stellar.sdk.scval;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.stellar.sdk.xdr.SCMap;
 import org.stellar.sdk.xdr.SCMapEntry;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_MAP}. */
-@Value
-@RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-class ScvMap extends Scv {
+class ScvMap {
   private static final SCValType TYPE = SCValType.SCV_MAP;
 
   // we want to keep the order of the map entries
   // this ensures that the generated XDR is deterministic.
-  LinkedHashMap<SCVal, SCVal> value;
-
-  @Override
-  public SCVal toSCVal() {
+  static SCVal toSCVal(LinkedHashMap<SCVal, SCVal> value) {
     SCMapEntry[] scMapEntries = new SCMapEntry[value.size()];
     int i = 0;
     for (Map.Entry<SCVal, SCVal> entry : value.entrySet()) {
@@ -32,7 +23,7 @@ class ScvMap extends Scv {
     return new SCVal.Builder().discriminant(TYPE).map(new SCMap(scMapEntries)).build();
   }
 
-  public static ScvMap fromSCVal(SCVal scVal) {
+  static LinkedHashMap<SCVal, SCVal> fromSCVal(SCVal scVal) {
     if (scVal.getDiscriminant() != TYPE) {
       throw new IllegalArgumentException(
           String.format(
@@ -43,6 +34,6 @@ class ScvMap extends Scv {
     for (SCMapEntry entry : scVal.getMap().getSCMap()) {
       map.put(entry.getKey(), entry.getVal());
     }
-    return new ScvMap(map);
+    return map;
   }
 }

@@ -9,15 +9,10 @@ import org.stellar.sdk.xdr.SCValType;
 public class ScvVoidTest {
   @Test
   public void testScvVoid() {
-    ScvVoid scvVoid = new ScvVoid();
-    SCVal scVal = scvVoid.toSCVal();
-
-    assertEquals(ScvVoid.fromSCVal(scVal), scvVoid);
-
     SCVal expectedScVal = new SCVal.Builder().discriminant(SCValType.SCV_VOID).build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toVoid(), scVal);
-    Scv.fromVoid(scVal);
+    SCVal actualScVal = Scv.toVoid();
+    assertEquals(expectedScVal, actualScVal);
+    Scv.fromVoid(actualScVal);
   }
 }

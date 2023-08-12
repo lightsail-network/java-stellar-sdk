@@ -1,5 +1,7 @@
 package org.stellar.sdk.scval;
 
+import static org.stellar.sdk.Util.getBytes;
+
 import com.google.common.primitives.Longs;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -15,27 +17,21 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_I128}. */
 @Value
 @EqualsAndHashCode(callSuper = false)
-class ScvInt128 extends Scv {
+class ScvInt128 {
   private static final SCValType TYPE = SCValType.SCV_I128;
 
-  public static final BigInteger MIN_VALUE = BigInteger.valueOf(-2).pow(127);
-  public static final BigInteger MAX_VALUE =
+  private static final BigInteger MIN_VALUE = BigInteger.valueOf(-2).pow(127);
+  private static final BigInteger MAX_VALUE =
       BigInteger.valueOf(2).pow(127).subtract(BigInteger.ONE);
 
-  BigInteger value;
-
-  public ScvInt128(BigInteger value) {
+  static SCVal toSCVal(BigInteger value) {
     if (value.compareTo(MIN_VALUE) < 0 || value.compareTo(MAX_VALUE) > 0) {
       throw new IllegalArgumentException(
           String.format(
               "invalid value, expected between %s and %s, but got %s",
               MIN_VALUE, MAX_VALUE, value));
     }
-    this.value = value;
-  }
 
-  @Override
-  public SCVal toSCVal() {
     byte[] bytes = value.toByteArray();
     byte[] paddedBytes = new byte[16];
     if (value.signum() >= 0) {
@@ -58,7 +54,7 @@ class ScvInt128 extends Scv {
     return new SCVal.Builder().discriminant(TYPE).i128(int128Parts).build();
   }
 
-  public static ScvInt128 fromSCVal(SCVal scVal) {
+  static BigInteger fromSCVal(SCVal scVal) {
     if (scVal.getDiscriminant() != TYPE) {
       throw new IllegalArgumentException(
           String.format(
@@ -73,7 +69,6 @@ class ScvInt128 extends Scv {
     System.arraycopy(hiBytes, 0, fullBytes, 0, 8);
     System.arraycopy(loBytes, 0, fullBytes, 8, 8);
 
-    BigInteger value = new BigInteger(fullBytes);
-    return new ScvInt128(value);
+    return new BigInteger(fullBytes);
   }
 }

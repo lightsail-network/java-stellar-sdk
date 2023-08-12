@@ -1,7 +1,6 @@
 package org.stellar.sdk.scval;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,7 +11,7 @@ import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
 /** Provides a range of methods to help you build and parse {@link SCVal} more conveniently. */
-public abstract class Scv {
+public class Scv {
 
   /**
    * Build a {@link SCVal} with the type of {@link SCValType#SCV_ADDRESS}.
@@ -21,7 +20,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_ADDRESS}
    */
   public static SCVal toAddress(String address) {
-    return new Address(address).toSCVal();
+    return ScvAddress.toSCVal(new Address(address));
   }
 
   /**
@@ -31,7 +30,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_ADDRESS}
    */
   public static SCVal toAddress(Address address) {
-    return address.toSCVal();
+    return ScvAddress.toSCVal(address);
   }
 
   /**
@@ -41,7 +40,7 @@ public abstract class Scv {
    * @return the address
    */
   public static Address fromAddress(SCVal scVal) {
-    return Address.fromSCVal(scVal);
+    return ScvAddress.fromSCVal(scVal);
   }
 
   /**
@@ -51,7 +50,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_BOOL}
    */
   public static SCVal toBoolean(boolean bool) {
-    return new ScvBoolean(bool).toSCVal();
+    return ScvBoolean.toSCVal(bool);
   }
 
   /**
@@ -61,7 +60,7 @@ public abstract class Scv {
    * @return boolean
    */
   public static boolean fromBoolean(SCVal scVal) {
-    return ScvBoolean.fromSCVal(scVal).getValue();
+    return ScvBoolean.fromSCVal(scVal);
   }
 
   /**
@@ -71,7 +70,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_BYTES}
    */
   public static SCVal toBytes(byte[] bytes) {
-    return new ScvBytes(bytes).toSCVal();
+    return ScvBytes.toSCVal(bytes);
   }
 
   /**
@@ -81,7 +80,7 @@ public abstract class Scv {
    * @return the bytes
    */
   public static byte[] fromBytes(SCVal scVal) {
-    return ScvBytes.fromSCVal(scVal).getValue();
+    return ScvBytes.fromSCVal(scVal);
   }
 
   /**
@@ -91,7 +90,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_CONTRACT_INSTANCE}
    */
   public static SCVal toContractInstance(SCContractInstance instance) {
-    return new ScvContractInstance(instance).toSCVal();
+    return ScvContractInstance.toSCVal(instance);
   }
 
   /**
@@ -102,7 +101,7 @@ public abstract class Scv {
    * @return the contract instance
    */
   public static SCContractInstance fromContractInstance(SCVal scVal) {
-    return ScvContractInstance.fromSCVal(scVal).getValue();
+    return ScvContractInstance.fromSCVal(scVal);
   }
 
   /**
@@ -112,7 +111,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_DURATION}
    */
   public static SCVal toDuration(BigInteger duration) {
-    return new ScvDuration(duration).toSCVal();
+    return ScvDuration.toSCVal(duration);
   }
 
   /**
@@ -123,7 +122,7 @@ public abstract class Scv {
    * @return the duration
    */
   public static BigInteger fromDuration(SCVal scVal) {
-    return ScvDuration.fromSCVal(scVal).getValue();
+    return ScvDuration.fromSCVal(scVal);
   }
 
   /**
@@ -133,7 +132,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_ERROR}
    */
   public static SCVal toError(SCError error) {
-    return new ScvError(error).toSCVal();
+    return ScvError.toSCVal(error);
   }
 
   /**
@@ -143,7 +142,7 @@ public abstract class Scv {
    * @return the error
    */
   public static SCError fromError(SCVal scVal) {
-    return ScvError.fromSCVal(scVal).getValue();
+    return ScvError.fromSCVal(scVal);
   }
 
   /**
@@ -153,7 +152,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_I128}
    */
   public static SCVal toInt32(int int32) {
-    return new ScvInt32(int32).toSCVal();
+    return ScvInt32.toSCVal(int32);
   }
 
   /**
@@ -163,7 +162,7 @@ public abstract class Scv {
    * @return the int32
    */
   public static int fromInt32(SCVal scVal) {
-    return ScvInt32.fromSCVal(scVal).getValue();
+    return ScvInt32.fromSCVal(scVal);
   }
 
   /**
@@ -173,7 +172,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_I64}
    */
   public static SCVal toInt64(long int64) {
-    return new ScvInt64(int64).toSCVal();
+    return ScvInt64.toSCVal(int64);
   }
 
   /**
@@ -183,7 +182,7 @@ public abstract class Scv {
    * @return the int64
    */
   public static long fromInt64(SCVal scVal) {
-    return ScvInt64.fromSCVal(scVal).getValue();
+    return ScvInt64.fromSCVal(scVal);
   }
 
   /**
@@ -193,7 +192,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_I128}
    */
   public static SCVal toInt128(BigInteger int128) {
-    return new ScvInt128(int128).toSCVal();
+    return ScvInt128.toSCVal(int128);
   }
 
   /**
@@ -203,7 +202,7 @@ public abstract class Scv {
    * @return the int128
    */
   public static BigInteger fromInt128(SCVal scVal) {
-    return ScvInt128.fromSCVal(scVal).getValue();
+    return ScvInt128.fromSCVal(scVal);
   }
 
   /**
@@ -213,7 +212,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_I256}
    */
   public static SCVal toInt256(BigInteger int256) {
-    return new ScvInt256(int256).toSCVal();
+    return ScvInt256.toSCVal(int256);
   }
 
   /**
@@ -223,7 +222,7 @@ public abstract class Scv {
    * @return the int256
    */
   public static BigInteger fromInt256(SCVal scVal) {
-    return ScvInt256.fromSCVal(scVal).getValue();
+    return ScvInt256.fromSCVal(scVal);
   }
 
   /**
@@ -232,7 +231,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_LEDGER_KEY_NONCE}
    */
   public static SCVal toLedgerKeyContractInstance() {
-    return new ScvLedgerKeyContractInstance().toSCVal();
+    return ScvLedgerKeyContractInstance.toSCVal();
   }
 
   /**
@@ -252,7 +251,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_LEDGER_KEY_NONCE}
    */
   public static SCVal toLedgerKeyNonce(long nonce) {
-    return new ScvLedgerKeyNonce(nonce).toSCVal();
+    return ScvLedgerKeyNonce.toSCVal(nonce);
   }
 
   /**
@@ -262,7 +261,7 @@ public abstract class Scv {
    * @return the nonce
    */
   public static long fromLedgerKeyNonce(SCVal scVal) {
-    return ScvLedgerKeyNonce.fromSCVal(scVal).getValue();
+    return ScvLedgerKeyNonce.fromSCVal(scVal);
   }
 
   /**
@@ -272,7 +271,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_MAP}
    */
   public static SCVal toMap(LinkedHashMap<SCVal, SCVal> map) {
-    return new ScvMap(map).toSCVal();
+    return ScvMap.toSCVal(map);
   }
 
   /**
@@ -282,7 +281,7 @@ public abstract class Scv {
    * @return the map
    */
   public static LinkedHashMap<SCVal, SCVal> fromMap(SCVal scVal) {
-    return ScvMap.fromSCVal(scVal).getValue();
+    return ScvMap.fromSCVal(scVal);
   }
 
   /**
@@ -292,7 +291,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_STRING}
    */
   public static SCVal toString(String string) {
-    return new ScvString(string).toSCVal();
+    return ScvString.toSCVal(string.getBytes());
   }
 
   /**
@@ -302,7 +301,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_STRING}
    */
   public static SCVal toString(byte[] string) {
-    return new ScvString(string).toSCVal();
+    return ScvString.toSCVal(string);
   }
 
   /**
@@ -312,7 +311,7 @@ public abstract class Scv {
    * @return the string value in bytes
    */
   public static byte[] fromString(SCVal scVal) {
-    return ScvString.fromSCVal(scVal).getValue();
+    return ScvString.fromSCVal(scVal);
   }
 
   /**
@@ -322,7 +321,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_SYMBOL}
    */
   public static SCVal toSymbol(String symbol) {
-    return new ScvSymbol(symbol).toSCVal();
+    return ScvSymbol.toSCVal(symbol);
   }
 
   /**
@@ -332,7 +331,7 @@ public abstract class Scv {
    * @return the symbol
    */
   public static String fromSymbol(SCVal scVal) {
-    return ScvSymbol.fromSCVal(scVal).getValue();
+    return ScvSymbol.fromSCVal(scVal);
   }
 
   /**
@@ -342,7 +341,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_TIMEPOINT}
    */
   public static SCVal toTimePoint(BigInteger timePoint) {
-    return new ScvTimePoint(timePoint).toSCVal();
+    return ScvTimePoint.toSCVal(timePoint);
   }
 
   /**
@@ -353,7 +352,7 @@ public abstract class Scv {
    * @return the timePoint
    */
   public static BigInteger fromTimePoint(SCVal scVal) {
-    return ScvTimePoint.fromSCVal(scVal).getValue();
+    return ScvTimePoint.fromSCVal(scVal);
   }
 
   /**
@@ -363,7 +362,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_U32}
    */
   public static SCVal toUint32(long uint32) {
-    return new ScvUint32(uint32).toSCVal();
+    return ScvUint32.toSCVal(uint32);
   }
 
   /**
@@ -373,7 +372,7 @@ public abstract class Scv {
    * @return the uint32
    */
   public static long fromUint32(SCVal scVal) {
-    return ScvUint32.fromSCVal(scVal).getValue();
+    return ScvUint32.fromSCVal(scVal);
   }
 
   /**
@@ -383,7 +382,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_U64}
    */
   public static SCVal toUint64(BigInteger uint64) {
-    return new ScvUint64(uint64).toSCVal();
+    return ScvUint64.toSCVal(uint64);
   }
 
   /**
@@ -393,7 +392,7 @@ public abstract class Scv {
    * @return the uint64
    */
   public static BigInteger fromUint64(SCVal scVal) {
-    return ScvUint64.fromSCVal(scVal).getValue();
+    return ScvUint64.fromSCVal(scVal);
   }
 
   /**
@@ -403,7 +402,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_U128}
    */
   public static SCVal toUint128(BigInteger uint128) {
-    return new ScvUint128(uint128).toSCVal();
+    return ScvUint128.toSCVal(uint128);
   }
 
   /**
@@ -413,7 +412,7 @@ public abstract class Scv {
    * @return the uint128
    */
   public static BigInteger fromUint128(SCVal scVal) {
-    return ScvUint128.fromSCVal(scVal).getValue();
+    return ScvUint128.fromSCVal(scVal);
   }
 
   /**
@@ -423,7 +422,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_U256}
    */
   public static SCVal toUint256(BigInteger uint256) {
-    return new ScvUint256(uint256).toSCVal();
+    return ScvUint256.toSCVal(uint256);
   }
 
   /**
@@ -433,7 +432,7 @@ public abstract class Scv {
    * @return the uint256
    */
   public static BigInteger fromUint256(SCVal scVal) {
-    return ScvUint256.fromSCVal(scVal).getValue();
+    return ScvUint256.fromSCVal(scVal);
   }
 
   /**
@@ -443,7 +442,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_VEC}
    */
   public static SCVal toVec(Collection<SCVal> vec) {
-    return new ScvVec(vec).toSCVal();
+    return ScvVec.toSCVal(vec);
   }
 
   /**
@@ -453,7 +452,7 @@ public abstract class Scv {
    * @return the vec
    */
   public static Collection<SCVal> fromVec(SCVal scVal) {
-    return ScvVec.fromSCVal(scVal).getValue();
+    return ScvVec.fromSCVal(scVal);
   }
 
   /**
@@ -462,7 +461,7 @@ public abstract class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_VOID}
    */
   public static SCVal toVoid() {
-    return new ScvVoid().toSCVal();
+    return ScvVoid.toSCVal();
   }
 
   /**
@@ -474,23 +473,4 @@ public abstract class Scv {
   public static void fromVoid(SCVal scVal) {
     ScvVoid.fromSCVal(scVal);
   }
-
-  static byte[] getBytes(BigInteger value) {
-    byte[] bytes = value.toByteArray();
-    if (bytes.length < 8) {
-      byte[] temp = new byte[8];
-      System.arraycopy(bytes, 0, temp, 8 - bytes.length, bytes.length);
-      bytes = temp;
-    } else if (bytes.length > 8) {
-      bytes = Arrays.copyOfRange(bytes, bytes.length - 8, bytes.length);
-    }
-    return bytes;
-  }
-
-  /**
-   * Convert this object to {@link SCVal}.
-   *
-   * @return {@link SCVal}
-   */
-  public abstract SCVal toSCVal();
 }

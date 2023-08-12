@@ -20,17 +20,11 @@ public class ScvContractInstanceTest {
                     .build())
             .build();
 
-    ScvContractInstance scvContractInstance = new ScvContractInstance(value);
-    SCVal scVal = scvContractInstance.toSCVal();
-
-    assertEquals(scvContractInstance.getValue(), value);
-    assertEquals(ScvContractInstance.fromSCVal(scVal), scvContractInstance);
-
     SCVal expectedScVal =
         new SCVal.Builder().discriminant(SCValType.SCV_CONTRACT_INSTANCE).instance(value).build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toContractInstance(value), scVal);
-    assertEquals(Scv.fromContractInstance(scVal), value);
+    SCVal actualScVal = Scv.toContractInstance(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromContractInstance(actualScVal));
   }
 }

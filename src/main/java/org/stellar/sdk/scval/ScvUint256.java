@@ -1,9 +1,9 @@
 package org.stellar.sdk.scval;
 
+import static org.stellar.sdk.Util.getBytes;
+
 import java.math.BigInteger;
 import java.util.Arrays;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.UInt256Parts;
@@ -11,29 +11,21 @@ import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_U256}. */
-@Value
-@EqualsAndHashCode(callSuper = false)
-class ScvUint256 extends Scv {
+class ScvUint256 {
   private static final SCValType TYPE = SCValType.SCV_U256;
 
-  public static final BigInteger MIN_VALUE = BigInteger.ZERO;
-  public static final BigInteger MAX_VALUE =
+  private static final BigInteger MIN_VALUE = BigInteger.ZERO;
+  private static final BigInteger MAX_VALUE =
       BigInteger.valueOf(2).pow(256).subtract(BigInteger.ONE);
 
-  BigInteger value;
-
-  public ScvUint256(BigInteger value) {
+  static SCVal toSCVal(BigInteger value) {
     if (value.compareTo(MIN_VALUE) < 0 || value.compareTo(MAX_VALUE) > 0) {
       throw new IllegalArgumentException(
           String.format(
               "invalid value, expected between %s and %s, but got %s",
               MIN_VALUE, MAX_VALUE, value));
     }
-    this.value = value;
-  }
 
-  @Override
-  public SCVal toSCVal() {
     byte[] bytes = value.toByteArray();
     byte[] paddedBytes = new byte[32];
     int numBytesToCopy = Math.min(bytes.length, 32);
@@ -62,7 +54,7 @@ class ScvUint256 extends Scv {
     return new SCVal.Builder().discriminant(TYPE).u256(uInt256Parts).build();
   }
 
-  public static ScvUint256 fromSCVal(SCVal scVal) {
+  static BigInteger fromSCVal(SCVal scVal) {
     if (scVal.getDiscriminant() != TYPE) {
       throw new IllegalArgumentException(
           String.format(
@@ -81,6 +73,6 @@ class ScvUint256 extends Scv {
     System.arraycopy(loHiBytes, 0, fullBytes, 16, 8);
     System.arraycopy(loLoBytes, 0, fullBytes, 24, 8);
 
-    return new ScvUint256(new BigInteger(1, fullBytes));
+    return new BigInteger(1, fullBytes);
   }
 }

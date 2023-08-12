@@ -12,20 +12,14 @@ public class ScvLedgerKeyNonceTest {
   @Test
   public void testScvLedgerKeyNonce() {
     long value = 123456L;
-    ScvLedgerKeyNonce scvLedgerKeyNonce = new ScvLedgerKeyNonce(value);
-    SCVal scVal = scvLedgerKeyNonce.toSCVal();
-
-    assertEquals(scvLedgerKeyNonce.getValue(), value);
-    assertEquals(ScvLedgerKeyNonce.fromSCVal(scVal), scvLedgerKeyNonce);
 
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_LEDGER_KEY_NONCE)
             .nonce_key(new SCNonceKey.Builder().nonce(new Int64(value)).build())
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toLedgerKeyNonce(value), scVal);
-    assertEquals(Scv.fromLedgerKeyNonce(scVal), value);
+    SCVal actualScVal = Scv.toLedgerKeyNonce(value);
+    assertEquals(expectedScVal, actualScVal);
   }
 }

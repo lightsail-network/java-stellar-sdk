@@ -1,32 +1,23 @@
 package org.stellar.sdk.scval;
 
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_BOOL}. */
-@Value
-@RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-class ScvBoolean extends Scv {
+class ScvBoolean {
   private static final SCValType TYPE = SCValType.SCV_BOOL;
 
-  Boolean value;
-
-  @Override
-  public SCVal toSCVal() {
+  static SCVal toSCVal(Boolean value) {
     return new SCVal.Builder().discriminant(TYPE).b(value).build();
   }
 
-  public static ScvBoolean fromSCVal(SCVal scVal) {
+  static boolean fromSCVal(SCVal scVal) {
     if (scVal.getDiscriminant() != TYPE) {
       throw new IllegalArgumentException(
           String.format(
               "invalid scVal type, expected %s, but got %s", TYPE, scVal.getDiscriminant()));
     }
 
-    return new ScvBoolean(scVal.getB());
+    return scVal.getB();
   }
 }

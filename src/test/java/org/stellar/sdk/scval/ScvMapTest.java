@@ -2,7 +2,6 @@ package org.stellar.sdk.scval;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import org.junit.Test;
 import org.stellar.sdk.xdr.SCMap;
@@ -12,16 +11,10 @@ import org.stellar.sdk.xdr.SCValType;
 
 public class ScvMapTest {
   @Test
-  public void testScvMap() throws IOException {
+  public void testScvMap() {
     LinkedHashMap<SCVal, SCVal> value = new LinkedHashMap<>();
-    value.put(new ScvSymbol("key1").toSCVal(), new ScvString("value1").toSCVal());
-    value.put(new ScvString("key2").toSCVal(), new ScvInt32(123).toSCVal());
-
-    ScvMap scvMap = new ScvMap(value);
-    SCVal scVal = scvMap.toSCVal();
-
-    assertEquals(scvMap.getValue(), value);
-    assertEquals(ScvMap.fromSCVal(scVal), scvMap);
+    value.put(Scv.toSymbol("key1"), Scv.toString("value1"));
+    value.put(Scv.toString("key2"), Scv.toInt32(123));
 
     SCVal expectedScVal =
         new SCVal.Builder()
@@ -30,18 +23,18 @@ public class ScvMapTest {
                 new SCMap(
                     new SCMapEntry[] {
                       new SCMapEntry.Builder()
-                          .key(new ScvSymbol("key1").toSCVal())
-                          .val(new ScvString("value1").toSCVal())
+                          .key(Scv.toSymbol("key1"))
+                          .val(Scv.toString("value1"))
                           .build(),
                       new SCMapEntry.Builder()
-                          .key(new ScvString("key2").toSCVal())
-                          .val(new ScvInt32(123).toSCVal())
+                          .key(Scv.toString("key2"))
+                          .val(Scv.toInt32(123))
                           .build(),
                     }))
             .build();
-    assertEquals(expectedScVal.toXdrBase64(), scVal.toXdrBase64());
 
-    assertEquals(Scv.toMap(value), scVal);
-    assertEquals(Scv.fromMap(scVal), value);
+    SCVal actualScVal = Scv.toMap(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromMap(actualScVal));
   }
 }

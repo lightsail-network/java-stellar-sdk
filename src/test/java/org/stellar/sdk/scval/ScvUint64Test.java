@@ -8,56 +8,45 @@ import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
-import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class ScvUint64Test {
   @Test
   public void testScvUint64Max() {
-    BigInteger value = ScvUint64.MAX_VALUE;
-    ScvUint64 scvUint64 = new ScvUint64(value);
-    SCVal scVal = scvUint64.toSCVal();
-
-    assertEquals(scvUint64.getValue(), value);
-    assertEquals(ScvUint64.fromSCVal(scVal), scvUint64);
+    BigInteger value = XdrUnsignedHyperInteger.MAX_VALUE;
 
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_U64)
-            .u64(new Uint64(new XdrUnsignedHyperInteger(XdrUnsignedHyperInteger.MAX_VALUE)))
+            .u64(new Uint64(new XdrUnsignedHyperInteger(value)))
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toUint64(value), scVal);
-    assertEquals(Scv.fromUint64(scVal), value);
+    SCVal actualScVal = Scv.toUint64(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromUint64(actualScVal));
   }
 
   @Test
   public void testScvUint64Min() {
-    BigInteger value = ScvUint64.MIN_VALUE;
-    ScvUint64 scvUint64 = new ScvUint64(value);
-    SCVal scVal = scvUint64.toSCVal();
-
-    assertEquals(scvUint64.getValue(), value);
-    assertEquals(ScvUint64.fromSCVal(scVal), scvUint64);
+    BigInteger value = XdrUnsignedHyperInteger.MIN_VALUE;
 
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_U64)
-            .u64(new Uint64(new XdrUnsignedHyperInteger(XdrUnsignedInteger.MIN_VALUE)))
+            .u64(new Uint64(new XdrUnsignedHyperInteger(value)))
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.toUint64(value), scVal);
-    assertEquals(Scv.fromUint64(scVal), value);
+    SCVal actualScVal = Scv.toUint64(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(value, Scv.fromUint64(actualScVal));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvUint64GreaterThanMaxValueThrows() {
-    Scv.toUint64(ScvUint64.MAX_VALUE.add(BigInteger.ONE));
+    Scv.toUint64(XdrUnsignedHyperInteger.MAX_VALUE.add(BigInteger.ONE));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvUint64LessThanMinValueThrows() {
-    Scv.toUint64(ScvUint64.MIN_VALUE.subtract(BigInteger.ONE));
+    Scv.toUint64(XdrUnsignedHyperInteger.MIN_VALUE.subtract(BigInteger.ONE));
   }
 }

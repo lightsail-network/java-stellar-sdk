@@ -16,21 +16,14 @@ public class ScvErrorTest {
     SCErrorCode errorCode = SCErrorCode.SCEC_UNEXPECTED_TYPE;
     SCError scError = new SCError.Builder().code(errorCode).type(errorType).build();
 
-    ScvError scvError = new ScvError(scError);
-    SCVal scVal = scvError.toSCVal();
-
-    assertEquals(scvError.getValue(), scError);
-
-    assertEquals(ScvError.fromSCVal(scVal), scvError);
-
     SCVal expectedScVal =
         new SCVal.Builder()
             .discriminant(SCValType.SCV_ERROR)
             .error(new SCError.Builder().code(errorCode).type(errorType).build())
             .build();
-    assertEquals(expectedScVal, scVal);
 
-    assertEquals(Scv.fromError(scVal), scError);
-    assertEquals(Scv.toError(scError), scVal);
+    SCVal actualScVal = Scv.toError(scError);
+    assertEquals(expectedScVal, actualScVal);
+    assertEquals(scError, Scv.fromError(actualScVal));
   }
 }

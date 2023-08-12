@@ -11,13 +11,18 @@ import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.Test;
 import org.stellar.sdk.xdr.SCVal;
+import org.stellar.sdk.xdr.SCValType;
 
 public class ScvUint256Test {
+  private static final BigInteger MIN_VALUE = BigInteger.ZERO;
+  private static final BigInteger MAX_VALUE =
+      BigInteger.valueOf(2).pow(256).subtract(BigInteger.ONE);
+
   @Test
   public void testScvUint256() throws IOException {
     List<TestCase> values =
         Arrays.asList(
-            new TestCase(ScvUint256.MIN_VALUE, new byte[32]),
+            new TestCase(MIN_VALUE, new byte[32]),
             new TestCase(
                 BigInteger.valueOf(1),
                 new byte[] {
@@ -43,7 +48,7 @@ public class ScvUint256Test {
                   0, 0, 0, 0, 0
                 }),
             new TestCase(
-                ScvUint256.MAX_VALUE,
+                MAX_VALUE,
                 new byte[] {
                   (byte) 0xff,
                   (byte) 0xff,
@@ -86,25 +91,19 @@ public class ScvUint256Test {
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvUint256GreaterThanMaxValueThrows() {
-    new ScvUint256(ScvUint256.MAX_VALUE.add(BigInteger.ONE));
+    Scv.toUint256(MAX_VALUE.add(BigInteger.ONE));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testScvUint256LessThanMinValueThrows() {
-    new ScvUint256(ScvUint256.MIN_VALUE.subtract(BigInteger.ONE));
+    Scv.toUint256(MIN_VALUE.subtract(BigInteger.ONE));
   }
 
   private void checkScvUint256(TestCase value) throws IOException {
-    ScvUint256 scvUint256 = new ScvUint256(value.v);
-    SCVal scVal = scvUint256.toSCVal();
-
-    assertEquals(scvUint256.getValue(), value.v);
-    assertEquals(ScvUint256.fromSCVal(scVal), scvUint256);
-
-    assertArrayEquals(scVal.getU256().toXdrByteArray(), value.getExpectedBytes());
-
-    assertEquals(Scv.toUint256(value.v), scVal);
+    SCVal scVal = Scv.toUint256(value.v);
+    assertEquals(scVal.getDiscriminant(), SCValType.SCV_U256);
     assertEquals(Scv.fromUint256(scVal), value.v);
+    assertArrayEquals(scVal.getU256().toXdrByteArray(), value.getExpectedBytes());
   }
 
   @Value
