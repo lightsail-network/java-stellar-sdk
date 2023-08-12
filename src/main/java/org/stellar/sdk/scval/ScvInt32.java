@@ -7,8 +7,6 @@ import org.stellar.sdk.xdr.SCValType;
 /** Represents an {@link SCVal} with the type of {@link SCValType#SCV_I32}. */
 class ScvInt32 {
   private static final SCValType TYPE = SCValType.SCV_I32;
-  private static final int MAX_VALUE = Integer.MAX_VALUE;
-  private static final int MIN_VALUE = Integer.MIN_VALUE;
 
   static SCVal toSCVal(int value) {
     return new SCVal.Builder().discriminant(TYPE).i32(new Int32(value)).build();
