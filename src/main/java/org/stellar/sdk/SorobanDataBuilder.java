@@ -110,8 +110,8 @@ public class SorobanDataBuilder {
    * SorobanDataBuilder#setReadOnly(Collection)} and {@link
    * SorobanDataBuilder#setReadWrite(Collection)}.
    *
-   * <p>Passing {@code null} to either parameter will IGNORE the existing values. If you want to
-   * clear them, pass empty collection instead.
+   * <p>Passing {@code null} to either parameter will leave that portion of the footprint untouched.
+   * If you want to clear a portion of the footprint, pass an empty collection.
    *
    * @param readOnly the set of ledger keys to set in the read-only portion of the transaction's
    *     sorobanData
@@ -133,6 +133,9 @@ public class SorobanDataBuilder {
   /**
    * Sets the read-only portion of the storage access footprint to be a certain set of ledger keys.
    *
+   * <p>Passing {@code null} will leave that portion of the footprint untouched. If you want to
+   * clear a portion of the footprint, pass an empty collection.
+   *
    * @param readOnly the set of ledger keys to set in the read-only portion of the transaction's
    *     sorobanData
    * @return this builder instance
@@ -146,6 +149,9 @@ public class SorobanDataBuilder {
 
   /**
    * Sets the read-write portion of the storage access footprint to be a certain set of ledger keys.
+   *
+   * <p>Passing {@code null} will leave that portion of the footprint untouched. If you want to
+   * clear a portion of the footprint, pass an empty collection.
    *
    * @param readWrite the set of ledger keys to set in the read-write portion of the transaction's
    *     sorobanData
