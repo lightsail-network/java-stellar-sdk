@@ -16,8 +16,8 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * Supports building {@link SorobanTransactionData} structures with various items set to specific
  * values.
  *
- * <p>This is recommended for when you are building {@link BumpFootprintExpirationOperation} {@link
- * RestoreFootprintOperation} operations to avoid (re)building the entire data structure from
+ * <p>This is recommended for when you are building {@link BumpFootprintExpirationOperation} and
+ * {@link RestoreFootprintOperation} operations to avoid (re)building the entire data structure from
  * scratch.
  */
 public class SorobanDataBuilder {
@@ -84,7 +84,7 @@ public class SorobanDataBuilder {
   /**
    * Sets up the resource metrics.
    *
-   * <p>You should almost NEVER need this, as its often generated / provided to you by transaction
+   * <p>You should almost NEVER need this, as its often generated/provided to you by transaction
    * simulation/preflight from a Soroban RPC server.
    *
    * @param cpuInstructions number of CPU instructions (uint32)
@@ -159,8 +159,6 @@ public class SorobanDataBuilder {
   }
 
   /**
-   * Returns the copy of the final {@link SorobanTransactionData} built by this builder.
-   *
    * @return the copy of the final {@link SorobanTransactionData}.
    */
   public SorobanTransactionData build() {
