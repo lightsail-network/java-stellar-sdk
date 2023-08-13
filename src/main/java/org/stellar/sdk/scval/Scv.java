@@ -109,7 +109,7 @@ public class Scv {
   /**
    * Build a {@link SCVal} with the type of {@link SCValType#SCV_DURATION}.
    *
-   * @param duration duration to convert
+   * @param duration duration to convert (uint64)
    * @return {@link SCVal} with the type of {@link SCValType#SCV_DURATION}
    */
   public static SCVal toDuration(BigInteger duration) {
@@ -121,7 +121,7 @@ public class Scv {
    * BigInteger}.
    *
    * @param scVal {@link SCVal} to convert
-   * @return the duration
+   * @return the duration (uint64)
    */
   public static BigInteger fromDuration(SCVal scVal) {
     return ScvDuration.fromSCVal(scVal);
@@ -339,7 +339,7 @@ public class Scv {
   /**
    * Build a {@link SCVal} with the type of {@link SCValType#SCV_TIMEPOINT}.
    *
-   * @param timePoint timePoint to convert
+   * @param timePoint timePoint to convert (uint64)
    * @return {@link SCVal} with the type of {@link SCValType#SCV_TIMEPOINT}
    */
   public static SCVal toTimePoint(BigInteger timePoint) {
@@ -351,7 +351,7 @@ public class Scv {
    * BigInteger}.
    *
    * @param scVal {@link SCVal} to convert
-   * @return the timePoint
+   * @return the timePoint (uint64)
    */
   public static BigInteger fromTimePoint(SCVal scVal) {
     return ScvTimePoint.fromSCVal(scVal);
