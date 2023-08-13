@@ -58,7 +58,7 @@ public class Transaction extends AbstractTransaction {
     this.mPreconditions = preconditions;
     this.mFee = fee;
     this.mMemo = memo != null ? memo : Memo.none();
-    this.mSorobanData = sorobanData;
+    this.mSorobanData = sorobanData != null ? new SorobanDataBuilder(sorobanData).build() : null;
   }
 
   // setEnvelopeType is only used in tests which is why this method is package protected
