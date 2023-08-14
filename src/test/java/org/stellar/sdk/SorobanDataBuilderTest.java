@@ -104,7 +104,13 @@ public class SorobanDataBuilderTest {
             .setReadOnly(of(readOnly))
             .setReadWrite(of(readWrite))
             .setRefundableFee(5)
-            .setResources(1, 2, 3, 4)
+            .setResources(
+                new SorobanDataBuilder.Resources.ResourcesBuilder()
+                    .cpuInstructions(1L)
+                    .readBytes(2L)
+                    .writeBytes(3L)
+                    .metadataBytes(4L)
+                    .build())
             .build();
     assertEquals(presetSorobanData, actualData);
   }

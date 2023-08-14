@@ -3,6 +3,9 @@ package org.stellar.sdk;
 import java.io.IOException;
 import java.util.Collection;
 import javax.annotation.Nullable;
+import lombok.Builder;
+import lombok.NonNull;
+import lombok.Value;
 import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerFootprint;
@@ -87,19 +90,18 @@ public class SorobanDataBuilder {
    * <p>You should almost NEVER need this, as its often generated/provided to you by transaction
    * simulation/preflight from a Soroban RPC server.
    *
-   * @param cpuInstructions number of CPU instructions (uint32)
-   * @param readBytes number of bytes being read (uint32)
-   * @param writeBytes number of bytes being written (uint32)
-   * @param metadataBytes number of extended metadata bytes (uint32)
+   * @param resources the resource metrics to set
    * @return this builder instance
    */
-  public SorobanDataBuilder setResources(
-      long cpuInstructions, long readBytes, long writeBytes, long metadataBytes) {
-    data.getResources().setInstructions(new Uint32(new XdrUnsignedInteger(cpuInstructions)));
-    data.getResources().setReadBytes(new Uint32(new XdrUnsignedInteger(readBytes)));
-    data.getResources().setWriteBytes(new Uint32(new XdrUnsignedInteger(writeBytes)));
+  public SorobanDataBuilder setResources(Resources resources) {
     data.getResources()
-        .setExtendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(metadataBytes)));
+        .setInstructions(new Uint32(new XdrUnsignedInteger(resources.getCpuInstructions())));
+    data.getResources().setReadBytes(new Uint32(new XdrUnsignedInteger(resources.getReadBytes())));
+    data.getResources()
+        .setWriteBytes(new Uint32(new XdrUnsignedInteger(resources.getWriteBytes())));
+    data.getResources()
+        .setExtendedMetaDataSizeBytes(
+            new Uint32(new XdrUnsignedInteger(resources.getMetadataBytes())));
     return this;
   }
 
@@ -146,5 +148,19 @@ public class SorobanDataBuilder {
     } catch (IOException e) {
       throw new IllegalArgumentException("Copy SorobanData failed, please report this bug.", e);
     }
+  }
+
+  /** Represents the resource metrics of the Soroban data. */
+  @Builder(toBuilder = true)
+  @Value
+  public static class Resources {
+    // number of CPU instructions (uint32)
+    @NonNull Long cpuInstructions;
+    // number of bytes being read (uint32)
+    @NonNull Long readBytes;
+    // number of bytes being written (uint32)
+    @NonNull Long writeBytes;
+    // number of extended metadata bytes (uint32)
+    @NonNull Long metadataBytes;
   }
 }
