@@ -1353,35 +1353,40 @@ public class SorobanServerTest {
       auth = new ArrayList<>();
     }
 
-    return new TransactionBuilder(AccountConverter.enableMuxed(), source, Network.STANDALONE)
-        .setBaseFee(50000)
-        .addPreconditions(
-            TransactionPreconditions.builder().timeBounds(new TimeBounds(0, 0)).build())
-        .addOperation(
-            InvokeHostFunctionOperation.builder()
-                .sourceAccount(opInvokerKp.getAccountId())
-                .hostFunction(
-                    new HostFunction.Builder()
-                        .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
-                        .invokeContract(
-                            new SCVec(
-                                new SCVal[] {
-                                  new Address(contractId).toSCVal(),
-                                  new SCVal.Builder()
-                                      .discriminant(SCValType.SCV_SYMBOL)
-                                      .sym(new SCSymbol(new XdrString("increment")))
-                                      .build(),
-                                  new Address(opInvokerKp.getAccountId()).toSCVal(),
-                                  new SCVal.Builder()
-                                      .discriminant(SCValType.SCV_U32)
-                                      .u32(new Uint32(new XdrUnsignedInteger(10)))
-                                      .build()
-                                }))
-                        .build())
-                .auth(auth)
-                .build())
-        .setSorobanData(sorobanData)
-        .build();
+    TransactionBuilder transactionBuilder =
+        new TransactionBuilder(AccountConverter.enableMuxed(), source, Network.STANDALONE)
+            .setBaseFee(50000)
+            .addPreconditions(
+                TransactionPreconditions.builder().timeBounds(new TimeBounds(0, 0)).build())
+            .addOperation(
+                InvokeHostFunctionOperation.builder()
+                    .sourceAccount(opInvokerKp.getAccountId())
+                    .hostFunction(
+                        new HostFunction.Builder()
+                            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
+                            .invokeContract(
+                                new SCVec(
+                                    new SCVal[] {
+                                      new Address(contractId).toSCVal(),
+                                      new SCVal.Builder()
+                                          .discriminant(SCValType.SCV_SYMBOL)
+                                          .sym(new SCSymbol(new XdrString("increment")))
+                                          .build(),
+                                      new Address(opInvokerKp.getAccountId()).toSCVal(),
+                                      new SCVal.Builder()
+                                          .discriminant(SCValType.SCV_U32)
+                                          .u32(new Uint32(new XdrUnsignedInteger(10)))
+                                          .build()
+                                    }))
+                            .build())
+                    .auth(auth)
+                    .build());
+
+    if (sorobanData != null) {
+      transactionBuilder.setSorobanData(sorobanData);
+    }
+
+    return transactionBuilder.build();
   }
 
   private static SorobanAuthorizationEntry sorobanAuthorizationEntryFromXdrBase64(

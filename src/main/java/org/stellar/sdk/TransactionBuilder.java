@@ -5,7 +5,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
 import com.google.common.base.Function;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
@@ -264,29 +263,36 @@ public class TransactionBuilder {
   }
 
   /**
-   * Sets Soroban data to the transaction. TODO: After adding SorobanServer, add more descriptions.
+   * Sets the transaction's internal Soroban transaction data (resources, footprint, etc.).
+   *
+   * <p>For non-contract(non-Soroban) transactions, this setting has no effect. In the case of
+   * Soroban transactions, this is either an instance of {@link SorobanTransactionData} or a
+   * base64-encoded string of said structure. This is usually obtained from the simulation response
+   * based on a transaction with a Soroban operation (e.g. {@link InvokeHostFunctionOperation},
+   * providing necessary resource and storage footprint estimations for contract invocation.
    *
    * @param sorobanData Soroban data to set
    * @return Builder object so you can chain methods.
    */
   public TransactionBuilder setSorobanData(SorobanTransactionData sorobanData) {
-    this.mSorobanData = sorobanData;
+    this.mSorobanData = new SorobanDataBuilder(sorobanData).build();
     return this;
   }
 
   /**
-   * Sets Soroban data to the transaction. TODO: After adding SorobanServer, add more descriptions.
+   * Sets the transaction's internal Soroban transaction data (resources, footprint, etc.).
+   *
+   * <p>For non-contract(non-Soroban) transactions, this setting has no effect. In the case of
+   * Soroban transactions, this is either an instance of {@link SorobanTransactionData} or a
+   * base64-encoded string of said structure. This is usually obtained from the simulation response
+   * based on a transaction with a Soroban operation (e.g. {@link InvokeHostFunctionOperation},
+   * providing necessary resource and storage footprint estimations for contract invocation.
    *
    * @param sorobanData Soroban data to set
    * @return Builder object so you can chain methods.
    */
   public TransactionBuilder setSorobanData(String sorobanData) {
-    SorobanTransactionData data;
-    try {
-      data = SorobanTransactionData.fromXdrBase64(sorobanData);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("Invalid Soroban data: " + sorobanData, e);
-    }
-    return setSorobanData(data);
+    this.mSorobanData = new SorobanDataBuilder(sorobanData).build();
+    return this;
   }
 }
