@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -479,12 +480,7 @@ public class InvokeHostFunctionOperationTest {
   public void invokeContractFunctionOperationBuilder() {
     String contractId = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
     String funcName = "hello";
-    List<SCVal> parameters =
-        Collections.singletonList(
-            new SCVal.Builder()
-                .discriminant(SCValType.SCV_SYMBOL)
-                .sym(new SCSymbol(new XdrString("world")))
-                .build());
+    List<SCVal> parameters = Collections.singletonList(Scv.toSymbol("world"));
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.invokeContractFunctionOperationBuilder(
                 contractId, funcName, parameters)

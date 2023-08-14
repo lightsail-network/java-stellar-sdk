@@ -36,6 +36,7 @@ import org.stellar.sdk.xdr.XdrString;
  *
  * @see <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations"
  *     target="_blank">List of Operations</a>
+ * @see org.stellar.sdk.scval.Scv
  */
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -225,6 +226,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
    * invoke a contract function.
    *
+   * @see org.stellar.sdk.scval.Scv
    * @see <a
    *     href="https://soroban.stellar.org/docs/fundamentals-and-concepts/interacting-with-contracts"
    *     target="_blank">Interacting with Contracts</a>
@@ -236,7 +238,7 @@ public class InvokeHostFunctionOperation extends Operation {
   public static InvokeHostFunctionOperationBuilder<?, ?> invokeContractFunctionOperationBuilder(
       String contractId, String functionName, @Nullable Collection<SCVal> parameters) {
     Address address = new Address(contractId);
-    if (address.getType() != Address.AddressType.CONTRACT) {
+    if (address.getAddressType() != Address.AddressType.CONTRACT) {
       throw new IllegalArgumentException("\"contractId\" must be a contract address");
     }
     SCVal contractIdScVal = address.toSCVal();

@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.SCAddress;
 import org.stellar.sdk.xdr.SCVal;
@@ -10,8 +10,9 @@ import org.stellar.sdk.xdr.SCValType;
  * Represents a single address in the Stellar network. An address can represent an account or a
  * contract.
  */
+@EqualsAndHashCode
 public class Address {
-
+  private static final SCValType TYPE = SCValType.SCV_ADDRESS;
   private final byte[] key;
 
   private final AddressType type;
@@ -77,8 +78,10 @@ public class Address {
    * @return a new {@link Address} object from the given XDR object
    */
   public static Address fromSCVal(SCVal scVal) {
-    if (!SCValType.SCV_ADDRESS.equals(scVal.getDiscriminant())) {
-      throw new IllegalArgumentException("SCVal is not of type SCV_ADDRESS");
+    if (!TYPE.equals(scVal.getDiscriminant())) {
+      throw new IllegalArgumentException(
+          String.format(
+              "invalid scVal type, expected %s, but got %s", TYPE, scVal.getDiscriminant()));
     }
     return Address.fromSCAddress(scVal.getAddress());
   }
@@ -112,7 +115,7 @@ public class Address {
    */
   public SCVal toSCVal() {
     SCVal scVal = new SCVal();
-    scVal.setDiscriminant(SCValType.SCV_ADDRESS);
+    scVal.setDiscriminant(TYPE);
     scVal.setAddress(this.toSCAddress());
     return scVal;
   }
@@ -131,23 +134,8 @@ public class Address {
    *
    * @return the type of this address.
    */
-  public AddressType getType() {
+  public AddressType getAddressType() {
     return type;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(this.key, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Address)) {
-      return false;
-    }
-
-    Address other = (Address) object;
-    return Objects.equal(this.key, other.key) && Objects.equal(this.type, other.type);
   }
 
   @Override

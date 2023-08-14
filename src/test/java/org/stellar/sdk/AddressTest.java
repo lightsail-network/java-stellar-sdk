@@ -18,7 +18,7 @@ public class AddressTest {
     String accountId = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
     Address address = new Address(accountId);
     assertEquals(address.toString(), accountId);
-    assertEquals(address.getType(), Address.AddressType.ACCOUNT);
+    assertEquals(address.getAddressType(), Address.AddressType.ACCOUNT);
   }
 
   @Test
@@ -26,7 +26,7 @@ public class AddressTest {
     String contractId = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
     Address address = new Address(contractId);
     assertEquals(address.toString(), contractId);
-    assertEquals(address.getType(), Address.AddressType.CONTRACT);
+    assertEquals(address.getAddressType(), Address.AddressType.CONTRACT);
   }
 
   @Test
@@ -57,7 +57,7 @@ public class AddressTest {
     byte[] accountIdBytes = StrKey.decodeStellarAccountId(accountId);
     Address address = Address.fromAccount(accountIdBytes);
     assertEquals(address.toString(), accountId);
-    assertEquals(address.getType(), Address.AddressType.ACCOUNT);
+    assertEquals(address.getAddressType(), Address.AddressType.ACCOUNT);
   }
 
   @Test
@@ -66,7 +66,7 @@ public class AddressTest {
     byte[] contractIdBytes = StrKey.decodeContractId(contractId);
     Address address = Address.fromContract(contractIdBytes);
     assertEquals(address.toString(), contractId);
-    assertEquals(address.getType(), Address.AddressType.CONTRACT);
+    assertEquals(address.getAddressType(), Address.AddressType.CONTRACT);
   }
 
   @Test
@@ -107,7 +107,7 @@ public class AddressTest {
     Address address = Address.fromSCAddress(scAddress);
     String accountId = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
     assertEquals(address.toString(), accountId);
-    assertEquals(address.getType(), Address.AddressType.ACCOUNT);
+    assertEquals(address.getAddressType(), Address.AddressType.ACCOUNT);
   }
 
   @Test
@@ -120,7 +120,7 @@ public class AddressTest {
     Address address = Address.fromSCAddress(scAddress);
     String contract = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
     assertEquals(address.toString(), contract);
-    assertEquals(address.getType(), Address.AddressType.CONTRACT);
+    assertEquals(address.getAddressType(), Address.AddressType.CONTRACT);
   }
 
   @Test
@@ -146,7 +146,7 @@ public class AddressTest {
     Address address = Address.fromSCVal(scVal);
     String contract = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
     assertEquals(address.toString(), contract);
-    assertEquals(address.getType(), Address.AddressType.CONTRACT);
+    assertEquals(address.getAddressType(), Address.AddressType.CONTRACT);
   }
 
   @Test
