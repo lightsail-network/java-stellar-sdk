@@ -104,33 +104,6 @@ public class SorobanDataBuilder {
   }
 
   /**
-   * Sets the storage access footprint to be a certain set of ledger keys.
-   *
-   * <p>You can also set each field explicitly via {@link
-   * SorobanDataBuilder#setReadOnly(Collection)} and {@link
-   * SorobanDataBuilder#setReadWrite(Collection)}.
-   *
-   * <p>Passing {@code null} to either parameter will leave that portion of the footprint untouched.
-   * If you want to clear a portion of the footprint, pass an empty collection.
-   *
-   * @param readOnly the set of ledger keys to set in the read-only portion of the transaction's
-   *     sorobanData
-   * @param readWrite the set of ledger keys to set in the read-write portion of the transaction's
-   *     sorobanData
-   * @return this builder instance
-   */
-  public SorobanDataBuilder setFootprint(
-      @Nullable Collection<LedgerKey> readOnly, @Nullable Collection<LedgerKey> readWrite) {
-    if (readOnly != null) {
-      data.getResources().getFootprint().setReadOnly(readOnly.toArray(new LedgerKey[0]));
-    }
-    if (readWrite != null) {
-      data.getResources().getFootprint().setReadWrite(readWrite.toArray(new LedgerKey[0]));
-    }
-    return this;
-  }
-
-  /**
    * Sets the read-only portion of the storage access footprint to be a certain set of ledger keys.
    *
    * <p>Passing {@code null} will leave that portion of the footprint untouched. If you want to

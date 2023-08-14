@@ -99,22 +99,14 @@ public class SorobanDataBuilderTest {
 
   @Test
   public void testSetProperties() {
-    SorobanTransactionData actualData0 =
+    SorobanTransactionData actualData =
         new SorobanDataBuilder()
             .setReadOnly(of(readOnly))
             .setReadWrite(of(readWrite))
             .setRefundableFee(5)
             .setResources(1, 2, 3, 4)
             .build();
-    assertEquals(presetSorobanData, actualData0);
-
-    SorobanTransactionData actualData1 =
-        new SorobanDataBuilder()
-            .setFootprint(of(readOnly), of(readWrite))
-            .setRefundableFee(5)
-            .setResources(1, 2, 3, 4)
-            .build();
-    assertEquals(presetSorobanData, actualData1);
+    assertEquals(presetSorobanData, actualData);
   }
 
   @Test
@@ -136,20 +128,6 @@ public class SorobanDataBuilderTest {
     SorobanTransactionData data4 =
         new SorobanDataBuilder(presetSorobanData).setReadWrite(new ArrayList<>()).build();
     assertArrayEquals(new LedgerKey[] {}, data4.getResources().getFootprint().getReadWrite());
-
-    SorobanTransactionData data5 =
-        new SorobanDataBuilder(presetSorobanData).setFootprint(null, null).build();
-    assertArrayEquals(
-        new LedgerKey[] {readOnly}, data5.getResources().getFootprint().getReadOnly());
-    assertArrayEquals(
-        new LedgerKey[] {readWrite}, data5.getResources().getFootprint().getReadWrite());
-
-    SorobanTransactionData data6 =
-        new SorobanDataBuilder(presetSorobanData)
-            .setFootprint(new ArrayList<>(), new ArrayList<>())
-            .build();
-    assertArrayEquals(new LedgerKey[] {}, data6.getResources().getFootprint().getReadOnly());
-    assertArrayEquals(new LedgerKey[] {}, data6.getResources().getFootprint().getReadWrite());
   }
 
   @Test
