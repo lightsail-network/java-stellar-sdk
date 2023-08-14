@@ -354,7 +354,11 @@ public class SorobanServer implements Closeable {
    *     must be one of {@link InvokeHostFunctionOperation}, {@link
    *     BumpFootprintExpirationOperation}, or {@link RestoreFootprintOperation}. Any provided
    *     footprint will be ignored. You can use {@link Transaction#isSorobanTransaction()} to check
-   *     if a transaction is a Soroban transaction.
+   *     if a transaction is a Soroban transaction. Any provided footprint will be overwritten.
+   *     However, if your operation has existing auth entries, they will be preferred over ALL auth
+   *     entries from the simulation. In other words, if you include auth entries, you don't care
+   *     about the auth returned from the simulation. Other fields (footprint, etc.) will be filled
+   *     as normal.
    * @return Returns a copy of the {@link Transaction}, with the expected authorizations (in the
    *     case of invocation) and ledger footprint added. The transaction fee will also automatically
    *     be padded with the contract's minimum resource fees discovered from the simulation.
@@ -422,24 +426,30 @@ public class SorobanServer implements Closeable {
     Operation operation = transaction.getOperations()[0];
 
     if (operation instanceof InvokeHostFunctionOperation) {
-      Collection<SorobanAuthorizationEntry> originalEntries =
+      // If the operation is an InvokeHostFunctionOperation, we need to update the auth entries if
+      // existing entries are empty and the simulation result contains auth entries.
+      Collection<SorobanAuthorizationEntry> existingEntries =
           ((InvokeHostFunctionOperation) operation).getAuth();
-      List<SorobanAuthorizationEntry> newEntries = new ArrayList<>(originalEntries);
-      if (simulateHostFunctionResult.getAuth() != null) {
+      if (existingEntries.isEmpty()
+          && simulateHostFunctionResult.getAuth() != null
+          && !simulateHostFunctionResult.getAuth().isEmpty()) {
+        List<SorobanAuthorizationEntry> authorizationEntries =
+            new ArrayList<>(simulateHostFunctionResult.getAuth().size());
         for (String auth : simulateHostFunctionResult.getAuth()) {
           try {
-            newEntries.add(SorobanAuthorizationEntry.fromXdrBase64(auth));
+            authorizationEntries.add(SorobanAuthorizationEntry.fromXdrBase64(auth));
           } catch (IOException e) {
             throw new IllegalArgumentException("Invalid auth: " + auth, e);
           }
         }
+
+        operation =
+            InvokeHostFunctionOperation.builder()
+                .hostFunction(((InvokeHostFunctionOperation) operation).getHostFunction())
+                .sourceAccount(operation.getSourceAccount())
+                .auth(authorizationEntries)
+                .build();
       }
-      operation =
-          InvokeHostFunctionOperation.builder()
-              .hostFunction(((InvokeHostFunctionOperation) operation).getHostFunction())
-              .sourceAccount(operation.getSourceAccount())
-              .auth(newEntries)
-              .build();
     }
 
     SorobanTransactionData sorobanData;

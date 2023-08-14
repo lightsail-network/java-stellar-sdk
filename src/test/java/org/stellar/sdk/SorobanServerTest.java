@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import static com.google.common.collect.ImmutableList.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.Dispatcher;
@@ -104,8 +104,7 @@ public class SorobanServerTest {
               throws InterruptedException {
             GetLedgerEntriesRequest expectedRequest =
                 new GetLedgerEntriesRequest(
-                    Collections.singletonList(
-                        "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA=="));
+                    of("AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA=="));
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -256,8 +255,7 @@ public class SorobanServerTest {
                     .build();
 
             GetLedgerEntriesRequest expectedRequest =
-                new GetLedgerEntriesRequest(
-                    Collections.singletonList(ledgerKeyToXdrBase64(ledgerKey)));
+                new GetLedgerEntriesRequest(of(ledgerKeyToXdrBase64(ledgerKey)));
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -326,8 +324,7 @@ public class SorobanServerTest {
                     .build();
 
             GetLedgerEntriesRequest expectedRequest =
-                new GetLedgerEntriesRequest(
-                    Collections.singletonList(ledgerKeyToXdrBase64(ledgerKey)));
+                new GetLedgerEntriesRequest(of(ledgerKeyToXdrBase64(ledgerKey)));
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -546,9 +543,7 @@ public class SorobanServerTest {
 
     GetEventsRequest.EventFilter eventFilter =
         GetEventsRequest.EventFilter.builder()
-            .contractIds(
-                Collections.singletonList(
-                    "607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0"))
+            .contractIds(of("607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0"))
             .type(EventFilterType.CONTRACT)
             .topic(Arrays.asList("AAAADwAAAAdDT1VOVEVSAA==", "AAAADwAAAAlpbmNyZW1lbnQAAAA="))
             .build();
@@ -851,7 +846,7 @@ public class SorobanServerTest {
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
             .auth(
-                Collections.singletonList(
+                of(
                     sorobanAuthorizationEntryFromXdrBase64(
                         "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
             .build();
@@ -970,7 +965,7 @@ public class SorobanServerTest {
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
             .auth(
-                Collections.singletonList(
+                of(
                     sorobanAuthorizationEntryFromXdrBase64(
                         "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
             .build();
@@ -1059,7 +1054,7 @@ public class SorobanServerTest {
                     .build())
             .build();
 
-    Transaction transaction = buildSorobanTransaction(null, Collections.singletonList(auth));
+    Transaction transaction = buildSorobanTransaction(null, of(auth));
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -1098,11 +1093,7 @@ public class SorobanServerTest {
             .hostFunction(
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
-            .auth(
-                Arrays.asList(
-                    auth,
-                    sorobanAuthorizationEntryFromXdrBase64(
-                        "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
+            .auth(of(auth))
             .build();
     Transaction expectedTx =
         new Transaction(
