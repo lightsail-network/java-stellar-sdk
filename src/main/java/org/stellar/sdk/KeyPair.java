@@ -266,8 +266,8 @@ public class KeyPair {
   /**
    * Sign the provided payload data for payload signer where the input is the data being signed. Per
    * the <a
-   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint"
-   * CAP-40 Signature spec</a> {@link DecoratedSignature}.
+   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint">CAP-40
+   * Signature spec</a> {@link DecoratedSignature}.
    *
    * @param signerPayload the payload signers raw data to sign
    * @return DecoratedSignature

@@ -8,7 +8,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 @lombok.Builder
 /**
  * LedgerBounds are Preconditions of a transaction per <a
- * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21<a/>
+ * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21</a>
  */
 public class LedgerBounds {
   long minLedger;

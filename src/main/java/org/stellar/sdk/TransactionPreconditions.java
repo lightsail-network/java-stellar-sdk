@@ -23,7 +23,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 @Builder(toBuilder = true)
 /**
  * Preconditions of a transaction per <a
- * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21<a/>
+ * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21</a>
  */
 public class TransactionPreconditions {
   public static final long MAX_EXTRA_SIGNERS_COUNT = 2;
