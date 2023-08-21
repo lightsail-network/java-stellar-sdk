@@ -2,7 +2,9 @@ name: "Test and Deploy"
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - soroban
   pull_request:
   release:
     types:
