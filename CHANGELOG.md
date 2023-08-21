@@ -4,6 +4,9 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.41.0-beta.2
+* Migrate from CircleCI to GitHub Actions. ([#512](https://github.com/stellar/java-stellar-sdk/pull/512))
+
 ## 0.41.0-beta.1
 * Use JDK 11 for CI builds. ([#511](https://github.com/stellar/java-stellar-sdk/issues/511))
 
