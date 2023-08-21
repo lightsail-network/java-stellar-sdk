@@ -89,7 +89,7 @@ public class TransactionBuilder {
 
   /**
    * Adds preconditions. For details of all preconditions on transaction refer to <a
-   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21<a/>
+   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21</a>
    *
    * @param preconditions the tx PreConditions
    * @return updated Builder object

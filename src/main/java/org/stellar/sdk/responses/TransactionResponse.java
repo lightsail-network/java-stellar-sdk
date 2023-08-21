@@ -197,7 +197,7 @@ public class TransactionResponse extends Response implements Pageable {
 
   /**
    * Preconditions of a transaction per <a
-   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21<a/>
+   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21</a>
    */
   @Value
   public static class Preconditions {

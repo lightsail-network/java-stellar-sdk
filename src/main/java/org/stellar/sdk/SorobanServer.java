@@ -340,7 +340,7 @@ public class SorobanServer implements Closeable {
    * Submit a trial contract invocation, first run a simulation of the contract invocation as
    * defined on the incoming transaction, and apply the results to a new copy of the transaction
    * which is then returned. Setting the ledger footprint and authorization, so the resulting
-   * transaction is ready for signing & sending.
+   * transaction is ready for signing and sending.
    *
    * <p>The returned transaction will also have an updated fee that is the sum of fee set on
    * incoming transaction with the contract resource fees estimated from simulation. It is advisable

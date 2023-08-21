@@ -103,3 +103,15 @@ tasks.register('updateGitHook', Copy) {
         fileName.endsWith('.sh') ? fileName[0..-4] : fileName
     }
 }
+
+tasks.javadoc {
+    destinationDir = file('javadoc')
+    failOnError = true
+    exclude("org/stellar/sdk/xdr/**")
+    // cast options to StandardJavadocDocletOptions
+    // https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
+    StandardJavadocDocletOptions options = options as StandardJavadocDocletOptions
+    options.setSplitIndex(true)
+    options.setMemberLevel(JavadocMemberLevel.PUBLIC)
+    options.setEncoding('UTF-8')
+}
