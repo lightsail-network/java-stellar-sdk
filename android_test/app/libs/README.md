@@ -1,0 +1,1 @@
+You need to place stellar-sdk.jar into this folder.
