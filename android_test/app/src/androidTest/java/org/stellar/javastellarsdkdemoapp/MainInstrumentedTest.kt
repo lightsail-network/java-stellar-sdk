@@ -19,7 +19,7 @@ private const val PACKAGE = "org.stellar.javastellarsdkdemoapp"
 @RunWith(AndroidJUnit4::class)
 class MainInstrumentedTest {
     @Test
-    fun demoTest() {
+    fun testGetNetwork() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         // open app
         device.pressHome()

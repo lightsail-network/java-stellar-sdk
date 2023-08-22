@@ -28,7 +28,7 @@ import kotlinx.coroutines.withContext
 import org.stellar.javastellarsdkdemoapp.ui.theme.JavaStellarSDKDemoAppTheme
 import org.stellar.sdk.Server
 
-private const val HORIZON_SERVER = "https://horizon.stellar.org"
+private const val HORIZON_SERVER = "https://horizon.stellar.lobstr.co/"
 private const val PUBLIC = "Public Global Stellar Network ; September 2015"
 private const val TESTNET = "Test SDF Network ; September 2015"
 
