@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [ 26, 33 ]  # minSdk and targetSdk, see ${project_root}/android_test/app/build.gradle.kts
+        api-level: [ 26, 32 ]  # minSdk and targetSdk, see ${project_root}/android_test/app/build.gradle.kts
     steps:
       - name: checkout
         uses: actions/checkout@v3
