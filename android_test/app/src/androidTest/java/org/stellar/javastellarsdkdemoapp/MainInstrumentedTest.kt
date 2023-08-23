@@ -10,7 +10,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 
-private const val DEFAULT_TIMEOUT = 5000L
+private const val ONE_MINUTE = 1000L * 60
 private const val PACKAGE = "org.stellar.javastellarsdkdemoapp"
 
 /**
@@ -27,7 +27,7 @@ class MainInstrumentedTest {
         assertNotNull(launcherPackage)
         device.wait(
             Until.hasObject(By.pkg(launcherPackage).depth(0)),
-            DEFAULT_TIMEOUT
+            ONE_MINUTE
         )
         val context = InstrumentationRegistry.getInstrumentation().context
         val intent =
@@ -37,35 +37,26 @@ class MainInstrumentedTest {
         // wait for app to appear
         device.wait(
             Until.hasObject(By.pkg(PACKAGE).depth(0)),
-            DEFAULT_TIMEOUT
+            ONE_MINUTE
         )
 
         // get text
         val textNoNetworkInfo = device.wait(
             Until.findObject(By.text("No network info")),
-            DEFAULT_TIMEOUT
+            ONE_MINUTE
         )
         assertNotNull(textNoNetworkInfo)
 
         // get button
         val button = device.wait(
             Until.findObject(By.text("Get Network")),
-            DEFAULT_TIMEOUT
+            ONE_MINUTE
         )
         assertNotNull(button)
 
-        // click button and wait screen change
-        button.clickAndWait(Until.newWindow(), DEFAULT_TIMEOUT)
+        // click button and wait text to appear
+        button.click()
 
-        // get text
-        val expectedNetwork = "public"
-        val textNetwork = device.wait(
-            Until.findObject(By.text(expectedNetwork)),
-            DEFAULT_TIMEOUT
-        )
-        assertNotNull(textNetwork)
-
-        // exit app
-        device.pressHome()
+        assertTrue(device.wait(Until.hasObject(By.text("public")), ONE_MINUTE * 5))
     }
 }

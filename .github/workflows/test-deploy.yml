@@ -74,9 +74,7 @@ jobs:
       fail-fast: false
       matrix:
         # minSdk and targetSdk, see ${project_root}/android_test/app/build.gradle.kts
-        # TODO: we should have set the API LEVEL to 26 and 33, but the test for API 33 has been failing on
-        # GitHub Actions while running fine locally. I'm out of ideas, let's try again later.
-        api-level: [ 26, 32 ]
+        api-level: [ 26, 33 ]
     steps:
       - name: checkout
         uses: actions/checkout@v3
