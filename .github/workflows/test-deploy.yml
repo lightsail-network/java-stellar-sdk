@@ -66,8 +66,39 @@ jobs:
           name: javadoc
           path: javadoc
 
+  android-test:
+    needs: shadow_jar
+    runs-on: macos-latest
+    name: android-test (api ${{ matrix.api-level }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # minSdk and targetSdk, see ${project_root}/android_test/app/build.gradle.kts
+        api-level: [ 26, 33 ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Download JAR Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: jar
+          path: android_test/app/libs/
+      - uses: actions/setup-java@v3
+        with:
+          java-version: 17 # TODO: Android Gradle plugin requires Java 11, consider replacing other parts with Java 17.
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          working-directory: ./android_test
+          api-level: ${{ matrix.api-level }}
+          script: ./gradlew connectedCheck
+          target: google_apis
+          arch: x86_64
+          profile: 'pixel_2'
+
   deploy:
-    needs: [ shadow_jar, javadoc ]
+    needs: [ javadoc, android-test ]
     permissions:
       contents: write
     if: github.event_name == 'release' && github.event.action == 'created'
