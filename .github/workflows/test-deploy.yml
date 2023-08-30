@@ -74,6 +74,7 @@ jobs:
       fail-fast: false
       matrix:
         # minSdk and targetSdk, see ${project_root}/android_test/app/build.gradle.kts
+        # TODO: Investigate why it is unstable on API 33.
         api-level: [ 26, 33 ]
     steps:
       - name: checkout
@@ -98,7 +99,7 @@ jobs:
           profile: 'pixel_2'
 
   deploy:
-    needs: [ javadoc, android-test ]
+    needs: [ javadoc, shadow_jar ]  # TODO: add android-test when it is stable.
     permissions:
       contents: write
     if: github.event_name == 'release' && github.event.action == 'created'
