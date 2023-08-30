@@ -4,6 +4,9 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.41.0-beta.3
+* Fix the bug in Transaction.isSorobanTransaction to accommodate BumpFootprintExpirationOperation. ([#518](https://github.com/stellar/java-stellar-sdk/pull/518))
+
 ## 0.41.0-beta.2
 * Migrate from CircleCI to GitHub Actions. ([#512](https://github.com/stellar/java-stellar-sdk/pull/512))
 
