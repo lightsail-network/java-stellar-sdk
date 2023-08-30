@@ -402,7 +402,7 @@ public class Transaction extends AbstractTransaction {
 
     Operation op = mOperations[0];
     return op instanceof InvokeHostFunctionOperation
-        || op instanceof BumpSequenceOperation
+        || op instanceof BumpFootprintExpirationOperation
         || op instanceof RestoreFootprintOperation;
   }
 }
