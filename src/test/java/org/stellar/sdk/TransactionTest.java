@@ -439,7 +439,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation, operation},
+            new org.stellar.sdk.Operation[] {operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
