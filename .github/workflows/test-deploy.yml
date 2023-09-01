@@ -68,13 +68,17 @@ jobs:
 
   android-test:
     needs: shadow_jar
-    runs-on: macos-latest
-    name: android-test (api ${{ matrix.api-level }})
+    runs-on: macos-13
+    name: android-test (api ${{ matrix.emulator.api-level }})
     strategy:
       fail-fast: false
       matrix:
         # minSdk and targetSdk, see ${project_root}/android_test/app/build.gradle.kts
-        api-level: [ 26, 33 ]
+        # TODO: Investigate why it is unstable on API 33.
+        emulator: [
+          { api-level: 26, target: google_apis },
+          { api-level: 33, target: playstore }
+        ]
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -91,14 +95,14 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           working-directory: ./android_test
-          api-level: ${{ matrix.api-level }}
+          api-level: ${{ matrix.emulator.api-level }}
+          target: ${{ matrix.emulator.target }}
           script: ./gradlew connectedCheck
-          target: google_apis
           arch: x86_64
           profile: 'pixel_2'
 
   deploy:
-    needs: [ javadoc, android-test ]
+    needs: [ javadoc, shadow_jar ]  # TODO: add android-test when it is stable.
     permissions:
       contents: write
     if: github.event_name == 'release' && github.event.action == 'created'
