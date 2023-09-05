@@ -33,13 +33,6 @@ compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 javadoc.options.encoding = 'UTF-8'
 
-publishing {
-    publications {
-        sdkLibrary(MavenPublication) { publication ->
-            project.shadow.component(publication)
-        }
-    }
-}
 
 shadowJar {
     manifest {
@@ -114,4 +107,22 @@ tasks.javadoc {
     options.setSplitIndex(true)
     options.setMemberLevel(JavadocMemberLevel.PUBLIC)
     options.setEncoding('UTF-8')
+}
+
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+    archiveFileName.set('stellar-sdk-javadoc.jar')
+}
+
+publishing {
+    publications {
+        sdkLibrary(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+        javadocPublication(MavenPublication) { publication ->
+            artifact tasks.javadocJar
+        }
+    }
 }
