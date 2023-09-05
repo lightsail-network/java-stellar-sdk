@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -12,8 +13,34 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.scval.Scv;
+import org.stellar.sdk.xdr.ContractDataDurability;
+import org.stellar.sdk.xdr.ContractEntryBodyType;
+import org.stellar.sdk.xdr.ContractExecutable;
+import org.stellar.sdk.xdr.ContractExecutableType;
+import org.stellar.sdk.xdr.ContractIDPreimage;
+import org.stellar.sdk.xdr.ContractIDPreimageType;
+import org.stellar.sdk.xdr.CreateContractArgs;
+import org.stellar.sdk.xdr.DecoratedSignature;
+import org.stellar.sdk.xdr.EnvelopeType;
+import org.stellar.sdk.xdr.ExtensionPoint;
+import org.stellar.sdk.xdr.HostFunction;
+import org.stellar.sdk.xdr.HostFunctionType;
+import org.stellar.sdk.xdr.Int64;
+import org.stellar.sdk.xdr.LedgerEntryType;
+import org.stellar.sdk.xdr.LedgerFootprint;
+import org.stellar.sdk.xdr.LedgerKey;
+import org.stellar.sdk.xdr.SCVal;
+import org.stellar.sdk.xdr.SignerKey;
+import org.stellar.sdk.xdr.SorobanResources;
+import org.stellar.sdk.xdr.SorobanTransactionData;
+import org.stellar.sdk.xdr.Uint256;
+import org.stellar.sdk.xdr.Uint32;
+import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class TransactionTest {
 
@@ -58,7 +85,7 @@ public class TransactionTest {
         (Transaction)
             Transaction.fromEnvelopeXdr(
                 AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.PUBLIC);
-    assertTrue(parsed.equals(transaction));
+    assertEquals(parsed, transaction);
     assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, parsed.toEnvelopeXdr().getDiscriminant());
     assertEquals(transaction.toEnvelopeXdrBase64(), parsed.toEnvelopeXdrBase64());
 
@@ -259,5 +286,165 @@ public class TransactionTest {
     String expectedXdr =
         "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAQAAAAAAAAAAAAAAAH8wYjTJienWf2nf2TEZi2APPWzmtkwiQHAftisIgyuHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAAfzBiNMmJ6dZ/ad/ZMRmLYA89bOa2TCJAcB+2KwiDK4cAAAAAAACHBwAAArsAAAAAAAAA2AAAAAAAAABkAAAAAA==";
     assertEquals(expectedXdr, transaction.toEnvelopeXdrBase64());
+  }
+
+  @Test
+  public void testIsSorobanTransactionInvokeHostFunctionOperation() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
+
+    String contractId = "CDYUOBUVMZPWIU4GB4XNBAYL6NIHIMYLZFNEXOCDIO33MBJMNPSFBYKU";
+    String functionName = "hello";
+    List<SCVal> params = Collections.singletonList(Scv.toSymbol("Soroban"));
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.invokeContractFunctionOperationBuilder(
+                contractId, functionName, params)
+            .build();
+
+    Transaction transaction =
+        new Transaction(
+            AccountConverter.enableMuxed(),
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation},
+            null,
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            null,
+            Network.TESTNET);
+    assertTrue(transaction.isSorobanTransaction());
+  }
+
+  @Test
+  public void testIsSorobanTransactionBumpFootprintExpirationOperation() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
+    String contractId = "CDYUOBUVMZPWIU4GB4XNBAYL6NIHIMYLZFNEXOCDIO33MBJMNPSFBYKU";
+    SorobanTransactionData sorobanData =
+        new SorobanDataBuilder()
+            .setReadOnly(
+                Collections.singletonList(
+                    new LedgerKey.Builder()
+                        .discriminant(LedgerEntryType.CONTRACT_DATA)
+                        .contractData(
+                            new LedgerKey.LedgerKeyContractData.Builder()
+                                .contract(new Address(contractId).toSCAddress())
+                                .key(Scv.toLedgerKeyContractInstance())
+                                .durability(ContractDataDurability.PERSISTENT)
+                                .bodyType(ContractEntryBodyType.DATA_ENTRY)
+                                .build())
+                        .build()))
+            .build();
+    BumpFootprintExpirationOperation operation =
+        BumpFootprintExpirationOperation.builder().ledgersToExpire(4096L).build();
+    Transaction transaction =
+        new Transaction(
+            AccountConverter.enableMuxed(),
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation},
+            null,
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            sorobanData,
+            Network.TESTNET);
+    assertTrue(transaction.isSorobanTransaction());
+  }
+
+  @Test
+  public void testIsSorobanTransactionRestoreFootprintOperation() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
+    String contractId = "CDYUOBUVMZPWIU4GB4XNBAYL6NIHIMYLZFNEXOCDIO33MBJMNPSFBYKU";
+    SorobanTransactionData sorobanData =
+        new SorobanDataBuilder()
+            .setReadOnly(
+                Collections.singletonList(
+                    new LedgerKey.Builder()
+                        .discriminant(LedgerEntryType.CONTRACT_DATA)
+                        .contractData(
+                            new LedgerKey.LedgerKeyContractData.Builder()
+                                .contract(new Address(contractId).toSCAddress())
+                                .key(Scv.toLedgerKeyContractInstance())
+                                .durability(ContractDataDurability.PERSISTENT)
+                                .bodyType(ContractEntryBodyType.DATA_ENTRY)
+                                .build())
+                        .build()))
+            .build();
+    RestoreFootprintOperation operation = RestoreFootprintOperation.builder().build();
+    Transaction transaction =
+        new Transaction(
+            AccountConverter.enableMuxed(),
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation},
+            null,
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            sorobanData,
+            Network.TESTNET);
+    assertTrue(transaction.isSorobanTransaction());
+  }
+
+  @Test
+  public void testIsSorobanTransactionMultiOperations() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
+
+    String contractId = "CDYUOBUVMZPWIU4GB4XNBAYL6NIHIMYLZFNEXOCDIO33MBJMNPSFBYKU";
+    String functionName = "hello";
+    List<SCVal> params = Collections.singletonList(Scv.toSymbol("Soroban"));
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.invokeContractFunctionOperationBuilder(
+                contractId, functionName, params)
+            .build();
+
+    Transaction transaction =
+        new Transaction(
+            AccountConverter.enableMuxed(),
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation, operation},
+            null,
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            null,
+            Network.TESTNET);
+    assertFalse(transaction.isSorobanTransaction());
+  }
+
+  @Test
+  public void testIsSorobanTransactionBumpSequenceOperation() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
+    BumpSequenceOperation operation = new BumpSequenceOperation.Builder(0L).build();
+
+    Transaction transaction =
+        new Transaction(
+            AccountConverter.enableMuxed(),
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation},
+            null,
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            null,
+            Network.TESTNET);
+    assertFalse(transaction.isSorobanTransaction());
   }
 }
