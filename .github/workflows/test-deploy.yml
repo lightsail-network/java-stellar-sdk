@@ -66,6 +66,25 @@ jobs:
           name: javadoc
           path: javadoc
 
+  javadoc_jar:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+      - name: Generate javadocJar
+        run: ./gradlew javadocJar
+      - name: Persist javadocJar
+        uses: actions/upload-artifact@v3
+        with:
+          name: javadoc_jar
+          path: build/libs/stellar-sdk-javadoc.jar
+
   android-test:
     needs: shadow_jar
     runs-on: macos-13
@@ -102,7 +121,7 @@ jobs:
           profile: 'pixel_2'
 
   deploy:
-    needs: [ javadoc, shadow_jar ]  # TODO: add android-test when it is stable.
+    needs: [ javadoc, shadow_jar, javadoc_jar ]  # TODO: add android-test when it is stable.
     permissions:
       contents: write
     if: github.event_name == 'release' && github.event.action == 'created'
@@ -120,6 +139,11 @@ jobs:
         with:
           name: javadoc
           path: javadoc
+      - name: Download javadocJar
+        uses: actions/download-artifact@v2
+        with:
+          name: javadoc_jar
+          path: javadoc_jar
       - name: Archive Documentation
         run: tar -czf stellar-sdk-javadoc.tar.gz javadoc
       - name: Upload artifacts to GitHub Release
@@ -127,6 +151,7 @@ jobs:
         with:
           files: |
             jar/stellar-sdk.jar
+            javadoc_jar/stellar-sdk-javadoc.jar
             stellar-sdk-javadoc.tar.gz
       - name: Upload Documentation to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
