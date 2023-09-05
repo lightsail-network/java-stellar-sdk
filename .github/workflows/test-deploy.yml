@@ -121,7 +121,7 @@ jobs:
           profile: 'pixel_2'
 
   deploy:
-    needs: [ javadoc, shadow_jar ]  # TODO: add android-test when it is stable.
+    needs: [ javadoc, shadow_jar, javadoc_jar ]  # TODO: add android-test when it is stable.
     permissions:
       contents: write
     if: github.event_name == 'release' && github.event.action == 'created'
