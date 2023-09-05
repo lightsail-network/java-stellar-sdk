@@ -4,6 +4,9 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.40.1
+* Fix the issue of unable to parse liquidity_pool_revoked effect properly. ([#521](https://github.com/stellar/java-stellar-sdk/pull/521))
+
 ## 0.40.0
 * Add strkey support for contract ids ([#471](https://github.com/stellar/java-stellar-sdk/pull/471))
 * Fix NPE in `KeyPair.equals()` method ([#474](https://github.com/stellar/java-stellar-sdk/pull/474))
