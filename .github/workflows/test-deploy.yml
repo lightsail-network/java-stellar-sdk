@@ -77,9 +77,9 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
-      - name: Generate JavaDoc Jar
+      - name: Generate javadocJar
         run: ./gradlew javadocJar
-      - name: Persist Documentation
+      - name: Persist javadocJar
         uses: actions/upload-artifact@v3
         with:
           name: javadoc_jar
