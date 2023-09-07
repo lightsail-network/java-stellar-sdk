@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -25,6 +26,7 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
             .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
             .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
+            .registerTypeAdapter(ImmutableList.class, new ImmutableListDeserializer())
             .create();
 
     int type = json.getAsJsonObject().get("type_i").getAsInt();

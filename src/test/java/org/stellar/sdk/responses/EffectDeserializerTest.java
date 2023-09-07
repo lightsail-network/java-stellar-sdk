@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.stellar.sdk.Asset.create;
 
 import java.util.Arrays;
@@ -22,6 +23,8 @@ import org.stellar.sdk.responses.effects.DataCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.DataRemovedEffectResponse;
 import org.stellar.sdk.responses.effects.DataUpdatedEffectResponse;
 import org.stellar.sdk.responses.effects.EffectResponse;
+import org.stellar.sdk.responses.effects.LiquidityPoolClaimableAssetAmount;
+import org.stellar.sdk.responses.effects.LiquidityPoolRevokedEffectResponse;
 import org.stellar.sdk.responses.effects.LiquidityPoolTradeEffectResponse;
 import org.stellar.sdk.responses.effects.SequenceBumpedEffectResponse;
 import org.stellar.sdk.responses.effects.SignerCreatedEffectResponse;
@@ -1317,5 +1320,97 @@ public class EffectDeserializerTest extends TestCase {
         effect.getBought(),
         new AssetAmount(
             create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"), "1.0000000"));
+  }
+
+  @Test
+  public void testDeserializeLiquidityPoolRevokedEffect() {
+    String json =
+        "{\n"
+            + "  \"_links\": {\n"
+            + "    \"operation\": {\n"
+            + "      \"href\": \"https://horizon.stellar.org/operations/166807682144149505\"\n"
+            + "    },\n"
+            + "    \"succeeds\": {\n"
+            + "      \"href\": \"https://horizon.stellar.org/effects?order=desc&cursor=166807682144149505-7\"\n"
+            + "    },\n"
+            + "    \"precedes\": {\n"
+            + "      \"href\": \"https://horizon.stellar.org/effects?order=asc&cursor=166807682144149505-7\"\n"
+            + "    }\n"
+            + "  },\n"
+            + "  \"id\": \"0166807682144149505-0000000007\",\n"
+            + "  \"paging_token\": \"166807682144149505-7\",\n"
+            + "  \"account\": \"GDGO6TGQLDCUYLQU3JOCSIU7CVCVUC2VHSTUUDPOUEDSZ2L5K3SWO76Y\",\n"
+            + "  \"type\": \"liquidity_pool_revoked\",\n"
+            + "  \"type_i\": 95,\n"
+            + "  \"created_at\": \"2021-12-22T13:50:44Z\",\n"
+            + "  \"liquidity_pool\": {\n"
+            + "    \"id\": \"d0e6dfe3cb35848c528ba283f8a274b61c0acae73486981e2e49c815ef0fa275\",\n"
+            + "    \"fee_bp\": 30,\n"
+            + "    \"type\": \"constant_product\",\n"
+            + "    \"total_trustlines\": \"2\",\n"
+            + "    \"total_shares\": \"12695.9043474\",\n"
+            + "    \"reserves\": [\n"
+            + "      {\n"
+            + "        \"asset\": \"native\",\n"
+            + "        \"amount\": \"166.0927633\"\n"
+            + "      },\n"
+            + "      {\n"
+            + "        \"asset\": \"TESLABIOHEAL:GDGO6TGQLDCUYLQU3JOCSIU7CVCVUC2VHSTUUDPOUEDSZ2L5K3SWO76Y\",\n"
+            + "        \"amount\": \"979387.4348690\"\n"
+            + "      }\n"
+            + "    ]\n"
+            + "  },\n"
+            + "  \"reserves_revoked\": [\n"
+            + "    {\n"
+            + "      \"asset\": \"native\",\n"
+            + "      \"amount\": \"319.8948139\",\n"
+            + "      \"claimable_balance_id\": \"0000000021e897197b8fe396772891ba3ece3244c37ba039fd73bd0ef0ce68a90d5bb688\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "      \"asset\": \"TESLABIOHEAL:GDGO6TGQLDCUYLQU3JOCSIU7CVCVUC2VHSTUUDPOUEDSZ2L5K3SWO76Y\",\n"
+            + "      \"amount\": \"1886301.0948913\",\n"
+            + "      \"claimable_balance_id\": \"000000001843f844860fd96541993c96c72157c1a5eb9d522e6f5b99e2ab300ccee8e38d\"\n"
+            + "    }\n"
+            + "  ],\n"
+            + "  \"shares_revoked\": \"24452.3233794\"\n"
+            + "}\n";
+
+    LiquidityPoolRevokedEffectResponse effect =
+        (LiquidityPoolRevokedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getType(), "liquidity_pool_revoked");
+
+    assertEquals(effect.getAccount(), "GDGO6TGQLDCUYLQU3JOCSIU7CVCVUC2VHSTUUDPOUEDSZ2L5K3SWO76Y");
+    assertEquals(effect.getCreatedAt(), "2021-12-22T13:50:44Z");
+    assertEquals(
+        effect.getLiquidityPool().getID().toString(),
+        "d0e6dfe3cb35848c528ba283f8a274b61c0acae73486981e2e49c815ef0fa275");
+    assertEquals(effect.getLiquidityPool().getFeeBP(), Integer.valueOf(30));
+    assertEquals(
+        effect.getLiquidityPool().getType(), LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT);
+    assertEquals(effect.getLiquidityPool().getTotalTrustlines(), Long.valueOf(2));
+    assertEquals(effect.getLiquidityPool().getTotalShares(), "12695.9043474");
+    assertArrayEquals(
+        effect.getLiquidityPool().getReserves(),
+        new AssetAmount[] {
+          new AssetAmount(create("native"), "166.0927633"),
+          new AssetAmount(
+              create("TESLABIOHEAL:GDGO6TGQLDCUYLQU3JOCSIU7CVCVUC2VHSTUUDPOUEDSZ2L5K3SWO76Y"),
+              "979387.4348690")
+        });
+    assertArrayEquals(
+        effect.getReservesRevoked().toArray(),
+        new LiquidityPoolClaimableAssetAmount[] {
+          new LiquidityPoolClaimableAssetAmount(
+              create("native"),
+              "319.8948139",
+              "0000000021e897197b8fe396772891ba3ece3244c37ba039fd73bd0ef0ce68a90d5bb688"),
+          new LiquidityPoolClaimableAssetAmount(
+              create("TESLABIOHEAL:GDGO6TGQLDCUYLQU3JOCSIU7CVCVUC2VHSTUUDPOUEDSZ2L5K3SWO76Y"),
+              "1886301.0948913",
+              "000000001843f844860fd96541993c96c72157c1a5eb9d522e6f5b99e2ab300ccee8e38d")
+        });
+    assertEquals(effect.getSharesRevoked(), "24452.3233794");
   }
 }

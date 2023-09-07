@@ -73,17 +73,18 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
     uriBuilder.setQueryParameter(RESERVES_PARAMETER_NAME, String.join(",", reserves));
     return this;
   }
-  
+
   /**
    * Returns all liquidity pools the specified account is participating in.
    *
    * @param account Account ID to filter liquidity pools
    * @return current {@link LiquidityPoolsRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/list/">LiquidityPools</a>
+   * @see <a
+   *     href="https://developers.stellar.org/api/resources/liquiditypools/list/">LiquidityPools</a>
    */
   public LiquidityPoolsRequestBuilder forAccount(String account) {
-      uriBuilder.setQueryParameter(ACCOUNT_PARAMETER_NAME, account);
-      return this;
+    uriBuilder.setQueryParameter(ACCOUNT_PARAMETER_NAME, account);
+    return this;
   }
 
   /**
