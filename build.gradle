@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 buildscript {
-    ext.okhttpclientVersion = '4.10.0'
+    ext.okhttpclientVersion = '4.11.0'
 }
 
 plugins {
@@ -72,17 +72,15 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp-sse:${okhttpclientVersion}"
     implementation 'com.moandjiezana.toml:toml4j:0.7.2'
     // use the android version because we don't want java 8 stuff
-    implementation 'com.google.guava:guava:26.0-android'
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'commons-io:commons-io:2.11.0'
+    // TODO: Do we really need to introduce guava?
+    implementation 'com.google.guava:guava:32.1.2-android'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'net.i2p.crypto:eddsa:0.3.0'
-    implementation 'org.threeten:threetenbp:1.6.0'
 
-    testImplementation 'org.mockito:mockito-core:4.6.1'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
     testImplementation "com.squareup.okhttp3:mockwebserver:${okhttpclientVersion}"
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'javax.xml.bind:jaxb-api:2.3.1'
-    testImplementation group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '4.12.1'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.10.0'
 }
 
 tasks.named('test') { task ->
