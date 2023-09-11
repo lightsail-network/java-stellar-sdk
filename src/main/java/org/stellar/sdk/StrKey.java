@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import com.google.common.io.BaseEncoding;
-import com.google.common.primitives.Bytes;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
@@ -398,6 +397,9 @@ class StrKey {
     int idCopyStartIndex = idBytes.length - idNumBytesToCopy;
     System.arraycopy(
         idBytes, idCopyStartIndex, idPaddedBytes, 8 - idNumBytesToCopy, idNumBytesToCopy);
-    return Bytes.concat(accountBytes, idPaddedBytes);
+    byte[] result = new byte[accountBytes.length + idPaddedBytes.length];
+    System.arraycopy(accountBytes, 0, result, 0, accountBytes.length);
+    System.arraycopy(idPaddedBytes, 0, result, accountBytes.length, idPaddedBytes.length);
+    return result;
   }
 }

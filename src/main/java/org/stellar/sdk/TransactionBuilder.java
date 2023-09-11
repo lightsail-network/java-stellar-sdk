@@ -3,10 +3,10 @@ package org.stellar.sdk;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
-import com.google.common.base.Function;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import lombok.NonNull;
 import org.stellar.sdk.TransactionPreconditions.TransactionPreconditionsBuilder;
 import org.stellar.sdk.xdr.SorobanTransactionData;
@@ -243,8 +243,8 @@ public class TransactionBuilder {
    * A default implementation of sequence number generation which will derive a sequence number
    * based on sourceAccount's current sequence number + 1.
    */
-  public static Function<TransactionBuilderAccount, Long> IncrementedSequenceNumberFunc =
-      sourceAccount -> sourceAccount.getIncrementedSequenceNumber();
+  public static Function<TransactionBuilderAccount, Long> incrementedSequenceNumberFunc =
+      TransactionBuilderAccount::getIncrementedSequenceNumber;
 
   @Deprecated
   public static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(long minTime, long maxTime) {

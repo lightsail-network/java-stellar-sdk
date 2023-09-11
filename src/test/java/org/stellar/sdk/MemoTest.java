@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.google.common.base.Strings;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -95,7 +94,7 @@ public class MemoTest {
 
   @Test
   public void testMemoHashSuccess() {
-    MemoHash memo = Memo.hash(Strings.padEnd("4142434445464748494a4b4c", 64, '0'));
+    MemoHash memo = Memo.hash("4142434445464748494a4b4c0000000000000000000000000000000000000000");
     assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
     String test = "ABCDEFGHIJKL";
     assertEquals(test, Util.paddedByteArrayToString(memo.getBytes()));
@@ -105,7 +104,8 @@ public class MemoTest {
   @Test
   public void testMemoHashSuccessUppercase() {
 
-    MemoHash memo = Memo.hash(Strings.padEnd("4142434445464748494a4b4c".toUpperCase(), 64, '0'));
+    MemoHash memo =
+        Memo.hash("4142434445464748494a4b4c0000000000000000000000000000000000000000".toUpperCase());
     assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
     String test = "ABCDEFGHIJKL";
     assertEquals(test, Util.paddedByteArrayToString(memo.getBytes()));
