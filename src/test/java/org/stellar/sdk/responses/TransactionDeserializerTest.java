@@ -3,9 +3,9 @@ package org.stellar.sdk.responses;
 import static java.math.BigInteger.valueOf;
 import static org.junit.Assert.assertEquals;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
+import java.util.Optional;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.MemoHash;
@@ -76,9 +76,8 @@ public class TransactionDeserializerTest extends TestCase {
         transaction.getSignatures(),
         ImmutableList.of(
             "b/noKPYnxb8oJmv6gLixY0PUJMZZ9pxwc226JtAfyRkhv6oFINj3iDuGJoBeuUh6D1vujP9e4/fH0xZjDaO3Aw=="));
-    assertEquals(
-        transaction.getFeeBump(), Optional.<TransactionResponse.FeeBumpTransaction>absent());
-    assertEquals(transaction.getInner(), Optional.<TransactionResponse.InnerTransaction>absent());
+    assertEquals(transaction.getFeeBump(), Optional.empty());
+    assertEquals(transaction.getInner(), Optional.empty());
     assertTrue(transaction.getMemo() instanceof MemoHash);
     MemoHash memo = (MemoHash) transaction.getMemo();
     assertEquals(

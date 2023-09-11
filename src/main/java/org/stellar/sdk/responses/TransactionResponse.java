@@ -1,9 +1,9 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.Memo;
@@ -92,7 +92,7 @@ public class TransactionResponse extends Response implements Pageable {
 
   public Optional<MuxedAccount> getSourceAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(
         new MuxedAccount(this.accountMuxed, this.sourceAccount, this.accountMuxedId));
@@ -100,7 +100,7 @@ public class TransactionResponse extends Response implements Pageable {
 
   public Optional<MuxedAccount> getFeeAccountMuxed() {
     if (this.feeAccountMuxed == null || this.feeAccountMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(
         new MuxedAccount(this.feeAccountMuxed, this.feeAccount, this.feeAccountMuxedId));
@@ -131,15 +131,15 @@ public class TransactionResponse extends Response implements Pageable {
   }
 
   public Optional<FeeBumpTransaction> getFeeBump() {
-    return Optional.fromNullable(this.feeBumpTransaction);
+    return Optional.ofNullable(this.feeBumpTransaction);
   }
 
   public Optional<InnerTransaction> getInner() {
-    return Optional.fromNullable(this.innerTransaction);
+    return Optional.ofNullable(this.innerTransaction);
   }
 
   public Optional<Preconditions> getPreconditions() {
-    return Optional.fromNullable(this.preconditions);
+    return Optional.ofNullable(this.preconditions);
   }
 
   public String getPagingToken() {

@@ -2,10 +2,10 @@ package org.stellar.sdk.responses;
 
 import static org.stellar.sdk.Asset.create;
 
-import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
+import java.util.Optional;
 import lombok.NonNull;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
@@ -163,7 +163,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   }
 
   public Optional<String> getSponsor() {
-    return Optional.fromNullable(this.sponsor);
+    return Optional.ofNullable(this.sponsor);
   }
 
   /** Represents account thresholds. */
@@ -321,15 +321,15 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<String> getAssetCode() {
-      return Optional.fromNullable(assetCode);
+      return Optional.ofNullable(assetCode);
     }
 
     public Optional<String> getAssetIssuer() {
-      return Optional.fromNullable(assetIssuer);
+      return Optional.ofNullable(assetIssuer);
     }
 
     public Optional<LiquidityPoolID> getLiquidityPoolID() {
-      return Optional.fromNullable(liquidityPoolID);
+      return Optional.ofNullable(liquidityPoolID);
     }
 
     public String getBalance() {
@@ -337,11 +337,11 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<String> getBuyingLiabilities() {
-      return Optional.fromNullable(buyingLiabilities);
+      return Optional.ofNullable(buyingLiabilities);
     }
 
     public Optional<String> getSellingLiabilities() {
-      return Optional.fromNullable(sellingLiabilities);
+      return Optional.ofNullable(sellingLiabilities);
     }
 
     public String getLimit() {
@@ -361,7 +361,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<String> getSponsor() {
-      return Optional.fromNullable(this.sponsor);
+      return Optional.ofNullable(this.sponsor);
     }
   }
 
@@ -408,7 +408,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<String> getSponsor() {
-      return Optional.fromNullable(this.sponsor);
+      return Optional.ofNullable(this.sponsor);
     }
   }
 

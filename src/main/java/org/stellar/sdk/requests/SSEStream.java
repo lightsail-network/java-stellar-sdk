@@ -1,8 +1,8 @@
 package org.stellar.sdk.requests;
 
-import com.google.common.base.Optional;
 import java.io.Closeable;
 import java.net.SocketException;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -199,7 +199,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     @Override
     public void onFailure(
         EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
-      Optional<Integer> code = Optional.absent();
+      Optional<Integer> code = Optional.empty();
       if (response != null) {
         code = Optional.of(response.code());
       }
@@ -212,7 +212,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
           listener.onFailure(Optional.of(t), code);
         }
       } else {
-        Optional<Throwable> absent = Optional.absent();
+        Optional<Throwable> absent = Optional.empty();
         listener.onFailure(absent, code);
       }
     }

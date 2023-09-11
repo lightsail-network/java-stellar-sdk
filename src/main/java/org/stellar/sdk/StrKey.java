@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.Bytes;
 import java.io.ByteArrayInputStream;
@@ -9,6 +8,7 @@ import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Optional;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -382,7 +382,7 @@ class StrKey {
           return Optional.of(versionByte);
         }
       }
-      return Optional.absent();
+      return Optional.empty();
     }
 
     public int getValue() {

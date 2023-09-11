@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
@@ -13,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Signature;
@@ -512,7 +512,7 @@ public class Sep10Challenge {
     // are consumed only once on the transaction.
     Set<String> allSigners = new HashSet<String>(clientSigners);
     allSigners.add(serverKeyPair.getAccountId());
-    Optional<String> clientDomainSigner = Optional.absent();
+    Optional<String> clientDomainSigner = Optional.empty();
 
     for (Operation op : transaction.getOperations()) {
       if (!(op instanceof ManageDataOperation)) {
