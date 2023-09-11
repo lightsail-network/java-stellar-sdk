@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 
 /**
  * Base class for AssetTypeCreditAlphaNum4 and AssetTypeCreditAlphaNum12 subclasses.
@@ -13,9 +12,7 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
   protected final String mCode;
   protected final String mIssuer;
 
-  public AssetTypeCreditAlphaNum(String code, String issuer) {
-    checkNotNull(code, "code cannot be null");
-    checkNotNull(issuer, "issuer cannot be null");
+  public AssetTypeCreditAlphaNum(@NonNull String code, @NonNull String issuer) {
     mCode = code;
     mIssuer = issuer;
   }

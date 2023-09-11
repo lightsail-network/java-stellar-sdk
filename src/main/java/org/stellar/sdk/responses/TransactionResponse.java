@@ -1,11 +1,10 @@
 package org.stellar.sdk.responses;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
+import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.Memo;
 
@@ -183,8 +182,7 @@ public class TransactionResponse extends Response implements Pageable {
     return memo;
   }
 
-  public void setMemo(Memo memo) {
-    memo = checkNotNull(memo, "memo cannot be null");
+  public void setMemo(@NonNull Memo memo) {
     if (this.memo != null) {
       throw new RuntimeException("Memo has been already set.");
     }

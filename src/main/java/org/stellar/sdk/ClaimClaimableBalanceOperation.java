@@ -1,17 +1,16 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class ClaimClaimableBalanceOperation extends Operation {
   private final String balanceId;
 
-  private ClaimClaimableBalanceOperation(String balanceId) {
-    this.balanceId = checkNotNull(balanceId, "balanceId cannot be null");
+  private ClaimClaimableBalanceOperation(@NonNull String balanceId) {
+    this.balanceId = balanceId;
   }
 
   public String getBalanceId() {
@@ -70,8 +69,8 @@ public class ClaimClaimableBalanceOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public ClaimClaimableBalanceOperation.Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    public ClaimClaimableBalanceOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 

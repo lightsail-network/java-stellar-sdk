@@ -1,12 +1,12 @@
 package org.stellar.sdk.responses;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.stellar.sdk.Asset.create;
 
 import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
+import lombok.NonNull;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPoolID;
@@ -281,27 +281,26 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private String sponsor;
 
     public Balance(
-        String assetType,
+        @NonNull String assetType,
         String assetCode,
         String assetIssuer,
         LiquidityPoolID liquidityPoolID,
-        String balance,
+        @NonNull String balance,
         String limit,
-        String buyingLiabilities,
-        String sellingLiabilities,
+        @NonNull String buyingLiabilities,
+        @NonNull String sellingLiabilities,
         Boolean isAuthorized,
         Boolean isAuthorizedToMaintainLiabilities,
         Integer lastModifiedLedger,
         String sponsor) {
-      this.assetType = checkNotNull(assetType, "assertType cannot be null");
-      this.balance = checkNotNull(balance, "balance cannot be null");
+      this.assetType = assetType;
+      this.balance = balance;
       this.limit = limit;
       this.assetCode = assetCode;
       this.assetIssuer = assetIssuer;
       this.liquidityPoolID = liquidityPoolID;
-      this.buyingLiabilities = checkNotNull(buyingLiabilities, "buyingLiabilities cannot be null");
-      this.sellingLiabilities =
-          checkNotNull(sellingLiabilities, "sellingLiabilities cannot be null");
+      this.buyingLiabilities = buyingLiabilities;
+      this.sellingLiabilities = sellingLiabilities;
       this.isAuthorized = isAuthorized;
       this.isAuthorizedToMaintainLiabilities = isAuthorizedToMaintainLiabilities;
       this.lastModifiedLedger = lastModifiedLedger;
@@ -380,10 +379,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     private String sponsor;
 
-    public Signer(String key, String type, int weight, String sponsor) {
-      this.key = checkNotNull(key, "key cannot be null");
-      this.type = checkNotNull(type, "type cannot be null");
-      this.weight = checkNotNull(weight, "weight cannot be null");
+    public Signer(@NonNull String key, @NonNull String type, int weight, String sponsor) {
+      this.key = key;
+      this.type = type;
+      this.weight = weight;
       // sponsor is an optional field
       this.sponsor = sponsor;
     }

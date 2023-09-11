@@ -1,10 +1,9 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import java.util.List;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class CreateClaimableBalanceOperation extends Operation {
@@ -12,10 +11,11 @@ public class CreateClaimableBalanceOperation extends Operation {
   private final Asset asset;
   private final List<Claimant> claimants;
 
-  private CreateClaimableBalanceOperation(String amount, Asset asset, List<Claimant> claimants) {
-    this.asset = checkNotNull(asset, "asset cannot be null");
-    this.amount = checkNotNull(amount, "amount cannot be null");
-    this.claimants = checkNotNull(claimants, "claimants cannot be null");
+  private CreateClaimableBalanceOperation(
+      @NonNull String amount, @NonNull Asset asset, @NonNull List<Claimant> claimants) {
+    this.asset = asset;
+    this.amount = amount;
+    this.claimants = claimants;
     if (this.claimants.isEmpty()) {
       throw new IllegalArgumentException("claimants cannot be empty");
     }
@@ -108,8 +108,8 @@ public class CreateClaimableBalanceOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public CreateClaimableBalanceOperation.Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    public CreateClaimableBalanceOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 

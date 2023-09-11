@@ -1,10 +1,9 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.FeeBumpTransactionEnvelope;
@@ -23,12 +22,12 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
   FeeBumpTransaction(
       AccountConverter accountConverter,
-      String feeAccount,
+      @NonNull String feeAccount,
       long fee,
-      Transaction innerTransaction) {
+      @NonNull Transaction innerTransaction) {
     super(accountConverter, innerTransaction.getNetwork());
-    this.mFeeAccount = checkNotNull(feeAccount, "feeAccount cannot be null");
-    this.mInner = checkNotNull(innerTransaction, "innerTransaction cannot be null");
+    this.mFeeAccount = feeAccount;
+    this.mInner = innerTransaction;
     this.mFee = fee;
   }
 
@@ -122,10 +121,9 @@ public class FeeBumpTransaction extends AbstractTransaction {
      * @param accountConverter The AccountConverter which will be used to encode the fee account.
      * @param inner The inner transaction which will be fee bumped. read-only, the
      */
-    public Builder(AccountConverter accountConverter, final Transaction inner) {
-      checkNotNull(inner, "inner cannot be null");
+    public Builder(@NonNull AccountConverter accountConverter, @NonNull final Transaction inner) {
       EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
-      this.mAccountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
+      this.mAccountConverter = accountConverter;
       if (inner.toEnvelopeXdr().getDiscriminant() == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
         this.mInner =
             new TransactionBuilder(
@@ -186,22 +184,24 @@ public class FeeBumpTransaction extends AbstractTransaction {
       return this;
     }
 
-    public FeeBumpTransaction.Builder setFeeAccount(String feeAccount) {
+    public FeeBumpTransaction.Builder setFeeAccount(@NonNull String feeAccount) {
       if (this.mFeeAccount != null) {
         throw new RuntimeException("fee account has been already been set.");
       }
 
-      this.mFeeAccount = checkNotNull(feeAccount, "feeAccount cannot be null");
+      this.mFeeAccount = feeAccount;
       return this;
     }
 
     public FeeBumpTransaction build() {
+      if (this.mFeeAccount == null) {
+        throw new NullPointerException("fee account has to be set. you must call setFeeAccount().");
+      }
+      if (this.mBaseFee == null) {
+        throw new NullPointerException("base fee has to be set. you must call setBaseFee().");
+      }
       return new FeeBumpTransaction(
-          this.mAccountConverter,
-          checkNotNull(
-              this.mFeeAccount, "fee account has to be set. you must call setFeeAccount()."),
-          checkNotNull(this.mBaseFee, "base fee has to be set. you must call setBaseFee()."),
-          this.mInner);
+          this.mAccountConverter, this.mFeeAccount, this.mBaseFee, this.mInner);
     }
   }
 

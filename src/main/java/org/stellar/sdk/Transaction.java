@@ -1,12 +1,12 @@
 package org.stellar.sdk;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClaimableBalanceIDType;
@@ -42,18 +42,18 @@ public class Transaction extends AbstractTransaction {
 
   Transaction(
       AccountConverter accountConverter,
-      String sourceAccount,
+      @NonNull String sourceAccount,
       long fee,
       long sequenceNumber,
-      Operation[] operations,
+      @NonNull Operation[] operations,
       Memo memo,
       TransactionPreconditions preconditions,
       SorobanTransactionData sorobanData,
       Network network) {
     super(accountConverter, network);
-    this.mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    this.mSourceAccount = sourceAccount;
     this.mSequenceNumber = sequenceNumber;
-    this.mOperations = checkNotNull(operations, "operations cannot be null");
+    this.mOperations = operations;
     checkArgument(operations.length > 0, "At least one operation required");
     this.mPreconditions = preconditions;
     this.mFee = fee;

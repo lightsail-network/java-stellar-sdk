@@ -1,16 +1,15 @@
 package org.stellar.sdk;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.io.BaseEncoding;
 import java.util.Arrays;
+import lombok.NonNull;
 
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
 
-  public MemoHashAbstract(byte[] bytes) {
-    checkNotNull(bytes, "bytes cannot be null");
+  public MemoHashAbstract(byte @NonNull [] bytes) {
     checkArgument(bytes.length == 32, "bytes must be 32-bytes long.");
     this.bytes = bytes;
   }

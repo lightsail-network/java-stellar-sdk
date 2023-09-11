@@ -1,9 +1,8 @@
 package org.stellar.sdk.requests;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,8 +24,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *     Account</a>
    * @param account Account for which to get effects
    */
-  public EffectsRequestBuilder forAccount(String account) {
-    account = checkNotNull(account, "account cannot be null");
+  public EffectsRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "effects");
     return this;
   }
@@ -50,8 +48,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *     Transaction</a>
    * @param transactionId Transaction ID for which to get effects
    */
-  public EffectsRequestBuilder forTransaction(String transactionId) {
-    transactionId = checkNotNull(transactionId, "transactionId cannot be null");
+  public EffectsRequestBuilder forTransaction(@NonNull String transactionId) {
     this.setSegments("transactions", transactionId, "effects");
     return this;
   }

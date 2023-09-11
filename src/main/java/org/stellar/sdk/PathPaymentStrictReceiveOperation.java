@@ -1,10 +1,10 @@
 package org.stellar.sdk;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 import java.util.Arrays;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentStrictReceiveOp;
@@ -27,17 +27,17 @@ public class PathPaymentStrictReceiveOperation extends Operation {
   private final Asset[] path;
 
   private PathPaymentStrictReceiveOperation(
-      Asset sendAsset,
-      String sendMax,
-      String destination,
-      Asset destAsset,
-      String destAmount,
+      @NonNull Asset sendAsset,
+      @NonNull String sendMax,
+      @NonNull String destination,
+      @NonNull Asset destAsset,
+      @NonNull String destAmount,
       Asset[] path) {
-    this.sendAsset = checkNotNull(sendAsset, "sendAsset cannot be null");
-    this.sendMax = checkNotNull(sendMax, "sendMax cannot be null");
-    this.destination = checkNotNull(destination, "destination cannot be null");
-    this.destAsset = checkNotNull(destAsset, "destAsset cannot be null");
-    this.destAmount = checkNotNull(destAmount, "destAmount cannot be null");
+    this.sendAsset = sendAsset;
+    this.sendMax = sendMax;
+    this.destination = destination;
+    this.destAsset = destAsset;
+    this.destAmount = destAmount;
     if (path == null) {
       this.path = new Asset[0];
     } else {
@@ -150,12 +150,16 @@ public class PathPaymentStrictReceiveOperation extends Operation {
      * @throws ArithmeticException when sendMax or destAmount has more than 7 decimal places.
      */
     public Builder(
-        Asset sendAsset, String sendMax, String destination, Asset destAsset, String destAmount) {
-      this.sendAsset = checkNotNull(sendAsset, "sendAsset cannot be null");
-      this.sendMax = checkNotNull(sendMax, "sendMax cannot be null");
-      this.destination = checkNotNull(destination, "destination cannot be null");
-      this.destAsset = checkNotNull(destAsset, "destAsset cannot be null");
-      this.destAmount = checkNotNull(destAmount, "destAmount cannot be null");
+        @NonNull Asset sendAsset,
+        @NonNull String sendMax,
+        @NonNull String destination,
+        @NonNull Asset destAsset,
+        @NonNull String destAmount) {
+      this.sendAsset = sendAsset;
+      this.sendMax = sendMax;
+      this.destination = destination;
+      this.destAsset = destAsset;
+      this.destAmount = destAmount;
     }
 
     /**
@@ -167,8 +171,7 @@ public class PathPaymentStrictReceiveOperation extends Operation {
      *     would contain XLM and BTC.
      * @return Builder object so you can chain methods.
      */
-    public PathPaymentStrictReceiveOperation.Builder setPath(Asset[] path) {
-      checkNotNull(path, "path cannot be null");
+    public PathPaymentStrictReceiveOperation.Builder setPath(@NonNull Asset[] path) {
       checkArgument(path.length <= 5, "The maximum number of assets in the path is 5");
       this.path = path;
       return this;
@@ -180,8 +183,9 @@ public class PathPaymentStrictReceiveOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public PathPaymentStrictReceiveOperation.Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    public PathPaymentStrictReceiveOperation.Builder setSourceAccount(
+        @NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 

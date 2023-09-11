@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -21,9 +20,12 @@ public class AllowTrustOperation extends Operation {
   private final boolean authorizeToMaintainLiabilities;
 
   private AllowTrustOperation(
-      String trustor, String assetCode, boolean authorize, boolean authorizeToMaintainLiabilities) {
-    this.trustor = checkNotNull(trustor, "trustor cannot be null");
-    this.assetCode = checkNotNull(assetCode, "assetCode cannot be null");
+      @NonNull String trustor,
+      @NonNull String assetCode,
+      boolean authorize,
+      boolean authorizeToMaintainLiabilities) {
+    this.trustor = trustor;
+    this.assetCode = assetCode;
     this.authorize = authorize;
     this.authorizeToMaintainLiabilities = authorizeToMaintainLiabilities;
   }

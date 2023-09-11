@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class RevokeTrustlineSponsorshipOperation extends Operation {
@@ -76,8 +75,9 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public RevokeTrustlineSponsorshipOperation.Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    public RevokeTrustlineSponsorshipOperation.Builder setSourceAccount(
+        @NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 

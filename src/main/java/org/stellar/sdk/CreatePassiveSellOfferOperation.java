@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.CreatePassiveSellOfferOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -22,11 +21,14 @@ public class CreatePassiveSellOfferOperation extends Operation {
   private final String price;
 
   private CreatePassiveSellOfferOperation(
-      Asset selling, Asset buying, String amount, String price) {
-    this.selling = checkNotNull(selling, "selling cannot be null");
-    this.buying = checkNotNull(buying, "buying cannot be null");
-    this.amount = checkNotNull(amount, "amount cannot be null");
-    this.price = checkNotNull(price, "price cannot be null");
+      @NonNull Asset selling,
+      @NonNull Asset buying,
+      @NonNull String amount,
+      @NonNull String price) {
+    this.selling = selling;
+    this.buying = buying;
+    this.amount = amount;
+    this.price = price;
   }
 
   /** The asset being sold in this operation */
@@ -103,11 +105,15 @@ public class CreatePassiveSellOfferOperation extends Operation {
      * @param price Price of 1 unit of selling in terms of buying.
      * @throws ArithmeticException when amount has more than 7 decimal places.
      */
-    public Builder(Asset selling, Asset buying, String amount, String price) {
-      this.selling = checkNotNull(selling, "selling cannot be null");
-      this.buying = checkNotNull(buying, "buying cannot be null");
-      this.amount = checkNotNull(amount, "amount cannot be null");
-      this.price = checkNotNull(price, "price cannot be null");
+    public Builder(
+        @NonNull Asset selling,
+        @NonNull Asset buying,
+        @NonNull String amount,
+        @NonNull String price) {
+      this.selling = selling;
+      this.buying = buying;
+      this.amount = amount;
+      this.price = price;
     }
 
     /**
@@ -116,8 +122,8 @@ public class CreatePassiveSellOfferOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public CreatePassiveSellOfferOperation.Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    public CreatePassiveSellOfferOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 

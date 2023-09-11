@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -16,10 +15,11 @@ public class ClawbackOperation extends Operation {
   private final AssetTypeCreditAlphaNum mAsset;
   private final String mAmount;
 
-  private ClawbackOperation(String from, AssetTypeCreditAlphaNum asset, String amount) {
-    mFrom = checkNotNull(from, "from cannot be null");
-    mAsset = checkNotNull(asset, "asset cannot be null");
-    mAmount = checkNotNull(amount, "amount cannot be null");
+  private ClawbackOperation(
+      @NonNull String from, @NonNull AssetTypeCreditAlphaNum asset, @NonNull String amount) {
+    mFrom = from;
+    mAsset = asset;
+    mAmount = amount;
   }
 
   /** The account owning of the trustline. */

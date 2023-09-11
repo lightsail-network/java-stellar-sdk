@@ -1007,7 +1007,7 @@ public class TransactionBuilderTest {
           .build();
       fail();
     } catch (NullPointerException e) {
-      assertTrue(e.getMessage().contains("Network cannot be null"));
+      assertTrue(e.getMessage().contains("network is marked non-null but is null"));
     }
   }
 

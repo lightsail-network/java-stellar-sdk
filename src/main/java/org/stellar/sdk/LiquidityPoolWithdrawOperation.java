@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 import org.stellar.sdk.xdr.LiquidityPoolWithdrawOp;
 import org.stellar.sdk.xdr.Operation.OperationBody;
@@ -23,11 +22,14 @@ public class LiquidityPoolWithdrawOperation extends Operation {
   private final String minAmountB;
 
   public LiquidityPoolWithdrawOperation(
-      LiquidityPoolID liquidityPoolID, String amount, String minAmountA, String minAmountB) {
-    this.liquidityPoolID = checkNotNull(liquidityPoolID, "liquidityPoolID cannot be null");
-    this.amount = checkNotNull(amount, "amount cannot be null");
-    this.minAmountA = checkNotNull(minAmountA, "minAmountA cannot be null");
-    this.minAmountB = checkNotNull(minAmountB, "minAmountB cannot be null");
+      @NonNull LiquidityPoolID liquidityPoolID,
+      @NonNull String amount,
+      @NonNull String minAmountA,
+      @NonNull String minAmountB) {
+    this.liquidityPoolID = liquidityPoolID;
+    this.amount = amount;
+    this.minAmountA = minAmountA;
+    this.minAmountB = minAmountB;
   }
 
   public LiquidityPoolWithdrawOperation(LiquidityPoolWithdrawOp op) {
@@ -37,14 +39,14 @@ public class LiquidityPoolWithdrawOperation extends Operation {
     this.minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64().longValue());
   }
 
-  public LiquidityPoolWithdrawOperation(AssetAmount a, AssetAmount b, String amount) {
+  public LiquidityPoolWithdrawOperation(AssetAmount a, AssetAmount b, @NonNull String amount) {
     this.liquidityPoolID =
         new LiquidityPoolID(
             LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             a.getAsset(),
             b.getAsset(),
             LiquidityPoolParameters.Fee);
-    this.amount = checkNotNull(amount, "amount cannot be null");
+    this.amount = amount;
     this.minAmountA = a.getAmount();
     this.minAmountB = b.getAmount();
   }

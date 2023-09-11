@@ -1,10 +1,9 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClawbackClaimableBalanceOp;
 import org.stellar.sdk.xdr.OperationType;
@@ -18,8 +17,8 @@ import org.stellar.sdk.xdr.OperationType;
 public class ClawbackClaimableBalanceOperation extends Operation {
   private final String balanceId;
 
-  private ClawbackClaimableBalanceOperation(String balanceId) {
-    this.balanceId = checkNotNull(balanceId, "balanceId cannot be null");
+  private ClawbackClaimableBalanceOperation(@NonNull String balanceId) {
+    this.balanceId = balanceId;
   }
 
   /** The id of the claimable balance which will be clawed back. */

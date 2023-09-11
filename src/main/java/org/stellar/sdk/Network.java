@@ -1,9 +1,8 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
 import java.nio.charset.Charset;
+import lombok.NonNull;
 
 /**
  * Network class is used to specify which Stellar network you want to use. Each network has a <code>
@@ -25,8 +24,8 @@ public class Network {
    *
    * @param networkPassphrase
    */
-  public Network(String networkPassphrase) {
-    this.networkPassphrase = checkNotNull(networkPassphrase, "networkPassphrase cannot be null");
+  public Network(@NonNull String networkPassphrase) {
+    this.networkPassphrase = networkPassphrase;
   }
 
   /** Returns network passphrase */

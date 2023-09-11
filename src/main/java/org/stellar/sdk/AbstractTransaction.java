@@ -1,13 +1,12 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.SignatureHint;
@@ -15,14 +14,15 @@ import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
 
 public abstract class AbstractTransaction {
+
   protected final Network mNetwork;
   protected final AccountConverter accountConverter;
   protected List<DecoratedSignature> mSignatures;
   public static final int MIN_BASE_FEE = 100;
 
-  AbstractTransaction(AccountConverter accountConverter, Network network) {
-    this.accountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
-    this.mNetwork = checkNotNull(network, "network cannot be null");
+  AbstractTransaction(@NonNull AccountConverter accountConverter, @NonNull Network network) {
+    this.accountConverter = accountConverter;
+    this.mNetwork = network;
     this.mSignatures = new ArrayList<DecoratedSignature>();
   }
 
@@ -31,8 +31,7 @@ public abstract class AbstractTransaction {
    *
    * @param signer {@link KeyPair} object representing a signer
    */
-  public void sign(KeyPair signer) {
-    checkNotNull(signer, "signer cannot be null");
+  public void sign(@NonNull KeyPair signer) {
     byte[] txHash = this.hash();
     mSignatures.add(signer.signDecorated(txHash));
   }
@@ -42,8 +41,7 @@ public abstract class AbstractTransaction {
    *
    * @param preimage the sha256 hash of preimage should be equal to signer hash
    */
-  public void sign(byte[] preimage) {
-    checkNotNull(preimage, "preimage cannot be null");
+  public void sign(byte @NonNull [] preimage) {
     org.stellar.sdk.xdr.Signature signature = new org.stellar.sdk.xdr.Signature();
     signature.setSignature(preimage);
 

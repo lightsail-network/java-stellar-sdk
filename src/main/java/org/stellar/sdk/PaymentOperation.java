@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PaymentOp;
@@ -20,10 +19,11 @@ public class PaymentOperation extends Operation {
   private final Asset asset;
   private final String amount;
 
-  private PaymentOperation(String destination, Asset asset, String amount) {
-    this.destination = checkNotNull(destination, "destination cannot be null");
-    this.asset = checkNotNull(asset, "asset cannot be null");
-    this.amount = checkNotNull(amount, "amount cannot be null");
+  private PaymentOperation(
+      @NonNull String destination, @NonNull Asset asset, @NonNull String amount) {
+    this.destination = destination;
+    this.asset = asset;
+    this.amount = amount;
   }
 
   /** Account that receives the payment. */

@@ -1,13 +1,12 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.Int32;
 
 /** Represents Price. Price in Stellar is represented as a fraction. */
@@ -46,8 +45,7 @@ public class Price {
    *
    * @param price Ex. "1.25"
    */
-  public static Price fromString(String price) {
-    checkNotNull(price, "price cannot be null");
+  public static Price fromString(@NonNull String price) {
     BigDecimal maxInt = new BigDecimal(Integer.MAX_VALUE);
     BigDecimal number = new BigDecimal(price);
     BigDecimal a;

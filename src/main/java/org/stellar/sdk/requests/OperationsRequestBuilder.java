@@ -1,12 +1,11 @@
 package org.stellar.sdk.requests;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.Set;
+import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -61,8 +60,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *     Account</a>
    * @param account Account for which to get operations
    */
-  public OperationsRequestBuilder forAccount(String account) {
-    account = checkNotNull(account, "account cannot be null");
+  public OperationsRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "operations");
     return this;
   }
@@ -75,8 +73,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *     for ClaimableBalance</a>
    * @param claimableBalance Claimable Balance for which to get operations
    */
-  public OperationsRequestBuilder forClaimableBalance(String claimableBalance) {
-    claimableBalance = checkNotNull(claimableBalance, "claimableBalance cannot be null");
+  public OperationsRequestBuilder forClaimableBalance(@NonNull String claimableBalance) {
     this.setSegments("claimable_balances", claimableBalance, "operations");
     return this;
   }
@@ -100,8 +97,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *     for Transaction</a>
    * @param transactionId Transaction ID for which to get operations
    */
-  public OperationsRequestBuilder forTransaction(String transactionId) {
-    transactionId = checkNotNull(transactionId, "transactionId cannot be null");
+  public OperationsRequestBuilder forTransaction(@NonNull String transactionId) {
     this.setSegments("transactions", transactionId, "operations");
     return this;
   }

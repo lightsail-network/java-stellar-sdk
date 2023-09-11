@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.CreateAccountOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -19,9 +18,9 @@ public class CreateAccountOperation extends Operation {
   private final String destination;
   private final String startingBalance;
 
-  private CreateAccountOperation(String destination, String startingBalance) {
-    this.destination = checkNotNull(destination, "destination cannot be null");
-    this.startingBalance = checkNotNull(startingBalance, "startingBalance cannot be null");
+  private CreateAccountOperation(@NonNull String destination, @NonNull String startingBalance) {
+    this.destination = destination;
+    this.startingBalance = startingBalance;
   }
 
   /** Amount of XLM to send to the newly created account. */

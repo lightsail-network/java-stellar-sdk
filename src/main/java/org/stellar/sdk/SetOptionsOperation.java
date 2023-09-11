@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -340,9 +339,7 @@ public class SetOptionsOperation extends Operation {
      * @param weight The weight to attach to the signer (0-255).
      * @return Builder object so you can chain methods.
      */
-    public Builder setSigner(SignerKey signer, Integer weight) {
-      checkNotNull(signer, "signer cannot be null");
-      checkNotNull(weight, "weight cannot be null");
+    public Builder setSigner(@NonNull SignerKey signer, @NonNull Integer weight) {
       this.signer = signer;
       signerWeight = weight & 0xFF;
       return this;

@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 
 /**
  * Represents an account in Stellar network with it's sequence number. Account object is required to
@@ -21,9 +20,9 @@ public class Account implements TransactionBuilderAccount {
    * @param sequenceNumber Current sequence number of the account (can be obtained using
    *     java-stellar-sdk or horizon server)
    */
-  public Account(String accountId, Long sequenceNumber) {
-    mAccountId = checkNotNull(accountId, "accountId cannot be null");
-    mSequenceNumber = checkNotNull(sequenceNumber, "sequenceNumber cannot be null");
+  public Account(@NonNull String accountId, @NonNull Long sequenceNumber) {
+    mAccountId = accountId;
+    mSequenceNumber = sequenceNumber;
   }
 
   @Override

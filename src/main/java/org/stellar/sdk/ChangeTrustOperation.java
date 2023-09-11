@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.ChangeTrustOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -19,9 +18,9 @@ public class ChangeTrustOperation extends Operation {
   private final ChangeTrustAsset asset;
   private final String limit;
 
-  private ChangeTrustOperation(ChangeTrustAsset asset, String limit) {
-    this.asset = checkNotNull(asset, "asset cannot be null");
-    this.limit = checkNotNull(limit, "limit cannot be null");
+  private ChangeTrustOperation(@NonNull ChangeTrustAsset asset, @NonNull String limit) {
+    this.asset = asset;
+    this.limit = limit;
   }
 
   /**
@@ -80,9 +79,9 @@ public class ChangeTrustOperation extends Operation {
      *     to 200 USD to a user, the limit is 200.
      * @throws ArithmeticException when limit has more than 7 decimal places.
      */
-    public Builder(ChangeTrustAsset asset, String limit) {
-      this.asset = checkNotNull(asset, "asset cannot be null");
-      this.limit = checkNotNull(limit, "limit cannot be null");
+    public Builder(@NonNull ChangeTrustAsset asset, @NonNull String limit) {
+      this.asset = asset;
+      this.limit = limit;
     }
 
     /**
@@ -91,8 +90,8 @@ public class ChangeTrustOperation extends Operation {
      * @param sourceAccount Source account
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    public Builder setSourceAccount(@NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 

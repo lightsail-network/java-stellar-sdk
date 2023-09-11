@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
 
@@ -17,8 +16,8 @@ public class AccountMergeOperation extends Operation {
 
   private final String destination;
 
-  private AccountMergeOperation(String destination) {
-    this.destination = checkNotNull(destination, "destination cannot be null");
+  private AccountMergeOperation(@NonNull String destination) {
+    this.destination = destination;
   }
 
   /** The account that receives the remaining XLM balance of the source account. */

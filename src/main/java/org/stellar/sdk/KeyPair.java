@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.System.arraycopy;
 
 import com.google.common.base.Objects;
@@ -11,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Arrays;
+import lombok.NonNull;
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -53,8 +53,8 @@ public class KeyPair {
    * @param publicKey
    * @param privateKey
    */
-  public KeyPair(EdDSAPublicKey publicKey, EdDSAPrivateKey privateKey) {
-    mPublicKey = checkNotNull(publicKey, "publicKey cannot be null");
+  public KeyPair(@NonNull EdDSAPublicKey publicKey, EdDSAPrivateKey privateKey) {
+    mPublicKey = publicKey;
     mPrivateKey = privateKey;
   }
 

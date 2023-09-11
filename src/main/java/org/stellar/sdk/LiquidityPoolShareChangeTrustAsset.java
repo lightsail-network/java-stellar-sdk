@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.AssetType;
 
 /**
@@ -19,8 +18,7 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
    *
    * @param params the liquidity pool parameters
    */
-  public LiquidityPoolShareChangeTrustAsset(LiquidityPoolParameters params) {
-    checkNotNull(params, "params cannot be null");
+  public LiquidityPoolShareChangeTrustAsset(@NonNull LiquidityPoolParameters params) {
     mParams = params;
   }
 

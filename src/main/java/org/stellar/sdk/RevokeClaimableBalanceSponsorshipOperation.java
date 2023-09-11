@@ -1,10 +1,9 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
@@ -85,8 +84,8 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public RevokeClaimableBalanceSponsorshipOperation.Builder setSourceAccount(
-        String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+        @NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 
