@@ -2,8 +2,8 @@ package org.stellar.sdk;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Objects;
 import java.util.Arrays;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -201,7 +201,7 @@ public class PathPaymentStrictSendOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.getSourceAccount(),
         this.destMin,
         this.destAsset,
@@ -218,12 +218,12 @@ public class PathPaymentStrictSendOperation extends Operation {
     }
 
     PathPaymentStrictSendOperation other = (PathPaymentStrictSendOperation) object;
-    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equal(this.destMin, other.destMin)
-        && Objects.equal(this.destAsset, other.destAsset)
-        && Objects.equal(this.destination, other.destination)
+    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equals(this.destMin, other.destMin)
+        && Objects.equals(this.destAsset, other.destAsset)
+        && Objects.equals(this.destination, other.destination)
         && Arrays.equals(this.path, other.path)
-        && Objects.equal(this.sendAsset, other.sendAsset)
-        && Objects.equal(this.sendAmount, other.sendAmount);
+        && Objects.equals(this.sendAsset, other.sendAsset)
+        && Objects.equals(this.sendAmount, other.sendAmount);
   }
 }

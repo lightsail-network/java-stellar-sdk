@@ -1,8 +1,8 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
@@ -126,7 +126,7 @@ public class CreateClaimableBalanceOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.amount, this.asset, this.claimants, this.getSourceAccount());
+    return Objects.hash(this.amount, this.asset, this.claimants, this.getSourceAccount());
   }
 
   @Override
@@ -136,9 +136,9 @@ public class CreateClaimableBalanceOperation extends Operation {
     }
 
     CreateClaimableBalanceOperation other = (CreateClaimableBalanceOperation) object;
-    return Objects.equal(this.amount, other.amount)
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.claimants, other.claimants)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.amount, other.amount)
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.claimants, other.claimants)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

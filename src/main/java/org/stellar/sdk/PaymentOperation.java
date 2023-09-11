@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -120,7 +120,7 @@ public class PaymentOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hashCode(this.getSourceAccount(), this.asset, this.amount, this.destination);
+    return Objects.hash(this.getSourceAccount(), this.asset, this.amount, this.destination);
   }
 
   @Override
@@ -130,9 +130,9 @@ public class PaymentOperation extends Operation {
     }
 
     PaymentOperation other = (PaymentOperation) object;
-    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.amount, other.amount)
-        && Objects.equal(this.destination, other.destination);
+    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.amount, other.amount)
+        && Objects.equals(this.destination, other.destination);
   }
 }

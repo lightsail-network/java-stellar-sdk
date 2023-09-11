@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.CreatePassiveSellOfferOp;
 import org.stellar.sdk.xdr.Int64;
@@ -140,7 +140,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.amount, this.buying, this.price, this.selling, this.getSourceAccount());
   }
 
@@ -151,10 +151,10 @@ public class CreatePassiveSellOfferOperation extends Operation {
     }
 
     CreatePassiveSellOfferOperation other = (CreatePassiveSellOfferOperation) object;
-    return Objects.equal(this.amount, other.amount)
-        && Objects.equal(this.buying, other.buying)
-        && Objects.equal(this.price, other.price)
-        && Objects.equal(this.selling, other.selling)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.amount, other.amount)
+        && Objects.equals(this.buying, other.buying)
+        && Objects.equals(this.price, other.price)
+        && Objects.equals(this.selling, other.selling)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

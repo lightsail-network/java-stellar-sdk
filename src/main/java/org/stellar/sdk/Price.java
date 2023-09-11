@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.Int32;
 
@@ -104,7 +104,7 @@ public class Price {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.getNumerator(), this.getDenominator());
+    return Objects.hash(this.getNumerator(), this.getDenominator());
   }
 
   @Override

@@ -1,7 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
-import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
+import java.util.Arrays;
+import java.util.Objects;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPoolID;
 
@@ -46,7 +47,8 @@ public class LiquidityPoolWithdrawOperationResponse extends OperationResponse {
   }
 
   public int hashCode() {
-    return Objects.hashCode(liquidityPoolId, reservesMin, reservesReceived, shares);
+    return Objects.hash(
+        liquidityPoolId, Arrays.hashCode(reservesMin), Arrays.hashCode(reservesReceived), shares);
   }
 
   @Override
@@ -56,9 +58,9 @@ public class LiquidityPoolWithdrawOperationResponse extends OperationResponse {
     }
 
     LiquidityPoolWithdrawOperationResponse o = (LiquidityPoolWithdrawOperationResponse) object;
-    return Objects.equal(this.getLiquidityPoolId(), o.getLiquidityPoolId())
-        && Objects.equal(this.getReservesMin(), o.getReservesMin())
-        && Objects.equal(this.getReservesReceived(), o.getReservesReceived())
-        && Objects.equal(this.getShares(), o.getShares());
+    return Objects.equals(this.getLiquidityPoolId(), o.getLiquidityPoolId())
+        && Objects.equals(this.getReservesMin(), o.getReservesMin())
+        && Objects.equals(this.getReservesReceived(), o.getReservesReceived())
+        && Objects.equals(this.getShares(), o.getShares());
   }
 }

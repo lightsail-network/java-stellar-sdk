@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.AssetType;
 
@@ -68,7 +68,7 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
 
   @Override
   public int compareTo(TrustLineAsset other) {
-    if (other.getType() != "pool_share") {
+    if (!Objects.equals(other.getType(), "pool_share")) {
       return 1;
     }
     return this.toString().compareTo(((LiquidityPoolShareTrustLineAsset) other).toString());

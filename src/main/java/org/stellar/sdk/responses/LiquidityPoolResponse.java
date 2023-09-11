@@ -1,7 +1,7 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
@@ -105,8 +105,8 @@ public class LiquidityPoolResponse extends Response {
       }
 
       LiquidityPoolResponse.Reserve o = (LiquidityPoolResponse.Reserve) other;
-      return Objects.equal(this.getAsset(), o.getAsset())
-          && Objects.equal(this.getAmount(), o.getAmount());
+      return Objects.equals(this.getAsset(), o.getAsset())
+          && Objects.equals(this.getAmount(), o.getAmount());
     }
   }
 

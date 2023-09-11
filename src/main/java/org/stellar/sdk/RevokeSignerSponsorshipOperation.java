@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
@@ -92,7 +92,7 @@ public class RevokeSignerSponsorshipOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.accountId, this.signer, this.getSourceAccount());
+    return Objects.hash(this.accountId, this.signer, this.getSourceAccount());
   }
 
   @Override
@@ -102,8 +102,8 @@ public class RevokeSignerSponsorshipOperation extends Operation {
     }
 
     RevokeSignerSponsorshipOperation other = (RevokeSignerSponsorshipOperation) object;
-    return Objects.equal(this.accountId, other.accountId)
-        && Objects.equal(this.signer, other.signer)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.accountId, other.accountId)
+        && Objects.equals(this.signer, other.signer)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 
 /**
@@ -56,7 +56,7 @@ public class Account implements TransactionBuilderAccount {
   }
 
   public int hashCode() {
-    return Objects.hashCode(this.mAccountId, this.mSequenceNumber);
+    return Objects.hash(this.mAccountId, this.mSequenceNumber);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class Account implements TransactionBuilderAccount {
     }
 
     Account other = (Account) object;
-    return Objects.equal(this.mAccountId, other.mAccountId)
-        && Objects.equal(this.mSequenceNumber, other.mSequenceNumber);
+    return Objects.equals(this.mAccountId, other.mAccountId)
+        && Objects.equals(this.mSequenceNumber, other.mSequenceNumber);
   }
 }

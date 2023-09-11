@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
@@ -78,7 +78,7 @@ public class AccountMergeOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hashCode(this.destination, this.getSourceAccount());
+    return Objects.hash(this.destination, this.getSourceAccount());
   }
 
   @Override
@@ -88,7 +88,7 @@ public class AccountMergeOperation extends Operation {
     }
 
     AccountMergeOperation other = (AccountMergeOperation) object;
-    return Objects.equal(this.destination, other.destination)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.destination, other.destination)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

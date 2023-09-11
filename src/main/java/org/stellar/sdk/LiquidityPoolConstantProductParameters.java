@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
@@ -48,9 +48,9 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
     }
 
     LiquidityPoolConstantProductParameters o = (LiquidityPoolConstantProductParameters) object;
-    return Objects.equal(this.getAssetA(), o.getAssetA())
-        && Objects.equal(this.getAssetB(), o.getAssetB())
-        && Objects.equal(this.getFee(), o.getFee());
+    return Objects.equals(this.getAssetA(), o.getAssetA())
+        && Objects.equals(this.getAssetB(), o.getAssetB())
+        && Objects.equals(this.getFee(), o.getFee());
   }
 
   /** Generates XDR object from a given LiquidityPoolParameters object */

@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import java.nio.charset.Charset;
+import java.util.Objects;
 import lombok.NonNull;
 
 /**
@@ -50,7 +50,7 @@ public class Network {
     }
 
     Network other = (Network) object;
-    return Objects.equal(this.networkPassphrase, other.networkPassphrase);
+    return Objects.equals(this.networkPassphrase, other.networkPassphrase);
   }
 
   @Override

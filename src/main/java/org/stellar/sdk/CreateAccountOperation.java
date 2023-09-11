@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.CreateAccountOp;
 import org.stellar.sdk.xdr.Int64;
@@ -104,7 +104,7 @@ public class CreateAccountOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.destination, this.startingBalance, this.getSourceAccount());
+    return Objects.hash(this.destination, this.startingBalance, this.getSourceAccount());
   }
 
   @Override
@@ -114,8 +114,8 @@ public class CreateAccountOperation extends Operation {
     }
 
     CreateAccountOperation other = (CreateAccountOperation) object;
-    return Objects.equal(this.destination, other.destination)
-        && Objects.equal(this.startingBalance, other.startingBalance)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.destination, other.destination)
+        && Objects.equals(this.startingBalance, other.startingBalance)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

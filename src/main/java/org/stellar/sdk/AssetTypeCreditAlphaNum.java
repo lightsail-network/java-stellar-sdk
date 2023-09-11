@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 
 /**
@@ -34,7 +34,7 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.mCode, this.mIssuer);
+    return Objects.hash(this.mCode, this.mIssuer);
   }
 
   @Override

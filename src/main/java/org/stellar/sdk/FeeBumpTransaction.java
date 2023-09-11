@@ -1,8 +1,8 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
@@ -207,8 +207,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
-        this.mFee, this.mInner, this.mNetwork, this.mFeeAccount, this.mSignatures);
+    return Objects.hash(this.mFee, this.mInner, this.mNetwork, this.mFeeAccount, this.mSignatures);
   }
 
   @Override
@@ -218,10 +217,10 @@ public class FeeBumpTransaction extends AbstractTransaction {
     }
 
     FeeBumpTransaction other = (FeeBumpTransaction) object;
-    return Objects.equal(this.mFee, other.mFee)
-        && Objects.equal(this.mFeeAccount, other.mFeeAccount)
-        && Objects.equal(this.mInner, other.mInner)
-        && Objects.equal(this.mNetwork, other.mNetwork)
-        && Objects.equal(this.mSignatures, other.mSignatures);
+    return Objects.equals(this.mFee, other.mFee)
+        && Objects.equals(this.mFeeAccount, other.mFeeAccount)
+        && Objects.equals(this.mInner, other.mInner)
+        && Objects.equals(this.mNetwork, other.mNetwork)
+        && Objects.equals(this.mSignatures, other.mSignatures);
   }
 }

@@ -1,8 +1,8 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
@@ -102,7 +102,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.balanceId, this.getSourceAccount());
+    return Objects.hash(this.balanceId, this.getSourceAccount());
   }
 
   @Override
@@ -113,7 +113,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
 
     RevokeClaimableBalanceSponsorshipOperation other =
         (RevokeClaimableBalanceSponsorshipOperation) object;
-    return Objects.equal(this.balanceId, other.balanceId)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.balanceId, other.balanceId)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

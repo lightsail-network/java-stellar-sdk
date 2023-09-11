@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 import org.stellar.sdk.xdr.LiquidityPoolWithdrawOp;
@@ -82,8 +82,7 @@ public class LiquidityPoolWithdrawOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hashCode(
-        this.getSourceAccount(), liquidityPoolID, amount, minAmountA, minAmountB);
+    return Objects.hash(this.getSourceAccount(), liquidityPoolID, amount, minAmountA, minAmountB);
   }
 
   @Override
@@ -93,10 +92,10 @@ public class LiquidityPoolWithdrawOperation extends Operation {
     }
 
     LiquidityPoolWithdrawOperation o = (LiquidityPoolWithdrawOperation) object;
-    return Objects.equal(this.getLiquidityPoolID(), o.getLiquidityPoolID())
-        && Objects.equal(this.getAmount(), o.getAmount())
-        && Objects.equal(this.getMinAmountA(), o.getMinAmountA())
-        && Objects.equal(this.getMinAmountB(), o.getMinAmountB())
-        && Objects.equal(this.getSourceAccount(), o.getSourceAccount());
+    return Objects.equals(this.getLiquidityPoolID(), o.getLiquidityPoolID())
+        && Objects.equals(this.getAmount(), o.getAmount())
+        && Objects.equals(this.getMinAmountA(), o.getMinAmountA())
+        && Objects.equals(this.getMinAmountB(), o.getMinAmountB())
+        && Objects.equals(this.getSourceAccount(), o.getSourceAccount());
   }
 }

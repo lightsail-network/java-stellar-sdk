@@ -1,8 +1,8 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClawbackClaimableBalanceOp;
@@ -98,7 +98,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.getSourceAccount(), this.balanceId);
+    return Objects.hash(this.getSourceAccount(), this.balanceId);
   }
 
   @Override
@@ -108,7 +108,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
     }
 
     ClawbackClaimableBalanceOperation other = (ClawbackClaimableBalanceOperation) object;
-    return Objects.equal(this.balanceId, other.balanceId)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.balanceId, other.balanceId)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

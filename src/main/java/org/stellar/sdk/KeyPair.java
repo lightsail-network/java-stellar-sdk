@@ -2,7 +2,6 @@ package org.stellar.sdk;
 
 import static java.lang.System.arraycopy;
 
-import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -10,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Arrays;
+import java.util.Objects;
 import lombok.NonNull;
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
@@ -314,7 +314,7 @@ public class KeyPair {
   }
 
   public int hashCode() {
-    return Objects.hashCode(this.mPrivateKey, this.mPublicKey);
+    return Objects.hash(this.mPrivateKey, this.mPublicKey);
   }
 
   @Override
@@ -324,7 +324,7 @@ public class KeyPair {
     }
 
     KeyPair other = (KeyPair) object;
-    return Objects.equal(this.mPrivateKey, other.mPrivateKey)
+    return Objects.equals(this.mPrivateKey, other.mPrivateKey)
         && this.mPublicKey.equals(other.mPublicKey);
   }
 }

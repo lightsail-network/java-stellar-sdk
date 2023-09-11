@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
@@ -12,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import org.stellar.sdk.xdr.DecoratedSignature;
@@ -745,7 +745,7 @@ public class Sep10Challenge {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.transaction.hashHex(), this.clientAccountId);
+      return Objects.hash(this.transaction.hashHex(), this.clientAccountId);
     }
 
     @Override
@@ -759,9 +759,9 @@ public class Sep10Challenge {
       }
 
       ChallengeTransaction other = (ChallengeTransaction) object;
-      return Objects.equal(this.transaction.hashHex(), other.transaction.hashHex())
-          && Objects.equal(this.clientAccountId, other.clientAccountId)
-          && Objects.equal(this.matchedHomeDomain, other.matchedHomeDomain);
+      return Objects.equals(this.transaction.hashHex(), other.transaction.hashHex())
+          && Objects.equals(this.clientAccountId, other.clientAccountId)
+          && Objects.equals(this.matchedHomeDomain, other.matchedHomeDomain);
     }
   }
 
@@ -785,7 +785,7 @@ public class Sep10Challenge {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.key, this.weight);
+      return Objects.hash(this.key, this.weight);
     }
 
     @Override
@@ -799,7 +799,7 @@ public class Sep10Challenge {
       }
 
       Signer other = (Signer) object;
-      return Objects.equal(this.key, other.key) && Objects.equal(this.weight, other.weight);
+      return Objects.equals(this.key, other.key) && Objects.equals(this.weight, other.weight);
     }
   }
 }

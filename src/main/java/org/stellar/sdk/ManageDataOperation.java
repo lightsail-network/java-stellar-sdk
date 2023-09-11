@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import java.util.Arrays;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
@@ -111,7 +111,7 @@ public class ManageDataOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.getSourceAccount(), this.name, Arrays.hashCode(this.value));
+    return Objects.hash(this.getSourceAccount(), this.name, Arrays.hashCode(this.value));
   }
 
   @Override
@@ -121,8 +121,8 @@ public class ManageDataOperation extends Operation {
     }
 
     ManageDataOperation other = (ManageDataOperation) object;
-    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equal(this.name, other.name)
+    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equals(this.name, other.name)
         && Arrays.equals(this.value, other.value);
   }
 }

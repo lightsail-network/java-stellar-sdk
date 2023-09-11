@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.LiquidityPoolDepositOp;
 import org.stellar.sdk.xdr.LiquidityPoolType;
@@ -96,7 +96,7 @@ public class LiquidityPoolDepositOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.getSourceAccount(), liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
   }
 
@@ -107,11 +107,11 @@ public class LiquidityPoolDepositOperation extends Operation {
     }
 
     LiquidityPoolDepositOperation o = (LiquidityPoolDepositOperation) object;
-    return Objects.equal(this.getLiquidityPoolID(), o.getLiquidityPoolID())
-        && Objects.equal(this.getMaxAmountA(), o.getMaxAmountA())
-        && Objects.equal(this.getMaxAmountB(), o.getMaxAmountB())
-        && Objects.equal(this.getMinPrice(), o.getMinPrice())
-        && Objects.equal(this.getMaxPrice(), o.getMaxPrice())
-        && Objects.equal(this.getSourceAccount(), o.getSourceAccount());
+    return Objects.equals(this.getLiquidityPoolID(), o.getLiquidityPoolID())
+        && Objects.equals(this.getMaxAmountA(), o.getMaxAmountA())
+        && Objects.equals(this.getMaxAmountB(), o.getMaxAmountB())
+        && Objects.equals(this.getMinPrice(), o.getMinPrice())
+        && Objects.equals(this.getMaxPrice(), o.getMaxPrice())
+        && Objects.equals(this.getSourceAccount(), o.getSourceAccount());
   }
 }

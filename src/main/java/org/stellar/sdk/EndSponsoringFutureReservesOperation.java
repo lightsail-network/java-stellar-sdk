@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.OperationType;
 
@@ -32,6 +32,6 @@ public class EndSponsoringFutureReservesOperation extends Operation {
     }
 
     EndSponsoringFutureReservesOperation other = (EndSponsoringFutureReservesOperation) object;
-    return Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

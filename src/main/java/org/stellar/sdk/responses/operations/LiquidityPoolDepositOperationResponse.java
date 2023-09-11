@@ -1,7 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
-import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
+import java.util.Arrays;
+import java.util.Objects;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Price;
@@ -83,14 +84,14 @@ public class LiquidityPoolDepositOperationResponse extends OperationResponse {
   }
 
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         liquidityPoolId,
-        reservesMax,
+        Arrays.hashCode(reservesMax),
         minPrice,
         minPriceR,
         maxPrice,
         maxPriceR,
-        reservesDeposited,
+        Arrays.hashCode(reservesDeposited),
         sharesReceived);
   }
 
@@ -101,13 +102,13 @@ public class LiquidityPoolDepositOperationResponse extends OperationResponse {
     }
 
     LiquidityPoolDepositOperationResponse o = (LiquidityPoolDepositOperationResponse) object;
-    return Objects.equal(this.getLiquidityPoolId(), o.getLiquidityPoolId())
-        && Objects.equal(this.getReservesMax(), o.getReservesMax())
-        && Objects.equal(this.getMaxPrice(), o.getMaxPrice())
-        && Objects.equal(this.getMinPrice(), o.getMinPrice())
-        && Objects.equal(this.getMaxPriceR(), o.getMaxPriceR())
-        && Objects.equal(this.getMinPriceR(), o.getMinPriceR())
-        && Objects.equal(this.getReservesDeposited(), o.getReservesDeposited())
-        && Objects.equal(this.getSharesReceived(), o.getSharesReceived());
+    return Objects.equals(this.getLiquidityPoolId(), o.getLiquidityPoolId())
+        && Arrays.equals(this.getReservesMax(), o.getReservesMax())
+        && Objects.equals(this.getMaxPrice(), o.getMaxPrice())
+        && Objects.equals(this.getMinPrice(), o.getMinPrice())
+        && Objects.equals(this.getMaxPriceR(), o.getMaxPriceR())
+        && Objects.equals(this.getMinPriceR(), o.getMinPriceR())
+        && Arrays.equals(this.getReservesDeposited(), o.getReservesDeposited())
+        && Objects.equals(this.getSharesReceived(), o.getSharesReceived());
   }
 }

@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
@@ -165,7 +165,7 @@ public class ManageSellOfferOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.getSourceAccount(), this.amount, this.buying, this.offerId, this.price, this.selling);
   }
 
@@ -176,11 +176,11 @@ public class ManageSellOfferOperation extends Operation {
     }
 
     ManageSellOfferOperation other = (ManageSellOfferOperation) object;
-    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equal(this.amount, other.amount)
-        && Objects.equal(this.buying, other.buying)
-        && Objects.equal(this.offerId, other.offerId)
-        && Objects.equal(this.price, other.price)
-        && Objects.equal(this.selling, other.selling);
+    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equals(this.amount, other.amount)
+        && Objects.equals(this.buying, other.buying)
+        && Objects.equals(this.offerId, other.offerId)
+        && Objects.equals(this.price, other.price)
+        && Objects.equals(this.selling, other.selling);
   }
 }

@@ -2,10 +2,10 @@ package org.stellar.sdk;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
@@ -339,7 +339,7 @@ public class Transaction extends AbstractTransaction {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.envelopeType,
         this.mFee,
         this.mSourceAccount,
@@ -359,16 +359,16 @@ public class Transaction extends AbstractTransaction {
     }
 
     Transaction other = (Transaction) object;
-    return Objects.equal(this.envelopeType, other.envelopeType)
-        && Objects.equal(this.mFee, other.mFee)
-        && Objects.equal(this.mSourceAccount, other.mSourceAccount)
-        && Objects.equal(this.mSequenceNumber, other.mSequenceNumber)
+    return Objects.equals(this.envelopeType, other.envelopeType)
+        && Objects.equals(this.mFee, other.mFee)
+        && Objects.equals(this.mSourceAccount, other.mSourceAccount)
+        && Objects.equals(this.mSequenceNumber, other.mSequenceNumber)
         && Arrays.equals(this.mOperations, other.mOperations)
-        && Objects.equal(this.mMemo, other.mMemo)
-        && Objects.equal(this.mPreconditions, other.mPreconditions)
-        && Objects.equal(this.mNetwork, other.mNetwork)
-        && Objects.equal(this.mSignatures, other.mSignatures)
-        && Objects.equal(this.mSorobanData, other.mSorobanData);
+        && Objects.equals(this.mMemo, other.mMemo)
+        && Objects.equals(this.mPreconditions, other.mPreconditions)
+        && Objects.equals(this.mNetwork, other.mNetwork)
+        && Objects.equals(this.mSignatures, other.mSignatures)
+        && Objects.equals(this.mSorobanData, other.mSorobanData);
   }
 
   /**

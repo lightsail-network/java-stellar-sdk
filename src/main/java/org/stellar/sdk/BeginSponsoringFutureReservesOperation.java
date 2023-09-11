@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
@@ -77,7 +77,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.sponsoredId, this.getSourceAccount());
+    return Objects.hash(this.sponsoredId, this.getSourceAccount());
   }
 
   @Override
@@ -87,7 +87,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
     }
 
     BeginSponsoringFutureReservesOperation other = (BeginSponsoringFutureReservesOperation) object;
-    return Objects.equal(this.sponsoredId, other.sponsoredId)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.sponsoredId, other.sponsoredId)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }
