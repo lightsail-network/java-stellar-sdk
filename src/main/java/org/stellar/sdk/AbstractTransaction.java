@@ -1,10 +1,10 @@
 package org.stellar.sdk;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
@@ -94,7 +94,7 @@ public abstract class AbstractTransaction {
    * @return immutable list of signatures
    */
   public List<DecoratedSignature> getSignatures() {
-    return ImmutableList.copyOf(mSignatures);
+    return Collections.unmodifiableList(mSignatures);
   }
 
   /**

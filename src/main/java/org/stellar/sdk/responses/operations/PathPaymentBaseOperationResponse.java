@@ -2,7 +2,6 @@ package org.stellar.sdk.responses.operations;
 
 import static org.stellar.sdk.Asset.create;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
@@ -55,7 +54,7 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
   private String sourceAssetIssuer;
 
   @SerializedName("path")
-  private ImmutableList<Asset> path;
+  private List<Asset> path;
 
   public String getAmount() {
     return amount;

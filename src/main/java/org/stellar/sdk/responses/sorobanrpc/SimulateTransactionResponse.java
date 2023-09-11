@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
@@ -19,11 +19,11 @@ public class SimulateTransactionResponse {
 
   String transactionData;
 
-  ImmutableList<String> events;
+  List<String> events;
 
   Long minResourceFee;
 
-  ImmutableList<SimulateHostFunctionResult> results;
+  List<SimulateHostFunctionResult> results;
 
   SimulateTransactionCost cost;
 
@@ -32,7 +32,7 @@ public class SimulateTransactionResponse {
   @AllArgsConstructor
   @Value
   public static class SimulateHostFunctionResult {
-    ImmutableList<String> auth;
+    List<String> auth;
 
     String xdr;
   }

@@ -428,16 +428,16 @@ public class SorobanServerTest {
     assertEquals(resp.getLatestLedger().longValue(), 7943L);
     assertEquals(resp.getEntries().size(), 2);
     assertEquals(
-        resp.getEntries().asList().get(0).getKey(),
+        resp.getEntries().get(0).getKey(),
         "AAAAAAAAAACynni6I2ACEzWuORVM1b2y0k1ZDni0W6JlC/Ad/mfCSg==");
     assertEquals(
-        resp.getEntries().asList().get(0).getXdr(),
+        resp.getEntries().get(0).getXdr(),
         "AAAAAAAAAACynni6I2ACEzWuORVM1b2y0k1ZDni0W6JlC/Ad/mfCSgAAABdIdugAAAAAnwAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA");
     assertEquals(
-        resp.getEntries().asList().get(1).getKey(),
+        resp.getEntries().get(1).getKey(),
         "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==");
     assertEquals(
-        resp.getEntries().asList().get(1).getXdr(),
+        resp.getEntries().get(1).getXdr(),
         "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABdIcmH6AAAAoQAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAAAHAkAAAAAZMPQ0g==");
     server.close();
     mockWebServer.close();

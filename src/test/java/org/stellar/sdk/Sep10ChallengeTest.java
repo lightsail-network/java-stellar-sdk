@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -151,7 +150,7 @@ public class Sep10ChallengeTest {
 
     assertEquals(v0ChallengeTransaction, v1ChallengeTransaction);
 
-    for (String envelopeBase64 : ImmutableList.of(v0Base64, v1Base64)) {
+    for (String envelopeBase64 : Arrays.asList(v0Base64, v1Base64)) {
       Sep10Challenge.ChallengeTransaction challengeTransaction =
           Sep10Challenge.readChallengeTransaction(
               envelopeBase64, server.getAccountId(), Network.TESTNET, domainName, webAuthDomain);

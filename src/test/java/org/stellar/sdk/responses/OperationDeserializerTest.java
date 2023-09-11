@@ -3,13 +3,11 @@ package org.stellar.sdk.responses;
 import static java.math.BigInteger.valueOf;
 import static org.stellar.sdk.Asset.create;
 
-import com.google.common.collect.ImmutableList;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.AssetTypePoolShare;
@@ -871,7 +869,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getAsset(), new AssetTypeNative());
     assertEquals(
         operation.getPath(),
-        ImmutableList.<Asset>of(
+        Arrays.asList(
             new AssetTypeNative(),
             create(null, "CNY", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX"),
             create(null, "CNYMNL", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX")));
@@ -935,7 +933,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getAsset(), new AssetTypeNative());
     assertEquals(
         operation.getPath(),
-        ImmutableList.<Asset>of(
+        Arrays.asList(
             new AssetTypeNative(),
             create(null, "CNY", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX"),
             create(null, "CNYMNL", "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX")));
@@ -1058,7 +1056,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(operation.getAmount(), "2.5000000");
     assertEquals(operation.getSourceMax(), "1.1779523");
     assertEquals(operation.getSourceAsset(), new AssetTypeNative());
-    assertEquals(operation.getPath(), ImmutableList.<Asset>of());
+    assertEquals(operation.getPath(), Collections.emptyList());
     assertEquals(
         operation.getAsset(),
         create(null, "XRP", "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5"));
