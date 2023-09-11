@@ -1,6 +1,5 @@
 package org.stellar.sdk.requests;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -158,7 +157,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
     if (toJoin.isEmpty()) {
       uriBuilder.removeAllQueryParameters("join");
     } else {
-      uriBuilder.setQueryParameter("join", Joiner.on(",").join(toJoin));
+      uriBuilder.setQueryParameter("join", String.join(",", toJoin));
     }
   }
 

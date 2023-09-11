@@ -1,6 +1,5 @@
 package org.stellar.sdk.requests;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,7 +86,7 @@ public abstract class RequestBuilder {
     for (Asset asset : assets) {
       assetStrings.add(encodeAsset(asset));
     }
-    uriBuilder.setQueryParameter(name, Joiner.on(",").join(assetStrings));
+    uriBuilder.setQueryParameter(name, String.join(",", assetStrings));
     return this;
   }
 
