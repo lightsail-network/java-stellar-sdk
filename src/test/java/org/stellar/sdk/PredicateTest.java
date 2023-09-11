@@ -3,8 +3,8 @@ package org.stellar.sdk;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigInteger;
+import java.time.Instant;
 import org.junit.Test;
-import org.threeten.bp.Instant;
 
 public class PredicateTest {
   @Test

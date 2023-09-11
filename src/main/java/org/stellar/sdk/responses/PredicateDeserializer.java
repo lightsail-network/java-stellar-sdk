@@ -3,13 +3,13 @@ package org.stellar.sdk.responses;
 import com.google.common.collect.Lists;
 import com.google.gson.*;
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.util.List;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
-import org.threeten.bp.Instant;
 
 public class PredicateDeserializer implements JsonDeserializer<Predicate> {
   @Override

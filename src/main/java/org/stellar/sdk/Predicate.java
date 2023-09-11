@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.List;
 import org.stellar.sdk.xdr.ClaimPredicate;
 import org.stellar.sdk.xdr.ClaimPredicateType;
@@ -11,7 +12,6 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
-import org.threeten.bp.Instant;
 
 public abstract class Predicate {
 
