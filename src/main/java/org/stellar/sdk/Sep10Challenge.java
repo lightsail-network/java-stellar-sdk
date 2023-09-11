@@ -1,15 +1,15 @@
 package org.stellar.sdk;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -681,10 +681,14 @@ public class Sep10Challenge {
     byte[] txHash = transaction.hash();
 
     // find and verify signatures
-    Set<String> signersFound = new HashSet<String>();
-    Multimap<SignatureHint, Signature> signatures = HashMultimap.create();
+    Set<String> signersFound = new HashSet<>();
+    Map<SignatureHint, List<Signature>> signatures = new HashMap<>();
+
     for (DecoratedSignature decoratedSignature : transaction.getSignatures()) {
-      signatures.put(decoratedSignature.getHint(), decoratedSignature.getSignature());
+      SignatureHint hint = decoratedSignature.getHint();
+      Signature signature = decoratedSignature.getSignature();
+      List<Signature> signatureList = signatures.computeIfAbsent(hint, k -> new ArrayList<>());
+      signatureList.add(signature);
     }
 
     for (String signer : signers) {
@@ -695,13 +699,13 @@ public class Sep10Challenge {
         continue;
       }
       SignatureHint hint = keyPair.getSignatureHint();
-
-      for (Signature signature : signatures.get(hint)) {
+      List<Signature> signatureList = signatures.getOrDefault(hint, Collections.emptyList());
+      for (Signature signature : signatureList) {
         if (keyPair.verify(txHash, signature.getSignature())) {
           signersFound.add(signer);
           // explicitly ensure that a transaction signature cannot be
           // mapped to more than one signer
-          signatures.remove(hint, signature);
+          signatureList.remove(signature);
           break;
         }
       }

@@ -1,8 +1,8 @@
 package org.stellar.sdk.requests;
 
-import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.NonNull;
 import okhttp3.HttpUrl;
@@ -18,7 +18,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
 
   public PaymentsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "payments");
-    toJoin = Sets.newHashSet();
+    toJoin = new HashSet<>();
   }
 
   /**
