@@ -3,8 +3,8 @@ package org.stellar.sdk;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import com.google.common.collect.Lists;
 import java.io.IOException;
+import java.util.Collections;
 import org.junit.Test;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -22,7 +22,7 @@ public class ClaimableBalanceIdTest {
         new CreateClaimableBalanceOperation.Builder(
                 "420",
                 new AssetTypeNative(),
-                Lists.newArrayList(
+                Collections.singletonList(
                     new Claimant(
                         "GCACCFMIWJAHUUASSE2WC7V6VVDLYRLSJYZ3DJEXCG523FSHTNII6KOG",
                         new Predicate.Unconditional())))
@@ -52,7 +52,7 @@ public class ClaimableBalanceIdTest {
         new CreateClaimableBalanceOperation.Builder(
                 "420",
                 new AssetTypeNative(),
-                Lists.newArrayList(
+                Collections.singletonList(
                     new Claimant(
                         "GCACCFMIWJAHUUASSE2WC7V6VVDLYRLSJYZ3DJEXCG523FSHTNII6KOG",
                         new Predicate.Unconditional())))

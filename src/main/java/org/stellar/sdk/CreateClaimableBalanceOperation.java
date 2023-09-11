@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.NonNull;
@@ -80,7 +80,7 @@ public class CreateClaimableBalanceOperation extends Operation {
     Builder(CreateClaimableBalanceOp op) {
       asset = Asset.fromXdr(op.getAsset());
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
-      claimants = Lists.newArrayList();
+      claimants = new ArrayList<>();
       for (org.stellar.sdk.xdr.Claimant c : op.getClaimants()) {
         claimants.add(
             new Claimant(

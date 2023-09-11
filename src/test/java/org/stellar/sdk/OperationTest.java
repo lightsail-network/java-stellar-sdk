@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.stellar.sdk.Asset.create;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -161,8 +161,7 @@ public class OperationTest {
     assertEquals(sendMax, parsedOperation.getSendMax());
     assertTrue(parsedOperation.getDestAsset() instanceof AssetTypeCreditAlphaNum4);
     assertEquals(destAmount, parsedOperation.getDestAmount());
-    assertEquals(Lists.newArrayList(path), Lists.newArrayList(parsedOperation.getPath()));
-
+    assertArrayEquals(path, parsedOperation.getPath());
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAIAAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAgAAAAFVU0QAAAAAACoIKnpnw8rtrfxa276dFZo1C19mDqWXtG4ufhWrLUd1AAAAAlRFU1RURVNUAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIg==",
         operation.toXdrBase64(AccountConverter.enableMuxed()));
@@ -302,7 +301,7 @@ public class OperationTest {
     assertEquals(sendAmount, parsedOperation.getSendAmount());
     assertTrue(parsedOperation.getDestAsset() instanceof AssetTypeCreditAlphaNum4);
     assertEquals(destMin, parsedOperation.getDestMin());
-    assertEquals(Lists.newArrayList(path), Lists.newArrayList(parsedOperation.getPath()));
+    assertArrayEquals(path, parsedOperation.getPath());
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAA0AAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAACMoAAAAAgAAAAFVU0QAAAAAACoIKnpnw8rtrfxa276dFZo1C19mDqWXtG4ufhWrLUd1AAAAAlRFU1RURVNUAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIg==",

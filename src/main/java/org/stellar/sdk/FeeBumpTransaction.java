@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import lombok.NonNull;
@@ -138,8 +138,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
                         .timeBounds(inner.getTimeBounds())
                         .build())
                 .build();
-
-        this.mInner.mSignatures = Lists.newArrayList(inner.mSignatures);
+        this.mInner.mSignatures = new ArrayList<>(inner.mSignatures);
       } else {
         this.mInner = inner;
       }

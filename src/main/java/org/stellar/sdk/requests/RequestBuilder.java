@@ -1,6 +1,5 @@
 package org.stellar.sdk.requests;
 
-import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,7 +81,7 @@ public abstract class RequestBuilder {
    * @param assets the list of assets to be serialized into the query parameter value
    */
   public RequestBuilder setAssetsParameter(String name, List<Asset> assets) {
-    List<String> assetStrings = Lists.newArrayList();
+    List<String> assetStrings = new ArrayList<>();
     for (Asset asset : assets) {
       assetStrings.add(encodeAsset(asset));
     }

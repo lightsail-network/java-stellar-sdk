@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.collect.Lists;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.stellar.sdk.xdr.ClaimPredicate;
@@ -16,7 +16,7 @@ import org.threeten.bp.Instant;
 public abstract class Predicate {
 
   private static List<Predicate> convertXDRPredicates(ClaimPredicate[] predicates) {
-    List<Predicate> list = Lists.newArrayList();
+    List<Predicate> list = new ArrayList<>();
     for (ClaimPredicate p : predicates) {
       list.add(fromXdr(p));
     }

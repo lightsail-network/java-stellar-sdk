@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.collect.Lists;
 import com.google.gson.*;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.xdr.Duration;
@@ -25,7 +25,7 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
     }
 
     if (obj.has("and")) {
-      List<Predicate> inner = Lists.newArrayList();
+      List<Predicate> inner = new ArrayList<>();
       for (JsonElement elt : obj.get("and").getAsJsonArray()) {
         inner.add(deserialize(elt, typeOfT, context));
       }
@@ -33,7 +33,7 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
     }
 
     if (obj.has("or")) {
-      List<Predicate> inner = Lists.newArrayList();
+      List<Predicate> inner = new ArrayList<>();
       for (JsonElement elt : obj.get("or").getAsJsonArray()) {
         inner.add(deserialize(elt, typeOfT, context));
       }

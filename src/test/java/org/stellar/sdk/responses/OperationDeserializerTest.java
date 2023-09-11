@@ -4,9 +4,9 @@ import static java.math.BigInteger.valueOf;
 import static org.stellar.sdk.Asset.create;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
@@ -1587,11 +1587,12 @@ public class OperationDeserializerTest extends TestCase {
         operation.getAssetIssuer(), "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS");
     assertEquals(operation.getAssetCode(), "EUR");
     assertEquals(operation.getAssetType(), "credit_alphanum4");
-    assertEquals(operation.getSetFlags(), Lists.newArrayList(4));
-    assertEquals(operation.getClearFlags(), Lists.newArrayList(2));
-    assertEquals(operation.getSetFlagStrings(), Lists.newArrayList("clawback_enabled"));
+    assertEquals(operation.getSetFlags(), Collections.singletonList(4));
+    assertEquals(operation.getClearFlags(), Collections.singletonList(2));
+    assertEquals(operation.getSetFlagStrings(), Collections.singletonList("clawback_enabled"));
     assertEquals(
-        operation.getClearFlagStrings(), Lists.newArrayList("authorized_to_maintain_liabilites"));
+        operation.getClearFlagStrings(),
+        Collections.singletonList("authorized_to_maintain_liabilites"));
   }
 
   @Test
