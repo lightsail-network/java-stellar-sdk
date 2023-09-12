@@ -106,7 +106,7 @@ class StrKey {
   public static MuxedAccount encodeToXDRMuxedAccount(String data) {
     MuxedAccount muxed = new MuxedAccount();
 
-    if (data.length() == 0) {
+    if (data.isEmpty()) {
       throw new IllegalArgumentException("address is empty");
     }
     switch (decodeVersionByte(data)) {
@@ -250,12 +250,14 @@ class StrKey {
       base32OutputStream.close();
 
       byte[] encodedBytes = byteArrayOutputStream.toByteArray();
-      char[] charsEncoded = bytesToChars(encodedBytes);
+      byte[] unpaddedEncodedBytes = removeBase32Padding(encodedBytes);
+      char[] charsEncoded = bytesToChars(unpaddedEncodedBytes);
 
-      Arrays.fill(encodedBytes, (byte) 0);
       Arrays.fill(unencoded, (byte) 0);
       Arrays.fill(payload, (byte) 0);
       Arrays.fill(checksum, (byte) 0);
+      Arrays.fill(encodedBytes, (byte) 0);
+      Arrays.fill(unpaddedEncodedBytes, (byte) 0);
 
       // Clean byteArrayOutputStream internal buffer
       int size = byteArrayOutputStream.size();
