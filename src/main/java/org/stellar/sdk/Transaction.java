@@ -1,7 +1,5 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -54,7 +52,9 @@ public class Transaction extends AbstractTransaction {
     this.mSourceAccount = sourceAccount;
     this.mSequenceNumber = sequenceNumber;
     this.mOperations = operations;
-    checkArgument(operations.length > 0, "At least one operation required");
+    if (operations.length == 0) {
+      throw new IllegalArgumentException("At least one operation required");
+    }
     this.mPreconditions = preconditions;
     this.mFee = fee;
     this.mMemo = memo != null ? memo : Memo.none();

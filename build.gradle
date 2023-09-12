@@ -71,9 +71,6 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:${okhttpclientVersion}"
     implementation "com.squareup.okhttp3:okhttp-sse:${okhttpclientVersion}"
     implementation 'com.moandjiezana.toml:toml4j:0.7.2'
-    // use the android version because we don't want java 8 stuff
-    // TODO: Do we really need to introduce guava?
-    implementation 'com.google.guava:guava:32.1.2-android'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'net.i2p.crypto:eddsa:0.3.0'
     implementation 'commons-codec:commons-codec:1.16.0'

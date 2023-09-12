@@ -1,7 +1,5 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import lombok.NonNull;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.XdrString;
@@ -19,7 +17,9 @@ public class MemoText extends Memo {
   }
 
   public MemoText(@NonNull XdrString text) {
-    checkArgument(text.getBytes().length <= 28, "text cannot be more than 28-bytes long.");
+    if (text.getBytes().length > 28) {
+      throw new IllegalArgumentException("text cannot be more than 28-bytes long.");
+    }
     this.text = text;
   }
 

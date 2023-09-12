@@ -1,9 +1,9 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -41,7 +41,7 @@ public class TransactionBuilder {
     mAccountConverter = accountConverter;
     mSourceAccount = sourceAccount;
     mNetwork = network;
-    mOperations = newArrayList();
+    mOperations = new ArrayList<>();
     mPreconditions = TransactionPreconditions.builder().build();
   }
 

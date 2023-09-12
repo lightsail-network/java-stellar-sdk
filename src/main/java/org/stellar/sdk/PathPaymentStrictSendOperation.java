@@ -1,7 +1,5 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.Arrays;
 import java.util.Objects;
 import lombok.NonNull;
@@ -41,7 +39,9 @@ public class PathPaymentStrictSendOperation extends Operation {
     if (path == null) {
       this.path = new Asset[0];
     } else {
-      checkArgument(path.length <= 5, "The maximum number of assets in the path is 5");
+      if (path.length > 5) {
+        throw new IllegalArgumentException("The maximum number of assets in the path is 5");
+      }
       this.path = path;
     }
   }
@@ -172,7 +172,9 @@ public class PathPaymentStrictSendOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public PathPaymentStrictSendOperation.Builder setPath(@NonNull Asset[] path) {
-      checkArgument(path.length <= 5, "The maximum number of assets in the path is 5");
+      if (path.length > 5) {
+        throw new IllegalArgumentException("The maximum number of assets in the path is 5");
+      }
       this.path = path;
       return this;
     }

@@ -1,10 +1,11 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
 
+import com.sun.tools.javac.util.List;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Collections;
 import org.junit.Test;
 import org.stellar.sdk.xdr.*;
 
@@ -481,7 +482,7 @@ public class TransactionBuilderTest {
                 TransactionPreconditions.builder()
                     .timeBounds(
                         new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
-                    .extraSigners(newArrayList(signerKey))
+                    .extraSigners(Collections.singletonList(signerKey))
                     .minSeqLedgerGap(5)
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -489,10 +490,12 @@ public class TransactionBuilderTest {
 
     assertEquals(
         SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD,
-        newArrayList(transaction.getPreconditions().getExtraSigners()).get(0).getDiscriminant());
+        transaction.getPreconditions().getExtraSigners().get(0).getDiscriminant());
     assertArrayEquals(
         payload,
-        newArrayList(transaction.getPreconditions().getExtraSigners())
+        transaction
+            .getPreconditions()
+            .getExtraSigners()
             .get(0)
             .getEd25519SignedPayload()
             .getPayload());
@@ -524,7 +527,7 @@ public class TransactionBuilderTest {
                   .timeBounds(
                       new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                   .extraSigners(
-                      newArrayList(
+                      List.of(
                           new SignerKey.Builder().build(),
                           new SignerKey.Builder().build(),
                           new SignerKey.Builder().build()))

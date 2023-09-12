@@ -2,10 +2,10 @@ package org.stellar.sdk;
 
 import java.io.IOException;
 import java.util.Collection;
-import javax.annotation.Nullable;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
+import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerFootprint;

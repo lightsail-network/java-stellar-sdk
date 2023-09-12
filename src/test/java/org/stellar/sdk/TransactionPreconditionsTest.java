@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.sun.tools.javac.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -122,7 +122,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .minSeqNumber(3L)
-            .extraSigners(newArrayList(signerKey, signerKey, signerKey))
+            .extraSigners(List.of(signerKey, signerKey, signerKey))
             .build();
 
     Preconditions xdr = preconditions.toXdr();
@@ -213,7 +213,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .extraSigners(
-                newArrayList(
+                List.of(
                     new SignerKey.Builder().build(),
                     new SignerKey.Builder().build(),
                     new SignerKey.Builder().build()))
