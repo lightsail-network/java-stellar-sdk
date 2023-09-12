@@ -243,7 +243,7 @@ public class TransactionBuilder {
    * A default implementation of sequence number generation which will derive a sequence number
    * based on sourceAccount's current sequence number + 1.
    */
-  public static Function<TransactionBuilderAccount, Long> incrementedSequenceNumberFunc =
+  public static Function<TransactionBuilderAccount, Long> IncrementedSequenceNumberFunc =
       TransactionBuilderAccount::getIncrementedSequenceNumber;
 
   @Deprecated
