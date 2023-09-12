@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -84,8 +84,7 @@ public class Sep10Challenge {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
 
     if (clientDomain.isEmpty() != clientSigningKey.isEmpty()) {
       throw new InvalidSep10ChallengeException(
@@ -309,10 +308,9 @@ public class Sep10Challenge {
           "Random nonce encoded as base64 should be 64 bytes long.");
     }
 
-    BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] nonce;
     try {
-      nonce = base64Encoding.decode(new String(manageDataOperation.getValue()));
+      nonce = Base64.getDecoder().decode(new String(manageDataOperation.getValue()));
     } catch (IllegalArgumentException e) {
       throw new InvalidSep10ChallengeException(
           "Failed to decode random nonce provided in ManageData operation.", e);

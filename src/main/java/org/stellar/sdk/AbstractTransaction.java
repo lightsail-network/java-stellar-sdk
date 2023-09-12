@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +63,7 @@ public abstract class AbstractTransaction {
 
   /** Returns transaction hash encoded as a hexadecimal string. */
   public String hashHex() {
-    return BaseEncoding.base16().lowerCase().encode(this.hash());
+    return Util.bytesToHex(this.hash()).toLowerCase();
   }
 
   /** Returns signature base. */

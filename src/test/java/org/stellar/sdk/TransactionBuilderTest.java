@@ -3,10 +3,10 @@ package org.stellar.sdk;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
 
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import org.apache.commons.codec.DecoderException;
 import org.junit.Test;
 import org.stellar.sdk.xdr.*;
 
@@ -503,7 +503,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderExtraSigners() throws IOException {
+  public void testBuilderExtraSigners() throws IOException, DecoderException {
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
     KeyPair newAccount =
@@ -511,10 +511,9 @@ public class TransactionBuilderTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
 
     String accountStrKey = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
-    byte[] payload =
-        BaseEncoding.base16()
-            .decode(
-                "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+
+    String encodedString = "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20";
+    byte[] payload = Util.hexToBytes(encodedString);
 
     SignerKey signerKey =
         new SignerKey.Builder()
@@ -715,12 +714,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -769,12 +764,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -825,12 +816,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -882,12 +869,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timebounds are correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.math.BigInteger;
@@ -163,6 +162,6 @@ public class MemoTest {
     assertNull(memoXdr.getHash());
     assertEquals(
         "4142434445464748494a4b4c0000000000000000000000000000000000000000",
-        BaseEncoding.base16().lowerCase().encode(memoXdr.getRetHash().getHash()));
+        Util.bytesToHex(memoXdr.getRetHash().getHash()).toLowerCase());
   }
 }

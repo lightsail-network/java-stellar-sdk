@@ -1,17 +1,14 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.ImmutableList.of;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.stellar.sdk.xdr.SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE;
 
-import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,8 +64,6 @@ import org.stellar.sdk.xdr.SorobanResources;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint32;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 import org.stellar.sdk.xdr.XdrString;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
@@ -104,7 +99,7 @@ public class SorobanServerTest {
               throws InterruptedException {
             GetLedgerEntriesRequest expectedRequest =
                 new GetLedgerEntriesRequest(
-                    of("AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA=="));
+                    singletonList("AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA=="));
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -254,8 +249,12 @@ public class SorobanServerTest {
                     .contractData(ledgerKeyContractData)
                     .build();
 
-            GetLedgerEntriesRequest expectedRequest =
-                new GetLedgerEntriesRequest(of(ledgerKeyToXdrBase64(ledgerKey)));
+            GetLedgerEntriesRequest expectedRequest = null;
+            try {
+              expectedRequest = new GetLedgerEntriesRequest(singletonList(ledgerKey.toXdrBase64()));
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -323,8 +322,12 @@ public class SorobanServerTest {
                     .contractData(ledgerKeyContractData)
                     .build();
 
-            GetLedgerEntriesRequest expectedRequest =
-                new GetLedgerEntriesRequest(of(ledgerKeyToXdrBase64(ledgerKey)));
+            GetLedgerEntriesRequest expectedRequest = null;
+            try {
+              expectedRequest = new GetLedgerEntriesRequest(singletonList(ledgerKey.toXdrBase64()));
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -382,7 +385,7 @@ public class SorobanServerTest {
             .account(ledgerKeyAccount0)
             .discriminant(LedgerEntryType.ACCOUNT)
             .build();
-    String ledgerKey0Xdr = ledgerKeyToXdrBase64(ledgerKey0);
+    String ledgerKey0Xdr = ledgerKey0.toXdrBase64();
 
     String accountId1 = "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54";
     LedgerKey.LedgerKeyAccount ledgerKeyAccount1 =
@@ -394,7 +397,7 @@ public class SorobanServerTest {
             .account(ledgerKeyAccount1)
             .discriminant(LedgerEntryType.ACCOUNT)
             .build();
-    String ledgerKey1Xdr = ledgerKeyToXdrBase64(ledgerKey1);
+    String ledgerKey1Xdr = ledgerKey1.toXdrBase64();
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -543,7 +546,8 @@ public class SorobanServerTest {
 
     GetEventsRequest.EventFilter eventFilter =
         GetEventsRequest.EventFilter.builder()
-            .contractIds(of("607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0"))
+            .contractIds(
+                singletonList("607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0"))
             .type(EventFilterType.CONTRACT)
             .topic(Arrays.asList("AAAADwAAAAdDT1VOVEVSAA==", "AAAADwAAAAlpbmNyZW1lbnQAAAA="))
             .build();
@@ -846,8 +850,8 @@ public class SorobanServerTest {
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
             .auth(
-                of(
-                    sorobanAuthorizationEntryFromXdrBase64(
+                singletonList(
+                    SorobanAuthorizationEntry.fromXdrBase64(
                         "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
             .build();
     Transaction expectedTx =
@@ -965,8 +969,8 @@ public class SorobanServerTest {
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
             .auth(
-                of(
-                    sorobanAuthorizationEntryFromXdrBase64(
+                singletonList(
+                    SorobanAuthorizationEntry.fromXdrBase64(
                         "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
             .build();
     Transaction expectedTx =
@@ -1054,7 +1058,7 @@ public class SorobanServerTest {
                     .build())
             .build();
 
-    Transaction transaction = buildSorobanTransaction(null, of(auth));
+    Transaction transaction = buildSorobanTransaction(null, singletonList(auth));
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -1093,7 +1097,7 @@ public class SorobanServerTest {
             .hostFunction(
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
-            .auth(of(auth))
+            .auth(singletonList(auth))
             .build();
     Transaction expectedTx =
         new Transaction(
@@ -1387,31 +1391,5 @@ public class SorobanServerTest {
     }
 
     return transactionBuilder.build();
-  }
-
-  private static SorobanAuthorizationEntry sorobanAuthorizationEntryFromXdrBase64(
-      String sorobanAuthorizationEntry) {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(sorobanAuthorizationEntry);
-    ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-    XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
-    try {
-      return SorobanAuthorizationEntry.decode(xdrInputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException(
-          "invalid ledgerEntryData: " + sorobanAuthorizationEntry, e);
-    }
-  }
-
-  private static String ledgerKeyToXdrBase64(LedgerKey ledgerKey) {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    try {
-      ledgerKey.encode(xdrDataOutputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid ledgerKey.", e);
-    }
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(byteArrayOutputStream.toByteArray());
   }
 }

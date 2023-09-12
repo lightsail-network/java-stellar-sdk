@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.util.Objects;
 import lombok.NonNull;
@@ -19,7 +18,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
-    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(this.balanceId.toLowerCase());
+    byte[] balanceIdBytes = Util.hexToBytes(this.balanceId);
     ClaimableBalanceID balanceId;
     try {
       balanceId = ClaimableBalanceID.fromXdrByteArray(balanceIdBytes);
@@ -48,7 +47,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
      */
     Builder(ClaimClaimableBalanceOp op) {
       try {
-        balanceId = BaseEncoding.base16().lowerCase().encode(op.getBalanceID().toXdrByteArray());
+        balanceId = Util.bytesToHex(op.getBalanceID().toXdrByteArray()).toLowerCase();
       } catch (IOException e) {
         throw new IllegalArgumentException("Invalid balanceId in the operation", e);
       }

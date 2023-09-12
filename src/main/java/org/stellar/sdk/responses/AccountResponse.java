@@ -2,8 +2,8 @@ package org.stellar.sdk.responses;
 
 import static org.stellar.sdk.Asset.create;
 
-import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Optional;
 import lombok.NonNull;
@@ -440,8 +440,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
      * @return raw value
      */
     public byte[] getDecoded(String key) {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.decode(this.get(key));
+      return Base64.getDecoder().decode(this.get(key));
     }
   }
 
