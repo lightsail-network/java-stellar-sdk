@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,7 +12,6 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
-import org.threeten.bp.Instant;
 
 public abstract class Predicate {
 
