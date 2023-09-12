@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -172,7 +172,7 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.success, this.noIssuer, this.code);
+    return Objects.hash(this.success, this.noIssuer, this.code);
   }
 
   @Override
@@ -182,15 +182,14 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
     }
 
     PathPaymentStrictReceiveResult other = (PathPaymentStrictReceiveResult) object;
-    return Objects.equal(this.success, other.success)
-        && Objects.equal(this.noIssuer, other.noIssuer)
-        && Objects.equal(this.code, other.code);
+    return Objects.equals(this.success, other.success)
+        && Objects.equals(this.noIssuer, other.noIssuer)
+        && Objects.equals(this.code, other.code);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -202,8 +201,7 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
   }
 
   public static PathPaymentStrictReceiveResult fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -267,7 +265,7 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(Arrays.hashCode(this.offers), this.last);
+      return Objects.hash(Arrays.hashCode(this.offers), this.last);
     }
 
     @Override
@@ -277,13 +275,12 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
       }
 
       PathPaymentStrictReceiveResultSuccess other = (PathPaymentStrictReceiveResultSuccess) object;
-      return Arrays.equals(this.offers, other.offers) && Objects.equal(this.last, other.last);
+      return Arrays.equals(this.offers, other.offers) && Objects.equals(this.last, other.last);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -296,8 +293,7 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
 
     public static PathPaymentStrictReceiveResultSuccess fromXdrBase64(String xdr)
         throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

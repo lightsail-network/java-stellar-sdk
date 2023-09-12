@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -62,7 +62,7 @@ public class CreateAccountOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.destination, this.startingBalance);
+    return Objects.hash(this.destination, this.startingBalance);
   }
 
   @Override
@@ -72,14 +72,13 @@ public class CreateAccountOp implements XdrElement {
     }
 
     CreateAccountOp other = (CreateAccountOp) object;
-    return Objects.equal(this.destination, other.destination)
-        && Objects.equal(this.startingBalance, other.startingBalance);
+    return Objects.equals(this.destination, other.destination)
+        && Objects.equals(this.startingBalance, other.startingBalance);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -91,8 +90,7 @@ public class CreateAccountOp implements XdrElement {
   }
 
   public static CreateAccountOp fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

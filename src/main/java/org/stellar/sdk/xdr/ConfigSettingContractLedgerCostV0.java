@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -264,7 +264,7 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.ledgerMaxReadLedgerEntries,
         this.ledgerMaxReadBytes,
         this.ledgerMaxWriteLedgerEntries,
@@ -290,28 +290,27 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     }
 
     ConfigSettingContractLedgerCostV0 other = (ConfigSettingContractLedgerCostV0) object;
-    return Objects.equal(this.ledgerMaxReadLedgerEntries, other.ledgerMaxReadLedgerEntries)
-        && Objects.equal(this.ledgerMaxReadBytes, other.ledgerMaxReadBytes)
-        && Objects.equal(this.ledgerMaxWriteLedgerEntries, other.ledgerMaxWriteLedgerEntries)
-        && Objects.equal(this.ledgerMaxWriteBytes, other.ledgerMaxWriteBytes)
-        && Objects.equal(this.txMaxReadLedgerEntries, other.txMaxReadLedgerEntries)
-        && Objects.equal(this.txMaxReadBytes, other.txMaxReadBytes)
-        && Objects.equal(this.txMaxWriteLedgerEntries, other.txMaxWriteLedgerEntries)
-        && Objects.equal(this.txMaxWriteBytes, other.txMaxWriteBytes)
-        && Objects.equal(this.feeReadLedgerEntry, other.feeReadLedgerEntry)
-        && Objects.equal(this.feeWriteLedgerEntry, other.feeWriteLedgerEntry)
-        && Objects.equal(this.feeRead1KB, other.feeRead1KB)
-        && Objects.equal(this.feeWrite1KB, other.feeWrite1KB)
-        && Objects.equal(this.bucketListSizeBytes, other.bucketListSizeBytes)
-        && Objects.equal(this.bucketListFeeRateLow, other.bucketListFeeRateLow)
-        && Objects.equal(this.bucketListFeeRateHigh, other.bucketListFeeRateHigh)
-        && Objects.equal(this.bucketListGrowthFactor, other.bucketListGrowthFactor);
+    return Objects.equals(this.ledgerMaxReadLedgerEntries, other.ledgerMaxReadLedgerEntries)
+        && Objects.equals(this.ledgerMaxReadBytes, other.ledgerMaxReadBytes)
+        && Objects.equals(this.ledgerMaxWriteLedgerEntries, other.ledgerMaxWriteLedgerEntries)
+        && Objects.equals(this.ledgerMaxWriteBytes, other.ledgerMaxWriteBytes)
+        && Objects.equals(this.txMaxReadLedgerEntries, other.txMaxReadLedgerEntries)
+        && Objects.equals(this.txMaxReadBytes, other.txMaxReadBytes)
+        && Objects.equals(this.txMaxWriteLedgerEntries, other.txMaxWriteLedgerEntries)
+        && Objects.equals(this.txMaxWriteBytes, other.txMaxWriteBytes)
+        && Objects.equals(this.feeReadLedgerEntry, other.feeReadLedgerEntry)
+        && Objects.equals(this.feeWriteLedgerEntry, other.feeWriteLedgerEntry)
+        && Objects.equals(this.feeRead1KB, other.feeRead1KB)
+        && Objects.equals(this.feeWrite1KB, other.feeWrite1KB)
+        && Objects.equals(this.bucketListSizeBytes, other.bucketListSizeBytes)
+        && Objects.equals(this.bucketListFeeRateLow, other.bucketListFeeRateLow)
+        && Objects.equals(this.bucketListFeeRateHigh, other.bucketListFeeRateHigh)
+        && Objects.equals(this.bucketListGrowthFactor, other.bucketListGrowthFactor);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -323,8 +322,7 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
   }
 
   public static ConfigSettingContractLedgerCostV0 fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

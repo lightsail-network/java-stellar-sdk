@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -120,7 +120,7 @@ public class SurveyResponseBody implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.topologyResponseBodyV0, this.topologyResponseBodyV1, this.type);
+    return Objects.hash(this.topologyResponseBodyV0, this.topologyResponseBodyV1, this.type);
   }
 
   @Override
@@ -130,15 +130,14 @@ public class SurveyResponseBody implements XdrElement {
     }
 
     SurveyResponseBody other = (SurveyResponseBody) object;
-    return Objects.equal(this.topologyResponseBodyV0, other.topologyResponseBodyV0)
-        && Objects.equal(this.topologyResponseBodyV1, other.topologyResponseBodyV1)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.topologyResponseBodyV0, other.topologyResponseBodyV0)
+        && Objects.equals(this.topologyResponseBodyV1, other.topologyResponseBodyV1)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -150,8 +149,7 @@ public class SurveyResponseBody implements XdrElement {
   }
 
   public static SurveyResponseBody fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

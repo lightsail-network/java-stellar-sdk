@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -90,7 +90,7 @@ public class TopologyResponseBodyV0 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.inboundPeers,
         this.outboundPeers,
         this.totalInboundPeerCount,
@@ -104,16 +104,15 @@ public class TopologyResponseBodyV0 implements XdrElement {
     }
 
     TopologyResponseBodyV0 other = (TopologyResponseBodyV0) object;
-    return Objects.equal(this.inboundPeers, other.inboundPeers)
-        && Objects.equal(this.outboundPeers, other.outboundPeers)
-        && Objects.equal(this.totalInboundPeerCount, other.totalInboundPeerCount)
-        && Objects.equal(this.totalOutboundPeerCount, other.totalOutboundPeerCount);
+    return Objects.equals(this.inboundPeers, other.inboundPeers)
+        && Objects.equals(this.outboundPeers, other.outboundPeers)
+        && Objects.equals(this.totalInboundPeerCount, other.totalInboundPeerCount)
+        && Objects.equals(this.totalOutboundPeerCount, other.totalOutboundPeerCount);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -125,8 +124,7 @@ public class TopologyResponseBodyV0 implements XdrElement {
   }
 
   public static TopologyResponseBodyV0 fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

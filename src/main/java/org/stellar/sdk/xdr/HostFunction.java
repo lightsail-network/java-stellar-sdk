@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -150,7 +150,7 @@ public class HostFunction implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.invokeContract, this.createContract, Arrays.hashCode(this.wasm), this.type);
   }
 
@@ -161,16 +161,15 @@ public class HostFunction implements XdrElement {
     }
 
     HostFunction other = (HostFunction) object;
-    return Objects.equal(this.invokeContract, other.invokeContract)
-        && Objects.equal(this.createContract, other.createContract)
+    return Objects.equals(this.invokeContract, other.invokeContract)
+        && Objects.equals(this.createContract, other.createContract)
         && Arrays.equals(this.wasm, other.wasm)
-        && Objects.equal(this.type, other.type);
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -182,8 +181,7 @@ public class HostFunction implements XdrElement {
   }
 
   public static HostFunction fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

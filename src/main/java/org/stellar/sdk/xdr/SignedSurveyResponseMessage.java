@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -64,7 +64,7 @@ public class SignedSurveyResponseMessage implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.responseSignature, this.response);
+    return Objects.hash(this.responseSignature, this.response);
   }
 
   @Override
@@ -74,14 +74,13 @@ public class SignedSurveyResponseMessage implements XdrElement {
     }
 
     SignedSurveyResponseMessage other = (SignedSurveyResponseMessage) object;
-    return Objects.equal(this.responseSignature, other.responseSignature)
-        && Objects.equal(this.response, other.response);
+    return Objects.equals(this.responseSignature, other.responseSignature)
+        && Objects.equals(this.response, other.response);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -93,8 +92,7 @@ public class SignedSurveyResponseMessage implements XdrElement {
   }
 
   public static SignedSurveyResponseMessage fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

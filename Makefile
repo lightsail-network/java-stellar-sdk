@@ -10,7 +10,7 @@ xdr/Stellar-contract-spec.x \
 xdr/Stellar-contract.x \
 xdr/Stellar-internal.x \
 xdr/Stellar-contract-config-setting.x
-
+# TODO: update XDRGEN_COMMIT
 XDRGEN_COMMIT=472eac8c5609d310d48bd8eed68aa24d2626df53
 XDRNEXT_COMMIT=e372df9f677961aac04c5a4cc80a3667f310b29f
 

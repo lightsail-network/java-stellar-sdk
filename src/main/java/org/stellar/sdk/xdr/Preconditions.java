@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -126,7 +126,7 @@ public class Preconditions implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.timeBounds, this.v2, this.type);
+    return Objects.hash(this.timeBounds, this.v2, this.type);
   }
 
   @Override
@@ -136,15 +136,14 @@ public class Preconditions implements XdrElement {
     }
 
     Preconditions other = (Preconditions) object;
-    return Objects.equal(this.timeBounds, other.timeBounds)
-        && Objects.equal(this.v2, other.v2)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.timeBounds, other.timeBounds)
+        && Objects.equals(this.v2, other.v2)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -156,8 +155,7 @@ public class Preconditions implements XdrElement {
   }
 
   public static Preconditions fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -173,7 +173,7 @@ public class OperationResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.tr, this.code);
+    return Objects.hash(this.tr, this.code);
   }
 
   @Override
@@ -183,13 +183,12 @@ public class OperationResult implements XdrElement {
     }
 
     OperationResult other = (OperationResult) object;
-    return Objects.equal(this.tr, other.tr) && Objects.equal(this.code, other.code);
+    return Objects.equals(this.tr, other.tr) && Objects.equals(this.code, other.code);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -201,8 +200,7 @@ public class OperationResult implements XdrElement {
   }
 
   public static OperationResult fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -920,7 +918,7 @@ public class OperationResult implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(
+      return Objects.hash(
           this.createAccountResult,
           this.paymentResult,
           this.pathPaymentStrictReceiveResult,
@@ -958,44 +956,43 @@ public class OperationResult implements XdrElement {
       }
 
       OperationResultTr other = (OperationResultTr) object;
-      return Objects.equal(this.createAccountResult, other.createAccountResult)
-          && Objects.equal(this.paymentResult, other.paymentResult)
-          && Objects.equal(
+      return Objects.equals(this.createAccountResult, other.createAccountResult)
+          && Objects.equals(this.paymentResult, other.paymentResult)
+          && Objects.equals(
               this.pathPaymentStrictReceiveResult, other.pathPaymentStrictReceiveResult)
-          && Objects.equal(this.manageSellOfferResult, other.manageSellOfferResult)
-          && Objects.equal(this.createPassiveSellOfferResult, other.createPassiveSellOfferResult)
-          && Objects.equal(this.setOptionsResult, other.setOptionsResult)
-          && Objects.equal(this.changeTrustResult, other.changeTrustResult)
-          && Objects.equal(this.allowTrustResult, other.allowTrustResult)
-          && Objects.equal(this.accountMergeResult, other.accountMergeResult)
-          && Objects.equal(this.inflationResult, other.inflationResult)
-          && Objects.equal(this.manageDataResult, other.manageDataResult)
-          && Objects.equal(this.bumpSeqResult, other.bumpSeqResult)
-          && Objects.equal(this.manageBuyOfferResult, other.manageBuyOfferResult)
-          && Objects.equal(this.pathPaymentStrictSendResult, other.pathPaymentStrictSendResult)
-          && Objects.equal(this.createClaimableBalanceResult, other.createClaimableBalanceResult)
-          && Objects.equal(this.claimClaimableBalanceResult, other.claimClaimableBalanceResult)
-          && Objects.equal(
+          && Objects.equals(this.manageSellOfferResult, other.manageSellOfferResult)
+          && Objects.equals(this.createPassiveSellOfferResult, other.createPassiveSellOfferResult)
+          && Objects.equals(this.setOptionsResult, other.setOptionsResult)
+          && Objects.equals(this.changeTrustResult, other.changeTrustResult)
+          && Objects.equals(this.allowTrustResult, other.allowTrustResult)
+          && Objects.equals(this.accountMergeResult, other.accountMergeResult)
+          && Objects.equals(this.inflationResult, other.inflationResult)
+          && Objects.equals(this.manageDataResult, other.manageDataResult)
+          && Objects.equals(this.bumpSeqResult, other.bumpSeqResult)
+          && Objects.equals(this.manageBuyOfferResult, other.manageBuyOfferResult)
+          && Objects.equals(this.pathPaymentStrictSendResult, other.pathPaymentStrictSendResult)
+          && Objects.equals(this.createClaimableBalanceResult, other.createClaimableBalanceResult)
+          && Objects.equals(this.claimClaimableBalanceResult, other.claimClaimableBalanceResult)
+          && Objects.equals(
               this.beginSponsoringFutureReservesResult, other.beginSponsoringFutureReservesResult)
-          && Objects.equal(
+          && Objects.equals(
               this.endSponsoringFutureReservesResult, other.endSponsoringFutureReservesResult)
-          && Objects.equal(this.revokeSponsorshipResult, other.revokeSponsorshipResult)
-          && Objects.equal(this.clawbackResult, other.clawbackResult)
-          && Objects.equal(
+          && Objects.equals(this.revokeSponsorshipResult, other.revokeSponsorshipResult)
+          && Objects.equals(this.clawbackResult, other.clawbackResult)
+          && Objects.equals(
               this.clawbackClaimableBalanceResult, other.clawbackClaimableBalanceResult)
-          && Objects.equal(this.setTrustLineFlagsResult, other.setTrustLineFlagsResult)
-          && Objects.equal(this.liquidityPoolDepositResult, other.liquidityPoolDepositResult)
-          && Objects.equal(this.liquidityPoolWithdrawResult, other.liquidityPoolWithdrawResult)
-          && Objects.equal(this.invokeHostFunctionResult, other.invokeHostFunctionResult)
-          && Objects.equal(this.bumpFootprintExpirationResult, other.bumpFootprintExpirationResult)
-          && Objects.equal(this.restoreFootprintResult, other.restoreFootprintResult)
-          && Objects.equal(this.type, other.type);
+          && Objects.equals(this.setTrustLineFlagsResult, other.setTrustLineFlagsResult)
+          && Objects.equals(this.liquidityPoolDepositResult, other.liquidityPoolDepositResult)
+          && Objects.equals(this.liquidityPoolWithdrawResult, other.liquidityPoolWithdrawResult)
+          && Objects.equals(this.invokeHostFunctionResult, other.invokeHostFunctionResult)
+          && Objects.equals(this.bumpFootprintExpirationResult, other.bumpFootprintExpirationResult)
+          && Objects.equals(this.restoreFootprintResult, other.restoreFootprintResult)
+          && Objects.equals(this.type, other.type);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -1007,8 +1004,7 @@ public class OperationResult implements XdrElement {
     }
 
     public static OperationResultTr fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

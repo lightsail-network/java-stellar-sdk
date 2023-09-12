@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -109,7 +109,7 @@ public class ContractEvent implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ext, this.contractID, this.type, this.body);
+    return Objects.hash(this.ext, this.contractID, this.type, this.body);
   }
 
   @Override
@@ -119,16 +119,15 @@ public class ContractEvent implements XdrElement {
     }
 
     ContractEvent other = (ContractEvent) object;
-    return Objects.equal(this.ext, other.ext)
-        && Objects.equal(this.contractID, other.contractID)
-        && Objects.equal(this.type, other.type)
-        && Objects.equal(this.body, other.body);
+    return Objects.equals(this.ext, other.ext)
+        && Objects.equals(this.contractID, other.contractID)
+        && Objects.equals(this.type, other.type)
+        && Objects.equals(this.body, other.body);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -140,8 +139,7 @@ public class ContractEvent implements XdrElement {
   }
 
   public static ContractEvent fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -262,7 +260,7 @@ public class ContractEvent implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v0, this.v);
+      return Objects.hash(this.v0, this.v);
     }
 
     @Override
@@ -272,13 +270,12 @@ public class ContractEvent implements XdrElement {
       }
 
       ContractEventBody other = (ContractEventBody) object;
-      return Objects.equal(this.v0, other.v0) && Objects.equal(this.v, other.v);
+      return Objects.equals(this.v0, other.v0) && Objects.equals(this.v, other.v);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -290,8 +287,7 @@ public class ContractEvent implements XdrElement {
     }
 
     public static ContractEventBody fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -343,7 +339,7 @@ public class ContractEvent implements XdrElement {
 
       @Override
       public int hashCode() {
-        return Objects.hashCode(this.topics, this.data);
+        return Objects.hash(this.topics, this.data);
       }
 
       @Override
@@ -353,13 +349,12 @@ public class ContractEvent implements XdrElement {
         }
 
         ContractEventV0 other = (ContractEventV0) object;
-        return Objects.equal(this.topics, other.topics) && Objects.equal(this.data, other.data);
+        return Objects.equals(this.topics, other.topics) && Objects.equals(this.data, other.data);
       }
 
       @Override
       public String toXdrBase64() throws IOException {
-        BaseEncoding base64Encoding = BaseEncoding.base64();
-        return base64Encoding.encode(toXdrByteArray());
+        return Base64.getEncoder().encodeToString(toXdrByteArray());
       }
 
       @Override
@@ -371,8 +366,7 @@ public class ContractEvent implements XdrElement {
       }
 
       public static ContractEventV0 fromXdrBase64(String xdr) throws IOException {
-        BaseEncoding base64Encoding = BaseEncoding.base64();
-        byte[] bytes = base64Encoding.decode(xdr);
+        byte[] bytes = Base64.getDecoder().decode(xdr);
         return fromXdrByteArray(bytes);
       }
 

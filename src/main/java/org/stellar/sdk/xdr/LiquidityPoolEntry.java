@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -77,7 +77,7 @@ public class LiquidityPoolEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.liquidityPoolID, this.body);
+    return Objects.hash(this.liquidityPoolID, this.body);
   }
 
   @Override
@@ -87,14 +87,13 @@ public class LiquidityPoolEntry implements XdrElement {
     }
 
     LiquidityPoolEntry other = (LiquidityPoolEntry) object;
-    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
-        && Objects.equal(this.body, other.body);
+    return Objects.equals(this.liquidityPoolID, other.liquidityPoolID)
+        && Objects.equals(this.body, other.body);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -106,8 +105,7 @@ public class LiquidityPoolEntry implements XdrElement {
   }
 
   public static LiquidityPoolEntry fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -217,7 +215,7 @@ public class LiquidityPoolEntry implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.constantProduct, this.type);
+      return Objects.hash(this.constantProduct, this.type);
     }
 
     @Override
@@ -227,14 +225,13 @@ public class LiquidityPoolEntry implements XdrElement {
       }
 
       LiquidityPoolEntryBody other = (LiquidityPoolEntryBody) object;
-      return Objects.equal(this.constantProduct, other.constantProduct)
-          && Objects.equal(this.type, other.type);
+      return Objects.equals(this.constantProduct, other.constantProduct)
+          && Objects.equals(this.type, other.type);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -246,8 +243,7 @@ public class LiquidityPoolEntry implements XdrElement {
     }
 
     public static LiquidityPoolEntryBody fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -341,7 +337,7 @@ public class LiquidityPoolEntry implements XdrElement {
 
       @Override
       public int hashCode() {
-        return Objects.hashCode(
+        return Objects.hash(
             this.params,
             this.reserveA,
             this.reserveB,
@@ -356,17 +352,16 @@ public class LiquidityPoolEntry implements XdrElement {
         }
 
         LiquidityPoolEntryConstantProduct other = (LiquidityPoolEntryConstantProduct) object;
-        return Objects.equal(this.params, other.params)
-            && Objects.equal(this.reserveA, other.reserveA)
-            && Objects.equal(this.reserveB, other.reserveB)
-            && Objects.equal(this.totalPoolShares, other.totalPoolShares)
-            && Objects.equal(this.poolSharesTrustLineCount, other.poolSharesTrustLineCount);
+        return Objects.equals(this.params, other.params)
+            && Objects.equals(this.reserveA, other.reserveA)
+            && Objects.equals(this.reserveB, other.reserveB)
+            && Objects.equals(this.totalPoolShares, other.totalPoolShares)
+            && Objects.equals(this.poolSharesTrustLineCount, other.poolSharesTrustLineCount);
       }
 
       @Override
       public String toXdrBase64() throws IOException {
-        BaseEncoding base64Encoding = BaseEncoding.base64();
-        return base64Encoding.encode(toXdrByteArray());
+        return Base64.getEncoder().encodeToString(toXdrByteArray());
       }
 
       @Override
@@ -378,8 +373,7 @@ public class LiquidityPoolEntry implements XdrElement {
       }
 
       public static LiquidityPoolEntryConstantProduct fromXdrBase64(String xdr) throws IOException {
-        BaseEncoding base64Encoding = BaseEncoding.base64();
-        byte[] bytes = base64Encoding.decode(xdr);
+        byte[] bytes = Base64.getDecoder().decode(xdr);
         return fromXdrByteArray(bytes);
       }
 

@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -137,8 +137,7 @@ public class TrustLineEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
-        this.accountID, this.asset, this.balance, this.limit, this.flags, this.ext);
+    return Objects.hash(this.accountID, this.asset, this.balance, this.limit, this.flags, this.ext);
   }
 
   @Override
@@ -148,18 +147,17 @@ public class TrustLineEntry implements XdrElement {
     }
 
     TrustLineEntry other = (TrustLineEntry) object;
-    return Objects.equal(this.accountID, other.accountID)
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.balance, other.balance)
-        && Objects.equal(this.limit, other.limit)
-        && Objects.equal(this.flags, other.flags)
-        && Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.accountID, other.accountID)
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.balance, other.balance)
+        && Objects.equals(this.limit, other.limit)
+        && Objects.equals(this.flags, other.flags)
+        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -171,8 +169,7 @@ public class TrustLineEntry implements XdrElement {
   }
 
   public static TrustLineEntry fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -311,7 +308,7 @@ public class TrustLineEntry implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v1, this.v);
+      return Objects.hash(this.v1, this.v);
     }
 
     @Override
@@ -321,13 +318,12 @@ public class TrustLineEntry implements XdrElement {
       }
 
       TrustLineEntryExt other = (TrustLineEntryExt) object;
-      return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
+      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -339,8 +335,7 @@ public class TrustLineEntry implements XdrElement {
     }
 
     public static TrustLineEntryExt fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -392,7 +387,7 @@ public class TrustLineEntry implements XdrElement {
 
       @Override
       public int hashCode() {
-        return Objects.hashCode(this.liabilities, this.ext);
+        return Objects.hash(this.liabilities, this.ext);
       }
 
       @Override
@@ -402,14 +397,13 @@ public class TrustLineEntry implements XdrElement {
         }
 
         TrustLineEntryV1 other = (TrustLineEntryV1) object;
-        return Objects.equal(this.liabilities, other.liabilities)
-            && Objects.equal(this.ext, other.ext);
+        return Objects.equals(this.liabilities, other.liabilities)
+            && Objects.equals(this.ext, other.ext);
       }
 
       @Override
       public String toXdrBase64() throws IOException {
-        BaseEncoding base64Encoding = BaseEncoding.base64();
-        return base64Encoding.encode(toXdrByteArray());
+        return Base64.getEncoder().encodeToString(toXdrByteArray());
       }
 
       @Override
@@ -421,8 +415,7 @@ public class TrustLineEntry implements XdrElement {
       }
 
       public static TrustLineEntryV1 fromXdrBase64(String xdr) throws IOException {
-        BaseEncoding base64Encoding = BaseEncoding.base64();
-        byte[] bytes = base64Encoding.decode(xdr);
+        byte[] bytes = Base64.getDecoder().decode(xdr);
         return fromXdrByteArray(bytes);
       }
 
@@ -534,7 +527,7 @@ public class TrustLineEntry implements XdrElement {
 
         @Override
         public int hashCode() {
-          return Objects.hashCode(this.v2, this.v);
+          return Objects.hash(this.v2, this.v);
         }
 
         @Override
@@ -544,13 +537,12 @@ public class TrustLineEntry implements XdrElement {
           }
 
           TrustLineEntryV1Ext other = (TrustLineEntryV1Ext) object;
-          return Objects.equal(this.v2, other.v2) && Objects.equal(this.v, other.v);
+          return Objects.equals(this.v2, other.v2) && Objects.equals(this.v, other.v);
         }
 
         @Override
         public String toXdrBase64() throws IOException {
-          BaseEncoding base64Encoding = BaseEncoding.base64();
-          return base64Encoding.encode(toXdrByteArray());
+          return Base64.getEncoder().encodeToString(toXdrByteArray());
         }
 
         @Override
@@ -562,8 +554,7 @@ public class TrustLineEntry implements XdrElement {
         }
 
         public static TrustLineEntryV1Ext fromXdrBase64(String xdr) throws IOException {
-          BaseEncoding base64Encoding = BaseEncoding.base64();
-          byte[] bytes = base64Encoding.decode(xdr);
+          byte[] bytes = Base64.getDecoder().decode(xdr);
           return fromXdrByteArray(bytes);
         }
 

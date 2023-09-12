@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -122,7 +122,7 @@ public class TransactionMetaV3 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.ext,
         this.txChangesBefore,
         Arrays.hashCode(this.operations),
@@ -137,17 +137,16 @@ public class TransactionMetaV3 implements XdrElement {
     }
 
     TransactionMetaV3 other = (TransactionMetaV3) object;
-    return Objects.equal(this.ext, other.ext)
-        && Objects.equal(this.txChangesBefore, other.txChangesBefore)
+    return Objects.equals(this.ext, other.ext)
+        && Objects.equals(this.txChangesBefore, other.txChangesBefore)
         && Arrays.equals(this.operations, other.operations)
-        && Objects.equal(this.txChangesAfter, other.txChangesAfter)
-        && Objects.equal(this.sorobanMeta, other.sorobanMeta);
+        && Objects.equals(this.txChangesAfter, other.txChangesAfter)
+        && Objects.equals(this.sorobanMeta, other.sorobanMeta);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -159,8 +158,7 @@ public class TransactionMetaV3 implements XdrElement {
   }
 
   public static TransactionMetaV3 fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
