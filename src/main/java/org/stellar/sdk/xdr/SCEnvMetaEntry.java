@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -95,7 +95,7 @@ public class SCEnvMetaEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.interfaceVersion, this.kind);
+    return Objects.hash(this.interfaceVersion, this.kind);
   }
 
   @Override
@@ -105,14 +105,13 @@ public class SCEnvMetaEntry implements XdrElement {
     }
 
     SCEnvMetaEntry other = (SCEnvMetaEntry) object;
-    return Objects.equal(this.interfaceVersion, other.interfaceVersion)
-        && Objects.equal(this.kind, other.kind);
+    return Objects.equals(this.interfaceVersion, other.interfaceVersion)
+        && Objects.equals(this.kind, other.kind);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -124,8 +123,7 @@ public class SCEnvMetaEntry implements XdrElement {
   }
 
   public static SCEnvMetaEntry fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

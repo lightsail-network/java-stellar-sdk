@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -62,7 +62,7 @@ public class CreateContractArgs implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.contractIDPreimage, this.executable);
+    return Objects.hash(this.contractIDPreimage, this.executable);
   }
 
   @Override
@@ -72,14 +72,13 @@ public class CreateContractArgs implements XdrElement {
     }
 
     CreateContractArgs other = (CreateContractArgs) object;
-    return Objects.equal(this.contractIDPreimage, other.contractIDPreimage)
-        && Objects.equal(this.executable, other.executable);
+    return Objects.equals(this.contractIDPreimage, other.contractIDPreimage)
+        && Objects.equals(this.executable, other.executable);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -91,8 +90,7 @@ public class CreateContractArgs implements XdrElement {
   }
 
   public static CreateContractArgs fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

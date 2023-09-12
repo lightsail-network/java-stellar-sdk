@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -334,7 +334,7 @@ public class LedgerKey implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.account,
         this.trustLine,
         this.offer,
@@ -354,22 +354,21 @@ public class LedgerKey implements XdrElement {
     }
 
     LedgerKey other = (LedgerKey) object;
-    return Objects.equal(this.account, other.account)
-        && Objects.equal(this.trustLine, other.trustLine)
-        && Objects.equal(this.offer, other.offer)
-        && Objects.equal(this.data, other.data)
-        && Objects.equal(this.claimableBalance, other.claimableBalance)
-        && Objects.equal(this.liquidityPool, other.liquidityPool)
-        && Objects.equal(this.contractData, other.contractData)
-        && Objects.equal(this.contractCode, other.contractCode)
-        && Objects.equal(this.configSetting, other.configSetting)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.account, other.account)
+        && Objects.equals(this.trustLine, other.trustLine)
+        && Objects.equals(this.offer, other.offer)
+        && Objects.equals(this.data, other.data)
+        && Objects.equals(this.claimableBalance, other.claimableBalance)
+        && Objects.equals(this.liquidityPool, other.liquidityPool)
+        && Objects.equals(this.contractData, other.contractData)
+        && Objects.equals(this.contractCode, other.contractCode)
+        && Objects.equals(this.configSetting, other.configSetting)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -381,8 +380,7 @@ public class LedgerKey implements XdrElement {
   }
 
   public static LedgerKey fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -422,7 +420,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.accountID);
+      return Objects.hash(this.accountID);
     }
 
     @Override
@@ -432,13 +430,12 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyAccount other = (LedgerKeyAccount) object;
-      return Objects.equal(this.accountID, other.accountID);
+      return Objects.equals(this.accountID, other.accountID);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -450,8 +447,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyAccount fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -520,7 +516,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.accountID, this.asset);
+      return Objects.hash(this.accountID, this.asset);
     }
 
     @Override
@@ -530,14 +526,13 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyTrustLine other = (LedgerKeyTrustLine) object;
-      return Objects.equal(this.accountID, other.accountID)
-          && Objects.equal(this.asset, other.asset);
+      return Objects.equals(this.accountID, other.accountID)
+          && Objects.equals(this.asset, other.asset);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -549,8 +544,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyTrustLine fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -625,7 +619,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.sellerID, this.offerID);
+      return Objects.hash(this.sellerID, this.offerID);
     }
 
     @Override
@@ -635,14 +629,13 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyOffer other = (LedgerKeyOffer) object;
-      return Objects.equal(this.sellerID, other.sellerID)
-          && Objects.equal(this.offerID, other.offerID);
+      return Objects.equals(this.sellerID, other.sellerID)
+          && Objects.equals(this.offerID, other.offerID);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -654,8 +647,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyOffer fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -730,7 +722,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.accountID, this.dataName);
+      return Objects.hash(this.accountID, this.dataName);
     }
 
     @Override
@@ -740,14 +732,13 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyData other = (LedgerKeyData) object;
-      return Objects.equal(this.accountID, other.accountID)
-          && Objects.equal(this.dataName, other.dataName);
+      return Objects.equals(this.accountID, other.accountID)
+          && Objects.equals(this.dataName, other.dataName);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -759,8 +750,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyData fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -824,7 +814,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.balanceID);
+      return Objects.hash(this.balanceID);
     }
 
     @Override
@@ -834,13 +824,12 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyClaimableBalance other = (LedgerKeyClaimableBalance) object;
-      return Objects.equal(this.balanceID, other.balanceID);
+      return Objects.equals(this.balanceID, other.balanceID);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -852,8 +841,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyClaimableBalance fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -910,7 +898,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.liquidityPoolID);
+      return Objects.hash(this.liquidityPoolID);
     }
 
     @Override
@@ -920,13 +908,12 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyLiquidityPool other = (LedgerKeyLiquidityPool) object;
-      return Objects.equal(this.liquidityPoolID, other.liquidityPoolID);
+      return Objects.equals(this.liquidityPoolID, other.liquidityPoolID);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -938,8 +925,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyLiquidityPool fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -1032,7 +1018,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.contract, this.key, this.durability, this.bodyType);
+      return Objects.hash(this.contract, this.key, this.durability, this.bodyType);
     }
 
     @Override
@@ -1042,16 +1028,15 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyContractData other = (LedgerKeyContractData) object;
-      return Objects.equal(this.contract, other.contract)
-          && Objects.equal(this.key, other.key)
-          && Objects.equal(this.durability, other.durability)
-          && Objects.equal(this.bodyType, other.bodyType);
+      return Objects.equals(this.contract, other.contract)
+          && Objects.equals(this.key, other.key)
+          && Objects.equals(this.durability, other.durability)
+          && Objects.equals(this.bodyType, other.bodyType);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -1063,8 +1048,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyContractData fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -1154,7 +1138,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.hash, this.bodyType);
+      return Objects.hash(this.hash, this.bodyType);
     }
 
     @Override
@@ -1164,13 +1148,12 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyContractCode other = (LedgerKeyContractCode) object;
-      return Objects.equal(this.hash, other.hash) && Objects.equal(this.bodyType, other.bodyType);
+      return Objects.equals(this.hash, other.hash) && Objects.equals(this.bodyType, other.bodyType);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -1182,8 +1165,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyContractCode fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -1247,7 +1229,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.configSettingID);
+      return Objects.hash(this.configSettingID);
     }
 
     @Override
@@ -1257,13 +1239,12 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyConfigSetting other = (LedgerKeyConfigSetting) object;
-      return Objects.equal(this.configSettingID, other.configSettingID);
+      return Objects.equals(this.configSettingID, other.configSettingID);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -1275,8 +1256,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyConfigSetting fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -112,8 +112,7 @@ public class StellarValue implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
-        this.txSetHash, this.closeTime, Arrays.hashCode(this.upgrades), this.ext);
+    return Objects.hash(this.txSetHash, this.closeTime, Arrays.hashCode(this.upgrades), this.ext);
   }
 
   @Override
@@ -123,16 +122,15 @@ public class StellarValue implements XdrElement {
     }
 
     StellarValue other = (StellarValue) object;
-    return Objects.equal(this.txSetHash, other.txSetHash)
-        && Objects.equal(this.closeTime, other.closeTime)
+    return Objects.equals(this.txSetHash, other.txSetHash)
+        && Objects.equals(this.closeTime, other.closeTime)
         && Arrays.equals(this.upgrades, other.upgrades)
-        && Objects.equal(this.ext, other.ext);
+        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -144,8 +142,7 @@ public class StellarValue implements XdrElement {
   }
 
   public static StellarValue fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -270,7 +267,7 @@ public class StellarValue implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.lcValueSignature, this.v);
+      return Objects.hash(this.lcValueSignature, this.v);
     }
 
     @Override
@@ -280,14 +277,13 @@ public class StellarValue implements XdrElement {
       }
 
       StellarValueExt other = (StellarValueExt) object;
-      return Objects.equal(this.lcValueSignature, other.lcValueSignature)
-          && Objects.equal(this.v, other.v);
+      return Objects.equals(this.lcValueSignature, other.lcValueSignature)
+          && Objects.equals(this.v, other.v);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -299,8 +295,7 @@ public class StellarValue implements XdrElement {
     }
 
     public static StellarValueExt fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -572,7 +572,7 @@ public class StellarMessage implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.error,
         this.hello,
         this.auth,
@@ -602,32 +602,31 @@ public class StellarMessage implements XdrElement {
     }
 
     StellarMessage other = (StellarMessage) object;
-    return Objects.equal(this.error, other.error)
-        && Objects.equal(this.hello, other.hello)
-        && Objects.equal(this.auth, other.auth)
-        && Objects.equal(this.dontHave, other.dontHave)
+    return Objects.equals(this.error, other.error)
+        && Objects.equals(this.hello, other.hello)
+        && Objects.equals(this.auth, other.auth)
+        && Objects.equals(this.dontHave, other.dontHave)
         && Arrays.equals(this.peers, other.peers)
-        && Objects.equal(this.txSetHash, other.txSetHash)
-        && Objects.equal(this.txSet, other.txSet)
-        && Objects.equal(this.generalizedTxSet, other.generalizedTxSet)
-        && Objects.equal(this.transaction, other.transaction)
-        && Objects.equal(this.signedSurveyRequestMessage, other.signedSurveyRequestMessage)
-        && Objects.equal(this.signedSurveyResponseMessage, other.signedSurveyResponseMessage)
-        && Objects.equal(this.qSetHash, other.qSetHash)
-        && Objects.equal(this.qSet, other.qSet)
-        && Objects.equal(this.envelope, other.envelope)
-        && Objects.equal(this.getSCPLedgerSeq, other.getSCPLedgerSeq)
-        && Objects.equal(this.sendMoreMessage, other.sendMoreMessage)
-        && Objects.equal(this.sendMoreExtendedMessage, other.sendMoreExtendedMessage)
-        && Objects.equal(this.floodAdvert, other.floodAdvert)
-        && Objects.equal(this.floodDemand, other.floodDemand)
-        && Objects.equal(this.type, other.type);
+        && Objects.equals(this.txSetHash, other.txSetHash)
+        && Objects.equals(this.txSet, other.txSet)
+        && Objects.equals(this.generalizedTxSet, other.generalizedTxSet)
+        && Objects.equals(this.transaction, other.transaction)
+        && Objects.equals(this.signedSurveyRequestMessage, other.signedSurveyRequestMessage)
+        && Objects.equals(this.signedSurveyResponseMessage, other.signedSurveyResponseMessage)
+        && Objects.equals(this.qSetHash, other.qSetHash)
+        && Objects.equals(this.qSet, other.qSet)
+        && Objects.equals(this.envelope, other.envelope)
+        && Objects.equals(this.getSCPLedgerSeq, other.getSCPLedgerSeq)
+        && Objects.equals(this.sendMoreMessage, other.sendMoreMessage)
+        && Objects.equals(this.sendMoreExtendedMessage, other.sendMoreExtendedMessage)
+        && Objects.equals(this.floodAdvert, other.floodAdvert)
+        && Objects.equals(this.floodDemand, other.floodDemand)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -639,8 +638,7 @@ public class StellarMessage implements XdrElement {
   }
 
   public static StellarMessage fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

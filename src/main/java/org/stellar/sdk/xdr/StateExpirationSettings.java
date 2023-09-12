@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -161,7 +161,7 @@ public class StateExpirationSettings implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.maxEntryExpiration,
         this.minTempEntryExpiration,
         this.minPersistentEntryExpiration,
@@ -180,21 +180,20 @@ public class StateExpirationSettings implements XdrElement {
     }
 
     StateExpirationSettings other = (StateExpirationSettings) object;
-    return Objects.equal(this.maxEntryExpiration, other.maxEntryExpiration)
-        && Objects.equal(this.minTempEntryExpiration, other.minTempEntryExpiration)
-        && Objects.equal(this.minPersistentEntryExpiration, other.minPersistentEntryExpiration)
-        && Objects.equal(this.autoBumpLedgers, other.autoBumpLedgers)
-        && Objects.equal(this.persistentRentRateDenominator, other.persistentRentRateDenominator)
-        && Objects.equal(this.tempRentRateDenominator, other.tempRentRateDenominator)
-        && Objects.equal(this.maxEntriesToExpire, other.maxEntriesToExpire)
-        && Objects.equal(this.bucketListSizeWindowSampleSize, other.bucketListSizeWindowSampleSize)
-        && Objects.equal(this.evictionScanSize, other.evictionScanSize);
+    return Objects.equals(this.maxEntryExpiration, other.maxEntryExpiration)
+        && Objects.equals(this.minTempEntryExpiration, other.minTempEntryExpiration)
+        && Objects.equals(this.minPersistentEntryExpiration, other.minPersistentEntryExpiration)
+        && Objects.equals(this.autoBumpLedgers, other.autoBumpLedgers)
+        && Objects.equals(this.persistentRentRateDenominator, other.persistentRentRateDenominator)
+        && Objects.equals(this.tempRentRateDenominator, other.tempRentRateDenominator)
+        && Objects.equals(this.maxEntriesToExpire, other.maxEntriesToExpire)
+        && Objects.equals(this.bucketListSizeWindowSampleSize, other.bucketListSizeWindowSampleSize)
+        && Objects.equals(this.evictionScanSize, other.evictionScanSize);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -206,8 +205,7 @@ public class StateExpirationSettings implements XdrElement {
   }
 
   public static StateExpirationSettings fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

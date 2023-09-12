@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -198,7 +198,7 @@ public class AccountEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.accountID,
         this.balance,
         this.seqNum,
@@ -218,22 +218,21 @@ public class AccountEntry implements XdrElement {
     }
 
     AccountEntry other = (AccountEntry) object;
-    return Objects.equal(this.accountID, other.accountID)
-        && Objects.equal(this.balance, other.balance)
-        && Objects.equal(this.seqNum, other.seqNum)
-        && Objects.equal(this.numSubEntries, other.numSubEntries)
-        && Objects.equal(this.inflationDest, other.inflationDest)
-        && Objects.equal(this.flags, other.flags)
-        && Objects.equal(this.homeDomain, other.homeDomain)
-        && Objects.equal(this.thresholds, other.thresholds)
+    return Objects.equals(this.accountID, other.accountID)
+        && Objects.equals(this.balance, other.balance)
+        && Objects.equals(this.seqNum, other.seqNum)
+        && Objects.equals(this.numSubEntries, other.numSubEntries)
+        && Objects.equals(this.inflationDest, other.inflationDest)
+        && Objects.equals(this.flags, other.flags)
+        && Objects.equals(this.homeDomain, other.homeDomain)
+        && Objects.equals(this.thresholds, other.thresholds)
         && Arrays.equals(this.signers, other.signers)
-        && Objects.equal(this.ext, other.ext);
+        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -245,8 +244,7 @@ public class AccountEntry implements XdrElement {
   }
 
   public static AccountEntry fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -413,7 +411,7 @@ public class AccountEntry implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v1, this.v);
+      return Objects.hash(this.v1, this.v);
     }
 
     @Override
@@ -423,13 +421,12 @@ public class AccountEntry implements XdrElement {
       }
 
       AccountEntryExt other = (AccountEntryExt) object;
-      return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
+      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -441,8 +438,7 @@ public class AccountEntry implements XdrElement {
     }
 
     public static AccountEntryExt fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

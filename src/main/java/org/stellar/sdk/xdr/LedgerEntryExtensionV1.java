@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -69,7 +69,7 @@ public class LedgerEntryExtensionV1 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.sponsoringID, this.ext);
+    return Objects.hash(this.sponsoringID, this.ext);
   }
 
   @Override
@@ -79,14 +79,13 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     }
 
     LedgerEntryExtensionV1 other = (LedgerEntryExtensionV1) object;
-    return Objects.equal(this.sponsoringID, other.sponsoringID)
-        && Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.sponsoringID, other.sponsoringID)
+        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -98,8 +97,7 @@ public class LedgerEntryExtensionV1 implements XdrElement {
   }
 
   public static LedgerEntryExtensionV1 fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -188,7 +186,7 @@ public class LedgerEntryExtensionV1 implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hash(this.v);
     }
 
     @Override
@@ -198,13 +196,12 @@ public class LedgerEntryExtensionV1 implements XdrElement {
       }
 
       LedgerEntryExtensionV1Ext other = (LedgerEntryExtensionV1Ext) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equals(this.v, other.v);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -216,8 +213,7 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     }
 
     public static LedgerEntryExtensionV1Ext fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

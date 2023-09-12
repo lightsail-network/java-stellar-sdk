@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -129,7 +129,7 @@ public class Asset implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.alphaNum4, this.alphaNum12, this.type);
+    return Objects.hash(this.alphaNum4, this.alphaNum12, this.type);
   }
 
   @Override
@@ -139,15 +139,14 @@ public class Asset implements XdrElement {
     }
 
     Asset other = (Asset) object;
-    return Objects.equal(this.alphaNum4, other.alphaNum4)
-        && Objects.equal(this.alphaNum12, other.alphaNum12)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.alphaNum4, other.alphaNum4)
+        && Objects.equals(this.alphaNum12, other.alphaNum12)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -159,8 +158,7 @@ public class Asset implements XdrElement {
   }
 
   public static Asset fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

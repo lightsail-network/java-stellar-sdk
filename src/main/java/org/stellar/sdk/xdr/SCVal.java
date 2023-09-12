@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -611,7 +611,7 @@ public class SCVal implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.b,
         this.error,
         this.u32,
@@ -642,33 +642,32 @@ public class SCVal implements XdrElement {
     }
 
     SCVal other = (SCVal) object;
-    return Objects.equal(this.b, other.b)
-        && Objects.equal(this.error, other.error)
-        && Objects.equal(this.u32, other.u32)
-        && Objects.equal(this.i32, other.i32)
-        && Objects.equal(this.u64, other.u64)
-        && Objects.equal(this.i64, other.i64)
-        && Objects.equal(this.timepoint, other.timepoint)
-        && Objects.equal(this.duration, other.duration)
-        && Objects.equal(this.u128, other.u128)
-        && Objects.equal(this.i128, other.i128)
-        && Objects.equal(this.u256, other.u256)
-        && Objects.equal(this.i256, other.i256)
-        && Objects.equal(this.bytes, other.bytes)
-        && Objects.equal(this.str, other.str)
-        && Objects.equal(this.sym, other.sym)
-        && Objects.equal(this.vec, other.vec)
-        && Objects.equal(this.map, other.map)
-        && Objects.equal(this.address, other.address)
-        && Objects.equal(this.nonce_key, other.nonce_key)
-        && Objects.equal(this.instance, other.instance)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.b, other.b)
+        && Objects.equals(this.error, other.error)
+        && Objects.equals(this.u32, other.u32)
+        && Objects.equals(this.i32, other.i32)
+        && Objects.equals(this.u64, other.u64)
+        && Objects.equals(this.i64, other.i64)
+        && Objects.equals(this.timepoint, other.timepoint)
+        && Objects.equals(this.duration, other.duration)
+        && Objects.equals(this.u128, other.u128)
+        && Objects.equals(this.i128, other.i128)
+        && Objects.equals(this.u256, other.u256)
+        && Objects.equals(this.i256, other.i256)
+        && Objects.equals(this.bytes, other.bytes)
+        && Objects.equals(this.str, other.str)
+        && Objects.equals(this.sym, other.sym)
+        && Objects.equals(this.vec, other.vec)
+        && Objects.equals(this.map, other.map)
+        && Objects.equals(this.address, other.address)
+        && Objects.equals(this.nonce_key, other.nonce_key)
+        && Objects.equals(this.instance, other.instance)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -680,8 +679,7 @@ public class SCVal implements XdrElement {
   }
 
   public static SCVal fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -83,7 +83,7 @@ public class PeerAddress implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ip, this.port, this.numFailures);
+    return Objects.hash(this.ip, this.port, this.numFailures);
   }
 
   @Override
@@ -93,15 +93,14 @@ public class PeerAddress implements XdrElement {
     }
 
     PeerAddress other = (PeerAddress) object;
-    return Objects.equal(this.ip, other.ip)
-        && Objects.equal(this.port, other.port)
-        && Objects.equal(this.numFailures, other.numFailures);
+    return Objects.equals(this.ip, other.ip)
+        && Objects.equals(this.port, other.port)
+        && Objects.equals(this.numFailures, other.numFailures);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -113,8 +112,7 @@ public class PeerAddress implements XdrElement {
   }
 
   public static PeerAddress fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -257,7 +255,7 @@ public class PeerAddress implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(Arrays.hashCode(this.ipv4), Arrays.hashCode(this.ipv6), this.type);
+      return Objects.hash(Arrays.hashCode(this.ipv4), Arrays.hashCode(this.ipv6), this.type);
     }
 
     @Override
@@ -269,13 +267,12 @@ public class PeerAddress implements XdrElement {
       PeerAddressIp other = (PeerAddressIp) object;
       return Arrays.equals(this.ipv4, other.ipv4)
           && Arrays.equals(this.ipv6, other.ipv6)
-          && Objects.equal(this.type, other.type);
+          && Objects.equals(this.type, other.type);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -287,8 +284,7 @@ public class PeerAddress implements XdrElement {
     }
 
     public static PeerAddressIp fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

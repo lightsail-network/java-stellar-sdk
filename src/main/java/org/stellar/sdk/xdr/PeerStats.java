@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -233,7 +233,7 @@ public class PeerStats implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.id,
         this.versionStr,
         this.messagesRead,
@@ -258,27 +258,26 @@ public class PeerStats implements XdrElement {
     }
 
     PeerStats other = (PeerStats) object;
-    return Objects.equal(this.id, other.id)
-        && Objects.equal(this.versionStr, other.versionStr)
-        && Objects.equal(this.messagesRead, other.messagesRead)
-        && Objects.equal(this.messagesWritten, other.messagesWritten)
-        && Objects.equal(this.bytesRead, other.bytesRead)
-        && Objects.equal(this.bytesWritten, other.bytesWritten)
-        && Objects.equal(this.secondsConnected, other.secondsConnected)
-        && Objects.equal(this.uniqueFloodBytesRecv, other.uniqueFloodBytesRecv)
-        && Objects.equal(this.duplicateFloodBytesRecv, other.duplicateFloodBytesRecv)
-        && Objects.equal(this.uniqueFetchBytesRecv, other.uniqueFetchBytesRecv)
-        && Objects.equal(this.duplicateFetchBytesRecv, other.duplicateFetchBytesRecv)
-        && Objects.equal(this.uniqueFloodMessageRecv, other.uniqueFloodMessageRecv)
-        && Objects.equal(this.duplicateFloodMessageRecv, other.duplicateFloodMessageRecv)
-        && Objects.equal(this.uniqueFetchMessageRecv, other.uniqueFetchMessageRecv)
-        && Objects.equal(this.duplicateFetchMessageRecv, other.duplicateFetchMessageRecv);
+    return Objects.equals(this.id, other.id)
+        && Objects.equals(this.versionStr, other.versionStr)
+        && Objects.equals(this.messagesRead, other.messagesRead)
+        && Objects.equals(this.messagesWritten, other.messagesWritten)
+        && Objects.equals(this.bytesRead, other.bytesRead)
+        && Objects.equals(this.bytesWritten, other.bytesWritten)
+        && Objects.equals(this.secondsConnected, other.secondsConnected)
+        && Objects.equals(this.uniqueFloodBytesRecv, other.uniqueFloodBytesRecv)
+        && Objects.equals(this.duplicateFloodBytesRecv, other.duplicateFloodBytesRecv)
+        && Objects.equals(this.uniqueFetchBytesRecv, other.uniqueFetchBytesRecv)
+        && Objects.equals(this.duplicateFetchBytesRecv, other.duplicateFetchBytesRecv)
+        && Objects.equals(this.uniqueFloodMessageRecv, other.uniqueFloodMessageRecv)
+        && Objects.equals(this.duplicateFloodMessageRecv, other.duplicateFloodMessageRecv)
+        && Objects.equals(this.uniqueFetchMessageRecv, other.uniqueFetchMessageRecv)
+        && Objects.equals(this.duplicateFetchMessageRecv, other.duplicateFetchMessageRecv);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -290,8 +289,7 @@ public class PeerStats implements XdrElement {
   }
 
   public static PeerStats fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

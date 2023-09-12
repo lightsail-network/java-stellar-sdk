@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -123,7 +123,7 @@ public class AssetCode implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.assetCode4, this.assetCode12, this.type);
+    return Objects.hash(this.assetCode4, this.assetCode12, this.type);
   }
 
   @Override
@@ -133,15 +133,14 @@ public class AssetCode implements XdrElement {
     }
 
     AssetCode other = (AssetCode) object;
-    return Objects.equal(this.assetCode4, other.assetCode4)
-        && Objects.equal(this.assetCode12, other.assetCode12)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.assetCode4, other.assetCode4)
+        && Objects.equals(this.assetCode12, other.assetCode12)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -153,8 +152,7 @@ public class AssetCode implements XdrElement {
   }
 
   public static AssetCode fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -103,7 +103,7 @@ public class TxSetComponent implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.txsMaybeDiscountedFee, this.type);
+    return Objects.hash(this.txsMaybeDiscountedFee, this.type);
   }
 
   @Override
@@ -113,14 +113,13 @@ public class TxSetComponent implements XdrElement {
     }
 
     TxSetComponent other = (TxSetComponent) object;
-    return Objects.equal(this.txsMaybeDiscountedFee, other.txsMaybeDiscountedFee)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.txsMaybeDiscountedFee, other.txsMaybeDiscountedFee)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -132,8 +131,7 @@ public class TxSetComponent implements XdrElement {
   }
 
   public static TxSetComponent fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -205,7 +203,7 @@ public class TxSetComponent implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.baseFee, Arrays.hashCode(this.txs));
+      return Objects.hash(this.baseFee, Arrays.hashCode(this.txs));
     }
 
     @Override
@@ -215,13 +213,12 @@ public class TxSetComponent implements XdrElement {
       }
 
       TxSetComponentTxsMaybeDiscountedFee other = (TxSetComponentTxsMaybeDiscountedFee) object;
-      return Objects.equal(this.baseFee, other.baseFee) && Arrays.equals(this.txs, other.txs);
+      return Objects.equals(this.baseFee, other.baseFee) && Arrays.equals(this.txs, other.txs);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -233,8 +230,7 @@ public class TxSetComponent implements XdrElement {
     }
 
     public static TxSetComponentTxsMaybeDiscountedFee fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

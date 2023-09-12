@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -145,7 +145,7 @@ public class LedgerCloseMeta implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.v0, this.v1, this.v2, this.v);
+    return Objects.hash(this.v0, this.v1, this.v2, this.v);
   }
 
   @Override
@@ -155,16 +155,15 @@ public class LedgerCloseMeta implements XdrElement {
     }
 
     LedgerCloseMeta other = (LedgerCloseMeta) object;
-    return Objects.equal(this.v0, other.v0)
-        && Objects.equal(this.v1, other.v1)
-        && Objects.equal(this.v2, other.v2)
-        && Objects.equal(this.v, other.v);
+    return Objects.equals(this.v0, other.v0)
+        && Objects.equals(this.v1, other.v1)
+        && Objects.equals(this.v2, other.v2)
+        && Objects.equals(this.v, other.v);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -176,8 +175,7 @@ public class LedgerCloseMeta implements XdrElement {
   }
 
   public static LedgerCloseMeta fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

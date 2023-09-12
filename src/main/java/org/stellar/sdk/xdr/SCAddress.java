@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -120,7 +120,7 @@ public class SCAddress implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.accountId, this.contractId, this.type);
+    return Objects.hash(this.accountId, this.contractId, this.type);
   }
 
   @Override
@@ -130,15 +130,14 @@ public class SCAddress implements XdrElement {
     }
 
     SCAddress other = (SCAddress) object;
-    return Objects.equal(this.accountId, other.accountId)
-        && Objects.equal(this.contractId, other.contractId)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.accountId, other.accountId)
+        && Objects.equals(this.contractId, other.contractId)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -150,8 +149,7 @@ public class SCAddress implements XdrElement {
   }
 
   public static SCAddress fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

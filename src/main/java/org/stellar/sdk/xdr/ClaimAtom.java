@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -145,7 +145,7 @@ public class ClaimAtom implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.v0, this.orderBook, this.liquidityPool, this.type);
+    return Objects.hash(this.v0, this.orderBook, this.liquidityPool, this.type);
   }
 
   @Override
@@ -155,16 +155,15 @@ public class ClaimAtom implements XdrElement {
     }
 
     ClaimAtom other = (ClaimAtom) object;
-    return Objects.equal(this.v0, other.v0)
-        && Objects.equal(this.orderBook, other.orderBook)
-        && Objects.equal(this.liquidityPool, other.liquidityPool)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.v0, other.v0)
+        && Objects.equals(this.orderBook, other.orderBook)
+        && Objects.equals(this.liquidityPool, other.liquidityPool)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -176,8 +175,7 @@ public class ClaimAtom implements XdrElement {
   }
 
   public static ClaimAtom fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
