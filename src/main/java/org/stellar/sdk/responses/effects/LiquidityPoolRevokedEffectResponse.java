@@ -1,7 +1,7 @@
 package org.stellar.sdk.responses.effects;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 /**
  * Represents liquidity_pool_revoked effect response.
@@ -16,14 +16,14 @@ public class LiquidityPoolRevokedEffectResponse extends EffectResponse {
   protected final LiquidityPool liquidityPool;
 
   @SerializedName("reserves_revoked")
-  protected final ImmutableList<LiquidityPoolClaimableAssetAmount> reservesRevoked;
+  protected final List<LiquidityPoolClaimableAssetAmount> reservesRevoked;
 
   @SerializedName("shares_revoked")
   protected final String sharesRevoked;
 
   public LiquidityPoolRevokedEffectResponse(
       LiquidityPool liquidityPool,
-      ImmutableList<LiquidityPoolClaimableAssetAmount> reservesRevoked,
+      List<LiquidityPoolClaimableAssetAmount> reservesRevoked,
       String sharesRevoked) {
     this.liquidityPool = liquidityPool;
     this.reservesRevoked = reservesRevoked;
@@ -34,7 +34,7 @@ public class LiquidityPoolRevokedEffectResponse extends EffectResponse {
     return liquidityPool;
   }
 
-  public ImmutableList<LiquidityPoolClaimableAssetAmount> getReservesRevoked() {
+  public List<LiquidityPoolClaimableAssetAmount> getReservesRevoked() {
     return reservesRevoked;
   }
 
