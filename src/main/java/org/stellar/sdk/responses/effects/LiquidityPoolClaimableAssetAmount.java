@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.stellar.sdk.Asset;
 
 /**
@@ -11,6 +13,8 @@ import org.stellar.sdk.Asset;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@EqualsAndHashCode
+@ToString
 public class LiquidityPoolClaimableAssetAmount {
   @SerializedName("asset")
   protected final Asset asset;

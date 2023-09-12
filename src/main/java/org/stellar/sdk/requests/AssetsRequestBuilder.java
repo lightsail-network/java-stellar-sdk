@@ -39,4 +39,22 @@ public class AssetsRequestBuilder extends RequestBuilder {
   public Page<AssetResponse> execute() throws IOException, TooManyRequestsException {
     return this.execute(this.httpClient, this.buildUri());
   }
+
+  @Override
+  public AssetsRequestBuilder cursor(String token) {
+    super.cursor(token);
+    return this;
+  }
+
+  @Override
+  public AssetsRequestBuilder limit(int number) {
+    super.limit(number);
+    return this;
+  }
+
+  @Override
+  public AssetsRequestBuilder order(Order direction) {
+    super.order(direction);
+    return this;
+  }
 }
