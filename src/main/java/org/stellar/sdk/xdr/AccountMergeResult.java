@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,13 @@ import java.io.IOException;
 //  {
 //  case ACCOUNT_MERGE_SUCCESS:
 //      int64 sourceAccountBalance; // how much got transferred from source account
-//  default:
+//  case ACCOUNT_MERGE_MALFORMED:
+//  case ACCOUNT_MERGE_NO_ACCOUNT:
+//  case ACCOUNT_MERGE_IMMUTABLE_SET:
+//  case ACCOUNT_MERGE_HAS_SUB_ENTRIES:
+//  case ACCOUNT_MERGE_SEQNUM_TOO_FAR:
+//  case ACCOUNT_MERGE_DEST_FULL:
+//  case ACCOUNT_MERGE_IS_SPONSOR:
 //      void;
 //  };
 
@@ -57,7 +68,7 @@ public class AccountMergeResult implements XdrElement {
     public AccountMergeResult build() {
       AccountMergeResult val = new AccountMergeResult();
       val.setDiscriminant(discriminant);
-      val.setSourceAccountBalance(sourceAccountBalance);
+      val.setSourceAccountBalance(this.sourceAccountBalance);
       return val;
     }
   }
@@ -71,7 +82,13 @@ public class AccountMergeResult implements XdrElement {
       case ACCOUNT_MERGE_SUCCESS:
         Int64.encode(stream, encodedAccountMergeResult.sourceAccountBalance);
         break;
-      default:
+      case ACCOUNT_MERGE_MALFORMED:
+      case ACCOUNT_MERGE_NO_ACCOUNT:
+      case ACCOUNT_MERGE_IMMUTABLE_SET:
+      case ACCOUNT_MERGE_HAS_SUB_ENTRIES:
+      case ACCOUNT_MERGE_SEQNUM_TOO_FAR:
+      case ACCOUNT_MERGE_DEST_FULL:
+      case ACCOUNT_MERGE_IS_SPONSOR:
         break;
     }
   }
@@ -88,7 +105,13 @@ public class AccountMergeResult implements XdrElement {
       case ACCOUNT_MERGE_SUCCESS:
         decodedAccountMergeResult.sourceAccountBalance = Int64.decode(stream);
         break;
-      default:
+      case ACCOUNT_MERGE_MALFORMED:
+      case ACCOUNT_MERGE_NO_ACCOUNT:
+      case ACCOUNT_MERGE_IMMUTABLE_SET:
+      case ACCOUNT_MERGE_HAS_SUB_ENTRIES:
+      case ACCOUNT_MERGE_SEQNUM_TOO_FAR:
+      case ACCOUNT_MERGE_DEST_FULL:
+      case ACCOUNT_MERGE_IS_SPONSOR:
         break;
     }
     return decodedAccountMergeResult;
@@ -108,5 +131,31 @@ public class AccountMergeResult implements XdrElement {
     AccountMergeResult other = (AccountMergeResult) object;
     return Objects.equal(this.sourceAccountBalance, other.sourceAccountBalance)
         && Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static AccountMergeResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static AccountMergeResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

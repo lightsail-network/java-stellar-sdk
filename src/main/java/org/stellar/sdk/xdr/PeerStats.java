@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -270,6 +275,32 @@ public class PeerStats implements XdrElement {
         && Objects.equal(this.duplicateFetchMessageRecv, other.duplicateFetchMessageRecv);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static PeerStats fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static PeerStats fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private NodeID id;
     private XdrString versionStr;
@@ -364,21 +395,21 @@ public class PeerStats implements XdrElement {
 
     public PeerStats build() {
       PeerStats val = new PeerStats();
-      val.setId(id);
-      val.setVersionStr(versionStr);
-      val.setMessagesRead(messagesRead);
-      val.setMessagesWritten(messagesWritten);
-      val.setBytesRead(bytesRead);
-      val.setBytesWritten(bytesWritten);
-      val.setSecondsConnected(secondsConnected);
-      val.setUniqueFloodBytesRecv(uniqueFloodBytesRecv);
-      val.setDuplicateFloodBytesRecv(duplicateFloodBytesRecv);
-      val.setUniqueFetchBytesRecv(uniqueFetchBytesRecv);
-      val.setDuplicateFetchBytesRecv(duplicateFetchBytesRecv);
-      val.setUniqueFloodMessageRecv(uniqueFloodMessageRecv);
-      val.setDuplicateFloodMessageRecv(duplicateFloodMessageRecv);
-      val.setUniqueFetchMessageRecv(uniqueFetchMessageRecv);
-      val.setDuplicateFetchMessageRecv(duplicateFetchMessageRecv);
+      val.setId(this.id);
+      val.setVersionStr(this.versionStr);
+      val.setMessagesRead(this.messagesRead);
+      val.setMessagesWritten(this.messagesWritten);
+      val.setBytesRead(this.bytesRead);
+      val.setBytesWritten(this.bytesWritten);
+      val.setSecondsConnected(this.secondsConnected);
+      val.setUniqueFloodBytesRecv(this.uniqueFloodBytesRecv);
+      val.setDuplicateFloodBytesRecv(this.duplicateFloodBytesRecv);
+      val.setUniqueFetchBytesRecv(this.uniqueFetchBytesRecv);
+      val.setDuplicateFetchBytesRecv(this.duplicateFetchBytesRecv);
+      val.setUniqueFloodMessageRecv(this.uniqueFloodMessageRecv);
+      val.setDuplicateFloodMessageRecv(this.duplicateFloodMessageRecv);
+      val.setUniqueFetchMessageRecv(this.uniqueFetchMessageRecv);
+      val.setDuplicateFetchMessageRecv(this.duplicateFetchMessageRecv);
       return val;
     }
   }

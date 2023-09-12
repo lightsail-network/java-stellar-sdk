@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -115,6 +120,32 @@ public class ManageSellOfferOp implements XdrElement {
         && Objects.equal(this.offerID, other.offerID);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ManageSellOfferOp fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ManageSellOfferOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private Asset selling;
     private Asset buying;
@@ -149,11 +180,11 @@ public class ManageSellOfferOp implements XdrElement {
 
     public ManageSellOfferOp build() {
       ManageSellOfferOp val = new ManageSellOfferOp();
-      val.setSelling(selling);
-      val.setBuying(buying);
-      val.setAmount(amount);
-      val.setPrice(price);
-      val.setOfferID(offerID);
+      val.setSelling(this.selling);
+      val.setBuying(this.buying);
+      val.setAmount(this.amount);
+      val.setPrice(this.price);
+      val.setOfferID(this.offerID);
       return val;
     }
   }

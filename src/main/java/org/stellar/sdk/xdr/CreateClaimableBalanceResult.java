@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -13,7 +18,11 @@ import java.io.IOException;
 //  {
 //  case CREATE_CLAIMABLE_BALANCE_SUCCESS:
 //      ClaimableBalanceID balanceID;
-//  default:
+//  case CREATE_CLAIMABLE_BALANCE_MALFORMED:
+//  case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
+//  case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
+//  case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+//  case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
 //      void;
 //  };
 
@@ -58,7 +67,7 @@ public class CreateClaimableBalanceResult implements XdrElement {
     public CreateClaimableBalanceResult build() {
       CreateClaimableBalanceResult val = new CreateClaimableBalanceResult();
       val.setDiscriminant(discriminant);
-      val.setBalanceID(balanceID);
+      val.setBalanceID(this.balanceID);
       return val;
     }
   }
@@ -73,7 +82,11 @@ public class CreateClaimableBalanceResult implements XdrElement {
       case CREATE_CLAIMABLE_BALANCE_SUCCESS:
         ClaimableBalanceID.encode(stream, encodedCreateClaimableBalanceResult.balanceID);
         break;
-      default:
+      case CREATE_CLAIMABLE_BALANCE_MALFORMED:
+      case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
+      case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
+      case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+      case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
         break;
     }
   }
@@ -91,7 +104,11 @@ public class CreateClaimableBalanceResult implements XdrElement {
       case CREATE_CLAIMABLE_BALANCE_SUCCESS:
         decodedCreateClaimableBalanceResult.balanceID = ClaimableBalanceID.decode(stream);
         break;
-      default:
+      case CREATE_CLAIMABLE_BALANCE_MALFORMED:
+      case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
+      case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
+      case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+      case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
         break;
     }
     return decodedCreateClaimableBalanceResult;
@@ -110,5 +127,31 @@ public class CreateClaimableBalanceResult implements XdrElement {
 
     CreateClaimableBalanceResult other = (CreateClaimableBalanceResult) object;
     return Objects.equal(this.balanceID, other.balanceID) && Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static CreateClaimableBalanceResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static CreateClaimableBalanceResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

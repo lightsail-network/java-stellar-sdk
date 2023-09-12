@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -147,6 +152,32 @@ public class PathPaymentStrictSendOp implements XdrElement {
         && Arrays.equals(this.path, other.path);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static PathPaymentStrictSendOp fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static PathPaymentStrictSendOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private Asset sendAsset;
     private Int64 sendAmount;
@@ -187,12 +218,12 @@ public class PathPaymentStrictSendOp implements XdrElement {
 
     public PathPaymentStrictSendOp build() {
       PathPaymentStrictSendOp val = new PathPaymentStrictSendOp();
-      val.setSendAsset(sendAsset);
-      val.setSendAmount(sendAmount);
-      val.setDestination(destination);
-      val.setDestAsset(destAsset);
-      val.setDestMin(destMin);
-      val.setPath(path);
+      val.setSendAsset(this.sendAsset);
+      val.setSendAmount(this.sendAmount);
+      val.setDestination(this.destination);
+      val.setDestAsset(this.destAsset);
+      val.setDestMin(this.destMin);
+      val.setPath(this.path);
       return val;
     }
   }

@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -138,6 +143,32 @@ public class ClaimOfferAtomV0 implements XdrElement {
         && Objects.equal(this.amountBought, other.amountBought);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ClaimOfferAtomV0 fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ClaimOfferAtomV0 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private Uint256 sellerEd25519;
     private Int64 offerID;
@@ -178,12 +209,12 @@ public class ClaimOfferAtomV0 implements XdrElement {
 
     public ClaimOfferAtomV0 build() {
       ClaimOfferAtomV0 val = new ClaimOfferAtomV0();
-      val.setSellerEd25519(sellerEd25519);
-      val.setOfferID(offerID);
-      val.setAssetSold(assetSold);
-      val.setAmountSold(amountSold);
-      val.setAssetBought(assetBought);
-      val.setAmountBought(amountBought);
+      val.setSellerEd25519(this.sellerEd25519);
+      val.setOfferID(this.offerID);
+      val.setAssetSold(this.assetSold);
+      val.setAmountSold(this.amountSold);
+      val.setAssetBought(this.assetBought);
+      val.setAmountBought(this.amountBought);
       return val;
     }
   }

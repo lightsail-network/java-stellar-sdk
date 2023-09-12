@@ -3,6 +3,11 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -14,7 +19,10 @@ import java.io.IOException;
 //      OFFER = 2,
 //      DATA = 3,
 //      CLAIMABLE_BALANCE = 4,
-//      LIQUIDITY_POOL = 5
+//      LIQUIDITY_POOL = 5,
+//      CONTRACT_DATA = 6,
+//      CONTRACT_CODE = 7,
+//      CONFIG_SETTING = 8
 //  };
 
 //  ===========================================================================
@@ -25,6 +33,9 @@ public enum LedgerEntryType implements XdrElement {
   DATA(3),
   CLAIMABLE_BALANCE(4),
   LIQUIDITY_POOL(5),
+  CONTRACT_DATA(6),
+  CONTRACT_CODE(7),
+  CONFIG_SETTING(8),
   ;
   private int mValue;
 
@@ -51,6 +62,12 @@ public enum LedgerEntryType implements XdrElement {
         return CLAIMABLE_BALANCE;
       case 5:
         return LIQUIDITY_POOL;
+      case 6:
+        return CONTRACT_DATA;
+      case 7:
+        return CONTRACT_CODE;
+      case 8:
+        return CONFIG_SETTING;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
@@ -62,5 +79,31 @@ public enum LedgerEntryType implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerEntryType fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerEntryType fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

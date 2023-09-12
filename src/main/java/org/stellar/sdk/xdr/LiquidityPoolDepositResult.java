@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,13 @@ import java.io.IOException;
 //  {
 //  case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
 //      void;
-//  default:
+//  case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
+//  case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
+//  case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
+//  case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
+//  case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
+//  case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
+//  case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
 //      void;
 //  };
 
@@ -54,7 +65,13 @@ public class LiquidityPoolDepositResult implements XdrElement {
     switch (encodedLiquidityPoolDepositResult.getDiscriminant()) {
       case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
         break;
-      default:
+      case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
+      case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
+      case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
+      case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
+      case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
+      case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
+      case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
         break;
     }
   }
@@ -70,7 +87,13 @@ public class LiquidityPoolDepositResult implements XdrElement {
     switch (decodedLiquidityPoolDepositResult.getDiscriminant()) {
       case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
         break;
-      default:
+      case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
+      case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
+      case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
+      case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
+      case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
+      case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
+      case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
         break;
     }
     return decodedLiquidityPoolDepositResult;
@@ -89,5 +112,31 @@ public class LiquidityPoolDepositResult implements XdrElement {
 
     LiquidityPoolDepositResult other = (LiquidityPoolDepositResult) object;
     return Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LiquidityPoolDepositResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LiquidityPoolDepositResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

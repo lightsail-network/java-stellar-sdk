@@ -4,6 +4,36 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.41.0-beta.3
+* Fix the bug in Transaction.isSorobanTransaction to accommodate BumpFootprintExpirationOperation. ([#518](https://github.com/stellar/java-stellar-sdk/pull/518))
+
+## 0.41.0-beta.2
+* Migrate from CircleCI to GitHub Actions. ([#512](https://github.com/stellar/java-stellar-sdk/pull/512))
+
+## 0.41.0-beta.1
+* Use JDK 11 for CI builds. ([#511](https://github.com/stellar/java-stellar-sdk/issues/511))
+
+## 0.41.0-beta.0
+* Add support for Soroban Preview 10. ([#490](https://github.com/stellar/java-stellar-sdk/issues/490))
+* Correct the data type of certain fields to store the expected design values. ([#497](https://github.com/stellar/java-stellar-sdk/pull/497))
+* Add source account comparison to `ClawbackClaimableBalanceOperation`, `LiquidityPoolWithdrawOperation`, and `LiquidityPoolDepositOperation` for equality check. ([#484](https://github.com/stellar/java-stellar-sdk/pull/484))
+* Add basic implementation of `liquidity_pools?account` ([#426](https://github.com/stellar/java-stellar-sdk/pull/426))
+
+### Breaking changes
+* `Utils.claimableBalanceIdToXDR` and `Utils.xdrToClaimableBalanceId` have been removed. ([#503](https://github.com/stellar/java-stellar-sdk/pull/503))
+* The types of the following fields have changed. ([#498](https://github.com/stellar/java-stellar-sdk/pull/498))
+  | field                                     | before | now        |
+  | ----------------------------------------- | ------ | ---------- |
+  | LedgerBounds.minLedger                    | int    | long       |
+  | LedgerBounds.maxLedger                    | int    | long       |
+  | MemoId.id                                 | long   | BigInteger |
+  | TimeBounds.minTime                        | long   | BigInteger |
+  | TimeBounds.maxTime                        | long   | BigInteger |
+  | TransactionBuilder.baseFee                | int    | long       |
+  | TransactionPreconditions.TIMEOUT_INFINITE | long   | BigInteger |
+  | TransactionPreconditions.minSeqAge        | Long   | BigInteger |
+  | TransactionPreconditions.minSeqLedgerGap  | int    | long       |
+
 ## 0.40.1
 * Fix the issue of unable to parse liquidity_pool_revoked effect properly. ([#521](https://github.com/stellar/java-stellar-sdk/pull/521))
 * Define cursor, order and limit in AssetsRequestBuilder object. ([#522](https://github.com/stellar/java-stellar-sdk/pull/522))

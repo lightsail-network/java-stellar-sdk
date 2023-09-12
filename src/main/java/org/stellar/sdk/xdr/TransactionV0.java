@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -170,6 +175,32 @@ public class TransactionV0 implements XdrElement {
         && Objects.equal(this.ext, other.ext);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static TransactionV0 fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static TransactionV0 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private Uint256 sourceAccountEd25519;
     private Uint32 fee;
@@ -216,18 +247,18 @@ public class TransactionV0 implements XdrElement {
 
     public TransactionV0 build() {
       TransactionV0 val = new TransactionV0();
-      val.setSourceAccountEd25519(sourceAccountEd25519);
-      val.setFee(fee);
-      val.setSeqNum(seqNum);
-      val.setTimeBounds(timeBounds);
-      val.setMemo(memo);
-      val.setOperations(operations);
-      val.setExt(ext);
+      val.setSourceAccountEd25519(this.sourceAccountEd25519);
+      val.setFee(this.fee);
+      val.setSeqNum(this.seqNum);
+      val.setTimeBounds(this.timeBounds);
+      val.setMemo(this.memo);
+      val.setOperations(this.operations);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class TransactionV0Ext {
+  public static class TransactionV0Ext implements XdrElement {
     public TransactionV0Ext() {}
 
     Integer v;
@@ -294,6 +325,32 @@ public class TransactionV0 implements XdrElement {
 
       TransactionV0Ext other = (TransactionV0Ext) object;
       return Objects.equal(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static TransactionV0Ext fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static TransactionV0Ext fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

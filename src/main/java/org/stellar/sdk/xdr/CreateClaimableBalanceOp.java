@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -95,6 +100,32 @@ public class CreateClaimableBalanceOp implements XdrElement {
         && Arrays.equals(this.claimants, other.claimants);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static CreateClaimableBalanceOp fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static CreateClaimableBalanceOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private Asset asset;
     private Int64 amount;
@@ -117,9 +148,9 @@ public class CreateClaimableBalanceOp implements XdrElement {
 
     public CreateClaimableBalanceOp build() {
       CreateClaimableBalanceOp val = new CreateClaimableBalanceOp();
-      val.setAsset(asset);
-      val.setAmount(amount);
-      val.setClaimants(claimants);
+      val.setAsset(this.asset);
+      val.setAmount(this.amount);
+      val.setClaimants(this.claimants);
       return val;
     }
   }

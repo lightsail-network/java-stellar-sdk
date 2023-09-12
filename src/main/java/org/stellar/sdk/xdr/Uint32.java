@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,24 +17,24 @@ import java.io.IOException;
 
 //  ===========================================================================
 public class Uint32 implements XdrElement {
-  private Integer uint32;
+  private XdrUnsignedInteger uint32;
 
   public Uint32() {}
 
-  public Uint32(Integer uint32) {
+  public Uint32(XdrUnsignedInteger uint32) {
     this.uint32 = uint32;
   }
 
-  public Integer getUint32() {
+  public XdrUnsignedInteger getUint32() {
     return this.uint32;
   }
 
-  public void setUint32(Integer value) {
+  public void setUint32(XdrUnsignedInteger value) {
     this.uint32 = value;
   }
 
   public static void encode(XdrDataOutputStream stream, Uint32 encodedUint32) throws IOException {
-    stream.writeInt(encodedUint32.uint32);
+    encodedUint32.uint32.encode(stream);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -38,7 +43,7 @@ public class Uint32 implements XdrElement {
 
   public static Uint32 decode(XdrDataInputStream stream) throws IOException {
     Uint32 decodedUint32 = new Uint32();
-    decodedUint32.uint32 = stream.readInt();
+    decodedUint32.uint32 = XdrUnsignedInteger.decode(stream);
     return decodedUint32;
   }
 
@@ -55,5 +60,31 @@ public class Uint32 implements XdrElement {
 
     Uint32 other = (Uint32) object;
     return Objects.equal(this.uint32, other.uint32);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static Uint32 fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static Uint32 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

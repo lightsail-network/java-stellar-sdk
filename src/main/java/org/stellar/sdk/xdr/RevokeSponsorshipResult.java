@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,11 @@ import java.io.IOException;
 //  {
 //  case REVOKE_SPONSORSHIP_SUCCESS:
 //      void;
-//  default:
+//  case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
+//  case REVOKE_SPONSORSHIP_NOT_SPONSOR:
+//  case REVOKE_SPONSORSHIP_LOW_RESERVE:
+//  case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
+//  case REVOKE_SPONSORSHIP_MALFORMED:
 //      void;
 //  };
 
@@ -54,7 +63,11 @@ public class RevokeSponsorshipResult implements XdrElement {
     switch (encodedRevokeSponsorshipResult.getDiscriminant()) {
       case REVOKE_SPONSORSHIP_SUCCESS:
         break;
-      default:
+      case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
+      case REVOKE_SPONSORSHIP_NOT_SPONSOR:
+      case REVOKE_SPONSORSHIP_LOW_RESERVE:
+      case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
+      case REVOKE_SPONSORSHIP_MALFORMED:
         break;
     }
   }
@@ -70,7 +83,11 @@ public class RevokeSponsorshipResult implements XdrElement {
     switch (decodedRevokeSponsorshipResult.getDiscriminant()) {
       case REVOKE_SPONSORSHIP_SUCCESS:
         break;
-      default:
+      case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
+      case REVOKE_SPONSORSHIP_NOT_SPONSOR:
+      case REVOKE_SPONSORSHIP_LOW_RESERVE:
+      case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
+      case REVOKE_SPONSORSHIP_MALFORMED:
         break;
     }
     return decodedRevokeSponsorshipResult;
@@ -89,5 +106,31 @@ public class RevokeSponsorshipResult implements XdrElement {
 
     RevokeSponsorshipResult other = (RevokeSponsorshipResult) object;
     return Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static RevokeSponsorshipResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static RevokeSponsorshipResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

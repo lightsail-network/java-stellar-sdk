@@ -96,7 +96,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
   /**
    * Returns all accounts who have trustlines to the specified liquidity pool.
    *
-   * @param Liquidity Pool ID
+   * @param liquidityPoolID Liquidity Pool ID
    * @return current {@link AccountsRequestBuilder} instance
    * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
@@ -107,7 +107,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
   /**
    * Returns all accounts who have trustlines to the specified liquidity pool.
    *
-   * @param Liquidity Pool ID
+   * @param liquidityPoolID Liquidity Pool ID
    * @return current {@link AccountsRequestBuilder} instance
    * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */

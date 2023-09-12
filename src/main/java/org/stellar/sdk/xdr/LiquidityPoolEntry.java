@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -86,6 +91,32 @@ public class LiquidityPoolEntry implements XdrElement {
         && Objects.equal(this.body, other.body);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LiquidityPoolEntry fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LiquidityPoolEntry fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private PoolID liquidityPoolID;
     private LiquidityPoolEntryBody body;
@@ -102,13 +133,13 @@ public class LiquidityPoolEntry implements XdrElement {
 
     public LiquidityPoolEntry build() {
       LiquidityPoolEntry val = new LiquidityPoolEntry();
-      val.setLiquidityPoolID(liquidityPoolID);
-      val.setBody(body);
+      val.setLiquidityPoolID(this.liquidityPoolID);
+      val.setBody(this.body);
       return val;
     }
   }
 
-  public static class LiquidityPoolEntryBody {
+  public static class LiquidityPoolEntryBody implements XdrElement {
     public LiquidityPoolEntryBody() {}
 
     LiquidityPoolType type;
@@ -148,7 +179,7 @@ public class LiquidityPoolEntry implements XdrElement {
       public LiquidityPoolEntryBody build() {
         LiquidityPoolEntryBody val = new LiquidityPoolEntryBody();
         val.setDiscriminant(discriminant);
-        val.setConstantProduct(constantProduct);
+        val.setConstantProduct(this.constantProduct);
         return val;
       }
     }
@@ -200,7 +231,33 @@ public class LiquidityPoolEntry implements XdrElement {
           && Objects.equal(this.type, other.type);
     }
 
-    public static class LiquidityPoolEntryConstantProduct {
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LiquidityPoolEntryBody fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LiquidityPoolEntryBody fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
+    public static class LiquidityPoolEntryConstantProduct implements XdrElement {
       public LiquidityPoolEntryConstantProduct() {}
 
       private LiquidityPoolConstantProductParameters params;
@@ -306,6 +363,33 @@ public class LiquidityPoolEntry implements XdrElement {
             && Objects.equal(this.poolSharesTrustLineCount, other.poolSharesTrustLineCount);
       }
 
+      @Override
+      public String toXdrBase64() throws IOException {
+        BaseEncoding base64Encoding = BaseEncoding.base64();
+        return base64Encoding.encode(toXdrByteArray());
+      }
+
+      @Override
+      public byte[] toXdrByteArray() throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+        encode(xdrDataOutputStream);
+        return byteArrayOutputStream.toByteArray();
+      }
+
+      public static LiquidityPoolEntryConstantProduct fromXdrBase64(String xdr) throws IOException {
+        BaseEncoding base64Encoding = BaseEncoding.base64();
+        byte[] bytes = base64Encoding.decode(xdr);
+        return fromXdrByteArray(bytes);
+      }
+
+      public static LiquidityPoolEntryConstantProduct fromXdrByteArray(byte[] xdr)
+          throws IOException {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+        XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+        return decode(xdrDataInputStream);
+      }
+
       public static final class Builder {
         private LiquidityPoolConstantProductParameters params;
         private Int64 reserveA;
@@ -340,11 +424,11 @@ public class LiquidityPoolEntry implements XdrElement {
 
         public LiquidityPoolEntryConstantProduct build() {
           LiquidityPoolEntryConstantProduct val = new LiquidityPoolEntryConstantProduct();
-          val.setParams(params);
-          val.setReserveA(reserveA);
-          val.setReserveB(reserveB);
-          val.setTotalPoolShares(totalPoolShares);
-          val.setPoolSharesTrustLineCount(poolSharesTrustLineCount);
+          val.setParams(this.params);
+          val.setReserveA(this.reserveA);
+          val.setReserveB(this.reserveB);
+          val.setTotalPoolShares(this.totalPoolShares);
+          val.setPoolSharesTrustLineCount(this.poolSharesTrustLineCount);
           return val;
         }
       }

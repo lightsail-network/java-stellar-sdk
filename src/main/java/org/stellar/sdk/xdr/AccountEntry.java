@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -225,6 +230,32 @@ public class AccountEntry implements XdrElement {
         && Objects.equal(this.ext, other.ext);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static AccountEntry fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static AccountEntry fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private AccountID accountID;
     private Int64 balance;
@@ -289,21 +320,21 @@ public class AccountEntry implements XdrElement {
 
     public AccountEntry build() {
       AccountEntry val = new AccountEntry();
-      val.setAccountID(accountID);
-      val.setBalance(balance);
-      val.setSeqNum(seqNum);
-      val.setNumSubEntries(numSubEntries);
-      val.setInflationDest(inflationDest);
-      val.setFlags(flags);
-      val.setHomeDomain(homeDomain);
-      val.setThresholds(thresholds);
-      val.setSigners(signers);
-      val.setExt(ext);
+      val.setAccountID(this.accountID);
+      val.setBalance(this.balance);
+      val.setSeqNum(this.seqNum);
+      val.setNumSubEntries(this.numSubEntries);
+      val.setInflationDest(this.inflationDest);
+      val.setFlags(this.flags);
+      val.setHomeDomain(this.homeDomain);
+      val.setThresholds(this.thresholds);
+      val.setSigners(this.signers);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class AccountEntryExt {
+  public static class AccountEntryExt implements XdrElement {
     public AccountEntryExt() {}
 
     Integer v;
@@ -343,7 +374,7 @@ public class AccountEntry implements XdrElement {
       public AccountEntryExt build() {
         AccountEntryExt val = new AccountEntryExt();
         val.setDiscriminant(discriminant);
-        val.setV1(v1);
+        val.setV1(this.v1);
         return val;
       }
     }
@@ -393,6 +424,32 @@ public class AccountEntry implements XdrElement {
 
       AccountEntryExt other = (AccountEntryExt) object;
       return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static AccountEntryExt fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static AccountEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

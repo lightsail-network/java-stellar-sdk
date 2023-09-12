@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -13,11 +18,13 @@ import java.io.IOException;
 //      uint32 ledgerSeq;
 //      TransactionSet txSet;
 //
-//      // reserved for future use
+//      // when v != 0, txSet must be empty
 //      union switch (int v)
 //      {
 //      case 0:
 //          void;
+//      case 1:
+//          GeneralizedTransactionSet generalizedTxSet;
 //      }
 //      ext;
 //  };
@@ -93,6 +100,32 @@ public class TransactionHistoryEntry implements XdrElement {
         && Objects.equal(this.ext, other.ext);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static TransactionHistoryEntry fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static TransactionHistoryEntry fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private Uint32 ledgerSeq;
     private TransactionSet txSet;
@@ -115,14 +148,14 @@ public class TransactionHistoryEntry implements XdrElement {
 
     public TransactionHistoryEntry build() {
       TransactionHistoryEntry val = new TransactionHistoryEntry();
-      val.setLedgerSeq(ledgerSeq);
-      val.setTxSet(txSet);
-      val.setExt(ext);
+      val.setLedgerSeq(this.ledgerSeq);
+      val.setTxSet(this.txSet);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class TransactionHistoryEntryExt {
+  public static class TransactionHistoryEntryExt implements XdrElement {
     public TransactionHistoryEntryExt() {}
 
     Integer v;
@@ -135,17 +168,34 @@ public class TransactionHistoryEntry implements XdrElement {
       this.v = value;
     }
 
+    private GeneralizedTransactionSet generalizedTxSet;
+
+    public GeneralizedTransactionSet getGeneralizedTxSet() {
+      return this.generalizedTxSet;
+    }
+
+    public void setGeneralizedTxSet(GeneralizedTransactionSet value) {
+      this.generalizedTxSet = value;
+    }
+
     public static final class Builder {
       private Integer discriminant;
+      private GeneralizedTransactionSet generalizedTxSet;
 
       public Builder discriminant(Integer discriminant) {
         this.discriminant = discriminant;
         return this;
       }
 
+      public Builder generalizedTxSet(GeneralizedTransactionSet generalizedTxSet) {
+        this.generalizedTxSet = generalizedTxSet;
+        return this;
+      }
+
       public TransactionHistoryEntryExt build() {
         TransactionHistoryEntryExt val = new TransactionHistoryEntryExt();
         val.setDiscriminant(discriminant);
+        val.setGeneralizedTxSet(this.generalizedTxSet);
         return val;
       }
     }
@@ -158,6 +208,10 @@ public class TransactionHistoryEntry implements XdrElement {
       stream.writeInt(encodedTransactionHistoryEntryExt.getDiscriminant().intValue());
       switch (encodedTransactionHistoryEntryExt.getDiscriminant()) {
         case 0:
+          break;
+        case 1:
+          GeneralizedTransactionSet.encode(
+              stream, encodedTransactionHistoryEntryExt.generalizedTxSet);
           break;
       }
     }
@@ -174,13 +228,17 @@ public class TransactionHistoryEntry implements XdrElement {
       switch (decodedTransactionHistoryEntryExt.getDiscriminant()) {
         case 0:
           break;
+        case 1:
+          decodedTransactionHistoryEntryExt.generalizedTxSet =
+              GeneralizedTransactionSet.decode(stream);
+          break;
       }
       return decodedTransactionHistoryEntryExt;
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hashCode(this.generalizedTxSet, this.v);
     }
 
     @Override
@@ -190,7 +248,34 @@ public class TransactionHistoryEntry implements XdrElement {
       }
 
       TransactionHistoryEntryExt other = (TransactionHistoryEntryExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equal(this.generalizedTxSet, other.generalizedTxSet)
+          && Objects.equal(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static TransactionHistoryEntryExt fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static TransactionHistoryEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

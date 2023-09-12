@@ -3,6 +3,11 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -13,7 +18,8 @@ import java.io.IOException;
 //      LEDGER_UPGRADE_BASE_FEE = 2,
 //      LEDGER_UPGRADE_MAX_TX_SET_SIZE = 3,
 //      LEDGER_UPGRADE_BASE_RESERVE = 4,
-//      LEDGER_UPGRADE_FLAGS = 5
+//      LEDGER_UPGRADE_FLAGS = 5,
+//      LEDGER_UPGRADE_CONFIG = 6
 //  };
 
 //  ===========================================================================
@@ -23,6 +29,7 @@ public enum LedgerUpgradeType implements XdrElement {
   LEDGER_UPGRADE_MAX_TX_SET_SIZE(3),
   LEDGER_UPGRADE_BASE_RESERVE(4),
   LEDGER_UPGRADE_FLAGS(5),
+  LEDGER_UPGRADE_CONFIG(6),
   ;
   private int mValue;
 
@@ -47,6 +54,8 @@ public enum LedgerUpgradeType implements XdrElement {
         return LEDGER_UPGRADE_BASE_RESERVE;
       case 5:
         return LEDGER_UPGRADE_FLAGS;
+      case 6:
+        return LEDGER_UPGRADE_CONFIG;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
@@ -59,5 +68,31 @@ public enum LedgerUpgradeType implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerUpgradeType fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerUpgradeType fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

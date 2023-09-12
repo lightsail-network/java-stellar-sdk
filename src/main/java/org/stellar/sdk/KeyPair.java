@@ -19,6 +19,7 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
@@ -200,6 +201,12 @@ public class KeyPair {
     return publicKey;
   }
 
+  public AccountID getXdrAccountId() {
+    AccountID accountID = new AccountID();
+    accountID.setAccountID(getXdrPublicKey());
+    return accountID;
+  }
+
   public SignerKey getXdrSignerKey() {
     SignerKey signerKey = new SignerKey();
     signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519);
@@ -259,8 +266,8 @@ public class KeyPair {
   /**
    * Sign the provided payload data for payload signer where the input is the data being signed. Per
    * the <a
-   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint"
-   * CAP-40 Signature spec</a> {@link DecoratedSignature}.
+   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint">CAP-40
+   * Signature spec</a> {@link DecoratedSignature}.
    *
    * @param signerPayload the payload signers raw data to sign
    * @return DecoratedSignature

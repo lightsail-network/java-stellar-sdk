@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,10 @@ import java.io.IOException;
 //  {
 //  case CREATE_ACCOUNT_SUCCESS:
 //      void;
-//  default:
+//  case CREATE_ACCOUNT_MALFORMED:
+//  case CREATE_ACCOUNT_UNDERFUNDED:
+//  case CREATE_ACCOUNT_LOW_RESERVE:
+//  case CREATE_ACCOUNT_ALREADY_EXIST:
 //      void;
 //  };
 
@@ -54,7 +62,10 @@ public class CreateAccountResult implements XdrElement {
     switch (encodedCreateAccountResult.getDiscriminant()) {
       case CREATE_ACCOUNT_SUCCESS:
         break;
-      default:
+      case CREATE_ACCOUNT_MALFORMED:
+      case CREATE_ACCOUNT_UNDERFUNDED:
+      case CREATE_ACCOUNT_LOW_RESERVE:
+      case CREATE_ACCOUNT_ALREADY_EXIST:
         break;
     }
   }
@@ -70,7 +81,10 @@ public class CreateAccountResult implements XdrElement {
     switch (decodedCreateAccountResult.getDiscriminant()) {
       case CREATE_ACCOUNT_SUCCESS:
         break;
-      default:
+      case CREATE_ACCOUNT_MALFORMED:
+      case CREATE_ACCOUNT_UNDERFUNDED:
+      case CREATE_ACCOUNT_LOW_RESERVE:
+      case CREATE_ACCOUNT_ALREADY_EXIST:
         break;
     }
     return decodedCreateAccountResult;
@@ -89,5 +103,31 @@ public class CreateAccountResult implements XdrElement {
 
     CreateAccountResult other = (CreateAccountResult) object;
     return Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static CreateAccountResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static CreateAccountResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

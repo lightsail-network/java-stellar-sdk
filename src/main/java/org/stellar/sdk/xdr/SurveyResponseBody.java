@@ -3,59 +3,83 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
 
-//  union SurveyResponseBody switch (SurveyMessageCommandType type)
+//  union SurveyResponseBody switch (SurveyMessageResponseType type)
 //  {
-//  case SURVEY_TOPOLOGY:
-//      TopologyResponseBody topologyResponseBody;
+//  case SURVEY_TOPOLOGY_RESPONSE_V0:
+//      TopologyResponseBodyV0 topologyResponseBodyV0;
+//  case SURVEY_TOPOLOGY_RESPONSE_V1:
+//      TopologyResponseBodyV1 topologyResponseBodyV1;
 //  };
 
 //  ===========================================================================
 public class SurveyResponseBody implements XdrElement {
   public SurveyResponseBody() {}
 
-  SurveyMessageCommandType type;
+  SurveyMessageResponseType type;
 
-  public SurveyMessageCommandType getDiscriminant() {
+  public SurveyMessageResponseType getDiscriminant() {
     return this.type;
   }
 
-  public void setDiscriminant(SurveyMessageCommandType value) {
+  public void setDiscriminant(SurveyMessageResponseType value) {
     this.type = value;
   }
 
-  private TopologyResponseBody topologyResponseBody;
+  private TopologyResponseBodyV0 topologyResponseBodyV0;
 
-  public TopologyResponseBody getTopologyResponseBody() {
-    return this.topologyResponseBody;
+  public TopologyResponseBodyV0 getTopologyResponseBodyV0() {
+    return this.topologyResponseBodyV0;
   }
 
-  public void setTopologyResponseBody(TopologyResponseBody value) {
-    this.topologyResponseBody = value;
+  public void setTopologyResponseBodyV0(TopologyResponseBodyV0 value) {
+    this.topologyResponseBodyV0 = value;
+  }
+
+  private TopologyResponseBodyV1 topologyResponseBodyV1;
+
+  public TopologyResponseBodyV1 getTopologyResponseBodyV1() {
+    return this.topologyResponseBodyV1;
+  }
+
+  public void setTopologyResponseBodyV1(TopologyResponseBodyV1 value) {
+    this.topologyResponseBodyV1 = value;
   }
 
   public static final class Builder {
-    private SurveyMessageCommandType discriminant;
-    private TopologyResponseBody topologyResponseBody;
+    private SurveyMessageResponseType discriminant;
+    private TopologyResponseBodyV0 topologyResponseBodyV0;
+    private TopologyResponseBodyV1 topologyResponseBodyV1;
 
-    public Builder discriminant(SurveyMessageCommandType discriminant) {
+    public Builder discriminant(SurveyMessageResponseType discriminant) {
       this.discriminant = discriminant;
       return this;
     }
 
-    public Builder topologyResponseBody(TopologyResponseBody topologyResponseBody) {
-      this.topologyResponseBody = topologyResponseBody;
+    public Builder topologyResponseBodyV0(TopologyResponseBodyV0 topologyResponseBodyV0) {
+      this.topologyResponseBodyV0 = topologyResponseBodyV0;
+      return this;
+    }
+
+    public Builder topologyResponseBodyV1(TopologyResponseBodyV1 topologyResponseBodyV1) {
+      this.topologyResponseBodyV1 = topologyResponseBodyV1;
       return this;
     }
 
     public SurveyResponseBody build() {
       SurveyResponseBody val = new SurveyResponseBody();
       val.setDiscriminant(discriminant);
-      val.setTopologyResponseBody(topologyResponseBody);
+      val.setTopologyResponseBodyV0(this.topologyResponseBodyV0);
+      val.setTopologyResponseBodyV1(this.topologyResponseBodyV1);
       return val;
     }
   }
@@ -63,11 +87,14 @@ public class SurveyResponseBody implements XdrElement {
   public static void encode(
       XdrDataOutputStream stream, SurveyResponseBody encodedSurveyResponseBody) throws IOException {
     // Xdrgen::AST::Identifier
-    // SurveyMessageCommandType
+    // SurveyMessageResponseType
     stream.writeInt(encodedSurveyResponseBody.getDiscriminant().getValue());
     switch (encodedSurveyResponseBody.getDiscriminant()) {
-      case SURVEY_TOPOLOGY:
-        TopologyResponseBody.encode(stream, encodedSurveyResponseBody.topologyResponseBody);
+      case SURVEY_TOPOLOGY_RESPONSE_V0:
+        TopologyResponseBodyV0.encode(stream, encodedSurveyResponseBody.topologyResponseBodyV0);
+        break;
+      case SURVEY_TOPOLOGY_RESPONSE_V1:
+        TopologyResponseBodyV1.encode(stream, encodedSurveyResponseBody.topologyResponseBodyV1);
         break;
     }
   }
@@ -78,11 +105,14 @@ public class SurveyResponseBody implements XdrElement {
 
   public static SurveyResponseBody decode(XdrDataInputStream stream) throws IOException {
     SurveyResponseBody decodedSurveyResponseBody = new SurveyResponseBody();
-    SurveyMessageCommandType discriminant = SurveyMessageCommandType.decode(stream);
+    SurveyMessageResponseType discriminant = SurveyMessageResponseType.decode(stream);
     decodedSurveyResponseBody.setDiscriminant(discriminant);
     switch (decodedSurveyResponseBody.getDiscriminant()) {
-      case SURVEY_TOPOLOGY:
-        decodedSurveyResponseBody.topologyResponseBody = TopologyResponseBody.decode(stream);
+      case SURVEY_TOPOLOGY_RESPONSE_V0:
+        decodedSurveyResponseBody.topologyResponseBodyV0 = TopologyResponseBodyV0.decode(stream);
+        break;
+      case SURVEY_TOPOLOGY_RESPONSE_V1:
+        decodedSurveyResponseBody.topologyResponseBodyV1 = TopologyResponseBodyV1.decode(stream);
         break;
     }
     return decodedSurveyResponseBody;
@@ -90,7 +120,7 @@ public class SurveyResponseBody implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.topologyResponseBody, this.type);
+    return Objects.hashCode(this.topologyResponseBodyV0, this.topologyResponseBodyV1, this.type);
   }
 
   @Override
@@ -100,7 +130,34 @@ public class SurveyResponseBody implements XdrElement {
     }
 
     SurveyResponseBody other = (SurveyResponseBody) object;
-    return Objects.equal(this.topologyResponseBody, other.topologyResponseBody)
+    return Objects.equal(this.topologyResponseBodyV0, other.topologyResponseBodyV0)
+        && Objects.equal(this.topologyResponseBodyV1, other.topologyResponseBodyV1)
         && Objects.equal(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SurveyResponseBody fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SurveyResponseBody fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

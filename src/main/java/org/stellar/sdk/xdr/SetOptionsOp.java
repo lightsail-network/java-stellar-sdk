@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -257,6 +262,32 @@ public class SetOptionsOp implements XdrElement {
         && Objects.equal(this.signer, other.signer);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SetOptionsOp fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SetOptionsOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private AccountID inflationDest;
     private Uint32 clearFlags;
@@ -315,15 +346,15 @@ public class SetOptionsOp implements XdrElement {
 
     public SetOptionsOp build() {
       SetOptionsOp val = new SetOptionsOp();
-      val.setInflationDest(inflationDest);
-      val.setClearFlags(clearFlags);
-      val.setSetFlags(setFlags);
-      val.setMasterWeight(masterWeight);
-      val.setLowThreshold(lowThreshold);
-      val.setMedThreshold(medThreshold);
-      val.setHighThreshold(highThreshold);
-      val.setHomeDomain(homeDomain);
-      val.setSigner(signer);
+      val.setInflationDest(this.inflationDest);
+      val.setClearFlags(this.clearFlags);
+      val.setSetFlags(this.setFlags);
+      val.setMasterWeight(this.masterWeight);
+      val.setLowThreshold(this.lowThreshold);
+      val.setMedThreshold(this.medThreshold);
+      val.setHighThreshold(this.highThreshold);
+      val.setHomeDomain(this.homeDomain);
+      val.setSigner(this.signer);
       return val;
     }
   }

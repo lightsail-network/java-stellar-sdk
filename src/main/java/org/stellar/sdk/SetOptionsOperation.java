@@ -131,32 +131,32 @@ public class SetOptionsOperation extends Operation {
     }
     if (clearFlags != null) {
       Uint32 clearFlags = new Uint32();
-      clearFlags.setUint32(this.clearFlags);
+      clearFlags.setUint32(new XdrUnsignedInteger(this.clearFlags));
       op.setClearFlags(clearFlags);
     }
     if (setFlags != null) {
       Uint32 setFlags = new Uint32();
-      setFlags.setUint32(this.setFlags);
+      setFlags.setUint32(new XdrUnsignedInteger(this.setFlags));
       op.setSetFlags(setFlags);
     }
     if (masterKeyWeight != null) {
       Uint32 uint32 = new Uint32();
-      uint32.setUint32(masterKeyWeight);
+      uint32.setUint32(new XdrUnsignedInteger(masterKeyWeight));
       op.setMasterWeight(uint32);
     }
     if (lowThreshold != null) {
       Uint32 uint32 = new Uint32();
-      uint32.setUint32(lowThreshold);
+      uint32.setUint32(new XdrUnsignedInteger(lowThreshold));
       op.setLowThreshold(uint32);
     }
     if (mediumThreshold != null) {
       Uint32 uint32 = new Uint32();
-      uint32.setUint32(mediumThreshold);
+      uint32.setUint32(new XdrUnsignedInteger(mediumThreshold));
       op.setMedThreshold(uint32);
     }
     if (highThreshold != null) {
       Uint32 uint32 = new Uint32();
-      uint32.setUint32(highThreshold);
+      uint32.setUint32(new XdrUnsignedInteger(highThreshold));
       op.setHighThreshold(uint32);
     }
     if (homeDomain != null) {
@@ -167,7 +167,7 @@ public class SetOptionsOperation extends Operation {
     if (signer != null) {
       org.stellar.sdk.xdr.Signer signer = new org.stellar.sdk.xdr.Signer();
       Uint32 weight = new Uint32();
-      weight.setUint32(signerWeight & 0xFF);
+      weight.setUint32(new XdrUnsignedInteger(signerWeight & 0xFF));
       signer.setKey(this.signer);
       signer.setWeight(weight);
       op.setSigner(signer);
@@ -203,29 +203,29 @@ public class SetOptionsOperation extends Operation {
         inflationDestination = StrKey.encodeStellarAccountId(op.getInflationDest());
       }
       if (op.getClearFlags() != null) {
-        clearFlags = op.getClearFlags().getUint32();
+        clearFlags = op.getClearFlags().getUint32().getNumber().intValue();
       }
       if (op.getSetFlags() != null) {
-        setFlags = op.getSetFlags().getUint32();
+        setFlags = op.getSetFlags().getUint32().getNumber().intValue();
       }
       if (op.getMasterWeight() != null) {
-        masterKeyWeight = op.getMasterWeight().getUint32();
+        masterKeyWeight = op.getMasterWeight().getUint32().getNumber().intValue();
       }
       if (op.getLowThreshold() != null) {
-        lowThreshold = op.getLowThreshold().getUint32();
+        lowThreshold = op.getLowThreshold().getUint32().getNumber().intValue();
       }
       if (op.getMedThreshold() != null) {
-        mediumThreshold = op.getMedThreshold().getUint32();
+        mediumThreshold = op.getMedThreshold().getUint32().getNumber().intValue();
       }
       if (op.getHighThreshold() != null) {
-        highThreshold = op.getHighThreshold().getUint32();
+        highThreshold = op.getHighThreshold().getUint32().getNumber().intValue();
       }
       if (op.getHomeDomain() != null) {
         homeDomain = op.getHomeDomain().getString32().toString();
       }
       if (op.getSigner() != null) {
         signer = op.getSigner().getKey();
-        signerWeight = op.getSigner().getWeight().getUint32() & 0xFF;
+        signerWeight = op.getSigner().getWeight().getUint32().getNumber().intValue() & 0xFF;
       }
     }
 

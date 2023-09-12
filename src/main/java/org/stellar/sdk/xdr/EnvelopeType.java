@@ -3,6 +3,11 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -16,7 +21,9 @@ import java.io.IOException;
 //      ENVELOPE_TYPE_SCPVALUE = 4,
 //      ENVELOPE_TYPE_TX_FEE_BUMP = 5,
 //      ENVELOPE_TYPE_OP_ID = 6,
-//      ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7
+//      ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
+//      ENVELOPE_TYPE_CONTRACT_ID = 8,
+//      ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
 //  };
 
 //  ===========================================================================
@@ -29,6 +36,8 @@ public enum EnvelopeType implements XdrElement {
   ENVELOPE_TYPE_TX_FEE_BUMP(5),
   ENVELOPE_TYPE_OP_ID(6),
   ENVELOPE_TYPE_POOL_REVOKE_OP_ID(7),
+  ENVELOPE_TYPE_CONTRACT_ID(8),
+  ENVELOPE_TYPE_SOROBAN_AUTHORIZATION(9),
   ;
   private int mValue;
 
@@ -59,6 +68,10 @@ public enum EnvelopeType implements XdrElement {
         return ENVELOPE_TYPE_OP_ID;
       case 7:
         return ENVELOPE_TYPE_POOL_REVOKE_OP_ID;
+      case 8:
+        return ENVELOPE_TYPE_CONTRACT_ID;
+      case 9:
+        return ENVELOPE_TYPE_SOROBAN_AUTHORIZATION;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
@@ -70,5 +83,31 @@ public enum EnvelopeType implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static EnvelopeType fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static EnvelopeType fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

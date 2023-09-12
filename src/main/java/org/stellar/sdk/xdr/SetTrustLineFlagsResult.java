@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,11 @@ import java.io.IOException;
 //  {
 //  case SET_TRUST_LINE_FLAGS_SUCCESS:
 //      void;
-//  default:
+//  case SET_TRUST_LINE_FLAGS_MALFORMED:
+//  case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+//  case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+//  case SET_TRUST_LINE_FLAGS_INVALID_STATE:
+//  case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
 //      void;
 //  };
 
@@ -54,7 +63,11 @@ public class SetTrustLineFlagsResult implements XdrElement {
     switch (encodedSetTrustLineFlagsResult.getDiscriminant()) {
       case SET_TRUST_LINE_FLAGS_SUCCESS:
         break;
-      default:
+      case SET_TRUST_LINE_FLAGS_MALFORMED:
+      case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+      case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+      case SET_TRUST_LINE_FLAGS_INVALID_STATE:
+      case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
         break;
     }
   }
@@ -70,7 +83,11 @@ public class SetTrustLineFlagsResult implements XdrElement {
     switch (decodedSetTrustLineFlagsResult.getDiscriminant()) {
       case SET_TRUST_LINE_FLAGS_SUCCESS:
         break;
-      default:
+      case SET_TRUST_LINE_FLAGS_MALFORMED:
+      case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+      case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+      case SET_TRUST_LINE_FLAGS_INVALID_STATE:
+      case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
         break;
     }
     return decodedSetTrustLineFlagsResult;
@@ -89,5 +106,31 @@ public class SetTrustLineFlagsResult implements XdrElement {
 
     SetTrustLineFlagsResult other = (SetTrustLineFlagsResult) object;
     return Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SetTrustLineFlagsResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SetTrustLineFlagsResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

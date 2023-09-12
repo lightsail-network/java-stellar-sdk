@@ -4,8 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,8 +13,6 @@ import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.SignatureHint;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 public abstract class AbstractTransaction {
   protected final Network mNetwork;
@@ -86,6 +82,15 @@ public abstract class AbstractTransaction {
   }
 
   /**
+   * Gets the {@link AccountConverter} for this transaction.
+   *
+   * @return the {@link AccountConverter} object
+   */
+  public AccountConverter getAccountConverter() {
+    return accountConverter;
+  }
+
+  /**
    * Gets read only list(immutable) of the signatures on transaction.
    *
    * @return immutable list of signatures
@@ -111,13 +116,7 @@ public abstract class AbstractTransaction {
    */
   public String toEnvelopeXdrBase64() {
     try {
-      TransactionEnvelope envelope = this.toEnvelopeXdr();
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
-      TransactionEnvelope.encode(xdrOutputStream, envelope);
-
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(outputStream.toByteArray());
+      return toEnvelopeXdr().toXdrBase64();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
@@ -167,11 +166,7 @@ public abstract class AbstractTransaction {
    */
   public static AbstractTransaction fromEnvelopeXdr(
       AccountConverter accountConverter, String envelope, Network network) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(envelope);
-
-    TransactionEnvelope transactionEnvelope =
-        TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+    TransactionEnvelope transactionEnvelope = TransactionEnvelope.fromXdrBase64(envelope);
     return fromEnvelopeXdr(accountConverter, transactionEnvelope, network);
   }
 
@@ -192,15 +187,13 @@ public abstract class AbstractTransaction {
       TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,
       Network network) {
     try {
-      TransactionSignaturePayload payload = new TransactionSignaturePayload();
-      Hash hash = new Hash();
-      hash.setHash(network.getNetworkId());
-      payload.setNetworkId(hash);
-      payload.setTaggedTransaction(taggedTransaction);
-      ByteArrayOutputStream txOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
-      payload.encode(xdrOutputStream);
-      return txOutputStream.toByteArray();
+      Hash networkIdHash = new Hash(network.getNetworkId());
+      TransactionSignaturePayload payload =
+          new TransactionSignaturePayload.Builder()
+              .networkId(networkIdHash)
+              .taggedTransaction(taggedTransaction)
+              .build();
+      return payload.toXdrByteArray();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

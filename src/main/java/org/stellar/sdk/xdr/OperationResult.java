@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -61,9 +66,20 @@ import java.io.IOException;
 //          LiquidityPoolDepositResult liquidityPoolDepositResult;
 //      case LIQUIDITY_POOL_WITHDRAW:
 //          LiquidityPoolWithdrawResult liquidityPoolWithdrawResult;
+//      case INVOKE_HOST_FUNCTION:
+//          InvokeHostFunctionResult invokeHostFunctionResult;
+//      case BUMP_FOOTPRINT_EXPIRATION:
+//          BumpFootprintExpirationResult bumpFootprintExpirationResult;
+//      case RESTORE_FOOTPRINT:
+//          RestoreFootprintResult restoreFootprintResult;
 //      }
 //      tr;
-//  default:
+//  case opBAD_AUTH:
+//  case opNO_ACCOUNT:
+//  case opNOT_SUPPORTED:
+//  case opTOO_MANY_SUBENTRIES:
+//  case opEXCEEDED_WORK_LIMIT:
+//  case opTOO_MANY_SPONSORING:
 //      void;
 //  };
 
@@ -108,7 +124,7 @@ public class OperationResult implements XdrElement {
     public OperationResult build() {
       OperationResult val = new OperationResult();
       val.setDiscriminant(discriminant);
-      val.setTr(tr);
+      val.setTr(this.tr);
       return val;
     }
   }
@@ -122,7 +138,12 @@ public class OperationResult implements XdrElement {
       case opINNER:
         OperationResultTr.encode(stream, encodedOperationResult.tr);
         break;
-      default:
+      case opBAD_AUTH:
+      case opNO_ACCOUNT:
+      case opNOT_SUPPORTED:
+      case opTOO_MANY_SUBENTRIES:
+      case opEXCEEDED_WORK_LIMIT:
+      case opTOO_MANY_SPONSORING:
         break;
     }
   }
@@ -139,7 +160,12 @@ public class OperationResult implements XdrElement {
       case opINNER:
         decodedOperationResult.tr = OperationResultTr.decode(stream);
         break;
-      default:
+      case opBAD_AUTH:
+      case opNO_ACCOUNT:
+      case opNOT_SUPPORTED:
+      case opTOO_MANY_SUBENTRIES:
+      case opEXCEEDED_WORK_LIMIT:
+      case opTOO_MANY_SPONSORING:
         break;
     }
     return decodedOperationResult;
@@ -160,7 +186,33 @@ public class OperationResult implements XdrElement {
     return Objects.equal(this.tr, other.tr) && Objects.equal(this.code, other.code);
   }
 
-  public static class OperationResultTr {
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static OperationResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static OperationResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class OperationResultTr implements XdrElement {
     public OperationResultTr() {}
 
     OperationType type;
@@ -413,6 +465,36 @@ public class OperationResult implements XdrElement {
       this.liquidityPoolWithdrawResult = value;
     }
 
+    private InvokeHostFunctionResult invokeHostFunctionResult;
+
+    public InvokeHostFunctionResult getInvokeHostFunctionResult() {
+      return this.invokeHostFunctionResult;
+    }
+
+    public void setInvokeHostFunctionResult(InvokeHostFunctionResult value) {
+      this.invokeHostFunctionResult = value;
+    }
+
+    private BumpFootprintExpirationResult bumpFootprintExpirationResult;
+
+    public BumpFootprintExpirationResult getBumpFootprintExpirationResult() {
+      return this.bumpFootprintExpirationResult;
+    }
+
+    public void setBumpFootprintExpirationResult(BumpFootprintExpirationResult value) {
+      this.bumpFootprintExpirationResult = value;
+    }
+
+    private RestoreFootprintResult restoreFootprintResult;
+
+    public RestoreFootprintResult getRestoreFootprintResult() {
+      return this.restoreFootprintResult;
+    }
+
+    public void setRestoreFootprintResult(RestoreFootprintResult value) {
+      this.restoreFootprintResult = value;
+    }
+
     public static final class Builder {
       private OperationType discriminant;
       private CreateAccountResult createAccountResult;
@@ -439,6 +521,9 @@ public class OperationResult implements XdrElement {
       private SetTrustLineFlagsResult setTrustLineFlagsResult;
       private LiquidityPoolDepositResult liquidityPoolDepositResult;
       private LiquidityPoolWithdrawResult liquidityPoolWithdrawResult;
+      private InvokeHostFunctionResult invokeHostFunctionResult;
+      private BumpFootprintExpirationResult bumpFootprintExpirationResult;
+      private RestoreFootprintResult restoreFootprintResult;
 
       public Builder discriminant(OperationType discriminant) {
         this.discriminant = discriminant;
@@ -575,33 +660,52 @@ public class OperationResult implements XdrElement {
         return this;
       }
 
+      public Builder invokeHostFunctionResult(InvokeHostFunctionResult invokeHostFunctionResult) {
+        this.invokeHostFunctionResult = invokeHostFunctionResult;
+        return this;
+      }
+
+      public Builder bumpFootprintExpirationResult(
+          BumpFootprintExpirationResult bumpFootprintExpirationResult) {
+        this.bumpFootprintExpirationResult = bumpFootprintExpirationResult;
+        return this;
+      }
+
+      public Builder restoreFootprintResult(RestoreFootprintResult restoreFootprintResult) {
+        this.restoreFootprintResult = restoreFootprintResult;
+        return this;
+      }
+
       public OperationResultTr build() {
         OperationResultTr val = new OperationResultTr();
         val.setDiscriminant(discriminant);
-        val.setCreateAccountResult(createAccountResult);
-        val.setPaymentResult(paymentResult);
-        val.setPathPaymentStrictReceiveResult(pathPaymentStrictReceiveResult);
-        val.setManageSellOfferResult(manageSellOfferResult);
-        val.setCreatePassiveSellOfferResult(createPassiveSellOfferResult);
-        val.setSetOptionsResult(setOptionsResult);
-        val.setChangeTrustResult(changeTrustResult);
-        val.setAllowTrustResult(allowTrustResult);
-        val.setAccountMergeResult(accountMergeResult);
-        val.setInflationResult(inflationResult);
-        val.setManageDataResult(manageDataResult);
-        val.setBumpSeqResult(bumpSeqResult);
-        val.setManageBuyOfferResult(manageBuyOfferResult);
-        val.setPathPaymentStrictSendResult(pathPaymentStrictSendResult);
-        val.setCreateClaimableBalanceResult(createClaimableBalanceResult);
-        val.setClaimClaimableBalanceResult(claimClaimableBalanceResult);
-        val.setBeginSponsoringFutureReservesResult(beginSponsoringFutureReservesResult);
-        val.setEndSponsoringFutureReservesResult(endSponsoringFutureReservesResult);
-        val.setRevokeSponsorshipResult(revokeSponsorshipResult);
-        val.setClawbackResult(clawbackResult);
-        val.setClawbackClaimableBalanceResult(clawbackClaimableBalanceResult);
-        val.setSetTrustLineFlagsResult(setTrustLineFlagsResult);
-        val.setLiquidityPoolDepositResult(liquidityPoolDepositResult);
-        val.setLiquidityPoolWithdrawResult(liquidityPoolWithdrawResult);
+        val.setCreateAccountResult(this.createAccountResult);
+        val.setPaymentResult(this.paymentResult);
+        val.setPathPaymentStrictReceiveResult(this.pathPaymentStrictReceiveResult);
+        val.setManageSellOfferResult(this.manageSellOfferResult);
+        val.setCreatePassiveSellOfferResult(this.createPassiveSellOfferResult);
+        val.setSetOptionsResult(this.setOptionsResult);
+        val.setChangeTrustResult(this.changeTrustResult);
+        val.setAllowTrustResult(this.allowTrustResult);
+        val.setAccountMergeResult(this.accountMergeResult);
+        val.setInflationResult(this.inflationResult);
+        val.setManageDataResult(this.manageDataResult);
+        val.setBumpSeqResult(this.bumpSeqResult);
+        val.setManageBuyOfferResult(this.manageBuyOfferResult);
+        val.setPathPaymentStrictSendResult(this.pathPaymentStrictSendResult);
+        val.setCreateClaimableBalanceResult(this.createClaimableBalanceResult);
+        val.setClaimClaimableBalanceResult(this.claimClaimableBalanceResult);
+        val.setBeginSponsoringFutureReservesResult(this.beginSponsoringFutureReservesResult);
+        val.setEndSponsoringFutureReservesResult(this.endSponsoringFutureReservesResult);
+        val.setRevokeSponsorshipResult(this.revokeSponsorshipResult);
+        val.setClawbackResult(this.clawbackResult);
+        val.setClawbackClaimableBalanceResult(this.clawbackClaimableBalanceResult);
+        val.setSetTrustLineFlagsResult(this.setTrustLineFlagsResult);
+        val.setLiquidityPoolDepositResult(this.liquidityPoolDepositResult);
+        val.setLiquidityPoolWithdrawResult(this.liquidityPoolWithdrawResult);
+        val.setInvokeHostFunctionResult(this.invokeHostFunctionResult);
+        val.setBumpFootprintExpirationResult(this.bumpFootprintExpirationResult);
+        val.setRestoreFootprintResult(this.restoreFootprintResult);
         return val;
       }
     }
@@ -693,6 +797,17 @@ public class OperationResult implements XdrElement {
         case LIQUIDITY_POOL_WITHDRAW:
           LiquidityPoolWithdrawResult.encode(
               stream, encodedOperationResultTr.liquidityPoolWithdrawResult);
+          break;
+        case INVOKE_HOST_FUNCTION:
+          InvokeHostFunctionResult.encode(
+              stream, encodedOperationResultTr.invokeHostFunctionResult);
+          break;
+        case BUMP_FOOTPRINT_EXPIRATION:
+          BumpFootprintExpirationResult.encode(
+              stream, encodedOperationResultTr.bumpFootprintExpirationResult);
+          break;
+        case RESTORE_FOOTPRINT:
+          RestoreFootprintResult.encode(stream, encodedOperationResultTr.restoreFootprintResult);
           break;
       }
     }
@@ -788,6 +903,17 @@ public class OperationResult implements XdrElement {
           decodedOperationResultTr.liquidityPoolWithdrawResult =
               LiquidityPoolWithdrawResult.decode(stream);
           break;
+        case INVOKE_HOST_FUNCTION:
+          decodedOperationResultTr.invokeHostFunctionResult =
+              InvokeHostFunctionResult.decode(stream);
+          break;
+        case BUMP_FOOTPRINT_EXPIRATION:
+          decodedOperationResultTr.bumpFootprintExpirationResult =
+              BumpFootprintExpirationResult.decode(stream);
+          break;
+        case RESTORE_FOOTPRINT:
+          decodedOperationResultTr.restoreFootprintResult = RestoreFootprintResult.decode(stream);
+          break;
       }
       return decodedOperationResultTr;
     }
@@ -819,6 +945,9 @@ public class OperationResult implements XdrElement {
           this.setTrustLineFlagsResult,
           this.liquidityPoolDepositResult,
           this.liquidityPoolWithdrawResult,
+          this.invokeHostFunctionResult,
+          this.bumpFootprintExpirationResult,
+          this.restoreFootprintResult,
           this.type);
     }
 
@@ -857,7 +986,36 @@ public class OperationResult implements XdrElement {
           && Objects.equal(this.setTrustLineFlagsResult, other.setTrustLineFlagsResult)
           && Objects.equal(this.liquidityPoolDepositResult, other.liquidityPoolDepositResult)
           && Objects.equal(this.liquidityPoolWithdrawResult, other.liquidityPoolWithdrawResult)
+          && Objects.equal(this.invokeHostFunctionResult, other.invokeHostFunctionResult)
+          && Objects.equal(this.bumpFootprintExpirationResult, other.bumpFootprintExpirationResult)
+          && Objects.equal(this.restoreFootprintResult, other.restoreFootprintResult)
           && Objects.equal(this.type, other.type);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static OperationResultTr fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static OperationResultTr fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

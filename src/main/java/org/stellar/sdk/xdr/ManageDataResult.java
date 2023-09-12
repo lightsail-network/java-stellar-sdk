@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,10 @@ import java.io.IOException;
 //  {
 //  case MANAGE_DATA_SUCCESS:
 //      void;
-//  default:
+//  case MANAGE_DATA_NOT_SUPPORTED_YET:
+//  case MANAGE_DATA_NAME_NOT_FOUND:
+//  case MANAGE_DATA_LOW_RESERVE:
+//  case MANAGE_DATA_INVALID_NAME:
 //      void;
 //  };
 
@@ -53,7 +61,10 @@ public class ManageDataResult implements XdrElement {
     switch (encodedManageDataResult.getDiscriminant()) {
       case MANAGE_DATA_SUCCESS:
         break;
-      default:
+      case MANAGE_DATA_NOT_SUPPORTED_YET:
+      case MANAGE_DATA_NAME_NOT_FOUND:
+      case MANAGE_DATA_LOW_RESERVE:
+      case MANAGE_DATA_INVALID_NAME:
         break;
     }
   }
@@ -69,7 +80,10 @@ public class ManageDataResult implements XdrElement {
     switch (decodedManageDataResult.getDiscriminant()) {
       case MANAGE_DATA_SUCCESS:
         break;
-      default:
+      case MANAGE_DATA_NOT_SUPPORTED_YET:
+      case MANAGE_DATA_NAME_NOT_FOUND:
+      case MANAGE_DATA_LOW_RESERVE:
+      case MANAGE_DATA_INVALID_NAME:
         break;
     }
     return decodedManageDataResult;
@@ -88,5 +102,31 @@ public class ManageDataResult implements XdrElement {
 
     ManageDataResult other = (ManageDataResult) object;
     return Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ManageDataResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ManageDataResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

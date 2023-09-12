@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -13,7 +18,7 @@ import java.util.Arrays;
 //  {
 //  case INFLATION_SUCCESS:
 //      InflationPayout payouts<>;
-//  default:
+//  case INFLATION_NOT_TIME:
 //      void;
 //  };
 
@@ -58,7 +63,7 @@ public class InflationResult implements XdrElement {
     public InflationResult build() {
       InflationResult val = new InflationResult();
       val.setDiscriminant(discriminant);
-      val.setPayouts(payouts);
+      val.setPayouts(this.payouts);
       return val;
     }
   }
@@ -76,7 +81,7 @@ public class InflationResult implements XdrElement {
           InflationPayout.encode(stream, encodedInflationResult.payouts[i]);
         }
         break;
-      default:
+      case INFLATION_NOT_TIME:
         break;
     }
   }
@@ -97,7 +102,7 @@ public class InflationResult implements XdrElement {
           decodedInflationResult.payouts[i] = InflationPayout.decode(stream);
         }
         break;
-      default:
+      case INFLATION_NOT_TIME:
         break;
     }
     return decodedInflationResult;
@@ -116,5 +121,31 @@ public class InflationResult implements XdrElement {
 
     InflationResult other = (InflationResult) object;
     return Arrays.equals(this.payouts, other.payouts) && Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static InflationResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static InflationResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

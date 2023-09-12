@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -77,8 +82,8 @@ public class RevokeSponsorshipOp implements XdrElement {
     public RevokeSponsorshipOp build() {
       RevokeSponsorshipOp val = new RevokeSponsorshipOp();
       val.setDiscriminant(discriminant);
-      val.setLedgerKey(ledgerKey);
-      val.setSigner(signer);
+      val.setLedgerKey(this.ledgerKey);
+      val.setSigner(this.signer);
       return val;
     }
   }
@@ -135,7 +140,33 @@ public class RevokeSponsorshipOp implements XdrElement {
         && Objects.equal(this.type, other.type);
   }
 
-  public static class RevokeSponsorshipOpSigner {
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static RevokeSponsorshipOp fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static RevokeSponsorshipOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class RevokeSponsorshipOpSigner implements XdrElement {
     public RevokeSponsorshipOpSigner() {}
 
     private AccountID accountID;
@@ -192,6 +223,32 @@ public class RevokeSponsorshipOp implements XdrElement {
           && Objects.equal(this.signerKey, other.signerKey);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static RevokeSponsorshipOpSigner fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static RevokeSponsorshipOpSigner fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID accountID;
       private SignerKey signerKey;
@@ -208,8 +265,8 @@ public class RevokeSponsorshipOp implements XdrElement {
 
       public RevokeSponsorshipOpSigner build() {
         RevokeSponsorshipOpSigner val = new RevokeSponsorshipOpSigner();
-        val.setAccountID(accountID);
-        val.setSignerKey(signerKey);
+        val.setAccountID(this.accountID);
+        val.setSignerKey(this.signerKey);
         return val;
       }
     }

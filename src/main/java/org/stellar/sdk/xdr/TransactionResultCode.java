@@ -3,6 +3,11 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -31,7 +36,9 @@ import java.io.IOException;
 //      txBAD_SPONSORSHIP = -14,       // sponsorship not confirmed
 //      txBAD_MIN_SEQ_AGE_OR_GAP =
 //          -15, // minSeqAge or minSeqLedgerGap conditions not met
-//      txMALFORMED = -16 // precondition is invalid
+//      txMALFORMED = -16, // precondition is invalid
+//      // declared Soroban resource usage exceeds the network limit
+//      txSOROBAN_RESOURCE_LIMIT_EXCEEDED = -17
 //  };
 
 //  ===========================================================================
@@ -54,6 +61,7 @@ public enum TransactionResultCode implements XdrElement {
   txBAD_SPONSORSHIP(-14),
   txBAD_MIN_SEQ_AGE_OR_GAP(-15),
   txMALFORMED(-16),
+  txSOROBAN_RESOURCE_LIMIT_EXCEEDED(-17),
   ;
   private int mValue;
 
@@ -104,6 +112,8 @@ public enum TransactionResultCode implements XdrElement {
         return txBAD_MIN_SEQ_AGE_OR_GAP;
       case -16:
         return txMALFORMED;
+      case -17:
+        return txSOROBAN_RESOURCE_LIMIT_EXCEEDED;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
@@ -116,5 +126,31 @@ public enum TransactionResultCode implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static TransactionResultCode fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static TransactionResultCode fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

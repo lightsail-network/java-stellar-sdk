@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -115,6 +120,32 @@ public class LiquidityPoolDepositOp implements XdrElement {
         && Objects.equal(this.maxPrice, other.maxPrice);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LiquidityPoolDepositOp fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LiquidityPoolDepositOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private PoolID liquidityPoolID;
     private Int64 maxAmountA;
@@ -149,11 +180,11 @@ public class LiquidityPoolDepositOp implements XdrElement {
 
     public LiquidityPoolDepositOp build() {
       LiquidityPoolDepositOp val = new LiquidityPoolDepositOp();
-      val.setLiquidityPoolID(liquidityPoolID);
-      val.setMaxAmountA(maxAmountA);
-      val.setMaxAmountB(maxAmountB);
-      val.setMinPrice(minPrice);
-      val.setMaxPrice(maxPrice);
+      val.setLiquidityPoolID(this.liquidityPoolID);
+      val.setMaxAmountA(this.maxAmountA);
+      val.setMaxAmountB(this.maxAmountB);
+      val.setMinPrice(this.minPrice);
+      val.setMaxPrice(this.maxPrice);
       return val;
     }
   }

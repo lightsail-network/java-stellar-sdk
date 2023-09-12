@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import java.math.BigInteger;
 import java.util.Arrays;
 import org.junit.Test;
 import org.stellar.sdk.responses.TransactionDeserializer;
@@ -62,22 +63,22 @@ public class MemoTest {
   @Test
   public void testMemoId() {
     MemoId memo = Memo.id(9223372036854775807L);
-    assertEquals(9223372036854775807L, memo.getId());
+    assertEquals(BigInteger.valueOf(9223372036854775807L), memo.getId());
     assertEquals(MemoType.MEMO_ID, memo.toXdr().getDiscriminant());
-    assertEquals(new Long(9223372036854775807L), memo.toXdr().getId().getUint64());
+    assertEquals(
+        BigInteger.valueOf(9223372036854775807L), memo.toXdr().getId().getUint64().getNumber());
     assertEquals("9223372036854775807", memo.toString());
   }
 
   @Test
   public void testParseMemoId() {
-    String longId = "10048071741004807174";
+    String maxId = "18446744073709551615";
     JsonElement element =
-        new JsonParser()
-            .parse(String.format("{ \"memo_type\": \"id\", \"memo\": \"%s\" }", longId));
+        new JsonParser().parse(String.format("{ \"memo_type\": \"id\", \"memo\": \"%s\" }", maxId));
     TransactionResponse transactionResponse =
         new TransactionDeserializer().deserialize(element, null, null);
     MemoId memoId = (MemoId) transactionResponse.getMemo();
-    assertEquals(longId, Long.toUnsignedString(memoId.getId()));
+    assertEquals(new BigInteger(maxId), memoId.getId());
   }
 
   @Test

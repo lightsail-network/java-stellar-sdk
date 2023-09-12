@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -119,6 +124,32 @@ public class SurveyRequestMessage implements XdrElement {
         && Objects.equal(this.commandType, other.commandType);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SurveyRequestMessage fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SurveyRequestMessage fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private NodeID surveyorPeerID;
     private NodeID surveyedPeerID;
@@ -153,11 +184,11 @@ public class SurveyRequestMessage implements XdrElement {
 
     public SurveyRequestMessage build() {
       SurveyRequestMessage val = new SurveyRequestMessage();
-      val.setSurveyorPeerID(surveyorPeerID);
-      val.setSurveyedPeerID(surveyedPeerID);
-      val.setLedgerNum(ledgerNum);
-      val.setEncryptionKey(encryptionKey);
-      val.setCommandType(commandType);
+      val.setSurveyorPeerID(this.surveyorPeerID);
+      val.setSurveyedPeerID(this.surveyedPeerID);
+      val.setLedgerNum(this.ledgerNum);
+      val.setEncryptionKey(this.encryptionKey);
+      val.setCommandType(this.commandType);
       return val;
     }
   }

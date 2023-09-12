@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -109,6 +114,32 @@ public class FeeBumpTransaction implements XdrElement {
         && Objects.equal(this.ext, other.ext);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static FeeBumpTransaction fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static FeeBumpTransaction fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private MuxedAccount feeSource;
     private Int64 fee;
@@ -137,15 +168,15 @@ public class FeeBumpTransaction implements XdrElement {
 
     public FeeBumpTransaction build() {
       FeeBumpTransaction val = new FeeBumpTransaction();
-      val.setFeeSource(feeSource);
-      val.setFee(fee);
-      val.setInnerTx(innerTx);
-      val.setExt(ext);
+      val.setFeeSource(this.feeSource);
+      val.setFee(this.fee);
+      val.setInnerTx(this.innerTx);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class FeeBumpTransactionInnerTx {
+  public static class FeeBumpTransactionInnerTx implements XdrElement {
     public FeeBumpTransactionInnerTx() {}
 
     EnvelopeType type;
@@ -185,7 +216,7 @@ public class FeeBumpTransaction implements XdrElement {
       public FeeBumpTransactionInnerTx build() {
         FeeBumpTransactionInnerTx val = new FeeBumpTransactionInnerTx();
         val.setDiscriminant(discriminant);
-        val.setV1(v1);
+        val.setV1(this.v1);
         return val;
       }
     }
@@ -233,9 +264,35 @@ public class FeeBumpTransaction implements XdrElement {
       FeeBumpTransactionInnerTx other = (FeeBumpTransactionInnerTx) object;
       return Objects.equal(this.v1, other.v1) && Objects.equal(this.type, other.type);
     }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static FeeBumpTransactionInnerTx fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static FeeBumpTransactionInnerTx fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
   }
 
-  public static class FeeBumpTransactionExt {
+  public static class FeeBumpTransactionExt implements XdrElement {
     public FeeBumpTransactionExt() {}
 
     Integer v;
@@ -303,6 +360,32 @@ public class FeeBumpTransaction implements XdrElement {
 
       FeeBumpTransactionExt other = (FeeBumpTransactionExt) object;
       return Objects.equal(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static FeeBumpTransactionExt fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static FeeBumpTransactionExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

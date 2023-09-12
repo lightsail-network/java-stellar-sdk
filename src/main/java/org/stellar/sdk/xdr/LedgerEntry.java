@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -26,6 +31,12 @@ import java.io.IOException;
 //          ClaimableBalanceEntry claimableBalance;
 //      case LIQUIDITY_POOL:
 //          LiquidityPoolEntry liquidityPool;
+//      case CONTRACT_DATA:
+//          ContractDataEntry contractData;
+//      case CONTRACT_CODE:
+//          ContractCodeEntry contractCode;
+//      case CONFIG_SETTING:
+//          ConfigSettingEntry configSetting;
 //      }
 //      data;
 //
@@ -110,6 +121,32 @@ public class LedgerEntry implements XdrElement {
         && Objects.equal(this.ext, other.ext);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerEntry fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerEntry fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private Uint32 lastModifiedLedgerSeq;
     private LedgerEntryData data;
@@ -132,14 +169,14 @@ public class LedgerEntry implements XdrElement {
 
     public LedgerEntry build() {
       LedgerEntry val = new LedgerEntry();
-      val.setLastModifiedLedgerSeq(lastModifiedLedgerSeq);
-      val.setData(data);
-      val.setExt(ext);
+      val.setLastModifiedLedgerSeq(this.lastModifiedLedgerSeq);
+      val.setData(this.data);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class LedgerEntryData {
+  public static class LedgerEntryData implements XdrElement {
     public LedgerEntryData() {}
 
     LedgerEntryType type;
@@ -212,6 +249,36 @@ public class LedgerEntry implements XdrElement {
       this.liquidityPool = value;
     }
 
+    private ContractDataEntry contractData;
+
+    public ContractDataEntry getContractData() {
+      return this.contractData;
+    }
+
+    public void setContractData(ContractDataEntry value) {
+      this.contractData = value;
+    }
+
+    private ContractCodeEntry contractCode;
+
+    public ContractCodeEntry getContractCode() {
+      return this.contractCode;
+    }
+
+    public void setContractCode(ContractCodeEntry value) {
+      this.contractCode = value;
+    }
+
+    private ConfigSettingEntry configSetting;
+
+    public ConfigSettingEntry getConfigSetting() {
+      return this.configSetting;
+    }
+
+    public void setConfigSetting(ConfigSettingEntry value) {
+      this.configSetting = value;
+    }
+
     public static final class Builder {
       private LedgerEntryType discriminant;
       private AccountEntry account;
@@ -220,6 +287,9 @@ public class LedgerEntry implements XdrElement {
       private DataEntry data;
       private ClaimableBalanceEntry claimableBalance;
       private LiquidityPoolEntry liquidityPool;
+      private ContractDataEntry contractData;
+      private ContractCodeEntry contractCode;
+      private ConfigSettingEntry configSetting;
 
       public Builder discriminant(LedgerEntryType discriminant) {
         this.discriminant = discriminant;
@@ -256,15 +326,33 @@ public class LedgerEntry implements XdrElement {
         return this;
       }
 
+      public Builder contractData(ContractDataEntry contractData) {
+        this.contractData = contractData;
+        return this;
+      }
+
+      public Builder contractCode(ContractCodeEntry contractCode) {
+        this.contractCode = contractCode;
+        return this;
+      }
+
+      public Builder configSetting(ConfigSettingEntry configSetting) {
+        this.configSetting = configSetting;
+        return this;
+      }
+
       public LedgerEntryData build() {
         LedgerEntryData val = new LedgerEntryData();
         val.setDiscriminant(discriminant);
-        val.setAccount(account);
-        val.setTrustLine(trustLine);
-        val.setOffer(offer);
-        val.setData(data);
-        val.setClaimableBalance(claimableBalance);
-        val.setLiquidityPool(liquidityPool);
+        val.setAccount(this.account);
+        val.setTrustLine(this.trustLine);
+        val.setOffer(this.offer);
+        val.setData(this.data);
+        val.setClaimableBalance(this.claimableBalance);
+        val.setLiquidityPool(this.liquidityPool);
+        val.setContractData(this.contractData);
+        val.setContractCode(this.contractCode);
+        val.setConfigSetting(this.configSetting);
         return val;
       }
     }
@@ -292,6 +380,15 @@ public class LedgerEntry implements XdrElement {
           break;
         case LIQUIDITY_POOL:
           LiquidityPoolEntry.encode(stream, encodedLedgerEntryData.liquidityPool);
+          break;
+        case CONTRACT_DATA:
+          ContractDataEntry.encode(stream, encodedLedgerEntryData.contractData);
+          break;
+        case CONTRACT_CODE:
+          ContractCodeEntry.encode(stream, encodedLedgerEntryData.contractCode);
+          break;
+        case CONFIG_SETTING:
+          ConfigSettingEntry.encode(stream, encodedLedgerEntryData.configSetting);
           break;
       }
     }
@@ -323,6 +420,15 @@ public class LedgerEntry implements XdrElement {
         case LIQUIDITY_POOL:
           decodedLedgerEntryData.liquidityPool = LiquidityPoolEntry.decode(stream);
           break;
+        case CONTRACT_DATA:
+          decodedLedgerEntryData.contractData = ContractDataEntry.decode(stream);
+          break;
+        case CONTRACT_CODE:
+          decodedLedgerEntryData.contractCode = ContractCodeEntry.decode(stream);
+          break;
+        case CONFIG_SETTING:
+          decodedLedgerEntryData.configSetting = ConfigSettingEntry.decode(stream);
+          break;
       }
       return decodedLedgerEntryData;
     }
@@ -336,6 +442,9 @@ public class LedgerEntry implements XdrElement {
           this.data,
           this.claimableBalance,
           this.liquidityPool,
+          this.contractData,
+          this.contractCode,
+          this.configSetting,
           this.type);
     }
 
@@ -352,11 +461,40 @@ public class LedgerEntry implements XdrElement {
           && Objects.equal(this.data, other.data)
           && Objects.equal(this.claimableBalance, other.claimableBalance)
           && Objects.equal(this.liquidityPool, other.liquidityPool)
+          && Objects.equal(this.contractData, other.contractData)
+          && Objects.equal(this.contractCode, other.contractCode)
+          && Objects.equal(this.configSetting, other.configSetting)
           && Objects.equal(this.type, other.type);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerEntryData fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerEntryData fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 
-  public static class LedgerEntryExt {
+  public static class LedgerEntryExt implements XdrElement {
     public LedgerEntryExt() {}
 
     Integer v;
@@ -396,7 +534,7 @@ public class LedgerEntry implements XdrElement {
       public LedgerEntryExt build() {
         LedgerEntryExt val = new LedgerEntryExt();
         val.setDiscriminant(discriminant);
-        val.setV1(v1);
+        val.setV1(this.v1);
         return val;
       }
     }
@@ -446,6 +584,32 @@ public class LedgerEntry implements XdrElement {
 
       LedgerEntryExt other = (LedgerEntryExt) object;
       return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerEntryExt fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

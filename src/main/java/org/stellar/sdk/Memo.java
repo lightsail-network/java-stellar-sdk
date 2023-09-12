@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import java.math.BigInteger;
+
 /**
  * The memo contains optional extra information. It is the responsibility of the client to interpret
  * this value. Memos can be one of the following types:
@@ -46,7 +48,16 @@ public abstract class Memo {
    *
    * @param id
    */
-  public static MemoId id(long id) {
+  public static MemoId id(BigInteger id) {
+    return new MemoId(id);
+  }
+
+  /**
+   * Creates new {@link MemoId} instance.
+   *
+   * @param id
+   */
+  public static MemoId id(Long id) {
     return new MemoId(id);
   }
 
@@ -91,7 +102,7 @@ public abstract class Memo {
       case MEMO_NONE:
         return none();
       case MEMO_ID:
-        return id(memo.getId().getUint64().longValue());
+        return id(memo.getId().getUint64().getNumber());
       case MEMO_TEXT:
         return text(memo.getText().getBytes());
       case MEMO_HASH:

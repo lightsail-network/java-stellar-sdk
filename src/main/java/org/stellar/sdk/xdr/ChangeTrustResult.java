@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,14 @@ import java.io.IOException;
 //  {
 //  case CHANGE_TRUST_SUCCESS:
 //      void;
-//  default:
+//  case CHANGE_TRUST_MALFORMED:
+//  case CHANGE_TRUST_NO_ISSUER:
+//  case CHANGE_TRUST_INVALID_LIMIT:
+//  case CHANGE_TRUST_LOW_RESERVE:
+//  case CHANGE_TRUST_SELF_NOT_ALLOWED:
+//  case CHANGE_TRUST_TRUST_LINE_MISSING:
+//  case CHANGE_TRUST_CANNOT_DELETE:
+//  case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
 //      void;
 //  };
 
@@ -53,7 +65,14 @@ public class ChangeTrustResult implements XdrElement {
     switch (encodedChangeTrustResult.getDiscriminant()) {
       case CHANGE_TRUST_SUCCESS:
         break;
-      default:
+      case CHANGE_TRUST_MALFORMED:
+      case CHANGE_TRUST_NO_ISSUER:
+      case CHANGE_TRUST_INVALID_LIMIT:
+      case CHANGE_TRUST_LOW_RESERVE:
+      case CHANGE_TRUST_SELF_NOT_ALLOWED:
+      case CHANGE_TRUST_TRUST_LINE_MISSING:
+      case CHANGE_TRUST_CANNOT_DELETE:
+      case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
         break;
     }
   }
@@ -69,7 +88,14 @@ public class ChangeTrustResult implements XdrElement {
     switch (decodedChangeTrustResult.getDiscriminant()) {
       case CHANGE_TRUST_SUCCESS:
         break;
-      default:
+      case CHANGE_TRUST_MALFORMED:
+      case CHANGE_TRUST_NO_ISSUER:
+      case CHANGE_TRUST_INVALID_LIMIT:
+      case CHANGE_TRUST_LOW_RESERVE:
+      case CHANGE_TRUST_SELF_NOT_ALLOWED:
+      case CHANGE_TRUST_TRUST_LINE_MISSING:
+      case CHANGE_TRUST_CANNOT_DELETE:
+      case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
         break;
     }
     return decodedChangeTrustResult;
@@ -88,5 +114,31 @@ public class ChangeTrustResult implements XdrElement {
 
     ChangeTrustResult other = (ChangeTrustResult) object;
     return Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ChangeTrustResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ChangeTrustResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

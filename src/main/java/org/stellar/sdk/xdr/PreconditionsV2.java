@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -189,6 +194,32 @@ public class PreconditionsV2 implements XdrElement {
         && Arrays.equals(this.extraSigners, other.extraSigners);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static PreconditionsV2 fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static PreconditionsV2 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private TimeBounds timeBounds;
     private LedgerBounds ledgerBounds;
@@ -229,12 +260,12 @@ public class PreconditionsV2 implements XdrElement {
 
     public PreconditionsV2 build() {
       PreconditionsV2 val = new PreconditionsV2();
-      val.setTimeBounds(timeBounds);
-      val.setLedgerBounds(ledgerBounds);
-      val.setMinSeqNum(minSeqNum);
-      val.setMinSeqAge(minSeqAge);
-      val.setMinSeqLedgerGap(minSeqLedgerGap);
-      val.setExtraSigners(extraSigners);
+      val.setTimeBounds(this.timeBounds);
+      val.setLedgerBounds(this.ledgerBounds);
+      val.setMinSeqNum(this.minSeqNum);
+      val.setMinSeqAge(this.minSeqAge);
+      val.setMinSeqLedgerGap(this.minSeqLedgerGap);
+      val.setExtraSigners(this.extraSigners);
       return val;
     }
   }

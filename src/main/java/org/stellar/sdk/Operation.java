@@ -2,17 +2,20 @@ package org.stellar.sdk;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import org.stellar.sdk.xdr.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 /** Abstract class for operations. */
+@SuperBuilder(toBuilder = true)
+@EqualsAndHashCode
 public abstract class Operation {
   Operation() {}
 
-  private String mSourceAccount;
+  @Getter @Setter private String sourceAccount;
 
   private static final BigDecimal ONE = new BigDecimal(10).pow(7);
 
@@ -31,7 +34,7 @@ public abstract class Operation {
   public org.stellar.sdk.xdr.Operation toXdr(AccountConverter accountConverter) {
     org.stellar.sdk.xdr.Operation xdr = new org.stellar.sdk.xdr.Operation();
     if (getSourceAccount() != null) {
-      xdr.setSourceAccount(accountConverter.encode(mSourceAccount));
+      xdr.setSourceAccount(accountConverter.encode(sourceAccount));
     }
     xdr.setBody(toOperationBody(accountConverter));
     return xdr;
@@ -45,12 +48,7 @@ public abstract class Operation {
   /** Returns base64-encoded Operation XDR object. */
   public String toXdrBase64(AccountConverter accountConverter) {
     try {
-      org.stellar.sdk.xdr.Operation operation = this.toXdr(accountConverter);
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
-      org.stellar.sdk.xdr.Operation.encode(xdrOutputStream, operation);
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(outputStream.toByteArray());
+      return toXdr(accountConverter).toXdrBase64();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
@@ -200,6 +198,15 @@ public abstract class Operation {
       case LIQUIDITY_POOL_WITHDRAW:
         operation = new LiquidityPoolWithdrawOperation(body.getLiquidityPoolWithdrawOp());
         break;
+      case INVOKE_HOST_FUNCTION:
+        operation = InvokeHostFunctionOperation.fromXdr(body.getInvokeHostFunctionOp());
+        break;
+      case BUMP_FOOTPRINT_EXPIRATION:
+        operation = BumpFootprintExpirationOperation.fromXdr(body.getBumpFootprintExpirationOp());
+        break;
+      case RESTORE_FOOTPRINT:
+        operation = RestoreFootprintOperation.fromXdr(body.getRestoreFootprintOp());
+        break;
       default:
         throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
     }
@@ -216,20 +223,6 @@ public abstract class Operation {
    */
   public static Operation fromXdr(org.stellar.sdk.xdr.Operation xdr) {
     return fromXdr(AccountConverter.enableMuxed(), xdr);
-  }
-
-  /** Returns operation source account. */
-  public String getSourceAccount() {
-    return mSourceAccount;
-  }
-
-  /**
-   * Sets operation source account.
-   *
-   * @param sourceAccount
-   */
-  void setSourceAccount(String sourceAccount) {
-    mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
   }
 
   /**

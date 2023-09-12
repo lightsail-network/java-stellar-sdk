@@ -18,6 +18,7 @@ import org.stellar.sdk.Predicate;
 import org.stellar.sdk.Price;
 import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;
 import org.stellar.sdk.responses.operations.AllowTrustOperationResponse;
+import org.stellar.sdk.responses.operations.BumpFootprintExpirationOperationResponse;
 import org.stellar.sdk.responses.operations.BumpSequenceOperationResponse;
 import org.stellar.sdk.responses.operations.ChangeTrustOperationResponse;
 import org.stellar.sdk.responses.operations.ClaimClaimableBalanceOperationResponse;
@@ -27,6 +28,7 @@ import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
 import org.stellar.sdk.responses.operations.CreateClaimableBalanceOperationResponse;
 import org.stellar.sdk.responses.operations.EndSponsoringFutureReservesOperationResponse;
 import org.stellar.sdk.responses.operations.InflationOperationResponse;
+import org.stellar.sdk.responses.operations.InvokeHostFunctionOperationResponse;
 import org.stellar.sdk.responses.operations.LiquidityPoolDepositOperationResponse;
 import org.stellar.sdk.responses.operations.LiquidityPoolWithdrawOperationResponse;
 import org.stellar.sdk.responses.operations.ManageBuyOfferOperationResponse;
@@ -35,6 +37,7 @@ import org.stellar.sdk.responses.operations.OperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentStrictReceiveOperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentStrictSendOperationResponse;
 import org.stellar.sdk.responses.operations.PaymentOperationResponse;
+import org.stellar.sdk.responses.operations.RestoreFootprintOperationResponse;
 import org.stellar.sdk.responses.operations.SetOptionsOperationResponse;
 import org.stellar.sdk.responses.operations.SetTrustLineFlagsOperationResponse;
 
@@ -1826,12 +1829,231 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(
         ((Predicate.AbsBefore) operation.getClaimants().get(0).getPredicate())
             .getTimestampSeconds(),
-        1234567890982222222L);
+        BigInteger.valueOf(1234567890982222222L));
     assertEquals(
         operation.getClaimants().get(1).getDestination(),
         "GAKFBRS24U3PEN6XDMEX4JEV5NGBARS2ZFF5O4CF3JL464SQSD4MDCPF");
     assertSame(
         operation.getClaimants().get(1).getPredicate().getClass(), Predicate.Unconditional.class);
     assertEquals(operation.getType(), "create_claimable_balance");
+  }
+
+  @Test
+  public void testDeserializeInvokeHostFunctionOperation() {
+    String json =
+        "{\n"
+            + "    \"_links\": {\n"
+            + "        \"self\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/operations/2224793063425\"\n"
+            + "        },\n"
+            + "        \"transaction\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/transactions/4ef3d81fba4b7db959080e4894cb8b2575418b8da9aa484f6306a79a3f63de3d\"\n"
+            + "        },\n"
+            + "        \"effects\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/operations/2224793063425/effects\"\n"
+            + "        },\n"
+            + "        \"succeeds\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/effects?order=desc&cursor=2224793063425\"\n"
+            + "        },\n"
+            + "        \"precedes\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/effects?order=asc&cursor=2224793063425\"\n"
+            + "        }\n"
+            + "    },\n"
+            + "    \"id\": \"2224793063425\",\n"
+            + "    \"paging_token\": \"2224793063425\",\n"
+            + "    \"transaction_successful\": true,\n"
+            + "    \"source_account\": \"GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54\",\n"
+            + "    \"type\": \"invoke_host_function\",\n"
+            + "    \"type_i\": 24,\n"
+            + "    \"created_at\": \"2023-07-20T10:44:56Z\",\n"
+            + "    \"transaction_hash\": \"4ef3d81fba4b7db959080e4894cb8b2575418b8da9aa484f6306a79a3f63de3d\",\n"
+            + "    \"function\": \"HostFunctionTypeHostFunctionTypeInvokeContract\",\n"
+            + "    \"parameters\": [\n"
+            + "        {\n"
+            + "            \"value\": \"AAAAEgAAAAGw7oy+G8a9SeTIE5E/EuJYl5JfwF0eZJWk8S7LmE7fwA==\",\n"
+            + "            \"type\": \"Address\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"value\": \"AAAADwAAAAh0cmFuc2Zlcg==\",\n"
+            + "            \"type\": \"Sym\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"value\": \"AAAAEgAAAAAAAAAAwT6e0zIpycpZ5/unUFyQAjXNeSxfmidj8tQWkeD9dCQ=\",\n"
+            + "            \"type\": \"Address\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"value\": \"AAAAEgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKE=\",\n"
+            + "            \"type\": \"Address\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"value\": \"AAAACgAAAAAAAAAAAAAAASoF8gA=\",\n"
+            + "            \"type\": \"I128\"\n"
+            + "        }\n"
+            + "    ],\n"
+            + "    \"address\": \"\",\n"
+            + "    \"salt\": \"\",\n"
+            + "    \"asset_balance_changes\": [\n"
+            + "        {\n"
+            + "            \"asset_type\": \"credit_alphanum12\",\n"
+            + "            \"asset_code\": \"Hello\",\n"
+            + "            \"asset_issuer\": \"GDJKBIYIPBE2NC5XIZX6GCFZHVWFUA7ONMQUOOVTLIM3BESTI4BYADAN\",\n"
+            + "            \"type\": \"transfer\",\n"
+            + "            \"from\": \"GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54\",\n"
+            + "            \"to\": \"GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM\",\n"
+            + "            \"amount\": \"500.0000000\"\n"
+            + "        }\n"
+            + "    ]\n"
+            + "}";
+
+    InvokeHostFunctionOperationResponse operation =
+        (InvokeHostFunctionOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+    assertEquals(
+        operation.getLinks().getSelf().getHref(), "http://127.0.0.1:8000/operations/2224793063425");
+    assertEquals(operation.getId().longValue(), 2224793063425L);
+    assertEquals(operation.getPagingToken(), "2224793063425");
+    // TODO: add transaction_successful field to the response
+    // assertEquals(operation.getTransactionSuccessful(), true);
+    assertEquals(
+        operation.getSourceAccount(), "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54");
+    assertEquals(operation.getType(), "invoke_host_function");
+    // TODO: add type_i field to the response
+    assertEquals(operation.getCreatedAt(), "2023-07-20T10:44:56Z");
+    assertEquals(
+        operation.getTransactionHash(),
+        "4ef3d81fba4b7db959080e4894cb8b2575418b8da9aa484f6306a79a3f63de3d");
+    assertEquals(operation.getFunction(), "HostFunctionTypeHostFunctionTypeInvokeContract");
+    assertEquals(operation.getParameters().size(), 5);
+    assertEquals(operation.getParameters().get(0).getType(), "Address");
+    assertEquals(
+        operation.getParameters().get(0).getValue(),
+        "AAAAEgAAAAGw7oy+G8a9SeTIE5E/EuJYl5JfwF0eZJWk8S7LmE7fwA==");
+    assertEquals(operation.getParameters().get(1).getType(), "Sym");
+    assertEquals(operation.getParameters().get(1).getValue(), "AAAADwAAAAh0cmFuc2Zlcg==");
+    assertEquals(operation.getParameters().get(2).getType(), "Address");
+    assertEquals(
+        operation.getParameters().get(2).getValue(),
+        "AAAAEgAAAAAAAAAAwT6e0zIpycpZ5/unUFyQAjXNeSxfmidj8tQWkeD9dCQ=");
+    assertEquals(operation.getParameters().get(3).getType(), "Address");
+    assertEquals(
+        operation.getParameters().get(3).getValue(),
+        "AAAAEgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKE=");
+    assertEquals(operation.getParameters().get(4).getType(), "I128");
+    assertEquals(operation.getParameters().get(4).getValue(), "AAAACgAAAAAAAAAAAAAAASoF8gA=");
+
+    assertEquals(operation.getAddress(), "");
+    assertEquals(operation.getSalt(), "");
+    assertEquals(operation.getAssetBalanceChanges().size(), 1);
+    assertEquals(operation.getAssetBalanceChanges().get(0).getAssetType(), "credit_alphanum12");
+    assertEquals(operation.getAssetBalanceChanges().get(0).getAssetCode(), "Hello");
+    assertEquals(
+        operation.getAssetBalanceChanges().get(0).getAssetIssuer(),
+        "GDJKBIYIPBE2NC5XIZX6GCFZHVWFUA7ONMQUOOVTLIM3BESTI4BYADAN");
+    assertEquals(operation.getAssetBalanceChanges().get(0).getType(), "transfer");
+    assertEquals(
+        operation.getAssetBalanceChanges().get(0).getFrom(),
+        "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54");
+    assertEquals(
+        operation.getAssetBalanceChanges().get(0).getTo(),
+        "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM");
+    assertEquals(operation.getAssetBalanceChanges().get(0).getAmount(), "500.0000000");
+  }
+
+  @Test
+  public void testDeserializeBumpFootprintExpirationOperation() {
+    String json =
+        "{\n"
+            + "    \"_links\": {\n"
+            + "        \"self\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/operations/2224793063426\"\n"
+            + "        },\n"
+            + "        \"transaction\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/transactions/c452cd9d1ff9692499d0d2aa2f8e898b8c38025300c0f293f4a2adde7295c82f\"\n"
+            + "        },\n"
+            + "        \"effects\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/operations/2224793063426/effects\"\n"
+            + "        },\n"
+            + "        \"succeeds\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/effects?order=desc&cursor=2224793063426\"\n"
+            + "        },\n"
+            + "        \"precedes\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/effects?order=asc&cursor=2224793063426\"\n"
+            + "        }\n"
+            + "    },\n"
+            + "    \"id\": \"2224793063426\",\n"
+            + "    \"paging_token\": \"2224793063426\",\n"
+            + "    \"transaction_successful\": true,\n"
+            + "    \"source_account\": \"GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54\",\n"
+            + "    \"type\": \"bump_footprint_expiration\",\n"
+            + "    \"type_i\": 25,\n"
+            + "    \"created_at\": \"2023-07-20T10:44:56Z\",\n"
+            + "    \"transaction_hash\": \"c452cd9d1ff9692499d0d2aa2f8e898b8c38025300c0f293f4a2adde7295c82f\",\n"
+            + "    \"ledgers_to_expire\": \"2343241\"\n"
+            + "}";
+
+    BumpFootprintExpirationOperationResponse operation =
+        (BumpFootprintExpirationOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+    assertEquals(
+        operation.getLinks().getSelf().getHref(), "http://127.0.0.1:8000/operations/2224793063426");
+    assertEquals(operation.getId().longValue(), 2224793063426L);
+    assertEquals(operation.getPagingToken(), "2224793063426");
+    // assertEquals(operation.getTransactionSuccessful(), true);
+    assertEquals(
+        operation.getSourceAccount(), "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54");
+    assertEquals(operation.getType(), "bump_footprint_expiration");
+    assertEquals(operation.getCreatedAt(), "2023-07-20T10:44:56Z");
+    assertEquals(
+        operation.getTransactionHash(),
+        "c452cd9d1ff9692499d0d2aa2f8e898b8c38025300c0f293f4a2adde7295c82f");
+    assertEquals(operation.getLedgersToExpire().longValue(), 2343241);
+  }
+
+  @Test
+  public void testDeserializeRestoreFootprintOperationResponse() {
+    String json =
+        "{\n"
+            + "    \"_links\": {\n"
+            + "        \"self\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/operations/2224793063427\"\n"
+            + "        },\n"
+            + "        \"transaction\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/transactions/b6932dacb25e05ca8e3d006d2a5a119683602f70474cc9f5de9fc53e99f627f8\"\n"
+            + "        },\n"
+            + "        \"effects\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/operations/2224793063427/effects\"\n"
+            + "        },\n"
+            + "        \"succeeds\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/effects?order=desc&cursor=2224793063427\"\n"
+            + "        },\n"
+            + "        \"precedes\": {\n"
+            + "            \"href\": \"http://127.0.0.1:8000/effects?order=asc&cursor=2224793063427\"\n"
+            + "        }\n"
+            + "    },\n"
+            + "    \"id\": \"2224793063427\",\n"
+            + "    \"paging_token\": \"2224793063427\",\n"
+            + "    \"transaction_successful\": true,\n"
+            + "    \"source_account\": \"GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54\",\n"
+            + "    \"type\": \"restore_footprint\",\n"
+            + "    \"type_i\": 26,\n"
+            + "    \"created_at\": \"2023-07-20T10:44:56Z\",\n"
+            + "    \"transaction_hash\": \"b6932dacb25e05ca8e3d006d2a5a119683602f70474cc9f5de9fc53e99f627f8\"\n"
+            + "}";
+
+    RestoreFootprintOperationResponse operation =
+        (RestoreFootprintOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+    assertEquals(
+        operation.getLinks().getSelf().getHref(), "http://127.0.0.1:8000/operations/2224793063427");
+    assertEquals(operation.getId().longValue(), 2224793063427L);
+    assertEquals(operation.getPagingToken(), "2224793063427");
+    // assertEquals(operation.getTransactionSuccessful(), true);
+    assertEquals(
+        operation.getSourceAccount(), "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54");
+    assertEquals(operation.getType(), "restore_footprint");
+    assertEquals(operation.getCreatedAt(), "2023-07-20T10:44:56Z");
+    assertEquals(
+        operation.getTransactionHash(),
+        "b6932dacb25e05ca8e3d006d2a5a119683602f70474cc9f5de9fc53e99f627f8");
   }
 }

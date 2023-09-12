@@ -14,6 +14,7 @@ import org.stellar.sdk.xdr.MuxedAccount;
 public class StrKeyTest {
   @Test
   public void testDecodeEncode() throws IOException, FormatException {
+
     String seed = "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE";
     byte[] secret = StrKey.decodeCheck(StrKey.VersionByte.SEED, seed.toCharArray());
     char[] encoded = StrKey.encodeCheck(StrKey.VersionByte.SEED, secret);
@@ -308,7 +309,9 @@ public class StrKeyTest {
     MuxedAccount muxedAccount = StrKey.encodeToXDRMuxedAccount(muxedAddress);
     assertEquals(CryptoKeyType.KEY_TYPE_MUXED_ED25519, muxedAccount.getDiscriminant());
     assertEquals(account.getAccountID().getEd25519(), muxedAccount.getMed25519().getEd25519());
-    assertEquals(new Long(-9223372036854775808L), muxedAccount.getMed25519().getId().getUint64());
+    assertEquals(
+        -9223372036854775808L,
+        muxedAccount.getMed25519().getId().getUint64().getNumber().longValue());
 
     assertEquals(muxedAddress, StrKey.encodeStellarMuxedAccount(muxedAccount));
 

@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -26,6 +31,20 @@ import java.io.IOException;
 //          PoolID liquidityPoolID;
 //          Asset asset;
 //      } revokeID;
+//  case ENVELOPE_TYPE_CONTRACT_ID:
+//      struct
+//      {
+//          Hash networkID;
+//          ContractIDPreimage contractIDPreimage;
+//      } contractID;
+//  case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
+//      struct
+//      {
+//          Hash networkID;
+//          int64 nonce;
+//          uint32 signatureExpirationLedger;
+//          SorobanAuthorizedInvocation invocation;
+//      } sorobanAuthorization;
 //  };
 
 //  ===========================================================================
@@ -62,10 +81,32 @@ public class HashIDPreimage implements XdrElement {
     this.revokeID = value;
   }
 
+  private HashIDPreimageContractID contractID;
+
+  public HashIDPreimageContractID getContractID() {
+    return this.contractID;
+  }
+
+  public void setContractID(HashIDPreimageContractID value) {
+    this.contractID = value;
+  }
+
+  private HashIDPreimageSorobanAuthorization sorobanAuthorization;
+
+  public HashIDPreimageSorobanAuthorization getSorobanAuthorization() {
+    return this.sorobanAuthorization;
+  }
+
+  public void setSorobanAuthorization(HashIDPreimageSorobanAuthorization value) {
+    this.sorobanAuthorization = value;
+  }
+
   public static final class Builder {
     private EnvelopeType discriminant;
     private HashIDPreimageOperationID operationID;
     private HashIDPreimageRevokeID revokeID;
+    private HashIDPreimageContractID contractID;
+    private HashIDPreimageSorobanAuthorization sorobanAuthorization;
 
     public Builder discriminant(EnvelopeType discriminant) {
       this.discriminant = discriminant;
@@ -82,11 +123,23 @@ public class HashIDPreimage implements XdrElement {
       return this;
     }
 
+    public Builder contractID(HashIDPreimageContractID contractID) {
+      this.contractID = contractID;
+      return this;
+    }
+
+    public Builder sorobanAuthorization(HashIDPreimageSorobanAuthorization sorobanAuthorization) {
+      this.sorobanAuthorization = sorobanAuthorization;
+      return this;
+    }
+
     public HashIDPreimage build() {
       HashIDPreimage val = new HashIDPreimage();
       val.setDiscriminant(discriminant);
-      val.setOperationID(operationID);
-      val.setRevokeID(revokeID);
+      val.setOperationID(this.operationID);
+      val.setRevokeID(this.revokeID);
+      val.setContractID(this.contractID);
+      val.setSorobanAuthorization(this.sorobanAuthorization);
       return val;
     }
   }
@@ -102,6 +155,13 @@ public class HashIDPreimage implements XdrElement {
         break;
       case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
         HashIDPreimageRevokeID.encode(stream, encodedHashIDPreimage.revokeID);
+        break;
+      case ENVELOPE_TYPE_CONTRACT_ID:
+        HashIDPreimageContractID.encode(stream, encodedHashIDPreimage.contractID);
+        break;
+      case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
+        HashIDPreimageSorobanAuthorization.encode(
+            stream, encodedHashIDPreimage.sorobanAuthorization);
         break;
     }
   }
@@ -121,13 +181,21 @@ public class HashIDPreimage implements XdrElement {
       case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
         decodedHashIDPreimage.revokeID = HashIDPreimageRevokeID.decode(stream);
         break;
+      case ENVELOPE_TYPE_CONTRACT_ID:
+        decodedHashIDPreimage.contractID = HashIDPreimageContractID.decode(stream);
+        break;
+      case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
+        decodedHashIDPreimage.sorobanAuthorization =
+            HashIDPreimageSorobanAuthorization.decode(stream);
+        break;
     }
     return decodedHashIDPreimage;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.operationID, this.revokeID, this.type);
+    return Objects.hashCode(
+        this.operationID, this.revokeID, this.contractID, this.sorobanAuthorization, this.type);
   }
 
   @Override
@@ -139,10 +207,38 @@ public class HashIDPreimage implements XdrElement {
     HashIDPreimage other = (HashIDPreimage) object;
     return Objects.equal(this.operationID, other.operationID)
         && Objects.equal(this.revokeID, other.revokeID)
+        && Objects.equal(this.contractID, other.contractID)
+        && Objects.equal(this.sorobanAuthorization, other.sorobanAuthorization)
         && Objects.equal(this.type, other.type);
   }
 
-  public static class HashIDPreimageOperationID {
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static HashIDPreimage fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static HashIDPreimage fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class HashIDPreimageOperationID implements XdrElement {
     public HashIDPreimageOperationID() {}
 
     private AccountID sourceAccount;
@@ -212,6 +308,32 @@ public class HashIDPreimage implements XdrElement {
           && Objects.equal(this.opNum, other.opNum);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static HashIDPreimageOperationID fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageOperationID fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID sourceAccount;
       private SequenceNumber seqNum;
@@ -234,15 +356,15 @@ public class HashIDPreimage implements XdrElement {
 
       public HashIDPreimageOperationID build() {
         HashIDPreimageOperationID val = new HashIDPreimageOperationID();
-        val.setSourceAccount(sourceAccount);
-        val.setSeqNum(seqNum);
-        val.setOpNum(opNum);
+        val.setSourceAccount(this.sourceAccount);
+        val.setSeqNum(this.seqNum);
+        val.setOpNum(this.opNum);
         return val;
       }
     }
   }
 
-  public static class HashIDPreimageRevokeID {
+  public static class HashIDPreimageRevokeID implements XdrElement {
     public HashIDPreimageRevokeID() {}
 
     private AccountID sourceAccount;
@@ -339,6 +461,32 @@ public class HashIDPreimage implements XdrElement {
           && Objects.equal(this.asset, other.asset);
     }
 
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static HashIDPreimageRevokeID fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageRevokeID fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
     public static final class Builder {
       private AccountID sourceAccount;
       private SequenceNumber seqNum;
@@ -373,11 +521,270 @@ public class HashIDPreimage implements XdrElement {
 
       public HashIDPreimageRevokeID build() {
         HashIDPreimageRevokeID val = new HashIDPreimageRevokeID();
-        val.setSourceAccount(sourceAccount);
-        val.setSeqNum(seqNum);
-        val.setOpNum(opNum);
-        val.setLiquidityPoolID(liquidityPoolID);
-        val.setAsset(asset);
+        val.setSourceAccount(this.sourceAccount);
+        val.setSeqNum(this.seqNum);
+        val.setOpNum(this.opNum);
+        val.setLiquidityPoolID(this.liquidityPoolID);
+        val.setAsset(this.asset);
+        return val;
+      }
+    }
+  }
+
+  public static class HashIDPreimageContractID implements XdrElement {
+    public HashIDPreimageContractID() {}
+
+    private Hash networkID;
+
+    public Hash getNetworkID() {
+      return this.networkID;
+    }
+
+    public void setNetworkID(Hash value) {
+      this.networkID = value;
+    }
+
+    private ContractIDPreimage contractIDPreimage;
+
+    public ContractIDPreimage getContractIDPreimage() {
+      return this.contractIDPreimage;
+    }
+
+    public void setContractIDPreimage(ContractIDPreimage value) {
+      this.contractIDPreimage = value;
+    }
+
+    public static void encode(
+        XdrDataOutputStream stream, HashIDPreimageContractID encodedHashIDPreimageContractID)
+        throws IOException {
+      Hash.encode(stream, encodedHashIDPreimageContractID.networkID);
+      ContractIDPreimage.encode(stream, encodedHashIDPreimageContractID.contractIDPreimage);
+    }
+
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
+
+    public static HashIDPreimageContractID decode(XdrDataInputStream stream) throws IOException {
+      HashIDPreimageContractID decodedHashIDPreimageContractID = new HashIDPreimageContractID();
+      decodedHashIDPreimageContractID.networkID = Hash.decode(stream);
+      decodedHashIDPreimageContractID.contractIDPreimage = ContractIDPreimage.decode(stream);
+      return decodedHashIDPreimageContractID;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(this.networkID, this.contractIDPreimage);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+      if (!(object instanceof HashIDPreimageContractID)) {
+        return false;
+      }
+
+      HashIDPreimageContractID other = (HashIDPreimageContractID) object;
+      return Objects.equal(this.networkID, other.networkID)
+          && Objects.equal(this.contractIDPreimage, other.contractIDPreimage);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static HashIDPreimageContractID fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageContractID fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
+    public static final class Builder {
+      private Hash networkID;
+      private ContractIDPreimage contractIDPreimage;
+
+      public Builder networkID(Hash networkID) {
+        this.networkID = networkID;
+        return this;
+      }
+
+      public Builder contractIDPreimage(ContractIDPreimage contractIDPreimage) {
+        this.contractIDPreimage = contractIDPreimage;
+        return this;
+      }
+
+      public HashIDPreimageContractID build() {
+        HashIDPreimageContractID val = new HashIDPreimageContractID();
+        val.setNetworkID(this.networkID);
+        val.setContractIDPreimage(this.contractIDPreimage);
+        return val;
+      }
+    }
+  }
+
+  public static class HashIDPreimageSorobanAuthorization implements XdrElement {
+    public HashIDPreimageSorobanAuthorization() {}
+
+    private Hash networkID;
+
+    public Hash getNetworkID() {
+      return this.networkID;
+    }
+
+    public void setNetworkID(Hash value) {
+      this.networkID = value;
+    }
+
+    private Int64 nonce;
+
+    public Int64 getNonce() {
+      return this.nonce;
+    }
+
+    public void setNonce(Int64 value) {
+      this.nonce = value;
+    }
+
+    private Uint32 signatureExpirationLedger;
+
+    public Uint32 getSignatureExpirationLedger() {
+      return this.signatureExpirationLedger;
+    }
+
+    public void setSignatureExpirationLedger(Uint32 value) {
+      this.signatureExpirationLedger = value;
+    }
+
+    private SorobanAuthorizedInvocation invocation;
+
+    public SorobanAuthorizedInvocation getInvocation() {
+      return this.invocation;
+    }
+
+    public void setInvocation(SorobanAuthorizedInvocation value) {
+      this.invocation = value;
+    }
+
+    public static void encode(
+        XdrDataOutputStream stream,
+        HashIDPreimageSorobanAuthorization encodedHashIDPreimageSorobanAuthorization)
+        throws IOException {
+      Hash.encode(stream, encodedHashIDPreimageSorobanAuthorization.networkID);
+      Int64.encode(stream, encodedHashIDPreimageSorobanAuthorization.nonce);
+      Uint32.encode(stream, encodedHashIDPreimageSorobanAuthorization.signatureExpirationLedger);
+      SorobanAuthorizedInvocation.encode(
+          stream, encodedHashIDPreimageSorobanAuthorization.invocation);
+    }
+
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
+
+    public static HashIDPreimageSorobanAuthorization decode(XdrDataInputStream stream)
+        throws IOException {
+      HashIDPreimageSorobanAuthorization decodedHashIDPreimageSorobanAuthorization =
+          new HashIDPreimageSorobanAuthorization();
+      decodedHashIDPreimageSorobanAuthorization.networkID = Hash.decode(stream);
+      decodedHashIDPreimageSorobanAuthorization.nonce = Int64.decode(stream);
+      decodedHashIDPreimageSorobanAuthorization.signatureExpirationLedger = Uint32.decode(stream);
+      decodedHashIDPreimageSorobanAuthorization.invocation =
+          SorobanAuthorizedInvocation.decode(stream);
+      return decodedHashIDPreimageSorobanAuthorization;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(
+          this.networkID, this.nonce, this.signatureExpirationLedger, this.invocation);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+      if (!(object instanceof HashIDPreimageSorobanAuthorization)) {
+        return false;
+      }
+
+      HashIDPreimageSorobanAuthorization other = (HashIDPreimageSorobanAuthorization) object;
+      return Objects.equal(this.networkID, other.networkID)
+          && Objects.equal(this.nonce, other.nonce)
+          && Objects.equal(this.signatureExpirationLedger, other.signatureExpirationLedger)
+          && Objects.equal(this.invocation, other.invocation);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.encode(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static HashIDPreimageSorobanAuthorization fromXdrBase64(String xdr) throws IOException {
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageSorobanAuthorization fromXdrByteArray(byte[] xdr)
+        throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
+    public static final class Builder {
+      private Hash networkID;
+      private Int64 nonce;
+      private Uint32 signatureExpirationLedger;
+      private SorobanAuthorizedInvocation invocation;
+
+      public Builder networkID(Hash networkID) {
+        this.networkID = networkID;
+        return this;
+      }
+
+      public Builder nonce(Int64 nonce) {
+        this.nonce = nonce;
+        return this;
+      }
+
+      public Builder signatureExpirationLedger(Uint32 signatureExpirationLedger) {
+        this.signatureExpirationLedger = signatureExpirationLedger;
+        return this;
+      }
+
+      public Builder invocation(SorobanAuthorizedInvocation invocation) {
+        this.invocation = invocation;
+        return this;
+      }
+
+      public HashIDPreimageSorobanAuthorization build() {
+        HashIDPreimageSorobanAuthorization val = new HashIDPreimageSorobanAuthorization();
+        val.setNetworkID(this.networkID);
+        val.setNonce(this.nonce);
+        val.setSignatureExpirationLedger(this.signatureExpirationLedger);
+        val.setInvocation(this.invocation);
         return val;
       }
     }

@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -109,10 +114,10 @@ public class LedgerEntryChange implements XdrElement {
     public LedgerEntryChange build() {
       LedgerEntryChange val = new LedgerEntryChange();
       val.setDiscriminant(discriminant);
-      val.setCreated(created);
-      val.setUpdated(updated);
-      val.setRemoved(removed);
-      val.setState(state);
+      val.setCreated(this.created);
+      val.setUpdated(this.updated);
+      val.setRemoved(this.removed);
+      val.setState(this.state);
       return val;
     }
   }
@@ -180,5 +185,31 @@ public class LedgerEntryChange implements XdrElement {
         && Objects.equal(this.removed, other.removed)
         && Objects.equal(this.state, other.state)
         && Objects.equal(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerEntryChange fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerEntryChange fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

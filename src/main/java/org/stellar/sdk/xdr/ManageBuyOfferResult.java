@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,18 @@ import java.io.IOException;
 //  {
 //  case MANAGE_BUY_OFFER_SUCCESS:
 //      ManageOfferSuccessResult success;
-//  default:
+//  case MANAGE_BUY_OFFER_MALFORMED:
+//  case MANAGE_BUY_OFFER_SELL_NO_TRUST:
+//  case MANAGE_BUY_OFFER_BUY_NO_TRUST:
+//  case MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED:
+//  case MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED:
+//  case MANAGE_BUY_OFFER_LINE_FULL:
+//  case MANAGE_BUY_OFFER_UNDERFUNDED:
+//  case MANAGE_BUY_OFFER_CROSS_SELF:
+//  case MANAGE_BUY_OFFER_SELL_NO_ISSUER:
+//  case MANAGE_BUY_OFFER_BUY_NO_ISSUER:
+//  case MANAGE_BUY_OFFER_NOT_FOUND:
+//  case MANAGE_BUY_OFFER_LOW_RESERVE:
 //      void;
 //  };
 
@@ -57,7 +73,7 @@ public class ManageBuyOfferResult implements XdrElement {
     public ManageBuyOfferResult build() {
       ManageBuyOfferResult val = new ManageBuyOfferResult();
       val.setDiscriminant(discriminant);
-      val.setSuccess(success);
+      val.setSuccess(this.success);
       return val;
     }
   }
@@ -72,7 +88,18 @@ public class ManageBuyOfferResult implements XdrElement {
       case MANAGE_BUY_OFFER_SUCCESS:
         ManageOfferSuccessResult.encode(stream, encodedManageBuyOfferResult.success);
         break;
-      default:
+      case MANAGE_BUY_OFFER_MALFORMED:
+      case MANAGE_BUY_OFFER_SELL_NO_TRUST:
+      case MANAGE_BUY_OFFER_BUY_NO_TRUST:
+      case MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED:
+      case MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED:
+      case MANAGE_BUY_OFFER_LINE_FULL:
+      case MANAGE_BUY_OFFER_UNDERFUNDED:
+      case MANAGE_BUY_OFFER_CROSS_SELF:
+      case MANAGE_BUY_OFFER_SELL_NO_ISSUER:
+      case MANAGE_BUY_OFFER_BUY_NO_ISSUER:
+      case MANAGE_BUY_OFFER_NOT_FOUND:
+      case MANAGE_BUY_OFFER_LOW_RESERVE:
         break;
     }
   }
@@ -89,7 +116,18 @@ public class ManageBuyOfferResult implements XdrElement {
       case MANAGE_BUY_OFFER_SUCCESS:
         decodedManageBuyOfferResult.success = ManageOfferSuccessResult.decode(stream);
         break;
-      default:
+      case MANAGE_BUY_OFFER_MALFORMED:
+      case MANAGE_BUY_OFFER_SELL_NO_TRUST:
+      case MANAGE_BUY_OFFER_BUY_NO_TRUST:
+      case MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED:
+      case MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED:
+      case MANAGE_BUY_OFFER_LINE_FULL:
+      case MANAGE_BUY_OFFER_UNDERFUNDED:
+      case MANAGE_BUY_OFFER_CROSS_SELF:
+      case MANAGE_BUY_OFFER_SELL_NO_ISSUER:
+      case MANAGE_BUY_OFFER_BUY_NO_ISSUER:
+      case MANAGE_BUY_OFFER_NOT_FOUND:
+      case MANAGE_BUY_OFFER_LOW_RESERVE:
         break;
     }
     return decodedManageBuyOfferResult;
@@ -108,5 +146,31 @@ public class ManageBuyOfferResult implements XdrElement {
 
     ManageBuyOfferResult other = (ManageBuyOfferResult) object;
     return Objects.equal(this.success, other.success) && Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ManageBuyOfferResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ManageBuyOfferResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

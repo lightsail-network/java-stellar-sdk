@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
 import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 // === xdr source ============================================================
@@ -12,7 +17,11 @@ import java.io.IOException;
 //  {
 //  case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
 //      void;
-//  default:
+//  case CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+//  case CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM:
+//  case CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
+//  case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
+//  case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
 //      void;
 //  };
 
@@ -54,7 +63,11 @@ public class ClaimClaimableBalanceResult implements XdrElement {
     switch (encodedClaimClaimableBalanceResult.getDiscriminant()) {
       case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
         break;
-      default:
+      case CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+      case CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM:
+      case CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
+      case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
+      case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
         break;
     }
   }
@@ -71,7 +84,11 @@ public class ClaimClaimableBalanceResult implements XdrElement {
     switch (decodedClaimClaimableBalanceResult.getDiscriminant()) {
       case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
         break;
-      default:
+      case CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+      case CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM:
+      case CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
+      case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
+      case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
         break;
     }
     return decodedClaimClaimableBalanceResult;
@@ -90,5 +107,31 @@ public class ClaimClaimableBalanceResult implements XdrElement {
 
     ClaimClaimableBalanceResult other = (ClaimClaimableBalanceResult) object;
     return Objects.equal(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    return base64Encoding.encode(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ClaimClaimableBalanceResult fromXdrBase64(String xdr) throws IOException {
+    BaseEncoding base64Encoding = BaseEncoding.base64();
+    byte[] bytes = base64Encoding.decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ClaimClaimableBalanceResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }
