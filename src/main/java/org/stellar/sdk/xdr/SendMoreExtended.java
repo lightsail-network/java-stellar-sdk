@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -62,7 +62,7 @@ public class SendMoreExtended implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.numMessages, this.numBytes);
+    return Objects.hash(this.numMessages, this.numBytes);
   }
 
   @Override
@@ -72,14 +72,13 @@ public class SendMoreExtended implements XdrElement {
     }
 
     SendMoreExtended other = (SendMoreExtended) object;
-    return Objects.equal(this.numMessages, other.numMessages)
-        && Objects.equal(this.numBytes, other.numBytes);
+    return Objects.equals(this.numMessages, other.numMessages)
+        && Objects.equals(this.numBytes, other.numBytes);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -91,8 +90,7 @@ public class SendMoreExtended implements XdrElement {
   }
 
   public static SendMoreExtended fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

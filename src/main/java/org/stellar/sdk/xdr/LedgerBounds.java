@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -62,7 +62,7 @@ public class LedgerBounds implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.minLedger, this.maxLedger);
+    return Objects.hash(this.minLedger, this.maxLedger);
   }
 
   @Override
@@ -72,14 +72,13 @@ public class LedgerBounds implements XdrElement {
     }
 
     LedgerBounds other = (LedgerBounds) object;
-    return Objects.equal(this.minLedger, other.minLedger)
-        && Objects.equal(this.maxLedger, other.maxLedger);
+    return Objects.equals(this.minLedger, other.minLedger)
+        && Objects.equals(this.maxLedger, other.maxLedger);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -91,8 +90,7 @@ public class LedgerBounds implements XdrElement {
   }
 
   public static LedgerBounds fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

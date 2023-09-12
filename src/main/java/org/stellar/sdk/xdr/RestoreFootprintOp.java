@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -49,7 +49,7 @@ public class RestoreFootprintOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ext);
+    return Objects.hash(this.ext);
   }
 
   @Override
@@ -59,13 +59,12 @@ public class RestoreFootprintOp implements XdrElement {
     }
 
     RestoreFootprintOp other = (RestoreFootprintOp) object;
-    return Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.ext, other.ext);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -77,8 +76,7 @@ public class RestoreFootprintOp implements XdrElement {
   }
 
   public static RestoreFootprintOp fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

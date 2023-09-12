@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -82,7 +82,7 @@ public class ManageOfferSuccessResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.hashCode(this.offersClaimed), this.offer);
+    return Objects.hash(Arrays.hashCode(this.offersClaimed), this.offer);
   }
 
   @Override
@@ -93,13 +93,12 @@ public class ManageOfferSuccessResult implements XdrElement {
 
     ManageOfferSuccessResult other = (ManageOfferSuccessResult) object;
     return Arrays.equals(this.offersClaimed, other.offersClaimed)
-        && Objects.equal(this.offer, other.offer);
+        && Objects.equals(this.offer, other.offer);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -111,8 +110,7 @@ public class ManageOfferSuccessResult implements XdrElement {
   }
 
   public static ManageOfferSuccessResult fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -229,7 +227,7 @@ public class ManageOfferSuccessResult implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.offer, this.effect);
+      return Objects.hash(this.offer, this.effect);
     }
 
     @Override
@@ -239,13 +237,12 @@ public class ManageOfferSuccessResult implements XdrElement {
       }
 
       ManageOfferSuccessResultOffer other = (ManageOfferSuccessResultOffer) object;
-      return Objects.equal(this.offer, other.offer) && Objects.equal(this.effect, other.effect);
+      return Objects.equals(this.offer, other.offer) && Objects.equals(this.effect, other.effect);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -257,8 +254,7 @@ public class ManageOfferSuccessResult implements XdrElement {
     }
 
     public static ManageOfferSuccessResultOffer fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

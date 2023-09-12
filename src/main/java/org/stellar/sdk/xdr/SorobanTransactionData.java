@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -77,7 +77,7 @@ public class SorobanTransactionData implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ext, this.resources, this.refundableFee);
+    return Objects.hash(this.ext, this.resources, this.refundableFee);
   }
 
   @Override
@@ -87,15 +87,14 @@ public class SorobanTransactionData implements XdrElement {
     }
 
     SorobanTransactionData other = (SorobanTransactionData) object;
-    return Objects.equal(this.ext, other.ext)
-        && Objects.equal(this.resources, other.resources)
-        && Objects.equal(this.refundableFee, other.refundableFee);
+    return Objects.equals(this.ext, other.ext)
+        && Objects.equals(this.resources, other.resources)
+        && Objects.equals(this.refundableFee, other.refundableFee);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -107,8 +106,7 @@ public class SorobanTransactionData implements XdrElement {
   }
 
   public static SorobanTransactionData fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

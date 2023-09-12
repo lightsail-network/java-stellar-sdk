@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -96,7 +96,7 @@ public class ContractCodeEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ext, this.hash, this.body, this.expirationLedgerSeq);
+    return Objects.hash(this.ext, this.hash, this.body, this.expirationLedgerSeq);
   }
 
   @Override
@@ -106,16 +106,15 @@ public class ContractCodeEntry implements XdrElement {
     }
 
     ContractCodeEntry other = (ContractCodeEntry) object;
-    return Objects.equal(this.ext, other.ext)
-        && Objects.equal(this.hash, other.hash)
-        && Objects.equal(this.body, other.body)
-        && Objects.equal(this.expirationLedgerSeq, other.expirationLedgerSeq);
+    return Objects.equals(this.ext, other.ext)
+        && Objects.equals(this.hash, other.hash)
+        && Objects.equals(this.body, other.body)
+        && Objects.equals(this.expirationLedgerSeq, other.expirationLedgerSeq);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -127,8 +126,7 @@ public class ContractCodeEntry implements XdrElement {
   }
 
   public static ContractCodeEntry fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -258,7 +256,7 @@ public class ContractCodeEntry implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(Arrays.hashCode(this.code), this.bodyType);
+      return Objects.hash(Arrays.hashCode(this.code), this.bodyType);
     }
 
     @Override
@@ -268,13 +266,12 @@ public class ContractCodeEntry implements XdrElement {
       }
 
       ContractCodeEntryBody other = (ContractCodeEntryBody) object;
-      return Arrays.equals(this.code, other.code) && Objects.equal(this.bodyType, other.bodyType);
+      return Arrays.equals(this.code, other.code) && Objects.equals(this.bodyType, other.bodyType);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -286,8 +283,7 @@ public class ContractCodeEntry implements XdrElement {
     }
 
     public static ContractCodeEntryBody fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

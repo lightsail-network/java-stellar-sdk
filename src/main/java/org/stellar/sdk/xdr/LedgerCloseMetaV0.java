@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -135,7 +135,7 @@ public class LedgerCloseMetaV0 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.ledgerHeader,
         this.txSet,
         Arrays.hashCode(this.txProcessing),
@@ -150,8 +150,8 @@ public class LedgerCloseMetaV0 implements XdrElement {
     }
 
     LedgerCloseMetaV0 other = (LedgerCloseMetaV0) object;
-    return Objects.equal(this.ledgerHeader, other.ledgerHeader)
-        && Objects.equal(this.txSet, other.txSet)
+    return Objects.equals(this.ledgerHeader, other.ledgerHeader)
+        && Objects.equals(this.txSet, other.txSet)
         && Arrays.equals(this.txProcessing, other.txProcessing)
         && Arrays.equals(this.upgradesProcessing, other.upgradesProcessing)
         && Arrays.equals(this.scpInfo, other.scpInfo);
@@ -159,8 +159,7 @@ public class LedgerCloseMetaV0 implements XdrElement {
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -172,8 +171,7 @@ public class LedgerCloseMetaV0 implements XdrElement {
   }
 
   public static LedgerCloseMetaV0 fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

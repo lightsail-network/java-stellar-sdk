@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -90,7 +90,7 @@ public class SetTrustLineFlagsOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.trustor, this.asset, this.clearFlags, this.setFlags);
+    return Objects.hash(this.trustor, this.asset, this.clearFlags, this.setFlags);
   }
 
   @Override
@@ -100,16 +100,15 @@ public class SetTrustLineFlagsOp implements XdrElement {
     }
 
     SetTrustLineFlagsOp other = (SetTrustLineFlagsOp) object;
-    return Objects.equal(this.trustor, other.trustor)
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.clearFlags, other.clearFlags)
-        && Objects.equal(this.setFlags, other.setFlags);
+    return Objects.equals(this.trustor, other.trustor)
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.clearFlags, other.clearFlags)
+        && Objects.equals(this.setFlags, other.setFlags);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -121,8 +120,7 @@ public class SetTrustLineFlagsOp implements XdrElement {
   }
 
   public static SetTrustLineFlagsOp fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

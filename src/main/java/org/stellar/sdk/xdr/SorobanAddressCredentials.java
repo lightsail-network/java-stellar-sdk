@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -89,7 +89,7 @@ public class SorobanAddressCredentials implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.address, this.nonce, this.signatureExpirationLedger, this.signatureArgs);
   }
 
@@ -100,16 +100,15 @@ public class SorobanAddressCredentials implements XdrElement {
     }
 
     SorobanAddressCredentials other = (SorobanAddressCredentials) object;
-    return Objects.equal(this.address, other.address)
-        && Objects.equal(this.nonce, other.nonce)
-        && Objects.equal(this.signatureExpirationLedger, other.signatureExpirationLedger)
-        && Objects.equal(this.signatureArgs, other.signatureArgs);
+    return Objects.equals(this.address, other.address)
+        && Objects.equals(this.nonce, other.nonce)
+        && Objects.equals(this.signatureExpirationLedger, other.signatureExpirationLedger)
+        && Objects.equals(this.signatureArgs, other.signatureArgs);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -121,8 +120,7 @@ public class SorobanAddressCredentials implements XdrElement {
   }
 
   public static SorobanAddressCredentials fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

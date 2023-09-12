@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -227,7 +227,7 @@ public class ClaimPredicate implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         Arrays.hashCode(this.andPredicates),
         Arrays.hashCode(this.orPredicates),
         this.notPredicate,
@@ -245,16 +245,15 @@ public class ClaimPredicate implements XdrElement {
     ClaimPredicate other = (ClaimPredicate) object;
     return Arrays.equals(this.andPredicates, other.andPredicates)
         && Arrays.equals(this.orPredicates, other.orPredicates)
-        && Objects.equal(this.notPredicate, other.notPredicate)
-        && Objects.equal(this.absBefore, other.absBefore)
-        && Objects.equal(this.relBefore, other.relBefore)
-        && Objects.equal(this.type, other.type);
+        && Objects.equals(this.notPredicate, other.notPredicate)
+        && Objects.equals(this.absBefore, other.absBefore)
+        && Objects.equals(this.relBefore, other.relBefore)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -266,8 +265,7 @@ public class ClaimPredicate implements XdrElement {
   }
 
   public static ClaimPredicate fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

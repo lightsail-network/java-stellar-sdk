@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -194,7 +194,7 @@ public class HashIDPreimage implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.operationID, this.revokeID, this.contractID, this.sorobanAuthorization, this.type);
   }
 
@@ -205,17 +205,16 @@ public class HashIDPreimage implements XdrElement {
     }
 
     HashIDPreimage other = (HashIDPreimage) object;
-    return Objects.equal(this.operationID, other.operationID)
-        && Objects.equal(this.revokeID, other.revokeID)
-        && Objects.equal(this.contractID, other.contractID)
-        && Objects.equal(this.sorobanAuthorization, other.sorobanAuthorization)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.operationID, other.operationID)
+        && Objects.equals(this.revokeID, other.revokeID)
+        && Objects.equals(this.contractID, other.contractID)
+        && Objects.equals(this.sorobanAuthorization, other.sorobanAuthorization)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -227,8 +226,7 @@ public class HashIDPreimage implements XdrElement {
   }
 
   public static HashIDPreimage fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -293,7 +291,7 @@ public class HashIDPreimage implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.sourceAccount, this.seqNum, this.opNum);
+      return Objects.hash(this.sourceAccount, this.seqNum, this.opNum);
     }
 
     @Override
@@ -303,15 +301,14 @@ public class HashIDPreimage implements XdrElement {
       }
 
       HashIDPreimageOperationID other = (HashIDPreimageOperationID) object;
-      return Objects.equal(this.sourceAccount, other.sourceAccount)
-          && Objects.equal(this.seqNum, other.seqNum)
-          && Objects.equal(this.opNum, other.opNum);
+      return Objects.equals(this.sourceAccount, other.sourceAccount)
+          && Objects.equals(this.seqNum, other.seqNum)
+          && Objects.equals(this.opNum, other.opNum);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -323,8 +320,7 @@ public class HashIDPreimage implements XdrElement {
     }
 
     public static HashIDPreimageOperationID fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -443,7 +439,7 @@ public class HashIDPreimage implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(
+      return Objects.hash(
           this.sourceAccount, this.seqNum, this.opNum, this.liquidityPoolID, this.asset);
     }
 
@@ -454,17 +450,16 @@ public class HashIDPreimage implements XdrElement {
       }
 
       HashIDPreimageRevokeID other = (HashIDPreimageRevokeID) object;
-      return Objects.equal(this.sourceAccount, other.sourceAccount)
-          && Objects.equal(this.seqNum, other.seqNum)
-          && Objects.equal(this.opNum, other.opNum)
-          && Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
-          && Objects.equal(this.asset, other.asset);
+      return Objects.equals(this.sourceAccount, other.sourceAccount)
+          && Objects.equals(this.seqNum, other.seqNum)
+          && Objects.equals(this.opNum, other.opNum)
+          && Objects.equals(this.liquidityPoolID, other.liquidityPoolID)
+          && Objects.equals(this.asset, other.asset);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -476,8 +471,7 @@ public class HashIDPreimage implements XdrElement {
     }
 
     public static HashIDPreimageRevokeID fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -574,7 +568,7 @@ public class HashIDPreimage implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.networkID, this.contractIDPreimage);
+      return Objects.hash(this.networkID, this.contractIDPreimage);
     }
 
     @Override
@@ -584,14 +578,13 @@ public class HashIDPreimage implements XdrElement {
       }
 
       HashIDPreimageContractID other = (HashIDPreimageContractID) object;
-      return Objects.equal(this.networkID, other.networkID)
-          && Objects.equal(this.contractIDPreimage, other.contractIDPreimage);
+      return Objects.equals(this.networkID, other.networkID)
+          && Objects.equals(this.contractIDPreimage, other.contractIDPreimage);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -603,8 +596,7 @@ public class HashIDPreimage implements XdrElement {
     }
 
     public static HashIDPreimageContractID fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -709,7 +701,7 @@ public class HashIDPreimage implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(
+      return Objects.hash(
           this.networkID, this.nonce, this.signatureExpirationLedger, this.invocation);
     }
 
@@ -720,16 +712,15 @@ public class HashIDPreimage implements XdrElement {
       }
 
       HashIDPreimageSorobanAuthorization other = (HashIDPreimageSorobanAuthorization) object;
-      return Objects.equal(this.networkID, other.networkID)
-          && Objects.equal(this.nonce, other.nonce)
-          && Objects.equal(this.signatureExpirationLedger, other.signatureExpirationLedger)
-          && Objects.equal(this.invocation, other.invocation);
+      return Objects.equals(this.networkID, other.networkID)
+          && Objects.equals(this.nonce, other.nonce)
+          && Objects.equals(this.signatureExpirationLedger, other.signatureExpirationLedger)
+          && Objects.equals(this.invocation, other.invocation);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -741,8 +732,7 @@ public class HashIDPreimage implements XdrElement {
     }
 
     public static HashIDPreimageSorobanAuthorization fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

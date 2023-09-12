@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -232,7 +232,7 @@ public class SetOptionsOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.inflationDest,
         this.clearFlags,
         this.setFlags,
@@ -251,21 +251,20 @@ public class SetOptionsOp implements XdrElement {
     }
 
     SetOptionsOp other = (SetOptionsOp) object;
-    return Objects.equal(this.inflationDest, other.inflationDest)
-        && Objects.equal(this.clearFlags, other.clearFlags)
-        && Objects.equal(this.setFlags, other.setFlags)
-        && Objects.equal(this.masterWeight, other.masterWeight)
-        && Objects.equal(this.lowThreshold, other.lowThreshold)
-        && Objects.equal(this.medThreshold, other.medThreshold)
-        && Objects.equal(this.highThreshold, other.highThreshold)
-        && Objects.equal(this.homeDomain, other.homeDomain)
-        && Objects.equal(this.signer, other.signer);
+    return Objects.equals(this.inflationDest, other.inflationDest)
+        && Objects.equals(this.clearFlags, other.clearFlags)
+        && Objects.equals(this.setFlags, other.setFlags)
+        && Objects.equals(this.masterWeight, other.masterWeight)
+        && Objects.equals(this.lowThreshold, other.lowThreshold)
+        && Objects.equals(this.medThreshold, other.medThreshold)
+        && Objects.equals(this.highThreshold, other.highThreshold)
+        && Objects.equals(this.homeDomain, other.homeDomain)
+        && Objects.equals(this.signer, other.signer);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -277,8 +276,7 @@ public class SetOptionsOp implements XdrElement {
   }
 
   public static SetOptionsOp fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

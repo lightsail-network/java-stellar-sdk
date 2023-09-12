@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -74,7 +74,7 @@ public class TransactionV1Envelope implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.tx, Arrays.hashCode(this.signatures));
+    return Objects.hash(this.tx, Arrays.hashCode(this.signatures));
   }
 
   @Override
@@ -84,13 +84,12 @@ public class TransactionV1Envelope implements XdrElement {
     }
 
     TransactionV1Envelope other = (TransactionV1Envelope) object;
-    return Objects.equal(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
+    return Objects.equals(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -102,8 +101,7 @@ public class TransactionV1Envelope implements XdrElement {
   }
 
   public static TransactionV1Envelope fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

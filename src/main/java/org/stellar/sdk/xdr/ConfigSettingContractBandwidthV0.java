@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -83,7 +83,7 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.ledgerMaxPropagateSizeBytes, this.txMaxSizeBytes, this.feePropagateData1KB);
   }
 
@@ -94,15 +94,14 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
     }
 
     ConfigSettingContractBandwidthV0 other = (ConfigSettingContractBandwidthV0) object;
-    return Objects.equal(this.ledgerMaxPropagateSizeBytes, other.ledgerMaxPropagateSizeBytes)
-        && Objects.equal(this.txMaxSizeBytes, other.txMaxSizeBytes)
-        && Objects.equal(this.feePropagateData1KB, other.feePropagateData1KB);
+    return Objects.equals(this.ledgerMaxPropagateSizeBytes, other.ledgerMaxPropagateSizeBytes)
+        && Objects.equals(this.txMaxSizeBytes, other.txMaxSizeBytes)
+        && Objects.equals(this.feePropagateData1KB, other.feePropagateData1KB);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -114,8 +113,7 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
   }
 
   public static ConfigSettingContractBandwidthV0 fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -260,7 +260,7 @@ public class LedgerHeader implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.ledgerVersion,
         this.previousLedgerHash,
         this.scpValue,
@@ -285,27 +285,26 @@ public class LedgerHeader implements XdrElement {
     }
 
     LedgerHeader other = (LedgerHeader) object;
-    return Objects.equal(this.ledgerVersion, other.ledgerVersion)
-        && Objects.equal(this.previousLedgerHash, other.previousLedgerHash)
-        && Objects.equal(this.scpValue, other.scpValue)
-        && Objects.equal(this.txSetResultHash, other.txSetResultHash)
-        && Objects.equal(this.bucketListHash, other.bucketListHash)
-        && Objects.equal(this.ledgerSeq, other.ledgerSeq)
-        && Objects.equal(this.totalCoins, other.totalCoins)
-        && Objects.equal(this.feePool, other.feePool)
-        && Objects.equal(this.inflationSeq, other.inflationSeq)
-        && Objects.equal(this.idPool, other.idPool)
-        && Objects.equal(this.baseFee, other.baseFee)
-        && Objects.equal(this.baseReserve, other.baseReserve)
-        && Objects.equal(this.maxTxSetSize, other.maxTxSetSize)
+    return Objects.equals(this.ledgerVersion, other.ledgerVersion)
+        && Objects.equals(this.previousLedgerHash, other.previousLedgerHash)
+        && Objects.equals(this.scpValue, other.scpValue)
+        && Objects.equals(this.txSetResultHash, other.txSetResultHash)
+        && Objects.equals(this.bucketListHash, other.bucketListHash)
+        && Objects.equals(this.ledgerSeq, other.ledgerSeq)
+        && Objects.equals(this.totalCoins, other.totalCoins)
+        && Objects.equals(this.feePool, other.feePool)
+        && Objects.equals(this.inflationSeq, other.inflationSeq)
+        && Objects.equals(this.idPool, other.idPool)
+        && Objects.equals(this.baseFee, other.baseFee)
+        && Objects.equals(this.baseReserve, other.baseReserve)
+        && Objects.equals(this.maxTxSetSize, other.maxTxSetSize)
         && Arrays.equals(this.skipList, other.skipList)
-        && Objects.equal(this.ext, other.ext);
+        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -317,8 +316,7 @@ public class LedgerHeader implements XdrElement {
   }
 
   public static LedgerHeader fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -520,7 +518,7 @@ public class LedgerHeader implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v1, this.v);
+      return Objects.hash(this.v1, this.v);
     }
 
     @Override
@@ -530,13 +528,12 @@ public class LedgerHeader implements XdrElement {
       }
 
       LedgerHeaderExt other = (LedgerHeaderExt) object;
-      return Objects.equal(this.v1, other.v1) && Objects.equal(this.v, other.v);
+      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -548,8 +545,7 @@ public class LedgerHeader implements XdrElement {
     }
 
     public static LedgerHeaderExt fromXdrBase64(String xdr) throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

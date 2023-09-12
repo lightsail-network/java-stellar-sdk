@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -105,7 +105,7 @@ public class ClaimLiquidityAtom implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.liquidityPoolID, this.assetSold, this.amountSold, this.assetBought, this.amountBought);
   }
 
@@ -116,17 +116,16 @@ public class ClaimLiquidityAtom implements XdrElement {
     }
 
     ClaimLiquidityAtom other = (ClaimLiquidityAtom) object;
-    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
-        && Objects.equal(this.assetSold, other.assetSold)
-        && Objects.equal(this.amountSold, other.amountSold)
-        && Objects.equal(this.assetBought, other.assetBought)
-        && Objects.equal(this.amountBought, other.amountBought);
+    return Objects.equals(this.liquidityPoolID, other.liquidityPoolID)
+        && Objects.equals(this.assetSold, other.assetSold)
+        && Objects.equals(this.amountSold, other.amountSold)
+        && Objects.equals(this.assetBought, other.assetBought)
+        && Objects.equals(this.amountBought, other.amountBought);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -138,8 +137,7 @@ public class ClaimLiquidityAtom implements XdrElement {
   }
 
   public static ClaimLiquidityAtom fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -414,7 +414,7 @@ public class ConfigSettingEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.contractMaxSizeBytes,
         this.contractCompute,
         this.contractLedgerCost,
@@ -438,26 +438,25 @@ public class ConfigSettingEntry implements XdrElement {
     }
 
     ConfigSettingEntry other = (ConfigSettingEntry) object;
-    return Objects.equal(this.contractMaxSizeBytes, other.contractMaxSizeBytes)
-        && Objects.equal(this.contractCompute, other.contractCompute)
-        && Objects.equal(this.contractLedgerCost, other.contractLedgerCost)
-        && Objects.equal(this.contractHistoricalData, other.contractHistoricalData)
-        && Objects.equal(this.contractMetaData, other.contractMetaData)
-        && Objects.equal(this.contractBandwidth, other.contractBandwidth)
-        && Objects.equal(this.contractCostParamsCpuInsns, other.contractCostParamsCpuInsns)
-        && Objects.equal(this.contractCostParamsMemBytes, other.contractCostParamsMemBytes)
-        && Objects.equal(this.contractDataKeySizeBytes, other.contractDataKeySizeBytes)
-        && Objects.equal(this.contractDataEntrySizeBytes, other.contractDataEntrySizeBytes)
-        && Objects.equal(this.stateExpirationSettings, other.stateExpirationSettings)
-        && Objects.equal(this.contractExecutionLanes, other.contractExecutionLanes)
+    return Objects.equals(this.contractMaxSizeBytes, other.contractMaxSizeBytes)
+        && Objects.equals(this.contractCompute, other.contractCompute)
+        && Objects.equals(this.contractLedgerCost, other.contractLedgerCost)
+        && Objects.equals(this.contractHistoricalData, other.contractHistoricalData)
+        && Objects.equals(this.contractMetaData, other.contractMetaData)
+        && Objects.equals(this.contractBandwidth, other.contractBandwidth)
+        && Objects.equals(this.contractCostParamsCpuInsns, other.contractCostParamsCpuInsns)
+        && Objects.equals(this.contractCostParamsMemBytes, other.contractCostParamsMemBytes)
+        && Objects.equals(this.contractDataKeySizeBytes, other.contractDataKeySizeBytes)
+        && Objects.equals(this.contractDataEntrySizeBytes, other.contractDataEntrySizeBytes)
+        && Objects.equals(this.stateExpirationSettings, other.stateExpirationSettings)
+        && Objects.equals(this.contractExecutionLanes, other.contractExecutionLanes)
         && Arrays.equals(this.bucketListSizeWindow, other.bucketListSizeWindow)
-        && Objects.equal(this.configSettingID, other.configSettingID);
+        && Objects.equals(this.configSettingID, other.configSettingID);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -469,8 +468,7 @@ public class ConfigSettingEntry implements XdrElement {
   }
 
   public static ConfigSettingEntry fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -327,7 +327,7 @@ public class SCSpecTypeDef implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.option,
         this.result,
         this.vec,
@@ -346,21 +346,20 @@ public class SCSpecTypeDef implements XdrElement {
     }
 
     SCSpecTypeDef other = (SCSpecTypeDef) object;
-    return Objects.equal(this.option, other.option)
-        && Objects.equal(this.result, other.result)
-        && Objects.equal(this.vec, other.vec)
-        && Objects.equal(this.map, other.map)
-        && Objects.equal(this.set, other.set)
-        && Objects.equal(this.tuple, other.tuple)
-        && Objects.equal(this.bytesN, other.bytesN)
-        && Objects.equal(this.udt, other.udt)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.option, other.option)
+        && Objects.equals(this.result, other.result)
+        && Objects.equals(this.vec, other.vec)
+        && Objects.equals(this.map, other.map)
+        && Objects.equals(this.set, other.set)
+        && Objects.equals(this.tuple, other.tuple)
+        && Objects.equals(this.bytesN, other.bytesN)
+        && Objects.equals(this.udt, other.udt)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -372,8 +371,7 @@ public class SCSpecTypeDef implements XdrElement {
   }
 
   public static SCSpecTypeDef fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -74,7 +74,7 @@ public class TransactionSignaturePayload implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.networkId, this.taggedTransaction);
+    return Objects.hash(this.networkId, this.taggedTransaction);
   }
 
   @Override
@@ -84,14 +84,13 @@ public class TransactionSignaturePayload implements XdrElement {
     }
 
     TransactionSignaturePayload other = (TransactionSignaturePayload) object;
-    return Objects.equal(this.networkId, other.networkId)
-        && Objects.equal(this.taggedTransaction, other.taggedTransaction);
+    return Objects.equals(this.networkId, other.networkId)
+        && Objects.equals(this.taggedTransaction, other.taggedTransaction);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -103,8 +102,7 @@ public class TransactionSignaturePayload implements XdrElement {
   }
 
   public static TransactionSignaturePayload fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -245,7 +243,7 @@ public class TransactionSignaturePayload implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.tx, this.feeBump, this.type);
+      return Objects.hash(this.tx, this.feeBump, this.type);
     }
 
     @Override
@@ -256,15 +254,14 @@ public class TransactionSignaturePayload implements XdrElement {
 
       TransactionSignaturePayloadTaggedTransaction other =
           (TransactionSignaturePayloadTaggedTransaction) object;
-      return Objects.equal(this.tx, other.tx)
-          && Objects.equal(this.feeBump, other.feeBump)
-          && Objects.equal(this.type, other.type);
+      return Objects.equals(this.tx, other.tx)
+          && Objects.equals(this.feeBump, other.feeBump)
+          && Objects.equals(this.type, other.type);
     }
 
     @Override
     public String toXdrBase64() throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(toXdrByteArray());
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -277,8 +274,7 @@ public class TransactionSignaturePayload implements XdrElement {
 
     public static TransactionSignaturePayloadTaggedTransaction fromXdrBase64(String xdr)
         throws IOException {
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      byte[] bytes = base64Encoding.decode(xdr);
+      byte[] bytes = Base64.getDecoder().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

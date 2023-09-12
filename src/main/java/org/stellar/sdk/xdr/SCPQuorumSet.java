@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -92,7 +92,7 @@ public class SCPQuorumSet implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.threshold, Arrays.hashCode(this.validators), Arrays.hashCode(this.innerSets));
   }
 
@@ -103,15 +103,14 @@ public class SCPQuorumSet implements XdrElement {
     }
 
     SCPQuorumSet other = (SCPQuorumSet) object;
-    return Objects.equal(this.threshold, other.threshold)
+    return Objects.equals(this.threshold, other.threshold)
         && Arrays.equals(this.validators, other.validators)
         && Arrays.equals(this.innerSets, other.innerSets);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -123,8 +122,7 @@ public class SCPQuorumSet implements XdrElement {
   }
 
   public static SCPQuorumSet fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

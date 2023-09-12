@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -76,7 +76,7 @@ public class SimplePaymentResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.destination, this.asset, this.amount);
+    return Objects.hash(this.destination, this.asset, this.amount);
   }
 
   @Override
@@ -86,15 +86,14 @@ public class SimplePaymentResult implements XdrElement {
     }
 
     SimplePaymentResult other = (SimplePaymentResult) object;
-    return Objects.equal(this.destination, other.destination)
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.amount, other.amount);
+    return Objects.equals(this.destination, other.destination)
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.amount, other.amount);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -106,8 +105,7 @@ public class SimplePaymentResult implements XdrElement {
   }
 
   public static SimplePaymentResult fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -62,7 +62,7 @@ public class SCPBallot implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.counter, this.value);
+    return Objects.hash(this.counter, this.value);
   }
 
   @Override
@@ -72,13 +72,12 @@ public class SCPBallot implements XdrElement {
     }
 
     SCPBallot other = (SCPBallot) object;
-    return Objects.equal(this.counter, other.counter) && Objects.equal(this.value, other.value);
+    return Objects.equals(this.counter, other.counter) && Objects.equals(this.value, other.value);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -90,8 +89,7 @@ public class SCPBallot implements XdrElement {
   }
 
   public static SCPBallot fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

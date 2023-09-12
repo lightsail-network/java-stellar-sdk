@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -62,7 +62,7 @@ public class DontHave implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.type, this.reqHash);
+    return Objects.hash(this.type, this.reqHash);
   }
 
   @Override
@@ -72,13 +72,12 @@ public class DontHave implements XdrElement {
     }
 
     DontHave other = (DontHave) object;
-    return Objects.equal(this.type, other.type) && Objects.equal(this.reqHash, other.reqHash);
+    return Objects.equals(this.type, other.type) && Objects.equals(this.reqHash, other.reqHash);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -90,8 +89,7 @@ public class DontHave implements XdrElement {
   }
 
   public static DontHave fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -5,12 +5,12 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -71,7 +71,7 @@ public class SCPHistoryEntryV0 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.hashCode(this.quorumSets), this.ledgerMessages);
+    return Objects.hash(Arrays.hashCode(this.quorumSets), this.ledgerMessages);
   }
 
   @Override
@@ -82,13 +82,12 @@ public class SCPHistoryEntryV0 implements XdrElement {
 
     SCPHistoryEntryV0 other = (SCPHistoryEntryV0) object;
     return Arrays.equals(this.quorumSets, other.quorumSets)
-        && Objects.equal(this.ledgerMessages, other.ledgerMessages);
+        && Objects.equals(this.ledgerMessages, other.ledgerMessages);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -100,8 +99,7 @@ public class SCPHistoryEntryV0 implements XdrElement {
   }
 
   public static SCPHistoryEntryV0 fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

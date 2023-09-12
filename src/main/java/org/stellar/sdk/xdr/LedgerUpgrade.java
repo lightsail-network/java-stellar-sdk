@@ -5,11 +5,11 @@ package org.stellar.sdk.xdr;
 
 import static org.stellar.sdk.xdr.Constants.*;
 
-import com.google.common.base.Objects;
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -220,7 +220,7 @@ public class LedgerUpgrade implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.newLedgerVersion,
         this.newBaseFee,
         this.newMaxTxSetSize,
@@ -237,19 +237,18 @@ public class LedgerUpgrade implements XdrElement {
     }
 
     LedgerUpgrade other = (LedgerUpgrade) object;
-    return Objects.equal(this.newLedgerVersion, other.newLedgerVersion)
-        && Objects.equal(this.newBaseFee, other.newBaseFee)
-        && Objects.equal(this.newMaxTxSetSize, other.newMaxTxSetSize)
-        && Objects.equal(this.newBaseReserve, other.newBaseReserve)
-        && Objects.equal(this.newFlags, other.newFlags)
-        && Objects.equal(this.newConfig, other.newConfig)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.newLedgerVersion, other.newLedgerVersion)
+        && Objects.equals(this.newBaseFee, other.newBaseFee)
+        && Objects.equals(this.newMaxTxSetSize, other.newMaxTxSetSize)
+        && Objects.equals(this.newBaseReserve, other.newBaseReserve)
+        && Objects.equals(this.newFlags, other.newFlags)
+        && Objects.equals(this.newConfig, other.newConfig)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
   public String toXdrBase64() throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(toXdrByteArray());
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -261,8 +260,7 @@ public class LedgerUpgrade implements XdrElement {
   }
 
   public static LedgerUpgrade fromXdrBase64(String xdr) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(xdr);
+    byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
