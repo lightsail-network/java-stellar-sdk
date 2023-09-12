@@ -59,8 +59,8 @@ public class LiquidityPoolWithdrawOperationResponse extends OperationResponse {
 
     LiquidityPoolWithdrawOperationResponse o = (LiquidityPoolWithdrawOperationResponse) object;
     return Objects.equals(this.getLiquidityPoolId(), o.getLiquidityPoolId())
-        && Objects.equals(this.getReservesMin(), o.getReservesMin())
-        && Objects.equals(this.getReservesReceived(), o.getReservesReceived())
+        && Arrays.equals(this.getReservesMin(), o.getReservesMin())
+        && Arrays.equals(this.getReservesReceived(), o.getReservesReceived())
         && Objects.equals(this.getShares(), o.getShares());
   }
 }
