@@ -5,10 +5,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.sun.tools.javac.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import org.junit.Test;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
@@ -122,7 +122,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .minSeqNumber(3L)
-            .extraSigners(List.of(signerKey, signerKey, signerKey))
+            .extraSigners(Arrays.asList(signerKey, signerKey, signerKey))
             .build();
 
     Preconditions xdr = preconditions.toXdr();
@@ -213,7 +213,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .extraSigners(
-                List.of(
+                Arrays.asList(
                     new SignerKey.Builder().build(),
                     new SignerKey.Builder().build(),
                     new SignerKey.Builder().build()))

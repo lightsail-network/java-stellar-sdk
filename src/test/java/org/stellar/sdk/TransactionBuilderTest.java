@@ -2,9 +2,9 @@ package org.stellar.sdk;
 
 import static org.junit.Assert.*;
 
-import com.sun.tools.javac.util.List;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
 import org.stellar.sdk.xdr.*;
@@ -527,7 +527,7 @@ public class TransactionBuilderTest {
                   .timeBounds(
                       new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                   .extraSigners(
-                      List.of(
+                      Arrays.asList(
                           new SignerKey.Builder().build(),
                           new SignerKey.Builder().build(),
                           new SignerKey.Builder().build()))
