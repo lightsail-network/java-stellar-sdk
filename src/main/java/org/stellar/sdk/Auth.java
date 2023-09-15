@@ -21,7 +21,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 public class Auth {
   public SorobanAuthorizationEntry authorizeEntry(
       SorobanAuthorizationEntry entry, KeyPair signer, Long validUntilLedgerSeq, Network network) {
-    Signer signFunction =
+    Signer entrySigner =
         preimage -> {
           byte[] data;
           try {
@@ -33,7 +33,7 @@ public class Auth {
           return signer.sign(payload);
         };
 
-    return authorizeEntry(entry, signFunction, validUntilLedgerSeq, network);
+    return authorizeEntry(entry, entrySigner, validUntilLedgerSeq, network);
   }
 
   public SorobanAuthorizationEntry authorizeEntry(
@@ -97,7 +97,7 @@ public class Auth {
       Long validUntilLedgerSeq,
       SorobanAuthorizedInvocation invocation,
       Network network) {
-    Signer signFunction =
+    Signer entrySigner =
         preimage -> {
           try {
             byte[] payload = Util.hash(preimage.toXdrByteArray());
@@ -107,7 +107,7 @@ public class Auth {
           }
         };
     return authorizeInvocation(
-        signFunction, validUntilLedgerSeq, invocation, signer.getAccountId(), network);
+        entrySigner, validUntilLedgerSeq, invocation, signer.getAccountId(), network);
   }
 
   public SorobanAuthorizationEntry authorizeInvocation(
