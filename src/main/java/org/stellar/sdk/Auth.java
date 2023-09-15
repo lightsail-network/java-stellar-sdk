@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import org.stellar.sdk.scval.Scv;
@@ -66,7 +67,7 @@ public class Auth {
     byte[] signature = signer.sign(preimage);
     byte[] publicKey = Address.fromSCAddress(addrAuth.getAddress()).getBytes();
 
-    byte[] data = new byte[0];
+    byte[] data;
     try {
       data = preimage.toXdrByteArray();
     } catch (IOException e) {
@@ -115,9 +116,7 @@ public class Auth {
       SorobanAuthorizedInvocation invocation,
       String publicKey,
       Network network) {
-    // random int64 nonce
-    long nonce = 1;
-
+    long nonce = new SecureRandom().nextLong();
     SorobanAuthorizationEntry entry =
         new SorobanAuthorizationEntry.Builder()
             .credentials(
