@@ -420,7 +420,7 @@ public class SorobanServer implements Closeable {
       if (simulateTransactionResponse.getResults() == null
           || simulateTransactionResponse.getResults().size() != 1) {
         throw new IllegalArgumentException(
-            "invalid simulateTransactionResponse: results must contain exactly one element if present");
+            "invalid simulateTransactionResponse: results must contain exactly one element if the operation is an InvokeHostFunctionOperation");
       }
 
       SimulateTransactionResponse.SimulateHostFunctionResult simulateHostFunctionResult =
