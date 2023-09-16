@@ -18,7 +18,6 @@ import java.util.List;
 import org.junit.Test;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
-import org.stellar.sdk.xdr.ContractEntryBodyType;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -230,7 +229,6 @@ public class TransactionTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
                     .readBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
@@ -284,7 +282,7 @@ public class TransactionTest {
                 AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.TESTNET);
     assertEquals(parsed, transaction);
     String expectedXdr =
-        "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAQAAAAAAAAAAAAAAAH8wYjTJienWf2nf2TEZi2APPWzmtkwiQHAftisIgyuHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAAfzBiNMmJ6dZ/ad/ZMRmLYA89bOa2TCJAcB+2KwiDK4cAAAAAAACHBwAAArsAAAAAAAAA2AAAAAAAAABkAAAAAA==";
+        "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAQAAAAAAAAAAAAAAAH8wYjTJienWf2nf2TEZi2APPWzmtkwiQHAftisIgyuHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAAfzBiNMmJ6dZ/ad/ZMRmLYA89bOa2TCJAcB+2KwiDK4cAAAAAAACHBwAAArsAAAAAAAAAAAAAAGQAAAAA";
     assertEquals(expectedXdr, transaction.toEnvelopeXdrBase64());
   }
 
@@ -336,7 +334,6 @@ public class TransactionTest {
                                 .contract(new Address(contractId).toSCAddress())
                                 .key(Scv.toLedgerKeyContractInstance())
                                 .durability(ContractDataDurability.PERSISTENT)
-                                .bodyType(ContractEntryBodyType.DATA_ENTRY)
                                 .build())
                         .build()))
             .build();
@@ -375,7 +372,6 @@ public class TransactionTest {
                                 .contract(new Address(contractId).toSCAddress())
                                 .key(Scv.toLedgerKeyContractInstance())
                                 .durability(ContractDataDurability.PERSISTENT)
-                                .bodyType(ContractEntryBodyType.DATA_ENTRY)
                                 .build())
                         .build()))
             .build();

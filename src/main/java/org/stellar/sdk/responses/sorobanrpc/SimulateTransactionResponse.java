@@ -23,9 +23,15 @@ public class SimulateTransactionResponse {
 
   Long minResourceFee;
 
+  // An array of the individual host function call results.
+  // This will only contain a single element if present, because only a single
+  // invokeHostFunctionOperation
+  // is supported per transaction.
   ImmutableList<SimulateHostFunctionResult> results;
 
   SimulateTransactionCost cost;
+
+  RestorePreamble restorePreamble;
 
   Long latestLedger;
 
@@ -45,5 +51,13 @@ public class SimulateTransactionResponse {
 
     @SerializedName("memBytes")
     BigInteger memoryBytes;
+  }
+
+  @AllArgsConstructor
+  @Value
+  public static class RestorePreamble {
+    String transactionData;
+
+    Long minResourceFee;
   }
 }
