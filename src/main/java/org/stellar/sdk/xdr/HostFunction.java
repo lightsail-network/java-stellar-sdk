@@ -17,7 +17,7 @@ import java.util.Objects;
 //  union HostFunction switch (HostFunctionType type)
 //  {
 //  case HOST_FUNCTION_TYPE_INVOKE_CONTRACT:
-//      SCVec invokeContract;
+//      InvokeContractArgs invokeContract;
 //  case HOST_FUNCTION_TYPE_CREATE_CONTRACT:
 //      CreateContractArgs createContract;
 //  case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
@@ -38,13 +38,13 @@ public class HostFunction implements XdrElement {
     this.type = value;
   }
 
-  private SCVec invokeContract;
+  private InvokeContractArgs invokeContract;
 
-  public SCVec getInvokeContract() {
+  public InvokeContractArgs getInvokeContract() {
     return this.invokeContract;
   }
 
-  public void setInvokeContract(SCVec value) {
+  public void setInvokeContract(InvokeContractArgs value) {
     this.invokeContract = value;
   }
 
@@ -70,7 +70,7 @@ public class HostFunction implements XdrElement {
 
   public static final class Builder {
     private HostFunctionType discriminant;
-    private SCVec invokeContract;
+    private InvokeContractArgs invokeContract;
     private CreateContractArgs createContract;
     private byte[] wasm;
 
@@ -79,7 +79,7 @@ public class HostFunction implements XdrElement {
       return this;
     }
 
-    public Builder invokeContract(SCVec invokeContract) {
+    public Builder invokeContract(InvokeContractArgs invokeContract) {
       this.invokeContract = invokeContract;
       return this;
     }
@@ -111,7 +111,7 @@ public class HostFunction implements XdrElement {
     stream.writeInt(encodedHostFunction.getDiscriminant().getValue());
     switch (encodedHostFunction.getDiscriminant()) {
       case HOST_FUNCTION_TYPE_INVOKE_CONTRACT:
-        SCVec.encode(stream, encodedHostFunction.invokeContract);
+        InvokeContractArgs.encode(stream, encodedHostFunction.invokeContract);
         break;
       case HOST_FUNCTION_TYPE_CREATE_CONTRACT:
         CreateContractArgs.encode(stream, encodedHostFunction.createContract);
@@ -134,7 +134,7 @@ public class HostFunction implements XdrElement {
     decodedHostFunction.setDiscriminant(discriminant);
     switch (decodedHostFunction.getDiscriminant()) {
       case HOST_FUNCTION_TYPE_INVOKE_CONTRACT:
-        decodedHostFunction.invokeContract = SCVec.decode(stream);
+        decodedHostFunction.invokeContract = InvokeContractArgs.decode(stream);
         break;
       case HOST_FUNCTION_TYPE_CREATE_CONTRACT:
         decodedHostFunction.createContract = CreateContractArgs.decode(stream);

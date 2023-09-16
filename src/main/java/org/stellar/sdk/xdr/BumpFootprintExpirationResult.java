@@ -19,6 +19,7 @@ import java.util.Objects;
 //      void;
 //  case BUMP_FOOTPRINT_EXPIRATION_MALFORMED:
 //  case BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED:
+//  case BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE:
 //      void;
 //  };
 
@@ -63,6 +64,7 @@ public class BumpFootprintExpirationResult implements XdrElement {
         break;
       case BUMP_FOOTPRINT_EXPIRATION_MALFORMED:
       case BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED:
+      case BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE:
         break;
     }
   }
@@ -82,6 +84,7 @@ public class BumpFootprintExpirationResult implements XdrElement {
         break;
       case BUMP_FOOTPRINT_EXPIRATION_MALFORMED:
       case BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED:
+      case BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE:
         break;
     }
     return decodedBumpFootprintExpirationResult;

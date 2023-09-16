@@ -37,6 +37,8 @@ import java.util.Objects;
 //          ContractCodeEntry contractCode;
 //      case CONFIG_SETTING:
 //          ConfigSettingEntry configSetting;
+//      case EXPIRATION:
+//          ExpirationEntry expiration;
 //      }
 //      data;
 //
@@ -277,6 +279,16 @@ public class LedgerEntry implements XdrElement {
       this.configSetting = value;
     }
 
+    private ExpirationEntry expiration;
+
+    public ExpirationEntry getExpiration() {
+      return this.expiration;
+    }
+
+    public void setExpiration(ExpirationEntry value) {
+      this.expiration = value;
+    }
+
     public static final class Builder {
       private LedgerEntryType discriminant;
       private AccountEntry account;
@@ -288,6 +300,7 @@ public class LedgerEntry implements XdrElement {
       private ContractDataEntry contractData;
       private ContractCodeEntry contractCode;
       private ConfigSettingEntry configSetting;
+      private ExpirationEntry expiration;
 
       public Builder discriminant(LedgerEntryType discriminant) {
         this.discriminant = discriminant;
@@ -339,6 +352,11 @@ public class LedgerEntry implements XdrElement {
         return this;
       }
 
+      public Builder expiration(ExpirationEntry expiration) {
+        this.expiration = expiration;
+        return this;
+      }
+
       public LedgerEntryData build() {
         LedgerEntryData val = new LedgerEntryData();
         val.setDiscriminant(discriminant);
@@ -351,6 +369,7 @@ public class LedgerEntry implements XdrElement {
         val.setContractData(this.contractData);
         val.setContractCode(this.contractCode);
         val.setConfigSetting(this.configSetting);
+        val.setExpiration(this.expiration);
         return val;
       }
     }
@@ -387,6 +406,9 @@ public class LedgerEntry implements XdrElement {
           break;
         case CONFIG_SETTING:
           ConfigSettingEntry.encode(stream, encodedLedgerEntryData.configSetting);
+          break;
+        case EXPIRATION:
+          ExpirationEntry.encode(stream, encodedLedgerEntryData.expiration);
           break;
       }
     }
@@ -427,6 +449,9 @@ public class LedgerEntry implements XdrElement {
         case CONFIG_SETTING:
           decodedLedgerEntryData.configSetting = ConfigSettingEntry.decode(stream);
           break;
+        case EXPIRATION:
+          decodedLedgerEntryData.expiration = ExpirationEntry.decode(stream);
+          break;
       }
       return decodedLedgerEntryData;
     }
@@ -443,6 +468,7 @@ public class LedgerEntry implements XdrElement {
           this.contractData,
           this.contractCode,
           this.configSetting,
+          this.expiration,
           this.type);
     }
 
@@ -462,6 +488,7 @@ public class LedgerEntry implements XdrElement {
           && Objects.equals(this.contractData, other.contractData)
           && Objects.equals(this.contractCode, other.contractCode)
           && Objects.equals(this.configSetting, other.configSetting)
+          && Objects.equals(this.expiration, other.expiration)
           && Objects.equals(this.type, other.type);
     }
 
