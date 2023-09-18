@@ -59,19 +59,23 @@ import java.util.Objects;
 //          SCAddress contract;
 //          SCVal key;
 //          ContractDataDurability durability;
-//          ContractEntryBodyType bodyType;
 //      } contractData;
 //  case CONTRACT_CODE:
 //      struct
 //      {
 //          Hash hash;
-//          ContractEntryBodyType bodyType;
 //      } contractCode;
 //  case CONFIG_SETTING:
 //      struct
 //      {
 //          ConfigSettingID configSettingID;
 //      } configSetting;
+//  case EXPIRATION:
+//      struct
+//      {
+//          // Hash of the LedgerKey that is associated with this ExpirationEntry
+//          Hash keyHash;
+//      } expiration;
 //  };
 
 //  ===========================================================================
@@ -178,6 +182,16 @@ public class LedgerKey implements XdrElement {
     this.configSetting = value;
   }
 
+  private LedgerKeyExpiration expiration;
+
+  public LedgerKeyExpiration getExpiration() {
+    return this.expiration;
+  }
+
+  public void setExpiration(LedgerKeyExpiration value) {
+    this.expiration = value;
+  }
+
   public static final class Builder {
     private LedgerEntryType discriminant;
     private LedgerKeyAccount account;
@@ -189,6 +203,7 @@ public class LedgerKey implements XdrElement {
     private LedgerKeyContractData contractData;
     private LedgerKeyContractCode contractCode;
     private LedgerKeyConfigSetting configSetting;
+    private LedgerKeyExpiration expiration;
 
     public Builder discriminant(LedgerEntryType discriminant) {
       this.discriminant = discriminant;
@@ -240,6 +255,11 @@ public class LedgerKey implements XdrElement {
       return this;
     }
 
+    public Builder expiration(LedgerKeyExpiration expiration) {
+      this.expiration = expiration;
+      return this;
+    }
+
     public LedgerKey build() {
       LedgerKey val = new LedgerKey();
       val.setDiscriminant(discriminant);
@@ -252,6 +272,7 @@ public class LedgerKey implements XdrElement {
       val.setContractData(this.contractData);
       val.setContractCode(this.contractCode);
       val.setConfigSetting(this.configSetting);
+      val.setExpiration(this.expiration);
       return val;
     }
   }
@@ -288,6 +309,9 @@ public class LedgerKey implements XdrElement {
         break;
       case CONFIG_SETTING:
         LedgerKeyConfigSetting.encode(stream, encodedLedgerKey.configSetting);
+        break;
+      case EXPIRATION:
+        LedgerKeyExpiration.encode(stream, encodedLedgerKey.expiration);
         break;
     }
   }
@@ -328,6 +352,9 @@ public class LedgerKey implements XdrElement {
       case CONFIG_SETTING:
         decodedLedgerKey.configSetting = LedgerKeyConfigSetting.decode(stream);
         break;
+      case EXPIRATION:
+        decodedLedgerKey.expiration = LedgerKeyExpiration.decode(stream);
+        break;
     }
     return decodedLedgerKey;
   }
@@ -344,6 +371,7 @@ public class LedgerKey implements XdrElement {
         this.contractData,
         this.contractCode,
         this.configSetting,
+        this.expiration,
         this.type);
   }
 
@@ -363,6 +391,7 @@ public class LedgerKey implements XdrElement {
         && Objects.equals(this.contractData, other.contractData)
         && Objects.equals(this.contractCode, other.contractCode)
         && Objects.equals(this.configSetting, other.configSetting)
+        && Objects.equals(this.expiration, other.expiration)
         && Objects.equals(this.type, other.type);
   }
 
@@ -984,23 +1013,12 @@ public class LedgerKey implements XdrElement {
       this.durability = value;
     }
 
-    private ContractEntryBodyType bodyType;
-
-    public ContractEntryBodyType getBodyType() {
-      return this.bodyType;
-    }
-
-    public void setBodyType(ContractEntryBodyType value) {
-      this.bodyType = value;
-    }
-
     public static void encode(
         XdrDataOutputStream stream, LedgerKeyContractData encodedLedgerKeyContractData)
         throws IOException {
       SCAddress.encode(stream, encodedLedgerKeyContractData.contract);
       SCVal.encode(stream, encodedLedgerKeyContractData.key);
       ContractDataDurability.encode(stream, encodedLedgerKeyContractData.durability);
-      ContractEntryBodyType.encode(stream, encodedLedgerKeyContractData.bodyType);
     }
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -1012,13 +1030,12 @@ public class LedgerKey implements XdrElement {
       decodedLedgerKeyContractData.contract = SCAddress.decode(stream);
       decodedLedgerKeyContractData.key = SCVal.decode(stream);
       decodedLedgerKeyContractData.durability = ContractDataDurability.decode(stream);
-      decodedLedgerKeyContractData.bodyType = ContractEntryBodyType.decode(stream);
       return decodedLedgerKeyContractData;
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(this.contract, this.key, this.durability, this.bodyType);
+      return Objects.hash(this.contract, this.key, this.durability);
     }
 
     @Override
@@ -1030,8 +1047,7 @@ public class LedgerKey implements XdrElement {
       LedgerKeyContractData other = (LedgerKeyContractData) object;
       return Objects.equals(this.contract, other.contract)
           && Objects.equals(this.key, other.key)
-          && Objects.equals(this.durability, other.durability)
-          && Objects.equals(this.bodyType, other.bodyType);
+          && Objects.equals(this.durability, other.durability);
     }
 
     @Override
@@ -1062,7 +1078,6 @@ public class LedgerKey implements XdrElement {
       private SCAddress contract;
       private SCVal key;
       private ContractDataDurability durability;
-      private ContractEntryBodyType bodyType;
 
       public Builder contract(SCAddress contract) {
         this.contract = contract;
@@ -1079,17 +1094,11 @@ public class LedgerKey implements XdrElement {
         return this;
       }
 
-      public Builder bodyType(ContractEntryBodyType bodyType) {
-        this.bodyType = bodyType;
-        return this;
-      }
-
       public LedgerKeyContractData build() {
         LedgerKeyContractData val = new LedgerKeyContractData();
         val.setContract(this.contract);
         val.setKey(this.key);
         val.setDurability(this.durability);
-        val.setBodyType(this.bodyType);
         return val;
       }
     }
@@ -1108,21 +1117,10 @@ public class LedgerKey implements XdrElement {
       this.hash = value;
     }
 
-    private ContractEntryBodyType bodyType;
-
-    public ContractEntryBodyType getBodyType() {
-      return this.bodyType;
-    }
-
-    public void setBodyType(ContractEntryBodyType value) {
-      this.bodyType = value;
-    }
-
     public static void encode(
         XdrDataOutputStream stream, LedgerKeyContractCode encodedLedgerKeyContractCode)
         throws IOException {
       Hash.encode(stream, encodedLedgerKeyContractCode.hash);
-      ContractEntryBodyType.encode(stream, encodedLedgerKeyContractCode.bodyType);
     }
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -1132,13 +1130,12 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyContractCode decode(XdrDataInputStream stream) throws IOException {
       LedgerKeyContractCode decodedLedgerKeyContractCode = new LedgerKeyContractCode();
       decodedLedgerKeyContractCode.hash = Hash.decode(stream);
-      decodedLedgerKeyContractCode.bodyType = ContractEntryBodyType.decode(stream);
       return decodedLedgerKeyContractCode;
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(this.hash, this.bodyType);
+      return Objects.hash(this.hash);
     }
 
     @Override
@@ -1148,7 +1145,7 @@ public class LedgerKey implements XdrElement {
       }
 
       LedgerKeyContractCode other = (LedgerKeyContractCode) object;
-      return Objects.equals(this.hash, other.hash) && Objects.equals(this.bodyType, other.bodyType);
+      return Objects.equals(this.hash, other.hash);
     }
 
     @Override
@@ -1177,22 +1174,15 @@ public class LedgerKey implements XdrElement {
 
     public static final class Builder {
       private Hash hash;
-      private ContractEntryBodyType bodyType;
 
       public Builder hash(Hash hash) {
         this.hash = hash;
         return this;
       }
 
-      public Builder bodyType(ContractEntryBodyType bodyType) {
-        this.bodyType = bodyType;
-        return this;
-      }
-
       public LedgerKeyContractCode build() {
         LedgerKeyContractCode val = new LedgerKeyContractCode();
         val.setHash(this.hash);
-        val.setBodyType(this.bodyType);
         return val;
       }
     }
@@ -1277,6 +1267,90 @@ public class LedgerKey implements XdrElement {
       public LedgerKeyConfigSetting build() {
         LedgerKeyConfigSetting val = new LedgerKeyConfigSetting();
         val.setConfigSettingID(this.configSettingID);
+        return val;
+      }
+    }
+  }
+
+  public static class LedgerKeyExpiration implements XdrElement {
+    public LedgerKeyExpiration() {}
+
+    private Hash keyHash;
+
+    public Hash getKeyHash() {
+      return this.keyHash;
+    }
+
+    public void setKeyHash(Hash value) {
+      this.keyHash = value;
+    }
+
+    public static void encode(
+        XdrDataOutputStream stream, LedgerKeyExpiration encodedLedgerKeyExpiration)
+        throws IOException {
+      Hash.encode(stream, encodedLedgerKeyExpiration.keyHash);
+    }
+
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      encode(stream, this);
+    }
+
+    public static LedgerKeyExpiration decode(XdrDataInputStream stream) throws IOException {
+      LedgerKeyExpiration decodedLedgerKeyExpiration = new LedgerKeyExpiration();
+      decodedLedgerKeyExpiration.keyHash = Hash.decode(stream);
+      return decodedLedgerKeyExpiration;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(this.keyHash);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+      if (!(object instanceof LedgerKeyExpiration)) {
+        return false;
+      }
+
+      LedgerKeyExpiration other = (LedgerKeyExpiration) object;
+      return Objects.equals(this.keyHash, other.keyHash);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerKeyExpiration fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerKeyExpiration fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
+
+    public static final class Builder {
+      private Hash keyHash;
+
+      public Builder keyHash(Hash keyHash) {
+        this.keyHash = keyHash;
+        return this;
+      }
+
+      public LedgerKeyExpiration build() {
+        LedgerKeyExpiration val = new LedgerKeyExpiration();
+        val.setKeyHash(this.keyHash);
         return val;
       }
     }

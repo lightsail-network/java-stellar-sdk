@@ -19,12 +19,11 @@ import org.stellar.sdk.xdr.CreateContractArgs;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.HostFunction;
 import org.stellar.sdk.xdr.HostFunctionType;
+import org.stellar.sdk.xdr.InvokeContractArgs;
 import org.stellar.sdk.xdr.InvokeHostFunctionOp;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.SCSymbol;
 import org.stellar.sdk.xdr.SCVal;
-import org.stellar.sdk.xdr.SCValType;
-import org.stellar.sdk.xdr.SCVec;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.XdrString;
@@ -226,14 +225,14 @@ public class InvokeHostFunctionOperation extends Operation {
    * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
    * invoke a contract function.
    *
-   * @see org.stellar.sdk.scval.Scv
-   * @see <a
-   *     href="https://soroban.stellar.org/docs/fundamentals-and-concepts/interacting-with-contracts"
-   *     target="_blank">Interacting with Contracts</a>
    * @param contractId The ID of the contract to invoke.
    * @param functionName The name of the function to invoke.
    * @param parameters The parameters to pass to the method.
    * @return {@link InvokeHostFunctionOperationBuilder}
+   * @see org.stellar.sdk.scval.Scv
+   * @see <a
+   *     href="https://soroban.stellar.org/docs/fundamentals-and-concepts/interacting-with-contracts"
+   *     target="_blank">Interacting with Contracts</a>
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> invokeContractFunctionOperationBuilder(
       String contractId, String functionName, @Nullable Collection<SCVal> parameters) {
@@ -241,17 +240,10 @@ public class InvokeHostFunctionOperation extends Operation {
     if (address.getAddressType() != Address.AddressType.CONTRACT) {
       throw new IllegalArgumentException("\"contractId\" must be a contract address");
     }
-    SCVal contractIdScVal = address.toSCVal();
-    SCVal functionNameScVal =
-        new SCVal.Builder()
-            .discriminant(SCValType.SCV_SYMBOL)
-            .sym(new SCSymbol(new XdrString(functionName)))
-            .build();
-
+    SCSymbol functionNameSCSymbol = new SCSymbol(new XdrString(functionName));
     List<SCVal> invokeContractParams =
-        new ArrayList<>(2 + (parameters != null ? parameters.size() : 0));
-    invokeContractParams.add(contractIdScVal);
-    invokeContractParams.add(functionNameScVal);
+        new ArrayList<>((parameters != null ? parameters.size() : 0));
+
     if (parameters != null) {
       for (SCVal parameter : parameters) {
         if (parameter == null) {
@@ -261,10 +253,17 @@ public class InvokeHostFunctionOperation extends Operation {
       }
     }
 
+    InvokeContractArgs invokeContractArgs =
+        new InvokeContractArgs.Builder()
+            .contractAddress(address.toSCAddress())
+            .functionName(functionNameSCSymbol)
+            .args(invokeContractParams.toArray(new SCVal[0]))
+            .build();
+
     HostFunction hostFunction =
         new HostFunction.Builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
-            .invokeContract(new SCVec(invokeContractParams.toArray(new SCVal[0])))
+            .invokeContract(invokeContractArgs)
             .build();
     return builder().hostFunction(hostFunction);
   }

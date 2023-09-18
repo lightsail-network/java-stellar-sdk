@@ -19,7 +19,8 @@ import java.util.Base64;
 //
 //      // codes considered as "failure" for the operation
 //      RESTORE_FOOTPRINT_MALFORMED = -1,
-//      RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED = -2
+//      RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED = -2,
+//      RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE = -3
 //  };
 
 //  ===========================================================================
@@ -27,6 +28,7 @@ public enum RestoreFootprintResultCode implements XdrElement {
   RESTORE_FOOTPRINT_SUCCESS(0),
   RESTORE_FOOTPRINT_MALFORMED(-1),
   RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED(-2),
+  RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE(-3),
   ;
   private int mValue;
 
@@ -47,6 +49,8 @@ public enum RestoreFootprintResultCode implements XdrElement {
         return RESTORE_FOOTPRINT_MALFORMED;
       case -2:
         return RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED;
+      case -3:
+        return RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

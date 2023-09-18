@@ -19,7 +19,8 @@ import java.util.Base64;
 //
 //      // codes considered as "failure" for the operation
 //      BUMP_FOOTPRINT_EXPIRATION_MALFORMED = -1,
-//      BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED = -2
+//      BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED = -2,
+//      BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE = -3
 //  };
 
 //  ===========================================================================
@@ -27,6 +28,7 @@ public enum BumpFootprintExpirationResultCode implements XdrElement {
   BUMP_FOOTPRINT_EXPIRATION_SUCCESS(0),
   BUMP_FOOTPRINT_EXPIRATION_MALFORMED(-1),
   BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED(-2),
+  BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE(-3),
   ;
   private int mValue;
 
@@ -48,6 +50,8 @@ public enum BumpFootprintExpirationResultCode implements XdrElement {
         return BUMP_FOOTPRINT_EXPIRATION_MALFORMED;
       case -2:
         return BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED;
+      case -3:
+        return BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

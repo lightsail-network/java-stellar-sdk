@@ -14,8 +14,7 @@ public final class Constants {
   public static final int MASK_TRUSTLINE_FLAGS_V17 = 7;
   public static final int MASK_OFFERENTRY_FLAGS = 1;
   public static final int MASK_CLAIMABLE_BALANCE_FLAGS = 0x1;
-  public static final int MASK_CONTRACT_DATA_FLAGS_V20 = 0x1;
-  public static final int MASK_LEDGER_HEADER_FLAGS = 0x7F;
+  public static final int MASK_LEDGER_HEADER_FLAGS = 0x7;
   public static final int AUTH_MSG_FLAG_FLOW_CONTROL_BYTES_REQUESTED = 200;
   public static final int TX_ADVERT_VECTOR_MAX_SIZE = 1000;
   public static final int TX_DEMAND_VECTOR_MAX_SIZE = 1000;
