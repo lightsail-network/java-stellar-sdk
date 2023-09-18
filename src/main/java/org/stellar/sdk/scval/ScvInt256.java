@@ -2,7 +2,6 @@ package org.stellar.sdk.scval;
 
 import static org.stellar.sdk.Util.getBytes;
 
-import com.google.common.primitives.Longs;
 import java.math.BigInteger;
 import java.util.Arrays;
 import org.stellar.sdk.xdr.Int256Parts;

@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import lombok.NonNull;
 
 /**
  * TrustLineAsset class.
@@ -144,9 +144,8 @@ public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
   public static final class Wrapper extends TrustLineAsset {
     private Asset asset;
 
-    public Wrapper(Asset baseAsset) {
+    public Wrapper(@NonNull Asset baseAsset) {
       super();
-      checkNotNull(baseAsset, "asset cannot be null");
       asset = baseAsset;
     }
 

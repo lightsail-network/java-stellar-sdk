@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import lombok.NonNull;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
@@ -24,9 +23,7 @@ public class SignedPayloadSigner {
    * @param signerAccountId - the xdr AccountID
    * @param payload - the raw payload for a signed payload
    */
-  public SignedPayloadSigner(AccountID signerAccountId, byte[] payload) {
-    checkNotNull(payload, "payload cannot be null");
-    checkNotNull(signerAccountId, "accountId cannot be null");
+  public SignedPayloadSigner(@NonNull AccountID signerAccountId, byte @NonNull [] payload) {
     if (payload.length > SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH) {
       throw new IllegalArgumentException(
           "invalid payload length, must be less than " + SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH);
@@ -39,8 +36,8 @@ public class SignedPayloadSigner {
       throw new IllegalArgumentException(
           "invalid payload signer, only ED25519 public key accounts are supported currently");
     }
-    this.signerAccountId = checkNotNull(signerAccountId);
-    this.payload = checkNotNull(payload);
+    this.signerAccountId = signerAccountId;
+    this.payload = payload;
   }
 
   /**

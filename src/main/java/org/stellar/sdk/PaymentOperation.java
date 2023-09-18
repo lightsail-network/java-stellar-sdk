@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PaymentOp;
@@ -20,10 +19,11 @@ public class PaymentOperation extends Operation {
   private final Asset asset;
   private final String amount;
 
-  private PaymentOperation(String destination, Asset asset, String amount) {
-    this.destination = checkNotNull(destination, "destination cannot be null");
-    this.asset = checkNotNull(asset, "asset cannot be null");
-    this.amount = checkNotNull(amount, "amount cannot be null");
+  private PaymentOperation(
+      @NonNull String destination, @NonNull Asset asset, @NonNull String amount) {
+    this.destination = destination;
+    this.asset = asset;
+    this.amount = amount;
   }
 
   /** Account that receives the payment. */
@@ -120,7 +120,7 @@ public class PaymentOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hashCode(this.getSourceAccount(), this.asset, this.amount, this.destination);
+    return Objects.hash(this.getSourceAccount(), this.asset, this.amount, this.destination);
   }
 
   @Override
@@ -130,9 +130,9 @@ public class PaymentOperation extends Operation {
     }
 
     PaymentOperation other = (PaymentOperation) object;
-    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.amount, other.amount)
-        && Objects.equal(this.destination, other.destination);
+    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.amount, other.amount)
+        && Objects.equals(this.destination, other.destination);
   }
 }

@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import java.math.BigInteger;
+import java.util.Objects;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
@@ -45,7 +45,7 @@ public class MemoId extends Memo {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MemoId memoId = (MemoId) o;
-    return Objects.equal(id, memoId.id);
+    return Objects.equals(id, memoId.id);
   }
 
   @Override
