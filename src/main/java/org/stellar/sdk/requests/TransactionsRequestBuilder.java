@@ -1,9 +1,8 @@
 package org.stellar.sdk.requests;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -55,8 +54,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *     for Account</a>
    * @param account Account for which to get transactions
    */
-  public TransactionsRequestBuilder forAccount(String account) {
-    account = checkNotNull(account, "account cannot be null");
+  public TransactionsRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "transactions");
     return this;
   }
@@ -69,8 +67,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *     for ClaimableBalance</a>
    * @param claimableBalance Claimable Balance for which to get transactions
    */
-  public TransactionsRequestBuilder forClaimableBalance(String claimableBalance) {
-    claimableBalance = checkNotNull(claimableBalance, "claimableBalance cannot be null");
+  public TransactionsRequestBuilder forClaimableBalance(@NonNull String claimableBalance) {
     this.setSegments("claimable_balances", claimableBalance, "transactions");
     return this;
   }

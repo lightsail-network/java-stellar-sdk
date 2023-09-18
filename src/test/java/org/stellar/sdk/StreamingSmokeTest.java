@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.Ignore;

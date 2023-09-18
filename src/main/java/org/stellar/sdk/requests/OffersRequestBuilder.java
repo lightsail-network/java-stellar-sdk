@@ -1,9 +1,8 @@
 package org.stellar.sdk.requests;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -54,8 +53,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    *     GET /accounts/{account}/offers</code>
    */
   @Deprecated
-  public OffersRequestBuilder forAccount(String account) {
-    account = checkNotNull(account, "account cannot be null");
+  public OffersRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "offers");
     return this;
   }

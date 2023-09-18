@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.ImmutableList.of;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -99,8 +99,8 @@ public class SorobanDataBuilderTest {
   public void testSetProperties() {
     SorobanTransactionData actualData =
         new SorobanDataBuilder()
-            .setReadOnly(of(readOnly))
-            .setReadWrite(of(readWrite))
+            .setReadOnly(singletonList(readOnly))
+            .setReadWrite(singletonList(readWrite))
             .setRefundableFee(5)
             .setResources(
                 new SorobanDataBuilder.Resources.ResourcesBuilder()

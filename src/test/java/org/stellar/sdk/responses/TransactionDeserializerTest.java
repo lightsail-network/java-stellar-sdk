@@ -1,11 +1,10 @@
 package org.stellar.sdk.responses;
 
 import static java.math.BigInteger.valueOf;
-import static org.junit.Assert.assertEquals;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.MemoHash;
@@ -28,20 +27,20 @@ public class TransactionDeserializerTest extends TestCase {
     assertEquals(transaction.getMaxFee(), Long.valueOf(776));
     assertEquals(transaction.getFeeCharged(), Long.valueOf(123));
     assertEquals(transaction.getOperationCount(), Integer.valueOf(1));
-    assertEquals(transaction.getSignatures(), ImmutableList.of("Hh4e"));
+    assertEquals(transaction.getSignatures(), Collections.singletonList("Hh4e"));
 
     TransactionResponse.FeeBumpTransaction feeBumpTransaction = transaction.getFeeBump().get();
     assertEquals(
         feeBumpTransaction.getHash(),
         "3dfef7d7226995b504f2827cc63d45ad41e9687bb0a8abcf08ba755fedca0352");
-    assertEquals(feeBumpTransaction.getSignatures(), ImmutableList.of("Hh4e"));
+    assertEquals(feeBumpTransaction.getSignatures(), Collections.singletonList("Hh4e"));
 
     TransactionResponse.InnerTransaction innerTransaction = transaction.getInner().get();
     assertEquals(
         innerTransaction.getHash(),
         "e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526");
     assertEquals(innerTransaction.getMaxFee(), Long.valueOf(99));
-    assertEquals(innerTransaction.getSignatures(), ImmutableList.of("FBQU"));
+    assertEquals(innerTransaction.getSignatures(), Collections.singletonList("FBQU"));
 
     assertFalse(transaction.getSourceAccountMuxed().isPresent());
     assertFalse(transaction.getFeeAccountMuxed().isPresent());
@@ -74,11 +73,10 @@ public class TransactionDeserializerTest extends TestCase {
         "AAAAAAAAAAEAAAACAAAAAAAN+SAAAAAAAAAAAMDtGdqtLMLCPc5P4zZu0IwWlUF2rElL5KvTSoGO0W/uAAAAAEsKz9AADfkgAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAN+SAAAAAAAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAHp6WMr55YACD1BAAAAHgAAAAoAAAAAAAAAAAAAAAABAAAAAAAACgAAAAARC07BokpLTOF+/vVKBwiAlop7hHGJTNeGGlY4MoPykwAAAAEAAAAAK+Lzfd3yDD+Ov0GbYu1g7SaIBrKZeBUxoCunkLuI7aoAAAABAAAAAERmsKL73CyLV/HvjyQCERDXXpWE70Xhyb6MR5qPO3yQAAAAAQAAAABSORGwAdyuanN3sNOHqNSpACyYdkUM3L8VafUu69EvEgAAAAEAAAAAeCzqJNkMM/jLvyuMIfyFHljBlLCtDyj17RMycPuNtRMAAAABAAAAAIEi4R7juq15ymL00DNlAddunyFT4FyUD4muC4t3bobdAAAAAQAAAACaNpLL5YMfjOTdXVEqrAh99LM12sN6He6pHgCRAa1f1QAAAAEAAAAAqB+lfAPV9ak+Zkv4aTNZwGaFFAfui4+yhM3dGhoYJ+sAAAABAAAAAMNJrEvdMg6M+M+n4BDIdzsVSj/ZI9SvAp7mOOsvAD/WAAAAAQAAAADbHA6xiKB1+G79mVqpsHMOleOqKa5mxDpP5KEp/Xdz9wAAAAEAAAAAAAAAAA==");
     assertEquals(
         transaction.getSignatures(),
-        ImmutableList.of(
+        Collections.singletonList(
             "b/noKPYnxb8oJmv6gLixY0PUJMZZ9pxwc226JtAfyRkhv6oFINj3iDuGJoBeuUh6D1vujP9e4/fH0xZjDaO3Aw=="));
-    assertEquals(
-        transaction.getFeeBump(), Optional.<TransactionResponse.FeeBumpTransaction>absent());
-    assertEquals(transaction.getInner(), Optional.<TransactionResponse.InnerTransaction>absent());
+    assertEquals(transaction.getFeeBump(), Optional.empty());
+    assertEquals(transaction.getInner(), Optional.empty());
     assertTrue(transaction.getMemo() instanceof MemoHash);
     MemoHash memo = (MemoHash) transaction.getMemo();
     assertEquals(
