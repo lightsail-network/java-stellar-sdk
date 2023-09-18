@@ -9,8 +9,14 @@ import lombok.Value;
 /**
  * Response for JSON-RPC method simulateTransaction.
  *
- * @see <a href="https://soroban.stellar.org/api/methods/simulateTransaction#returns"
- *     target="_blank">simulateTransaction documentation</a>
+ *  Note - The simulation response will have different model representations with different members
+ *  present or absent depending on type of response that it is conveying. For example, the simulation
+ *  response for invoke host function, could be one of three types: error, success, or restore operation needed.
+ *
+ *  Please refer to the latest <a href="https://soroban.stellar.org/api/methods/simulateTransaction#returns"
+ *  target="_blank">Soroban simulateTransaction documentation</a> for details on which members of the
+ *  simulation response model are keyed to each type of response.
+ *
  */
 @AllArgsConstructor
 @Value
