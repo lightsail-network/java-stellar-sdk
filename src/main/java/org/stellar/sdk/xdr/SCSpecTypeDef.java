@@ -42,8 +42,6 @@ import java.util.Objects;
 //      SCSpecTypeVec vec;
 //  case SC_SPEC_TYPE_MAP:
 //      SCSpecTypeMap map;
-//  case SC_SPEC_TYPE_SET:
-//      SCSpecTypeSet set;
 //  case SC_SPEC_TYPE_TUPLE:
 //      SCSpecTypeTuple tuple;
 //  case SC_SPEC_TYPE_BYTES_N:
@@ -106,16 +104,6 @@ public class SCSpecTypeDef implements XdrElement {
     this.map = value;
   }
 
-  private SCSpecTypeSet set;
-
-  public SCSpecTypeSet getSet() {
-    return this.set;
-  }
-
-  public void setSet(SCSpecTypeSet value) {
-    this.set = value;
-  }
-
   private SCSpecTypeTuple tuple;
 
   public SCSpecTypeTuple getTuple() {
@@ -152,7 +140,6 @@ public class SCSpecTypeDef implements XdrElement {
     private SCSpecTypeResult result;
     private SCSpecTypeVec vec;
     private SCSpecTypeMap map;
-    private SCSpecTypeSet set;
     private SCSpecTypeTuple tuple;
     private SCSpecTypeBytesN bytesN;
     private SCSpecTypeUDT udt;
@@ -182,11 +169,6 @@ public class SCSpecTypeDef implements XdrElement {
       return this;
     }
 
-    public Builder set(SCSpecTypeSet set) {
-      this.set = set;
-      return this;
-    }
-
     public Builder tuple(SCSpecTypeTuple tuple) {
       this.tuple = tuple;
       return this;
@@ -209,7 +191,6 @@ public class SCSpecTypeDef implements XdrElement {
       val.setResult(this.result);
       val.setVec(this.vec);
       val.setMap(this.map);
-      val.setSet(this.set);
       val.setTuple(this.tuple);
       val.setBytesN(this.bytesN);
       val.setUdt(this.udt);
@@ -253,9 +234,6 @@ public class SCSpecTypeDef implements XdrElement {
         break;
       case SC_SPEC_TYPE_MAP:
         SCSpecTypeMap.encode(stream, encodedSCSpecTypeDef.map);
-        break;
-      case SC_SPEC_TYPE_SET:
-        SCSpecTypeSet.encode(stream, encodedSCSpecTypeDef.set);
         break;
       case SC_SPEC_TYPE_TUPLE:
         SCSpecTypeTuple.encode(stream, encodedSCSpecTypeDef.tuple);
@@ -309,9 +287,6 @@ public class SCSpecTypeDef implements XdrElement {
       case SC_SPEC_TYPE_MAP:
         decodedSCSpecTypeDef.map = SCSpecTypeMap.decode(stream);
         break;
-      case SC_SPEC_TYPE_SET:
-        decodedSCSpecTypeDef.set = SCSpecTypeSet.decode(stream);
-        break;
       case SC_SPEC_TYPE_TUPLE:
         decodedSCSpecTypeDef.tuple = SCSpecTypeTuple.decode(stream);
         break;
@@ -328,15 +303,7 @@ public class SCSpecTypeDef implements XdrElement {
   @Override
   public int hashCode() {
     return Objects.hash(
-        this.option,
-        this.result,
-        this.vec,
-        this.map,
-        this.set,
-        this.tuple,
-        this.bytesN,
-        this.udt,
-        this.type);
+        this.option, this.result, this.vec, this.map, this.tuple, this.bytesN, this.udt, this.type);
   }
 
   @Override
@@ -350,7 +317,6 @@ public class SCSpecTypeDef implements XdrElement {
         && Objects.equals(this.result, other.result)
         && Objects.equals(this.vec, other.vec)
         && Objects.equals(this.map, other.map)
-        && Objects.equals(this.set, other.set)
         && Objects.equals(this.tuple, other.tuple)
         && Objects.equals(this.bytesN, other.bytesN)
         && Objects.equals(this.udt, other.udt)

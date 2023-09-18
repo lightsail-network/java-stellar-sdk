@@ -16,7 +16,7 @@ import java.util.Objects;
 //  union SorobanAuthorizedFunction switch (SorobanAuthorizedFunctionType type)
 //  {
 //  case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
-//      SorobanAuthorizedContractFunction contractFn;
+//      InvokeContractArgs contractFn;
 //  case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
 //      CreateContractArgs createContractHostFn;
 //  };
@@ -35,13 +35,13 @@ public class SorobanAuthorizedFunction implements XdrElement {
     this.type = value;
   }
 
-  private SorobanAuthorizedContractFunction contractFn;
+  private InvokeContractArgs contractFn;
 
-  public SorobanAuthorizedContractFunction getContractFn() {
+  public InvokeContractArgs getContractFn() {
     return this.contractFn;
   }
 
-  public void setContractFn(SorobanAuthorizedContractFunction value) {
+  public void setContractFn(InvokeContractArgs value) {
     this.contractFn = value;
   }
 
@@ -57,7 +57,7 @@ public class SorobanAuthorizedFunction implements XdrElement {
 
   public static final class Builder {
     private SorobanAuthorizedFunctionType discriminant;
-    private SorobanAuthorizedContractFunction contractFn;
+    private InvokeContractArgs contractFn;
     private CreateContractArgs createContractHostFn;
 
     public Builder discriminant(SorobanAuthorizedFunctionType discriminant) {
@@ -65,7 +65,7 @@ public class SorobanAuthorizedFunction implements XdrElement {
       return this;
     }
 
-    public Builder contractFn(SorobanAuthorizedContractFunction contractFn) {
+    public Builder contractFn(InvokeContractArgs contractFn) {
       this.contractFn = contractFn;
       return this;
     }
@@ -92,8 +92,7 @@ public class SorobanAuthorizedFunction implements XdrElement {
     stream.writeInt(encodedSorobanAuthorizedFunction.getDiscriminant().getValue());
     switch (encodedSorobanAuthorizedFunction.getDiscriminant()) {
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
-        SorobanAuthorizedContractFunction.encode(
-            stream, encodedSorobanAuthorizedFunction.contractFn);
+        InvokeContractArgs.encode(stream, encodedSorobanAuthorizedFunction.contractFn);
         break;
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
         CreateContractArgs.encode(stream, encodedSorobanAuthorizedFunction.createContractHostFn);
@@ -111,8 +110,7 @@ public class SorobanAuthorizedFunction implements XdrElement {
     decodedSorobanAuthorizedFunction.setDiscriminant(discriminant);
     switch (decodedSorobanAuthorizedFunction.getDiscriminant()) {
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
-        decodedSorobanAuthorizedFunction.contractFn =
-            SorobanAuthorizedContractFunction.decode(stream);
+        decodedSorobanAuthorizedFunction.contractFn = InvokeContractArgs.decode(stream);
         break;
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
         decodedSorobanAuthorizedFunction.createContractHostFn = CreateContractArgs.decode(stream);

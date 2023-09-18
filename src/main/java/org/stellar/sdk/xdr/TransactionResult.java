@@ -41,7 +41,7 @@ import java.util.Objects;
 //      case txBAD_SPONSORSHIP:
 //      case txBAD_MIN_SEQ_AGE_OR_GAP:
 //      case txMALFORMED:
-//      case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
+//      case txSOROBAN_INVALID:
 //          void;
 //      }
 //      result;
@@ -273,7 +273,7 @@ public class TransactionResult implements XdrElement {
         case txBAD_SPONSORSHIP:
         case txBAD_MIN_SEQ_AGE_OR_GAP:
         case txMALFORMED:
-        case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
+        case txSOROBAN_INVALID:
           break;
       }
     }
@@ -314,7 +314,7 @@ public class TransactionResult implements XdrElement {
         case txBAD_SPONSORSHIP:
         case txBAD_MIN_SEQ_AGE_OR_GAP:
         case txMALFORMED:
-        case txSOROBAN_RESOURCE_LIMIT_EXCEEDED:
+        case txSOROBAN_INVALID:
           break;
       }
       return decodedTransactionResultResult;

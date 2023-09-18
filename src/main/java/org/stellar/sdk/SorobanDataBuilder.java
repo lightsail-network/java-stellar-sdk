@@ -40,7 +40,6 @@ public class SorobanDataBuilder {
                     .instructions(new Uint32(new XdrUnsignedInteger(0)))
                     .readBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
-                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .build())
             .refundableFee(new Int64(0L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -99,9 +98,6 @@ public class SorobanDataBuilder {
     data.getResources().setReadBytes(new Uint32(new XdrUnsignedInteger(resources.getReadBytes())));
     data.getResources()
         .setWriteBytes(new Uint32(new XdrUnsignedInteger(resources.getWriteBytes())));
-    data.getResources()
-        .setExtendedMetaDataSizeBytes(
-            new Uint32(new XdrUnsignedInteger(resources.getMetadataBytes())));
     return this;
   }
 
@@ -160,7 +156,5 @@ public class SorobanDataBuilder {
     @NonNull Long readBytes;
     // number of bytes being written (uint32)
     @NonNull Long writeBytes;
-    // number of extended metadata bytes (uint32)
-    @NonNull Long metadataBytes;
   }
 }

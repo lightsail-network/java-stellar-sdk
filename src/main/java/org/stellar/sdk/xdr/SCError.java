@@ -13,9 +13,19 @@ import java.util.Objects;
 
 // === xdr source ============================================================
 
-//  struct SCError
+//  union SCError switch (SCErrorType type)
 //  {
-//      SCErrorType type;
+//  case SCE_CONTRACT:
+//      uint32 contractCode;
+//  case SCE_WASM_VM:
+//  case SCE_CONTEXT:
+//  case SCE_STORAGE:
+//  case SCE_OBJECT:
+//  case SCE_CRYPTO:
+//  case SCE_EVENTS:
+//  case SCE_BUDGET:
+//  case SCE_VALUE:
+//  case SCE_AUTH:
 //      SCErrorCode code;
 //  };
 
@@ -23,14 +33,24 @@ import java.util.Objects;
 public class SCError implements XdrElement {
   public SCError() {}
 
-  private SCErrorType type;
+  SCErrorType type;
 
-  public SCErrorType getType() {
+  public SCErrorType getDiscriminant() {
     return this.type;
   }
 
-  public void setType(SCErrorType value) {
+  public void setDiscriminant(SCErrorType value) {
     this.type = value;
+  }
+
+  private Uint32 contractCode;
+
+  public Uint32 getContractCode() {
+    return this.contractCode;
+  }
+
+  public void setContractCode(Uint32 value) {
+    this.contractCode = value;
   }
 
   private SCErrorCode code;
@@ -43,9 +63,55 @@ public class SCError implements XdrElement {
     this.code = value;
   }
 
+  public static final class Builder {
+    private SCErrorType discriminant;
+    private Uint32 contractCode;
+    private SCErrorCode code;
+
+    public Builder discriminant(SCErrorType discriminant) {
+      this.discriminant = discriminant;
+      return this;
+    }
+
+    public Builder contractCode(Uint32 contractCode) {
+      this.contractCode = contractCode;
+      return this;
+    }
+
+    public Builder code(SCErrorCode code) {
+      this.code = code;
+      return this;
+    }
+
+    public SCError build() {
+      SCError val = new SCError();
+      val.setDiscriminant(discriminant);
+      val.setContractCode(this.contractCode);
+      val.setCode(this.code);
+      return val;
+    }
+  }
+
   public static void encode(XdrDataOutputStream stream, SCError encodedSCError) throws IOException {
-    SCErrorType.encode(stream, encodedSCError.type);
-    SCErrorCode.encode(stream, encodedSCError.code);
+    // Xdrgen::AST::Identifier
+    // SCErrorType
+    stream.writeInt(encodedSCError.getDiscriminant().getValue());
+    switch (encodedSCError.getDiscriminant()) {
+      case SCE_CONTRACT:
+        Uint32.encode(stream, encodedSCError.contractCode);
+        break;
+      case SCE_WASM_VM:
+      case SCE_CONTEXT:
+      case SCE_STORAGE:
+      case SCE_OBJECT:
+      case SCE_CRYPTO:
+      case SCE_EVENTS:
+      case SCE_BUDGET:
+      case SCE_VALUE:
+      case SCE_AUTH:
+        SCErrorCode.encode(stream, encodedSCError.code);
+        break;
+    }
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -54,14 +120,30 @@ public class SCError implements XdrElement {
 
   public static SCError decode(XdrDataInputStream stream) throws IOException {
     SCError decodedSCError = new SCError();
-    decodedSCError.type = SCErrorType.decode(stream);
-    decodedSCError.code = SCErrorCode.decode(stream);
+    SCErrorType discriminant = SCErrorType.decode(stream);
+    decodedSCError.setDiscriminant(discriminant);
+    switch (decodedSCError.getDiscriminant()) {
+      case SCE_CONTRACT:
+        decodedSCError.contractCode = Uint32.decode(stream);
+        break;
+      case SCE_WASM_VM:
+      case SCE_CONTEXT:
+      case SCE_STORAGE:
+      case SCE_OBJECT:
+      case SCE_CRYPTO:
+      case SCE_EVENTS:
+      case SCE_BUDGET:
+      case SCE_VALUE:
+      case SCE_AUTH:
+        decodedSCError.code = SCErrorCode.decode(stream);
+        break;
+    }
     return decodedSCError;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.type, this.code);
+    return Objects.hash(this.contractCode, this.code, this.type);
   }
 
   @Override
@@ -71,7 +153,9 @@ public class SCError implements XdrElement {
     }
 
     SCError other = (SCError) object;
-    return Objects.equals(this.type, other.type) && Objects.equals(this.code, other.code);
+    return Objects.equals(this.contractCode, other.contractCode)
+        && Objects.equals(this.code, other.code)
+        && Objects.equals(this.type, other.type);
   }
 
   @Override
@@ -96,27 +180,5 @@ public class SCError implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCErrorType type;
-    private SCErrorCode code;
-
-    public Builder type(SCErrorType type) {
-      this.type = type;
-      return this;
-    }
-
-    public Builder code(SCErrorCode code) {
-      this.code = code;
-      return this;
-    }
-
-    public SCError build() {
-      SCError val = new SCError();
-      val.setType(this.type);
-      val.setCode(this.code);
-      return val;
-    }
   }
 }

@@ -14,28 +14,27 @@ import java.util.Objects;
 // === xdr source ============================================================
 
 //  struct ContractDataEntry {
+//      ExtensionPoint ext;
+//
 //      SCAddress contract;
 //      SCVal key;
 //      ContractDataDurability durability;
-//
-//      union switch (ContractEntryBodyType bodyType)
-//      {
-//      case DATA_ENTRY:
-//      struct
-//      {
-//          uint32 flags;
-//          SCVal val;
-//      } data;
-//      case EXPIRATION_EXTENSION:
-//          void;
-//      } body;
-//
-//      uint32 expirationLedgerSeq;
+//      SCVal val;
 //  };
 
 //  ===========================================================================
 public class ContractDataEntry implements XdrElement {
   public ContractDataEntry() {}
+
+  private ExtensionPoint ext;
+
+  public ExtensionPoint getExt() {
+    return this.ext;
+  }
+
+  public void setExt(ExtensionPoint value) {
+    this.ext = value;
+  }
 
   private SCAddress contract;
 
@@ -67,33 +66,23 @@ public class ContractDataEntry implements XdrElement {
     this.durability = value;
   }
 
-  private ContractDataEntryBody body;
+  private SCVal val;
 
-  public ContractDataEntryBody getBody() {
-    return this.body;
+  public SCVal getVal() {
+    return this.val;
   }
 
-  public void setBody(ContractDataEntryBody value) {
-    this.body = value;
-  }
-
-  private Uint32 expirationLedgerSeq;
-
-  public Uint32 getExpirationLedgerSeq() {
-    return this.expirationLedgerSeq;
-  }
-
-  public void setExpirationLedgerSeq(Uint32 value) {
-    this.expirationLedgerSeq = value;
+  public void setVal(SCVal value) {
+    this.val = value;
   }
 
   public static void encode(XdrDataOutputStream stream, ContractDataEntry encodedContractDataEntry)
       throws IOException {
+    ExtensionPoint.encode(stream, encodedContractDataEntry.ext);
     SCAddress.encode(stream, encodedContractDataEntry.contract);
     SCVal.encode(stream, encodedContractDataEntry.key);
     ContractDataDurability.encode(stream, encodedContractDataEntry.durability);
-    ContractDataEntryBody.encode(stream, encodedContractDataEntry.body);
-    Uint32.encode(stream, encodedContractDataEntry.expirationLedgerSeq);
+    SCVal.encode(stream, encodedContractDataEntry.val);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -102,18 +91,17 @@ public class ContractDataEntry implements XdrElement {
 
   public static ContractDataEntry decode(XdrDataInputStream stream) throws IOException {
     ContractDataEntry decodedContractDataEntry = new ContractDataEntry();
+    decodedContractDataEntry.ext = ExtensionPoint.decode(stream);
     decodedContractDataEntry.contract = SCAddress.decode(stream);
     decodedContractDataEntry.key = SCVal.decode(stream);
     decodedContractDataEntry.durability = ContractDataDurability.decode(stream);
-    decodedContractDataEntry.body = ContractDataEntryBody.decode(stream);
-    decodedContractDataEntry.expirationLedgerSeq = Uint32.decode(stream);
+    decodedContractDataEntry.val = SCVal.decode(stream);
     return decodedContractDataEntry;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        this.contract, this.key, this.durability, this.body, this.expirationLedgerSeq);
+    return Objects.hash(this.ext, this.contract, this.key, this.durability, this.val);
   }
 
   @Override
@@ -123,11 +111,11 @@ public class ContractDataEntry implements XdrElement {
     }
 
     ContractDataEntry other = (ContractDataEntry) object;
-    return Objects.equals(this.contract, other.contract)
+    return Objects.equals(this.ext, other.ext)
+        && Objects.equals(this.contract, other.contract)
         && Objects.equals(this.key, other.key)
         && Objects.equals(this.durability, other.durability)
-        && Objects.equals(this.body, other.body)
-        && Objects.equals(this.expirationLedgerSeq, other.expirationLedgerSeq);
+        && Objects.equals(this.val, other.val);
   }
 
   @Override
@@ -155,11 +143,16 @@ public class ContractDataEntry implements XdrElement {
   }
 
   public static final class Builder {
+    private ExtensionPoint ext;
     private SCAddress contract;
     private SCVal key;
     private ContractDataDurability durability;
-    private ContractDataEntryBody body;
-    private Uint32 expirationLedgerSeq;
+    private SCVal val;
+
+    public Builder ext(ExtensionPoint ext) {
+      this.ext = ext;
+      return this;
+    }
 
     public Builder contract(SCAddress contract) {
       this.contract = contract;
@@ -176,245 +169,19 @@ public class ContractDataEntry implements XdrElement {
       return this;
     }
 
-    public Builder body(ContractDataEntryBody body) {
-      this.body = body;
-      return this;
-    }
-
-    public Builder expirationLedgerSeq(Uint32 expirationLedgerSeq) {
-      this.expirationLedgerSeq = expirationLedgerSeq;
+    public Builder val(SCVal val) {
+      this.val = val;
       return this;
     }
 
     public ContractDataEntry build() {
       ContractDataEntry val = new ContractDataEntry();
+      val.setExt(this.ext);
       val.setContract(this.contract);
       val.setKey(this.key);
       val.setDurability(this.durability);
-      val.setBody(this.body);
-      val.setExpirationLedgerSeq(this.expirationLedgerSeq);
+      val.setVal(this.val);
       return val;
-    }
-  }
-
-  public static class ContractDataEntryBody implements XdrElement {
-    public ContractDataEntryBody() {}
-
-    ContractEntryBodyType bodyType;
-
-    public ContractEntryBodyType getDiscriminant() {
-      return this.bodyType;
-    }
-
-    public void setDiscriminant(ContractEntryBodyType value) {
-      this.bodyType = value;
-    }
-
-    private ContractDataEntryData data;
-
-    public ContractDataEntryData getData() {
-      return this.data;
-    }
-
-    public void setData(ContractDataEntryData value) {
-      this.data = value;
-    }
-
-    public static final class Builder {
-      private ContractEntryBodyType discriminant;
-      private ContractDataEntryData data;
-
-      public Builder discriminant(ContractEntryBodyType discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder data(ContractDataEntryData data) {
-        this.data = data;
-        return this;
-      }
-
-      public ContractDataEntryBody build() {
-        ContractDataEntryBody val = new ContractDataEntryBody();
-        val.setDiscriminant(discriminant);
-        val.setData(this.data);
-        return val;
-      }
-    }
-
-    public static void encode(
-        XdrDataOutputStream stream, ContractDataEntryBody encodedContractDataEntryBody)
-        throws IOException {
-      // Xdrgen::AST::Identifier
-      // ContractEntryBodyType
-      stream.writeInt(encodedContractDataEntryBody.getDiscriminant().getValue());
-      switch (encodedContractDataEntryBody.getDiscriminant()) {
-        case DATA_ENTRY:
-          ContractDataEntryData.encode(stream, encodedContractDataEntryBody.data);
-          break;
-        case EXPIRATION_EXTENSION:
-          break;
-      }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
-    }
-
-    public static ContractDataEntryBody decode(XdrDataInputStream stream) throws IOException {
-      ContractDataEntryBody decodedContractDataEntryBody = new ContractDataEntryBody();
-      ContractEntryBodyType discriminant = ContractEntryBodyType.decode(stream);
-      decodedContractDataEntryBody.setDiscriminant(discriminant);
-      switch (decodedContractDataEntryBody.getDiscriminant()) {
-        case DATA_ENTRY:
-          decodedContractDataEntryBody.data = ContractDataEntryData.decode(stream);
-          break;
-        case EXPIRATION_EXTENSION:
-          break;
-      }
-      return decodedContractDataEntryBody;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.data, this.bodyType);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof ContractDataEntryBody)) {
-        return false;
-      }
-
-      ContractDataEntryBody other = (ContractDataEntryBody) object;
-      return Objects.equals(this.data, other.data) && Objects.equals(this.bodyType, other.bodyType);
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
-    }
-
-    public static ContractDataEntryBody fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
-      return fromXdrByteArray(bytes);
-    }
-
-    public static ContractDataEntryBody fromXdrByteArray(byte[] xdr) throws IOException {
-      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
-      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
-      return decode(xdrDataInputStream);
-    }
-
-    public static class ContractDataEntryData implements XdrElement {
-      public ContractDataEntryData() {}
-
-      private Uint32 flags;
-
-      public Uint32 getFlags() {
-        return this.flags;
-      }
-
-      public void setFlags(Uint32 value) {
-        this.flags = value;
-      }
-
-      private SCVal val;
-
-      public SCVal getVal() {
-        return this.val;
-      }
-
-      public void setVal(SCVal value) {
-        this.val = value;
-      }
-
-      public static void encode(
-          XdrDataOutputStream stream, ContractDataEntryData encodedContractDataEntryData)
-          throws IOException {
-        Uint32.encode(stream, encodedContractDataEntryData.flags);
-        SCVal.encode(stream, encodedContractDataEntryData.val);
-      }
-
-      public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
-      }
-
-      public static ContractDataEntryData decode(XdrDataInputStream stream) throws IOException {
-        ContractDataEntryData decodedContractDataEntryData = new ContractDataEntryData();
-        decodedContractDataEntryData.flags = Uint32.decode(stream);
-        decodedContractDataEntryData.val = SCVal.decode(stream);
-        return decodedContractDataEntryData;
-      }
-
-      @Override
-      public int hashCode() {
-        return Objects.hash(this.flags, this.val);
-      }
-
-      @Override
-      public boolean equals(Object object) {
-        if (!(object instanceof ContractDataEntryData)) {
-          return false;
-        }
-
-        ContractDataEntryData other = (ContractDataEntryData) object;
-        return Objects.equals(this.flags, other.flags) && Objects.equals(this.val, other.val);
-      }
-
-      @Override
-      public String toXdrBase64() throws IOException {
-        return Base64.getEncoder().encodeToString(toXdrByteArray());
-      }
-
-      @Override
-      public byte[] toXdrByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-        encode(xdrDataOutputStream);
-        return byteArrayOutputStream.toByteArray();
-      }
-
-      public static ContractDataEntryData fromXdrBase64(String xdr) throws IOException {
-        byte[] bytes = Base64.getDecoder().decode(xdr);
-        return fromXdrByteArray(bytes);
-      }
-
-      public static ContractDataEntryData fromXdrByteArray(byte[] xdr) throws IOException {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
-        XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
-        return decode(xdrDataInputStream);
-      }
-
-      public static final class Builder {
-        private Uint32 flags;
-        private SCVal val;
-
-        public Builder flags(Uint32 flags) {
-          this.flags = flags;
-          return this;
-        }
-
-        public Builder val(SCVal val) {
-          this.val = val;
-          return this;
-        }
-
-        public ContractDataEntryData build() {
-          ContractDataEntryData val = new ContractDataEntryData();
-          val.setFlags(this.flags);
-          val.setVal(this.val);
-          return val;
-        }
-      }
     }
   }
 }

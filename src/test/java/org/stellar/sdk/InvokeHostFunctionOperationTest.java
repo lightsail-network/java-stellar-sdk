@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
@@ -19,10 +18,10 @@ import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.HostFunction;
 import org.stellar.sdk.xdr.HostFunctionType;
 import org.stellar.sdk.xdr.Int64;
+import org.stellar.sdk.xdr.InvokeContractArgs;
+import org.stellar.sdk.xdr.SCAddress;
 import org.stellar.sdk.xdr.SCSymbol;
 import org.stellar.sdk.xdr.SCVal;
-import org.stellar.sdk.xdr.SCValType;
-import org.stellar.sdk.xdr.SCVec;
 import org.stellar.sdk.xdr.SorobanAddressCredentials;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 import org.stellar.sdk.xdr.SorobanAuthorizedFunction;
@@ -218,7 +217,6 @@ public class InvokeHostFunctionOperationTest {
                                     .toSCAddress())
                             .nonce(new Int64(123123432L))
                             .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(10)))
-                            .signatureArgs(new SCVec(new SCVal[] {}))
                             .build())
                     .build())
             .rootInvocation(
@@ -486,26 +484,27 @@ public class InvokeHostFunctionOperationTest {
                 contractId, funcName, parameters)
             .build();
 
-    SCVal contractIdScVal = new Address(contractId).toSCVal();
-    SCVal functionNameScVal =
-        new SCVal.Builder()
-            .discriminant(SCValType.SCV_SYMBOL)
-            .sym(new SCSymbol(new XdrString(funcName)))
-            .build();
+    SCAddress contractIdScAddress = new Address(contractId).toSCAddress();
+    SCSymbol functionNameSCSymbol = new SCSymbol(new XdrString(funcName));
     SCVal paramScVal = parameters.get(0);
-    List<SCVal> invokeContractParams =
-        Arrays.asList(contractIdScVal, functionNameScVal, paramScVal);
+
+    InvokeContractArgs invokeContractArgs =
+        new InvokeContractArgs.Builder()
+            .contractAddress(contractIdScAddress)
+            .functionName(functionNameSCSymbol)
+            .args(new SCVal[] {paramScVal})
+            .build();
     HostFunction expectedFunction =
         new HostFunction.Builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
-            .invokeContract(new SCVec(invokeContractParams.toArray(new SCVal[0])))
+            .invokeContract(invokeContractArgs)
             .build();
 
     assertEquals(operation.getHostFunction(), expectedFunction);
     assertTrue(operation.getAuth().isEmpty());
     assertNull(operation.getSourceAccount());
     String expectedXdr =
-        "AAAAAAAAABgAAAAAAAAAAwAAABIAAAABPww0v5OtDZlx0EzMkPcFURyDiq2XNKSi+w16A/x/6JoAAAAPAAAABWhlbGxvAAAAAAAADwAAAAV3b3JsZAAAAAAAAAA=";
+        "AAAAAAAAABgAAAAAAAAAAT8MNL+TrQ2ZcdBMzJD3BVEcg4qtlzSkovsNegP8f+iaAAAABWhlbGxvAAAAAAAAAQAAAA8AAAAFd29ybGQAAAAAAAAA";
     assertEquals(expectedXdr, operation.toXdrBase64());
   }
 }
