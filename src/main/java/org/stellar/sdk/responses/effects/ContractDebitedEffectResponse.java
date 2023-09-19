@@ -25,9 +25,7 @@ public class ContractDebitedEffectResponse extends EffectResponse {
   @SerializedName("asset_issuer")
   private final String assetIssuer;
 
-  @SerializedName("contract")
   private final String contract;
 
-  @SerializedName("amount")
   private final String amount;
 }
