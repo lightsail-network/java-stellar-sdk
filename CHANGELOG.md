@@ -9,34 +9,31 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 * New effects have been added to support Protocol 20 (Soroban) ([#535](https://github.com/stellar/java-stellar-sdk/pull/535)):
   - `ContractCredited` occurs when a Stellar asset moves into its corresponding Stellar Asset Contract instance
   - `ContractDebited` occurs when a Stellar asset moves out of its corresponding Stellar Asset Contract instance
-* Bump dependencies & Remove unnecessary dependencies. ([#523](https://github.com/stellar/java-stellar-sdk/pull/523))
 * Add helper functions to sign authorization entries. ([#537](https://github.com/stellar/java-stellar-sdk/pull/537))
-* No longer provide a shadow jar that has relocated third-party dependencies, but instead default to providing a thin jar. 
-  We also offer an [uber jar](https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_example) and javadoc jar. 
-  You can import the jar you need in one of the following three ways: ([#528](https://github.com/stellar/java-stellar-sdk/issues/528))
-    ```kotlin
+
+### Breaking changes
+* Bump dependencies & Remove unnecessary dependencies like guava. ([#523](https://github.com/stellar/java-stellar-sdk/pull/523))
+* No longer provide a shadow jar that contains embedded, relocated third-party dependencies.  ([#528](https://github.com/stellar/java-stellar-sdk/issues/528))
+  Instead the default `stellar-sdk.jar` and the `com.github.stellar:java-stellar-sdk:{version}` dependency are now packaged 
+  as 'thin library' jar, having no embedded dependencies. 
+  - if your project used `stellar-sdk.jar` directly on classpath loader, will need to obtain the `.jar` for each dependency version listed in `build.gradle.kts`
+    and include all in your project classpath, or consider downloading the 'uber' jar from the published artifacts on repo 
+    `https://jitpack.io/com/github/stellar/java-stellar-sdk/{version}/java-stellar-sdk-{version}-uber.jar`
+  - if your project utilizes dependency management for build such as gradle/maven, then you can choose from the following artifacts 
+    using the dependency classifier:
+     ```kotlin
     implementation("com.github.stellar:java-stellar-sdk:{version}") // thin jar
     implementation("com.github.stellar:java-stellar-sdk:{version}:uber") // uber jar
     implementation("com.github.stellar:java-stellar-sdk:{version}:javadoc") // javadoc jar
+    implementation("com.github.stellar:java-stellar-sdk:{version}:sources") // sources jar
     ```
-* Use JDK 17 for CI builds. ([#528](https://github.com/stellar/java-stellar-sdk/issues/528))
-
-## 0.41.0-beta.3
-* Fix the bug in Transaction.isSorobanTransaction to accommodate BumpFootprintExpirationOperation. ([#518](https://github.com/stellar/java-stellar-sdk/pull/518))
-
-## 0.41.0-beta.2
-* Migrate from CircleCI to GitHub Actions. ([#512](https://github.com/stellar/java-stellar-sdk/pull/512))
-
-## 0.41.0-beta.1
-* Use JDK 11 for CI builds. ([#511](https://github.com/stellar/java-stellar-sdk/issues/511))
-
-## 0.41.0-beta.0
-* Add support for Soroban Preview 10. ([#490](https://github.com/stellar/java-stellar-sdk/issues/490))
-* Correct the data type of certain fields to store the expected design values. ([#497](https://github.com/stellar/java-stellar-sdk/pull/497))
-* Add source account comparison to `ClawbackClaimableBalanceOperation`, `LiquidityPoolWithdrawOperation`, and `LiquidityPoolDepositOperation` for equality check. ([#484](https://github.com/stellar/java-stellar-sdk/pull/484))
-* Add basic implementation of `liquidity_pools?account` ([#426](https://github.com/stellar/java-stellar-sdk/pull/426))
-
-### Breaking changes
+    
+  - When using the 'thin' jar in dependency management, it will automatically fetch dependencies transitively. 
+    If your project declares dependencies that are also declared here, then your project will override 
+    the preferences of this project and may cause runtime conflict.
+    
+  - When using the 'uber' jar in dependency management or as `.jar` in classpath , be aware that it does not relocate the dependent packages.
+     
 * `Utils.claimableBalanceIdToXDR` and `Utils.xdrToClaimableBalanceId` have been removed. ([#503](https://github.com/stellar/java-stellar-sdk/pull/503))
 * The types of the following fields have changed. ([#498](https://github.com/stellar/java-stellar-sdk/pull/498))
   | field                                     | before | now        |
@@ -50,6 +47,15 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   | TransactionPreconditions.TIMEOUT_INFINITE | long   | BigInteger |
   | TransactionPreconditions.minSeqAge        | Long   | BigInteger |
   | TransactionPreconditions.minSeqLedgerGap  | int    | long       |
+
+## 0.41.0-beta.3
+* Fix the bug in Transaction.isSorobanTransaction to accommodate BumpFootprintExpirationOperation. ([#518](https://github.com/stellar/java-stellar-sdk/pull/518))
+
+## 0.41.0-beta.0
+* Add support for Soroban Preview 10. ([#490](https://github.com/stellar/java-stellar-sdk/issues/490))
+* Correct the data type of certain fields to store the expected design values. ([#497](https://github.com/stellar/java-stellar-sdk/pull/497))
+* Add source account comparison to `ClawbackClaimableBalanceOperation`, `LiquidityPoolWithdrawOperation`, and `LiquidityPoolDepositOperation` for equality check. ([#484](https://github.com/stellar/java-stellar-sdk/pull/484))
+* Add basic implementation of `liquidity_pools?account` ([#426](https://github.com/stellar/java-stellar-sdk/pull/426))
 
 ## 0.40.1
 * Fix the issue of unable to parse liquidity_pool_revoked effect properly. ([#521](https://github.com/stellar/java-stellar-sdk/pull/521))
