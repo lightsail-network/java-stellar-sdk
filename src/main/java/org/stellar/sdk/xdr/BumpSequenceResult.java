@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -12,7 +17,7 @@ import java.io.IOException;
 //  {
 //  case BUMP_SEQUENCE_SUCCESS:
 //      void;
-//  default:
+//  case BUMP_SEQUENCE_BAD_SEQ:
 //      void;
 //  };
 
@@ -53,7 +58,7 @@ public class BumpSequenceResult implements XdrElement {
     switch (encodedBumpSequenceResult.getDiscriminant()) {
       case BUMP_SEQUENCE_SUCCESS:
         break;
-      default:
+      case BUMP_SEQUENCE_BAD_SEQ:
         break;
     }
   }
@@ -69,7 +74,7 @@ public class BumpSequenceResult implements XdrElement {
     switch (decodedBumpSequenceResult.getDiscriminant()) {
       case BUMP_SEQUENCE_SUCCESS:
         break;
-      default:
+      case BUMP_SEQUENCE_BAD_SEQ:
         break;
     }
     return decodedBumpSequenceResult;
@@ -77,7 +82,7 @@ public class BumpSequenceResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.code);
+    return Objects.hash(this.code);
   }
 
   @Override
@@ -87,6 +92,30 @@ public class BumpSequenceResult implements XdrElement {
     }
 
     BumpSequenceResult other = (BumpSequenceResult) object;
-    return Objects.equal(this.code, other.code);
+    return Objects.equals(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static BumpSequenceResult fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static BumpSequenceResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

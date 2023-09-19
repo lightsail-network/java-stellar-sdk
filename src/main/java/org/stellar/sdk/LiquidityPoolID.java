@@ -1,8 +1,8 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -59,7 +59,7 @@ public final class LiquidityPoolID {
 
     LiquidityPoolID o = (LiquidityPoolID) object;
 
-    return Objects.equal(this.toString(), o.toString());
+    return Objects.equals(this.toString(), o.toString());
   }
 
   /** Generates XDR object from a given LiquidityPoolID object */

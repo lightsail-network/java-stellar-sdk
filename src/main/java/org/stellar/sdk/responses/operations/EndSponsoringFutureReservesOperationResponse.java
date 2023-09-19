@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
-import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
+import java.util.Optional;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -23,7 +23,7 @@ public class EndSponsoringFutureReservesOperationResponse extends OperationRespo
 
   public Optional<MuxedAccount> getBeginSponsorMuxed() {
     if (this.beginSponsorMuxed == null || this.beginSponsorMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(
         new MuxedAccount(this.beginSponsorMuxed, this.beginSponsor, this.beginSponsorMuxedId));

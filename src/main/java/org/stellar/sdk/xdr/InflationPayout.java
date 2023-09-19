@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -57,7 +62,7 @@ public class InflationPayout implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.destination, this.amount);
+    return Objects.hash(this.destination, this.amount);
   }
 
   @Override
@@ -67,8 +72,32 @@ public class InflationPayout implements XdrElement {
     }
 
     InflationPayout other = (InflationPayout) object;
-    return Objects.equal(this.destination, other.destination)
-        && Objects.equal(this.amount, other.amount);
+    return Objects.equals(this.destination, other.destination)
+        && Objects.equals(this.amount, other.amount);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static InflationPayout fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static InflationPayout fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -87,8 +116,8 @@ public class InflationPayout implements XdrElement {
 
     public InflationPayout build() {
       InflationPayout val = new InflationPayout();
-      val.setDestination(destination);
-      val.setAmount(amount);
+      val.setDestination(this.destination);
+      val.setAmount(this.amount);
       return val;
     }
   }

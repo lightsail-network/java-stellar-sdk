@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -107,8 +112,7 @@ public class StellarValue implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
-        this.txSetHash, this.closeTime, Arrays.hashCode(this.upgrades), this.ext);
+    return Objects.hash(this.txSetHash, this.closeTime, Arrays.hashCode(this.upgrades), this.ext);
   }
 
   @Override
@@ -118,10 +122,34 @@ public class StellarValue implements XdrElement {
     }
 
     StellarValue other = (StellarValue) object;
-    return Objects.equal(this.txSetHash, other.txSetHash)
-        && Objects.equal(this.closeTime, other.closeTime)
+    return Objects.equals(this.txSetHash, other.txSetHash)
+        && Objects.equals(this.closeTime, other.closeTime)
         && Arrays.equals(this.upgrades, other.upgrades)
-        && Objects.equal(this.ext, other.ext);
+        && Objects.equals(this.ext, other.ext);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static StellarValue fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static StellarValue fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -152,15 +180,15 @@ public class StellarValue implements XdrElement {
 
     public StellarValue build() {
       StellarValue val = new StellarValue();
-      val.setTxSetHash(txSetHash);
-      val.setCloseTime(closeTime);
-      val.setUpgrades(upgrades);
-      val.setExt(ext);
+      val.setTxSetHash(this.txSetHash);
+      val.setCloseTime(this.closeTime);
+      val.setUpgrades(this.upgrades);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class StellarValueExt {
+  public static class StellarValueExt implements XdrElement {
     public StellarValueExt() {}
 
     StellarValueType v;
@@ -200,7 +228,7 @@ public class StellarValue implements XdrElement {
       public StellarValueExt build() {
         StellarValueExt val = new StellarValueExt();
         val.setDiscriminant(discriminant);
-        val.setLcValueSignature(lcValueSignature);
+        val.setLcValueSignature(this.lcValueSignature);
         return val;
       }
     }
@@ -239,7 +267,7 @@ public class StellarValue implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.lcValueSignature, this.v);
+      return Objects.hash(this.lcValueSignature, this.v);
     }
 
     @Override
@@ -249,8 +277,32 @@ public class StellarValue implements XdrElement {
       }
 
       StellarValueExt other = (StellarValueExt) object;
-      return Objects.equal(this.lcValueSignature, other.lcValueSignature)
-          && Objects.equal(this.v, other.v);
+      return Objects.equals(this.lcValueSignature, other.lcValueSignature)
+          && Objects.equals(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static StellarValueExt fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static StellarValueExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

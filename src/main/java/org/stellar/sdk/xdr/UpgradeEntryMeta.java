@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -57,7 +62,7 @@ public class UpgradeEntryMeta implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.upgrade, this.changes);
+    return Objects.hash(this.upgrade, this.changes);
   }
 
   @Override
@@ -67,7 +72,32 @@ public class UpgradeEntryMeta implements XdrElement {
     }
 
     UpgradeEntryMeta other = (UpgradeEntryMeta) object;
-    return Objects.equal(this.upgrade, other.upgrade) && Objects.equal(this.changes, other.changes);
+    return Objects.equals(this.upgrade, other.upgrade)
+        && Objects.equals(this.changes, other.changes);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static UpgradeEntryMeta fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static UpgradeEntryMeta fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -86,8 +116,8 @@ public class UpgradeEntryMeta implements XdrElement {
 
     public UpgradeEntryMeta build() {
       UpgradeEntryMeta val = new UpgradeEntryMeta();
-      val.setUpgrade(upgrade);
-      val.setChanges(changes);
+      val.setUpgrade(this.upgrade);
+      val.setChanges(this.changes);
       return val;
     }
   }

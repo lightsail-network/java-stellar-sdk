@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -69,7 +74,7 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.tx, Arrays.hashCode(this.signatures));
+    return Objects.hash(this.tx, Arrays.hashCode(this.signatures));
   }
 
   @Override
@@ -79,7 +84,31 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
     }
 
     FeeBumpTransactionEnvelope other = (FeeBumpTransactionEnvelope) object;
-    return Objects.equal(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
+    return Objects.equals(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static FeeBumpTransactionEnvelope fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static FeeBumpTransactionEnvelope fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -98,8 +127,8 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
 
     public FeeBumpTransactionEnvelope build() {
       FeeBumpTransactionEnvelope val = new FeeBumpTransactionEnvelope();
-      val.setTx(tx);
-      val.setSignatures(signatures);
+      val.setTx(this.tx);
+      val.setSignatures(this.signatures);
       return val;
     }
   }

@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -98,9 +103,9 @@ public class ChangeTrustAsset implements XdrElement {
     public ChangeTrustAsset build() {
       ChangeTrustAsset val = new ChangeTrustAsset();
       val.setDiscriminant(discriminant);
-      val.setAlphaNum4(alphaNum4);
-      val.setAlphaNum12(alphaNum12);
-      val.setLiquidityPool(liquidityPool);
+      val.setAlphaNum4(this.alphaNum4);
+      val.setAlphaNum12(this.alphaNum12);
+      val.setLiquidityPool(this.liquidityPool);
       return val;
     }
   }
@@ -151,7 +156,7 @@ public class ChangeTrustAsset implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.alphaNum4, this.alphaNum12, this.liquidityPool, this.type);
+    return Objects.hash(this.alphaNum4, this.alphaNum12, this.liquidityPool, this.type);
   }
 
   @Override
@@ -161,9 +166,33 @@ public class ChangeTrustAsset implements XdrElement {
     }
 
     ChangeTrustAsset other = (ChangeTrustAsset) object;
-    return Objects.equal(this.alphaNum4, other.alphaNum4)
-        && Objects.equal(this.alphaNum12, other.alphaNum12)
-        && Objects.equal(this.liquidityPool, other.liquidityPool)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.alphaNum4, other.alphaNum4)
+        && Objects.equals(this.alphaNum12, other.alphaNum12)
+        && Objects.equals(this.liquidityPool, other.liquidityPool)
+        && Objects.equals(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ChangeTrustAsset fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ChangeTrustAsset fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

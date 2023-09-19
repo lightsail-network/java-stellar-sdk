@@ -1,9 +1,9 @@
 # java-stellar-sdk
 
-[![Build Status](https://travis-ci.org/stellar/java-stellar-sdk.svg)](https://travis-ci.org/stellar/java-stellar-sdk)
+[![Test and Deploy](https://github.com/stellar/java-stellar-sdk/actions/workflows/test-deploy.yml/badge.svg?branch=master)](https://github.com/stellar/java-stellar-sdk/actions/workflows/test-deploy.yml)
 [![](https://jitpack.io/v/stellar/java-stellar-sdk.svg)](https://jitpack.io/#stellar/java-stellar-sdk)
 
-The Java Stellar Sdk library provides APIs to build transactions and connect to [Horizon](https://github.com/stellar/horizon).
+The Java Stellar Sdk library provides APIs to build transactions and connect to [Horizon](https://github.com/stellar/go/tree/master/services/horizon) and [Soroban-RPC Server](https://soroban.stellar.org/docs/reference/rpc).
 
 ## Installation
 
@@ -21,7 +21,7 @@ dependencies {
 }
 ```
 
-The list of versions to install can be found in the [Releases](./releases) section. More information can be found in [jitpack.io docs](https://jitpack.io/docs/).
+The list of versions to install can be found in the [Releases](https://github.com/stellar/java-stellar-sdk/releases) section. More information can be found in [jitpack.io docs](https://jitpack.io/docs/).
 
 ### JAR
 
@@ -40,7 +40,7 @@ For information on how to contribute, please refer to our [contribution guide](h
 java-stellar-sdk is licensed under an Apache-2.0 license. See the [LICENSE](https://github.com/stellar/java-stellar-sdk/blob/master/LICENSE) file for details.
 
 ## xdr to jave code generation
-All the java source files in org.stellar.sdk.xdr package are generated using the `xdrgen` command from the [stellar/xdrgen](https://github.com/stellar/xdrgen) 
-```
-xdrgen -o ./src/main/java/org/stellar/sdk/xdr -l java -n org.stellar.sdk.xdr ./xdr/Stellar-types.x ./xdr/Stellar-SCP.x ./xdr/Stellar-overlay.x ./xdr/Stellar-ledger-entries.x ./xdr/Stellar-ledger.x ./xdr/Stellar-transaction.x
+All the java source files in `org.stellar.sdk.xdr` package are generated using the following command:
+```bash
+make xdr-update
 ```

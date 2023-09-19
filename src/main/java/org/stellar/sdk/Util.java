@@ -1,15 +1,9 @@
 package org.stellar.sdk;
 
-import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import org.stellar.sdk.xdr.ClaimableBalanceID;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 public class Util {
 
@@ -100,33 +94,28 @@ public class Util {
     return clientVersion;
   }
 
-  public static ClaimableBalanceID claimableBalanceIdToXDR(String balanceId) {
-    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(balanceId.toLowerCase());
-    XdrDataInputStream balanceIdXdrDataInputStream =
-        new XdrDataInputStream(new ByteArrayInputStream(balanceIdBytes));
-
-    try {
-      return ClaimableBalanceID.decode(balanceIdXdrDataInputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid balanceId: " + balanceId, e);
-    }
-  }
-
-  public static String xdrToClaimableBalanceId(ClaimableBalanceID balanceId) {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    try {
-      balanceId.encode(xdrDataOutputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid claimClaimableBalanceOp.", e);
-    }
-    return BaseEncoding.base16().lowerCase().encode(byteArrayOutputStream.toByteArray());
-  }
-
   public static AssetTypeCreditAlphaNum assertNonNativeAsset(Asset asset) {
     if (asset instanceof AssetTypeCreditAlphaNum) {
       return (AssetTypeCreditAlphaNum) asset;
     }
     throw new IllegalArgumentException("native assets are not supported");
+  }
+
+  /**
+   * Returns an 8 byte array representation of a BigInteger value.
+   *
+   * @param value BigInteger value to convert to byte array
+   * @return byte array
+   */
+  public static byte[] getBytes(BigInteger value) {
+    byte[] bytes = value.toByteArray();
+    if (bytes.length < 8) {
+      byte[] temp = new byte[8];
+      System.arraycopy(bytes, 0, temp, 8 - bytes.length, bytes.length);
+      bytes = temp;
+    } else if (bytes.length > 8) {
+      bytes = Arrays.copyOfRange(bytes, bytes.length - 8, bytes.length);
+    }
+    return bytes;
   }
 }

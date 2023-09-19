@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -78,7 +83,7 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.hash, this.header, this.ext);
+    return Objects.hash(this.hash, this.header, this.ext);
   }
 
   @Override
@@ -88,9 +93,33 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     }
 
     LedgerHeaderHistoryEntry other = (LedgerHeaderHistoryEntry) object;
-    return Objects.equal(this.hash, other.hash)
-        && Objects.equal(this.header, other.header)
-        && Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.hash, other.hash)
+        && Objects.equals(this.header, other.header)
+        && Objects.equals(this.ext, other.ext);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerHeaderHistoryEntry fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerHeaderHistoryEntry fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -115,14 +144,14 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
 
     public LedgerHeaderHistoryEntry build() {
       LedgerHeaderHistoryEntry val = new LedgerHeaderHistoryEntry();
-      val.setHash(hash);
-      val.setHeader(header);
-      val.setExt(ext);
+      val.setHash(this.hash);
+      val.setHeader(this.header);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class LedgerHeaderHistoryEntryExt {
+  public static class LedgerHeaderHistoryEntryExt implements XdrElement {
     public LedgerHeaderHistoryEntryExt() {}
 
     Integer v;
@@ -180,7 +209,7 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hash(this.v);
     }
 
     @Override
@@ -190,7 +219,31 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
       }
 
       LedgerHeaderHistoryEntryExt other = (LedgerHeaderHistoryEntryExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equals(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerHeaderHistoryEntryExt fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerHeaderHistoryEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

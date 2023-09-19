@@ -62,7 +62,7 @@ public class OperationsRequestBuilderTest {
     Server server = new Server(mockWebServer.url("").toString());
     OperationResponse response = server.operations().operation(438086668289l);
     assertEquals(response.getType(), "create_account");
-    assertEquals(response.getId(), new Long(438086668289l));
+    assertEquals(response.getId(), Long.valueOf(438086668289l));
     assertEquals(
         response.getSourceAccount(), "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H");
     RecordedRequest request = mockWebServer.takeRequest();

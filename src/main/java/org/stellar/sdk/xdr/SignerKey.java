@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -118,10 +123,10 @@ public class SignerKey implements XdrElement {
     public SignerKey build() {
       SignerKey val = new SignerKey();
       val.setDiscriminant(discriminant);
-      val.setEd25519(ed25519);
-      val.setPreAuthTx(preAuthTx);
-      val.setHashX(hashX);
-      val.setEd25519SignedPayload(ed25519SignedPayload);
+      val.setEd25519(this.ed25519);
+      val.setPreAuthTx(this.preAuthTx);
+      val.setHashX(this.hashX);
+      val.setEd25519SignedPayload(this.ed25519SignedPayload);
       return val;
     }
   }
@@ -174,7 +179,7 @@ public class SignerKey implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.ed25519, this.preAuthTx, this.hashX, this.ed25519SignedPayload, this.type);
   }
 
@@ -185,14 +190,38 @@ public class SignerKey implements XdrElement {
     }
 
     SignerKey other = (SignerKey) object;
-    return Objects.equal(this.ed25519, other.ed25519)
-        && Objects.equal(this.preAuthTx, other.preAuthTx)
-        && Objects.equal(this.hashX, other.hashX)
-        && Objects.equal(this.ed25519SignedPayload, other.ed25519SignedPayload)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.ed25519, other.ed25519)
+        && Objects.equals(this.preAuthTx, other.preAuthTx)
+        && Objects.equals(this.hashX, other.hashX)
+        && Objects.equals(this.ed25519SignedPayload, other.ed25519SignedPayload)
+        && Objects.equals(this.type, other.type);
   }
 
-  public static class SignerKeyEd25519SignedPayload {
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SignerKey fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SignerKey fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class SignerKeyEd25519SignedPayload implements XdrElement {
     public SignerKeyEd25519SignedPayload() {}
 
     private Uint256 ed25519;
@@ -242,7 +271,7 @@ public class SignerKey implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.ed25519, Arrays.hashCode(this.payload));
+      return Objects.hash(this.ed25519, Arrays.hashCode(this.payload));
     }
 
     @Override
@@ -252,8 +281,32 @@ public class SignerKey implements XdrElement {
       }
 
       SignerKeyEd25519SignedPayload other = (SignerKeyEd25519SignedPayload) object;
-      return Objects.equal(this.ed25519, other.ed25519)
+      return Objects.equals(this.ed25519, other.ed25519)
           && Arrays.equals(this.payload, other.payload);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static SignerKeyEd25519SignedPayload fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static SignerKeyEd25519SignedPayload fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
 
     public static final class Builder {
@@ -272,8 +325,8 @@ public class SignerKey implements XdrElement {
 
       public SignerKeyEd25519SignedPayload build() {
         SignerKeyEd25519SignedPayload val = new SignerKeyEd25519SignedPayload();
-        val.setEd25519(ed25519);
-        val.setPayload(payload);
+        val.setEd25519(this.ed25519);
+        val.setPayload(this.payload);
         return val;
       }
     }

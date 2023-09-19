@@ -3,12 +3,13 @@ package org.stellar.sdk;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import com.google.common.collect.Lists;
 import java.io.IOException;
+import java.util.Collections;
 import org.junit.Test;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
 import org.stellar.sdk.xdr.Uint64;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 public class ClaimableBalanceIdTest {
 
@@ -21,7 +22,7 @@ public class ClaimableBalanceIdTest {
         new CreateClaimableBalanceOperation.Builder(
                 "420",
                 new AssetTypeNative(),
-                Lists.newArrayList(
+                Collections.singletonList(
                     new Claimant(
                         "GCACCFMIWJAHUUASSE2WC7V6VVDLYRLSJYZ3DJEXCG523FSHTNII6KOG",
                         new Predicate.Unconditional())))
@@ -51,7 +52,7 @@ public class ClaimableBalanceIdTest {
         new CreateClaimableBalanceOperation.Builder(
                 "420",
                 new AssetTypeNative(),
-                Lists.newArrayList(
+                Collections.singletonList(
                     new Claimant(
                         "GCACCFMIWJAHUUASSE2WC7V6VVDLYRLSJYZ3DJEXCG523FSHTNII6KOG",
                         new Predicate.Unconditional())))
@@ -84,7 +85,7 @@ public class ClaimableBalanceIdTest {
     muxedAccount.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
     MuxedAccount.MuxedAccountMed25519 med = new MuxedAccount.MuxedAccountMed25519();
     med.setEd25519(StrKey.encodeToXDRMuxedAccount(sourceAccount).getEd25519());
-    med.setId(new Uint64(41l));
+    med.setId(new Uint64(new XdrUnsignedHyperInteger(41l)));
     muxedAccount.setMed25519(med);
 
     transaction =

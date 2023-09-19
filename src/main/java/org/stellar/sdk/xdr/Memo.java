@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -111,10 +116,10 @@ public class Memo implements XdrElement {
     public Memo build() {
       Memo val = new Memo();
       val.setDiscriminant(discriminant);
-      val.setText(text);
-      val.setId(id);
-      val.setHash(hash);
-      val.setRetHash(retHash);
+      val.setText(this.text);
+      val.setId(this.id);
+      val.setHash(this.hash);
+      val.setRetHash(this.retHash);
       return val;
     }
   }
@@ -170,7 +175,7 @@ public class Memo implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.text, this.id, this.hash, this.retHash, this.type);
+    return Objects.hash(this.text, this.id, this.hash, this.retHash, this.type);
   }
 
   @Override
@@ -180,10 +185,34 @@ public class Memo implements XdrElement {
     }
 
     Memo other = (Memo) object;
-    return Objects.equal(this.text, other.text)
-        && Objects.equal(this.id, other.id)
-        && Objects.equal(this.hash, other.hash)
-        && Objects.equal(this.retHash, other.retHash)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.text, other.text)
+        && Objects.equals(this.id, other.id)
+        && Objects.equals(this.hash, other.hash)
+        && Objects.equals(this.retHash, other.retHash)
+        && Objects.equals(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static Memo fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static Memo fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

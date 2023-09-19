@@ -122,7 +122,14 @@ enum LedgerUpgradeType
     LEDGER_UPGRADE_BASE_FEE = 2,
     LEDGER_UPGRADE_MAX_TX_SET_SIZE = 3,
     LEDGER_UPGRADE_BASE_RESERVE = 4,
-    LEDGER_UPGRADE_FLAGS = 5
+    LEDGER_UPGRADE_FLAGS = 5,
+    LEDGER_UPGRADE_CONFIG = 6,
+    LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE = 7
+};
+
+struct ConfigUpgradeSetKey {
+    Hash contractID;
+    Hash contentHash;
 };
 
 union LedgerUpgrade switch (LedgerUpgradeType type)
@@ -137,6 +144,17 @@ case LEDGER_UPGRADE_BASE_RESERVE:
     uint32 newBaseReserve; // update baseReserve
 case LEDGER_UPGRADE_FLAGS:
     uint32 newFlags; // update flags
+case LEDGER_UPGRADE_CONFIG:
+    // Update arbitrary `ConfigSetting` entries identified by the key.
+    ConfigUpgradeSetKey newConfig;
+case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+    // Update ConfigSettingContractExecutionLanesV0.ledgerMaxTxCount without
+    // using `LEDGER_UPGRADE_CONFIG`.
+    uint32 newMaxSorobanTxSetSize;
+};
+
+struct ConfigUpgradeSet {
+    ConfigSettingEntry updatedEntry<>;
 };
 
 /* Entries used to define the bucket list */
@@ -176,12 +194,48 @@ case METAENTRY:
     BucketMetadata metaEntry;
 };
 
+enum TxSetComponentType
+{
+  // txs with effective fee <= bid derived from a base fee (if any).
+  // If base fee is not specified, no discount is applied.
+  TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE = 0
+};
+
+union TxSetComponent switch (TxSetComponentType type)
+{
+case TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE:
+  struct
+  {
+    int64* baseFee;
+    TransactionEnvelope txs<>;
+  } txsMaybeDiscountedFee;
+};
+
+union TransactionPhase switch (int v)
+{
+case 0:
+    TxSetComponent v0Components<>;
+};
+
 // Transaction sets are the unit used by SCP to decide on transitions
 // between ledgers
 struct TransactionSet
 {
     Hash previousLedgerHash;
     TransactionEnvelope txs<>;
+};
+
+struct TransactionSetV1
+{
+    Hash previousLedgerHash;
+    TransactionPhase phases<>;
+};
+
+union GeneralizedTransactionSet switch (int v)
+{
+// We consider the legacy TransactionSet to be v0.
+case 1:
+    TransactionSetV1 v1TxSet;
 };
 
 struct TransactionResultPair
@@ -203,11 +257,13 @@ struct TransactionHistoryEntry
     uint32 ledgerSeq;
     TransactionSet txSet;
 
-    // reserved for future use
+    // when v != 0, txSet must be empty
     union switch (int v)
     {
     case 0:
         void;
+    case 1:
+        GeneralizedTransactionSet generalizedTxSet;
     }
     ext;
 };
@@ -310,6 +366,74 @@ struct TransactionMetaV2
                                         // applied if any
 };
 
+enum ContractEventType
+{
+    SYSTEM = 0,
+    CONTRACT = 1,
+    DIAGNOSTIC = 2
+};
+
+struct ContractEvent
+{
+    // We can use this to add more fields, or because it
+    // is first, to change ContractEvent into a union.
+    ExtensionPoint ext;
+
+    Hash* contractID;
+    ContractEventType type;
+
+    union switch (int v)
+    {
+    case 0:
+        struct
+        {
+            SCVal topics<>;
+            SCVal data;
+        } v0;
+    }
+    body;
+};
+
+struct DiagnosticEvent
+{
+    bool inSuccessfulContractCall;
+    ContractEvent event;
+};
+
+struct SorobanTransactionMeta 
+{
+    ExtensionPoint ext;
+
+    ContractEvent events<>;             // custom events populated by the
+                                        // contracts themselves.
+    SCVal returnValue;                  // return value of the host fn invocation
+
+    // Diagnostics events that are not hashed.
+    // This will contain all contract and diagnostic events. Even ones
+    // that were emitted in a failed contract call.
+    DiagnosticEvent diagnosticEvents<>;
+};
+
+struct TransactionMetaV3
+{
+    ExtensionPoint ext;
+
+    LedgerEntryChanges txChangesBefore;  // tx level changes before operations
+                                         // are applied if any
+    OperationMeta operations<>;          // meta for each operation
+    LedgerEntryChanges txChangesAfter;   // tx level changes after operations are
+                                         // applied if any
+    SorobanTransactionMeta* sorobanMeta; // Soroban-specific meta (only for 
+                                         // Soroban transactions).
+};
+
+// This is in Stellar-ledger.x to due to a circular dependency 
+struct InvokeHostFunctionSuccessPreImage
+{
+    SCVal returnValue;
+    ContractEvent events<>;
+};
+
 // this is the meta produced when applying transactions
 // it does not include pre-apply updates such as fees
 union TransactionMeta switch (int v)
@@ -320,6 +444,8 @@ case 1:
     TransactionMetaV1 v1;
 case 2:
     TransactionMetaV2 v2;
+case 3:
+    TransactionMetaV3 v3;
 };
 
 // This struct groups together changes on a per transaction basis
@@ -358,9 +484,64 @@ struct LedgerCloseMetaV0
     SCPHistoryEntry scpInfo<>;
 };
 
+struct LedgerCloseMetaV1
+{
+    LedgerHeaderHistoryEntry ledgerHeader;
+
+    GeneralizedTransactionSet txSet;
+
+    // NB: transactions are sorted in apply order here
+    // fees for all transactions are processed first
+    // followed by applying transactions
+    TransactionResultMeta txProcessing<>;
+
+    // upgrades are applied last
+    UpgradeEntryMeta upgradesProcessing<>;
+
+    // other misc information attached to the ledger close
+    SCPHistoryEntry scpInfo<>;
+};
+
+struct LedgerCloseMetaV2
+{
+    // We forgot to add an ExtensionPoint in v1 but at least
+    // we can add one now in v2.
+    ExtensionPoint ext;
+
+    LedgerHeaderHistoryEntry ledgerHeader;
+
+    GeneralizedTransactionSet txSet;
+
+    // NB: transactions are sorted in apply order here
+    // fees for all transactions are processed first
+    // followed by applying transactions
+    TransactionResultMeta txProcessing<>;
+
+    // upgrades are applied last
+    UpgradeEntryMeta upgradesProcessing<>;
+
+    // other misc information attached to the ledger close
+    SCPHistoryEntry scpInfo<>;
+
+    // Size in bytes of BucketList, to support downstream
+    // systems calculating storage fees correctly.
+    uint64 totalByteSizeOfBucketList;
+
+    // Expired temp keys that are being evicted at this ledger.
+    LedgerKey evictedTemporaryLedgerKeys<>;
+
+    // Expired restorable ledger entries that are being
+    // evicted at this ledger.
+    LedgerEntry evictedPersistentLedgerEntries<>;
+};
+
 union LedgerCloseMeta switch (int v)
 {
 case 0:
     LedgerCloseMetaV0 v0;
+case 1:
+    LedgerCloseMetaV1 v1;
+case 2:
+    LedgerCloseMetaV2 v2;
 };
 }

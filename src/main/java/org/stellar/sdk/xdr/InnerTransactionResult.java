@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -35,6 +40,7 @@ import java.util.Arrays;
 //      case txBAD_SPONSORSHIP:
 //      case txBAD_MIN_SEQ_AGE_OR_GAP:
 //      case txMALFORMED:
+//      case txSOROBAN_INVALID:
 //          void;
 //      }
 //      result;
@@ -104,7 +110,7 @@ public class InnerTransactionResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.feeCharged, this.result, this.ext);
+    return Objects.hash(this.feeCharged, this.result, this.ext);
   }
 
   @Override
@@ -114,9 +120,33 @@ public class InnerTransactionResult implements XdrElement {
     }
 
     InnerTransactionResult other = (InnerTransactionResult) object;
-    return Objects.equal(this.feeCharged, other.feeCharged)
-        && Objects.equal(this.result, other.result)
-        && Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.feeCharged, other.feeCharged)
+        && Objects.equals(this.result, other.result)
+        && Objects.equals(this.ext, other.ext);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static InnerTransactionResult fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static InnerTransactionResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -141,14 +171,14 @@ public class InnerTransactionResult implements XdrElement {
 
     public InnerTransactionResult build() {
       InnerTransactionResult val = new InnerTransactionResult();
-      val.setFeeCharged(feeCharged);
-      val.setResult(result);
-      val.setExt(ext);
+      val.setFeeCharged(this.feeCharged);
+      val.setResult(this.result);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class InnerTransactionResultResult {
+  public static class InnerTransactionResultResult implements XdrElement {
     public InnerTransactionResultResult() {}
 
     TransactionResultCode code;
@@ -188,7 +218,7 @@ public class InnerTransactionResult implements XdrElement {
       public InnerTransactionResultResult build() {
         InnerTransactionResultResult val = new InnerTransactionResultResult();
         val.setDiscriminant(discriminant);
-        val.setResults(results);
+        val.setResults(this.results);
         return val;
       }
     }
@@ -223,6 +253,7 @@ public class InnerTransactionResult implements XdrElement {
         case txBAD_SPONSORSHIP:
         case txBAD_MIN_SEQ_AGE_OR_GAP:
         case txMALFORMED:
+        case txSOROBAN_INVALID:
           break;
       }
     }
@@ -260,6 +291,7 @@ public class InnerTransactionResult implements XdrElement {
         case txBAD_SPONSORSHIP:
         case txBAD_MIN_SEQ_AGE_OR_GAP:
         case txMALFORMED:
+        case txSOROBAN_INVALID:
           break;
       }
       return decodedInnerTransactionResultResult;
@@ -267,7 +299,7 @@ public class InnerTransactionResult implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(Arrays.hashCode(this.results), this.code);
+      return Objects.hash(Arrays.hashCode(this.results), this.code);
     }
 
     @Override
@@ -277,11 +309,35 @@ public class InnerTransactionResult implements XdrElement {
       }
 
       InnerTransactionResultResult other = (InnerTransactionResultResult) object;
-      return Arrays.equals(this.results, other.results) && Objects.equal(this.code, other.code);
+      return Arrays.equals(this.results, other.results) && Objects.equals(this.code, other.code);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static InnerTransactionResultResult fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static InnerTransactionResultResult fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 
-  public static class InnerTransactionResultExt {
+  public static class InnerTransactionResultExt implements XdrElement {
     public InnerTransactionResultExt() {}
 
     Integer v;
@@ -338,7 +394,7 @@ public class InnerTransactionResult implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hash(this.v);
     }
 
     @Override
@@ -348,7 +404,31 @@ public class InnerTransactionResult implements XdrElement {
       }
 
       InnerTransactionResultExt other = (InnerTransactionResultExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equals(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static InnerTransactionResultExt fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static InnerTransactionResultExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

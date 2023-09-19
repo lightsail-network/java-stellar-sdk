@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -74,7 +79,7 @@ public class LiquidityPoolConstantProductParameters implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.assetA, this.assetB, this.fee);
+    return Objects.hash(this.assetA, this.assetB, this.fee);
   }
 
   @Override
@@ -84,9 +89,35 @@ public class LiquidityPoolConstantProductParameters implements XdrElement {
     }
 
     LiquidityPoolConstantProductParameters other = (LiquidityPoolConstantProductParameters) object;
-    return Objects.equal(this.assetA, other.assetA)
-        && Objects.equal(this.assetB, other.assetB)
-        && Objects.equal(this.fee, other.fee);
+    return Objects.equals(this.assetA, other.assetA)
+        && Objects.equals(this.assetB, other.assetB)
+        && Objects.equals(this.fee, other.fee);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LiquidityPoolConstantProductParameters fromXdrBase64(String xdr)
+      throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LiquidityPoolConstantProductParameters fromXdrByteArray(byte[] xdr)
+      throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -111,9 +142,9 @@ public class LiquidityPoolConstantProductParameters implements XdrElement {
 
     public LiquidityPoolConstantProductParameters build() {
       LiquidityPoolConstantProductParameters val = new LiquidityPoolConstantProductParameters();
-      val.setAssetA(assetA);
-      val.setAssetB(assetB);
-      val.setFee(fee);
+      val.setAssetA(this.assetA);
+      val.setAssetB(this.assetB);
+      val.setFee(this.fee);
       return val;
     }
   }

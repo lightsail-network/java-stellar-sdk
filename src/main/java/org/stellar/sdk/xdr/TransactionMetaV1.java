@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -66,7 +71,7 @@ public class TransactionMetaV1 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.txChanges, Arrays.hashCode(this.operations));
+    return Objects.hash(this.txChanges, Arrays.hashCode(this.operations));
   }
 
   @Override
@@ -76,8 +81,32 @@ public class TransactionMetaV1 implements XdrElement {
     }
 
     TransactionMetaV1 other = (TransactionMetaV1) object;
-    return Objects.equal(this.txChanges, other.txChanges)
+    return Objects.equals(this.txChanges, other.txChanges)
         && Arrays.equals(this.operations, other.operations);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static TransactionMetaV1 fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static TransactionMetaV1 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -96,8 +125,8 @@ public class TransactionMetaV1 implements XdrElement {
 
     public TransactionMetaV1 build() {
       TransactionMetaV1 val = new TransactionMetaV1();
-      val.setTxChanges(txChanges);
-      val.setOperations(operations);
+      val.setTxChanges(this.txChanges);
+      val.setOperations(this.operations);
       return val;
     }
   }

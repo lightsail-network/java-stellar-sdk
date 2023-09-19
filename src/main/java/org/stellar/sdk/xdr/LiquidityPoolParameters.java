@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -55,7 +60,7 @@ public class LiquidityPoolParameters implements XdrElement {
     public LiquidityPoolParameters build() {
       LiquidityPoolParameters val = new LiquidityPoolParameters();
       val.setDiscriminant(discriminant);
-      val.setConstantProduct(constantProduct);
+      val.setConstantProduct(this.constantProduct);
       return val;
     }
   }
@@ -93,7 +98,7 @@ public class LiquidityPoolParameters implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.constantProduct, this.type);
+    return Objects.hash(this.constantProduct, this.type);
   }
 
   @Override
@@ -103,7 +108,31 @@ public class LiquidityPoolParameters implements XdrElement {
     }
 
     LiquidityPoolParameters other = (LiquidityPoolParameters) object;
-    return Objects.equal(this.constantProduct, other.constantProduct)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.constantProduct, other.constantProduct)
+        && Objects.equals(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LiquidityPoolParameters fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LiquidityPoolParameters fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

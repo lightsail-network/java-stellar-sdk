@@ -1,11 +1,10 @@
 package org.stellar.sdk.responses;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
+import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.Memo;
 
@@ -93,7 +92,7 @@ public class TransactionResponse extends Response implements Pageable {
 
   public Optional<MuxedAccount> getSourceAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(
         new MuxedAccount(this.accountMuxed, this.sourceAccount, this.accountMuxedId));
@@ -101,7 +100,7 @@ public class TransactionResponse extends Response implements Pageable {
 
   public Optional<MuxedAccount> getFeeAccountMuxed() {
     if (this.feeAccountMuxed == null || this.feeAccountMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(
         new MuxedAccount(this.feeAccountMuxed, this.feeAccount, this.feeAccountMuxedId));
@@ -132,15 +131,15 @@ public class TransactionResponse extends Response implements Pageable {
   }
 
   public Optional<FeeBumpTransaction> getFeeBump() {
-    return Optional.fromNullable(this.feeBumpTransaction);
+    return Optional.ofNullable(this.feeBumpTransaction);
   }
 
   public Optional<InnerTransaction> getInner() {
-    return Optional.fromNullable(this.innerTransaction);
+    return Optional.ofNullable(this.innerTransaction);
   }
 
   public Optional<Preconditions> getPreconditions() {
-    return Optional.fromNullable(this.preconditions);
+    return Optional.ofNullable(this.preconditions);
   }
 
   public String getPagingToken() {
@@ -183,8 +182,7 @@ public class TransactionResponse extends Response implements Pageable {
     return memo;
   }
 
-  public void setMemo(Memo memo) {
-    memo = checkNotNull(memo, "memo cannot be null");
+  public void setMemo(@NonNull Memo memo) {
     if (this.memo != null) {
       throw new RuntimeException("Memo has been already set.");
     }
@@ -197,7 +195,7 @@ public class TransactionResponse extends Response implements Pageable {
 
   /**
    * Preconditions of a transaction per <a
-   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21<a/>
+   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21</a>
    */
   @Value
   public static class Preconditions {

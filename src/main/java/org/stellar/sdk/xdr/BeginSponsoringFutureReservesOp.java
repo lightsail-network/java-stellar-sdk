@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -48,7 +53,7 @@ public class BeginSponsoringFutureReservesOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.sponsoredID);
+    return Objects.hash(this.sponsoredID);
   }
 
   @Override
@@ -58,7 +63,31 @@ public class BeginSponsoringFutureReservesOp implements XdrElement {
     }
 
     BeginSponsoringFutureReservesOp other = (BeginSponsoringFutureReservesOp) object;
-    return Objects.equal(this.sponsoredID, other.sponsoredID);
+    return Objects.equals(this.sponsoredID, other.sponsoredID);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static BeginSponsoringFutureReservesOp fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static BeginSponsoringFutureReservesOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -71,7 +100,7 @@ public class BeginSponsoringFutureReservesOp implements XdrElement {
 
     public BeginSponsoringFutureReservesOp build() {
       BeginSponsoringFutureReservesOp val = new BeginSponsoringFutureReservesOp();
-      val.setSponsoredID(sponsoredID);
+      val.setSponsoredID(this.sponsoredID);
       return val;
     }
   }

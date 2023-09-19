@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -148,7 +153,7 @@ public class OfferEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.sellerID,
         this.offerID,
         this.selling,
@@ -166,14 +171,38 @@ public class OfferEntry implements XdrElement {
     }
 
     OfferEntry other = (OfferEntry) object;
-    return Objects.equal(this.sellerID, other.sellerID)
-        && Objects.equal(this.offerID, other.offerID)
-        && Objects.equal(this.selling, other.selling)
-        && Objects.equal(this.buying, other.buying)
-        && Objects.equal(this.amount, other.amount)
-        && Objects.equal(this.price, other.price)
-        && Objects.equal(this.flags, other.flags)
-        && Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.sellerID, other.sellerID)
+        && Objects.equals(this.offerID, other.offerID)
+        && Objects.equals(this.selling, other.selling)
+        && Objects.equals(this.buying, other.buying)
+        && Objects.equals(this.amount, other.amount)
+        && Objects.equals(this.price, other.price)
+        && Objects.equals(this.flags, other.flags)
+        && Objects.equals(this.ext, other.ext);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static OfferEntry fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static OfferEntry fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -228,19 +257,19 @@ public class OfferEntry implements XdrElement {
 
     public OfferEntry build() {
       OfferEntry val = new OfferEntry();
-      val.setSellerID(sellerID);
-      val.setOfferID(offerID);
-      val.setSelling(selling);
-      val.setBuying(buying);
-      val.setAmount(amount);
-      val.setPrice(price);
-      val.setFlags(flags);
-      val.setExt(ext);
+      val.setSellerID(this.sellerID);
+      val.setOfferID(this.offerID);
+      val.setSelling(this.selling);
+      val.setBuying(this.buying);
+      val.setAmount(this.amount);
+      val.setPrice(this.price);
+      val.setFlags(this.flags);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class OfferEntryExt {
+  public static class OfferEntryExt implements XdrElement {
     public OfferEntryExt() {}
 
     Integer v;
@@ -296,7 +325,7 @@ public class OfferEntry implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hash(this.v);
     }
 
     @Override
@@ -306,7 +335,31 @@ public class OfferEntry implements XdrElement {
       }
 
       OfferEntryExt other = (OfferEntryExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equals(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static OfferEntryExt fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static OfferEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

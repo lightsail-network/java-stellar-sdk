@@ -1,15 +1,14 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import org.junit.Test;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
@@ -25,6 +24,8 @@ import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
+import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class TransactionPreconditionsTest {
 
@@ -36,14 +37,14 @@ public class TransactionPreconditionsTest {
     PreconditionsV2.Builder v2Builder = new PreconditionsV2.Builder();
 
     v2Builder.extraSigners(new SignerKey[] {});
-    v2Builder.minSeqAge(new Duration(new Uint64(2L)));
+    v2Builder.minSeqAge(new Duration(new Uint64(new XdrUnsignedHyperInteger(2L))));
     v2Builder.ledgerBounds(
         new org.stellar.sdk.xdr.LedgerBounds.Builder()
-            .minLedger(new Uint32(1))
-            .maxLedger(new Uint32(2))
+            .minLedger(new Uint32(new XdrUnsignedInteger(1)))
+            .maxLedger(new Uint32(new XdrUnsignedInteger(2)))
             .build());
     v2Builder.minSeqNum(new SequenceNumber(new Int64(4L)));
-    v2Builder.minSeqLedgerGap(new Uint32(0));
+    v2Builder.minSeqLedgerGap(new Uint32(new XdrUnsignedInteger(0)));
     preconditionsBuilder.v2(v2Builder.build());
     Preconditions xdr = preconditionsBuilder.build();
 
@@ -54,7 +55,7 @@ public class TransactionPreconditionsTest {
 
     TransactionPreconditions transactionPreconditions = TransactionPreconditions.fromXdr(xdr);
 
-    assertEquals(transactionPreconditions.getMinSeqAge(), 2);
+    assertEquals(transactionPreconditions.getMinSeqAge().longValue(), 2);
     assertEquals(transactionPreconditions.getLedgerBounds().getMinLedger(), 1);
     assertEquals(transactionPreconditions.getLedgerBounds().getMaxLedger(), 2);
     assertEquals(transactionPreconditions.getMinSeqNumber(), Long.valueOf(4));
@@ -69,12 +70,12 @@ public class TransactionPreconditionsTest {
     PreconditionsV2.Builder v2Builder = new PreconditionsV2.Builder();
     org.stellar.sdk.xdr.TimeBounds xdrTimeBounds =
         new org.stellar.sdk.xdr.TimeBounds.Builder()
-            .minTime(new TimePoint(new Uint64(1L)))
-            .maxTime(new TimePoint(new Uint64(2L)))
+            .minTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(1L))))
+            .maxTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(2L))))
             .build();
     v2Builder.timeBounds(xdrTimeBounds);
-    v2Builder.minSeqLedgerGap(new Uint32(0));
-    v2Builder.minSeqAge(new Duration(new Uint64(0L)));
+    v2Builder.minSeqLedgerGap(new Uint32(new XdrUnsignedInteger(0)));
+    v2Builder.minSeqAge(new Duration(new Uint64(new XdrUnsignedHyperInteger(0L))));
     v2Builder.extraSigners(new SignerKey[] {});
     preconditionsBuilder.v2(v2Builder.build());
     // create V2 Precond with just timebounds
@@ -102,9 +103,8 @@ public class TransactionPreconditionsTest {
   public void itConvertsToV2Xdr() throws IOException {
 
     byte[] payload =
-        BaseEncoding.base16()
-            .decode(
-                "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+        Util.hexToBytes(
+            "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
     SignerKey signerKey =
         new SignerKey.Builder()
             .discriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD)
@@ -122,7 +122,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .minSeqNumber(3L)
-            .extraSigners(newArrayList(signerKey, signerKey, signerKey))
+            .extraSigners(Arrays.asList(signerKey, signerKey, signerKey))
             .build();
 
     Preconditions xdr = preconditions.toXdr();
@@ -135,14 +135,16 @@ public class TransactionPreconditionsTest {
 
     assertEquals(xdr.getDiscriminant(), PreconditionType.PRECOND_V2);
     assertEquals(
-        xdr.getV2().getTimeBounds().getMinTime().getTimePoint().getUint64(), Long.valueOf(1));
+        xdr.getV2().getTimeBounds().getMinTime().getTimePoint().getUint64().getNumber().longValue(),
+        1L);
     assertEquals(
-        xdr.getV2().getTimeBounds().getMaxTime().getTimePoint().getUint64(), Long.valueOf(2));
+        xdr.getV2().getTimeBounds().getMaxTime().getTimePoint().getUint64().getNumber().longValue(),
+        2L);
     assertEquals(xdr.getV2().getMinSeqNum().getSequenceNumber().getInt64(), Long.valueOf(3));
     // xdr encoding requires non-null for min ledger gap
-    assertEquals(xdr.getV2().getMinSeqLedgerGap().getUint32().intValue(), 0);
+    assertEquals(xdr.getV2().getMinSeqLedgerGap().getUint32().getNumber().intValue(), 0);
     // xdr encoding requires non-null for min seq age
-    assertEquals(xdr.getV2().getMinSeqAge().getDuration().getUint64().longValue(), 0);
+    assertEquals(xdr.getV2().getMinSeqAge().getDuration().getUint64().getNumber().longValue(), 0);
     assertEquals(xdr.getV2().getExtraSigners().length, 3);
   }
 
@@ -160,8 +162,10 @@ public class TransactionPreconditionsTest {
         Preconditions.decode(new XdrDataInputStream(new ByteArrayInputStream(baos.toByteArray())));
 
     assertEquals(xdr.getDiscriminant(), PreconditionType.PRECOND_TIME);
-    assertEquals(xdr.getTimeBounds().getMinTime().getTimePoint().getUint64(), Long.valueOf(1));
-    assertEquals(xdr.getTimeBounds().getMaxTime().getTimePoint().getUint64(), Long.valueOf(2));
+    assertEquals(
+        xdr.getTimeBounds().getMinTime().getTimePoint().getUint64().getNumber().longValue(), 1L);
+    assertEquals(
+        xdr.getTimeBounds().getMaxTime().getTimePoint().getUint64().getNumber().longValue(), 2L);
     assertNull(xdr.getV2());
   }
 
@@ -209,7 +213,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .extraSigners(
-                newArrayList(
+                Arrays.asList(
                     new SignerKey.Builder().build(),
                     new SignerKey.Builder().build(),
                     new SignerKey.Builder().build()))
@@ -239,11 +243,11 @@ public class TransactionPreconditionsTest {
     PreconditionsV2.Builder v2Builder = new PreconditionsV2.Builder();
 
     v2Builder.extraSigners(new SignerKey[] {});
-    v2Builder.minSeqAge(new Duration(new Uint64(2L)));
+    v2Builder.minSeqAge(new Duration(new Uint64(new XdrUnsignedHyperInteger(2L))));
     v2Builder.ledgerBounds(
         new org.stellar.sdk.xdr.LedgerBounds.Builder()
-            .minLedger(new Uint32(1))
-            .maxLedger(new Uint32(2))
+            .minLedger(new Uint32(new XdrUnsignedInteger(1)))
+            .maxLedger(new Uint32(new XdrUnsignedInteger(2)))
             .build());
     v2Builder.minSeqNum(new SequenceNumber(new Int64(4L)));
     preconditionsBuilder.v2(v2Builder.build());

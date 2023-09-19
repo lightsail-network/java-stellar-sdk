@@ -1,8 +1,6 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import lombok.NonNull;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.XdrString;
 
@@ -10,17 +8,18 @@ import org.stellar.sdk.xdr.XdrString;
 public class MemoText extends Memo {
   private XdrString text;
 
-  public MemoText(String text) {
-    this(new XdrString(checkNotNull(text, "text cannot be null")));
+  public MemoText(@NonNull String text) {
+    this(new XdrString(text));
   }
 
-  public MemoText(byte[] text) {
-    this(new XdrString(checkNotNull(text, "text cannot be null")));
+  public MemoText(byte @NonNull [] text) {
+    this(new XdrString(text));
   }
 
-  public MemoText(XdrString text) {
-    checkNotNull(text, "text cannot be null");
-    checkArgument(text.getBytes().length <= 28, "text cannot be more than 28-bytes long.");
+  public MemoText(@NonNull XdrString text) {
+    if (text.getBytes().length > 28) {
+      throw new IllegalArgumentException("text cannot be more than 28-bytes long.");
+    }
     this.text = text;
   }
 

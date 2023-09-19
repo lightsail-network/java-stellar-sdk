@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
 
 // === xdr source ============================================================
 
@@ -60,6 +65,30 @@ public class Curve25519Secret implements XdrElement {
     return Arrays.equals(this.key, other.key);
   }
 
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static Curve25519Secret fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static Curve25519Secret fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
   public static final class Builder {
     private byte[] key;
 
@@ -70,7 +99,7 @@ public class Curve25519Secret implements XdrElement {
 
     public Curve25519Secret build() {
       Curve25519Secret val = new Curve25519Secret();
-      val.setKey(key);
+      val.setKey(this.key);
       return val;
     }
   }

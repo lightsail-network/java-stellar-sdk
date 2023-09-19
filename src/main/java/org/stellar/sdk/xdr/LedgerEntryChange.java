@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -109,10 +114,10 @@ public class LedgerEntryChange implements XdrElement {
     public LedgerEntryChange build() {
       LedgerEntryChange val = new LedgerEntryChange();
       val.setDiscriminant(discriminant);
-      val.setCreated(created);
-      val.setUpdated(updated);
-      val.setRemoved(removed);
-      val.setState(state);
+      val.setCreated(this.created);
+      val.setUpdated(this.updated);
+      val.setRemoved(this.removed);
+      val.setState(this.state);
       return val;
     }
   }
@@ -165,7 +170,7 @@ public class LedgerEntryChange implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.created, this.updated, this.removed, this.state, this.type);
+    return Objects.hash(this.created, this.updated, this.removed, this.state, this.type);
   }
 
   @Override
@@ -175,10 +180,34 @@ public class LedgerEntryChange implements XdrElement {
     }
 
     LedgerEntryChange other = (LedgerEntryChange) object;
-    return Objects.equal(this.created, other.created)
-        && Objects.equal(this.updated, other.updated)
-        && Objects.equal(this.removed, other.removed)
-        && Objects.equal(this.state, other.state)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.created, other.created)
+        && Objects.equals(this.updated, other.updated)
+        && Objects.equals(this.removed, other.removed)
+        && Objects.equals(this.state, other.state)
+        && Objects.equals(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerEntryChange fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerEntryChange fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

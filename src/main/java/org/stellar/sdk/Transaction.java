@@ -1,20 +1,20 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
+import lombok.NonNull;
+import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClaimableBalanceIDType;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.Hash;
+import org.stellar.sdk.xdr.HashIDPreimage;
 import org.stellar.sdk.xdr.Int64;
-import org.stellar.sdk.xdr.OperationID;
 import org.stellar.sdk.xdr.SequenceNumber;
+import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
 import org.stellar.sdk.xdr.TransactionV0;
@@ -22,6 +22,7 @@ import org.stellar.sdk.xdr.TransactionV0Envelope;
 import org.stellar.sdk.xdr.TransactionV1Envelope;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
+import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 /**
  * Represents <a href="https://developers.stellar.org/docs/glossary/transactions/"
@@ -34,25 +35,30 @@ public class Transaction extends AbstractTransaction {
   private final Operation[] mOperations;
   private final Memo mMemo;
   private final TransactionPreconditions mPreconditions;
+  private final SorobanTransactionData mSorobanData;
   private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;
 
   Transaction(
       AccountConverter accountConverter,
-      String sourceAccount,
+      @NonNull String sourceAccount,
       long fee,
       long sequenceNumber,
-      Operation[] operations,
+      @NonNull Operation[] operations,
       Memo memo,
       TransactionPreconditions preconditions,
+      SorobanTransactionData sorobanData,
       Network network) {
     super(accountConverter, network);
-    this.mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    this.mSourceAccount = sourceAccount;
     this.mSequenceNumber = sequenceNumber;
-    this.mOperations = checkNotNull(operations, "operations cannot be null");
-    checkArgument(operations.length > 0, "At least one operation required");
+    this.mOperations = operations;
+    if (operations.length == 0) {
+      throw new IllegalArgumentException("At least one operation required");
+    }
     this.mPreconditions = preconditions;
     this.mFee = fee;
     this.mMemo = memo != null ? memo : Memo.none();
+    this.mSorobanData = sorobanData != null ? new SorobanDataBuilder(sorobanData).build() : null;
   }
 
   // setEnvelopeType is only used in tests which is why this method is package protected
@@ -79,6 +85,15 @@ public class Transaction extends AbstractTransaction {
 
   public Memo getMemo() {
     return mMemo;
+  }
+
+  /**
+   * Get the Soroban data for the transaction.
+   *
+   * @return SorobanTransactionData if the transaction includes SorobanData, otherwise null.
+   */
+  public SorobanTransactionData getSorobanData() {
+    return mSorobanData;
   }
 
   /**
@@ -131,23 +146,29 @@ public class Transaction extends AbstractTransaction {
     //
     // Note that the source account must be *unmuxed* for this to work.
 
-    OperationID id = new OperationID();
-    id.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_OP_ID);
-    OperationID.OperationIDId body = new OperationID.OperationIDId();
-    body.setOpNum(new Uint32(index));
-    body.setSeqNum(new SequenceNumber(new Int64(getSequenceNumber())));
-    body.setSourceAccount(
-        StrKey.muxedAccountToAccountId(AccountConverter.disableMuxed().encode(getSourceAccount())));
-    id.setId(body);
-
+    Uint32 opIndex = new Uint32(new XdrUnsignedInteger(index));
+    SequenceNumber sequenceNumber = new SequenceNumber(new Int64(getSequenceNumber()));
+    AccountID sourceAccount =
+        StrKey.muxedAccountToAccountId(AccountConverter.disableMuxed().encode(getSourceAccount()));
+    HashIDPreimage.HashIDPreimageOperationID operationID =
+        new HashIDPreimage.HashIDPreimageOperationID.Builder()
+            .opNum(opIndex)
+            .seqNum(sequenceNumber)
+            .sourceAccount(sourceAccount)
+            .build();
+    HashIDPreimage hashIDPreimage =
+        new HashIDPreimage.Builder()
+            .discriminant(EnvelopeType.ENVELOPE_TYPE_OP_ID)
+            .operationID(operationID)
+            .build();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    id.encode(new XdrDataOutputStream(outputStream));
+    hashIDPreimage.encode(new XdrDataOutputStream(outputStream));
+    Hash operationIDHash = new Hash(Util.hash(outputStream.toByteArray()));
+    outputStream.reset();
 
     ClaimableBalanceID result = new ClaimableBalanceID();
     result.setDiscriminant(ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0);
-    result.setV0(new Hash(Util.hash(outputStream.toByteArray())));
-
-    outputStream.reset();
+    result.setV0(operationIDHash);
     result.encode(new XdrDataOutputStream(outputStream));
     return Util.bytesToHex(outputStream.toByteArray()).toLowerCase();
   }
@@ -156,7 +177,7 @@ public class Transaction extends AbstractTransaction {
   private TransactionV0 toXdr() {
     // fee
     Uint32 fee = new Uint32();
-    fee.setUint32((int) mFee);
+    fee.setUint32(new XdrUnsignedInteger(mFee));
     // sequenceNumber
     Int64 sequenceNumberUint = new Int64();
     sequenceNumberUint.setInt64(mSequenceNumber);
@@ -188,7 +209,7 @@ public class Transaction extends AbstractTransaction {
 
     // fee
     Uint32 fee = new Uint32();
-    fee.setUint32((int) mFee);
+    fee.setUint32((new XdrUnsignedInteger(mFee)));
     // sequenceNumber
     Int64 sequenceNumberUint = new Int64();
     sequenceNumberUint.setInt64(mSequenceNumber);
@@ -203,7 +224,12 @@ public class Transaction extends AbstractTransaction {
     // ext
     org.stellar.sdk.xdr.Transaction.TransactionExt ext =
         new org.stellar.sdk.xdr.Transaction.TransactionExt();
-    ext.setDiscriminant(0);
+    if (this.mSorobanData != null) {
+      ext.setDiscriminant(1);
+      ext.setSorobanData(this.mSorobanData);
+    } else {
+      ext.setDiscriminant(0);
+    }
 
     org.stellar.sdk.xdr.Transaction v1Tx = new org.stellar.sdk.xdr.Transaction();
     v1Tx.setFee(fee);
@@ -219,7 +245,7 @@ public class Transaction extends AbstractTransaction {
 
   public static Transaction fromV0EnvelopeXdr(
       AccountConverter accountConverter, TransactionV0Envelope envelope, Network network) {
-    int mFee = envelope.getTx().getFee().getUint32();
+    long mFee = envelope.getTx().getFee().getUint32().getNumber();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
     TimeBounds mTimeBounds = TimeBounds.fromXdr(envelope.getTx().getTimeBounds());
@@ -238,6 +264,7 @@ public class Transaction extends AbstractTransaction {
             mOperations,
             mMemo,
             TransactionPreconditions.builder().timeBounds(mTimeBounds).build(),
+            null,
             network);
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
 
@@ -252,7 +279,7 @@ public class Transaction extends AbstractTransaction {
 
   public static Transaction fromV1EnvelopeXdr(
       AccountConverter accountConverter, TransactionV1Envelope envelope, Network network) {
-    int mFee = envelope.getTx().getFee().getUint32();
+    long mFee = envelope.getTx().getFee().getUint32().getNumber();
     Long mSequenceNumber = envelope.getTx().getSeqNum().getSequenceNumber().getInt64();
     Memo mMemo = Memo.fromXdr(envelope.getTx().getMemo());
 
@@ -260,6 +287,8 @@ public class Transaction extends AbstractTransaction {
     for (int i = 0; i < envelope.getTx().getOperations().length; i++) {
       mOperations[i] = Operation.fromXdr(accountConverter, envelope.getTx().getOperations()[i]);
     }
+
+    SorobanTransactionData sorobanData = envelope.getTx().getExt().getSorobanData();
 
     Transaction transaction =
         new Transaction(
@@ -270,6 +299,7 @@ public class Transaction extends AbstractTransaction {
             mOperations,
             mMemo,
             TransactionPreconditions.fromXdr(envelope.getTx().getCond()),
+            sorobanData,
             network);
 
     transaction.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
@@ -309,7 +339,7 @@ public class Transaction extends AbstractTransaction {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.envelopeType,
         this.mFee,
         this.mSourceAccount,
@@ -318,7 +348,8 @@ public class Transaction extends AbstractTransaction {
         this.mMemo,
         this.mPreconditions,
         this.mSignatures,
-        this.mNetwork);
+        this.mNetwork,
+        this.mSorobanData);
   }
 
   @Override
@@ -328,15 +359,16 @@ public class Transaction extends AbstractTransaction {
     }
 
     Transaction other = (Transaction) object;
-    return Objects.equal(this.envelopeType, other.envelopeType)
-        && Objects.equal(this.mFee, other.mFee)
-        && Objects.equal(this.mSourceAccount, other.mSourceAccount)
-        && Objects.equal(this.mSequenceNumber, other.mSequenceNumber)
+    return Objects.equals(this.envelopeType, other.envelopeType)
+        && Objects.equals(this.mFee, other.mFee)
+        && Objects.equals(this.mSourceAccount, other.mSourceAccount)
+        && Objects.equals(this.mSequenceNumber, other.mSequenceNumber)
         && Arrays.equals(this.mOperations, other.mOperations)
-        && Objects.equal(this.mMemo, other.mMemo)
-        && Objects.equal(this.mPreconditions, other.mPreconditions)
-        && Objects.equal(this.mNetwork, other.mNetwork)
-        && Objects.equal(this.mSignatures, other.mSignatures);
+        && Objects.equals(this.mMemo, other.mMemo)
+        && Objects.equals(this.mPreconditions, other.mPreconditions)
+        && Objects.equals(this.mNetwork, other.mNetwork)
+        && Objects.equals(this.mSignatures, other.mSignatures)
+        && Objects.equals(this.mSorobanData, other.mSorobanData);
   }
 
   /**
@@ -356,5 +388,21 @@ public class Transaction extends AbstractTransaction {
     public Builder(TransactionBuilderAccount sourceAccount, Network network) {
       super(sourceAccount, network);
     }
+  }
+
+  /**
+   * Returns true if this transaction is a Soroban transaction.
+   *
+   * @return true if this transaction is a Soroban transaction.
+   */
+  public boolean isSorobanTransaction() {
+    if (mOperations.length != 1) {
+      return false;
+    }
+
+    Operation op = mOperations[0];
+    return op instanceof InvokeHostFunctionOperation
+        || op instanceof BumpFootprintExpirationOperation
+        || op instanceof RestoreFootprintOperation;
   }
 }

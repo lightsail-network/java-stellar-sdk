@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -60,7 +65,7 @@ public class AuthenticatedMessage implements XdrElement {
     public AuthenticatedMessage build() {
       AuthenticatedMessage val = new AuthenticatedMessage();
       val.setDiscriminant(discriminant);
-      val.setV0(v0);
+      val.setV0(this.v0);
       return val;
     }
   }
@@ -70,8 +75,9 @@ public class AuthenticatedMessage implements XdrElement {
       throws IOException {
     // Xdrgen::AST::Identifier
     // Uint32
-    stream.writeInt(encodedAuthenticatedMessage.getDiscriminant().getUint32());
-    switch (encodedAuthenticatedMessage.getDiscriminant().getUint32()) {
+    stream.writeInt(
+        encodedAuthenticatedMessage.getDiscriminant().getUint32().getNumber().intValue());
+    switch (encodedAuthenticatedMessage.getDiscriminant().getUint32().getNumber().intValue()) {
       case 0:
         AuthenticatedMessageV0.encode(stream, encodedAuthenticatedMessage.v0);
         break;
@@ -86,7 +92,7 @@ public class AuthenticatedMessage implements XdrElement {
     AuthenticatedMessage decodedAuthenticatedMessage = new AuthenticatedMessage();
     Uint32 discriminant = Uint32.decode(stream);
     decodedAuthenticatedMessage.setDiscriminant(discriminant);
-    switch (decodedAuthenticatedMessage.getDiscriminant().getUint32()) {
+    switch (decodedAuthenticatedMessage.getDiscriminant().getUint32().getNumber().intValue()) {
       case 0:
         decodedAuthenticatedMessage.v0 = AuthenticatedMessageV0.decode(stream);
         break;
@@ -96,7 +102,7 @@ public class AuthenticatedMessage implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.v0, this.v);
+    return Objects.hash(this.v0, this.v);
   }
 
   @Override
@@ -106,10 +112,34 @@ public class AuthenticatedMessage implements XdrElement {
     }
 
     AuthenticatedMessage other = (AuthenticatedMessage) object;
-    return Objects.equal(this.v0, other.v0) && Objects.equal(this.v, other.v);
+    return Objects.equals(this.v0, other.v0) && Objects.equals(this.v, other.v);
   }
 
-  public static class AuthenticatedMessageV0 {
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static AuthenticatedMessage fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static AuthenticatedMessage fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class AuthenticatedMessageV0 implements XdrElement {
     public AuthenticatedMessageV0() {}
 
     private Uint64 sequence;
@@ -164,7 +194,7 @@ public class AuthenticatedMessage implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.sequence, this.message, this.mac);
+      return Objects.hash(this.sequence, this.message, this.mac);
     }
 
     @Override
@@ -174,9 +204,33 @@ public class AuthenticatedMessage implements XdrElement {
       }
 
       AuthenticatedMessageV0 other = (AuthenticatedMessageV0) object;
-      return Objects.equal(this.sequence, other.sequence)
-          && Objects.equal(this.message, other.message)
-          && Objects.equal(this.mac, other.mac);
+      return Objects.equals(this.sequence, other.sequence)
+          && Objects.equals(this.message, other.message)
+          && Objects.equals(this.mac, other.mac);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static AuthenticatedMessageV0 fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static AuthenticatedMessageV0 fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
 
     public static final class Builder {
@@ -201,9 +255,9 @@ public class AuthenticatedMessage implements XdrElement {
 
       public AuthenticatedMessageV0 build() {
         AuthenticatedMessageV0 val = new AuthenticatedMessageV0();
-        val.setSequence(sequence);
-        val.setMessage(message);
-        val.setMac(mac);
+        val.setSequence(this.sequence);
+        val.setMessage(this.message);
+        val.setMac(this.mac);
         return val;
       }
     }

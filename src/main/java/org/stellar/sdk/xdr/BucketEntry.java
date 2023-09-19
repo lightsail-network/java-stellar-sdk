@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -93,9 +98,9 @@ public class BucketEntry implements XdrElement {
     public BucketEntry build() {
       BucketEntry val = new BucketEntry();
       val.setDiscriminant(discriminant);
-      val.setLiveEntry(liveEntry);
-      val.setDeadEntry(deadEntry);
-      val.setMetaEntry(metaEntry);
+      val.setLiveEntry(this.liveEntry);
+      val.setDeadEntry(this.deadEntry);
+      val.setMetaEntry(this.metaEntry);
       return val;
     }
   }
@@ -144,7 +149,7 @@ public class BucketEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.liveEntry, this.deadEntry, this.metaEntry, this.type);
+    return Objects.hash(this.liveEntry, this.deadEntry, this.metaEntry, this.type);
   }
 
   @Override
@@ -154,9 +159,33 @@ public class BucketEntry implements XdrElement {
     }
 
     BucketEntry other = (BucketEntry) object;
-    return Objects.equal(this.liveEntry, other.liveEntry)
-        && Objects.equal(this.deadEntry, other.deadEntry)
-        && Objects.equal(this.metaEntry, other.metaEntry)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.liveEntry, other.liveEntry)
+        && Objects.equals(this.deadEntry, other.deadEntry)
+        && Objects.equals(this.metaEntry, other.metaEntry)
+        && Objects.equals(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static BucketEntry fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static BucketEntry fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

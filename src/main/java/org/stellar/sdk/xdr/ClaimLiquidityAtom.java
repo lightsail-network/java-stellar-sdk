@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -100,7 +105,7 @@ public class ClaimLiquidityAtom implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.liquidityPoolID, this.assetSold, this.amountSold, this.assetBought, this.amountBought);
   }
 
@@ -111,11 +116,35 @@ public class ClaimLiquidityAtom implements XdrElement {
     }
 
     ClaimLiquidityAtom other = (ClaimLiquidityAtom) object;
-    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
-        && Objects.equal(this.assetSold, other.assetSold)
-        && Objects.equal(this.amountSold, other.amountSold)
-        && Objects.equal(this.assetBought, other.assetBought)
-        && Objects.equal(this.amountBought, other.amountBought);
+    return Objects.equals(this.liquidityPoolID, other.liquidityPoolID)
+        && Objects.equals(this.assetSold, other.assetSold)
+        && Objects.equals(this.amountSold, other.amountSold)
+        && Objects.equals(this.assetBought, other.assetBought)
+        && Objects.equals(this.amountBought, other.amountBought);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ClaimLiquidityAtom fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ClaimLiquidityAtom fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -152,11 +181,11 @@ public class ClaimLiquidityAtom implements XdrElement {
 
     public ClaimLiquidityAtom build() {
       ClaimLiquidityAtom val = new ClaimLiquidityAtom();
-      val.setLiquidityPoolID(liquidityPoolID);
-      val.setAssetSold(assetSold);
-      val.setAmountSold(amountSold);
-      val.setAssetBought(assetBought);
-      val.setAmountBought(amountBought);
+      val.setLiquidityPoolID(this.liquidityPoolID);
+      val.setAssetSold(this.assetSold);
+      val.setAmountSold(this.amountSold);
+      val.setAssetBought(this.assetBought);
+      val.setAmountBought(this.amountBought);
       return val;
     }
   }

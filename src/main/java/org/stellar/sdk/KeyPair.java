@@ -1,9 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.System.arraycopy;
 
-import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -11,6 +9,8 @@ import java.security.MessageDigest;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Arrays;
+import java.util.Objects;
+import lombok.NonNull;
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -19,6 +19,7 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
@@ -52,8 +53,8 @@ public class KeyPair {
    * @param publicKey
    * @param privateKey
    */
-  public KeyPair(EdDSAPublicKey publicKey, EdDSAPrivateKey privateKey) {
-    mPublicKey = checkNotNull(publicKey, "publicKey cannot be null");
+  public KeyPair(@NonNull EdDSAPublicKey publicKey, EdDSAPrivateKey privateKey) {
+    mPublicKey = publicKey;
     mPrivateKey = privateKey;
   }
 
@@ -200,6 +201,12 @@ public class KeyPair {
     return publicKey;
   }
 
+  public AccountID getXdrAccountId() {
+    AccountID accountID = new AccountID();
+    accountID.setAccountID(getXdrPublicKey());
+    return accountID;
+  }
+
   public SignerKey getXdrSignerKey() {
     SignerKey signerKey = new SignerKey();
     signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519);
@@ -259,8 +266,8 @@ public class KeyPair {
   /**
    * Sign the provided payload data for payload signer where the input is the data being signed. Per
    * the <a
-   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint"
-   * CAP-40 Signature spec</a> {@link DecoratedSignature}.
+   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint">CAP-40
+   * Signature spec</a> {@link DecoratedSignature}.
    *
    * @param signerPayload the payload signers raw data to sign
    * @return DecoratedSignature
@@ -307,7 +314,7 @@ public class KeyPair {
   }
 
   public int hashCode() {
-    return Objects.hashCode(this.mPrivateKey, this.mPublicKey);
+    return Objects.hash(this.mPrivateKey, this.mPublicKey);
   }
 
   @Override
@@ -317,7 +324,7 @@ public class KeyPair {
     }
 
     KeyPair other = (KeyPair) object;
-    return Objects.equal(this.mPrivateKey, other.mPrivateKey)
+    return Objects.equals(this.mPrivateKey, other.mPrivateKey)
         && this.mPublicKey.equals(other.mPublicKey);
   }
 }

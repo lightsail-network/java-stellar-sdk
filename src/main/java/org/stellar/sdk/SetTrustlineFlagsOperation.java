@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
 import java.util.EnumSet;
+import java.util.Objects;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -53,7 +53,7 @@ public class SetTrustlineFlagsOperation extends Operation {
       v |= f.getValue();
     }
     Uint32 combined = new Uint32();
-    combined.setUint32(v);
+    combined.setUint32(new XdrUnsignedInteger(v));
     return combined;
   }
 
@@ -89,8 +89,8 @@ public class SetTrustlineFlagsOperation extends Operation {
     Builder(SetTrustLineFlagsOp op) {
       trustor = StrKey.encodeStellarAccountId(op.getTrustor());
       asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
-      clearFlags = flagSetFromInt(op.getClearFlags().getUint32());
-      setFlags = flagSetFromInt(op.getSetFlags().getUint32());
+      clearFlags = flagSetFromInt(op.getClearFlags().getUint32().getNumber().intValue());
+      setFlags = flagSetFromInt(op.getSetFlags().getUint32().getNumber().intValue());
     }
 
     private static EnumSet<TrustLineFlags> flagSetFromInt(int x) {
@@ -146,7 +146,7 @@ public class SetTrustlineFlagsOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.getSourceAccount(), this.trustor, this.asset, this.clearFlags, this.setFlags);
   }
 
@@ -157,10 +157,10 @@ public class SetTrustlineFlagsOperation extends Operation {
     }
 
     SetTrustlineFlagsOperation other = (SetTrustlineFlagsOperation) object;
-    return Objects.equal(this.trustor, other.trustor)
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.clearFlags, other.clearFlags)
-        && Objects.equal(this.setFlags, other.setFlags)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.trustor, other.trustor)
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.clearFlags, other.clearFlags)
+        && Objects.equals(this.setFlags, other.setFlags)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

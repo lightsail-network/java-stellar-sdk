@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -59,7 +64,7 @@ public class Claimant implements XdrElement {
     public Claimant build() {
       Claimant val = new Claimant();
       val.setDiscriminant(discriminant);
-      val.setV0(v0);
+      val.setV0(this.v0);
       return val;
     }
   }
@@ -94,7 +99,7 @@ public class Claimant implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.v0, this.type);
+    return Objects.hash(this.v0, this.type);
   }
 
   @Override
@@ -104,10 +109,34 @@ public class Claimant implements XdrElement {
     }
 
     Claimant other = (Claimant) object;
-    return Objects.equal(this.v0, other.v0) && Objects.equal(this.type, other.type);
+    return Objects.equals(this.v0, other.v0) && Objects.equals(this.type, other.type);
   }
 
-  public static class ClaimantV0 {
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static Claimant fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static Claimant fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class ClaimantV0 implements XdrElement {
     public ClaimantV0() {}
 
     private AccountID destination;
@@ -149,7 +178,7 @@ public class Claimant implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.destination, this.predicate);
+      return Objects.hash(this.destination, this.predicate);
     }
 
     @Override
@@ -159,8 +188,32 @@ public class Claimant implements XdrElement {
       }
 
       ClaimantV0 other = (ClaimantV0) object;
-      return Objects.equal(this.destination, other.destination)
-          && Objects.equal(this.predicate, other.predicate);
+      return Objects.equals(this.destination, other.destination)
+          && Objects.equals(this.predicate, other.predicate);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static ClaimantV0 fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static ClaimantV0 fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
 
     public static final class Builder {
@@ -179,8 +232,8 @@ public class Claimant implements XdrElement {
 
       public ClaimantV0 build() {
         ClaimantV0 val = new ClaimantV0();
-        val.setDestination(destination);
-        val.setPredicate(predicate);
+        val.setDestination(this.destination);
+        val.setPredicate(this.predicate);
         return val;
       }
     }

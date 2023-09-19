@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class RevokeAccountSponsorshipOperation extends Operation {
@@ -64,8 +63,9 @@ public class RevokeAccountSponsorshipOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public RevokeAccountSponsorshipOperation.Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    public RevokeAccountSponsorshipOperation.Builder setSourceAccount(
+        @NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 
@@ -82,7 +82,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.accountId, this.getSourceAccount());
+    return Objects.hash(this.accountId, this.getSourceAccount());
   }
 
   @Override
@@ -92,7 +92,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
     }
 
     RevokeAccountSponsorshipOperation other = (RevokeAccountSponsorshipOperation) object;
-    return Objects.equal(this.accountId, other.accountId)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.accountId, other.accountId)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

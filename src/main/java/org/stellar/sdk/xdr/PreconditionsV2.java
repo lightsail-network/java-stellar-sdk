@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -165,7 +170,7 @@ public class PreconditionsV2 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.timeBounds,
         this.ledgerBounds,
         this.minSeqNum,
@@ -181,12 +186,36 @@ public class PreconditionsV2 implements XdrElement {
     }
 
     PreconditionsV2 other = (PreconditionsV2) object;
-    return Objects.equal(this.timeBounds, other.timeBounds)
-        && Objects.equal(this.ledgerBounds, other.ledgerBounds)
-        && Objects.equal(this.minSeqNum, other.minSeqNum)
-        && Objects.equal(this.minSeqAge, other.minSeqAge)
-        && Objects.equal(this.minSeqLedgerGap, other.minSeqLedgerGap)
+    return Objects.equals(this.timeBounds, other.timeBounds)
+        && Objects.equals(this.ledgerBounds, other.ledgerBounds)
+        && Objects.equals(this.minSeqNum, other.minSeqNum)
+        && Objects.equals(this.minSeqAge, other.minSeqAge)
+        && Objects.equals(this.minSeqLedgerGap, other.minSeqLedgerGap)
         && Arrays.equals(this.extraSigners, other.extraSigners);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static PreconditionsV2 fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static PreconditionsV2 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -229,12 +258,12 @@ public class PreconditionsV2 implements XdrElement {
 
     public PreconditionsV2 build() {
       PreconditionsV2 val = new PreconditionsV2();
-      val.setTimeBounds(timeBounds);
-      val.setLedgerBounds(ledgerBounds);
-      val.setMinSeqNum(minSeqNum);
-      val.setMinSeqAge(minSeqAge);
-      val.setMinSeqLedgerGap(minSeqLedgerGap);
-      val.setExtraSigners(extraSigners);
+      val.setTimeBounds(this.timeBounds);
+      val.setLedgerBounds(this.ledgerBounds);
+      val.setMinSeqNum(this.minSeqNum);
+      val.setMinSeqAge(this.minSeqAge);
+      val.setMinSeqLedgerGap(this.minSeqLedgerGap);
+      val.setExtraSigners(this.extraSigners);
       return val;
     }
   }

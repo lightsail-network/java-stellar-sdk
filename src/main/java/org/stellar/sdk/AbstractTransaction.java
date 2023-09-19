@@ -1,32 +1,27 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.SignatureHint;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 public abstract class AbstractTransaction {
+
   protected final Network mNetwork;
   protected final AccountConverter accountConverter;
   protected List<DecoratedSignature> mSignatures;
   public static final int MIN_BASE_FEE = 100;
 
-  AbstractTransaction(AccountConverter accountConverter, Network network) {
-    this.accountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
-    this.mNetwork = checkNotNull(network, "network cannot be null");
+  AbstractTransaction(@NonNull AccountConverter accountConverter, @NonNull Network network) {
+    this.accountConverter = accountConverter;
+    this.mNetwork = network;
     this.mSignatures = new ArrayList<DecoratedSignature>();
   }
 
@@ -35,8 +30,7 @@ public abstract class AbstractTransaction {
    *
    * @param signer {@link KeyPair} object representing a signer
    */
-  public void sign(KeyPair signer) {
-    checkNotNull(signer, "signer cannot be null");
+  public void sign(@NonNull KeyPair signer) {
     byte[] txHash = this.hash();
     mSignatures.add(signer.signDecorated(txHash));
   }
@@ -46,8 +40,7 @@ public abstract class AbstractTransaction {
    *
    * @param preimage the sha256 hash of preimage should be equal to signer hash
    */
-  public void sign(byte[] preimage) {
-    checkNotNull(preimage, "preimage cannot be null");
+  public void sign(byte @NonNull [] preimage) {
     org.stellar.sdk.xdr.Signature signature = new org.stellar.sdk.xdr.Signature();
     signature.setSignature(preimage);
 
@@ -70,7 +63,7 @@ public abstract class AbstractTransaction {
 
   /** Returns transaction hash encoded as a hexadecimal string. */
   public String hashHex() {
-    return BaseEncoding.base16().lowerCase().encode(this.hash());
+    return Util.bytesToHex(this.hash()).toLowerCase();
   }
 
   /** Returns signature base. */
@@ -86,12 +79,21 @@ public abstract class AbstractTransaction {
   }
 
   /**
+   * Gets the {@link AccountConverter} for this transaction.
+   *
+   * @return the {@link AccountConverter} object
+   */
+  public AccountConverter getAccountConverter() {
+    return accountConverter;
+  }
+
+  /**
    * Gets read only list(immutable) of the signatures on transaction.
    *
    * @return immutable list of signatures
    */
   public List<DecoratedSignature> getSignatures() {
-    return ImmutableList.copyOf(mSignatures);
+    return Collections.unmodifiableList(mSignatures);
   }
 
   /**
@@ -111,13 +113,7 @@ public abstract class AbstractTransaction {
    */
   public String toEnvelopeXdrBase64() {
     try {
-      TransactionEnvelope envelope = this.toEnvelopeXdr();
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(outputStream);
-      TransactionEnvelope.encode(xdrOutputStream, envelope);
-
-      BaseEncoding base64Encoding = BaseEncoding.base64();
-      return base64Encoding.encode(outputStream.toByteArray());
+      return toEnvelopeXdr().toXdrBase64();
     } catch (IOException e) {
       throw new AssertionError(e);
     }
@@ -167,11 +163,7 @@ public abstract class AbstractTransaction {
    */
   public static AbstractTransaction fromEnvelopeXdr(
       AccountConverter accountConverter, String envelope, Network network) throws IOException {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(envelope);
-
-    TransactionEnvelope transactionEnvelope =
-        TransactionEnvelope.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
+    TransactionEnvelope transactionEnvelope = TransactionEnvelope.fromXdrBase64(envelope);
     return fromEnvelopeXdr(accountConverter, transactionEnvelope, network);
   }
 
@@ -192,15 +184,13 @@ public abstract class AbstractTransaction {
       TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,
       Network network) {
     try {
-      TransactionSignaturePayload payload = new TransactionSignaturePayload();
-      Hash hash = new Hash();
-      hash.setHash(network.getNetworkId());
-      payload.setNetworkId(hash);
-      payload.setTaggedTransaction(taggedTransaction);
-      ByteArrayOutputStream txOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(txOutputStream);
-      payload.encode(xdrOutputStream);
-      return txOutputStream.toByteArray();
+      Hash networkIdHash = new Hash(network.getNetworkId());
+      TransactionSignaturePayload payload =
+          new TransactionSignaturePayload.Builder()
+              .networkId(networkIdHash)
+              .taggedTransaction(taggedTransaction)
+              .build();
+      return payload.toXdrByteArray();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

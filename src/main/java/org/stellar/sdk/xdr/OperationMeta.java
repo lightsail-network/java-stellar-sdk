@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -44,7 +49,7 @@ public class OperationMeta implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.changes);
+    return Objects.hash(this.changes);
   }
 
   @Override
@@ -54,7 +59,31 @@ public class OperationMeta implements XdrElement {
     }
 
     OperationMeta other = (OperationMeta) object;
-    return Objects.equal(this.changes, other.changes);
+    return Objects.equals(this.changes, other.changes);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static OperationMeta fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static OperationMeta fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -67,7 +96,7 @@ public class OperationMeta implements XdrElement {
 
     public OperationMeta build() {
       OperationMeta val = new OperationMeta();
-      val.setChanges(changes);
+      val.setChanges(this.changes);
       return val;
     }
   }

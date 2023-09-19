@@ -1,14 +1,15 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.collect.Lists;
 import com.google.gson.*;
 import java.lang.reflect.Type;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
-import org.threeten.bp.Instant;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 public class PredicateDeserializer implements JsonDeserializer<Predicate> {
   @Override
@@ -24,7 +25,7 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
     }
 
     if (obj.has("and")) {
-      List<Predicate> inner = Lists.newArrayList();
+      List<Predicate> inner = new ArrayList<>();
       for (JsonElement elt : obj.get("and").getAsJsonArray()) {
         inner.add(deserialize(elt, typeOfT, context));
       }
@@ -32,7 +33,7 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
     }
 
     if (obj.has("or")) {
-      List<Predicate> inner = Lists.newArrayList();
+      List<Predicate> inner = new ArrayList<>();
       for (JsonElement elt : obj.get("or").getAsJsonArray()) {
         inner.add(deserialize(elt, typeOfT, context));
       }
@@ -44,15 +45,21 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
     // abs_before date string
     if (obj.has("abs_before_epoch")) {
       return new Predicate.AbsBefore(
-          new TimePoint(new Uint64(obj.get("abs_before_epoch").getAsLong())));
+          new TimePoint(
+              new Uint64(
+                  new XdrUnsignedHyperInteger(obj.get("abs_before_epoch").getAsBigInteger()))));
     } else if (obj.has("abs_before")) {
       String formattedDate = obj.get("abs_before").getAsString();
       return new Predicate.AbsBefore(
-          new TimePoint(new Uint64(Instant.parse(formattedDate).getEpochSecond())));
+          new TimePoint(
+              new Uint64(
+                  new XdrUnsignedHyperInteger(Instant.parse(formattedDate).getEpochSecond()))));
     }
 
     if (obj.has("rel_before")) {
-      return new Predicate.RelBefore(new Duration(new Uint64(obj.get("rel_before").getAsLong())));
+      return new Predicate.RelBefore(
+          new Duration(
+              new Uint64(new XdrUnsignedHyperInteger(obj.get("rel_before").getAsBigInteger()))));
     }
 
     throw new IllegalArgumentException("Unsupported predicate: " + json.toString());

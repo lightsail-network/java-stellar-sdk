@@ -1,24 +1,25 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.io.BaseEncoding;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Signature;
 import org.stellar.sdk.xdr.SignatureHint;
 
 public class Sep10Challenge {
-  static final int GRACE_PERIOD_SECONDS = 5 * 60;
+  static final BigInteger GRACE_PERIOD_SECONDS = BigInteger.valueOf(5 * 60);
   static final String CLIENT_DOMAIN_DATA_NAME = "client_domain";
   private static final String HOME_DOMAIN_MANAGER_DATA_NAME_FLAG = "auth";
   private static final String WEB_AUTH_DOMAIN_MANAGER_DATA_NAME = "web_auth_domain";
@@ -83,8 +84,7 @@ public class Sep10Challenge {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] encodedNonce = base64Encoding.encode(nonce).getBytes();
+    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
 
     if (clientDomain.isEmpty() != clientSigningKey.isEmpty()) {
       throw new InvalidSep10ChallengeException(
@@ -247,14 +247,15 @@ public class Sep10Challenge {
       throw new InvalidSep10ChallengeException("only memo type `id` is supported");
     }
 
-    long maxTime = transaction.getTimeBounds().getMaxTime();
-    long minTime = transaction.getTimeBounds().getMinTime();
-    if (maxTime == 0L) {
+    BigInteger maxTime = transaction.getTimeBounds().getMaxTime();
+    BigInteger minTime = transaction.getTimeBounds().getMinTime();
+    if (maxTime.equals(BigInteger.ZERO)) {
       throw new InvalidSep10ChallengeException("Transaction requires non-infinite timebounds.");
     }
 
-    long currentTime = System.currentTimeMillis() / 1000L;
-    if ((currentTime + GRACE_PERIOD_SECONDS) < minTime || currentTime > maxTime) {
+    BigInteger currentTime = BigInteger.valueOf(System.currentTimeMillis() / 1000L);
+    if (currentTime.add(GRACE_PERIOD_SECONDS).compareTo(minTime) < 0
+        || currentTime.compareTo(maxTime) > 0) {
       throw new InvalidSep10ChallengeException(
           "Transaction is not within range of the specified timebounds.");
     }
@@ -307,10 +308,9 @@ public class Sep10Challenge {
           "Random nonce encoded as base64 should be 64 bytes long.");
     }
 
-    BaseEncoding base64Encoding = BaseEncoding.base64();
     byte[] nonce;
     try {
-      nonce = base64Encoding.decode(new String(manageDataOperation.getValue()));
+      nonce = Base64.getDecoder().decode(new String(manageDataOperation.getValue()));
     } catch (IllegalArgumentException e) {
       throw new InvalidSep10ChallengeException(
           "Failed to decode random nonce provided in ManageData operation.", e);
@@ -510,7 +510,7 @@ public class Sep10Challenge {
     // are consumed only once on the transaction.
     Set<String> allSigners = new HashSet<String>(clientSigners);
     allSigners.add(serverKeyPair.getAccountId());
-    Optional<String> clientDomainSigner = Optional.absent();
+    Optional<String> clientDomainSigner = Optional.empty();
 
     for (Operation op : transaction.getOperations()) {
       if (!(op instanceof ManageDataOperation)) {
@@ -679,10 +679,14 @@ public class Sep10Challenge {
     byte[] txHash = transaction.hash();
 
     // find and verify signatures
-    Set<String> signersFound = new HashSet<String>();
-    Multimap<SignatureHint, Signature> signatures = HashMultimap.create();
+    Set<String> signersFound = new HashSet<>();
+    Map<SignatureHint, List<Signature>> signatures = new HashMap<>();
+
     for (DecoratedSignature decoratedSignature : transaction.getSignatures()) {
-      signatures.put(decoratedSignature.getHint(), decoratedSignature.getSignature());
+      SignatureHint hint = decoratedSignature.getHint();
+      Signature signature = decoratedSignature.getSignature();
+      List<Signature> signatureList = signatures.computeIfAbsent(hint, k -> new ArrayList<>());
+      signatureList.add(signature);
     }
 
     for (String signer : signers) {
@@ -693,13 +697,13 @@ public class Sep10Challenge {
         continue;
       }
       SignatureHint hint = keyPair.getSignatureHint();
-
-      for (Signature signature : signatures.get(hint)) {
+      List<Signature> signatureList = signatures.getOrDefault(hint, Collections.emptyList());
+      for (Signature signature : signatureList) {
         if (keyPair.verify(txHash, signature.getSignature())) {
           signersFound.add(signer);
           // explicitly ensure that a transaction signature cannot be
           // mapped to more than one signer
-          signatures.remove(hint, signature);
+          signatureList.remove(signature);
           break;
         }
       }
@@ -743,7 +747,7 @@ public class Sep10Challenge {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.transaction.hashHex(), this.clientAccountId);
+      return Objects.hash(this.transaction.hashHex(), this.clientAccountId);
     }
 
     @Override
@@ -757,9 +761,9 @@ public class Sep10Challenge {
       }
 
       ChallengeTransaction other = (ChallengeTransaction) object;
-      return Objects.equal(this.transaction.hashHex(), other.transaction.hashHex())
-          && Objects.equal(this.clientAccountId, other.clientAccountId)
-          && Objects.equal(this.matchedHomeDomain, other.matchedHomeDomain);
+      return Objects.equals(this.transaction.hashHex(), other.transaction.hashHex())
+          && Objects.equals(this.clientAccountId, other.clientAccountId)
+          && Objects.equals(this.matchedHomeDomain, other.matchedHomeDomain);
     }
   }
 
@@ -783,7 +787,7 @@ public class Sep10Challenge {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.key, this.weight);
+      return Objects.hash(this.key, this.weight);
     }
 
     @Override
@@ -797,7 +801,7 @@ public class Sep10Challenge {
       }
 
       Signer other = (Signer) object;
-      return Objects.equal(this.key, other.key) && Objects.equal(this.weight, other.weight);
+      return Objects.equals(this.key, other.key) && Objects.equals(this.weight, other.weight);
     }
   }
 }
