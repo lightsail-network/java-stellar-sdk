@@ -1,15 +1,14 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.google.common.io.BaseEncoding;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import org.junit.Test;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
@@ -104,9 +103,8 @@ public class TransactionPreconditionsTest {
   public void itConvertsToV2Xdr() throws IOException {
 
     byte[] payload =
-        BaseEncoding.base16()
-            .decode(
-                "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+        Util.hexToBytes(
+            "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
     SignerKey signerKey =
         new SignerKey.Builder()
             .discriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD)
@@ -124,7 +122,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .minSeqNumber(3L)
-            .extraSigners(newArrayList(signerKey, signerKey, signerKey))
+            .extraSigners(Arrays.asList(signerKey, signerKey, signerKey))
             .build();
 
     Preconditions xdr = preconditions.toXdr();
@@ -215,7 +213,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .extraSigners(
-                newArrayList(
+                Arrays.asList(
                     new SignerKey.Builder().build(),
                     new SignerKey.Builder().build(),
                     new SignerKey.Builder().build()))

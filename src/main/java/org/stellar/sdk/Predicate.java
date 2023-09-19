@@ -1,10 +1,10 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.stellar.sdk.xdr.ClaimPredicate;
 import org.stellar.sdk.xdr.ClaimPredicateType;
 import org.stellar.sdk.xdr.Duration;
@@ -16,7 +16,7 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 public abstract class Predicate {
 
   private static List<Predicate> convertXDRPredicates(ClaimPredicate[] predicates) {
-    List<Predicate> list = Lists.newArrayList();
+    List<Predicate> list = new ArrayList<>();
     for (ClaimPredicate p : predicates) {
       list.add(fromXdr(p));
     }
@@ -88,7 +88,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(inner, ((Not) o).inner);
+      return (getClass() == o.getClass()) && Objects.equals(inner, ((Not) o).inner);
     }
 
     @Override
@@ -121,7 +121,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(inner, ((Or) o).inner);
+      return (getClass() == o.getClass()) && Objects.equals(inner, ((Or) o).inner);
     }
 
     @Override
@@ -158,7 +158,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(inner, ((And) o).inner);
+      return (getClass() == o.getClass()) && Objects.equals(inner, ((And) o).inner);
     }
 
     @Override
@@ -227,7 +227,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(timePoint, ((AbsBefore) o).timePoint);
+      return (getClass() == o.getClass()) && Objects.equals(timePoint, ((AbsBefore) o).timePoint);
     }
 
     @Override
@@ -265,7 +265,7 @@ public abstract class Predicate {
       if (this == o) {
         return true;
       }
-      return (getClass() == o.getClass()) && Objects.equal(duration, ((RelBefore) o).duration);
+      return (getClass() == o.getClass()) && Objects.equals(duration, ((RelBefore) o).duration);
     }
 
     @Override

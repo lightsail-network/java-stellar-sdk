@@ -17,7 +17,6 @@ import java.util.Objects;
 //      uint32 maxEntryExpiration;
 //      uint32 minTempEntryExpiration;
 //      uint32 minPersistentEntryExpiration;
-//      uint32 autoBumpLedgers;
 //
 //      // rent_fee = wfee_rate_average / rent_rate_denominator_for_type
 //      int64 persistentRentRateDenominator;
@@ -31,6 +30,9 @@ import java.util.Objects;
 //
 //      // Maximum number of bytes that we scan for eviction per ledger
 //      uint64 evictionScanSize;
+//
+//      // Lowest BucketList level to be scanned to evict entries
+//      uint32 startingEvictionScanLevel;
 //  };
 
 //  ===========================================================================
@@ -65,16 +67,6 @@ public class StateExpirationSettings implements XdrElement {
 
   public void setMinPersistentEntryExpiration(Uint32 value) {
     this.minPersistentEntryExpiration = value;
-  }
-
-  private Uint32 autoBumpLedgers;
-
-  public Uint32 getAutoBumpLedgers() {
-    return this.autoBumpLedgers;
-  }
-
-  public void setAutoBumpLedgers(Uint32 value) {
-    this.autoBumpLedgers = value;
   }
 
   private Int64 persistentRentRateDenominator;
@@ -127,18 +119,28 @@ public class StateExpirationSettings implements XdrElement {
     this.evictionScanSize = value;
   }
 
+  private Uint32 startingEvictionScanLevel;
+
+  public Uint32 getStartingEvictionScanLevel() {
+    return this.startingEvictionScanLevel;
+  }
+
+  public void setStartingEvictionScanLevel(Uint32 value) {
+    this.startingEvictionScanLevel = value;
+  }
+
   public static void encode(
       XdrDataOutputStream stream, StateExpirationSettings encodedStateExpirationSettings)
       throws IOException {
     Uint32.encode(stream, encodedStateExpirationSettings.maxEntryExpiration);
     Uint32.encode(stream, encodedStateExpirationSettings.minTempEntryExpiration);
     Uint32.encode(stream, encodedStateExpirationSettings.minPersistentEntryExpiration);
-    Uint32.encode(stream, encodedStateExpirationSettings.autoBumpLedgers);
     Int64.encode(stream, encodedStateExpirationSettings.persistentRentRateDenominator);
     Int64.encode(stream, encodedStateExpirationSettings.tempRentRateDenominator);
     Uint32.encode(stream, encodedStateExpirationSettings.maxEntriesToExpire);
     Uint32.encode(stream, encodedStateExpirationSettings.bucketListSizeWindowSampleSize);
     Uint64.encode(stream, encodedStateExpirationSettings.evictionScanSize);
+    Uint32.encode(stream, encodedStateExpirationSettings.startingEvictionScanLevel);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -150,12 +152,12 @@ public class StateExpirationSettings implements XdrElement {
     decodedStateExpirationSettings.maxEntryExpiration = Uint32.decode(stream);
     decodedStateExpirationSettings.minTempEntryExpiration = Uint32.decode(stream);
     decodedStateExpirationSettings.minPersistentEntryExpiration = Uint32.decode(stream);
-    decodedStateExpirationSettings.autoBumpLedgers = Uint32.decode(stream);
     decodedStateExpirationSettings.persistentRentRateDenominator = Int64.decode(stream);
     decodedStateExpirationSettings.tempRentRateDenominator = Int64.decode(stream);
     decodedStateExpirationSettings.maxEntriesToExpire = Uint32.decode(stream);
     decodedStateExpirationSettings.bucketListSizeWindowSampleSize = Uint32.decode(stream);
     decodedStateExpirationSettings.evictionScanSize = Uint64.decode(stream);
+    decodedStateExpirationSettings.startingEvictionScanLevel = Uint32.decode(stream);
     return decodedStateExpirationSettings;
   }
 
@@ -165,12 +167,12 @@ public class StateExpirationSettings implements XdrElement {
         this.maxEntryExpiration,
         this.minTempEntryExpiration,
         this.minPersistentEntryExpiration,
-        this.autoBumpLedgers,
         this.persistentRentRateDenominator,
         this.tempRentRateDenominator,
         this.maxEntriesToExpire,
         this.bucketListSizeWindowSampleSize,
-        this.evictionScanSize);
+        this.evictionScanSize,
+        this.startingEvictionScanLevel);
   }
 
   @Override
@@ -183,12 +185,12 @@ public class StateExpirationSettings implements XdrElement {
     return Objects.equals(this.maxEntryExpiration, other.maxEntryExpiration)
         && Objects.equals(this.minTempEntryExpiration, other.minTempEntryExpiration)
         && Objects.equals(this.minPersistentEntryExpiration, other.minPersistentEntryExpiration)
-        && Objects.equals(this.autoBumpLedgers, other.autoBumpLedgers)
         && Objects.equals(this.persistentRentRateDenominator, other.persistentRentRateDenominator)
         && Objects.equals(this.tempRentRateDenominator, other.tempRentRateDenominator)
         && Objects.equals(this.maxEntriesToExpire, other.maxEntriesToExpire)
         && Objects.equals(this.bucketListSizeWindowSampleSize, other.bucketListSizeWindowSampleSize)
-        && Objects.equals(this.evictionScanSize, other.evictionScanSize);
+        && Objects.equals(this.evictionScanSize, other.evictionScanSize)
+        && Objects.equals(this.startingEvictionScanLevel, other.startingEvictionScanLevel);
   }
 
   @Override
@@ -219,12 +221,12 @@ public class StateExpirationSettings implements XdrElement {
     private Uint32 maxEntryExpiration;
     private Uint32 minTempEntryExpiration;
     private Uint32 minPersistentEntryExpiration;
-    private Uint32 autoBumpLedgers;
     private Int64 persistentRentRateDenominator;
     private Int64 tempRentRateDenominator;
     private Uint32 maxEntriesToExpire;
     private Uint32 bucketListSizeWindowSampleSize;
     private Uint64 evictionScanSize;
+    private Uint32 startingEvictionScanLevel;
 
     public Builder maxEntryExpiration(Uint32 maxEntryExpiration) {
       this.maxEntryExpiration = maxEntryExpiration;
@@ -238,11 +240,6 @@ public class StateExpirationSettings implements XdrElement {
 
     public Builder minPersistentEntryExpiration(Uint32 minPersistentEntryExpiration) {
       this.minPersistentEntryExpiration = minPersistentEntryExpiration;
-      return this;
-    }
-
-    public Builder autoBumpLedgers(Uint32 autoBumpLedgers) {
-      this.autoBumpLedgers = autoBumpLedgers;
       return this;
     }
 
@@ -271,17 +268,22 @@ public class StateExpirationSettings implements XdrElement {
       return this;
     }
 
+    public Builder startingEvictionScanLevel(Uint32 startingEvictionScanLevel) {
+      this.startingEvictionScanLevel = startingEvictionScanLevel;
+      return this;
+    }
+
     public StateExpirationSettings build() {
       StateExpirationSettings val = new StateExpirationSettings();
       val.setMaxEntryExpiration(this.maxEntryExpiration);
       val.setMinTempEntryExpiration(this.minTempEntryExpiration);
       val.setMinPersistentEntryExpiration(this.minPersistentEntryExpiration);
-      val.setAutoBumpLedgers(this.autoBumpLedgers);
       val.setPersistentRentRateDenominator(this.persistentRentRateDenominator);
       val.setTempRentRateDenominator(this.tempRentRateDenominator);
       val.setMaxEntriesToExpire(this.maxEntriesToExpire);
       val.setBucketListSizeWindowSampleSize(this.bucketListSizeWindowSampleSize);
       val.setEvictionScanSize(this.evictionScanSize);
+      val.setStartingEvictionScanLevel(this.startingEvictionScanLevel);
       return val;
     }
   }

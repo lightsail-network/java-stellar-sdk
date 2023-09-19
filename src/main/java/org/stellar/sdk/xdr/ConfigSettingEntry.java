@@ -24,8 +24,8 @@ import java.util.Objects;
 //      ConfigSettingContractLedgerCostV0 contractLedgerCost;
 //  case CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0:
 //      ConfigSettingContractHistoricalDataV0 contractHistoricalData;
-//  case CONFIG_SETTING_CONTRACT_META_DATA_V0:
-//      ConfigSettingContractMetaDataV0 contractMetaData;
+//  case CONFIG_SETTING_CONTRACT_EVENTS_V0:
+//      ConfigSettingContractEventsV0 contractEvents;
 //  case CONFIG_SETTING_CONTRACT_BANDWIDTH_V0:
 //      ConfigSettingContractBandwidthV0 contractBandwidth;
 //  case CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS:
@@ -42,6 +42,8 @@ import java.util.Objects;
 //      ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
 //  case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
 //      uint64 bucketListSizeWindow<>;
+//  case CONFIG_SETTING_EVICTION_ITERATOR:
+//      EvictionIterator evictionIterator;
 //  };
 
 //  ===========================================================================
@@ -98,14 +100,14 @@ public class ConfigSettingEntry implements XdrElement {
     this.contractHistoricalData = value;
   }
 
-  private ConfigSettingContractMetaDataV0 contractMetaData;
+  private ConfigSettingContractEventsV0 contractEvents;
 
-  public ConfigSettingContractMetaDataV0 getContractMetaData() {
-    return this.contractMetaData;
+  public ConfigSettingContractEventsV0 getContractEvents() {
+    return this.contractEvents;
   }
 
-  public void setContractMetaData(ConfigSettingContractMetaDataV0 value) {
-    this.contractMetaData = value;
+  public void setContractEvents(ConfigSettingContractEventsV0 value) {
+    this.contractEvents = value;
   }
 
   private ConfigSettingContractBandwidthV0 contractBandwidth;
@@ -188,13 +190,23 @@ public class ConfigSettingEntry implements XdrElement {
     this.bucketListSizeWindow = value;
   }
 
+  private EvictionIterator evictionIterator;
+
+  public EvictionIterator getEvictionIterator() {
+    return this.evictionIterator;
+  }
+
+  public void setEvictionIterator(EvictionIterator value) {
+    this.evictionIterator = value;
+  }
+
   public static final class Builder {
     private ConfigSettingID discriminant;
     private Uint32 contractMaxSizeBytes;
     private ConfigSettingContractComputeV0 contractCompute;
     private ConfigSettingContractLedgerCostV0 contractLedgerCost;
     private ConfigSettingContractHistoricalDataV0 contractHistoricalData;
-    private ConfigSettingContractMetaDataV0 contractMetaData;
+    private ConfigSettingContractEventsV0 contractEvents;
     private ConfigSettingContractBandwidthV0 contractBandwidth;
     private ContractCostParams contractCostParamsCpuInsns;
     private ContractCostParams contractCostParamsMemBytes;
@@ -203,6 +215,7 @@ public class ConfigSettingEntry implements XdrElement {
     private StateExpirationSettings stateExpirationSettings;
     private ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
     private Uint64[] bucketListSizeWindow;
+    private EvictionIterator evictionIterator;
 
     public Builder discriminant(ConfigSettingID discriminant) {
       this.discriminant = discriminant;
@@ -230,8 +243,8 @@ public class ConfigSettingEntry implements XdrElement {
       return this;
     }
 
-    public Builder contractMetaData(ConfigSettingContractMetaDataV0 contractMetaData) {
-      this.contractMetaData = contractMetaData;
+    public Builder contractEvents(ConfigSettingContractEventsV0 contractEvents) {
+      this.contractEvents = contractEvents;
       return this;
     }
 
@@ -276,6 +289,11 @@ public class ConfigSettingEntry implements XdrElement {
       return this;
     }
 
+    public Builder evictionIterator(EvictionIterator evictionIterator) {
+      this.evictionIterator = evictionIterator;
+      return this;
+    }
+
     public ConfigSettingEntry build() {
       ConfigSettingEntry val = new ConfigSettingEntry();
       val.setDiscriminant(discriminant);
@@ -283,7 +301,7 @@ public class ConfigSettingEntry implements XdrElement {
       val.setContractCompute(this.contractCompute);
       val.setContractLedgerCost(this.contractLedgerCost);
       val.setContractHistoricalData(this.contractHistoricalData);
-      val.setContractMetaData(this.contractMetaData);
+      val.setContractEvents(this.contractEvents);
       val.setContractBandwidth(this.contractBandwidth);
       val.setContractCostParamsCpuInsns(this.contractCostParamsCpuInsns);
       val.setContractCostParamsMemBytes(this.contractCostParamsMemBytes);
@@ -292,6 +310,7 @@ public class ConfigSettingEntry implements XdrElement {
       val.setStateExpirationSettings(this.stateExpirationSettings);
       val.setContractExecutionLanes(this.contractExecutionLanes);
       val.setBucketListSizeWindow(this.bucketListSizeWindow);
+      val.setEvictionIterator(this.evictionIterator);
       return val;
     }
   }
@@ -316,8 +335,8 @@ public class ConfigSettingEntry implements XdrElement {
         ConfigSettingContractHistoricalDataV0.encode(
             stream, encodedConfigSettingEntry.contractHistoricalData);
         break;
-      case CONFIG_SETTING_CONTRACT_META_DATA_V0:
-        ConfigSettingContractMetaDataV0.encode(stream, encodedConfigSettingEntry.contractMetaData);
+      case CONFIG_SETTING_CONTRACT_EVENTS_V0:
+        ConfigSettingContractEventsV0.encode(stream, encodedConfigSettingEntry.contractEvents);
         break;
       case CONFIG_SETTING_CONTRACT_BANDWIDTH_V0:
         ConfigSettingContractBandwidthV0.encode(
@@ -349,6 +368,9 @@ public class ConfigSettingEntry implements XdrElement {
           Uint64.encode(stream, encodedConfigSettingEntry.bucketListSizeWindow[i]);
         }
         break;
+      case CONFIG_SETTING_EVICTION_ITERATOR:
+        EvictionIterator.encode(stream, encodedConfigSettingEntry.evictionIterator);
+        break;
     }
   }
 
@@ -375,8 +397,8 @@ public class ConfigSettingEntry implements XdrElement {
         decodedConfigSettingEntry.contractHistoricalData =
             ConfigSettingContractHistoricalDataV0.decode(stream);
         break;
-      case CONFIG_SETTING_CONTRACT_META_DATA_V0:
-        decodedConfigSettingEntry.contractMetaData = ConfigSettingContractMetaDataV0.decode(stream);
+      case CONFIG_SETTING_CONTRACT_EVENTS_V0:
+        decodedConfigSettingEntry.contractEvents = ConfigSettingContractEventsV0.decode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_BANDWIDTH_V0:
         decodedConfigSettingEntry.contractBandwidth =
@@ -408,6 +430,9 @@ public class ConfigSettingEntry implements XdrElement {
           decodedConfigSettingEntry.bucketListSizeWindow[i] = Uint64.decode(stream);
         }
         break;
+      case CONFIG_SETTING_EVICTION_ITERATOR:
+        decodedConfigSettingEntry.evictionIterator = EvictionIterator.decode(stream);
+        break;
     }
     return decodedConfigSettingEntry;
   }
@@ -419,7 +444,7 @@ public class ConfigSettingEntry implements XdrElement {
         this.contractCompute,
         this.contractLedgerCost,
         this.contractHistoricalData,
-        this.contractMetaData,
+        this.contractEvents,
         this.contractBandwidth,
         this.contractCostParamsCpuInsns,
         this.contractCostParamsMemBytes,
@@ -428,6 +453,7 @@ public class ConfigSettingEntry implements XdrElement {
         this.stateExpirationSettings,
         this.contractExecutionLanes,
         Arrays.hashCode(this.bucketListSizeWindow),
+        this.evictionIterator,
         this.configSettingID);
   }
 
@@ -442,7 +468,7 @@ public class ConfigSettingEntry implements XdrElement {
         && Objects.equals(this.contractCompute, other.contractCompute)
         && Objects.equals(this.contractLedgerCost, other.contractLedgerCost)
         && Objects.equals(this.contractHistoricalData, other.contractHistoricalData)
-        && Objects.equals(this.contractMetaData, other.contractMetaData)
+        && Objects.equals(this.contractEvents, other.contractEvents)
         && Objects.equals(this.contractBandwidth, other.contractBandwidth)
         && Objects.equals(this.contractCostParamsCpuInsns, other.contractCostParamsCpuInsns)
         && Objects.equals(this.contractCostParamsMemBytes, other.contractCostParamsMemBytes)
@@ -451,6 +477,7 @@ public class ConfigSettingEntry implements XdrElement {
         && Objects.equals(this.stateExpirationSettings, other.stateExpirationSettings)
         && Objects.equals(this.contractExecutionLanes, other.contractExecutionLanes)
         && Arrays.equals(this.bucketListSizeWindow, other.bucketListSizeWindow)
+        && Objects.equals(this.evictionIterator, other.evictionIterator)
         && Objects.equals(this.configSettingID, other.configSettingID);
   }
 

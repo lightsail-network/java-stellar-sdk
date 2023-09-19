@@ -1,9 +1,8 @@
 package org.stellar.sdk.responses;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
+import java.util.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.xdr.LiquidityPoolType;
@@ -81,14 +80,14 @@ public class LiquidityPoolResponse extends Response {
     @SerializedName("asset")
     private final Asset asset;
 
-    public Reserve(String amount, String asset) {
-      this.amount = checkNotNull(amount, "amount cannot be null");
-      this.asset = Asset.create(checkNotNull(asset, "asset cannot be null"));
+    public Reserve(@NonNull String amount, @NonNull String asset) {
+      this.amount = amount;
+      this.asset = Asset.create(asset);
     }
 
-    public Reserve(String amount, Asset asset) {
-      this.amount = checkNotNull(amount, "amount cannot be null");
-      this.asset = checkNotNull(asset, "asset cannot be null");
+    public Reserve(@NonNull String amount, @NonNull Asset asset) {
+      this.amount = amount;
+      this.asset = asset;
     }
 
     public Asset getAsset() {
@@ -106,8 +105,8 @@ public class LiquidityPoolResponse extends Response {
       }
 
       LiquidityPoolResponse.Reserve o = (LiquidityPoolResponse.Reserve) other;
-      return Objects.equal(this.getAsset(), o.getAsset())
-          && Objects.equal(this.getAmount(), o.getAmount());
+      return Objects.equals(this.getAsset(), o.getAsset())
+          && Objects.equals(this.getAmount(), o.getAmount());
     }
   }
 

@@ -1,17 +1,14 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.ImmutableList.of;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.stellar.sdk.xdr.SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE;
 
-import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +37,6 @@ import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.xdr.ContractDataDurability;
-import org.stellar.sdk.xdr.ContractEntryBodyType;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -50,13 +46,13 @@ import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.HostFunction;
 import org.stellar.sdk.xdr.HostFunctionType;
 import org.stellar.sdk.xdr.Int64;
+import org.stellar.sdk.xdr.InvokeContractArgs;
 import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerFootprint;
 import org.stellar.sdk.xdr.LedgerKey;
 import org.stellar.sdk.xdr.SCSymbol;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
-import org.stellar.sdk.xdr.SCVec;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 import org.stellar.sdk.xdr.SorobanAuthorizedFunction;
 import org.stellar.sdk.xdr.SorobanAuthorizedFunctionType;
@@ -67,8 +63,6 @@ import org.stellar.sdk.xdr.SorobanResources;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint32;
-import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 import org.stellar.sdk.xdr.XdrString;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
@@ -104,7 +98,7 @@ public class SorobanServerTest {
               throws InterruptedException {
             GetLedgerEntriesRequest expectedRequest =
                 new GetLedgerEntriesRequest(
-                    of("AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA=="));
+                    singletonList("AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA=="));
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -246,7 +240,6 @@ public class SorobanServerTest {
                     .contract(address.toSCAddress())
                     .key(key)
                     .durability(ContractDataDurability.PERSISTENT)
-                    .bodyType(ContractEntryBodyType.DATA_ENTRY)
                     .build();
             LedgerKey ledgerKey =
                 new LedgerKey.Builder()
@@ -254,8 +247,12 @@ public class SorobanServerTest {
                     .contractData(ledgerKeyContractData)
                     .build();
 
-            GetLedgerEntriesRequest expectedRequest =
-                new GetLedgerEntriesRequest(of(ledgerKeyToXdrBase64(ledgerKey)));
+            GetLedgerEntriesRequest expectedRequest = null;
+            try {
+              expectedRequest = new GetLedgerEntriesRequest(singletonList(ledgerKey.toXdrBase64()));
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -315,7 +312,6 @@ public class SorobanServerTest {
                     .contract(address.toSCAddress())
                     .key(key)
                     .durability(ContractDataDurability.PERSISTENT)
-                    .bodyType(ContractEntryBodyType.DATA_ENTRY)
                     .build();
             LedgerKey ledgerKey =
                 new LedgerKey.Builder()
@@ -323,8 +319,12 @@ public class SorobanServerTest {
                     .contractData(ledgerKeyContractData)
                     .build();
 
-            GetLedgerEntriesRequest expectedRequest =
-                new GetLedgerEntriesRequest(of(ledgerKeyToXdrBase64(ledgerKey)));
+            GetLedgerEntriesRequest expectedRequest = null;
+            try {
+              expectedRequest = new GetLedgerEntriesRequest(singletonList(ledgerKey.toXdrBase64()));
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
             SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
                 gson.fromJson(
                     recordedRequest.getBody().readUtf8(),
@@ -382,7 +382,7 @@ public class SorobanServerTest {
             .account(ledgerKeyAccount0)
             .discriminant(LedgerEntryType.ACCOUNT)
             .build();
-    String ledgerKey0Xdr = ledgerKeyToXdrBase64(ledgerKey0);
+    String ledgerKey0Xdr = ledgerKey0.toXdrBase64();
 
     String accountId1 = "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54";
     LedgerKey.LedgerKeyAccount ledgerKeyAccount1 =
@@ -394,7 +394,7 @@ public class SorobanServerTest {
             .account(ledgerKeyAccount1)
             .discriminant(LedgerEntryType.ACCOUNT)
             .build();
-    String ledgerKey1Xdr = ledgerKeyToXdrBase64(ledgerKey1);
+    String ledgerKey1Xdr = ledgerKey1.toXdrBase64();
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -428,16 +428,16 @@ public class SorobanServerTest {
     assertEquals(resp.getLatestLedger().longValue(), 7943L);
     assertEquals(resp.getEntries().size(), 2);
     assertEquals(
-        resp.getEntries().asList().get(0).getKey(),
+        resp.getEntries().get(0).getKey(),
         "AAAAAAAAAACynni6I2ACEzWuORVM1b2y0k1ZDni0W6JlC/Ad/mfCSg==");
     assertEquals(
-        resp.getEntries().asList().get(0).getXdr(),
+        resp.getEntries().get(0).getXdr(),
         "AAAAAAAAAACynni6I2ACEzWuORVM1b2y0k1ZDni0W6JlC/Ad/mfCSgAAABdIdugAAAAAnwAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA");
     assertEquals(
-        resp.getEntries().asList().get(1).getKey(),
+        resp.getEntries().get(1).getKey(),
         "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==");
     assertEquals(
-        resp.getEntries().asList().get(1).getXdr(),
+        resp.getEntries().get(1).getXdr(),
         "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABdIcmH6AAAAoQAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAAAHAkAAAAAZMPQ0g==");
     server.close();
     mockWebServer.close();
@@ -543,7 +543,8 @@ public class SorobanServerTest {
 
     GetEventsRequest.EventFilter eventFilter =
         GetEventsRequest.EventFilter.builder()
-            .contractIds(of("607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0"))
+            .contractIds(
+                singletonList("607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0"))
             .type(EventFilterType.CONTRACT)
             .topic(Arrays.asList("AAAADwAAAAdDT1VOVEVSAA==", "AAAADwAAAAlpbmNyZW1lbnQAAAA="))
             .build();
@@ -697,30 +698,27 @@ public class SorobanServerTest {
   public void testSimulateTransaction() throws IOException, SorobanRpcErrorResponse {
     String json =
         "{\n"
-            + "    \"jsonrpc\": \"2.0\",\n"
-            + "    \"id\": \"e1fabdcdf0244a2a9adfab94d7748b6c\",\n"
-            + "    \"result\": {\n"
-            + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=\",\n"
-            + "        \"events\": [\n"
-            + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
-            + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "  \"jsonrpc\": \"2.0\",\n"
+            + "  \"id\": \"7a469b9d6ed4444893491be530862ce3\",\n"
+            + "  \"result\": {\n"
+            + "    \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==\",\n"
+            + "    \"minResourceFee\": \"58181\",\n"
+            + "    \"events\": [\n"
+            + "      \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "      \"AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "    ],\n"
+            + "    \"results\": [\n"
+            + "      {\n"
+            + "        \"auth\": [\n"
+            + "          \"AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
             + "        ],\n"
-            + "        \"minResourceFee\": \"58595\",\n"
-            + "        \"results\": [\n"
-            + "            {\n"
-            + "                \"auth\": [\n"
-            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
-            + "                ],\n"
-            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
-            + "            }\n"
-            + "        ],\n"
-            + "        \"cost\": {\n"
-            + "            \"cpuInsns\": \"1240100\",\n"
-            + "            \"memBytes\": \"161637\"\n"
-            + "        },\n"
-            + "        \"latestLedger\": \"1479\"\n"
-            + "    }\n"
-            + "}";
+            + "        \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "      }\n"
+            + "    ],\n"
+            + "    \"cost\": { \"cpuInsns\": \"1646885\", \"memBytes\": \"1296481\" },\n"
+            + "    \"latestLedger\": \"14245\"\n"
+            + "  }\n"
+            + "}\n";
 
     Transaction transaction = buildSorobanTransaction(null, null);
 
@@ -752,26 +750,26 @@ public class SorobanServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     SorobanServer server = new SorobanServer(baseUrl.toString());
     SimulateTransactionResponse resp = server.simulateTransaction(transaction);
-    assertEquals(resp.getLatestLedger().longValue(), 1479L);
+    assertEquals(resp.getLatestLedger().longValue(), 14245L);
     assertEquals(
         resp.getTransactionData(),
-        "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
+        "AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==");
     assertEquals(resp.getEvents().size(), 2);
     assertEquals(
         resp.getEvents().get(0),
-        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=");
+        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=");
     assertEquals(
         resp.getEvents().get(1),
-        "AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=");
-    assertEquals(resp.getMinResourceFee().longValue(), 58595L);
+        "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=");
+    assertEquals(resp.getMinResourceFee().longValue(), 58181L);
     assertEquals(resp.getResults().size(), 1);
     assertEquals(resp.getResults().get(0).getAuth().size(), 1);
     assertEquals(
         resp.getResults().get(0).getAuth().get(0),
-        "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
+        "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
     assertEquals(resp.getResults().get(0).getXdr(), "AAAAAwAAABQ=");
-    assertEquals(resp.getCost().getCpuInstructions().longValue(), 1240100L);
-    assertEquals(resp.getCost().getMemoryBytes().longValue(), 161637L);
+    assertEquals(resp.getCost().getCpuInstructions().longValue(), 1646885L);
+    assertEquals(resp.getCost().getMemoryBytes().longValue(), 1296481L);
     server.close();
     mockWebServer.close();
   }
@@ -781,30 +779,27 @@ public class SorobanServerTest {
       throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
     String json =
         "{\n"
-            + "    \"jsonrpc\": \"2.0\",\n"
-            + "    \"id\": \"e1fabdcdf0244a2a9adfab94d7748b6c\",\n"
-            + "    \"result\": {\n"
-            + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=\",\n"
-            + "        \"events\": [\n"
-            + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
-            + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "  \"jsonrpc\": \"2.0\",\n"
+            + "  \"id\": \"7a469b9d6ed4444893491be530862ce3\",\n"
+            + "  \"result\": {\n"
+            + "    \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==\",\n"
+            + "    \"minResourceFee\": \"58181\",\n"
+            + "    \"events\": [\n"
+            + "      \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "      \"AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "    ],\n"
+            + "    \"results\": [\n"
+            + "      {\n"
+            + "        \"auth\": [\n"
+            + "          \"AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
             + "        ],\n"
-            + "        \"minResourceFee\": \"58595\",\n"
-            + "        \"results\": [\n"
-            + "            {\n"
-            + "                \"auth\": [\n"
-            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
-            + "                ],\n"
-            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
-            + "            }\n"
-            + "        ],\n"
-            + "        \"cost\": {\n"
-            + "            \"cpuInsns\": \"1240100\",\n"
-            + "            \"memBytes\": \"161637\"\n"
-            + "        },\n"
-            + "        \"latestLedger\": \"1479\"\n"
-            + "    }\n"
-            + "}";
+            + "        \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "      }\n"
+            + "    ],\n"
+            + "    \"cost\": { \"cpuInsns\": \"1646885\", \"memBytes\": \"1296481\" },\n"
+            + "    \"latestLedger\": \"14245\"\n"
+            + "  }\n"
+            + "}\n";
 
     Transaction transaction = buildSorobanTransaction(null, null);
 
@@ -839,22 +834,22 @@ public class SorobanServerTest {
 
     SorobanTransactionData sorobanData =
         SorobanTransactionData.fromXdrBase64(
-            "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
+            "AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.builder()
             .hostFunction(
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
             .auth(
-                of(
-                    sorobanAuthorizationEntryFromXdrBase64(
-                        "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
+                singletonList(
+                    SorobanAuthorizationEntry.fromXdrBase64(
+                        "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
             .build();
     Transaction expectedTx =
         new Transaction(
             transaction.getAccountConverter(),
             transaction.getSourceAccount(),
-            transaction.getFee() + 58595L,
+            transaction.getFee() + 58181L,
             transaction.getSequenceNumber(),
             new Operation[] {operation},
             transaction.getMemo(),
@@ -873,30 +868,27 @@ public class SorobanServerTest {
     // soroban data will be overwritten
     String json =
         "{\n"
-            + "    \"jsonrpc\": \"2.0\",\n"
-            + "    \"id\": \"e1fabdcdf0244a2a9adfab94d7748b6c\",\n"
-            + "    \"result\": {\n"
-            + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=\",\n"
-            + "        \"events\": [\n"
-            + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
-            + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "  \"jsonrpc\": \"2.0\",\n"
+            + "  \"id\": \"7a469b9d6ed4444893491be530862ce3\",\n"
+            + "  \"result\": {\n"
+            + "    \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==\",\n"
+            + "    \"minResourceFee\": \"58181\",\n"
+            + "    \"events\": [\n"
+            + "      \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "      \"AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "    ],\n"
+            + "    \"results\": [\n"
+            + "      {\n"
+            + "        \"auth\": [\n"
+            + "          \"AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
             + "        ],\n"
-            + "        \"minResourceFee\": \"58595\",\n"
-            + "        \"results\": [\n"
-            + "            {\n"
-            + "                \"auth\": [\n"
-            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
-            + "                ],\n"
-            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
-            + "            }\n"
-            + "        ],\n"
-            + "        \"cost\": {\n"
-            + "            \"cpuInsns\": \"1240100\",\n"
-            + "            \"memBytes\": \"161637\"\n"
-            + "        },\n"
-            + "        \"latestLedger\": \"1479\"\n"
-            + "    }\n"
-            + "}";
+            + "        \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "      }\n"
+            + "    ],\n"
+            + "    \"cost\": { \"cpuInsns\": \"1646885\", \"memBytes\": \"1296481\" },\n"
+            + "    \"latestLedger\": \"14245\"\n"
+            + "  }\n"
+            + "}\n";
     LedgerKey ledgerKey =
         new LedgerKey.Builder()
             .discriminant(LedgerEntryType.ACCOUNT)
@@ -917,7 +909,6 @@ public class SorobanServerTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
                     .readBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
@@ -958,22 +949,22 @@ public class SorobanServerTest {
 
     SorobanTransactionData sorobanData =
         SorobanTransactionData.fromXdrBase64(
-            "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
+            "AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.builder()
             .hostFunction(
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
             .auth(
-                of(
-                    sorobanAuthorizationEntryFromXdrBase64(
-                        "AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
+                singletonList(
+                    SorobanAuthorizationEntry.fromXdrBase64(
+                        "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA")))
             .build();
     Transaction expectedTx =
         new Transaction(
             transaction.getAccountConverter(),
             transaction.getSourceAccount(),
-            transaction.getFee() + 58595L,
+            transaction.getFee() + 58181L,
             transaction.getSequenceNumber(),
             new Operation[] {operation},
             transaction.getMemo(),
@@ -992,30 +983,27 @@ public class SorobanServerTest {
     // origin auth will not be overwritten
     String json =
         "{\n"
-            + "    \"jsonrpc\": \"2.0\",\n"
-            + "    \"id\": \"e1fabdcdf0244a2a9adfab94d7748b6c\",\n"
-            + "    \"result\": {\n"
-            + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=\",\n"
-            + "        \"events\": [\n"
-            + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
-            + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "  \"jsonrpc\": \"2.0\",\n"
+            + "  \"id\": \"7a469b9d6ed4444893491be530862ce3\",\n"
+            + "  \"result\": {\n"
+            + "    \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==\",\n"
+            + "    \"minResourceFee\": \"58181\",\n"
+            + "    \"events\": [\n"
+            + "      \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "      \"AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "    ],\n"
+            + "    \"results\": [\n"
+            + "      {\n"
+            + "        \"auth\": [\n"
+            + "          \"AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
             + "        ],\n"
-            + "        \"minResourceFee\": \"58595\",\n"
-            + "        \"results\": [\n"
-            + "            {\n"
-            + "                \"auth\": [\n"
-            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
-            + "                ],\n"
-            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
-            + "            }\n"
-            + "        ],\n"
-            + "        \"cost\": {\n"
-            + "            \"cpuInsns\": \"1240100\",\n"
-            + "            \"memBytes\": \"161637\"\n"
-            + "        },\n"
-            + "        \"latestLedger\": \"1479\"\n"
-            + "    }\n"
-            + "}";
+            + "        \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "      }\n"
+            + "    ],\n"
+            + "    \"cost\": { \"cpuInsns\": \"1646885\", \"memBytes\": \"1296481\" },\n"
+            + "    \"latestLedger\": \"14245\"\n"
+            + "  }\n"
+            + "}\n";
     CreateContractArgs createContractArgs =
         new CreateContractArgs.Builder()
             .contractIDPreimage(
@@ -1054,7 +1042,7 @@ public class SorobanServerTest {
                     .build())
             .build();
 
-    Transaction transaction = buildSorobanTransaction(null, of(auth));
+    Transaction transaction = buildSorobanTransaction(null, singletonList(auth));
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -1087,19 +1075,19 @@ public class SorobanServerTest {
 
     SorobanTransactionData sorobanData =
         SorobanTransactionData.fromXdrBase64(
-            "AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=");
+            "AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.builder()
             .hostFunction(
                 ((InvokeHostFunctionOperation) transaction.getOperations()[0]).getHostFunction())
             .sourceAccount(transaction.getOperations()[0].getSourceAccount())
-            .auth(of(auth))
+            .auth(singletonList(auth))
             .build();
     Transaction expectedTx =
         new Transaction(
             transaction.getAccountConverter(),
             transaction.getSourceAccount(),
-            transaction.getFee() + 58595L,
+            transaction.getFee() + 58181L,
             transaction.getSequenceNumber(),
             new Operation[] {operation},
             transaction.getMemo(),
@@ -1121,7 +1109,7 @@ public class SorobanServerTest {
             + "    \"id\": \"7b6ada2bdec04ee28147d1557aadc3cf\",\n"
             + "    \"result\": {\n"
             + "        \"error\": \"HostError: Error(WasmVm, MissingValue)\\n\\nEvent log (newest first):\\n   0: [Diagnostic Event] contract:607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0, topics:[error, Error(WasmVm, MissingValue)], data:[\\\"invoking unknown export\\\", increment]\\n   1: [Diagnostic Event] topics:[fn_call, Bytes(607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0), increment], data:[Address(Account(58b7c4a2c8f297aa8f3d2471281fdfccecafe48e5663313ec18e12a73eca98a1)), 10]\\n\\nBacktrace (newest first):\\n   0: soroban_env_host::vm::Vm::invoke_function_raw\\n   1: soroban_env_host::host::frame::<impl soroban_env_host::host::Host>::call_n_internal\\n   2: soroban_env_host::host::frame::<impl soroban_env_host::host::Host>::invoke_function\\n   3: preflight::preflight_invoke_hf_op::{{closure}}\\n   4: preflight::catch_preflight_panic\\n   5: _cgo_a3255893d7fd_Cfunc_preflight_invoke_hf_op\\n             at /tmp/go-build/cgo-gcc-prolog:99:11\\n   6: runtime.asmcgocall\\n             at ./runtime/asm_amd64.s:848\\n\\n\",\n"
-            + "        \"transactionData\": \"\",\n"
+            + "        \"transactionData\": null,\n"
             + "        \"events\": null,\n"
             + "        \"minResourceFee\": \"0\",\n"
             + "        \"cost\": {\n"
@@ -1166,40 +1154,24 @@ public class SorobanServerTest {
     mockWebServer.close();
   }
 
-  @Test(expected = PrepareTransactionException.class)
-  public void testPrepareTransactionWithPrepareTransactionExceptionThrowsErrorInvalidResults()
+  @Test(expected = IllegalArgumentException.class)
+  public void testPrepareTransactionWithIllegalArgumentExceptionThrowsErrorResultsIsEmpty()
       throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
     String json =
         "{\n"
-            + "    \"jsonrpc\": \"2.0\",\n"
-            + "    \"id\": \"e1fabdcdf0244a2a9adfab94d7748b6c\",\n"
-            + "    \"result\": {\n"
-            + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAFAAAAAEAAAAAAAAAB300Hyg0HZG+Qie3zvsxLvugrNtFqd3AIntWy9bg2YvZAAAAAAAAAAEAAAAGAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAAEAAAAAEAAAACAAAADwAAAAdDb3VudGVyAAAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAQAAAAAAFcLDAAAF8AAAAQgAAAMcAAAAAAAAAJw=\",\n"
-            + "        \"events\": [\n"
-            + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
-            + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
-            + "        ],\n"
-            + "        \"minResourceFee\": \"58595\",\n"
-            + "        \"results\": [\n"
-            + "            {\n"
-            + "                \"auth\": [\n"
-            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
-            + "                ],\n"
-            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
-            + "            },\n"
-            + "            {\n"
-            + "                \"auth\": [\n"
-            + "                    \"AAAAAAAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
-            + "                ],\n"
-            + "                \"xdr\": \"AAAAAwAAABQ=\"\n"
-            + "            }\n"
-            + "        ],\n"
-            + "        \"cost\": {\n"
-            + "            \"cpuInsns\": \"1240100\",\n"
-            + "            \"memBytes\": \"161637\"\n"
-            + "        },\n"
-            + "        \"latestLedger\": \"1479\"\n"
-            + "    }\n"
+            + "  \"jsonrpc\": \"2.0\",\n"
+            + "  \"id\": \"7a469b9d6ed4444893491be530862ce3\",\n"
+            + "  \"result\": {\n"
+            + "    \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==\",\n"
+            + "    \"minResourceFee\": \"58181\",\n"
+            + "    \"events\": [\n"
+            + "      \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "      \"AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "    ],\n"
+            + "    \"results\": [],\n"
+            + "    \"cost\": { \"cpuInsns\": \"1646885\", \"memBytes\": \"1296481\" },\n"
+            + "    \"latestLedger\": \"14245\"\n"
+            + "  }\n"
             + "}";
 
     Transaction transaction = buildSorobanTransaction(null, null);
@@ -1245,7 +1217,7 @@ public class SorobanServerTest {
             + "    \"id\": \"688dfcf3bcd04f52af4866e98dffe387\",\n"
             + "    \"result\": {\n"
             + "        \"status\": \"PENDING\",\n"
-            + "        \"hash\": \"f59636c3bb27ad958c599632405ed657c3d7d55c717dbfd2644a68625e9d9e7e\",\n"
+            + "        \"hash\": \"64977cc4bb7f8bf75bdc47570548a994667899d3319b72f95cb2a64e567ad52c\",\n"
             + "        \"latestLedger\": \"1479\",\n"
             + "        \"latestLedgerCloseTime\": \"1690594566\"\n"
             + "    }\n"
@@ -1341,17 +1313,31 @@ public class SorobanServerTest {
 
   private Transaction buildSorobanTransaction(
       SorobanTransactionData sorobanData, Collection<SorobanAuthorizationEntry> auth) {
-    String contractId = "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK";
+    String contractId = "CDU3PZ4LXVETIFVLS33RDXLD63JZ5GXS7PCV2DJ7BBT6EBPA2AB7YR5H";
     KeyPair txSubmitterKp =
         KeyPair.fromSecretSeed("SAAPYAPTTRZMCUZFPG3G66V4ZMHTK4TWA6NS7U4F7Z3IMUD52EK4DDEV");
     KeyPair opInvokerKp =
         KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
 
-    TransactionBuilderAccount source = new Account(txSubmitterKp.getAccountId(), 6171868004355L);
+    TransactionBuilderAccount source = new Account(txSubmitterKp.getAccountId(), 3053721747476L);
 
     if (auth == null) {
       auth = new ArrayList<>();
     }
+
+    InvokeContractArgs invokeContractArgs =
+        new InvokeContractArgs.Builder()
+            .contractAddress(new Address(contractId).toSCAddress())
+            .functionName(new SCSymbol(new XdrString("increment")))
+            .args(
+                new SCVal[] {
+                  new Address(opInvokerKp.getAccountId()).toSCVal(),
+                  new SCVal.Builder()
+                      .discriminant(SCValType.SCV_U32)
+                      .u32(new Uint32(new XdrUnsignedInteger(10)))
+                      .build()
+                })
+            .build();
 
     TransactionBuilder transactionBuilder =
         new TransactionBuilder(AccountConverter.enableMuxed(), source, Network.STANDALONE)
@@ -1364,20 +1350,7 @@ public class SorobanServerTest {
                     .hostFunction(
                         new HostFunction.Builder()
                             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
-                            .invokeContract(
-                                new SCVec(
-                                    new SCVal[] {
-                                      new Address(contractId).toSCVal(),
-                                      new SCVal.Builder()
-                                          .discriminant(SCValType.SCV_SYMBOL)
-                                          .sym(new SCSymbol(new XdrString("increment")))
-                                          .build(),
-                                      new Address(opInvokerKp.getAccountId()).toSCVal(),
-                                      new SCVal.Builder()
-                                          .discriminant(SCValType.SCV_U32)
-                                          .u32(new Uint32(new XdrUnsignedInteger(10)))
-                                          .build()
-                                    }))
+                            .invokeContract(invokeContractArgs)
                             .build())
                     .auth(auth)
                     .build());
@@ -1387,31 +1360,5 @@ public class SorobanServerTest {
     }
 
     return transactionBuilder.build();
-  }
-
-  private static SorobanAuthorizationEntry sorobanAuthorizationEntryFromXdrBase64(
-      String sorobanAuthorizationEntry) {
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    byte[] bytes = base64Encoding.decode(sorobanAuthorizationEntry);
-    ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-    XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
-    try {
-      return SorobanAuthorizationEntry.decode(xdrInputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException(
-          "invalid ledgerEntryData: " + sorobanAuthorizationEntry, e);
-    }
-  }
-
-  private static String ledgerKeyToXdrBase64(LedgerKey ledgerKey) {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    try {
-      ledgerKey.encode(xdrDataOutputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid ledgerKey.", e);
-    }
-    BaseEncoding base64Encoding = BaseEncoding.base64();
-    return base64Encoding.encode(byteArrayOutputStream.toByteArray());
   }
 }

@@ -1,6 +1,5 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -28,7 +27,6 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
-            .registerTypeAdapter(ImmutableList.class, new ImmutableListDeserializer())
             .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
             .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
             .create();

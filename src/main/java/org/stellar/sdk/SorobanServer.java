@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nullable;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.requests.ClientIdentificationInterceptor;
 import org.stellar.sdk.requests.ResponseHandler;
 import org.stellar.sdk.requests.sorobanrpc.GetEventsRequest;
@@ -37,7 +37,6 @@ import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SorobanRpcResponse;
 import org.stellar.sdk.xdr.ContractDataDurability;
-import org.stellar.sdk.xdr.ContractEntryBodyType;
 import org.stellar.sdk.xdr.LedgerEntry;
 import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerKey;
@@ -179,7 +178,6 @@ public class SorobanServer implements Closeable {
             .contract(address.toSCAddress())
             .key(key)
             .durability(contractDataDurability)
-            .bodyType(ContractEntryBodyType.DATA_ENTRY)
             .build();
     LedgerKey ledgerKey =
         new LedgerKey.Builder()
@@ -370,16 +368,43 @@ public class SorobanServer implements Closeable {
    */
   public Transaction prepareTransaction(Transaction transaction)
       throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
-    SimulateTransactionResponse simulateTransactionResponse = this.simulateTransaction(transaction);
+    SimulateTransactionResponse simulateTransactionResponse = simulateTransaction(transaction);
+    return prepareTransaction(transaction, simulateTransactionResponse);
+  }
+
+  /**
+   * Prepare the transaction using the simulateTransaction obtained by the user in advance, apply
+   * the simulateTransaction results to a new copy of the transaction which is then returned.
+   * Setting the ledger footprint and authorization, so the resulting transaction is ready for
+   * signing and sending.
+   *
+   * <p>The returned transaction will also have an updated fee that is the sum of fee set on
+   * incoming transaction with the contract resource fees estimated from simulation. It is advisable
+   * to check the fee on returned transaction and validate or take appropriate measures for
+   * interaction with user to confirm it is acceptable.
+   *
+   * @param transaction The transaction to prepare. It should include exactly one operation, which
+   *     must be one of {@link InvokeHostFunctionOperation}, {@link
+   *     BumpFootprintExpirationOperation}, or {@link RestoreFootprintOperation}. Any provided
+   *     footprint will be ignored. You can use {@link Transaction#isSorobanTransaction()} to check
+   *     if a transaction is a Soroban transaction. Any provided footprint will be overwritten.
+   *     However, if your operation has existing auth entries, they will be preferred over ALL auth
+   *     entries from the simulation. In other words, if you include auth entries, you don't care
+   *     about the auth returned from the simulation. Other fields (footprint, etc.) will be filled
+   *     as normal.
+   * @param simulateTransactionResponse The {@link SimulateTransactionResponse} to use for preparing
+   *     the transaction.
+   * @return Returns a copy of the {@link Transaction}, with the expected authorizations (in the
+   *     case of invocation) and ledger footprint added. The transaction fee will also automatically
+   *     be padded with the contract's minimum resource fees discovered from the simulation.
+   * @throws PrepareTransactionException If preparing the transaction fails.
+   */
+  public Transaction prepareTransaction(
+      Transaction transaction, SimulateTransactionResponse simulateTransactionResponse)
+      throws PrepareTransactionException {
     if (simulateTransactionResponse.getError() != null) {
       throw new PrepareTransactionException(
           "simulation transaction failed, the response contains error information.",
-          simulateTransactionResponse);
-    }
-    if (simulateTransactionResponse.getResults() == null
-        || simulateTransactionResponse.getResults().size() != 1) {
-      throw new PrepareTransactionException(
-          "simulation transaction failed, the \"results\" field contains multiple records, but it should only contain one.",
           simulateTransactionResponse);
     }
     return assembleTransaction(transaction, simulateTransactionResponse);
@@ -416,9 +441,6 @@ public class SorobanServer implements Closeable {
           "unsupported transaction: must contain exactly one InvokeHostFunctionOperation, BumpSequenceOperation, or RestoreFootprintOperation");
     }
 
-    SimulateTransactionResponse.SimulateHostFunctionResult simulateHostFunctionResult =
-        simulateTransactionResponse.getResults().get(0);
-
     long classicFeeNum = transaction.getFee();
     long minResourceFeeNum =
         Optional.ofNullable(simulateTransactionResponse.getMinResourceFee()).orElse(0L);
@@ -428,6 +450,15 @@ public class SorobanServer implements Closeable {
     if (operation instanceof InvokeHostFunctionOperation) {
       // If the operation is an InvokeHostFunctionOperation, we need to update the auth entries if
       // existing entries are empty and the simulation result contains auth entries.
+      if (simulateTransactionResponse.getResults() == null
+          || simulateTransactionResponse.getResults().size() != 1) {
+        throw new IllegalArgumentException(
+            "invalid simulateTransactionResponse: results must contain exactly one element if the operation is an InvokeHostFunctionOperation");
+      }
+
+      SimulateTransactionResponse.SimulateHostFunctionResult simulateHostFunctionResult =
+          simulateTransactionResponse.getResults().get(0);
+
       Collection<SorobanAuthorizationEntry> existingEntries =
           ((InvokeHostFunctionOperation) operation).getAuth();
       if (existingEntries.isEmpty()

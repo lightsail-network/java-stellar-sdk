@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class RevokeTrustlineSponsorshipOperation extends Operation {
@@ -76,8 +75,9 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public RevokeTrustlineSponsorshipOperation.Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    public RevokeTrustlineSponsorshipOperation.Builder setSourceAccount(
+        @NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 
@@ -94,7 +94,7 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.accountId, this.asset, this.getSourceAccount());
+    return Objects.hash(this.accountId, this.asset, this.getSourceAccount());
   }
 
   @Override
@@ -104,8 +104,8 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
     }
 
     RevokeTrustlineSponsorshipOperation other = (RevokeTrustlineSponsorshipOperation) object;
-    return Objects.equal(this.accountId, other.accountId)
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.accountId, other.accountId)
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

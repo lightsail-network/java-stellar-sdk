@@ -8,21 +8,21 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
 
 // === xdr source ============================================================
 
-//  struct SorobanAuthorizedContractFunction
-//  {
+//  struct InvokeContractArgs {
 //      SCAddress contractAddress;
 //      SCSymbol functionName;
-//      SCVec args;
+//      SCVal args<>;
 //  };
 
 //  ===========================================================================
-public class SorobanAuthorizedContractFunction implements XdrElement {
-  public SorobanAuthorizedContractFunction() {}
+public class InvokeContractArgs implements XdrElement {
+  public InvokeContractArgs() {}
 
   private SCAddress contractAddress;
 
@@ -44,54 +44,58 @@ public class SorobanAuthorizedContractFunction implements XdrElement {
     this.functionName = value;
   }
 
-  private SCVec args;
+  private SCVal[] args;
 
-  public SCVec getArgs() {
+  public SCVal[] getArgs() {
     return this.args;
   }
 
-  public void setArgs(SCVec value) {
+  public void setArgs(SCVal[] value) {
     this.args = value;
   }
 
   public static void encode(
-      XdrDataOutputStream stream,
-      SorobanAuthorizedContractFunction encodedSorobanAuthorizedContractFunction)
-      throws IOException {
-    SCAddress.encode(stream, encodedSorobanAuthorizedContractFunction.contractAddress);
-    SCSymbol.encode(stream, encodedSorobanAuthorizedContractFunction.functionName);
-    SCVec.encode(stream, encodedSorobanAuthorizedContractFunction.args);
+      XdrDataOutputStream stream, InvokeContractArgs encodedInvokeContractArgs) throws IOException {
+    SCAddress.encode(stream, encodedInvokeContractArgs.contractAddress);
+    SCSymbol.encode(stream, encodedInvokeContractArgs.functionName);
+    int argssize = encodedInvokeContractArgs.getArgs().length;
+    stream.writeInt(argssize);
+    for (int i = 0; i < argssize; i++) {
+      SCVal.encode(stream, encodedInvokeContractArgs.args[i]);
+    }
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
 
-  public static SorobanAuthorizedContractFunction decode(XdrDataInputStream stream)
-      throws IOException {
-    SorobanAuthorizedContractFunction decodedSorobanAuthorizedContractFunction =
-        new SorobanAuthorizedContractFunction();
-    decodedSorobanAuthorizedContractFunction.contractAddress = SCAddress.decode(stream);
-    decodedSorobanAuthorizedContractFunction.functionName = SCSymbol.decode(stream);
-    decodedSorobanAuthorizedContractFunction.args = SCVec.decode(stream);
-    return decodedSorobanAuthorizedContractFunction;
+  public static InvokeContractArgs decode(XdrDataInputStream stream) throws IOException {
+    InvokeContractArgs decodedInvokeContractArgs = new InvokeContractArgs();
+    decodedInvokeContractArgs.contractAddress = SCAddress.decode(stream);
+    decodedInvokeContractArgs.functionName = SCSymbol.decode(stream);
+    int argssize = stream.readInt();
+    decodedInvokeContractArgs.args = new SCVal[argssize];
+    for (int i = 0; i < argssize; i++) {
+      decodedInvokeContractArgs.args[i] = SCVal.decode(stream);
+    }
+    return decodedInvokeContractArgs;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.contractAddress, this.functionName, this.args);
+    return Objects.hash(this.contractAddress, this.functionName, Arrays.hashCode(this.args));
   }
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof SorobanAuthorizedContractFunction)) {
+    if (!(object instanceof InvokeContractArgs)) {
       return false;
     }
 
-    SorobanAuthorizedContractFunction other = (SorobanAuthorizedContractFunction) object;
+    InvokeContractArgs other = (InvokeContractArgs) object;
     return Objects.equals(this.contractAddress, other.contractAddress)
         && Objects.equals(this.functionName, other.functionName)
-        && Objects.equals(this.args, other.args);
+        && Arrays.equals(this.args, other.args);
   }
 
   @Override
@@ -107,12 +111,12 @@ public class SorobanAuthorizedContractFunction implements XdrElement {
     return byteArrayOutputStream.toByteArray();
   }
 
-  public static SorobanAuthorizedContractFunction fromXdrBase64(String xdr) throws IOException {
+  public static InvokeContractArgs fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64.getDecoder().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static SorobanAuthorizedContractFunction fromXdrByteArray(byte[] xdr) throws IOException {
+  public static InvokeContractArgs fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
@@ -121,7 +125,7 @@ public class SorobanAuthorizedContractFunction implements XdrElement {
   public static final class Builder {
     private SCAddress contractAddress;
     private SCSymbol functionName;
-    private SCVec args;
+    private SCVal[] args;
 
     public Builder contractAddress(SCAddress contractAddress) {
       this.contractAddress = contractAddress;
@@ -133,13 +137,13 @@ public class SorobanAuthorizedContractFunction implements XdrElement {
       return this;
     }
 
-    public Builder args(SCVec args) {
+    public Builder args(SCVal[] args) {
       this.args = args;
       return this;
     }
 
-    public SorobanAuthorizedContractFunction build() {
-      SorobanAuthorizedContractFunction val = new SorobanAuthorizedContractFunction();
+    public InvokeContractArgs build() {
+      InvokeContractArgs val = new InvokeContractArgs();
       val.setContractAddress(this.contractAddress);
       val.setFunctionName(this.functionName);
       val.setArgs(this.args);

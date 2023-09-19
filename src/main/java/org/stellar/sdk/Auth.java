@@ -18,8 +18,64 @@ import org.stellar.sdk.xdr.SorobanCredentialsType;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
+/** This class contains helper methods to sign {@link SorobanAuthorizationEntry}. */
 public class Auth {
-  public SorobanAuthorizationEntry authorizeEntry(
+  /**
+   * Actually authorizes an existing authorization entry using the given the credentials and
+   * expiration details, returning a signed copy.
+   *
+   * <p>This "fills out" the authorization entry with a signature, indicating to the {@link
+   * InvokeHostFunctionOperation} it's attached to that:
+   *
+   * <ul>
+   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *       SorobanAuthorizedInvocation} or otherwise built)
+   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>- until a particular ledger sequence is reached.
+   * </ul>
+   *
+   * @param entry a base64 encoded unsigned Soroban authorization entry
+   * @param signer a {@link KeyPair} which should correspond to the address in the `entry`
+   * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
+   *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
+   * @param network the network is incorprated into the signature
+   * @return a signed Soroban authorization entry
+   */
+  public static SorobanAuthorizationEntry authorizeEntry(
+      String entry, KeyPair signer, Long validUntilLedgerSeq, Network network) {
+    SorobanAuthorizationEntry entryXdr;
+    try {
+      entryXdr = SorobanAuthorizationEntry.fromXdrBase64(entry);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Unable to convert entry to SorobanAuthorizationEntry", e);
+    }
+    return authorizeEntry(entryXdr, signer, validUntilLedgerSeq, network);
+  }
+
+  /**
+   * Actually authorizes an existing authorization entry using the given the credentials and
+   * expiration details, returning a signed copy.
+   *
+   * <p>This "fills out" the authorization entry with a signature, indicating to the {@link
+   * InvokeHostFunctionOperation} it's attached to that:
+   *
+   * <ul>
+   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *       SorobanAuthorizedInvocation} or otherwise built)
+   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>- until a particular ledger sequence is reached.
+   * </ul>
+   *
+   * @param entry a base64 encoded unsigned Soroban authorization entry
+   * @param signer a {@link KeyPair} which should correspond to the address in the `entry`
+   * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
+   *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
+   * @param network the network is incorprated into the signature
+   * @return a signed Soroban authorization entry
+   */
+  public static SorobanAuthorizationEntry authorizeEntry(
       SorobanAuthorizationEntry entry, KeyPair signer, Long validUntilLedgerSeq, Network network) {
     Signer entrySigner =
         preimage -> {
@@ -36,7 +92,64 @@ public class Auth {
     return authorizeEntry(entry, entrySigner, validUntilLedgerSeq, network);
   }
 
-  public SorobanAuthorizationEntry authorizeEntry(
+  /**
+   * Actually authorizes an existing authorization entry using the given the credentials and
+   * expiration details, returning a signed copy.
+   *
+   * <p>This "fills out" the authorization entry with a signature, indicating to the {@link
+   * InvokeHostFunctionOperation} it's attached to that:
+   *
+   * <ul>
+   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *       SorobanAuthorizedInvocation} or otherwise built)
+   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>- until a particular ledger sequence is reached.
+   * </ul>
+   *
+   * @param entry a base64 encoded unsigned Soroban authorization entry
+   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
+   *     signature of the hash of the raw payload bytes, see {@link Signer}
+   * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
+   *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
+   * @param network the network is incorprated into the signature
+   * @return a signed Soroban authorization entry
+   */
+  public static SorobanAuthorizationEntry authorizeEntry(
+      String entry, Signer signer, Long validUntilLedgerSeq, Network network) {
+    SorobanAuthorizationEntry entryXdr;
+    try {
+      entryXdr = SorobanAuthorizationEntry.fromXdrBase64(entry);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Unable to convert entry to SorobanAuthorizationEntry", e);
+    }
+    return authorizeEntry(entryXdr, signer, validUntilLedgerSeq, network);
+  }
+
+  /**
+   * Actually authorizes an existing authorization entry using the given the credentials and
+   * expiration details, returning a signed copy.
+   *
+   * <p>This "fills out" the authorization entry with a signature, indicating to the {@link
+   * InvokeHostFunctionOperation} it's attached to that:
+   *
+   * <ul>
+   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *       SorobanAuthorizedInvocation} or otherwise built)
+   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>- until a particular ledger sequence is reached.
+   * </ul>
+   *
+   * @param entry an unsigned Soroban authorization entry
+   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
+   *     signature of the hash of the raw payload bytes, see {@link Signer}
+   * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
+   *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
+   * @param network the network is incorprated into the signature
+   * @return a signed Soroban authorization entry
+   */
+  public static SorobanAuthorizationEntry authorizeEntry(
       SorobanAuthorizationEntry entry, Signer signer, Long validUntilLedgerSeq, Network network) {
     if (entry.getCredentials().getDiscriminant()
         != SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
@@ -88,11 +201,33 @@ public class Auth {
                 put(Scv.toSymbol("signature"), Scv.toBytes(signature));
               }
             });
-    addrAuth.setSignatureArgs(Scv.toVec(Collections.singleton(sigScVal)).getVec());
-    return entry;
+    addrAuth.setSignature(Scv.toVec(Collections.singleton(sigScVal)));
+    return clone;
   }
 
-  public SorobanAuthorizationEntry authorizeInvocation(
+  /**
+   * This builds an entry from scratch, allowing you to express authorization as a function of:
+   *
+   * <ul>
+   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *       SorobanAuthorizedInvocation} or otherwise built)
+   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>- until a particular ledger sequence is reached.
+   * </ul>
+   *
+   * <p>This is in contrast to {@link Auth#authorizeEntry}, which signs an existing entry "in
+   * place".
+   *
+   * @param signer a {@link KeyPair} used to sign the entry
+   * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
+   *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
+   * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
+   *     from transaction simulation)
+   * @param network the network is incorprated into the signature
+   * @return a signed Soroban authorization entry
+   */
+  public static SorobanAuthorizationEntry authorizeInvocation(
       KeyPair signer,
       Long validUntilLedgerSeq,
       SorobanAuthorizedInvocation invocation,
@@ -110,7 +245,31 @@ public class Auth {
         entrySigner, validUntilLedgerSeq, invocation, signer.getAccountId(), network);
   }
 
-  public SorobanAuthorizationEntry authorizeInvocation(
+  /**
+   * This builds an entry from scratch, allowing you to express authorization as a function of:
+   *
+   * <ul>
+   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *       SorobanAuthorizedInvocation} or otherwise built)
+   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>- until a particular ledger sequence is reached.
+   * </ul>
+   *
+   * <p>This is in contrast to {@link Auth#authorizeEntry}, which signs an existing entry "in
+   * place".
+   *
+   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
+   *     signature of the hash of the raw payload bytes, see {@link Signer}
+   * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
+   *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
+   * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
+   *     from transaction simulation)
+   * @param publicKey the public identity of the signer
+   * @param network the network is incorprated into the signature
+   * @return a signed Soroban authorization entry
+   */
+  public static SorobanAuthorizationEntry authorizeInvocation(
       Signer signer,
       Long validUntilLedgerSeq,
       SorobanAuthorizedInvocation invocation,
@@ -128,7 +287,7 @@ public class Auth {
                             .nonce(new Int64(nonce))
                             .signatureExpirationLedger(
                                 new Uint32(new XdrUnsignedInteger(validUntilLedgerSeq)))
-                            .signatureArgs(Scv.toVec(Collections.emptyList()).getVec())
+                            .signature(Scv.toVoid())
                             .build())
                     .build())
             .rootInvocation(invocation)
@@ -136,6 +295,7 @@ public class Auth {
     return authorizeEntry(entry, signer, validUntilLedgerSeq, network);
   }
 
+  /** An interface for signing a {@link HashIDPreimage} to produce a signature. */
   public interface Signer {
     byte[] sign(HashIDPreimage preimage);
   }

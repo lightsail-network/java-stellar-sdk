@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import lombok.NonNull;
 
 /**
  * ChangeTrustAsset class.
@@ -127,9 +127,8 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
   public static final class Wrapper extends ChangeTrustAsset {
     private Asset asset;
 
-    public Wrapper(Asset baseAsset) {
+    public Wrapper(@NonNull Asset baseAsset) {
       super();
-      checkNotNull(baseAsset, "asset cannot be null");
       asset = baseAsset;
     }
 

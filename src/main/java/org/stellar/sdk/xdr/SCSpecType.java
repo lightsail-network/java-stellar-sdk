@@ -39,7 +39,6 @@ import java.util.Base64;
 //      SC_SPEC_TYPE_OPTION = 1000,
 //      SC_SPEC_TYPE_RESULT = 1001,
 //      SC_SPEC_TYPE_VEC = 1002,
-//      SC_SPEC_TYPE_SET = 1003,
 //      SC_SPEC_TYPE_MAP = 1004,
 //      SC_SPEC_TYPE_TUPLE = 1005,
 //      SC_SPEC_TYPE_BYTES_N = 1006,
@@ -71,7 +70,6 @@ public enum SCSpecType implements XdrElement {
   SC_SPEC_TYPE_OPTION(1000),
   SC_SPEC_TYPE_RESULT(1001),
   SC_SPEC_TYPE_VEC(1002),
-  SC_SPEC_TYPE_SET(1003),
   SC_SPEC_TYPE_MAP(1004),
   SC_SPEC_TYPE_TUPLE(1005),
   SC_SPEC_TYPE_BYTES_N(1006),
@@ -132,8 +130,6 @@ public enum SCSpecType implements XdrElement {
         return SC_SPEC_TYPE_RESULT;
       case 1002:
         return SC_SPEC_TYPE_VEC;
-      case 1003:
-        return SC_SPEC_TYPE_SET;
       case 1004:
         return SC_SPEC_TYPE_MAP;
       case 1005:
