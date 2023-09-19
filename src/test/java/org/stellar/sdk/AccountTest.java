@@ -28,11 +28,11 @@ public class AccountTest {
     Account account = new Account(random.getAccountId(), 100L);
     Long incremented;
     incremented = account.getIncrementedSequenceNumber();
-    assertEquals(new Long(100L), account.getSequenceNumber());
-    assertEquals(new Long(101L), incremented);
+    assertEquals(Long.valueOf(100L), account.getSequenceNumber());
+    assertEquals(Long.valueOf(101L), incremented);
     incremented = account.getIncrementedSequenceNumber();
-    assertEquals(new Long(100L), account.getSequenceNumber());
-    assertEquals(new Long(101L), incremented);
+    assertEquals(Long.valueOf(100L), account.getSequenceNumber());
+    assertEquals(Long.valueOf(101L), incremented);
   }
 
   @Test
@@ -40,7 +40,7 @@ public class AccountTest {
     KeyPair random = KeyPair.random();
     Account account = new Account(random.getAccountId(), 100L);
     account.incrementSequenceNumber();
-    assertEquals(account.getSequenceNumber(), new Long(101L));
+    assertEquals(account.getSequenceNumber(), Long.valueOf(101L));
   }
 
   @Test
@@ -49,6 +49,6 @@ public class AccountTest {
     Account account = new Account(keypair.getAccountId(), 100L);
     assertEquals(account.getKeyPair().getAccountId(), keypair.getAccountId());
     assertEquals(account.getAccountId(), keypair.getAccountId());
-    assertEquals(account.getSequenceNumber(), new Long(100L));
+    assertEquals(account.getSequenceNumber(), Long.valueOf(100L));
   }
 }
