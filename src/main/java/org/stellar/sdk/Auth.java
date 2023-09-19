@@ -28,11 +28,11 @@ public class Auth {
    * InvokeHostFunctionOperation} it's attached to that:
    *
    * <ul>
-   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
-   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>approving the execution of an invocation tree (i.e. a simulation-acquired {@link
    *       SorobanAuthorizedInvocation} or otherwise built)
-   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
-   *   <li>- until a particular ledger sequence is reached.
+   *   <li>on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>until a particular ledger sequence is reached.
    * </ul>
    *
    * @param entry a base64 encoded unsigned Soroban authorization entry
@@ -61,11 +61,11 @@ public class Auth {
    * InvokeHostFunctionOperation} it's attached to that:
    *
    * <ul>
-   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
-   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>approving the execution of an invocation tree (i.e. a simulation-acquired {@link
    *       SorobanAuthorizedInvocation} or otherwise built)
-   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
-   *   <li>- until a particular ledger sequence is reached.
+   *   <li>on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>until a particular ledger sequence is reached.
    * </ul>
    *
    * @param entry a base64 encoded unsigned Soroban authorization entry
@@ -100,11 +100,11 @@ public class Auth {
    * InvokeHostFunctionOperation} it's attached to that:
    *
    * <ul>
-   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
-   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>approving the execution of an invocation tree (i.e. a simulation-acquired {@link
    *       SorobanAuthorizedInvocation} or otherwise built)
-   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
-   *   <li>- until a particular ledger sequence is reached.
+   *   <li>on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>until a particular ledger sequence is reached.
    * </ul>
    *
    * @param entry a base64 encoded unsigned Soroban authorization entry
@@ -134,11 +134,11 @@ public class Auth {
    * InvokeHostFunctionOperation} it's attached to that:
    *
    * <ul>
-   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
-   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>approving the execution of an invocation tree (i.e. a simulation-acquired {@link
    *       SorobanAuthorizedInvocation} or otherwise built)
-   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
-   *   <li>- until a particular ledger sequence is reached.
+   *   <li>on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>until a particular ledger sequence is reached.
    * </ul>
    *
    * @param entry an unsigned Soroban authorization entry
@@ -163,8 +163,9 @@ public class Auth {
       return clone;
     }
 
-    SorobanAddressCredentials addrAuth = clone.getCredentials().getAddress();
-    addrAuth.setSignatureExpirationLedger(new Uint32(new XdrUnsignedInteger(validUntilLedgerSeq)));
+    SorobanAddressCredentials addressCredentials = clone.getCredentials().getAddress();
+    addressCredentials.setSignatureExpirationLedger(
+        new Uint32(new XdrUnsignedInteger(validUntilLedgerSeq)));
 
     HashIDPreimage preimage =
         new HashIDPreimage.Builder()
@@ -172,13 +173,13 @@ public class Auth {
             .sorobanAuthorization(
                 new HashIDPreimage.HashIDPreimageSorobanAuthorization.Builder()
                     .networkID(new Hash(network.getNetworkId()))
-                    .nonce(addrAuth.getNonce())
+                    .nonce(addressCredentials.getNonce())
                     .invocation(clone.getRootInvocation())
-                    .signatureExpirationLedger(addrAuth.getSignatureExpirationLedger())
+                    .signatureExpirationLedger(addressCredentials.getSignatureExpirationLedger())
                     .build())
             .build();
     byte[] signature = signer.sign(preimage);
-    byte[] publicKey = Address.fromSCAddress(addrAuth.getAddress()).getBytes();
+    byte[] publicKey = Address.fromSCAddress(addressCredentials.getAddress()).getBytes();
 
     byte[] data;
     try {
@@ -201,7 +202,7 @@ public class Auth {
                 put(Scv.toSymbol("signature"), Scv.toBytes(signature));
               }
             });
-    addrAuth.setSignature(Scv.toVec(Collections.singleton(sigScVal)));
+    addressCredentials.setSignature(Scv.toVec(Collections.singleton(sigScVal)));
     return clone;
   }
 
@@ -209,11 +210,11 @@ public class Auth {
    * This builds an entry from scratch, allowing you to express authorization as a function of:
    *
    * <ul>
-   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
-   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>approving the execution of an invocation tree (i.e. a simulation-acquired {@link
    *       SorobanAuthorizedInvocation} or otherwise built)
-   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
-   *   <li>- until a particular ledger sequence is reached.
+   *   <li>on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>until a particular ledger sequence is reached.
    * </ul>
    *
    * <p>This is in contrast to {@link Auth#authorizeEntry}, which signs an existing entry "in
@@ -249,11 +250,11 @@ public class Auth {
    * This builds an entry from scratch, allowing you to express authorization as a function of:
    *
    * <ul>
-   *   <li>- a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
-   *   <li>- approving the execution of an invocation tree (i.e. a simulation-acquired {@link
+   *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
+   *   <li>approving the execution of an invocation tree (i.e. a simulation-acquired {@link
    *       SorobanAuthorizedInvocation} or otherwise built)
-   *   <li>- on a particular network (uniquely identified by its passphrase, see {@link Network})
-   *   <li>- until a particular ledger sequence is reached.
+   *   <li>on a particular network (uniquely identified by its passphrase, see {@link Network})
+   *   <li>until a particular ledger sequence is reached.
    * </ul>
    *
    * <p>This is in contrast to {@link Auth#authorizeEntry}, which signs an existing entry "in
