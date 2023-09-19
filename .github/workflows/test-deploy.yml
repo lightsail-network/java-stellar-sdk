@@ -11,7 +11,7 @@ on:
       - created
 
 env:
-  JAVA_VERSION: '11'
+  JAVA_VERSION: '17'
   JAVA_DISTRIBUTION: 'microsoft'
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
       - name: Test
         run: ./gradlew check
 
-  shadow_jar:
+  build:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -39,13 +39,13 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
-      - name: Build JAR
-        run: ./gradlew shadowJar
-      - name: Persist JAR Artifact
+      - name: Build
+        run: ./gradlew build
+      - name: Persist JAR Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: jar
-          path: build/libs/stellar-sdk.jar
+          name: libs
+          path: build/libs/*.jar
 
   javadoc:
     needs: test
@@ -66,27 +66,8 @@ jobs:
           name: javadoc
           path: javadoc
 
-  javadoc_jar:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-      - name: Generate javadocJar
-        run: ./gradlew javadocJar
-      - name: Persist javadocJar
-        uses: actions/upload-artifact@v3
-        with:
-          name: javadoc_jar
-          path: build/libs/stellar-sdk-javadoc.jar
-
   android-test:
-    needs: shadow_jar
+    needs: build
     runs-on: macos-13
     name: android-test (api ${{ matrix.emulator.api-level }})
     strategy:
@@ -96,7 +77,7 @@ jobs:
         # TODO: Investigate why it is unstable on API 33.
         emulator: [
           { api-level: 26, target: google_apis },
-          { api-level: 33, target: playstore }
+          { api-level: 32, target: playstore }
         ]
     steps:
       - name: checkout
@@ -104,11 +85,11 @@ jobs:
       - name: Download JAR Artifact
         uses: actions/download-artifact@v2
         with:
-          name: jar
+          name: libs
           path: android_test/app/libs/
       - uses: actions/setup-java@v3
         with:
-          java-version: 17 # TODO: Android Gradle plugin requires Java 11, consider replacing other parts with Java 17.
+          java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -121,7 +102,7 @@ jobs:
           profile: 'pixel_2'
 
   deploy:
-    needs: [ javadoc, shadow_jar, javadoc_jar ]  # TODO: add android-test when it is stable.
+    needs: [ build, javadoc ]  # TODO: add android-test when it is stable.
     permissions:
       contents: write
     if: github.event_name == 'release' && github.event.action == 'created'
@@ -132,26 +113,20 @@ jobs:
       - name: Download JAR Artifact
         uses: actions/download-artifact@v2
         with:
-          name: jar
-          path: jar
+          name: libs
+          path: libs
       - name: Download Java Documentation
         uses: actions/download-artifact@v2
         with:
           name: javadoc
           path: javadoc
-      - name: Download javadocJar
-        uses: actions/download-artifact@v2
-        with:
-          name: javadoc_jar
-          path: javadoc_jar
       - name: Archive Documentation
         run: tar -czf stellar-sdk-javadoc.tar.gz javadoc
       - name: Upload artifacts to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            jar/stellar-sdk.jar
-            javadoc_jar/stellar-sdk-javadoc.jar
+            libs/*.jar
             stellar-sdk-javadoc.tar.gz
       - name: Upload Documentation to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
