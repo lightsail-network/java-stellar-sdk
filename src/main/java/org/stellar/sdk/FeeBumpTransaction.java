@@ -1,9 +1,10 @@
 package org.stellar.sdk;
 
-import java.util.ArrayList;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import java.util.Arrays;
-import java.util.Objects;
-import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.FeeBumpTransactionEnvelope;
@@ -22,12 +23,12 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
   FeeBumpTransaction(
       AccountConverter accountConverter,
-      @NonNull String feeAccount,
+      String feeAccount,
       long fee,
-      @NonNull Transaction innerTransaction) {
+      Transaction innerTransaction) {
     super(accountConverter, innerTransaction.getNetwork());
-    this.mFeeAccount = feeAccount;
-    this.mInner = innerTransaction;
+    this.mFeeAccount = checkNotNull(feeAccount, "feeAccount cannot be null");
+    this.mInner = checkNotNull(innerTransaction, "innerTransaction cannot be null");
     this.mFee = fee;
   }
 
@@ -121,9 +122,10 @@ public class FeeBumpTransaction extends AbstractTransaction {
      * @param accountConverter The AccountConverter which will be used to encode the fee account.
      * @param inner The inner transaction which will be fee bumped. read-only, the
      */
-    public Builder(@NonNull AccountConverter accountConverter, @NonNull final Transaction inner) {
+    public Builder(AccountConverter accountConverter, final Transaction inner) {
+      checkNotNull(inner, "inner cannot be null");
       EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
-      this.mAccountConverter = accountConverter;
+      this.mAccountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
       if (inner.toEnvelopeXdr().getDiscriminant() == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
         this.mInner =
             new TransactionBuilder(
@@ -138,7 +140,8 @@ public class FeeBumpTransaction extends AbstractTransaction {
                         .timeBounds(inner.getTimeBounds())
                         .build())
                 .build();
-        this.mInner.mSignatures = new ArrayList<>(inner.mSignatures);
+
+        this.mInner.mSignatures = Lists.newArrayList(inner.mSignatures);
       } else {
         this.mInner = inner;
       }
@@ -183,30 +186,29 @@ public class FeeBumpTransaction extends AbstractTransaction {
       return this;
     }
 
-    public FeeBumpTransaction.Builder setFeeAccount(@NonNull String feeAccount) {
+    public FeeBumpTransaction.Builder setFeeAccount(String feeAccount) {
       if (this.mFeeAccount != null) {
         throw new RuntimeException("fee account has been already been set.");
       }
 
-      this.mFeeAccount = feeAccount;
+      this.mFeeAccount = checkNotNull(feeAccount, "feeAccount cannot be null");
       return this;
     }
 
     public FeeBumpTransaction build() {
-      if (this.mFeeAccount == null) {
-        throw new NullPointerException("fee account has to be set. you must call setFeeAccount().");
-      }
-      if (this.mBaseFee == null) {
-        throw new NullPointerException("base fee has to be set. you must call setBaseFee().");
-      }
       return new FeeBumpTransaction(
-          this.mAccountConverter, this.mFeeAccount, this.mBaseFee, this.mInner);
+          this.mAccountConverter,
+          checkNotNull(
+              this.mFeeAccount, "fee account has to be set. you must call setFeeAccount()."),
+          checkNotNull(this.mBaseFee, "base fee has to be set. you must call setBaseFee()."),
+          this.mInner);
     }
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.mFee, this.mInner, this.mNetwork, this.mFeeAccount, this.mSignatures);
+    return Objects.hashCode(
+        this.mFee, this.mInner, this.mNetwork, this.mFeeAccount, this.mSignatures);
   }
 
   @Override
@@ -216,10 +218,10 @@ public class FeeBumpTransaction extends AbstractTransaction {
     }
 
     FeeBumpTransaction other = (FeeBumpTransaction) object;
-    return Objects.equals(this.mFee, other.mFee)
-        && Objects.equals(this.mFeeAccount, other.mFeeAccount)
-        && Objects.equals(this.mInner, other.mInner)
-        && Objects.equals(this.mNetwork, other.mNetwork)
-        && Objects.equals(this.mSignatures, other.mSignatures);
+    return Objects.equal(this.mFee, other.mFee)
+        && Objects.equal(this.mFeeAccount, other.mFeeAccount)
+        && Objects.equal(this.mInner, other.mInner)
+        && Objects.equal(this.mNetwork, other.mNetwork)
+        && Objects.equal(this.mSignatures, other.mSignatures);
   }
 }

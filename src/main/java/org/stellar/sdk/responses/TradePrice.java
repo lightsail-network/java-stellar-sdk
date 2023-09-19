@@ -1,9 +1,9 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.Objects;
 
 /** Represents Price. Price in Stellar is represented as a fraction. */
 public class TradePrice {
@@ -44,7 +44,7 @@ public class TradePrice {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.getNumerator(), this.getDenominator());
+    return Objects.hashCode(this.getNumerator(), this.getDenominator());
   }
 
   @Override
@@ -54,7 +54,7 @@ public class TradePrice {
     }
 
     TradePrice other = (TradePrice) object;
-    return Objects.equals(this.getNumerator(), other.getNumerator())
-        && Objects.equals(this.getDenominator(), other.getDenominator());
+    return this.getNumerator() == other.getNumerator()
+        && this.getDenominator() == other.getDenominator();
   }
 }

@@ -1,8 +1,10 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import java.util.Arrays;
-import java.util.Objects;
-import lombok.NonNull;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentStrictSendOp;
@@ -25,23 +27,21 @@ public class PathPaymentStrictSendOperation extends Operation {
   private final Asset[] path;
 
   private PathPaymentStrictSendOperation(
-      @NonNull Asset sendAsset,
-      @NonNull String sendAmount,
-      @NonNull String destination,
-      @NonNull Asset destAsset,
-      @NonNull String destMin,
+      Asset sendAsset,
+      String sendAmount,
+      String destination,
+      Asset destAsset,
+      String destMin,
       Asset[] path) {
-    this.sendAsset = sendAsset;
-    this.sendAmount = sendAmount;
-    this.destination = destination;
-    this.destAsset = destAsset;
-    this.destMin = destMin;
+    this.sendAsset = checkNotNull(sendAsset, "sendAsset cannot be null");
+    this.sendAmount = checkNotNull(sendAmount, "sendAmount cannot be null");
+    this.destination = checkNotNull(destination, "destination cannot be null");
+    this.destAsset = checkNotNull(destAsset, "destAsset cannot be null");
+    this.destMin = checkNotNull(destMin, "destMin cannot be null");
     if (path == null) {
       this.path = new Asset[0];
     } else {
-      if (path.length > 5) {
-        throw new IllegalArgumentException("The maximum number of assets in the path is 5");
-      }
+      checkArgument(path.length <= 5, "The maximum number of assets in the path is 5");
       this.path = path;
     }
   }
@@ -150,16 +150,12 @@ public class PathPaymentStrictSendOperation extends Operation {
      * @throws ArithmeticException when sendAmount or destMin has more than 7 decimal places.
      */
     public Builder(
-        @NonNull Asset sendAsset,
-        @NonNull String sendAmount,
-        @NonNull String destination,
-        @NonNull Asset destAsset,
-        @NonNull String destMin) {
-      this.sendAsset = sendAsset;
-      this.sendAmount = sendAmount;
-      this.destination = destination;
-      this.destAsset = destAsset;
-      this.destMin = destMin;
+        Asset sendAsset, String sendAmount, String destination, Asset destAsset, String destMin) {
+      this.sendAsset = checkNotNull(sendAsset, "sendAsset cannot be null");
+      this.sendAmount = checkNotNull(sendAmount, "sendAmount cannot be null");
+      this.destination = checkNotNull(destination, "destination cannot be null");
+      this.destAsset = checkNotNull(destAsset, "destAsset cannot be null");
+      this.destMin = checkNotNull(destMin, "destMin cannot be null");
     }
 
     /**
@@ -171,10 +167,9 @@ public class PathPaymentStrictSendOperation extends Operation {
      *     would contain XLM and BTC.
      * @return Builder object so you can chain methods.
      */
-    public PathPaymentStrictSendOperation.Builder setPath(@NonNull Asset[] path) {
-      if (path.length > 5) {
-        throw new IllegalArgumentException("The maximum number of assets in the path is 5");
-      }
+    public PathPaymentStrictSendOperation.Builder setPath(Asset[] path) {
+      checkNotNull(path, "path cannot be null");
+      checkArgument(path.length <= 5, "The maximum number of assets in the path is 5");
       this.path = path;
       return this;
     }
@@ -185,8 +180,8 @@ public class PathPaymentStrictSendOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public PathPaymentStrictSendOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+    public PathPaymentStrictSendOperation.Builder setSourceAccount(String sourceAccount) {
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
@@ -203,7 +198,7 @@ public class PathPaymentStrictSendOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
         this.getSourceAccount(),
         this.destMin,
         this.destAsset,
@@ -220,12 +215,12 @@ public class PathPaymentStrictSendOperation extends Operation {
     }
 
     PathPaymentStrictSendOperation other = (PathPaymentStrictSendOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.destMin, other.destMin)
-        && Objects.equals(this.destAsset, other.destAsset)
-        && Objects.equals(this.destination, other.destination)
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equal(this.destMin, other.destMin)
+        && Objects.equal(this.destAsset, other.destAsset)
+        && Objects.equal(this.destination, other.destination)
         && Arrays.equals(this.path, other.path)
-        && Objects.equals(this.sendAsset, other.sendAsset)
-        && Objects.equals(this.sendAmount, other.sendAmount);
+        && Objects.equal(this.sendAsset, other.sendAsset)
+        && Objects.equal(this.sendAmount, other.sendAmount);
   }
 }

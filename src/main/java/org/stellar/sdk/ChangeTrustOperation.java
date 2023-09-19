@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.ChangeTrustOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -18,9 +19,9 @@ public class ChangeTrustOperation extends Operation {
   private final ChangeTrustAsset asset;
   private final String limit;
 
-  private ChangeTrustOperation(@NonNull ChangeTrustAsset asset, @NonNull String limit) {
-    this.asset = asset;
-    this.limit = limit;
+  private ChangeTrustOperation(ChangeTrustAsset asset, String limit) {
+    this.asset = checkNotNull(asset, "asset cannot be null");
+    this.limit = checkNotNull(limit, "limit cannot be null");
   }
 
   /**
@@ -79,9 +80,9 @@ public class ChangeTrustOperation extends Operation {
      *     to 200 USD to a user, the limit is 200.
      * @throws ArithmeticException when limit has more than 7 decimal places.
      */
-    public Builder(@NonNull ChangeTrustAsset asset, @NonNull String limit) {
-      this.asset = asset;
-      this.limit = limit;
+    public Builder(ChangeTrustAsset asset, String limit) {
+      this.asset = checkNotNull(asset, "asset cannot be null");
+      this.limit = checkNotNull(limit, "limit cannot be null");
     }
 
     /**
@@ -90,8 +91,8 @@ public class ChangeTrustOperation extends Operation {
      * @param sourceAccount Source account
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+    public Builder setSourceAccount(String sourceAccount) {
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
@@ -107,7 +108,7 @@ public class ChangeTrustOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.asset, this.limit, this.getSourceAccount());
+    return Objects.hashCode(this.asset, this.limit, this.getSourceAccount());
   }
 
   @Override
@@ -117,8 +118,8 @@ public class ChangeTrustOperation extends Operation {
     }
 
     ChangeTrustOperation other = (ChangeTrustOperation) object;
-    return Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.limit, other.limit)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.asset, other.asset)
+        && Objects.equal(this.limit, other.limit)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

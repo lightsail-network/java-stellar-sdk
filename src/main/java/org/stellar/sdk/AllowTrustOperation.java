@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -20,12 +21,9 @@ public class AllowTrustOperation extends Operation {
   private final boolean authorizeToMaintainLiabilities;
 
   private AllowTrustOperation(
-      @NonNull String trustor,
-      @NonNull String assetCode,
-      boolean authorize,
-      boolean authorizeToMaintainLiabilities) {
-    this.trustor = trustor;
-    this.assetCode = assetCode;
+      String trustor, String assetCode, boolean authorize, boolean authorizeToMaintainLiabilities) {
+    this.trustor = checkNotNull(trustor, "trustor cannot be null");
+    this.assetCode = checkNotNull(assetCode, "assetCode cannot be null");
     this.authorize = authorize;
     this.authorizeToMaintainLiabilities = authorizeToMaintainLiabilities;
   }
@@ -167,7 +165,7 @@ public class AllowTrustOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
         this.getSourceAccount(),
         this.assetCode,
         this.authorize,
@@ -182,10 +180,10 @@ public class AllowTrustOperation extends Operation {
     }
 
     AllowTrustOperation other = (AllowTrustOperation) object;
-    return Objects.equals(this.assetCode, other.assetCode)
-        && Objects.equals(this.authorize, other.authorize)
-        && Objects.equals(this.authorizeToMaintainLiabilities, other.authorizeToMaintainLiabilities)
-        && Objects.equals(this.trustor, other.trustor)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.assetCode, other.assetCode)
+        && Objects.equal(this.authorize, other.authorize)
+        && Objects.equal(this.authorizeToMaintainLiabilities, other.authorizeToMaintainLiabilities)
+        && Objects.equal(this.trustor, other.trustor)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

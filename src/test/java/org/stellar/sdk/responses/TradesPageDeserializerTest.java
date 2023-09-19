@@ -3,8 +3,8 @@ package org.stellar.sdk.responses;
 import static java.lang.Long.valueOf;
 import static org.stellar.sdk.Asset.create;
 
+import com.google.common.base.Optional;
 import com.google.gson.reflect.TypeToken;
-import java.util.Optional;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeNative;
@@ -39,8 +39,8 @@ public class TradesPageDeserializerTest extends TestCase {
         create(null, "JPY", "GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM"));
     assertEquals(tradesPage.getRecords().get(0).getPrice().getNumerator(), valueOf(267));
     assertEquals(tradesPage.getRecords().get(0).getPrice().getDenominator(), valueOf(1000));
-    assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.empty());
-    assertEquals(tradesPage.getRecords().get(0).getBaseLiquidityPoolID(), Optional.empty());
+    assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.absent());
+    assertEquals(tradesPage.getRecords().get(0).getBaseLiquidityPoolID(), Optional.absent());
 
     assertEquals(
         tradesPage.getRecords().get(1).getBaseAccount(),
@@ -58,8 +58,8 @@ public class TradesPageDeserializerTest extends TestCase {
         Optional.of(
             new LiquidityPoolID(
                 "a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7bbase")));
-    assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.empty());
-    assertEquals(tradesPage.getRecords().get(1).getBaseLiquidityPoolID(), Optional.empty());
+    assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.absent());
+    assertEquals(tradesPage.getRecords().get(1).getBaseLiquidityPoolID(), Optional.absent());
     assertEquals(
         tradesPage.getRecords().get(1).getCounterLiquidityPoolID(),
         Optional.of(

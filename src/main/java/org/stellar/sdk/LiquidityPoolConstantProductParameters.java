@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 /**
@@ -23,7 +24,10 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
    * @param b Second asset in the liquidity pool
    * @param feeBP Fee amount in base-points
    */
-  public LiquidityPoolConstantProductParameters(@NonNull Asset a, @NonNull Asset b, int feeBP) {
+  public LiquidityPoolConstantProductParameters(Asset a, Asset b, int feeBP) {
+    checkNotNull(a, "asset A cannot be null");
+    checkNotNull(b, "asset B cannot be null");
+    checkNotNull(feeBP, "fee cannot be null");
     assetA = a;
     assetB = b;
     fee = feeBP;
@@ -48,9 +52,9 @@ public final class LiquidityPoolConstantProductParameters extends LiquidityPoolP
     }
 
     LiquidityPoolConstantProductParameters o = (LiquidityPoolConstantProductParameters) object;
-    return Objects.equals(this.getAssetA(), o.getAssetA())
-        && Objects.equals(this.getAssetB(), o.getAssetB())
-        && Objects.equals(this.getFee(), o.getFee());
+    return Objects.equal(this.getAssetA(), o.getAssetA())
+        && Objects.equal(this.getAssetB(), o.getAssetB())
+        && Objects.equal(this.getFee(), o.getFee());
   }
 
   /** Generates XDR object from a given LiquidityPoolParameters object */

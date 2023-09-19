@@ -1,12 +1,12 @@
 package org.stellar.sdk.responses;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.stellar.sdk.Asset.create;
 
+import com.google.common.base.Optional;
+import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
-import java.util.Base64;
 import java.util.HashMap;
-import java.util.Optional;
-import lombok.NonNull;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPoolID;
@@ -163,7 +163,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   }
 
   public Optional<String> getSponsor() {
-    return Optional.ofNullable(this.sponsor);
+    return Optional.fromNullable(this.sponsor);
   }
 
   /** Represents account thresholds. */
@@ -281,26 +281,27 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     private String sponsor;
 
     public Balance(
-        @NonNull String assetType,
+        String assetType,
         String assetCode,
         String assetIssuer,
         LiquidityPoolID liquidityPoolID,
-        @NonNull String balance,
+        String balance,
         String limit,
-        @NonNull String buyingLiabilities,
-        @NonNull String sellingLiabilities,
+        String buyingLiabilities,
+        String sellingLiabilities,
         Boolean isAuthorized,
         Boolean isAuthorizedToMaintainLiabilities,
         Integer lastModifiedLedger,
         String sponsor) {
-      this.assetType = assetType;
-      this.balance = balance;
+      this.assetType = checkNotNull(assetType, "assertType cannot be null");
+      this.balance = checkNotNull(balance, "balance cannot be null");
       this.limit = limit;
       this.assetCode = assetCode;
       this.assetIssuer = assetIssuer;
       this.liquidityPoolID = liquidityPoolID;
-      this.buyingLiabilities = buyingLiabilities;
-      this.sellingLiabilities = sellingLiabilities;
+      this.buyingLiabilities = checkNotNull(buyingLiabilities, "buyingLiabilities cannot be null");
+      this.sellingLiabilities =
+          checkNotNull(sellingLiabilities, "sellingLiabilities cannot be null");
       this.isAuthorized = isAuthorized;
       this.isAuthorizedToMaintainLiabilities = isAuthorizedToMaintainLiabilities;
       this.lastModifiedLedger = lastModifiedLedger;
@@ -321,15 +322,15 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<String> getAssetCode() {
-      return Optional.ofNullable(assetCode);
+      return Optional.fromNullable(assetCode);
     }
 
     public Optional<String> getAssetIssuer() {
-      return Optional.ofNullable(assetIssuer);
+      return Optional.fromNullable(assetIssuer);
     }
 
     public Optional<LiquidityPoolID> getLiquidityPoolID() {
-      return Optional.ofNullable(liquidityPoolID);
+      return Optional.fromNullable(liquidityPoolID);
     }
 
     public String getBalance() {
@@ -337,11 +338,11 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<String> getBuyingLiabilities() {
-      return Optional.ofNullable(buyingLiabilities);
+      return Optional.fromNullable(buyingLiabilities);
     }
 
     public Optional<String> getSellingLiabilities() {
-      return Optional.ofNullable(sellingLiabilities);
+      return Optional.fromNullable(sellingLiabilities);
     }
 
     public String getLimit() {
@@ -361,7 +362,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<String> getSponsor() {
-      return Optional.ofNullable(this.sponsor);
+      return Optional.fromNullable(this.sponsor);
     }
   }
 
@@ -379,10 +380,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     private String sponsor;
 
-    public Signer(@NonNull String key, @NonNull String type, int weight, String sponsor) {
-      this.key = key;
-      this.type = type;
-      this.weight = weight;
+    public Signer(String key, String type, int weight, String sponsor) {
+      this.key = checkNotNull(key, "key cannot be null");
+      this.type = checkNotNull(type, "type cannot be null");
+      this.weight = checkNotNull(weight, "weight cannot be null");
       // sponsor is an optional field
       this.sponsor = sponsor;
     }
@@ -408,7 +409,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     }
 
     public Optional<String> getSponsor() {
-      return Optional.ofNullable(this.sponsor);
+      return Optional.fromNullable(this.sponsor);
     }
   }
 
@@ -440,7 +441,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
      * @return raw value
      */
     public byte[] getDecoded(String key) {
-      return Base64.getDecoder().decode(this.get(key));
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      return base64Encoding.decode(this.get(key));
     }
   }
 

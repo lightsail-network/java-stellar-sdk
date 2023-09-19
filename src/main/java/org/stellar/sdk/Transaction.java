@@ -1,10 +1,12 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
-import lombok.NonNull;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClaimableBalanceIDType;
@@ -40,21 +42,19 @@ public class Transaction extends AbstractTransaction {
 
   Transaction(
       AccountConverter accountConverter,
-      @NonNull String sourceAccount,
+      String sourceAccount,
       long fee,
       long sequenceNumber,
-      @NonNull Operation[] operations,
+      Operation[] operations,
       Memo memo,
       TransactionPreconditions preconditions,
       SorobanTransactionData sorobanData,
       Network network) {
     super(accountConverter, network);
-    this.mSourceAccount = sourceAccount;
+    this.mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
     this.mSequenceNumber = sequenceNumber;
-    this.mOperations = operations;
-    if (operations.length == 0) {
-      throw new IllegalArgumentException("At least one operation required");
-    }
+    this.mOperations = checkNotNull(operations, "operations cannot be null");
+    checkArgument(operations.length > 0, "At least one operation required");
     this.mPreconditions = preconditions;
     this.mFee = fee;
     this.mMemo = memo != null ? memo : Memo.none();
@@ -339,7 +339,7 @@ public class Transaction extends AbstractTransaction {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
         this.envelopeType,
         this.mFee,
         this.mSourceAccount,
@@ -359,16 +359,16 @@ public class Transaction extends AbstractTransaction {
     }
 
     Transaction other = (Transaction) object;
-    return Objects.equals(this.envelopeType, other.envelopeType)
-        && Objects.equals(this.mFee, other.mFee)
-        && Objects.equals(this.mSourceAccount, other.mSourceAccount)
-        && Objects.equals(this.mSequenceNumber, other.mSequenceNumber)
+    return Objects.equal(this.envelopeType, other.envelopeType)
+        && Objects.equal(this.mFee, other.mFee)
+        && Objects.equal(this.mSourceAccount, other.mSourceAccount)
+        && Objects.equal(this.mSequenceNumber, other.mSequenceNumber)
         && Arrays.equals(this.mOperations, other.mOperations)
-        && Objects.equals(this.mMemo, other.mMemo)
-        && Objects.equals(this.mPreconditions, other.mPreconditions)
-        && Objects.equals(this.mNetwork, other.mNetwork)
-        && Objects.equals(this.mSignatures, other.mSignatures)
-        && Objects.equals(this.mSorobanData, other.mSorobanData);
+        && Objects.equal(this.mMemo, other.mMemo)
+        && Objects.equal(this.mPreconditions, other.mPreconditions)
+        && Objects.equal(this.mNetwork, other.mNetwork)
+        && Objects.equal(this.mSignatures, other.mSignatures)
+        && Objects.equal(this.mSorobanData, other.mSorobanData);
   }
 
   /**

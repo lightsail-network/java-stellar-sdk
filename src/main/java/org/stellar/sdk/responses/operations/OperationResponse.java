@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import org.stellar.sdk.responses.*;
 
 /**
@@ -49,7 +49,7 @@ public abstract class OperationResponse extends Response implements Pageable {
 
   public Optional<MuxedAccount> getSourceAccountMuxed() {
     if (this.sourceAccountMuxed == null || this.sourceAccountMuxed.isEmpty()) {
-      return Optional.empty();
+      return Optional.absent();
     }
     return Optional.of(
         new MuxedAccount(this.sourceAccountMuxed, this.sourceAccount, this.sourceAccountMuxedId));
@@ -106,7 +106,7 @@ public abstract class OperationResponse extends Response implements Pageable {
   }
 
   public Optional<TransactionResponse> getTransaction() {
-    return Optional.ofNullable(transaction);
+    return Optional.fromNullable(transaction);
   }
 
   /** Represents operation links. */

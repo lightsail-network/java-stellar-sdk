@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
-import java.util.Optional;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Claimant;
 
@@ -87,7 +87,7 @@ public class ClaimableBalanceResponse extends Response implements Pageable {
   }
 
   public Optional<String> getSponsor() {
-    return Optional.ofNullable(this.sponsor);
+    return Optional.fromNullable(this.sponsor);
   }
 
   public String getPagingToken() {

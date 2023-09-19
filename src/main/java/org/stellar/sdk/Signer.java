@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
@@ -14,7 +15,8 @@ public class Signer {
    * @param keyPair
    * @return org.stellar.sdk.xdr.SignerKey
    */
-  public static SignerKey ed25519PublicKey(@NonNull KeyPair keyPair) {
+  public static SignerKey ed25519PublicKey(KeyPair keyPair) {
+    checkNotNull(keyPair, "keyPair cannot be null");
     return keyPair.getXdrSignerKey();
   }
 
@@ -25,7 +27,8 @@ public class Signer {
    * @param hash
    * @return org.stellar.sdk.xdr.SignerKey
    */
-  public static SignerKey sha256Hash(byte @NonNull [] hash) {
+  public static SignerKey sha256Hash(byte[] hash) {
+    checkNotNull(hash, "hash cannot be null");
     SignerKey signerKey = new SignerKey();
     Uint256 value = Signer.createUint256(hash);
 
@@ -42,7 +45,8 @@ public class Signer {
    * @param tx
    * @return org.stellar.sdk.xdr.SignerKey
    */
-  public static SignerKey preAuthTx(@NonNull Transaction tx) {
+  public static SignerKey preAuthTx(Transaction tx) {
+    checkNotNull(tx, "tx cannot be null");
     SignerKey signerKey = new SignerKey();
     Uint256 value = Signer.createUint256(tx.hash());
 
@@ -58,7 +62,8 @@ public class Signer {
    * @param hash
    * @return org.stellar.sdk.xdr.SignerKey
    */
-  public static SignerKey preAuthTx(byte @NonNull [] hash) {
+  public static SignerKey preAuthTx(byte[] hash) {
+    checkNotNull(hash, "hash cannot be null");
     SignerKey signerKey = new SignerKey();
     Uint256 value = Signer.createUint256(hash);
 

@@ -1,8 +1,8 @@
 package org.stellar.sdk.requests;
 
+import com.google.common.base.Optional;
 import java.io.Closeable;
 import java.net.SocketException;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.annotation.Nullable;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,7 +18,6 @@ import okhttp3.Response;
 import okhttp3.internal.sse.RealEventSource;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
-import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Pageable;
@@ -199,7 +199,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     @Override
     public void onFailure(
         EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
-      Optional<Integer> code = Optional.empty();
+      Optional<Integer> code = Optional.absent();
       if (response != null) {
         code = Optional.of(response.code());
       }
@@ -212,7 +212,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
           listener.onFailure(Optional.of(t), code);
         }
       } else {
-        Optional<Throwable> absent = Optional.empty();
+        Optional<Throwable> absent = Optional.absent();
         listener.onFailure(absent, code);
       }
     }

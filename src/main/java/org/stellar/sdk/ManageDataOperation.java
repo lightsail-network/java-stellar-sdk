@@ -1,8 +1,9 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import java.util.Arrays;
-import java.util.Objects;
-import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -16,8 +17,8 @@ public class ManageDataOperation extends Operation {
   private final String name;
   private final byte[] value;
 
-  private ManageDataOperation(@NonNull String name, byte[] value) {
-    this.name = name;
+  private ManageDataOperation(String name, byte[] value) {
+    this.name = checkNotNull(name, "name cannot be null");
     this.value = value;
 
     if (new XdrString(this.name).getBytes().length > 64) {
@@ -83,8 +84,8 @@ public class ManageDataOperation extends Operation {
      * @param name The name of data entry
      * @param value The value of data entry. <code>null</code>null will delete data entry.
      */
-    public Builder(@NonNull String name, byte[] value) {
-      this.name = name;
+    public Builder(String name, byte[] value) {
+      this.name = checkNotNull(name, "name cannot be null");
       this.value = value;
     }
 
@@ -94,8 +95,8 @@ public class ManageDataOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+    public Builder setSourceAccount(String sourceAccount) {
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
@@ -111,7 +112,7 @@ public class ManageDataOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.getSourceAccount(), this.name, Arrays.hashCode(this.value));
+    return Objects.hashCode(this.getSourceAccount(), this.name, Arrays.hashCode(this.value));
   }
 
   @Override
@@ -121,8 +122,8 @@ public class ManageDataOperation extends Operation {
     }
 
     ManageDataOperation other = (ManageDataOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.name, other.name)
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equal(this.name, other.name)
         && Arrays.equals(this.value, other.value);
   }
 }

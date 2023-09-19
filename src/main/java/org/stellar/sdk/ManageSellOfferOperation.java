@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -21,15 +22,11 @@ public class ManageSellOfferOperation extends Operation {
   private final long offerId;
 
   private ManageSellOfferOperation(
-      @NonNull Asset selling,
-      @NonNull Asset buying,
-      @NonNull String amount,
-      @NonNull String price,
-      long offerId) {
-    this.selling = selling;
-    this.buying = buying;
-    this.amount = amount;
-    this.price = price;
+      Asset selling, Asset buying, String amount, String price, long offerId) {
+    this.selling = checkNotNull(selling, "selling cannot be null");
+    this.buying = checkNotNull(buying, "buying cannot be null");
+    this.amount = checkNotNull(amount, "amount cannot be null");
+    this.price = checkNotNull(price, "price cannot be null");
     // offerId can be null
     this.offerId = offerId;
   }
@@ -120,15 +117,11 @@ public class ManageSellOfferOperation extends Operation {
      * @param price Price of 1 unit of selling in terms of buying.
      * @throws ArithmeticException when amount has more than 7 decimal places.
      */
-    public Builder(
-        @NonNull Asset selling,
-        @NonNull Asset buying,
-        @NonNull String amount,
-        @NonNull String price) {
-      this.selling = selling;
-      this.buying = buying;
-      this.amount = amount;
-      this.price = price;
+    public Builder(Asset selling, Asset buying, String amount, String price) {
+      this.selling = checkNotNull(selling, "selling cannot be null");
+      this.buying = checkNotNull(buying, "buying cannot be null");
+      this.amount = checkNotNull(amount, "amount cannot be null");
+      this.price = checkNotNull(price, "price cannot be null");
     }
 
     /**
@@ -147,8 +140,8 @@ public class ManageSellOfferOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+    public Builder setSourceAccount(String sourceAccount) {
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
@@ -165,7 +158,7 @@ public class ManageSellOfferOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
         this.getSourceAccount(), this.amount, this.buying, this.offerId, this.price, this.selling);
   }
 
@@ -176,11 +169,11 @@ public class ManageSellOfferOperation extends Operation {
     }
 
     ManageSellOfferOperation other = (ManageSellOfferOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.buying, other.buying)
-        && Objects.equals(this.offerId, other.offerId)
-        && Objects.equals(this.price, other.price)
-        && Objects.equals(this.selling, other.selling);
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equal(this.amount, other.amount)
+        && Objects.equal(this.buying, other.buying)
+        && Objects.equal(this.offerId, other.offerId)
+        && Objects.equal(this.price, other.price)
+        && Objects.equal(this.selling, other.selling);
   }
 }

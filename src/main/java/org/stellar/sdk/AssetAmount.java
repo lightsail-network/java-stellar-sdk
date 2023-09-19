@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
-import java.util.Objects;
 
 public final class AssetAmount {
   @SerializedName("asset")
@@ -24,7 +24,7 @@ public final class AssetAmount {
   }
 
   public int hashCode() {
-    return Objects.hash(asset, amount);
+    return Objects.hashCode(asset, amount);
   }
 
   @Override
@@ -34,7 +34,7 @@ public final class AssetAmount {
     }
 
     AssetAmount o = (AssetAmount) object;
-    return Objects.equals(this.getAsset(), o.getAsset())
-        && Objects.equals(this.getAmount(), o.getAmount());
+    return Objects.equal(this.getAsset(), o.getAsset())
+        && Objects.equal(this.getAmount(), o.getAmount());
   }
 }

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.google.common.base.Strings;
+import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.math.BigInteger;
@@ -93,7 +95,7 @@ public class MemoTest {
 
   @Test
   public void testMemoHashSuccess() {
-    MemoHash memo = Memo.hash("4142434445464748494a4b4c0000000000000000000000000000000000000000");
+    MemoHash memo = Memo.hash(Strings.padEnd("4142434445464748494a4b4c", 64, '0'));
     assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
     String test = "ABCDEFGHIJKL";
     assertEquals(test, Util.paddedByteArrayToString(memo.getBytes()));
@@ -103,8 +105,7 @@ public class MemoTest {
   @Test
   public void testMemoHashSuccessUppercase() {
 
-    MemoHash memo =
-        Memo.hash("4142434445464748494a4b4c0000000000000000000000000000000000000000".toUpperCase());
+    MemoHash memo = Memo.hash(Strings.padEnd("4142434445464748494a4b4c".toUpperCase(), 64, '0'));
     assertEquals(MemoType.MEMO_HASH, memo.toXdr().getDiscriminant());
     String test = "ABCDEFGHIJKL";
     assertEquals(test, Util.paddedByteArrayToString(memo.getBytes()));
@@ -162,6 +163,6 @@ public class MemoTest {
     assertNull(memoXdr.getHash());
     assertEquals(
         "4142434445464748494a4b4c0000000000000000000000000000000000000000",
-        Util.bytesToHex(memoXdr.getRetHash().getHash()).toLowerCase());
+        BaseEncoding.base16().lowerCase().encode(memoXdr.getRetHash().getHash()));
   }
 }

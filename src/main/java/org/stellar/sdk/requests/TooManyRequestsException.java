@@ -1,6 +1,6 @@
 package org.stellar.sdk.requests;
 
-import java.util.Optional;
+import com.google.common.base.Optional;
 
 /**
  * Exception thrown when too many requests were sent to the Horizon server.
@@ -21,6 +21,6 @@ public class TooManyRequestsException extends RuntimeException {
    * is unknown.
    */
   public Optional<Integer> getRetryAfter() {
-    return Optional.ofNullable(retryAfter);
+    return Optional.fromNullable(retryAfter);
   }
 }

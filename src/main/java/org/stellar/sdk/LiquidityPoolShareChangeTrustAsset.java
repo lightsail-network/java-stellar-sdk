@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.AssetType;
 
 /**
@@ -18,7 +19,8 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
    *
    * @param params the liquidity pool parameters
    */
-  public LiquidityPoolShareChangeTrustAsset(@NonNull LiquidityPoolParameters params) {
+  public LiquidityPoolShareChangeTrustAsset(LiquidityPoolParameters params) {
+    checkNotNull(params, "params cannot be null");
     mParams = params;
   }
 
@@ -68,7 +70,7 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
 
   @Override
   public int compareTo(ChangeTrustAsset other) {
-    if (!Objects.equals(other.getType(), "pool_share")) {
+    if (other.getType() != "pool_share") {
       return 1;
     }
     return this.toString().compareTo(((LiquidityPoolShareChangeTrustAsset) other).toString());

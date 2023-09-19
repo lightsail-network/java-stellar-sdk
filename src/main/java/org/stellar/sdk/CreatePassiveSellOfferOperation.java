@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.CreatePassiveSellOfferOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -21,14 +22,11 @@ public class CreatePassiveSellOfferOperation extends Operation {
   private final String price;
 
   private CreatePassiveSellOfferOperation(
-      @NonNull Asset selling,
-      @NonNull Asset buying,
-      @NonNull String amount,
-      @NonNull String price) {
-    this.selling = selling;
-    this.buying = buying;
-    this.amount = amount;
-    this.price = price;
+      Asset selling, Asset buying, String amount, String price) {
+    this.selling = checkNotNull(selling, "selling cannot be null");
+    this.buying = checkNotNull(buying, "buying cannot be null");
+    this.amount = checkNotNull(amount, "amount cannot be null");
+    this.price = checkNotNull(price, "price cannot be null");
   }
 
   /** The asset being sold in this operation */
@@ -105,15 +103,11 @@ public class CreatePassiveSellOfferOperation extends Operation {
      * @param price Price of 1 unit of selling in terms of buying.
      * @throws ArithmeticException when amount has more than 7 decimal places.
      */
-    public Builder(
-        @NonNull Asset selling,
-        @NonNull Asset buying,
-        @NonNull String amount,
-        @NonNull String price) {
-      this.selling = selling;
-      this.buying = buying;
-      this.amount = amount;
-      this.price = price;
+    public Builder(Asset selling, Asset buying, String amount, String price) {
+      this.selling = checkNotNull(selling, "selling cannot be null");
+      this.buying = checkNotNull(buying, "buying cannot be null");
+      this.amount = checkNotNull(amount, "amount cannot be null");
+      this.price = checkNotNull(price, "price cannot be null");
     }
 
     /**
@@ -122,8 +116,8 @@ public class CreatePassiveSellOfferOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public CreatePassiveSellOfferOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+    public CreatePassiveSellOfferOperation.Builder setSourceAccount(String sourceAccount) {
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
@@ -140,7 +134,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
         this.amount, this.buying, this.price, this.selling, this.getSourceAccount());
   }
 
@@ -151,10 +145,10 @@ public class CreatePassiveSellOfferOperation extends Operation {
     }
 
     CreatePassiveSellOfferOperation other = (CreatePassiveSellOfferOperation) object;
-    return Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.buying, other.buying)
-        && Objects.equals(this.price, other.price)
-        && Objects.equals(this.selling, other.selling)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.amount, other.amount)
+        && Objects.equal(this.buying, other.buying)
+        && Objects.equal(this.price, other.price)
+        && Objects.equal(this.selling, other.selling)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

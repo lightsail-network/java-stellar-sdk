@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Objects;
 import java.math.BigInteger;
-import java.util.Objects;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
@@ -101,12 +101,12 @@ public final class TimeBounds {
       return false;
     }
     TimeBounds that = (TimeBounds) o;
-    return Objects.equals(this.mMaxTime, that.mMaxTime)
-        && Objects.equals(this.mMinTime, that.mMinTime);
+    return Objects.equal(this.mMaxTime, that.mMaxTime)
+        && Objects.equal(this.mMinTime, that.mMinTime);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.mMaxTime, this.mMinTime);
+    return Objects.hashCode(this.mMaxTime, this.mMinTime);
   }
 }

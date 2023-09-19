@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -68,6 +69,7 @@ public class GsonSingleton {
               .registerTypeAdapter(
                   claimableBalancePageType.getType(),
                   new PageDeserializer<ClaimableBalanceResponse>(claimableBalancePageType))
+              .registerTypeAdapter(ImmutableList.class, new ImmutableListDeserializer())
               .create();
     }
     return instance;

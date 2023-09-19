@@ -1,10 +1,11 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -18,7 +19,8 @@ public abstract class Operation {
 
   private static final BigDecimal ONE = new BigDecimal(10).pow(7);
 
-  protected static long toXdrAmount(@NonNull String value) {
+  protected static long toXdrAmount(String value) {
+    value = checkNotNull(value, "value cannot be null");
     BigDecimal amount = new BigDecimal(value).multiply(Operation.ONE);
     return amount.longValueExact();
   }

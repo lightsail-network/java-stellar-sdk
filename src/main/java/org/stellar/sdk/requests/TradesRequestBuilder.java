@@ -1,8 +1,9 @@
 package org.stellar.sdk.requests;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
-import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -48,7 +49,8 @@ public class TradesRequestBuilder extends RequestBuilder {
    *     Account</a>
    * @param account Account for which to get trades
    */
-  public TradesRequestBuilder forAccount(@NonNull String account) {
+  public TradesRequestBuilder forAccount(String account) {
+    account = checkNotNull(account, "account cannot be null");
     this.setSegments("accounts", account, "trades");
     return this;
   }
@@ -83,7 +85,8 @@ public class TradesRequestBuilder extends RequestBuilder {
    * @return current {@link TradesRequestBuilder} instance
    * @see <a href="https://developers.stellar.org/api/resources/trades/list/">List All Trades</a>
    */
-  public TradesRequestBuilder forTradeType(@NonNull String tradeType) {
+  public TradesRequestBuilder forTradeType(String tradeType) {
+    tradeType = checkNotNull(tradeType, "tradeType cannot be null");
     uriBuilder.setQueryParameter(TRADE_TYPE_PARAMETER_NAME, tradeType);
     return this;
   }

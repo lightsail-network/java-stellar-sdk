@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -34,14 +34,14 @@ public class AccountMergeOperationResponse extends OperationResponse {
 
   public Optional<MuxedAccount> getAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
-      return Optional.empty();
+      return Optional.absent();
     }
     return Optional.of(new MuxedAccount(this.accountMuxed, this.account, this.accountMuxedId));
   }
 
   public Optional<MuxedAccount> getIntoMuxed() {
     if (this.intoMuxed == null || this.intoMuxed.isEmpty()) {
-      return Optional.empty();
+      return Optional.absent();
     }
     return Optional.of(new MuxedAccount(this.intoMuxed, this.into, this.intoMuxedId));
   }

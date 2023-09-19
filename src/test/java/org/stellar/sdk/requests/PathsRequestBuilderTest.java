@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.stellar.sdk.Asset.create;
 
-import java.util.Arrays;
+import com.google.common.collect.Lists;
 import java.util.List;
 import okhttp3.HttpUrl;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictReceiveWithSourceAssets() {
     List<Asset> assets =
-        Arrays.asList(
+        Lists.newArrayList(
             create("native", "", ""),
             create(
                 "credit_alphanum4",
@@ -87,7 +87,7 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictReceiveWithSourceAccountAndSourceAssets() {
     List<Asset> assets =
-        Arrays.asList(
+        Lists.newArrayList(
             create("native", "", ""),
             create(
                 "credit_alphanum4",
@@ -151,7 +151,7 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictSendWithDestinationAssets() {
     List<Asset> assets =
-        Arrays.asList(
+        Lists.newArrayList(
             create("native", "", ""),
             create(
                 "credit_alphanum4",
@@ -190,7 +190,7 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictSendWithDestinationAccountAndDestinationAssets() {
     List<Asset> assets =
-        Arrays.asList(
+        Lists.newArrayList(
             create("native", "", ""),
             create(
                 "credit_alphanum4",

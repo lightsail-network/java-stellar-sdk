@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import com.google.common.base.Objects;
 
 /**
  * Represents Stellar liquidity pool share asset - <a
@@ -34,7 +34,7 @@ public final class AssetTypePoolShare extends Asset {
       return false;
     }
 
-    return (Objects.equals(((AssetTypePoolShare) object).getPoolId(), poolId));
+    return (Objects.equal(((AssetTypePoolShare) object).getPoolId(), poolId));
   }
 
   @Override

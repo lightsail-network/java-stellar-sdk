@@ -3,10 +3,15 @@ package org.stellar.sdk.xdr;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Test;
 
 public class AccountEntryDecodeTest {
+
+  BaseEncoding base64Encoding = BaseEncoding.base64();
 
   @Test
   public void testDecodeSignerPayload() throws IOException {
@@ -75,7 +80,15 @@ public class AccountEntryDecodeTest {
 
     AccountEntry xdr = bldr.build();
 
-    AccountEntry accountEntry = AccountEntry.fromXdrBase64(xdr.toXdrBase64());
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    XdrDataOutputStream outputStream = new XdrDataOutputStream(baos);
+    AccountEntry.encode(outputStream, xdr);
+    String encodedXdr = base64Encoding.encode(baos.toByteArray());
+
+    byte[] decodedbBytes = base64Encoding.decode(encodedXdr);
+
+    AccountEntry accountEntry =
+        AccountEntry.decode(new XdrDataInputStream(new ByteArrayInputStream(decodedbBytes)));
     assertArrayEquals(
         new byte[32],
         accountEntry.getSigners()[0].getKey().getEd25519SignedPayload().getEd25519().getUint256());
