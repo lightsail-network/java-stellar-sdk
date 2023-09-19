@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import lombok.Singular;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.Nullable;
@@ -46,9 +46,7 @@ public class InvokeHostFunctionOperation extends Operation {
   @NonNull HostFunction hostFunction;
 
   /** The authorizations required to execute the host function */
-  @Singular("auth")
-  @NonNull
-  Collection<SorobanAuthorizationEntry> auth;
+  @NonNull @Builder.Default List<SorobanAuthorizationEntry> auth = new ArrayList<>();
 
   /**
    * Constructs a new InvokeHostFunctionOperation object from the XDR representation of the {@link

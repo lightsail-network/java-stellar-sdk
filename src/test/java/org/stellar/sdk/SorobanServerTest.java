@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.Dispatcher;
@@ -1312,7 +1312,7 @@ public class SorobanServerTest {
   }
 
   private Transaction buildSorobanTransaction(
-      SorobanTransactionData sorobanData, Collection<SorobanAuthorizationEntry> auth) {
+      SorobanTransactionData sorobanData, List<SorobanAuthorizationEntry> auth) {
     String contractId = "CDU3PZ4LXVETIFVLS33RDXLD63JZ5GXS7PCV2DJ7BBT6EBPA2AB7YR5H";
     KeyPair txSubmitterKp =
         KeyPair.fromSecretSeed("SAAPYAPTTRZMCUZFPG3G66V4ZMHTK4TWA6NS7U4F7Z3IMUD52EK4DDEV");

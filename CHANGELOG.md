@@ -10,6 +10,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   - `ContractCredited` occurs when a Stellar asset moves into its corresponding Stellar Asset Contract instance
   - `ContractDebited` occurs when a Stellar asset moves out of its corresponding Stellar Asset Contract instance
 * Bump dependencies & Remove unnecessary dependencies. ([#523](https://github.com/stellar/java-stellar-sdk/pull/523))
+* Add helper functions to sign authorization entries. ([#537](https://github.com/stellar/java-stellar-sdk/pull/537))
 * No longer provide a shadow jar that has relocated third-party dependencies, but instead default to providing a thin jar. 
   We also offer an [uber jar](https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_example) and javadoc jar. 
   You can import the jar you need in one of the following three ways: ([#528](https://github.com/stellar/java-stellar-sdk/issues/528))
