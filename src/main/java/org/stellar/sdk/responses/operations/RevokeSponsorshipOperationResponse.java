@@ -1,7 +1,7 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
-import java.util.Optional;
 
 /**
  * Represents RevokeSponsorship operation response.
@@ -59,38 +59,38 @@ public class RevokeSponsorshipOperationResponse extends OperationResponse {
   }
 
   public Optional<String> getAccountId() {
-    return Optional.ofNullable(accountId);
+    return Optional.fromNullable(accountId);
   }
 
   public Optional<String> getClaimableBalanceId() {
-    return Optional.ofNullable(claimableBalanceId);
+    return Optional.fromNullable(claimableBalanceId);
   }
 
   public Optional<String> getDataAccountId() {
-    return Optional.ofNullable(dataAccountId);
+    return Optional.fromNullable(dataAccountId);
   }
 
   public Optional<String> getDataName() {
-    return Optional.ofNullable(dataName);
+    return Optional.fromNullable(dataName);
   }
 
   public Optional<Long> getOfferId() {
-    return Optional.ofNullable(offerId);
+    return Optional.fromNullable(offerId);
   }
 
   public Optional<String> getTrustlineAccountId() {
-    return Optional.ofNullable(trustlineAccountId);
+    return Optional.fromNullable(trustlineAccountId);
   }
 
   public Optional<String> getTrustlineAsset() {
-    return Optional.ofNullable(trustlineAsset);
+    return Optional.fromNullable(trustlineAsset);
   }
 
   public Optional<String> getSignerAccountId() {
-    return Optional.ofNullable(signerAccountId);
+    return Optional.fromNullable(signerAccountId);
   }
 
   public Optional<String> getSignerKey() {
-    return Optional.ofNullable(signerKey);
+    return Optional.fromNullable(signerKey);
   }
 }

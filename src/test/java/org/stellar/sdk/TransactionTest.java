@@ -6,6 +6,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.google.common.io.BaseEncoding;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -36,6 +38,7 @@ import org.stellar.sdk.xdr.SorobanResources;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint32;
+import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class TransactionTest {
@@ -69,8 +72,12 @@ public class TransactionTest {
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
     transaction.sign(source);
 
+    XdrDataInputStream is =
+        new XdrDataInputStream(
+            new ByteArrayInputStream(
+                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
+        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
     assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, decodedTransaction.getDiscriminant());
 
     Transaction parsed =

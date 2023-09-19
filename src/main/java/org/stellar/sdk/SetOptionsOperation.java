@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -339,7 +340,9 @@ public class SetOptionsOperation extends Operation {
      * @param weight The weight to attach to the signer (0-255).
      * @return Builder object so you can chain methods.
      */
-    public Builder setSigner(@NonNull SignerKey signer, @NonNull Integer weight) {
+    public Builder setSigner(SignerKey signer, Integer weight) {
+      checkNotNull(signer, "signer cannot be null");
+      checkNotNull(weight, "weight cannot be null");
       this.signer = signer;
       signerWeight = weight & 0xFF;
       return this;
@@ -379,7 +382,7 @@ public class SetOptionsOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
         this.getSourceAccount(),
         this.inflationDestination,
         this.clearFlags,
@@ -400,16 +403,16 @@ public class SetOptionsOperation extends Operation {
     }
 
     SetOptionsOperation other = (SetOptionsOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.inflationDestination, other.inflationDestination)
-        && Objects.equals(this.clearFlags, other.clearFlags)
-        && Objects.equals(this.setFlags, other.setFlags)
-        && Objects.equals(this.masterKeyWeight, other.masterKeyWeight)
-        && Objects.equals(this.lowThreshold, other.lowThreshold)
-        && Objects.equals(this.mediumThreshold, other.mediumThreshold)
-        && Objects.equals(this.highThreshold, other.highThreshold)
-        && Objects.equals(this.homeDomain, other.homeDomain)
-        && Objects.equals(this.signer, other.signer)
-        && Objects.equals(this.signerWeight, other.signerWeight);
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount())
+        && Objects.equal(this.inflationDestination, other.inflationDestination)
+        && Objects.equal(this.clearFlags, other.clearFlags)
+        && Objects.equal(this.setFlags, other.setFlags)
+        && Objects.equal(this.masterKeyWeight, other.masterKeyWeight)
+        && Objects.equal(this.lowThreshold, other.lowThreshold)
+        && Objects.equal(this.mediumThreshold, other.mediumThreshold)
+        && Objects.equal(this.highThreshold, other.highThreshold)
+        && Objects.equal(this.homeDomain, other.homeDomain)
+        && Objects.equal(this.signer, other.signer)
+        && Objects.equal(this.signerWeight, other.signerWeight);
   }
 }

@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
 public class BeginSponsoringFutureReservesOperation extends Operation {
@@ -58,9 +59,8 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public BeginSponsoringFutureReservesOperation.Builder setSourceAccount(
-        @NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+    public BeginSponsoringFutureReservesOperation.Builder setSourceAccount(String sourceAccount) {
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
@@ -77,7 +77,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.sponsoredId, this.getSourceAccount());
+    return Objects.hashCode(this.sponsoredId, this.getSourceAccount());
   }
 
   @Override
@@ -87,7 +87,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
     }
 
     BeginSponsoringFutureReservesOperation other = (BeginSponsoringFutureReservesOperation) object;
-    return Objects.equals(this.sponsoredId, other.sponsoredId)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.sponsoredId, other.sponsoredId)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

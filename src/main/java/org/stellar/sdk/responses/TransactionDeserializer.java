@@ -1,11 +1,11 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.io.BaseEncoding;
 import com.google.gson.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
-import java.util.Base64;
 import org.stellar.sdk.Memo;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.XdrDataInputStream;
@@ -54,19 +54,19 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
       // representation of a transaction. That's why we need to handle a special case
       // here.
       if (memoType.equals("text")) {
-        Base64.Decoder base64Decoder = Base64.getDecoder();
+        BaseEncoding base64Encoding = BaseEncoding.base64();
         JsonObject jsonResponse = json.getAsJsonObject();
 
         if (jsonResponse.has("memo_bytes")) {
           // we obtain the memo text from the "memo_bytes" field because the original byte sequence
           // may not be valid utf8
           String memoBase64 = json.getAsJsonObject().get("memo_bytes").getAsString();
-          memo = Memo.text(base64Decoder.decode(memoBase64));
+          memo = Memo.text(base64Encoding.decode(memoBase64));
         } else {
           // memo_bytes is not available because horizon is running a version older than 1.2.0
           // so we will recover the bytes from the xdr
           String envelopeXdr = json.getAsJsonObject().get("envelope_xdr").getAsString();
-          byte[] bytes = base64Decoder.decode(envelopeXdr);
+          byte[] bytes = base64Encoding.decode(envelopeXdr);
           TransactionEnvelope transactionEnvelope = null;
           try {
             transactionEnvelope =
@@ -80,13 +80,13 @@ public class TransactionDeserializer implements JsonDeserializer<TransactionResp
         }
       } else {
         String memoValue = json.getAsJsonObject().get("memo").getAsString();
-        Base64.Decoder base64Decoder = Base64.getDecoder();
+        BaseEncoding base64Encoding = BaseEncoding.base64();
         if (memoType.equals("id")) {
           memo = Memo.id(new BigInteger(memoValue));
         } else if (memoType.equals("hash")) {
-          memo = Memo.hash(base64Decoder.decode(memoValue));
+          memo = Memo.hash(base64Encoding.decode(memoValue));
         } else if (memoType.equals("return")) {
-          memo = Memo.returnHash(base64Decoder.decode(memoValue));
+          memo = Memo.returnHash(base64Encoding.decode(memoValue));
         } else {
           throw new JsonParseException("Unknown memo type.");
         }

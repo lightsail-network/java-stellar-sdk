@@ -1,7 +1,8 @@
 package org.stellar.sdk.responses;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.gson.annotations.SerializedName;
-import lombok.NonNull;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Price;
 
@@ -60,10 +61,10 @@ public class OrderBookResponse extends Response {
     @SerializedName("price_r")
     private final Price priceR;
 
-    Row(@NonNull String amount, @NonNull String price, @NonNull Price priceR) {
-      this.amount = amount;
-      this.price = price;
-      this.priceR = priceR;
+    Row(String amount, String price, Price priceR) {
+      this.amount = checkNotNull(amount, "amount cannot be null");
+      this.price = checkNotNull(price, "price cannot be null");
+      this.priceR = checkNotNull(priceR, "priceR cannot be null");
     }
 
     public String getAmount() {

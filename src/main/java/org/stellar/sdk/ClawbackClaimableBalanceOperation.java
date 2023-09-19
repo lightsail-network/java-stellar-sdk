@@ -1,8 +1,10 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
 import java.io.IOException;
-import java.util.Objects;
-import lombok.NonNull;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClawbackClaimableBalanceOp;
 import org.stellar.sdk.xdr.OperationType;
@@ -16,8 +18,8 @@ import org.stellar.sdk.xdr.OperationType;
 public class ClawbackClaimableBalanceOperation extends Operation {
   private final String balanceId;
 
-  private ClawbackClaimableBalanceOperation(@NonNull String balanceId) {
-    this.balanceId = balanceId;
+  private ClawbackClaimableBalanceOperation(String balanceId) {
+    this.balanceId = checkNotNull(balanceId, "balanceId cannot be null");
   }
 
   /** The id of the claimable balance which will be clawed back. */
@@ -27,7 +29,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
-    byte[] balanceIdBytes = Util.hexToBytes(this.balanceId);
+    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(this.balanceId.toLowerCase());
     ClaimableBalanceID balanceId;
     try {
       balanceId = ClaimableBalanceID.fromXdrByteArray(balanceIdBytes);
@@ -58,7 +60,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
 
     Builder(ClawbackClaimableBalanceOp op) {
       try {
-        balanceId = Util.bytesToHex(op.getBalanceID().toXdrByteArray()).toLowerCase();
+        balanceId = BaseEncoding.base16().lowerCase().encode(op.getBalanceID().toXdrByteArray());
       } catch (IOException e) {
         throw new IllegalArgumentException("Invalid balanceId in the operation", e);
       }
@@ -97,7 +99,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.getSourceAccount(), this.balanceId);
+    return Objects.hashCode(this.getSourceAccount(), this.balanceId);
   }
 
   @Override
@@ -107,7 +109,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
     }
 
     ClawbackClaimableBalanceOperation other = (ClawbackClaimableBalanceOperation) object;
-    return Objects.equals(this.balanceId, other.balanceId)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.balanceId, other.balanceId)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

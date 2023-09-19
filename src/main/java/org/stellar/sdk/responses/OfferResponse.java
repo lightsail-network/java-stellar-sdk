@@ -1,7 +1,7 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
-import java.util.Optional;
 import org.stellar.sdk.Asset;
 
 /**
@@ -109,7 +109,7 @@ public class OfferResponse extends Response implements Pageable {
   }
 
   public Optional<String> getSponsor() {
-    return Optional.ofNullable(this.sponsor);
+    return Optional.fromNullable(this.sponsor);
   }
 
   public Links getLinks() {

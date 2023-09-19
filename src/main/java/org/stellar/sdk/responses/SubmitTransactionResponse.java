@@ -1,11 +1,11 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Optional;
+import com.google.common.io.BaseEncoding;
 import com.google.gson.annotations.SerializedName;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Optional;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.xdr.OperationResult;
 import org.stellar.sdk.xdr.OperationType;
@@ -63,7 +63,7 @@ public class SubmitTransactionResponse extends Response {
       if (this.getExtras() != null) {
         return Optional.of(this.getExtras().getEnvelopeXdr());
       }
-      return Optional.empty();
+      return Optional.absent();
     }
   }
 
@@ -74,7 +74,7 @@ public class SubmitTransactionResponse extends Response {
       if (this.getExtras() != null) {
         return Optional.of(this.getExtras().getResultXdr());
       }
-      return Optional.empty();
+      return Optional.absent();
     }
   }
 
@@ -89,17 +89,17 @@ public class SubmitTransactionResponse extends Response {
    */
   public Optional<Long> getOfferIdFromResult(int position) throws IOException {
     if (!this.isSuccess()) {
-      return Optional.empty();
+      return Optional.absent();
     }
 
     Optional<TransactionResult> optionalResult = getDecodedTransactionResult();
     if (!optionalResult.isPresent()) {
-      return Optional.empty();
+      return Optional.absent();
     }
     TransactionResult result = optionalResult.get();
 
     if (result.getResult().getResults()[position] == null) {
-      return Optional.empty();
+      return Optional.absent();
     }
 
     OperationResult operationResult = result.getResult().getResults()[position];
@@ -108,7 +108,7 @@ public class SubmitTransactionResponse extends Response {
 
     if (operationType == OperationType.MANAGE_SELL_OFFER) {
       if (operationResultTr.getManageSellOfferResult().getSuccess().getOffer().getOffer() == null) {
-        return Optional.empty();
+        return Optional.absent();
       }
       return Optional.of(
           operationResultTr
@@ -122,7 +122,7 @@ public class SubmitTransactionResponse extends Response {
 
     if (operationType == OperationType.MANAGE_BUY_OFFER) {
       if (operationResultTr.getManageBuyOfferResult().getSuccess().getOffer().getOffer() == null) {
-        return Optional.empty();
+        return Optional.absent();
       }
       return Optional.of(
           operationResultTr
@@ -134,24 +134,25 @@ public class SubmitTransactionResponse extends Response {
               .getInt64());
     }
 
-    return Optional.empty();
+    return Optional.absent();
   }
 
   /**
-   * Decoding "TransactionResult" from "resultXdr". This will be <code>Optional.empty()()</code> if
+   * Decoding "TransactionResult" from "resultXdr". This will be <code>Optional.absent()</code> if
    * transaction has failed.
    */
   public Optional<TransactionResult> getDecodedTransactionResult() throws IOException {
     if (!this.isSuccess()) {
-      return Optional.empty();
+      return Optional.absent();
     }
 
     if (this.transactionResult == null) {
       Optional<String> resultXDR = this.getResultXdr();
       if (!resultXDR.isPresent()) {
-        return Optional.empty();
+        return Optional.absent();
       }
-      byte[] bytes = Base64.getDecoder().decode(resultXDR.get());
+      BaseEncoding base64Encoding = BaseEncoding.base64();
+      byte[] bytes = base64Encoding.decode(resultXDR.get());
       ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
       XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
       this.transactionResult = TransactionResult.decode(xdrInputStream);

@@ -1,11 +1,11 @@
 package org.stellar.sdk;
 
+import com.google.common.base.Optional;
 import com.google.gson.reflect.TypeToken;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -62,7 +62,7 @@ public class Server implements Closeable {
     this.serverURI = HttpUrl.parse(serverURI);
     this.httpClient = httpClient;
     this.submitHttpClient = submitHttpClient;
-    this.network = Optional.empty();
+    this.network = Optional.absent();
     this.networkLock = new ReentrantReadWriteLock();
   }
 

@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.LiquidityPoolDepositOp;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 import org.stellar.sdk.xdr.Operation.OperationBody;
@@ -23,16 +24,16 @@ public class LiquidityPoolDepositOperation extends Operation {
   private final Price maxPrice;
 
   public LiquidityPoolDepositOperation(
-      @NonNull LiquidityPoolID liquidityPoolID,
-      @NonNull String maxAmountA,
-      @NonNull String maxAmountB,
-      @NonNull Price minPrice,
-      @NonNull Price maxPrice) {
-    this.liquidityPoolID = liquidityPoolID;
-    this.maxAmountA = maxAmountA;
-    this.maxAmountB = maxAmountB;
-    this.minPrice = minPrice;
-    this.maxPrice = maxPrice;
+      LiquidityPoolID liquidityPoolID,
+      String maxAmountA,
+      String maxAmountB,
+      Price minPrice,
+      Price maxPrice) {
+    this.liquidityPoolID = checkNotNull(liquidityPoolID, "liquidityPoolID cannot be null");
+    this.maxAmountA = checkNotNull(maxAmountA, "amountA cannot be null");
+    this.maxAmountB = checkNotNull(maxAmountB, "amountB cannot be null");
+    this.minPrice = checkNotNull(minPrice, "minPrice cannot be null");
+    this.maxPrice = checkNotNull(maxPrice, "maxPrice cannot be null");
   }
 
   public LiquidityPoolDepositOperation(LiquidityPoolDepositOp op) {
@@ -44,7 +45,7 @@ public class LiquidityPoolDepositOperation extends Operation {
   }
 
   public LiquidityPoolDepositOperation(
-      AssetAmount a, AssetAmount b, @NonNull Price minPrice, @NonNull Price maxPrice) {
+      AssetAmount a, AssetAmount b, Price minPrice, Price maxPrice) {
     if (a.getAsset().compareTo(b.getAsset()) >= 0) {
       throw new RuntimeException("AssetA must be < AssetB");
     }
@@ -56,8 +57,8 @@ public class LiquidityPoolDepositOperation extends Operation {
             LiquidityPoolParameters.Fee);
     this.maxAmountA = a.getAmount();
     this.maxAmountB = b.getAmount();
-    this.minPrice = minPrice;
-    this.maxPrice = maxPrice;
+    this.minPrice = checkNotNull(minPrice, "minPrice cannot be null");
+    this.maxPrice = checkNotNull(maxPrice, "maxPrice cannot be null");
   }
 
   public LiquidityPoolID getLiquidityPoolID() {
@@ -96,7 +97,7 @@ public class LiquidityPoolDepositOperation extends Operation {
   }
 
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hashCode(
         this.getSourceAccount(), liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
   }
 
@@ -107,11 +108,11 @@ public class LiquidityPoolDepositOperation extends Operation {
     }
 
     LiquidityPoolDepositOperation o = (LiquidityPoolDepositOperation) object;
-    return Objects.equals(this.getLiquidityPoolID(), o.getLiquidityPoolID())
-        && Objects.equals(this.getMaxAmountA(), o.getMaxAmountA())
-        && Objects.equals(this.getMaxAmountB(), o.getMaxAmountB())
-        && Objects.equals(this.getMinPrice(), o.getMinPrice())
-        && Objects.equals(this.getMaxPrice(), o.getMaxPrice())
-        && Objects.equals(this.getSourceAccount(), o.getSourceAccount());
+    return Objects.equal(this.getLiquidityPoolID(), o.getLiquidityPoolID())
+        && Objects.equal(this.getMaxAmountA(), o.getMaxAmountA())
+        && Objects.equal(this.getMaxAmountB(), o.getMaxAmountB())
+        && Objects.equal(this.getMinPrice(), o.getMinPrice())
+        && Objects.equal(this.getMaxPrice(), o.getMaxPrice())
+        && Objects.equal(this.getSourceAccount(), o.getSourceAccount());
   }
 }

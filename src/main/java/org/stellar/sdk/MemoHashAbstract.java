@@ -1,21 +1,23 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.io.BaseEncoding;
 import java.util.Arrays;
-import lombok.NonNull;
 
 abstract class MemoHashAbstract extends Memo {
   protected byte[] bytes;
 
-  public MemoHashAbstract(byte @NonNull [] bytes) {
-    if (bytes.length != 32) {
-      throw new IllegalArgumentException("bytes must be 32-bytes long.");
-    }
+  public MemoHashAbstract(byte[] bytes) {
+    checkNotNull(bytes, "bytes cannot be null");
+    checkArgument(bytes.length == 32, "bytes must be 32-bytes long.");
     this.bytes = bytes;
   }
 
   public MemoHashAbstract(String hexString) {
     // We change to lowercase because we want to decode both: upper cased and lower cased alphabets.
-    this(Util.hexToBytes(hexString.toLowerCase()));
+    this(BaseEncoding.base16().lowerCase().decode(hexString.toLowerCase()));
   }
 
   /** Returns 32 bytes long array contained in this memo. */
@@ -32,7 +34,7 @@ abstract class MemoHashAbstract extends Memo {
    * </code>
    */
   public String getHexValue() {
-    return Util.bytesToHex(this.bytes).toLowerCase();
+    return BaseEncoding.base16().lowerCase().encode(this.bytes);
   }
 
   @Override

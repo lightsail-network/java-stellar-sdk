@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -15,11 +16,10 @@ public class ClawbackOperation extends Operation {
   private final AssetTypeCreditAlphaNum mAsset;
   private final String mAmount;
 
-  private ClawbackOperation(
-      @NonNull String from, @NonNull AssetTypeCreditAlphaNum asset, @NonNull String amount) {
-    mFrom = from;
-    mAsset = asset;
-    mAmount = amount;
+  private ClawbackOperation(String from, AssetTypeCreditAlphaNum asset, String amount) {
+    mFrom = checkNotNull(from, "from cannot be null");
+    mAsset = checkNotNull(asset, "asset cannot be null");
+    mAmount = checkNotNull(amount, "amount cannot be null");
   }
 
   /** The account owning of the trustline. */
@@ -110,7 +110,7 @@ public class ClawbackOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.getSourceAccount(), this.mFrom, this.mAsset, this.mAmount);
+    return Objects.hashCode(this.getSourceAccount(), this.mFrom, this.mAsset, this.mAmount);
   }
 
   @Override
@@ -120,9 +120,9 @@ public class ClawbackOperation extends Operation {
     }
 
     ClawbackOperation other = (ClawbackOperation) object;
-    return Objects.equals(this.mFrom, other.mFrom)
-        && Objects.equals(this.mAsset, other.mAsset)
-        && Objects.equals(this.mAmount, other.mAmount)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.mFrom, other.mFrom)
+        && Objects.equal(this.mAsset, other.mAsset)
+        && Objects.equal(this.mAmount, other.mAmount)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

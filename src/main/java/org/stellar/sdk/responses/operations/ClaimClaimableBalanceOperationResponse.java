@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -26,7 +26,7 @@ public class ClaimClaimableBalanceOperationResponse extends OperationResponse {
 
   public Optional<MuxedAccount> getClaimantMuxed() {
     if (this.claimantMuxed == null || this.claimantMuxed.isEmpty()) {
-      return Optional.empty();
+      return Optional.absent();
     }
     return Optional.of(new MuxedAccount(this.claimantMuxed, this.claimant, this.claimantMuxedId));
   }

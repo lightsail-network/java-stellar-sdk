@@ -1,9 +1,10 @@
 package org.stellar.sdk;
 
-import java.util.ArrayList;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import java.util.List;
-import java.util.Objects;
-import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class CreateClaimableBalanceOperation extends Operation {
@@ -11,11 +12,10 @@ public class CreateClaimableBalanceOperation extends Operation {
   private final Asset asset;
   private final List<Claimant> claimants;
 
-  private CreateClaimableBalanceOperation(
-      @NonNull String amount, @NonNull Asset asset, @NonNull List<Claimant> claimants) {
-    this.asset = asset;
-    this.amount = amount;
-    this.claimants = claimants;
+  private CreateClaimableBalanceOperation(String amount, Asset asset, List<Claimant> claimants) {
+    this.asset = checkNotNull(asset, "asset cannot be null");
+    this.amount = checkNotNull(amount, "amount cannot be null");
+    this.claimants = checkNotNull(claimants, "claimants cannot be null");
     if (this.claimants.isEmpty()) {
       throw new IllegalArgumentException("claimants cannot be empty");
     }
@@ -80,7 +80,7 @@ public class CreateClaimableBalanceOperation extends Operation {
     Builder(CreateClaimableBalanceOp op) {
       asset = Asset.fromXdr(op.getAsset());
       amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
-      claimants = new ArrayList<>();
+      claimants = Lists.newArrayList();
       for (org.stellar.sdk.xdr.Claimant c : op.getClaimants()) {
         claimants.add(
             new Claimant(
@@ -108,8 +108,8 @@ public class CreateClaimableBalanceOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public CreateClaimableBalanceOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+    public CreateClaimableBalanceOperation.Builder setSourceAccount(String sourceAccount) {
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
@@ -126,7 +126,7 @@ public class CreateClaimableBalanceOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.amount, this.asset, this.claimants, this.getSourceAccount());
+    return Objects.hashCode(this.amount, this.asset, this.claimants, this.getSourceAccount());
   }
 
   @Override
@@ -136,9 +136,9 @@ public class CreateClaimableBalanceOperation extends Operation {
     }
 
     CreateClaimableBalanceOperation other = (CreateClaimableBalanceOperation) object;
-    return Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.claimants, other.claimants)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.amount, other.amount)
+        && Objects.equal(this.asset, other.asset)
+        && Objects.equal(this.claimants, other.claimants)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

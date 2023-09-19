@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import static org.junit.Assert.fail;
 
+import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.PublicKey;
@@ -21,9 +22,10 @@ public class SignedPayloadSignerTest {
   public void itFailsWhenPayloadLengthTooBig() {
     String accountStrKey = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
     byte[] payload =
-        Util.hexToBytes(
-            "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2001"
-                .toUpperCase());
+        BaseEncoding.base16()
+            .decode(
+                "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2001"
+                    .toUpperCase());
     try {
       new SignedPayloadSigner(StrKey.decodeStellarAccountId(accountStrKey), payload);
       fail("should not create a payload signer if payload > max length");

@@ -1,11 +1,13 @@
 package org.stellar.sdk.responses;
 
+import static com.google.common.base.Optional.fromNullable;
+
+import com.google.common.base.Function;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
-import java.util.Optional;
 import org.stellar.sdk.Asset;
 
 class AssetDeserializer implements JsonDeserializer<Asset> {
@@ -19,12 +21,23 @@ class AssetDeserializer implements JsonDeserializer<Asset> {
 
     return Asset.create(
         json.getAsJsonObject().get("asset_type").getAsString(),
-        getValueAsString(json.getAsJsonObject().get("asset_code")),
-        getValueAsString(json.getAsJsonObject().get("asset_issuer")),
-        getValueAsString(json.getAsJsonObject().get("liquidity_pool_id")));
+        fromNullable(json.getAsJsonObject().get("asset_code"))
+            .transform(ToString.FUNCTION)
+            .orNull(),
+        fromNullable(json.getAsJsonObject().get("asset_issuer"))
+            .transform(ToString.FUNCTION)
+            .orNull(),
+        fromNullable(json.getAsJsonObject().get("liquidity_pool_id"))
+            .transform(ToString.FUNCTION)
+            .orNull());
   }
 
-  private String getValueAsString(JsonElement element) {
-    return Optional.ofNullable(element).map(JsonElement::getAsString).orElse(null);
+  enum ToString implements Function<JsonElement, String> {
+    FUNCTION;
+
+    @Override
+    public String apply(JsonElement input) {
+      return input.getAsString();
+    }
   }
 }

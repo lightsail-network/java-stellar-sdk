@@ -1,14 +1,15 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.OperationType;
 
 public class EndSponsoringFutureReservesOperation extends Operation {
   public EndSponsoringFutureReservesOperation() {}
 
-  public EndSponsoringFutureReservesOperation(@NonNull String sourceAccount) {
-    setSourceAccount(sourceAccount);
+  public EndSponsoringFutureReservesOperation(String sourceAccount) {
+    setSourceAccount(checkNotNull(sourceAccount, "sourceAccount cannot be null"));
   }
 
   @Override
@@ -32,6 +33,6 @@ public class EndSponsoringFutureReservesOperation extends Operation {
     }
 
     EndSponsoringFutureReservesOperation other = (EndSponsoringFutureReservesOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

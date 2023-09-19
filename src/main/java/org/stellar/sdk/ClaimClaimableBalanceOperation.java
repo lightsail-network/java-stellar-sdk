@@ -1,15 +1,17 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
+import com.google.common.io.BaseEncoding;
 import java.io.IOException;
-import java.util.Objects;
-import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class ClaimClaimableBalanceOperation extends Operation {
   private final String balanceId;
 
-  private ClaimClaimableBalanceOperation(@NonNull String balanceId) {
-    this.balanceId = balanceId;
+  private ClaimClaimableBalanceOperation(String balanceId) {
+    this.balanceId = checkNotNull(balanceId, "balanceId cannot be null");
   }
 
   public String getBalanceId() {
@@ -18,7 +20,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
-    byte[] balanceIdBytes = Util.hexToBytes(this.balanceId);
+    byte[] balanceIdBytes = BaseEncoding.base16().lowerCase().decode(this.balanceId.toLowerCase());
     ClaimableBalanceID balanceId;
     try {
       balanceId = ClaimableBalanceID.fromXdrByteArray(balanceIdBytes);
@@ -47,7 +49,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
      */
     Builder(ClaimClaimableBalanceOp op) {
       try {
-        balanceId = Util.bytesToHex(op.getBalanceID().toXdrByteArray()).toLowerCase();
+        balanceId = BaseEncoding.base16().lowerCase().encode(op.getBalanceID().toXdrByteArray());
       } catch (IOException e) {
         throw new IllegalArgumentException("Invalid balanceId in the operation", e);
       }
@@ -68,8 +70,8 @@ public class ClaimClaimableBalanceOperation extends Operation {
      * @param sourceAccount The operation's source account.
      * @return Builder object so you can chain methods.
      */
-    public ClaimClaimableBalanceOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+    public ClaimClaimableBalanceOperation.Builder setSourceAccount(String sourceAccount) {
+      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
       return this;
     }
 
@@ -85,7 +87,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.balanceId, this.getSourceAccount());
+    return Objects.hashCode(this.balanceId, this.getSourceAccount());
   }
 
   @Override
@@ -95,7 +97,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
     }
 
     ClaimClaimableBalanceOperation other = (ClaimClaimableBalanceOperation) object;
-    return Objects.equals(this.balanceId, other.balanceId)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equal(this.balanceId, other.balanceId)
+        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
   }
 }

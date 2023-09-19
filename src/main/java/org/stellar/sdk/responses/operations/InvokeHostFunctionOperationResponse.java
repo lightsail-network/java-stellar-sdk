@@ -1,7 +1,7 @@
 package org.stellar.sdk.responses.operations;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 import org.stellar.sdk.xdr.HostFunctionType;
 
 /**
@@ -20,7 +20,7 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
   private final String function;
 
   @SerializedName("parameters")
-  private final List<HostFunctionParameter> parameters;
+  private final ImmutableList<HostFunctionParameter> parameters;
 
   @SerializedName("address")
   private final String address;
@@ -29,14 +29,14 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
   private final String salt;
 
   @SerializedName("asset_balance_changes")
-  private final List<AssetContractBalanceChange> assetBalanceChanges;
+  private final ImmutableList<AssetContractBalanceChange> assetBalanceChanges;
 
   public InvokeHostFunctionOperationResponse(
       String function,
-      List<HostFunctionParameter> parameters,
+      ImmutableList<HostFunctionParameter> parameters,
       String address,
       String salt,
-      List<AssetContractBalanceChange> assetBalanceChanges) {
+      ImmutableList<AssetContractBalanceChange> assetBalanceChanges) {
     this.function = function;
     this.parameters = parameters;
     this.address = address;
@@ -60,7 +60,7 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
     return function;
   }
 
-  public List<HostFunctionParameter> getParameters() {
+  public ImmutableList<HostFunctionParameter> getParameters() {
     return parameters;
   }
 
@@ -72,7 +72,7 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
     return salt;
   }
 
-  public List<AssetContractBalanceChange> getAssetBalanceChanges() {
+  public ImmutableList<AssetContractBalanceChange> getAssetBalanceChanges() {
     return assetBalanceChanges;
   }
 

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import org.junit.Test;
 import org.stellar.sdk.xdr.AccountID;
@@ -141,8 +142,9 @@ public class StrKeyTest {
   public void testValidSignedPayloadEncode() {
     // Valid signed payload with an ed25519 public key and a 32-byte payload.
     byte[] payload =
-        Util.hexToBytes(
-            "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+        BaseEncoding.base16()
+            .decode(
+                "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
     SignedPayloadSigner signedPayloadSigner =
         new SignedPayloadSigner(
             StrKey.decodeStellarAccountId(
@@ -155,7 +157,8 @@ public class StrKeyTest {
 
     // Valid signed payload with an ed25519 public key and a 29-byte payload.
     payload =
-        Util.hexToBytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d".toUpperCase());
+        BaseEncoding.base16()
+            .decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d".toUpperCase());
     signedPayloadSigner =
         new SignedPayloadSigner(
             StrKey.decodeStellarAccountId(

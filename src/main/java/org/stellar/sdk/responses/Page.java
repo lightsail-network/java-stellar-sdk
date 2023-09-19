@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -44,13 +45,13 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
     if (this.getLinks().getNext() == null) {
       return null;
     }
-    if (this.type == null) {
-      throw new NullPointerException(
-          "type cannot be null, is it being correctly set after the creation of this "
-              + getClass().getSimpleName()
-              + "?");
-    }
-    ResponseHandler<Page<T>> responseHandler = new ResponseHandler<Page<T>>(this.type);
+    TypeToken<Page<T>> type =
+        Preconditions.checkNotNull(
+            this.type,
+            "type cannot be null, is it being correctly set after the creation of this "
+                + getClass().getSimpleName()
+                + "?");
+    ResponseHandler<Page<T>> responseHandler = new ResponseHandler<Page<T>>(type);
     String url = this.getLinks().getNext().getHref();
 
     Request request = new Request.Builder().get().url(url).build();

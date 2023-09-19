@@ -1,10 +1,11 @@
 package org.stellar.sdk.responses;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
-import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.Memo;
 
@@ -92,7 +93,7 @@ public class TransactionResponse extends Response implements Pageable {
 
   public Optional<MuxedAccount> getSourceAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
-      return Optional.empty();
+      return Optional.absent();
     }
     return Optional.of(
         new MuxedAccount(this.accountMuxed, this.sourceAccount, this.accountMuxedId));
@@ -100,7 +101,7 @@ public class TransactionResponse extends Response implements Pageable {
 
   public Optional<MuxedAccount> getFeeAccountMuxed() {
     if (this.feeAccountMuxed == null || this.feeAccountMuxed.isEmpty()) {
-      return Optional.empty();
+      return Optional.absent();
     }
     return Optional.of(
         new MuxedAccount(this.feeAccountMuxed, this.feeAccount, this.feeAccountMuxedId));
@@ -131,15 +132,15 @@ public class TransactionResponse extends Response implements Pageable {
   }
 
   public Optional<FeeBumpTransaction> getFeeBump() {
-    return Optional.ofNullable(this.feeBumpTransaction);
+    return Optional.fromNullable(this.feeBumpTransaction);
   }
 
   public Optional<InnerTransaction> getInner() {
-    return Optional.ofNullable(this.innerTransaction);
+    return Optional.fromNullable(this.innerTransaction);
   }
 
   public Optional<Preconditions> getPreconditions() {
-    return Optional.ofNullable(this.preconditions);
+    return Optional.fromNullable(this.preconditions);
   }
 
   public String getPagingToken() {
@@ -182,7 +183,8 @@ public class TransactionResponse extends Response implements Pageable {
     return memo;
   }
 
-  public void setMemo(@NonNull Memo memo) {
+  public void setMemo(Memo memo) {
+    memo = checkNotNull(memo, "memo cannot be null");
     if (this.memo != null) {
       throw new RuntimeException("Memo has been already set.");
     }

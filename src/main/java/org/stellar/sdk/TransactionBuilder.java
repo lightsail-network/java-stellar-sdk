@@ -1,13 +1,13 @@
 package org.stellar.sdk;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
+import com.google.common.base.Function;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
-import lombok.NonNull;
 import org.stellar.sdk.TransactionPreconditions.TransactionPreconditionsBuilder;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.TimePoint;
@@ -35,13 +35,11 @@ public class TransactionBuilder {
    * @param network the testnet or pubnet network to use
    */
   public TransactionBuilder(
-      @NonNull AccountConverter accountConverter,
-      @NonNull TransactionBuilderAccount sourceAccount,
-      @NonNull Network network) {
-    mAccountConverter = accountConverter;
-    mSourceAccount = sourceAccount;
-    mNetwork = network;
-    mOperations = new ArrayList<>();
+      AccountConverter accountConverter, TransactionBuilderAccount sourceAccount, Network network) {
+    mAccountConverter = checkNotNull(accountConverter, "accountConverter cannot be null");
+    mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+    mNetwork = checkNotNull(network, "Network cannot be null");
+    mOperations = newArrayList();
     mPreconditions = TransactionPreconditions.builder().build();
   }
 
@@ -69,7 +67,8 @@ public class TransactionBuilder {
    * @return Builder object so you can chain methods.
    * @see Operation
    */
-  public TransactionBuilder addOperation(@NonNull Operation operation) {
+  public TransactionBuilder addOperation(Operation operation) {
+    checkNotNull(operation, "operation cannot be null");
     mOperations.add(operation);
     return this;
   }
@@ -82,7 +81,8 @@ public class TransactionBuilder {
    * @return Builder object so you can chain methods.
    * @see Operation
    */
-  public TransactionBuilder addOperations(@NonNull Collection<Operation> operations) {
+  public TransactionBuilder addOperations(Collection<Operation> operations) {
+    checkNotNull(operations, "operations cannot be null");
     mOperations.addAll(operations);
     return this;
   }
@@ -94,7 +94,8 @@ public class TransactionBuilder {
    * @param preconditions the tx PreConditions
    * @return updated Builder object
    */
-  public TransactionBuilder addPreconditions(@NonNull TransactionPreconditions preconditions) {
+  public TransactionBuilder addPreconditions(TransactionPreconditions preconditions) {
+    checkNotNull(preconditions, "preconditions cannot be null");
     this.mPreconditions = preconditions;
     return this;
   }
@@ -107,10 +108,11 @@ public class TransactionBuilder {
    * @return Builder object so you can chain methods.
    * @see Memo
    */
-  public TransactionBuilder addMemo(@NonNull Memo memo) {
+  public TransactionBuilder addMemo(Memo memo) {
     if (mMemo != null) {
       throw new RuntimeException("Memo has been already added.");
     }
+    checkNotNull(memo, "memo cannot be null");
     mMemo = memo;
     return this;
   }
@@ -125,7 +127,8 @@ public class TransactionBuilder {
    * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
    *     </code> instead for more control over preconditions.
    */
-  public TransactionBuilder addTimeBounds(@NonNull TimeBounds timeBounds) {
+  public TransactionBuilder addTimeBounds(TimeBounds timeBounds) {
+    checkNotNull(timeBounds, "timeBounds cannot be null");
     if (mPreconditions.getTimeBounds() != null) {
       throw new RuntimeException("TimeBounds already set.");
     }
@@ -244,7 +247,12 @@ public class TransactionBuilder {
    * based on sourceAccount's current sequence number + 1.
    */
   public static Function<TransactionBuilderAccount, Long> IncrementedSequenceNumberFunc =
-      TransactionBuilderAccount::getIncrementedSequenceNumber;
+      new Function<TransactionBuilderAccount, Long>() {
+        @Override
+        public Long apply(TransactionBuilderAccount sourceAccount) {
+          return sourceAccount.getIncrementedSequenceNumber();
+        }
+      };
 
   @Deprecated
   public static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(long minTime, long maxTime) {

@@ -2,8 +2,8 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
+import com.google.common.base.Optional;
 import java.io.IOException;
-import java.util.Optional;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -54,7 +54,7 @@ public class ResponseHandlerTest {
       AccountsRequestBuilder.execute(okHttpClient, mockWebServer.url("/"));
       Assert.fail();
     } catch (TooManyRequestsException tmre) {
-      assertEquals(Optional.empty(), tmre.getRetryAfter());
+      assertEquals(Optional.absent(), tmre.getRetryAfter());
     } finally {
 
       mockWebServer.shutdown();

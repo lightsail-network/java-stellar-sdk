@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
-import lombok.NonNull;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
 import org.stellar.sdk.xdr.AssetType;
 
 /**
@@ -18,7 +19,8 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
    *
    * @param params the LiquidityPoolParameters
    */
-  public LiquidityPoolShareTrustLineAsset(@NonNull LiquidityPoolParameters params) {
+  public LiquidityPoolShareTrustLineAsset(LiquidityPoolParameters params) {
+    checkNotNull(params, "params cannot be null");
     mId = params.getId();
   }
 
@@ -27,7 +29,8 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
    *
    * @param id the LiquidityPoolID
    */
-  public LiquidityPoolShareTrustLineAsset(@NonNull LiquidityPoolID id) {
+  public LiquidityPoolShareTrustLineAsset(LiquidityPoolID id) {
+    checkNotNull(id, "id cannot be null");
     mId = id;
   }
 
@@ -68,7 +71,7 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
 
   @Override
   public int compareTo(TrustLineAsset other) {
-    if (!Objects.equals(other.getType(), "pool_share")) {
+    if (other.getType() != "pool_share") {
       return 1;
     }
     return this.toString().compareTo(((LiquidityPoolShareTrustLineAsset) other).toString());
