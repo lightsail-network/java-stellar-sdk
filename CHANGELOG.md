@@ -7,7 +7,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## 0.41.0-beta.4
 * Add support for Soroban Preview 11. ([#530](https://github.com/stellar/java-stellar-sdk/pull/530))
 * Bump dependencies & Remove unnecessary dependencies. ([#523](https://github.com/stellar/java-stellar-sdk/pull/523))
-* Add helper functions to sign authorization entries. ([#536](https://github.com/stellar/java-stellar-sdk/pull/536))
+* Add helper functions to sign authorization entries. ([#537](https://github.com/stellar/java-stellar-sdk/pull/537))
 
 ## 0.41.0-beta.3
 * Fix the bug in Transaction.isSorobanTransaction to accommodate BumpFootprintExpirationOperation. ([#518](https://github.com/stellar/java-stellar-sdk/pull/518))
