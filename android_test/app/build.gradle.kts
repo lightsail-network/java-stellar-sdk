@@ -60,6 +60,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation(files("libs/stellar-sdk.jar"))
+    // Since we are adding local jar(libs/stellar-sdk.jar) as dependency,
+    // gradle cannot automatically download the required third-party dependencies.
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:okhttp-sse:4.11.0")
+    implementation("com.moandjiezana.toml:toml4j:0.7.2")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("net.i2p.crypto:eddsa:0.3.0")
+    implementation("commons-codec:commons-codec:1.16.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0-alpha03")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

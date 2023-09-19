@@ -206,7 +206,7 @@ public class ServerTest {
     assertEquals(1, builder.getOperationsCount());
     Transaction transaction = builder.build();
     assertEquals(2908908335136769L, transaction.getSequenceNumber());
-    assertEquals(new Long(2908908335136769L), account.getSequenceNumber());
+    assertEquals(Long.valueOf(2908908335136769L), account.getSequenceNumber());
     transaction.sign(source);
     return transaction;
   }
@@ -240,7 +240,7 @@ public class ServerTest {
 
     SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction(), true);
     assertTrue(response.isSuccess());
-    assertEquals(response.getLedger(), new Long(826150L));
+    assertEquals(response.getLedger(), Long.valueOf(826150L));
     assertEquals(
         response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
     assertEquals(

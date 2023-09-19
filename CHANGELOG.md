@@ -7,6 +7,15 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## 0.41.0-beta.4
 * Add support for Soroban Preview 11. ([#530](https://github.com/stellar/java-stellar-sdk/pull/530))
 * Bump dependencies & Remove unnecessary dependencies. ([#523](https://github.com/stellar/java-stellar-sdk/pull/523))
+* No longer provide a shadow jar that has relocated third-party dependencies, but instead default to providing a thin jar. 
+  We also offer an [uber jar](https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_example) and javadoc jar. 
+  You can import the jar you need in one of the following three ways: ([#528](https://github.com/stellar/java-stellar-sdk/issues/528))
+    ```kotlin
+    implementation("com.github.stellar:java-stellar-sdk:{version}") // thin jar
+    implementation("com.github.stellar:java-stellar-sdk:{version}:uber") // uber jar
+    implementation("com.github.stellar:java-stellar-sdk:{version}:javadoc") // javadoc jar
+    ```
+* Use JDK 17 for CI builds. ([#528](https://github.com/stellar/java-stellar-sdk/issues/528))
 
 ## 0.41.0-beta.3
 * Fix the bug in Transaction.isSorobanTransaction to accommodate BumpFootprintExpirationOperation. ([#518](https://github.com/stellar/java-stellar-sdk/pull/518))
