@@ -9,10 +9,7 @@ class ScvError {
   private static final SCValType TYPE = SCValType.SCV_ERROR;
 
   static SCVal toSCVal(SCError value) {
-    return new SCVal.Builder()
-        .discriminant(TYPE)
-        .error(new SCError.Builder().code(value.getCode()).type(value.getType()).build())
-        .build();
+    return new SCVal.Builder().discriminant(TYPE).error(value).build();
   }
 
   static SCError fromSCVal(SCVal scVal) {

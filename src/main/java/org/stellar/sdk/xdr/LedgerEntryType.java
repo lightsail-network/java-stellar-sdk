@@ -22,7 +22,8 @@ import java.util.Base64;
 //      LIQUIDITY_POOL = 5,
 //      CONTRACT_DATA = 6,
 //      CONTRACT_CODE = 7,
-//      CONFIG_SETTING = 8
+//      CONFIG_SETTING = 8,
+//      EXPIRATION = 9
 //  };
 
 //  ===========================================================================
@@ -36,6 +37,7 @@ public enum LedgerEntryType implements XdrElement {
   CONTRACT_DATA(6),
   CONTRACT_CODE(7),
   CONFIG_SETTING(8),
+  EXPIRATION(9),
   ;
   private int mValue;
 
@@ -68,6 +70,8 @@ public enum LedgerEntryType implements XdrElement {
         return CONTRACT_CODE;
       case 8:
         return CONFIG_SETTING;
+      case 9:
+        return EXPIRATION;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

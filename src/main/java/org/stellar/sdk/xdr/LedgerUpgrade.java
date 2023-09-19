@@ -26,7 +26,12 @@ import java.util.Objects;
 //  case LEDGER_UPGRADE_FLAGS:
 //      uint32 newFlags; // update flags
 //  case LEDGER_UPGRADE_CONFIG:
+//      // Update arbitrary `ConfigSetting` entries identified by the key.
 //      ConfigUpgradeSetKey newConfig;
+//  case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+//      // Update ConfigSettingContractExecutionLanesV0.ledgerMaxTxCount without
+//      // using `LEDGER_UPGRADE_CONFIG`.
+//      uint32 newMaxSorobanTxSetSize;
 //  };
 
 //  ===========================================================================
@@ -103,6 +108,16 @@ public class LedgerUpgrade implements XdrElement {
     this.newConfig = value;
   }
 
+  private Uint32 newMaxSorobanTxSetSize;
+
+  public Uint32 getNewMaxSorobanTxSetSize() {
+    return this.newMaxSorobanTxSetSize;
+  }
+
+  public void setNewMaxSorobanTxSetSize(Uint32 value) {
+    this.newMaxSorobanTxSetSize = value;
+  }
+
   public static final class Builder {
     private LedgerUpgradeType discriminant;
     private Uint32 newLedgerVersion;
@@ -111,6 +126,7 @@ public class LedgerUpgrade implements XdrElement {
     private Uint32 newBaseReserve;
     private Uint32 newFlags;
     private ConfigUpgradeSetKey newConfig;
+    private Uint32 newMaxSorobanTxSetSize;
 
     public Builder discriminant(LedgerUpgradeType discriminant) {
       this.discriminant = discriminant;
@@ -147,6 +163,11 @@ public class LedgerUpgrade implements XdrElement {
       return this;
     }
 
+    public Builder newMaxSorobanTxSetSize(Uint32 newMaxSorobanTxSetSize) {
+      this.newMaxSorobanTxSetSize = newMaxSorobanTxSetSize;
+      return this;
+    }
+
     public LedgerUpgrade build() {
       LedgerUpgrade val = new LedgerUpgrade();
       val.setDiscriminant(discriminant);
@@ -156,6 +177,7 @@ public class LedgerUpgrade implements XdrElement {
       val.setNewBaseReserve(this.newBaseReserve);
       val.setNewFlags(this.newFlags);
       val.setNewConfig(this.newConfig);
+      val.setNewMaxSorobanTxSetSize(this.newMaxSorobanTxSetSize);
       return val;
     }
   }
@@ -183,6 +205,9 @@ public class LedgerUpgrade implements XdrElement {
         break;
       case LEDGER_UPGRADE_CONFIG:
         ConfigUpgradeSetKey.encode(stream, encodedLedgerUpgrade.newConfig);
+        break;
+      case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+        Uint32.encode(stream, encodedLedgerUpgrade.newMaxSorobanTxSetSize);
         break;
     }
   }
@@ -214,6 +239,9 @@ public class LedgerUpgrade implements XdrElement {
       case LEDGER_UPGRADE_CONFIG:
         decodedLedgerUpgrade.newConfig = ConfigUpgradeSetKey.decode(stream);
         break;
+      case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+        decodedLedgerUpgrade.newMaxSorobanTxSetSize = Uint32.decode(stream);
+        break;
     }
     return decodedLedgerUpgrade;
   }
@@ -227,6 +255,7 @@ public class LedgerUpgrade implements XdrElement {
         this.newBaseReserve,
         this.newFlags,
         this.newConfig,
+        this.newMaxSorobanTxSetSize,
         this.type);
   }
 
@@ -243,6 +272,7 @@ public class LedgerUpgrade implements XdrElement {
         && Objects.equals(this.newBaseReserve, other.newBaseReserve)
         && Objects.equals(this.newFlags, other.newFlags)
         && Objects.equals(this.newConfig, other.newConfig)
+        && Objects.equals(this.newMaxSorobanTxSetSize, other.newMaxSorobanTxSetSize)
         && Objects.equals(this.type, other.type);
   }
 

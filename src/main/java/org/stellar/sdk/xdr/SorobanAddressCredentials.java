@@ -18,7 +18,7 @@ import java.util.Objects;
 //      SCAddress address;
 //      int64 nonce;
 //      uint32 signatureExpirationLedger;
-//      SCVec signatureArgs;
+//      SCVal signature;
 //  };
 
 //  ===========================================================================
@@ -55,14 +55,14 @@ public class SorobanAddressCredentials implements XdrElement {
     this.signatureExpirationLedger = value;
   }
 
-  private SCVec signatureArgs;
+  private SCVal signature;
 
-  public SCVec getSignatureArgs() {
-    return this.signatureArgs;
+  public SCVal getSignature() {
+    return this.signature;
   }
 
-  public void setSignatureArgs(SCVec value) {
-    this.signatureArgs = value;
+  public void setSignature(SCVal value) {
+    this.signature = value;
   }
 
   public static void encode(
@@ -71,7 +71,7 @@ public class SorobanAddressCredentials implements XdrElement {
     SCAddress.encode(stream, encodedSorobanAddressCredentials.address);
     Int64.encode(stream, encodedSorobanAddressCredentials.nonce);
     Uint32.encode(stream, encodedSorobanAddressCredentials.signatureExpirationLedger);
-    SCVec.encode(stream, encodedSorobanAddressCredentials.signatureArgs);
+    SCVal.encode(stream, encodedSorobanAddressCredentials.signature);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -83,14 +83,13 @@ public class SorobanAddressCredentials implements XdrElement {
     decodedSorobanAddressCredentials.address = SCAddress.decode(stream);
     decodedSorobanAddressCredentials.nonce = Int64.decode(stream);
     decodedSorobanAddressCredentials.signatureExpirationLedger = Uint32.decode(stream);
-    decodedSorobanAddressCredentials.signatureArgs = SCVec.decode(stream);
+    decodedSorobanAddressCredentials.signature = SCVal.decode(stream);
     return decodedSorobanAddressCredentials;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        this.address, this.nonce, this.signatureExpirationLedger, this.signatureArgs);
+    return Objects.hash(this.address, this.nonce, this.signatureExpirationLedger, this.signature);
   }
 
   @Override
@@ -103,7 +102,7 @@ public class SorobanAddressCredentials implements XdrElement {
     return Objects.equals(this.address, other.address)
         && Objects.equals(this.nonce, other.nonce)
         && Objects.equals(this.signatureExpirationLedger, other.signatureExpirationLedger)
-        && Objects.equals(this.signatureArgs, other.signatureArgs);
+        && Objects.equals(this.signature, other.signature);
   }
 
   @Override
@@ -134,7 +133,7 @@ public class SorobanAddressCredentials implements XdrElement {
     private SCAddress address;
     private Int64 nonce;
     private Uint32 signatureExpirationLedger;
-    private SCVec signatureArgs;
+    private SCVal signature;
 
     public Builder address(SCAddress address) {
       this.address = address;
@@ -151,8 +150,8 @@ public class SorobanAddressCredentials implements XdrElement {
       return this;
     }
 
-    public Builder signatureArgs(SCVec signatureArgs) {
-      this.signatureArgs = signatureArgs;
+    public Builder signature(SCVal signature) {
+      this.signature = signature;
       return this;
     }
 
@@ -161,7 +160,7 @@ public class SorobanAddressCredentials implements XdrElement {
       val.setAddress(this.address);
       val.setNonce(this.nonce);
       val.setSignatureExpirationLedger(this.signatureExpirationLedger);
-      val.setSignatureArgs(this.signatureArgs);
+      val.setSignature(this.signature);
       return val;
     }
   }

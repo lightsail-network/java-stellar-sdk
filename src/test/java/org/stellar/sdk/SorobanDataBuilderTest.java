@@ -54,7 +54,6 @@ public class SorobanDataBuilderTest {
                   .instructions(new Uint32(new XdrUnsignedInteger(0)))
                   .readBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
-                  .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .build())
           .refundableFee(new Int64(0L))
           .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -72,7 +71,6 @@ public class SorobanDataBuilderTest {
                   .instructions(new Uint32(new XdrUnsignedInteger(1)))
                   .readBytes(new Uint32(new XdrUnsignedInteger(2)))
                   .writeBytes(new Uint32(new XdrUnsignedInteger(3)))
-                  .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(4)))
                   .build())
           .refundableFee(new Int64(5L))
           .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -109,7 +107,6 @@ public class SorobanDataBuilderTest {
                     .cpuInstructions(1L)
                     .readBytes(2L)
                     .writeBytes(3L)
-                    .metadataBytes(4L)
                     .build())
             .build();
     assertEquals(presetSorobanData, actualData);

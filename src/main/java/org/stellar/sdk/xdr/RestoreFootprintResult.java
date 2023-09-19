@@ -19,6 +19,7 @@ import java.util.Objects;
 //      void;
 //  case RESTORE_FOOTPRINT_MALFORMED:
 //  case RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED:
+//  case RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE:
 //      void;
 //  };
 
@@ -62,6 +63,7 @@ public class RestoreFootprintResult implements XdrElement {
         break;
       case RESTORE_FOOTPRINT_MALFORMED:
       case RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED:
+      case RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE:
         break;
     }
   }
@@ -79,6 +81,7 @@ public class RestoreFootprintResult implements XdrElement {
         break;
       case RESTORE_FOOTPRINT_MALFORMED:
       case RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED:
+      case RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE:
         break;
     }
     return decodedRestoreFootprintResult;
