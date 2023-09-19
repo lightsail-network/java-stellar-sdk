@@ -6,6 +6,9 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## 0.41.0-beta.4
 * Add support for Soroban Preview 11. ([#530](https://github.com/stellar/java-stellar-sdk/pull/530))
+* New effects have been added to support Protocol 20 (Soroban) ([#535](https://github.com/stellar/java-stellar-sdk/pull/535)):
+  - `ContractCredited` occurs when a Stellar asset moves into its corresponding Stellar Asset Contract instance
+  - `ContractDebited` occurs when a Stellar asset moves out of its corresponding Stellar Asset Contract instance
 * Bump dependencies & Remove unnecessary dependencies. ([#523](https://github.com/stellar/java-stellar-sdk/pull/523))
 
 ## 0.41.0-beta.3
