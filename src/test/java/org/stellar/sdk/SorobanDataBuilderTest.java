@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.ImmutableList.of;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -54,7 +54,6 @@ public class SorobanDataBuilderTest {
                   .instructions(new Uint32(new XdrUnsignedInteger(0)))
                   .readBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
-                  .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .build())
           .refundableFee(new Int64(0L))
           .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -72,7 +71,6 @@ public class SorobanDataBuilderTest {
                   .instructions(new Uint32(new XdrUnsignedInteger(1)))
                   .readBytes(new Uint32(new XdrUnsignedInteger(2)))
                   .writeBytes(new Uint32(new XdrUnsignedInteger(3)))
-                  .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(4)))
                   .build())
           .refundableFee(new Int64(5L))
           .ext(new ExtensionPoint.Builder().discriminant(0).build())
@@ -101,15 +99,14 @@ public class SorobanDataBuilderTest {
   public void testSetProperties() {
     SorobanTransactionData actualData =
         new SorobanDataBuilder()
-            .setReadOnly(of(readOnly))
-            .setReadWrite(of(readWrite))
+            .setReadOnly(singletonList(readOnly))
+            .setReadWrite(singletonList(readWrite))
             .setRefundableFee(5)
             .setResources(
                 new SorobanDataBuilder.Resources.ResourcesBuilder()
                     .cpuInstructions(1L)
                     .readBytes(2L)
                     .writeBytes(3L)
-                    .metadataBytes(4L)
                     .build())
             .build();
     assertEquals(presetSorobanData, actualData);

@@ -1,6 +1,6 @@
 package org.stellar.sdk.requests;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /** This interface is used in {@link RequestBuilder} classes <code>stream</code> method. */
 public interface EventListener<T> {

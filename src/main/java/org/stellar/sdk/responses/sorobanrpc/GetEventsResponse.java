@@ -1,6 +1,6 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
@@ -14,7 +14,7 @@ import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
 @AllArgsConstructor
 @Value
 public class GetEventsResponse {
-  ImmutableList<EventInfo> events;
+  List<EventInfo> events;
 
   Long latestLedger;
 
@@ -33,7 +33,7 @@ public class GetEventsResponse {
 
     String pagingToken;
 
-    ImmutableList<String> topic;
+    List<String> topic;
 
     EventInfoValue value;
 

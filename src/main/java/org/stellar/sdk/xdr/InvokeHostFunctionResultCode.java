@@ -20,7 +20,9 @@ import java.util.Base64;
 //      // codes considered as "failure" for the operation
 //      INVOKE_HOST_FUNCTION_MALFORMED = -1,
 //      INVOKE_HOST_FUNCTION_TRAPPED = -2,
-//      INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED = -3
+//      INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED = -3,
+//      INVOKE_HOST_FUNCTION_ENTRY_EXPIRED = -4,
+//      INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE = -5
 //  };
 
 //  ===========================================================================
@@ -29,6 +31,8 @@ public enum InvokeHostFunctionResultCode implements XdrElement {
   INVOKE_HOST_FUNCTION_MALFORMED(-1),
   INVOKE_HOST_FUNCTION_TRAPPED(-2),
   INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED(-3),
+  INVOKE_HOST_FUNCTION_ENTRY_EXPIRED(-4),
+  INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE(-5),
   ;
   private int mValue;
 
@@ -51,6 +55,10 @@ public enum InvokeHostFunctionResultCode implements XdrElement {
         return INVOKE_HOST_FUNCTION_TRAPPED;
       case -3:
         return INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED;
+      case -4:
+        return INVOKE_HOST_FUNCTION_ENTRY_EXPIRED;
+      case -5:
+        return INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

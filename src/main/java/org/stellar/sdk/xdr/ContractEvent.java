@@ -8,6 +8,7 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ import java.util.Objects;
 //      case 0:
 //          struct
 //          {
-//              SCVec topics;
+//              SCVal topics<>;
 //              SCVal data;
 //          } v0;
 //      }
@@ -300,13 +301,13 @@ public class ContractEvent implements XdrElement {
     public static class ContractEventV0 implements XdrElement {
       public ContractEventV0() {}
 
-      private SCVec topics;
+      private SCVal[] topics;
 
-      public SCVec getTopics() {
+      public SCVal[] getTopics() {
         return this.topics;
       }
 
-      public void setTopics(SCVec value) {
+      public void setTopics(SCVal[] value) {
         this.topics = value;
       }
 
@@ -322,7 +323,11 @@ public class ContractEvent implements XdrElement {
 
       public static void encode(XdrDataOutputStream stream, ContractEventV0 encodedContractEventV0)
           throws IOException {
-        SCVec.encode(stream, encodedContractEventV0.topics);
+        int topicssize = encodedContractEventV0.getTopics().length;
+        stream.writeInt(topicssize);
+        for (int i = 0; i < topicssize; i++) {
+          SCVal.encode(stream, encodedContractEventV0.topics[i]);
+        }
         SCVal.encode(stream, encodedContractEventV0.data);
       }
 
@@ -332,14 +337,18 @@ public class ContractEvent implements XdrElement {
 
       public static ContractEventV0 decode(XdrDataInputStream stream) throws IOException {
         ContractEventV0 decodedContractEventV0 = new ContractEventV0();
-        decodedContractEventV0.topics = SCVec.decode(stream);
+        int topicssize = stream.readInt();
+        decodedContractEventV0.topics = new SCVal[topicssize];
+        for (int i = 0; i < topicssize; i++) {
+          decodedContractEventV0.topics[i] = SCVal.decode(stream);
+        }
         decodedContractEventV0.data = SCVal.decode(stream);
         return decodedContractEventV0;
       }
 
       @Override
       public int hashCode() {
-        return Objects.hash(this.topics, this.data);
+        return Objects.hash(Arrays.hashCode(this.topics), this.data);
       }
 
       @Override
@@ -349,7 +358,7 @@ public class ContractEvent implements XdrElement {
         }
 
         ContractEventV0 other = (ContractEventV0) object;
-        return Objects.equals(this.topics, other.topics) && Objects.equals(this.data, other.data);
+        return Arrays.equals(this.topics, other.topics) && Objects.equals(this.data, other.data);
       }
 
       @Override
@@ -377,10 +386,10 @@ public class ContractEvent implements XdrElement {
       }
 
       public static final class Builder {
-        private SCVec topics;
+        private SCVal[] topics;
         private SCVal data;
 
-        public Builder topics(SCVec topics) {
+        public Builder topics(SCVal[] topics) {
           this.topics = topics;
           return this;
         }

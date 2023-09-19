@@ -15,27 +15,27 @@ import java.util.Objects;
 
 //  struct ConfigSettingContractBandwidthV0
 //  {
-//      // Maximum size in bytes to propagate per ledger
-//      uint32 ledgerMaxPropagateSizeBytes;
+//      // Maximum sum of all transaction sizes in the ledger in bytes
+//      uint32 ledgerMaxTxsSizeBytes;
 //      // Maximum size in bytes for a transaction
 //      uint32 txMaxSizeBytes;
 //
-//      // Fee for propagating 1KB of data
-//      int64 feePropagateData1KB;
+//      // Fee for 1 KB of transaction size
+//      int64 feeTxSize1KB;
 //  };
 
 //  ===========================================================================
 public class ConfigSettingContractBandwidthV0 implements XdrElement {
   public ConfigSettingContractBandwidthV0() {}
 
-  private Uint32 ledgerMaxPropagateSizeBytes;
+  private Uint32 ledgerMaxTxsSizeBytes;
 
-  public Uint32 getLedgerMaxPropagateSizeBytes() {
-    return this.ledgerMaxPropagateSizeBytes;
+  public Uint32 getLedgerMaxTxsSizeBytes() {
+    return this.ledgerMaxTxsSizeBytes;
   }
 
-  public void setLedgerMaxPropagateSizeBytes(Uint32 value) {
-    this.ledgerMaxPropagateSizeBytes = value;
+  public void setLedgerMaxTxsSizeBytes(Uint32 value) {
+    this.ledgerMaxTxsSizeBytes = value;
   }
 
   private Uint32 txMaxSizeBytes;
@@ -48,23 +48,23 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
     this.txMaxSizeBytes = value;
   }
 
-  private Int64 feePropagateData1KB;
+  private Int64 feeTxSize1KB;
 
-  public Int64 getFeePropagateData1KB() {
-    return this.feePropagateData1KB;
+  public Int64 getFeeTxSize1KB() {
+    return this.feeTxSize1KB;
   }
 
-  public void setFeePropagateData1KB(Int64 value) {
-    this.feePropagateData1KB = value;
+  public void setFeeTxSize1KB(Int64 value) {
+    this.feeTxSize1KB = value;
   }
 
   public static void encode(
       XdrDataOutputStream stream,
       ConfigSettingContractBandwidthV0 encodedConfigSettingContractBandwidthV0)
       throws IOException {
-    Uint32.encode(stream, encodedConfigSettingContractBandwidthV0.ledgerMaxPropagateSizeBytes);
+    Uint32.encode(stream, encodedConfigSettingContractBandwidthV0.ledgerMaxTxsSizeBytes);
     Uint32.encode(stream, encodedConfigSettingContractBandwidthV0.txMaxSizeBytes);
-    Int64.encode(stream, encodedConfigSettingContractBandwidthV0.feePropagateData1KB);
+    Int64.encode(stream, encodedConfigSettingContractBandwidthV0.feeTxSize1KB);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -75,16 +75,15 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
       throws IOException {
     ConfigSettingContractBandwidthV0 decodedConfigSettingContractBandwidthV0 =
         new ConfigSettingContractBandwidthV0();
-    decodedConfigSettingContractBandwidthV0.ledgerMaxPropagateSizeBytes = Uint32.decode(stream);
+    decodedConfigSettingContractBandwidthV0.ledgerMaxTxsSizeBytes = Uint32.decode(stream);
     decodedConfigSettingContractBandwidthV0.txMaxSizeBytes = Uint32.decode(stream);
-    decodedConfigSettingContractBandwidthV0.feePropagateData1KB = Int64.decode(stream);
+    decodedConfigSettingContractBandwidthV0.feeTxSize1KB = Int64.decode(stream);
     return decodedConfigSettingContractBandwidthV0;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        this.ledgerMaxPropagateSizeBytes, this.txMaxSizeBytes, this.feePropagateData1KB);
+    return Objects.hash(this.ledgerMaxTxsSizeBytes, this.txMaxSizeBytes, this.feeTxSize1KB);
   }
 
   @Override
@@ -94,9 +93,9 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
     }
 
     ConfigSettingContractBandwidthV0 other = (ConfigSettingContractBandwidthV0) object;
-    return Objects.equals(this.ledgerMaxPropagateSizeBytes, other.ledgerMaxPropagateSizeBytes)
+    return Objects.equals(this.ledgerMaxTxsSizeBytes, other.ledgerMaxTxsSizeBytes)
         && Objects.equals(this.txMaxSizeBytes, other.txMaxSizeBytes)
-        && Objects.equals(this.feePropagateData1KB, other.feePropagateData1KB);
+        && Objects.equals(this.feeTxSize1KB, other.feeTxSize1KB);
   }
 
   @Override
@@ -124,12 +123,12 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
   }
 
   public static final class Builder {
-    private Uint32 ledgerMaxPropagateSizeBytes;
+    private Uint32 ledgerMaxTxsSizeBytes;
     private Uint32 txMaxSizeBytes;
-    private Int64 feePropagateData1KB;
+    private Int64 feeTxSize1KB;
 
-    public Builder ledgerMaxPropagateSizeBytes(Uint32 ledgerMaxPropagateSizeBytes) {
-      this.ledgerMaxPropagateSizeBytes = ledgerMaxPropagateSizeBytes;
+    public Builder ledgerMaxTxsSizeBytes(Uint32 ledgerMaxTxsSizeBytes) {
+      this.ledgerMaxTxsSizeBytes = ledgerMaxTxsSizeBytes;
       return this;
     }
 
@@ -138,16 +137,16 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
       return this;
     }
 
-    public Builder feePropagateData1KB(Int64 feePropagateData1KB) {
-      this.feePropagateData1KB = feePropagateData1KB;
+    public Builder feeTxSize1KB(Int64 feeTxSize1KB) {
+      this.feeTxSize1KB = feeTxSize1KB;
       return this;
     }
 
     public ConfigSettingContractBandwidthV0 build() {
       ConfigSettingContractBandwidthV0 val = new ConfigSettingContractBandwidthV0();
-      val.setLedgerMaxPropagateSizeBytes(this.ledgerMaxPropagateSizeBytes);
+      val.setLedgerMaxTxsSizeBytes(this.ledgerMaxTxsSizeBytes);
       val.setTxMaxSizeBytes(this.txMaxSizeBytes);
-      val.setFeePropagateData1KB(this.feePropagateData1KB);
+      val.setFeeTxSize1KB(this.feeTxSize1KB);
       return val;
     }
   }

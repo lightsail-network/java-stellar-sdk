@@ -6,8 +6,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -18,7 +16,6 @@ import java.util.List;
 import org.junit.Test;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
-import org.stellar.sdk.xdr.ContractEntryBodyType;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -39,7 +36,6 @@ import org.stellar.sdk.xdr.SorobanResources;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint32;
-import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class TransactionTest {
@@ -73,12 +69,8 @@ public class TransactionTest {
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
     transaction.sign(source);
 
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, decodedTransaction.getDiscriminant());
 
     Transaction parsed =
@@ -230,7 +222,6 @@ public class TransactionTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
                     .readBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
@@ -284,7 +275,7 @@ public class TransactionTest {
                 AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.TESTNET);
     assertEquals(parsed, transaction);
     String expectedXdr =
-        "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAQAAAAAAAAAAAAAAAH8wYjTJienWf2nf2TEZi2APPWzmtkwiQHAftisIgyuHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAAfzBiNMmJ6dZ/ad/ZMRmLYA89bOa2TCJAcB+2KwiDK4cAAAAAAACHBwAAArsAAAAAAAAA2AAAAAAAAABkAAAAAA==";
+        "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAQAAAAAAAAAAAAAAAH8wYjTJienWf2nf2TEZi2APPWzmtkwiQHAftisIgyuHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAAfzBiNMmJ6dZ/ad/ZMRmLYA89bOa2TCJAcB+2KwiDK4cAAAAAAACHBwAAArsAAAAAAAAAAAAAAGQAAAAA";
     assertEquals(expectedXdr, transaction.toEnvelopeXdrBase64());
   }
 
@@ -336,7 +327,6 @@ public class TransactionTest {
                                 .contract(new Address(contractId).toSCAddress())
                                 .key(Scv.toLedgerKeyContractInstance())
                                 .durability(ContractDataDurability.PERSISTENT)
-                                .bodyType(ContractEntryBodyType.DATA_ENTRY)
                                 .build())
                         .build()))
             .build();
@@ -375,7 +365,6 @@ public class TransactionTest {
                                 .contract(new Address(contractId).toSCAddress())
                                 .key(Scv.toLedgerKeyContractInstance())
                                 .durability(ContractDataDurability.PERSISTENT)
-                                .bodyType(ContractEntryBodyType.DATA_ENTRY)
                                 .build())
                         .build()))
             .build();

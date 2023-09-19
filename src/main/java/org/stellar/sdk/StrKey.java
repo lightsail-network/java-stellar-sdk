@@ -1,14 +1,12 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Optional;
-import com.google.common.io.BaseEncoding;
-import com.google.common.primitives.Bytes;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Optional;
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Base32OutputStream;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -25,8 +23,7 @@ class StrKey {
 
   public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
   private static final byte[] b32Table = decodingTable();
-  private static final BaseEncoding base32Encoding =
-      BaseEncoding.base32().upperCase().omitPadding();
+  private static final Base32 base32Codec = new Base32();
 
   public static String encodeContractId(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
@@ -109,7 +106,7 @@ class StrKey {
   public static MuxedAccount encodeToXDRMuxedAccount(String data) {
     MuxedAccount muxed = new MuxedAccount();
 
-    if (data.length() == 0) {
+    if (data.isEmpty()) {
       throw new IllegalArgumentException("address is empty");
     }
     switch (decodeVersionByte(data)) {
@@ -142,7 +139,7 @@ class StrKey {
   }
 
   public static VersionByte decodeVersionByte(String data) {
-    byte[] decoded = StrKey.base32Encoding.decode(java.nio.CharBuffer.wrap(data.toCharArray()));
+    byte[] decoded = base32Codec.decode(data);
     byte decodedVersionByte = decoded[0];
     Optional<VersionByte> versionByteOptional = VersionByte.findByValue(decodedVersionByte);
     if (!versionByteOptional.isPresent()) {
@@ -240,28 +237,33 @@ class StrKey {
       byte[] unencoded = outputStream.toByteArray();
 
       if (VersionByte.SEED != versionByte) {
-        return base32Encoding.encode(unencoded).toCharArray();
+        return bytesToChars(removeBase32Padding(base32Codec.encode(unencoded)));
       }
 
-      // Why not use base32Encoding.encode here?
+      // Why not use base32Codec.encode here?
       // We don't want secret seed to be stored as String in memory because of security reasons.
       // It's impossible
       // to erase it from memory when we want it to be erased (ASAP).
-      CharArrayWriter charArrayWriter = new CharArrayWriter(unencoded.length);
-      OutputStream charOutputStream = base32Encoding.encodingStream(charArrayWriter);
-      charOutputStream.write(unencoded);
-      char[] charsEncoded = charArrayWriter.toCharArray();
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(unencoded.length);
+      Base32OutputStream base32OutputStream = new Base32OutputStream(byteArrayOutputStream);
+      base32OutputStream.write(unencoded);
+      base32OutputStream.close();
+
+      byte[] encodedBytes = byteArrayOutputStream.toByteArray();
+      byte[] unpaddedEncodedBytes = removeBase32Padding(encodedBytes);
+      char[] charsEncoded = bytesToChars(unpaddedEncodedBytes);
 
       Arrays.fill(unencoded, (byte) 0);
       Arrays.fill(payload, (byte) 0);
       Arrays.fill(checksum, (byte) 0);
+      Arrays.fill(encodedBytes, (byte) 0);
+      Arrays.fill(unpaddedEncodedBytes, (byte) 0);
 
-      // Clean charArrayWriter internal buffer
-      int bufferSize = charArrayWriter.size();
-      char[] zeros = new char[bufferSize];
-      Arrays.fill(zeros, '0');
-      charArrayWriter.reset();
-      charArrayWriter.write(zeros);
+      // Clean byteArrayOutputStream internal buffer
+      int size = byteArrayOutputStream.size();
+      byteArrayOutputStream.reset();
+      byteArrayOutputStream.write(new byte[size]);
+      byteArrayOutputStream.close();
 
       return charsEncoded;
     } catch (IOException e) {
@@ -298,7 +300,7 @@ class StrKey {
       }
     }
 
-    byte[] decoded = base32Encoding.decode(java.nio.CharBuffer.wrap(encoded));
+    byte[] decoded = base32Codec.decode(bytes);
     byte decodedVersionByte = decoded[0];
     byte[] payload = Arrays.copyOfRange(decoded, 0, decoded.length - 2);
     byte[] data = Arrays.copyOfRange(payload, 1, payload.length);
@@ -382,7 +384,7 @@ class StrKey {
           return Optional.of(versionByte);
         }
       }
-      return Optional.absent();
+      return Optional.empty();
     }
 
     public int getValue() {
@@ -398,6 +400,28 @@ class StrKey {
     int idCopyStartIndex = idBytes.length - idNumBytesToCopy;
     System.arraycopy(
         idBytes, idCopyStartIndex, idPaddedBytes, 8 - idNumBytesToCopy, idNumBytesToCopy);
-    return Bytes.concat(accountBytes, idPaddedBytes);
+    byte[] result = new byte[accountBytes.length + idPaddedBytes.length];
+    System.arraycopy(accountBytes, 0, result, 0, accountBytes.length);
+    System.arraycopy(idPaddedBytes, 0, result, accountBytes.length, idPaddedBytes.length);
+    return result;
+  }
+
+  private static byte[] removeBase32Padding(byte[] data) {
+    // Calculate the length of unpadded data
+    int unpaddedLength = data.length;
+    while (unpaddedLength > 0 && data[unpaddedLength - 1] == '=') {
+      unpaddedLength--;
+    }
+
+    // Create a copy of the data without padding bytes
+    return Arrays.copyOf(data, unpaddedLength);
+  }
+
+  private static char[] bytesToChars(byte[] data) {
+    char[] chars = new char[data.length];
+    for (int i = 0; i < data.length; i++) {
+      chars[i] = (char) (data[i] & 0xFF);
+    }
+    return chars;
   }
 }

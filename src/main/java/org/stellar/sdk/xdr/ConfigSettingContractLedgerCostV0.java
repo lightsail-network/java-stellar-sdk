@@ -37,16 +37,16 @@ import java.util.Objects;
 //      int64 feeWriteLedgerEntry; // Fee per ledger entry write
 //
 //      int64 feeRead1KB;  // Fee for reading 1KB
-//      int64 feeWrite1KB; // Fee for writing 1KB
 //
-//      // Bucket list fees grow slowly up to that size
-//      int64 bucketListSizeBytes;
-//      // Fee rate in stroops when the bucket list is empty
-//      int64 bucketListFeeRateLow;
-//      // Fee rate in stroops when the bucket list reached bucketListSizeBytes
-//      int64 bucketListFeeRateHigh;
-//      // Rate multiplier for any additional data past the first bucketListSizeBytes
-//      uint32 bucketListGrowthFactor;
+//      // The following parameters determine the write fee per 1KB.
+//      // Write fee grows linearly until bucket list reaches this size
+//      int64 bucketListTargetSizeBytes;
+//      // Fee per 1KB write when the bucket list is empty
+//      int64 writeFee1KBBucketListLow;
+//      // Fee per 1KB write when the bucket list has reached `bucketListTargetSizeBytes`
+//      int64 writeFee1KBBucketListHigh;
+//      // Write fee multiplier for any additional data past the first `bucketListTargetSizeBytes`
+//      uint32 bucketListWriteFeeGrowthFactor;
 //  };
 
 //  ===========================================================================
@@ -163,54 +163,44 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     this.feeRead1KB = value;
   }
 
-  private Int64 feeWrite1KB;
+  private Int64 bucketListTargetSizeBytes;
 
-  public Int64 getFeeWrite1KB() {
-    return this.feeWrite1KB;
+  public Int64 getBucketListTargetSizeBytes() {
+    return this.bucketListTargetSizeBytes;
   }
 
-  public void setFeeWrite1KB(Int64 value) {
-    this.feeWrite1KB = value;
+  public void setBucketListTargetSizeBytes(Int64 value) {
+    this.bucketListTargetSizeBytes = value;
   }
 
-  private Int64 bucketListSizeBytes;
+  private Int64 writeFee1KBBucketListLow;
 
-  public Int64 getBucketListSizeBytes() {
-    return this.bucketListSizeBytes;
+  public Int64 getWriteFee1KBBucketListLow() {
+    return this.writeFee1KBBucketListLow;
   }
 
-  public void setBucketListSizeBytes(Int64 value) {
-    this.bucketListSizeBytes = value;
+  public void setWriteFee1KBBucketListLow(Int64 value) {
+    this.writeFee1KBBucketListLow = value;
   }
 
-  private Int64 bucketListFeeRateLow;
+  private Int64 writeFee1KBBucketListHigh;
 
-  public Int64 getBucketListFeeRateLow() {
-    return this.bucketListFeeRateLow;
+  public Int64 getWriteFee1KBBucketListHigh() {
+    return this.writeFee1KBBucketListHigh;
   }
 
-  public void setBucketListFeeRateLow(Int64 value) {
-    this.bucketListFeeRateLow = value;
+  public void setWriteFee1KBBucketListHigh(Int64 value) {
+    this.writeFee1KBBucketListHigh = value;
   }
 
-  private Int64 bucketListFeeRateHigh;
+  private Uint32 bucketListWriteFeeGrowthFactor;
 
-  public Int64 getBucketListFeeRateHigh() {
-    return this.bucketListFeeRateHigh;
+  public Uint32 getBucketListWriteFeeGrowthFactor() {
+    return this.bucketListWriteFeeGrowthFactor;
   }
 
-  public void setBucketListFeeRateHigh(Int64 value) {
-    this.bucketListFeeRateHigh = value;
-  }
-
-  private Uint32 bucketListGrowthFactor;
-
-  public Uint32 getBucketListGrowthFactor() {
-    return this.bucketListGrowthFactor;
-  }
-
-  public void setBucketListGrowthFactor(Uint32 value) {
-    this.bucketListGrowthFactor = value;
+  public void setBucketListWriteFeeGrowthFactor(Uint32 value) {
+    this.bucketListWriteFeeGrowthFactor = value;
   }
 
   public static void encode(
@@ -228,11 +218,10 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.feeReadLedgerEntry);
     Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.feeWriteLedgerEntry);
     Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.feeRead1KB);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.feeWrite1KB);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.bucketListSizeBytes);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.bucketListFeeRateLow);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.bucketListFeeRateHigh);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.bucketListGrowthFactor);
+    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.bucketListTargetSizeBytes);
+    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListLow);
+    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListHigh);
+    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.bucketListWriteFeeGrowthFactor);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -254,11 +243,10 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     decodedConfigSettingContractLedgerCostV0.feeReadLedgerEntry = Int64.decode(stream);
     decodedConfigSettingContractLedgerCostV0.feeWriteLedgerEntry = Int64.decode(stream);
     decodedConfigSettingContractLedgerCostV0.feeRead1KB = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.feeWrite1KB = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.bucketListSizeBytes = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.bucketListFeeRateLow = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.bucketListFeeRateHigh = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.bucketListGrowthFactor = Uint32.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.bucketListTargetSizeBytes = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListLow = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListHigh = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.bucketListWriteFeeGrowthFactor = Uint32.decode(stream);
     return decodedConfigSettingContractLedgerCostV0;
   }
 
@@ -276,11 +264,10 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
         this.feeReadLedgerEntry,
         this.feeWriteLedgerEntry,
         this.feeRead1KB,
-        this.feeWrite1KB,
-        this.bucketListSizeBytes,
-        this.bucketListFeeRateLow,
-        this.bucketListFeeRateHigh,
-        this.bucketListGrowthFactor);
+        this.bucketListTargetSizeBytes,
+        this.writeFee1KBBucketListLow,
+        this.writeFee1KBBucketListHigh,
+        this.bucketListWriteFeeGrowthFactor);
   }
 
   @Override
@@ -301,11 +288,11 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
         && Objects.equals(this.feeReadLedgerEntry, other.feeReadLedgerEntry)
         && Objects.equals(this.feeWriteLedgerEntry, other.feeWriteLedgerEntry)
         && Objects.equals(this.feeRead1KB, other.feeRead1KB)
-        && Objects.equals(this.feeWrite1KB, other.feeWrite1KB)
-        && Objects.equals(this.bucketListSizeBytes, other.bucketListSizeBytes)
-        && Objects.equals(this.bucketListFeeRateLow, other.bucketListFeeRateLow)
-        && Objects.equals(this.bucketListFeeRateHigh, other.bucketListFeeRateHigh)
-        && Objects.equals(this.bucketListGrowthFactor, other.bucketListGrowthFactor);
+        && Objects.equals(this.bucketListTargetSizeBytes, other.bucketListTargetSizeBytes)
+        && Objects.equals(this.writeFee1KBBucketListLow, other.writeFee1KBBucketListLow)
+        && Objects.equals(this.writeFee1KBBucketListHigh, other.writeFee1KBBucketListHigh)
+        && Objects.equals(
+            this.bucketListWriteFeeGrowthFactor, other.bucketListWriteFeeGrowthFactor);
   }
 
   @Override
@@ -344,11 +331,10 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     private Int64 feeReadLedgerEntry;
     private Int64 feeWriteLedgerEntry;
     private Int64 feeRead1KB;
-    private Int64 feeWrite1KB;
-    private Int64 bucketListSizeBytes;
-    private Int64 bucketListFeeRateLow;
-    private Int64 bucketListFeeRateHigh;
-    private Uint32 bucketListGrowthFactor;
+    private Int64 bucketListTargetSizeBytes;
+    private Int64 writeFee1KBBucketListLow;
+    private Int64 writeFee1KBBucketListHigh;
+    private Uint32 bucketListWriteFeeGrowthFactor;
 
     public Builder ledgerMaxReadLedgerEntries(Uint32 ledgerMaxReadLedgerEntries) {
       this.ledgerMaxReadLedgerEntries = ledgerMaxReadLedgerEntries;
@@ -405,28 +391,23 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
       return this;
     }
 
-    public Builder feeWrite1KB(Int64 feeWrite1KB) {
-      this.feeWrite1KB = feeWrite1KB;
+    public Builder bucketListTargetSizeBytes(Int64 bucketListTargetSizeBytes) {
+      this.bucketListTargetSizeBytes = bucketListTargetSizeBytes;
       return this;
     }
 
-    public Builder bucketListSizeBytes(Int64 bucketListSizeBytes) {
-      this.bucketListSizeBytes = bucketListSizeBytes;
+    public Builder writeFee1KBBucketListLow(Int64 writeFee1KBBucketListLow) {
+      this.writeFee1KBBucketListLow = writeFee1KBBucketListLow;
       return this;
     }
 
-    public Builder bucketListFeeRateLow(Int64 bucketListFeeRateLow) {
-      this.bucketListFeeRateLow = bucketListFeeRateLow;
+    public Builder writeFee1KBBucketListHigh(Int64 writeFee1KBBucketListHigh) {
+      this.writeFee1KBBucketListHigh = writeFee1KBBucketListHigh;
       return this;
     }
 
-    public Builder bucketListFeeRateHigh(Int64 bucketListFeeRateHigh) {
-      this.bucketListFeeRateHigh = bucketListFeeRateHigh;
-      return this;
-    }
-
-    public Builder bucketListGrowthFactor(Uint32 bucketListGrowthFactor) {
-      this.bucketListGrowthFactor = bucketListGrowthFactor;
+    public Builder bucketListWriteFeeGrowthFactor(Uint32 bucketListWriteFeeGrowthFactor) {
+      this.bucketListWriteFeeGrowthFactor = bucketListWriteFeeGrowthFactor;
       return this;
     }
 
@@ -443,11 +424,10 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
       val.setFeeReadLedgerEntry(this.feeReadLedgerEntry);
       val.setFeeWriteLedgerEntry(this.feeWriteLedgerEntry);
       val.setFeeRead1KB(this.feeRead1KB);
-      val.setFeeWrite1KB(this.feeWrite1KB);
-      val.setBucketListSizeBytes(this.bucketListSizeBytes);
-      val.setBucketListFeeRateLow(this.bucketListFeeRateLow);
-      val.setBucketListFeeRateHigh(this.bucketListFeeRateHigh);
-      val.setBucketListGrowthFactor(this.bucketListGrowthFactor);
+      val.setBucketListTargetSizeBytes(this.bucketListTargetSizeBytes);
+      val.setWriteFee1KBBucketListLow(this.writeFee1KBBucketListLow);
+      val.setWriteFee1KBBucketListHigh(this.writeFee1KBBucketListHigh);
+      val.setBucketListWriteFeeGrowthFactor(this.bucketListWriteFeeGrowthFactor);
       return val;
     }
   }

@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
-import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
+import java.util.Optional;
 import org.stellar.sdk.responses.Link;
 import org.stellar.sdk.responses.MuxedAccount;
 import org.stellar.sdk.responses.Pageable;
@@ -51,7 +51,7 @@ public abstract class EffectResponse extends Response implements Pageable {
 
   public Optional<MuxedAccount> getAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.accountMuxed, this.account, this.accountMuxedId));
   }

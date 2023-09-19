@@ -1,12 +1,11 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
 
-import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 import org.stellar.sdk.xdr.*;
 
@@ -461,10 +460,9 @@ public class TransactionBuilderTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
 
     String accountStrKey = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
-    byte[] payload =
-        BaseEncoding.base16()
-            .decode(
-                "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+
+    String encodedString = "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20";
+    byte[] payload = Util.hexToBytes(encodedString);
 
     SignerKey signerKey =
         new SignerKey.Builder()
@@ -484,7 +482,7 @@ public class TransactionBuilderTest {
                 TransactionPreconditions.builder()
                     .timeBounds(
                         new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
-                    .extraSigners(newArrayList(signerKey))
+                    .extraSigners(Collections.singletonList(signerKey))
                     .minSeqLedgerGap(5)
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -492,10 +490,12 @@ public class TransactionBuilderTest {
 
     assertEquals(
         SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD,
-        newArrayList(transaction.getPreconditions().getExtraSigners()).get(0).getDiscriminant());
+        transaction.getPreconditions().getExtraSigners().get(0).getDiscriminant());
     assertArrayEquals(
         payload,
-        newArrayList(transaction.getPreconditions().getExtraSigners())
+        transaction
+            .getPreconditions()
+            .getExtraSigners()
             .get(0)
             .getEd25519SignedPayload()
             .getPayload());
@@ -527,7 +527,7 @@ public class TransactionBuilderTest {
                   .timeBounds(
                       new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                   .extraSigners(
-                      newArrayList(
+                      Arrays.asList(
                           new SignerKey.Builder().build(),
                           new SignerKey.Builder().build(),
                           new SignerKey.Builder().build()))
@@ -660,12 +660,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -714,12 +710,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -770,12 +762,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -827,12 +815,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timebounds are correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -952,7 +936,7 @@ public class TransactionBuilderTest {
           .build();
       fail();
     } catch (NullPointerException e) {
-      assertTrue(e.getMessage().contains("Network cannot be null"));
+      assertTrue(e.getMessage().contains("network is marked non-null but is null"));
     }
   }
 
@@ -983,7 +967,6 @@ public class TransactionBuilderTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
                     .readBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
@@ -1039,7 +1022,6 @@ public class TransactionBuilderTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .extendedMetaDataSizeBytes(new Uint32(new XdrUnsignedInteger(216)))
                     .readBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
