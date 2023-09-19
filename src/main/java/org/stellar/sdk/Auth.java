@@ -151,16 +151,16 @@ public class Auth {
    */
   public static SorobanAuthorizationEntry authorizeEntry(
       SorobanAuthorizationEntry entry, Signer signer, Long validUntilLedgerSeq, Network network) {
-    if (entry.getCredentials().getDiscriminant()
-        != SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
-      return entry;
-    }
-
     SorobanAuthorizationEntry clone;
     try {
       clone = SorobanAuthorizationEntry.fromXdrByteArray(entry.toXdrByteArray());
     } catch (IOException e) {
       throw new IllegalArgumentException("Unable to clone SorobanAuthorizationEntry", e);
+    }
+
+    if (clone.getCredentials().getDiscriminant()
+        != SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
+      return clone;
     }
 
     SorobanAddressCredentials addrAuth = clone.getCredentials().getAddress();
@@ -242,7 +242,7 @@ public class Auth {
           }
         };
     return authorizeInvocation(
-        entrySigner, validUntilLedgerSeq, invocation, signer.getAccountId(), network);
+        entrySigner, signer.getAccountId(), validUntilLedgerSeq, invocation, network);
   }
 
   /**
@@ -261,19 +261,19 @@ public class Auth {
    *
    * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
    *     signature of the hash of the raw payload bytes, see {@link Signer}
+   * @param publicKey the public identity of the signer
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
    *     from transaction simulation)
-   * @param publicKey the public identity of the signer
    * @param network the network is incorprated into the signature
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeInvocation(
       Signer signer,
+      String publicKey,
       Long validUntilLedgerSeq,
       SorobanAuthorizedInvocation invocation,
-      String publicKey,
       Network network) {
     long nonce = new SecureRandom().nextLong();
     SorobanAuthorizationEntry entry =
