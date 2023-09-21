@@ -5,8 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
-import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.codec.binary.Base32OutputStream;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -23,7 +21,7 @@ class StrKey {
 
   public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
   private static final byte[] b32Table = decodingTable();
-  private static final Base32 base32Codec = new Base32();
+  private static final ApacheCodec.Base32 base32Codec = new ApacheCodec.Base32();
 
   public static String encodeContractId(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
@@ -245,7 +243,8 @@ class StrKey {
       // It's impossible
       // to erase it from memory when we want it to be erased (ASAP).
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(unencoded.length);
-      Base32OutputStream base32OutputStream = new Base32OutputStream(byteArrayOutputStream);
+      ApacheCodec.Base32OutputStream base32OutputStream =
+          new ApacheCodec.Base32OutputStream(byteArrayOutputStream);
       base32OutputStream.write(unencoded);
       base32OutputStream.close();
 

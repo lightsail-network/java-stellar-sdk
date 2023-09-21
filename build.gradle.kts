@@ -36,7 +36,6 @@ dependencies {
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("net.i2p.crypto:eddsa:0.3.0")
-    implementation("commons-codec:commons-codec:1.16.0")
 
     testImplementation("org.mockito:mockito-core:5.5.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")
