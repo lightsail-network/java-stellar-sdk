@@ -432,10 +432,8 @@ class StrKey {
   private static byte[] base32decode(byte[] data) {
     // Apache commons codec Base32 class will auto remove the illegal characters, this is
     // what we don't want, so we need to check the data before decoding
-    for (byte b : data) {
-      if (!base32Codec.isInAlphabet(b)) {
-        throw new IllegalArgumentException("Invalid Base32 character: " + (char) b);
-      }
+    if (!base32Codec.isInAlphabet(data, false)) {
+      throw new IllegalArgumentException("Invalid base32 encoded string");
     }
     return base32Codec.decode(data);
   }
