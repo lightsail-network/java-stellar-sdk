@@ -427,5 +427,12 @@ public class StrKeyTest {
       fail();
     } catch (IllegalArgumentException ignored) {
     }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          " MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK");
+      fail();
+    } catch (IllegalArgumentException ignored) {
+    }
   }
 }
