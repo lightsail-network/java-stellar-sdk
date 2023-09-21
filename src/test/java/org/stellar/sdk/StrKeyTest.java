@@ -333,7 +333,7 @@ public class StrKeyTest {
 
   @Test
   public void testEncodeToXDRMuxedAccountInvalidAddress() {
-
+    // https://github.com/stellar/go/blob/2b876cd781b6dd0c218dcdd4f300900f87b3889e/strkey/main_test.go#L86
     try {
       StrKey.encodeToXDRMuxedAccount("XBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG");
       fail();
@@ -346,6 +346,86 @@ public class StrKeyTest {
       fail();
     } catch (FormatException e) {
       assertEquals("Checksum invalid", e.getMessage());
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUR");
+      fail();
+    } catch (IllegalArgumentException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZA");
+      fail();
+    } catch (IllegalArgumentException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount("G47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVP2I");
+      fail();
+    } catch (FormatException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLKA");
+      fail();
+    } catch (IllegalArgumentException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          "M47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ");
+      fail();
+    } catch (FormatException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          "M47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ");
+      fail();
+    } catch (FormatException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUK");
+      fail();
+    } catch (FormatException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUO");
+      fail();
+    } catch (FormatException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount("");
+      fail();
+    } catch (IllegalArgumentException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount("SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO");
+      fail();
+    } catch (FormatException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          "MCEO75Y6YKE53HM6N46IJYH3LK3YYFZ4QWGNUKCSSIQSH3KOAD7BEAAAAAAAAAAAPNT2W___");
+      fail();
+    } catch (IllegalArgumentException ignored) {
+    }
+
+    try {
+      StrKey.encodeToXDRMuxedAccount(
+          "MDWZCOEQRODFCH6ISYQPWY67L3ULLWS5ISXYYL5GH43W7YFMTLB64AAAAAAAAAAAAHGLW===");
+      fail();
+    } catch (IllegalArgumentException ignored) {
     }
   }
 }

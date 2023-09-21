@@ -3,6 +3,7 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Pending
+* Fix issues where the validity of the encoded strkey is not verified in certain scenarios. ([#541](https://github.com/stellar/java-stellar-sdk/pull/541))
 
 ## 0.41.0
 * Add support for Soroban Preview 11. ([#530](https://github.com/stellar/java-stellar-sdk/pull/530))

@@ -5,8 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
+import org.apache.commons.codec.CodecPolicy;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Base32OutputStream;
+import org.apache.commons.codec.binary.StringUtils;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -23,7 +25,8 @@ class StrKey {
 
   public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
   private static final byte[] b32Table = decodingTable();
-  private static final Base32 base32Codec = new Base32();
+  private static final Base32 base32Codec =
+      new Base32(0, null, false, (byte) '=', CodecPolicy.STRICT);
 
   public static String encodeContractId(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
@@ -139,7 +142,8 @@ class StrKey {
   }
 
   public static VersionByte decodeVersionByte(String data) {
-    byte[] decoded = base32Codec.decode(data);
+    byte[] dataBytes = StringUtils.getBytesUtf8(data);
+    byte[] decoded = base32decode(dataBytes);
     byte decodedVersionByte = decoded[0];
     Optional<VersionByte> versionByteOptional = VersionByte.findByValue(decodedVersionByte);
     if (!versionByteOptional.isPresent()) {
@@ -300,7 +304,7 @@ class StrKey {
       }
     }
 
-    byte[] decoded = base32Codec.decode(bytes);
+    byte[] decoded = base32decode(bytes);
     byte decodedVersionByte = decoded[0];
     byte[] payload = Arrays.copyOfRange(decoded, 0, decoded.length - 2);
     byte[] data = Arrays.copyOfRange(payload, 1, payload.length);
@@ -423,5 +427,16 @@ class StrKey {
       chars[i] = (char) (data[i] & 0xFF);
     }
     return chars;
+  }
+
+  private static byte[] base32decode(byte[] data) {
+    // Apache commons codec Base32 class will auto remove the illegal characters, this is
+    // what we don't want, so we need to check the data before decoding
+    for (byte b : data) {
+      if (!base32Codec.isInAlphabet(b)) {
+        throw new IllegalArgumentException("Invalid Base32 character: " + (char) b);
+      }
+    }
+    return base32Codec.decode(data);
   }
 }
