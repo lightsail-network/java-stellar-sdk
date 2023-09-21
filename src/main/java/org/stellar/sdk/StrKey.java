@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
-import org.apache.commons.codec.CodecPolicy;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Base32OutputStream;
 import org.apache.commons.codec.binary.StringUtils;
@@ -25,8 +24,7 @@ class StrKey {
 
   public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
   private static final byte[] b32Table = decodingTable();
-  private static final Base32 base32Codec =
-      new Base32(0, null, false, (byte) '=', CodecPolicy.STRICT);
+  private static final Base32 base32Codec = new Base32();
 
   public static String encodeContractId(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
