@@ -67,7 +67,6 @@ dependencies {
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("net.i2p.crypto:eddsa:0.3.0")
-    implementation("commons-codec:commons-codec:1.16.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0-alpha03")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
