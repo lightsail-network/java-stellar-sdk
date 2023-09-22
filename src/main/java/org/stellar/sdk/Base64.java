@@ -41,9 +41,19 @@ public class Base64 {
    */
   public static byte[] decode(String data) {
     byte[] raw = data.getBytes(StandardCharsets.UTF_8);
-    if (!base64.isInAlphabet(raw, true)) {
+    if (!isInAlphabet(raw)) {
       throw new IllegalArgumentException("Invalid base64 string");
     }
     return base64.decode(raw);
+  }
+
+  private static boolean isInAlphabet(final byte[] arrayOctet) {
+    for (final byte octet : arrayOctet) {
+      // allow padding characters in the base64 string.
+      if (!base64.isInAlphabet(octet) && (octet != base64.pad)) {
+        return false;
+      }
+    }
+    return true;
   }
 }
