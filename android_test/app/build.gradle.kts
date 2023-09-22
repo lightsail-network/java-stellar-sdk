@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "org.stellar.javastellarsdkdemoapp"
-        minSdk = 26
+        minSdk = 24
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -59,9 +59,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation(files("libs/stellar-sdk.jar"))
     // Since we are adding local jar(libs/stellar-sdk.jar) as dependency,
     // gradle cannot automatically download the required third-party dependencies.
+    implementation(files("libs/stellar-sdk.jar"))
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:okhttp-sse:4.11.0")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
