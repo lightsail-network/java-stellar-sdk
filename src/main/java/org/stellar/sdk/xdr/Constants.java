@@ -6,6 +6,9 @@ package org.stellar.sdk.xdr;
 public final class Constants {
   private Constants() {}
 
+  public static final int CONTRACT_COST_COUNT_LIMIT = 1024;
+  public static final int SC_SPEC_DOC_LIMIT = 1024;
+  public static final int SCSYMBOL_LIMIT = 32;
   public static final int MASK_ACCOUNT_FLAGS = 0x7;
   public static final int MASK_ACCOUNT_FLAGS_V17 = 0xF;
   public static final int MAX_SIGNERS = 20;
@@ -20,7 +23,4 @@ public final class Constants {
   public static final int TX_DEMAND_VECTOR_MAX_SIZE = 1000;
   public static final int MAX_OPS_PER_TX = 100;
   public static final int LIQUIDITY_POOL_FEE_V18 = 30;
-  public static final int SC_SPEC_DOC_LIMIT = 1024;
-  public static final int SCSYMBOL_LIMIT = 32;
-  public static final int CONTRACT_COST_COUNT_LIMIT = 1024;
 }

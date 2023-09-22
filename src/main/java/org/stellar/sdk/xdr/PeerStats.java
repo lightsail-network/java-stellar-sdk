@@ -8,8 +8,8 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Objects;
+import org.stellar.sdk.Base64;
 
 // === xdr source ============================================================
 
@@ -277,7 +277,7 @@ public class PeerStats implements XdrElement {
 
   @Override
   public String toXdrBase64() throws IOException {
-    return Base64.getEncoder().encodeToString(toXdrByteArray());
+    return Base64.encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -289,7 +289,7 @@ public class PeerStats implements XdrElement {
   }
 
   public static PeerStats fromXdrBase64(String xdr) throws IOException {
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64.decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
