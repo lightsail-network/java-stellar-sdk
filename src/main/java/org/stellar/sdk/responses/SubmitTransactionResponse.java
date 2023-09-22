@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Optional;
+import org.stellar.sdk.Base64;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.xdr.OperationResult;
 import org.stellar.sdk.xdr.OperationType;
@@ -151,7 +151,7 @@ public class SubmitTransactionResponse extends Response {
       if (!resultXDR.isPresent()) {
         return Optional.empty();
       }
-      byte[] bytes = Base64.getDecoder().decode(resultXDR.get());
+      byte[] bytes = Base64.decode(resultXDR.get());
       ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
       XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
       this.transactionResult = TransactionResult.decode(xdrInputStream);

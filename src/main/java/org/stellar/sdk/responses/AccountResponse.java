@@ -3,11 +3,11 @@ package org.stellar.sdk.responses;
 import static org.stellar.sdk.Asset.create;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Optional;
 import lombok.NonNull;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.Base64;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPoolID;
 
@@ -440,7 +440,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
      * @return raw value
      */
     public byte[] getDecoded(String key) {
-      return Base64.getDecoder().decode(this.get(key));
+      return Base64.decode(this.get(key));
     }
   }
 

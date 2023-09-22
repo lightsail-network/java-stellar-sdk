@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -84,7 +83,7 @@ public class Sep10Challenge {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = Base64.encode(nonce);
 
     if (clientDomain.isEmpty() != clientSigningKey.isEmpty()) {
       throw new InvalidSep10ChallengeException(
@@ -310,7 +309,7 @@ public class Sep10Challenge {
 
     byte[] nonce;
     try {
-      nonce = Base64.getDecoder().decode(new String(manageDataOperation.getValue()));
+      nonce = Base64.decode(new String(manageDataOperation.getValue()));
     } catch (IllegalArgumentException e) {
       throw new InvalidSep10ChallengeException(
           "Failed to decode random nonce provided in ManageData operation.", e);

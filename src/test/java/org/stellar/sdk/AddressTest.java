@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 import org.stellar.sdk.xdr.SCAddress;
@@ -76,7 +75,7 @@ public class AddressTest {
     SCAddress scAddress = address.toSCAddress();
 
     String xdr = "AAAAAAAAAAA/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg==";
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64.decode(xdr);
     SCAddress expectScAddress =
         SCAddress.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
     assertEquals(scAddress, expectScAddress);
@@ -89,7 +88,7 @@ public class AddressTest {
     SCAddress scAddress = address.toSCAddress();
 
     String xdr = "AAAAAT8MNL+TrQ2ZcdBMzJD3BVEcg4qtlzSkovsNegP8f+ia";
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64.decode(xdr);
     SCAddress expectScAddress =
         SCAddress.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
     assertEquals(scAddress, expectScAddress);
@@ -98,7 +97,7 @@ public class AddressTest {
   @Test
   public void testFromSCAddressAccount() throws IOException {
     String xdr = "AAAAAAAAAAA/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg==";
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64.decode(xdr);
     SCAddress scAddress = SCAddress.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
 
     Address address = Address.fromSCAddress(scAddress);
@@ -110,7 +109,7 @@ public class AddressTest {
   @Test
   public void testFromSCAddressContract() throws IOException {
     String xdr = "AAAAAT8MNL+TrQ2ZcdBMzJD3BVEcg4qtlzSkovsNegP8f+ia";
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64.decode(xdr);
     SCAddress scAddress = SCAddress.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
 
     Address address = Address.fromSCAddress(scAddress);
@@ -126,7 +125,7 @@ public class AddressTest {
     SCVal scVal = address.toSCVal();
 
     String xdr = "AAAAEgAAAAE/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg==";
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64.decode(xdr);
     SCVal expectSCVal = SCVal.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
     assertEquals(scVal, expectSCVal);
   }
@@ -134,7 +133,7 @@ public class AddressTest {
   @Test
   public void testFromSCVal() throws IOException {
     String xdr = "AAAAEgAAAAE/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg==";
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64.decode(xdr);
     SCVal scVal = SCVal.decode(new XdrDataInputStream(new ByteArrayInputStream(bytes)));
 
     Address address = Address.fromSCVal(scVal);
