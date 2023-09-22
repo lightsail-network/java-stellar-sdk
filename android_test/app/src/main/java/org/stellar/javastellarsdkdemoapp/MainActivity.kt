@@ -30,6 +30,7 @@ import org.stellar.javastellarsdkdemoapp.ui.theme.JavaStellarSDKDemoAppTheme
 import org.stellar.sdk.Account
 import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.Address
+import org.stellar.sdk.Auth
 import org.stellar.sdk.InvokeHostFunctionOperation
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Network
@@ -39,6 +40,8 @@ import org.stellar.sdk.TimeBounds
 import org.stellar.sdk.Transaction
 import org.stellar.sdk.TransactionBuilder
 import org.stellar.sdk.TransactionPreconditions
+import org.stellar.sdk.federation.FederationServer
+import org.stellar.sdk.scval.Scv
 import org.stellar.sdk.xdr.ContractExecutable
 import org.stellar.sdk.xdr.ContractExecutableType
 import org.stellar.sdk.xdr.ContractIDPreimage
@@ -49,10 +52,18 @@ import org.stellar.sdk.xdr.ExtensionPoint
 import org.stellar.sdk.xdr.HostFunction
 import org.stellar.sdk.xdr.HostFunctionType
 import org.stellar.sdk.xdr.Int64
+import org.stellar.sdk.xdr.InvokeContractArgs
 import org.stellar.sdk.xdr.LedgerEntryType
 import org.stellar.sdk.xdr.LedgerFootprint
 import org.stellar.sdk.xdr.LedgerKey
 import org.stellar.sdk.xdr.LedgerKey.LedgerKeyAccount
+import org.stellar.sdk.xdr.SorobanAddressCredentials
+import org.stellar.sdk.xdr.SorobanAuthorizationEntry
+import org.stellar.sdk.xdr.SorobanAuthorizedFunction
+import org.stellar.sdk.xdr.SorobanAuthorizedFunctionType
+import org.stellar.sdk.xdr.SorobanAuthorizedInvocation
+import org.stellar.sdk.xdr.SorobanCredentials
+import org.stellar.sdk.xdr.SorobanCredentialsType
 import org.stellar.sdk.xdr.SorobanResources
 import org.stellar.sdk.xdr.SorobanTransactionData
 import org.stellar.sdk.xdr.Uint256
@@ -129,13 +140,25 @@ private fun testSDK(): String {
     return try {
         // send request to horizon server
         val server = Server("https://horizon-testnet.stellar.org")
-        server.root()
+        val horizonResp = server.root()
+        if (horizonResp == null || horizonResp.networkPassphrase != Network.TESTNET.networkPassphrase) {
+            throw Exception("Query Horizon failed")
+        }
 
         // send request to Soroban RPC server
         val sorobanServer = SorobanServer("https://soroban-testnet.stellar.org:443")
-        sorobanServer.health
+        if (sorobanServer.network.passphrase != Network.TESTNET.networkPassphrase) {
+            throw Exception("Query Soroban Server failed")
+        }
 
-        // build transaction
+        // Test Federation
+        val fedResp =
+            FederationServer.createForDomain("lobstr.co").resolveAddress("example*lobstr.co")
+        if (fedResp == null || fedResp.accountId == null) {
+            throw Exception("Query Federation failed")
+        }
+
+        // build and parse transaction
         val source: KeyPair =
             KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS")
 
@@ -213,6 +236,49 @@ private fun testSDK(): String {
                 .setSorobanData(sorobanDataString)
                 .build()
         transaction.sign(source)
+        Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), Network.TESTNET)
+
+        // sign entry
+        val contractId = "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK"
+        val signer =
+            KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN")
+        val validUntilLedgerSeq = 654656L
+        val network = Network.TESTNET
+
+        val credentials = SorobanCredentials.Builder()
+            .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
+            .address(
+                SorobanAddressCredentials.Builder()
+                    .address(Address(signer.accountId).toSCAddress())
+                    .nonce(Int64(123456789L))
+                    .signatureExpirationLedger(Uint32(XdrUnsignedInteger(0L)))
+                    .signature(Scv.toVoid())
+                    .build()
+            )
+            .build()
+        val invocation = SorobanAuthorizedInvocation.Builder()
+            .function(
+                SorobanAuthorizedFunction.Builder()
+                    .discriminant(
+                        SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN
+                    )
+                    .contractFn(
+                        InvokeContractArgs.Builder()
+                            .contractAddress(Address(contractId).toSCAddress())
+                            .functionName(Scv.toSymbol("increment").sym)
+                            .args(arrayOfNulls(0))
+                            .build()
+                    )
+                    .build()
+            )
+            .subInvocations(arrayOfNulls(0))
+            .build()
+        val entry = SorobanAuthorizationEntry.Builder()
+            .credentials(credentials)
+            .rootInvocation(invocation)
+            .build()
+        Auth.authorizeEntry(entry.toXdrBase64(), signer, validUntilLedgerSeq, network)
+
         "SUCCESS"
     } catch (e: Exception) {
         Log.e("MainActivity", "testSDK ERROR", e)
