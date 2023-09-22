@@ -19,7 +19,7 @@ private const val PACKAGE = "org.stellar.javastellarsdkdemoapp"
 @RunWith(AndroidJUnit4::class)
 class MainInstrumentedTest {
     @Test
-    fun testGetNetwork() {
+    fun testSDK() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         // open app
         device.pressHome()
@@ -41,15 +41,15 @@ class MainInstrumentedTest {
         )
 
         // get text
-        val textNoNetworkInfo = device.wait(
-            Until.findObject(By.text("No network info")),
+        val textNoTestResult = device.wait(
+            Until.findObject(By.text("Not Run")),
             ONE_MINUTE
         )
-        assertNotNull(textNoNetworkInfo)
+        assertNotNull(textNoTestResult)
 
         // get button
         val button = device.wait(
-            Until.findObject(By.text("Get Network")),
+            Until.findObject(By.text("Run Test")),
             ONE_MINUTE
         )
         assertNotNull(button)
@@ -57,6 +57,6 @@ class MainInstrumentedTest {
         // click button and wait text to appear
         button.click()
 
-        assertTrue(device.wait(Until.hasObject(By.text("public")), ONE_MINUTE * 5))
+        assertTrue(device.wait(Until.hasObject(By.text("SUCCESS")), ONE_MINUTE * 5))
     }
 }
