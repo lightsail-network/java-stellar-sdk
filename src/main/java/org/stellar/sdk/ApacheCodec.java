@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.stellar.sdk;
 
 import static org.stellar.sdk.ApacheCodec.BaseNCodec.EOF;
@@ -15,8 +31,9 @@ import java.util.Objects;
  * Copy from commons-codec:commons-codec:1.16.0
  *
  * <p>This is a compromise, because the Android platform built-in with commons-codec:commons-codec:
- * 1.3.0 version in API < 28, which does not include the Base32 module. See <a
- * href="https://github.com/stellar/java-stellar-sdk/issues/542">the issue</a>
+ * 1.3.0 version in API < 28, which does not include the Base32 module. In addition, {@link
+ * java.util.Base64} also requires API 26+, so we have also copied the Base64 implementation here.
+ * See <a href="https://github.com/stellar/java-stellar-sdk/issues/542">the issue</a>
  */
 class ApacheCodec {
   enum CodecPolicy {
@@ -1145,8 +1162,8 @@ class ApacheCodec {
      *
      * <blockquote>
      *
-     * Some VMs reserve some header words in an array. Attempts to allocate larger arrays may result
-     * in OutOfMemoryError: Requested array size exceeds VM limit.
+     * <p>Some VMs reserve some header words in an array. Attempts to allocate larger arrays may
+     * result in OutOfMemoryError: Requested array size exceeds VM limit.
      *
      * </blockquote>
      */
@@ -2246,6 +2263,163 @@ class ApacheCodec {
     private final int encodeSize;
 
     /**
+     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
+     *
+     * <p>When encoding the line length is 0 (no chunking), and the encoding table is
+     * STANDARD_ENCODE_TABLE.
+     *
+     * <p>When decoding all variants are supported.
+     */
+    public Base64() {
+      this(0);
+    }
+
+    /**
+     * Creates a Base64 codec used for decoding (all modes) and encoding in the given URL-safe mode.
+     *
+     * <p>When encoding the line length is 76, the line separator is CRLF, and the encoding table is
+     * STANDARD_ENCODE_TABLE.
+     *
+     * <p>When decoding all variants are supported.
+     *
+     * @param urlSafe if {@code true}, URL-safe encoding is used. In most cases this should be set
+     *     to {@code false}.
+     * @since 1.4
+     */
+    public Base64(final boolean urlSafe) {
+      this(MIME_CHUNK_SIZE, CHUNK_SEPARATOR, urlSafe);
+    }
+
+    // Implementation of integer encoding used for crypto
+
+    /**
+     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
+     *
+     * <p>When encoding the line length is given in the constructor, the line separator is CRLF, and
+     * the encoding table is STANDARD_ENCODE_TABLE.
+     *
+     * <p>Line lengths that aren't multiples of 4 will still essentially end up being multiples of 4
+     * in the encoded data.
+     *
+     * <p>When decoding all variants are supported.
+     *
+     * @param lineLength Each line of encoded data will be at most of the given length (rounded down
+     *     to the nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
+     *     into lines (chunks). Ignored when decoding.
+     * @since 1.4
+     */
+    public Base64(final int lineLength) {
+      this(lineLength, CHUNK_SEPARATOR);
+    }
+
+    /**
+     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
+     *
+     * <p>When encoding the line length and line separator are given in the constructor, and the
+     * encoding table is STANDARD_ENCODE_TABLE.
+     *
+     * <p>Line lengths that aren't multiples of 4 will still essentially end up being multiples of 4
+     * in the encoded data.
+     *
+     * <p>When decoding all variants are supported.
+     *
+     * @param lineLength Each line of encoded data will be at most of the given length (rounded down
+     *     to the nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
+     *     into lines (chunks). Ignored when decoding.
+     * @param lineSeparator Each line of encoded data will end with this sequence of bytes.
+     * @throws IllegalArgumentException Thrown when the provided lineSeparator included some base64
+     *     characters.
+     * @since 1.4
+     */
+    public Base64(final int lineLength, final byte[] lineSeparator) {
+      this(lineLength, lineSeparator, false);
+    }
+
+    /**
+     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
+     *
+     * <p>When encoding the line length and line separator are given in the constructor, and the
+     * encoding table is STANDARD_ENCODE_TABLE.
+     *
+     * <p>Line lengths that aren't multiples of 4 will still essentially end up being multiples of 4
+     * in the encoded data.
+     *
+     * <p>When decoding all variants are supported.
+     *
+     * @param lineLength Each line of encoded data will be at most of the given length (rounded down
+     *     to the nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
+     *     into lines (chunks). Ignored when decoding.
+     * @param lineSeparator Each line of encoded data will end with this sequence of bytes.
+     * @param urlSafe Instead of emitting '+' and '/' we emit '-' and '_' respectively. urlSafe is
+     *     only applied to encode operations. Decoding seamlessly handles both modes. <b>Note: no
+     *     padding is added when using the URL-safe alphabet.</b>
+     * @throws IllegalArgumentException Thrown when the {@code lineSeparator} contains Base64
+     *     characters.
+     * @since 1.4
+     */
+    public Base64(final int lineLength, final byte[] lineSeparator, final boolean urlSafe) {
+      this(lineLength, lineSeparator, urlSafe, DECODING_POLICY_DEFAULT);
+    }
+
+    /**
+     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
+     *
+     * <p>When encoding the line length and line separator are given in the constructor, and the
+     * encoding table is STANDARD_ENCODE_TABLE.
+     *
+     * <p>Line lengths that aren't multiples of 4 will still essentially end up being multiples of 4
+     * in the encoded data.
+     *
+     * <p>When decoding all variants are supported.
+     *
+     * @param lineLength Each line of encoded data will be at most of the given length (rounded down
+     *     to the nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
+     *     into lines (chunks). Ignored when decoding.
+     * @param lineSeparator Each line of encoded data will end with this sequence of bytes.
+     * @param urlSafe Instead of emitting '+' and '/' we emit '-' and '_' respectively. urlSafe is
+     *     only applied to encode operations. Decoding seamlessly handles both modes. <b>Note: no
+     *     padding is added when using the URL-safe alphabet.</b>
+     * @param decodingPolicy The decoding policy.
+     * @throws IllegalArgumentException Thrown when the {@code lineSeparator} contains Base64
+     *     characters.
+     * @since 1.15
+     */
+    public Base64(
+        final int lineLength,
+        final byte[] lineSeparator,
+        final boolean urlSafe,
+        final CodecPolicy decodingPolicy) {
+      super(
+          BYTES_PER_UNENCODED_BLOCK,
+          BYTES_PER_ENCODED_BLOCK,
+          lineLength,
+          lineSeparator == null ? 0 : lineSeparator.length,
+          PAD_DEFAULT,
+          decodingPolicy);
+      // could be simplified if there is no requirement to reject invalid line sep when length <=0
+      // @see test case Base64Test.testConstructors()
+      if (lineSeparator != null) {
+        if (containsAlphabetOrPad(lineSeparator)) {
+          final String sep = StringUtils.newStringUtf8(lineSeparator);
+          throw new IllegalArgumentException(
+              "lineSeparator must not contain base64 characters: [" + sep + "]");
+        }
+        if (lineLength > 0) { // null line-sep forces no chunking rather than throwing IAE
+          this.encodeSize = BYTES_PER_ENCODED_BLOCK + lineSeparator.length;
+          this.lineSeparator = lineSeparator.clone();
+        } else {
+          this.encodeSize = BYTES_PER_ENCODED_BLOCK;
+          this.lineSeparator = null;
+        }
+      } else {
+        this.encodeSize = BYTES_PER_ENCODED_BLOCK;
+        this.lineSeparator = null;
+      }
+      this.decodeSize = this.encodeSize - 1;
+      this.encodeTable = urlSafe ? URL_SAFE_ENCODE_TABLE : STANDARD_ENCODE_TABLE;
+    }
+
+    /**
      * Decodes Base64 data into octets.
      *
      * <p><b>Note:</b> this method seamlessly handles data encoded in URL-safe or normal mode.
@@ -2270,7 +2444,6 @@ class ApacheCodec {
       return new Base64().decode(base64String);
     }
 
-    // Implementation of integer encoding used for crypto
     /**
      * Decodes a byte64-encoded integer according to crypto standards such as W3C's XML-Signature.
      *
@@ -2516,161 +2689,6 @@ class ApacheCodec {
       final byte[] resizedBytes = new byte[bitlen / 8];
       System.arraycopy(bigBytes, startSrc, resizedBytes, startDst, len);
       return resizedBytes;
-    }
-
-    /**
-     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
-     *
-     * <p>When encoding the line length is 0 (no chunking), and the encoding table is
-     * STANDARD_ENCODE_TABLE.
-     *
-     * <p>When decoding all variants are supported.
-     */
-    public Base64() {
-      this(0);
-    }
-
-    /**
-     * Creates a Base64 codec used for decoding (all modes) and encoding in the given URL-safe mode.
-     *
-     * <p>When encoding the line length is 76, the line separator is CRLF, and the encoding table is
-     * STANDARD_ENCODE_TABLE.
-     *
-     * <p>When decoding all variants are supported.
-     *
-     * @param urlSafe if {@code true}, URL-safe encoding is used. In most cases this should be set
-     *     to {@code false}.
-     * @since 1.4
-     */
-    public Base64(final boolean urlSafe) {
-      this(MIME_CHUNK_SIZE, CHUNK_SEPARATOR, urlSafe);
-    }
-
-    /**
-     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
-     *
-     * <p>When encoding the line length is given in the constructor, the line separator is CRLF, and
-     * the encoding table is STANDARD_ENCODE_TABLE.
-     *
-     * <p>Line lengths that aren't multiples of 4 will still essentially end up being multiples of 4
-     * in the encoded data.
-     *
-     * <p>When decoding all variants are supported.
-     *
-     * @param lineLength Each line of encoded data will be at most of the given length (rounded down
-     *     to the nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
-     *     into lines (chunks). Ignored when decoding.
-     * @since 1.4
-     */
-    public Base64(final int lineLength) {
-      this(lineLength, CHUNK_SEPARATOR);
-    }
-
-    /**
-     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
-     *
-     * <p>When encoding the line length and line separator are given in the constructor, and the
-     * encoding table is STANDARD_ENCODE_TABLE.
-     *
-     * <p>Line lengths that aren't multiples of 4 will still essentially end up being multiples of 4
-     * in the encoded data.
-     *
-     * <p>When decoding all variants are supported.
-     *
-     * @param lineLength Each line of encoded data will be at most of the given length (rounded down
-     *     to the nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
-     *     into lines (chunks). Ignored when decoding.
-     * @param lineSeparator Each line of encoded data will end with this sequence of bytes.
-     * @throws IllegalArgumentException Thrown when the provided lineSeparator included some base64
-     *     characters.
-     * @since 1.4
-     */
-    public Base64(final int lineLength, final byte[] lineSeparator) {
-      this(lineLength, lineSeparator, false);
-    }
-
-    /**
-     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
-     *
-     * <p>When encoding the line length and line separator are given in the constructor, and the
-     * encoding table is STANDARD_ENCODE_TABLE.
-     *
-     * <p>Line lengths that aren't multiples of 4 will still essentially end up being multiples of 4
-     * in the encoded data.
-     *
-     * <p>When decoding all variants are supported.
-     *
-     * @param lineLength Each line of encoded data will be at most of the given length (rounded down
-     *     to the nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
-     *     into lines (chunks). Ignored when decoding.
-     * @param lineSeparator Each line of encoded data will end with this sequence of bytes.
-     * @param urlSafe Instead of emitting '+' and '/' we emit '-' and '_' respectively. urlSafe is
-     *     only applied to encode operations. Decoding seamlessly handles both modes. <b>Note: no
-     *     padding is added when using the URL-safe alphabet.</b>
-     * @throws IllegalArgumentException Thrown when the {@code lineSeparator} contains Base64
-     *     characters.
-     * @since 1.4
-     */
-    public Base64(final int lineLength, final byte[] lineSeparator, final boolean urlSafe) {
-      this(lineLength, lineSeparator, urlSafe, DECODING_POLICY_DEFAULT);
-    }
-
-    /**
-     * Creates a Base64 codec used for decoding (all modes) and encoding in URL-unsafe mode.
-     *
-     * <p>When encoding the line length and line separator are given in the constructor, and the
-     * encoding table is STANDARD_ENCODE_TABLE.
-     *
-     * <p>Line lengths that aren't multiples of 4 will still essentially end up being multiples of 4
-     * in the encoded data.
-     *
-     * <p>When decoding all variants are supported.
-     *
-     * @param lineLength Each line of encoded data will be at most of the given length (rounded down
-     *     to the nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
-     *     into lines (chunks). Ignored when decoding.
-     * @param lineSeparator Each line of encoded data will end with this sequence of bytes.
-     * @param urlSafe Instead of emitting '+' and '/' we emit '-' and '_' respectively. urlSafe is
-     *     only applied to encode operations. Decoding seamlessly handles both modes. <b>Note: no
-     *     padding is added when using the URL-safe alphabet.</b>
-     * @param decodingPolicy The decoding policy.
-     * @throws IllegalArgumentException Thrown when the {@code lineSeparator} contains Base64
-     *     characters.
-     * @since 1.15
-     */
-    public Base64(
-        final int lineLength,
-        final byte[] lineSeparator,
-        final boolean urlSafe,
-        final CodecPolicy decodingPolicy) {
-      super(
-          BYTES_PER_UNENCODED_BLOCK,
-          BYTES_PER_ENCODED_BLOCK,
-          lineLength,
-          lineSeparator == null ? 0 : lineSeparator.length,
-          PAD_DEFAULT,
-          decodingPolicy);
-      // could be simplified if there is no requirement to reject invalid line sep when length <=0
-      // @see test case Base64Test.testConstructors()
-      if (lineSeparator != null) {
-        if (containsAlphabetOrPad(lineSeparator)) {
-          final String sep = StringUtils.newStringUtf8(lineSeparator);
-          throw new IllegalArgumentException(
-              "lineSeparator must not contain base64 characters: [" + sep + "]");
-        }
-        if (lineLength > 0) { // null line-sep forces no chunking rather than throwing IAE
-          this.encodeSize = BYTES_PER_ENCODED_BLOCK + lineSeparator.length;
-          this.lineSeparator = lineSeparator.clone();
-        } else {
-          this.encodeSize = BYTES_PER_ENCODED_BLOCK;
-          this.lineSeparator = null;
-        }
-      } else {
-        this.encodeSize = BYTES_PER_ENCODED_BLOCK;
-        this.lineSeparator = null;
-      }
-      this.decodeSize = this.encodeSize - 1;
-      this.encodeTable = urlSafe ? URL_SAFE_ENCODE_TABLE : STANDARD_ENCODE_TABLE;
     }
 
     // Implementation of the Encoder Interface
