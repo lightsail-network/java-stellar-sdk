@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 public class Base64 {
   // ApacheCodec.Base64 is thread-safe
   private static final ApacheCodec.Base64 base64 =
-      new ApacheCodec.Base64(0, new byte[] {'\r', '\n'}, false, ApacheCodec.CodecPolicy.STRICT);
+      new ApacheCodec.Base64(0, null, false, ApacheCodec.CodecPolicy.STRICT);
 
   /**
    * Encodes bytes to base64 string
