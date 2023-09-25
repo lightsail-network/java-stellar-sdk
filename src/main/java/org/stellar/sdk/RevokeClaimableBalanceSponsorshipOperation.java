@@ -1,8 +1,8 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
+import java.io.IOException;
+import java.util.Objects;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
@@ -18,13 +18,21 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+    byte[] balanceIdBytes = Util.hexToBytes(this.balanceId);
+    ClaimableBalanceID balanceId;
+    try {
+      balanceId = ClaimableBalanceID.fromXdrByteArray(balanceIdBytes);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("invalid balanceId: " + this.balanceId, e);
+    }
+
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
     key.setDiscriminant(LedgerEntryType.CLAIMABLE_BALANCE);
     LedgerKey.LedgerKeyClaimableBalance claimableBalance =
         new LedgerKey.LedgerKeyClaimableBalance();
 
-    claimableBalance.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
+    claimableBalance.setBalanceID(balanceId);
     key.setClaimableBalance(claimableBalance);
     op.setLedgerKey(key);
     op.setDiscriminant(RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY);
@@ -49,8 +57,13 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
-      balanceId =
-          Util.xdrToClaimableBalanceId(op.getLedgerKey().getClaimableBalance().getBalanceID());
+      try {
+        balanceId =
+            Util.bytesToHex(op.getLedgerKey().getClaimableBalance().getBalanceID().toXdrByteArray())
+                .toLowerCase();
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Invalid claimableBalance in the operation", e);
+      }
     }
 
     /**
@@ -69,8 +82,8 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public RevokeClaimableBalanceSponsorshipOperation.Builder setSourceAccount(
-        String sourceAccount) {
-      mSourceAccount = checkNotNull(sourceAccount, "sourceAccount cannot be null");
+        @NonNull String sourceAccount) {
+      mSourceAccount = sourceAccount;
       return this;
     }
 
@@ -87,7 +100,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.balanceId, this.getSourceAccount());
+    return Objects.hash(this.balanceId, this.getSourceAccount());
   }
 
   @Override
@@ -98,7 +111,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
 
     RevokeClaimableBalanceSponsorshipOperation other =
         (RevokeClaimableBalanceSponsorshipOperation) object;
-    return Objects.equal(this.balanceId, other.balanceId)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.balanceId, other.balanceId)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

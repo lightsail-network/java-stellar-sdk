@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -80,7 +85,7 @@ public class TransactionHistoryResultEntry implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ledgerSeq, this.txResultSet, this.ext);
+    return Objects.hash(this.ledgerSeq, this.txResultSet, this.ext);
   }
 
   @Override
@@ -90,9 +95,33 @@ public class TransactionHistoryResultEntry implements XdrElement {
     }
 
     TransactionHistoryResultEntry other = (TransactionHistoryResultEntry) object;
-    return Objects.equal(this.ledgerSeq, other.ledgerSeq)
-        && Objects.equal(this.txResultSet, other.txResultSet)
-        && Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.ledgerSeq, other.ledgerSeq)
+        && Objects.equals(this.txResultSet, other.txResultSet)
+        && Objects.equals(this.ext, other.ext);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static TransactionHistoryResultEntry fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static TransactionHistoryResultEntry fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -117,14 +146,14 @@ public class TransactionHistoryResultEntry implements XdrElement {
 
     public TransactionHistoryResultEntry build() {
       TransactionHistoryResultEntry val = new TransactionHistoryResultEntry();
-      val.setLedgerSeq(ledgerSeq);
-      val.setTxResultSet(txResultSet);
-      val.setExt(ext);
+      val.setLedgerSeq(this.ledgerSeq);
+      val.setTxResultSet(this.txResultSet);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class TransactionHistoryResultEntryExt {
+  public static class TransactionHistoryResultEntryExt implements XdrElement {
     public TransactionHistoryResultEntryExt() {}
 
     Integer v;
@@ -184,7 +213,7 @@ public class TransactionHistoryResultEntry implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hash(this.v);
     }
 
     @Override
@@ -194,7 +223,31 @@ public class TransactionHistoryResultEntry implements XdrElement {
       }
 
       TransactionHistoryResultEntryExt other = (TransactionHistoryResultEntryExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equals(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static TransactionHistoryResultEntryExt fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static TransactionHistoryResultEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

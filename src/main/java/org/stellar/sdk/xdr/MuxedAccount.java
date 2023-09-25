@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -77,8 +82,8 @@ public class MuxedAccount implements XdrElement {
     public MuxedAccount build() {
       MuxedAccount val = new MuxedAccount();
       val.setDiscriminant(discriminant);
-      val.setEd25519(ed25519);
-      val.setMed25519(med25519);
+      val.setEd25519(this.ed25519);
+      val.setMed25519(this.med25519);
       return val;
     }
   }
@@ -119,7 +124,7 @@ public class MuxedAccount implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ed25519, this.med25519, this.type);
+    return Objects.hash(this.ed25519, this.med25519, this.type);
   }
 
   @Override
@@ -129,12 +134,36 @@ public class MuxedAccount implements XdrElement {
     }
 
     MuxedAccount other = (MuxedAccount) object;
-    return Objects.equal(this.ed25519, other.ed25519)
-        && Objects.equal(this.med25519, other.med25519)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.ed25519, other.ed25519)
+        && Objects.equals(this.med25519, other.med25519)
+        && Objects.equals(this.type, other.type);
   }
 
-  public static class MuxedAccountMed25519 {
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static MuxedAccount fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static MuxedAccount fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+
+  public static class MuxedAccountMed25519 implements XdrElement {
     public MuxedAccountMed25519() {}
 
     private Uint64 id;
@@ -177,7 +206,7 @@ public class MuxedAccount implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.id, this.ed25519);
+      return Objects.hash(this.id, this.ed25519);
     }
 
     @Override
@@ -187,7 +216,31 @@ public class MuxedAccount implements XdrElement {
       }
 
       MuxedAccountMed25519 other = (MuxedAccountMed25519) object;
-      return Objects.equal(this.id, other.id) && Objects.equal(this.ed25519, other.ed25519);
+      return Objects.equals(this.id, other.id) && Objects.equals(this.ed25519, other.ed25519);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static MuxedAccountMed25519 fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static MuxedAccountMed25519 fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
 
     public static final class Builder {
@@ -206,8 +259,8 @@ public class MuxedAccount implements XdrElement {
 
       public MuxedAccountMed25519 build() {
         MuxedAccountMed25519 val = new MuxedAccountMed25519();
-        val.setId(id);
-        val.setEd25519(ed25519);
+        val.setId(this.id);
+        val.setEd25519(this.ed25519);
         return val;
       }
     }

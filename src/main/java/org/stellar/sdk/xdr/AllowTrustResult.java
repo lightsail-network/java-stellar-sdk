@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -12,7 +17,12 @@ import java.io.IOException;
 //  {
 //  case ALLOW_TRUST_SUCCESS:
 //      void;
-//  default:
+//  case ALLOW_TRUST_MALFORMED:
+//  case ALLOW_TRUST_NO_TRUST_LINE:
+//  case ALLOW_TRUST_TRUST_NOT_REQUIRED:
+//  case ALLOW_TRUST_CANT_REVOKE:
+//  case ALLOW_TRUST_SELF_NOT_ALLOWED:
+//  case ALLOW_TRUST_LOW_RESERVE:
 //      void;
 //  };
 
@@ -53,7 +63,12 @@ public class AllowTrustResult implements XdrElement {
     switch (encodedAllowTrustResult.getDiscriminant()) {
       case ALLOW_TRUST_SUCCESS:
         break;
-      default:
+      case ALLOW_TRUST_MALFORMED:
+      case ALLOW_TRUST_NO_TRUST_LINE:
+      case ALLOW_TRUST_TRUST_NOT_REQUIRED:
+      case ALLOW_TRUST_CANT_REVOKE:
+      case ALLOW_TRUST_SELF_NOT_ALLOWED:
+      case ALLOW_TRUST_LOW_RESERVE:
         break;
     }
   }
@@ -69,7 +84,12 @@ public class AllowTrustResult implements XdrElement {
     switch (decodedAllowTrustResult.getDiscriminant()) {
       case ALLOW_TRUST_SUCCESS:
         break;
-      default:
+      case ALLOW_TRUST_MALFORMED:
+      case ALLOW_TRUST_NO_TRUST_LINE:
+      case ALLOW_TRUST_TRUST_NOT_REQUIRED:
+      case ALLOW_TRUST_CANT_REVOKE:
+      case ALLOW_TRUST_SELF_NOT_ALLOWED:
+      case ALLOW_TRUST_LOW_RESERVE:
         break;
     }
     return decodedAllowTrustResult;
@@ -77,7 +97,7 @@ public class AllowTrustResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.code);
+    return Objects.hash(this.code);
   }
 
   @Override
@@ -87,6 +107,30 @@ public class AllowTrustResult implements XdrElement {
     }
 
     AllowTrustResult other = (AllowTrustResult) object;
-    return Objects.equal(this.code, other.code);
+    return Objects.equals(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static AllowTrustResult fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static AllowTrustResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

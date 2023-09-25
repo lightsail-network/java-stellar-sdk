@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -56,7 +61,7 @@ public class Signer implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.key, this.weight);
+    return Objects.hash(this.key, this.weight);
   }
 
   @Override
@@ -66,7 +71,31 @@ public class Signer implements XdrElement {
     }
 
     Signer other = (Signer) object;
-    return Objects.equal(this.key, other.key) && Objects.equal(this.weight, other.weight);
+    return Objects.equals(this.key, other.key) && Objects.equals(this.weight, other.weight);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static Signer fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static Signer fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -85,8 +114,8 @@ public class Signer implements XdrElement {
 
     public Signer build() {
       Signer val = new Signer();
-      val.setKey(key);
-      val.setWeight(weight);
+      val.setKey(this.key);
+      val.setWeight(this.weight);
       return val;
     }
   }

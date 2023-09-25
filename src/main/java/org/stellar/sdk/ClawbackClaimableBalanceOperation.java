@@ -1,8 +1,9 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
+import java.io.IOException;
+import java.util.Objects;
+import lombok.NonNull;
+import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClawbackClaimableBalanceOp;
 import org.stellar.sdk.xdr.OperationType;
 
@@ -15,8 +16,8 @@ import org.stellar.sdk.xdr.OperationType;
 public class ClawbackClaimableBalanceOperation extends Operation {
   private final String balanceId;
 
-  private ClawbackClaimableBalanceOperation(String balanceId) {
-    this.balanceId = checkNotNull(balanceId, "balanceId cannot be null");
+  private ClawbackClaimableBalanceOperation(@NonNull String balanceId) {
+    this.balanceId = balanceId;
   }
 
   /** The id of the claimable balance which will be clawed back. */
@@ -26,9 +27,17 @@ public class ClawbackClaimableBalanceOperation extends Operation {
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+    byte[] balanceIdBytes = Util.hexToBytes(this.balanceId);
+    ClaimableBalanceID balanceId;
+    try {
+      balanceId = ClaimableBalanceID.fromXdrByteArray(balanceIdBytes);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("invalid balanceId: " + this.balanceId, e);
+    }
+
     ClawbackClaimableBalanceOp op = new ClawbackClaimableBalanceOp();
 
-    op.setBalanceID(Util.claimableBalanceIdToXDR(balanceId));
+    op.setBalanceID(balanceId);
 
     org.stellar.sdk.xdr.Operation.OperationBody body =
         new org.stellar.sdk.xdr.Operation.OperationBody();
@@ -48,7 +57,11 @@ public class ClawbackClaimableBalanceOperation extends Operation {
     private String mSourceAccount;
 
     Builder(ClawbackClaimableBalanceOp op) {
-      balanceId = Util.xdrToClaimableBalanceId(op.getBalanceID());
+      try {
+        balanceId = Util.bytesToHex(op.getBalanceID().toXdrByteArray()).toLowerCase();
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Invalid balanceId in the operation", e);
+      }
     }
 
     /**
@@ -84,7 +97,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.getSourceAccount(), this.balanceId);
+    return Objects.hash(this.getSourceAccount(), this.balanceId);
   }
 
   @Override
@@ -94,7 +107,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
     }
 
     ClawbackClaimableBalanceOperation other = (ClawbackClaimableBalanceOperation) object;
-    return Objects.equal(this.balanceId, other.balanceId)
-        && Objects.equal(this.getSourceAccount(), other.getSourceAccount());
+    return Objects.equals(this.balanceId, other.balanceId)
+        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

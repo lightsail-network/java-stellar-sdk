@@ -2,11 +2,10 @@ package org.stellar.sdk.responses.operations;
 
 import static org.stellar.sdk.Asset.create;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
@@ -55,7 +54,7 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
   private String sourceAssetIssuer;
 
   @SerializedName("path")
-  private ImmutableList<Asset> path;
+  private List<Asset> path;
 
   public String getAmount() {
     return amount;
@@ -71,14 +70,14 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
 
   public Optional<MuxedAccount> getFromMuxed() {
     if (this.fromMuxed == null || this.fromMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.fromMuxed, this.from, this.fromMuxedId));
   }
 
   public Optional<MuxedAccount> getToMuxed() {
     if (this.toMuxed == null || this.toMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.toMuxed, this.to, this.toMuxedId));
   }

@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -66,7 +71,7 @@ public class SCPHistoryEntryV0 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.hashCode(this.quorumSets), this.ledgerMessages);
+    return Objects.hash(Arrays.hashCode(this.quorumSets), this.ledgerMessages);
   }
 
   @Override
@@ -77,7 +82,31 @@ public class SCPHistoryEntryV0 implements XdrElement {
 
     SCPHistoryEntryV0 other = (SCPHistoryEntryV0) object;
     return Arrays.equals(this.quorumSets, other.quorumSets)
-        && Objects.equal(this.ledgerMessages, other.ledgerMessages);
+        && Objects.equals(this.ledgerMessages, other.ledgerMessages);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SCPHistoryEntryV0 fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SCPHistoryEntryV0 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -96,8 +125,8 @@ public class SCPHistoryEntryV0 implements XdrElement {
 
     public SCPHistoryEntryV0 build() {
       SCPHistoryEntryV0 val = new SCPHistoryEntryV0();
-      val.setQuorumSets(quorumSets);
-      val.setLedgerMessages(ledgerMessages);
+      val.setQuorumSets(this.quorumSets);
+      val.setLedgerMessages(this.ledgerMessages);
       return val;
     }
   }

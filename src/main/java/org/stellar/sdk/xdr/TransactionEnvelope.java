@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -91,9 +96,9 @@ public class TransactionEnvelope implements XdrElement {
     public TransactionEnvelope build() {
       TransactionEnvelope val = new TransactionEnvelope();
       val.setDiscriminant(discriminant);
-      val.setV0(v0);
-      val.setV1(v1);
-      val.setFeeBump(feeBump);
+      val.setV0(this.v0);
+      val.setV1(this.v1);
+      val.setFeeBump(this.feeBump);
       return val;
     }
   }
@@ -141,7 +146,7 @@ public class TransactionEnvelope implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.v0, this.v1, this.feeBump, this.type);
+    return Objects.hash(this.v0, this.v1, this.feeBump, this.type);
   }
 
   @Override
@@ -151,9 +156,33 @@ public class TransactionEnvelope implements XdrElement {
     }
 
     TransactionEnvelope other = (TransactionEnvelope) object;
-    return Objects.equal(this.v0, other.v0)
-        && Objects.equal(this.v1, other.v1)
-        && Objects.equal(this.feeBump, other.feeBump)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.v0, other.v0)
+        && Objects.equals(this.v1, other.v1)
+        && Objects.equals(this.feeBump, other.feeBump)
+        && Objects.equals(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static TransactionEnvelope fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static TransactionEnvelope fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

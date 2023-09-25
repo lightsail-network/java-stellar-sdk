@@ -1,6 +1,5 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -28,7 +27,6 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
             .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
-            .registerTypeAdapter(ImmutableList.class, new ImmutableListDeserializer())
             .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
             .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
             .create();
@@ -87,6 +85,12 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         return gson.fromJson(json, LiquidityPoolDepositOperationResponse.class);
       case LIQUIDITY_POOL_WITHDRAW:
         return gson.fromJson(json, LiquidityPoolWithdrawOperationResponse.class);
+      case INVOKE_HOST_FUNCTION:
+        return gson.fromJson(json, InvokeHostFunctionOperationResponse.class);
+      case BUMP_FOOTPRINT_EXPIRATION:
+        return gson.fromJson(json, BumpFootprintExpirationOperationResponse.class);
+      case RESTORE_FOOTPRINT:
+        return gson.fromJson(json, RestoreFootprintOperationResponse.class);
       default:
         throw new RuntimeException("Invalid operation type");
     }

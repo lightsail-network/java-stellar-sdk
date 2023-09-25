@@ -1,7 +1,7 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
+import java.util.Optional;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 
@@ -141,15 +141,15 @@ public class TradeResponse extends Response implements Pageable {
   }
 
   public Optional<Long> getBaseOfferId() {
-    return Optional.fromNullable(baseOfferId);
+    return Optional.ofNullable(baseOfferId);
   }
 
   public Optional<String> getBaseAccount() {
-    return Optional.fromNullable(baseAccount);
+    return Optional.ofNullable(baseAccount);
   }
 
   public Optional<LiquidityPoolID> getBaseLiquidityPoolID() {
-    return Optional.fromNullable(baseLiquidityPoolID);
+    return Optional.ofNullable(baseLiquidityPoolID);
   }
 
   public String getBaseAmount() {
@@ -173,15 +173,15 @@ public class TradeResponse extends Response implements Pageable {
   }
 
   public Optional<String> getCounterAccount() {
-    return Optional.fromNullable(counterAccount);
+    return Optional.ofNullable(counterAccount);
   }
 
   public Optional<LiquidityPoolID> getCounterLiquidityPoolID() {
-    return Optional.fromNullable(counterLiquidityPoolID);
+    return Optional.ofNullable(counterLiquidityPoolID);
   }
 
   public Optional<Long> getCounterOfferId() {
-    return Optional.fromNullable(counterOfferId);
+    return Optional.ofNullable(counterOfferId);
   }
 
   public Asset getCounterAsset() {

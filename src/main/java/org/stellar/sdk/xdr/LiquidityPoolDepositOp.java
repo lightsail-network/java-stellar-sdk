@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -97,7 +102,7 @@ public class LiquidityPoolDepositOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.liquidityPoolID, this.maxAmountA, this.maxAmountB, this.minPrice, this.maxPrice);
   }
 
@@ -108,11 +113,35 @@ public class LiquidityPoolDepositOp implements XdrElement {
     }
 
     LiquidityPoolDepositOp other = (LiquidityPoolDepositOp) object;
-    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
-        && Objects.equal(this.maxAmountA, other.maxAmountA)
-        && Objects.equal(this.maxAmountB, other.maxAmountB)
-        && Objects.equal(this.minPrice, other.minPrice)
-        && Objects.equal(this.maxPrice, other.maxPrice);
+    return Objects.equals(this.liquidityPoolID, other.liquidityPoolID)
+        && Objects.equals(this.maxAmountA, other.maxAmountA)
+        && Objects.equals(this.maxAmountB, other.maxAmountB)
+        && Objects.equals(this.minPrice, other.minPrice)
+        && Objects.equals(this.maxPrice, other.maxPrice);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LiquidityPoolDepositOp fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LiquidityPoolDepositOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -149,11 +178,11 @@ public class LiquidityPoolDepositOp implements XdrElement {
 
     public LiquidityPoolDepositOp build() {
       LiquidityPoolDepositOp val = new LiquidityPoolDepositOp();
-      val.setLiquidityPoolID(liquidityPoolID);
-      val.setMaxAmountA(maxAmountA);
-      val.setMaxAmountB(maxAmountB);
-      val.setMinPrice(minPrice);
-      val.setMaxPrice(maxPrice);
+      val.setLiquidityPoolID(this.liquidityPoolID);
+      val.setMaxAmountA(this.maxAmountA);
+      val.setMaxAmountB(this.maxAmountB);
+      val.setMinPrice(this.minPrice);
+      val.setMaxPrice(this.maxPrice);
       return val;
     }
   }

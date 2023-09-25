@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -45,7 +50,7 @@ public class ClawbackClaimableBalanceOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.balanceID);
+    return Objects.hash(this.balanceID);
   }
 
   @Override
@@ -55,7 +60,31 @@ public class ClawbackClaimableBalanceOp implements XdrElement {
     }
 
     ClawbackClaimableBalanceOp other = (ClawbackClaimableBalanceOp) object;
-    return Objects.equal(this.balanceID, other.balanceID);
+    return Objects.equals(this.balanceID, other.balanceID);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ClawbackClaimableBalanceOp fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ClawbackClaimableBalanceOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -68,7 +97,7 @@ public class ClawbackClaimableBalanceOp implements XdrElement {
 
     public ClawbackClaimableBalanceOp build() {
       ClawbackClaimableBalanceOp val = new ClawbackClaimableBalanceOp();
-      val.setBalanceID(balanceID);
+      val.setBalanceID(this.balanceID);
       return val;
     }
   }

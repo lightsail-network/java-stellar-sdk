@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -69,7 +74,7 @@ public class TransactionSignaturePayload implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.networkId, this.taggedTransaction);
+    return Objects.hash(this.networkId, this.taggedTransaction);
   }
 
   @Override
@@ -79,8 +84,32 @@ public class TransactionSignaturePayload implements XdrElement {
     }
 
     TransactionSignaturePayload other = (TransactionSignaturePayload) object;
-    return Objects.equal(this.networkId, other.networkId)
-        && Objects.equal(this.taggedTransaction, other.taggedTransaction);
+    return Objects.equals(this.networkId, other.networkId)
+        && Objects.equals(this.taggedTransaction, other.taggedTransaction);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static TransactionSignaturePayload fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static TransactionSignaturePayload fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -100,13 +129,13 @@ public class TransactionSignaturePayload implements XdrElement {
 
     public TransactionSignaturePayload build() {
       TransactionSignaturePayload val = new TransactionSignaturePayload();
-      val.setNetworkId(networkId);
-      val.setTaggedTransaction(taggedTransaction);
+      val.setNetworkId(this.networkId);
+      val.setTaggedTransaction(this.taggedTransaction);
       return val;
     }
   }
 
-  public static class TransactionSignaturePayloadTaggedTransaction {
+  public static class TransactionSignaturePayloadTaggedTransaction implements XdrElement {
     public TransactionSignaturePayloadTaggedTransaction() {}
 
     EnvelopeType type;
@@ -163,8 +192,8 @@ public class TransactionSignaturePayload implements XdrElement {
         TransactionSignaturePayloadTaggedTransaction val =
             new TransactionSignaturePayloadTaggedTransaction();
         val.setDiscriminant(discriminant);
-        val.setTx(tx);
-        val.setFeeBump(feeBump);
+        val.setTx(this.tx);
+        val.setFeeBump(this.feeBump);
         return val;
       }
     }
@@ -214,7 +243,7 @@ public class TransactionSignaturePayload implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.tx, this.feeBump, this.type);
+      return Objects.hash(this.tx, this.feeBump, this.type);
     }
 
     @Override
@@ -225,9 +254,35 @@ public class TransactionSignaturePayload implements XdrElement {
 
       TransactionSignaturePayloadTaggedTransaction other =
           (TransactionSignaturePayloadTaggedTransaction) object;
-      return Objects.equal(this.tx, other.tx)
-          && Objects.equal(this.feeBump, other.feeBump)
-          && Objects.equal(this.type, other.type);
+      return Objects.equals(this.tx, other.tx)
+          && Objects.equals(this.feeBump, other.feeBump)
+          && Objects.equals(this.type, other.type);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static TransactionSignaturePayloadTaggedTransaction fromXdrBase64(String xdr)
+        throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static TransactionSignaturePayloadTaggedTransaction fromXdrByteArray(byte[] xdr)
+        throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -65,7 +70,7 @@ public class ManageDataOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.dataName, this.dataValue);
+    return Objects.hash(this.dataName, this.dataValue);
   }
 
   @Override
@@ -75,8 +80,32 @@ public class ManageDataOp implements XdrElement {
     }
 
     ManageDataOp other = (ManageDataOp) object;
-    return Objects.equal(this.dataName, other.dataName)
-        && Objects.equal(this.dataValue, other.dataValue);
+    return Objects.equals(this.dataName, other.dataName)
+        && Objects.equals(this.dataValue, other.dataValue);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ManageDataOp fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ManageDataOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -95,8 +124,8 @@ public class ManageDataOp implements XdrElement {
 
     public ManageDataOp build() {
       ManageDataOp val = new ManageDataOp();
-      val.setDataName(dataName);
-      val.setDataValue(dataValue);
+      val.setDataName(this.dataName);
+      val.setDataValue(this.dataValue);
       return val;
     }
   }

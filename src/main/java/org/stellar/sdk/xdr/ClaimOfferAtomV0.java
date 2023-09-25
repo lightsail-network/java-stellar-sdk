@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -114,7 +119,7 @@ public class ClaimOfferAtomV0 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.sellerEd25519,
         this.offerID,
         this.assetSold,
@@ -130,12 +135,36 @@ public class ClaimOfferAtomV0 implements XdrElement {
     }
 
     ClaimOfferAtomV0 other = (ClaimOfferAtomV0) object;
-    return Objects.equal(this.sellerEd25519, other.sellerEd25519)
-        && Objects.equal(this.offerID, other.offerID)
-        && Objects.equal(this.assetSold, other.assetSold)
-        && Objects.equal(this.amountSold, other.amountSold)
-        && Objects.equal(this.assetBought, other.assetBought)
-        && Objects.equal(this.amountBought, other.amountBought);
+    return Objects.equals(this.sellerEd25519, other.sellerEd25519)
+        && Objects.equals(this.offerID, other.offerID)
+        && Objects.equals(this.assetSold, other.assetSold)
+        && Objects.equals(this.amountSold, other.amountSold)
+        && Objects.equals(this.assetBought, other.assetBought)
+        && Objects.equals(this.amountBought, other.amountBought);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ClaimOfferAtomV0 fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ClaimOfferAtomV0 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -178,12 +207,12 @@ public class ClaimOfferAtomV0 implements XdrElement {
 
     public ClaimOfferAtomV0 build() {
       ClaimOfferAtomV0 val = new ClaimOfferAtomV0();
-      val.setSellerEd25519(sellerEd25519);
-      val.setOfferID(offerID);
-      val.setAssetSold(assetSold);
-      val.setAmountSold(amountSold);
-      val.setAssetBought(assetBought);
-      val.setAmountBought(amountBought);
+      val.setSellerEd25519(this.sellerEd25519);
+      val.setOfferID(this.offerID);
+      val.setAssetSold(this.assetSold);
+      val.setAmountSold(this.amountSold);
+      val.setAssetBought(this.assetBought);
+      val.setAmountBought(this.amountBought);
       return val;
     }
   }

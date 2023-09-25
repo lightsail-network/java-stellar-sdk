@@ -2,9 +2,9 @@ package org.stellar.sdk.responses.effects;
 
 import static org.stellar.sdk.Asset.create;
 
-import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
+import java.util.Optional;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.MuxedAccount;
 
@@ -55,7 +55,7 @@ public class TradeEffectResponse extends EffectResponse {
 
   public Optional<MuxedAccount> getSellerMuxed() {
     if (this.sellerMuxed == null || this.sellerMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.sellerMuxed, this.seller, this.sellerMuxedId));
   }

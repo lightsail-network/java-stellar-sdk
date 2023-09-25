@@ -4,7 +4,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import org.junit.Test;
 import org.stellar.sdk.xdr.AccountID;
@@ -14,6 +13,7 @@ import org.stellar.sdk.xdr.MuxedAccount;
 public class StrKeyTest {
   @Test
   public void testDecodeEncode() throws IOException, FormatException {
+
     String seed = "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE";
     byte[] secret = StrKey.decodeCheck(StrKey.VersionByte.SEED, seed.toCharArray());
     char[] encoded = StrKey.encodeCheck(StrKey.VersionByte.SEED, secret);
@@ -141,9 +141,8 @@ public class StrKeyTest {
   public void testValidSignedPayloadEncode() {
     // Valid signed payload with an ed25519 public key and a 32-byte payload.
     byte[] payload =
-        BaseEncoding.base16()
-            .decode(
-                "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+        Util.hexToBytes(
+            "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
     SignedPayloadSigner signedPayloadSigner =
         new SignedPayloadSigner(
             StrKey.decodeStellarAccountId(
@@ -156,8 +155,7 @@ public class StrKeyTest {
 
     // Valid signed payload with an ed25519 public key and a 29-byte payload.
     payload =
-        BaseEncoding.base16()
-            .decode("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d".toUpperCase());
+        Util.hexToBytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d".toUpperCase());
     signedPayloadSigner =
         new SignedPayloadSigner(
             StrKey.decodeStellarAccountId(
@@ -308,7 +306,9 @@ public class StrKeyTest {
     MuxedAccount muxedAccount = StrKey.encodeToXDRMuxedAccount(muxedAddress);
     assertEquals(CryptoKeyType.KEY_TYPE_MUXED_ED25519, muxedAccount.getDiscriminant());
     assertEquals(account.getAccountID().getEd25519(), muxedAccount.getMed25519().getEd25519());
-    assertEquals(new Long(-9223372036854775808L), muxedAccount.getMed25519().getId().getUint64());
+    assertEquals(
+        -9223372036854775808L,
+        muxedAccount.getMed25519().getId().getUint64().getNumber().longValue());
 
     assertEquals(muxedAddress, StrKey.encodeStellarMuxedAccount(muxedAccount));
 

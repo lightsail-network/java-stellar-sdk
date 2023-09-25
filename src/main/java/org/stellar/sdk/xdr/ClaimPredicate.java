@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -131,11 +136,11 @@ public class ClaimPredicate implements XdrElement {
     public ClaimPredicate build() {
       ClaimPredicate val = new ClaimPredicate();
       val.setDiscriminant(discriminant);
-      val.setAndPredicates(andPredicates);
-      val.setOrPredicates(orPredicates);
-      val.setNotPredicate(notPredicate);
-      val.setAbsBefore(absBefore);
-      val.setRelBefore(relBefore);
+      val.setAndPredicates(this.andPredicates);
+      val.setOrPredicates(this.orPredicates);
+      val.setNotPredicate(this.notPredicate);
+      val.setAbsBefore(this.absBefore);
+      val.setRelBefore(this.relBefore);
       return val;
     }
   }
@@ -222,7 +227,7 @@ public class ClaimPredicate implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         Arrays.hashCode(this.andPredicates),
         Arrays.hashCode(this.orPredicates),
         this.notPredicate,
@@ -240,9 +245,33 @@ public class ClaimPredicate implements XdrElement {
     ClaimPredicate other = (ClaimPredicate) object;
     return Arrays.equals(this.andPredicates, other.andPredicates)
         && Arrays.equals(this.orPredicates, other.orPredicates)
-        && Objects.equal(this.notPredicate, other.notPredicate)
-        && Objects.equal(this.absBefore, other.absBefore)
-        && Objects.equal(this.relBefore, other.relBefore)
-        && Objects.equal(this.type, other.type);
+        && Objects.equals(this.notPredicate, other.notPredicate)
+        && Objects.equals(this.absBefore, other.absBefore)
+        && Objects.equals(this.relBefore, other.relBefore)
+        && Objects.equals(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ClaimPredicate fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ClaimPredicate fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

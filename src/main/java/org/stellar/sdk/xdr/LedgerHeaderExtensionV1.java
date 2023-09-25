@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -64,7 +69,7 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.flags, this.ext);
+    return Objects.hash(this.flags, this.ext);
   }
 
   @Override
@@ -74,7 +79,31 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
     }
 
     LedgerHeaderExtensionV1 other = (LedgerHeaderExtensionV1) object;
-    return Objects.equal(this.flags, other.flags) && Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.flags, other.flags) && Objects.equals(this.ext, other.ext);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerHeaderExtensionV1 fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerHeaderExtensionV1 fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -93,13 +122,13 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
 
     public LedgerHeaderExtensionV1 build() {
       LedgerHeaderExtensionV1 val = new LedgerHeaderExtensionV1();
-      val.setFlags(flags);
-      val.setExt(ext);
+      val.setFlags(this.flags);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class LedgerHeaderExtensionV1Ext {
+  public static class LedgerHeaderExtensionV1Ext implements XdrElement {
     public LedgerHeaderExtensionV1Ext() {}
 
     Integer v;
@@ -157,7 +186,7 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hash(this.v);
     }
 
     @Override
@@ -167,7 +196,31 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
       }
 
       LedgerHeaderExtensionV1Ext other = (LedgerHeaderExtensionV1Ext) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equals(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static LedgerHeaderExtensionV1Ext fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static LedgerHeaderExtensionV1Ext fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

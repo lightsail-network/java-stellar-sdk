@@ -1,7 +1,7 @@
 package org.stellar.sdk.responses;
 
-import com.google.common.base.Optional;
 import com.google.gson.reflect.TypeToken;
+import java.util.Optional;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.Asset;

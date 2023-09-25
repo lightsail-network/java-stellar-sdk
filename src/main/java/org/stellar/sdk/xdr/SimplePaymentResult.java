@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -71,7 +76,7 @@ public class SimplePaymentResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.destination, this.asset, this.amount);
+    return Objects.hash(this.destination, this.asset, this.amount);
   }
 
   @Override
@@ -81,9 +86,33 @@ public class SimplePaymentResult implements XdrElement {
     }
 
     SimplePaymentResult other = (SimplePaymentResult) object;
-    return Objects.equal(this.destination, other.destination)
-        && Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.amount, other.amount);
+    return Objects.equals(this.destination, other.destination)
+        && Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.amount, other.amount);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SimplePaymentResult fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SimplePaymentResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -108,9 +137,9 @@ public class SimplePaymentResult implements XdrElement {
 
     public SimplePaymentResult build() {
       SimplePaymentResult val = new SimplePaymentResult();
-      val.setDestination(destination);
-      val.setAsset(asset);
-      val.setAmount(amount);
+      val.setDestination(this.destination);
+      val.setAsset(this.asset);
+      val.setAmount(this.amount);
       return val;
     }
   }

@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -19,7 +24,7 @@ import java.util.Arrays;
 //      case MANAGE_OFFER_CREATED:
 //      case MANAGE_OFFER_UPDATED:
 //          OfferEntry offer;
-//      default:
+//      case MANAGE_OFFER_DELETED:
 //          void;
 //      }
 //      offer;
@@ -77,7 +82,7 @@ public class ManageOfferSuccessResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(Arrays.hashCode(this.offersClaimed), this.offer);
+    return Objects.hash(Arrays.hashCode(this.offersClaimed), this.offer);
   }
 
   @Override
@@ -88,7 +93,31 @@ public class ManageOfferSuccessResult implements XdrElement {
 
     ManageOfferSuccessResult other = (ManageOfferSuccessResult) object;
     return Arrays.equals(this.offersClaimed, other.offersClaimed)
-        && Objects.equal(this.offer, other.offer);
+        && Objects.equals(this.offer, other.offer);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ManageOfferSuccessResult fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ManageOfferSuccessResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -107,13 +136,13 @@ public class ManageOfferSuccessResult implements XdrElement {
 
     public ManageOfferSuccessResult build() {
       ManageOfferSuccessResult val = new ManageOfferSuccessResult();
-      val.setOffersClaimed(offersClaimed);
-      val.setOffer(offer);
+      val.setOffersClaimed(this.offersClaimed);
+      val.setOffer(this.offer);
       return val;
     }
   }
 
-  public static class ManageOfferSuccessResultOffer {
+  public static class ManageOfferSuccessResultOffer implements XdrElement {
     public ManageOfferSuccessResultOffer() {}
 
     ManageOfferEffect effect;
@@ -153,7 +182,7 @@ public class ManageOfferSuccessResult implements XdrElement {
       public ManageOfferSuccessResultOffer build() {
         ManageOfferSuccessResultOffer val = new ManageOfferSuccessResultOffer();
         val.setDiscriminant(discriminant);
-        val.setOffer(offer);
+        val.setOffer(this.offer);
         return val;
       }
     }
@@ -170,7 +199,7 @@ public class ManageOfferSuccessResult implements XdrElement {
         case MANAGE_OFFER_UPDATED:
           OfferEntry.encode(stream, encodedManageOfferSuccessResultOffer.offer);
           break;
-        default:
+        case MANAGE_OFFER_DELETED:
           break;
       }
     }
@@ -190,7 +219,7 @@ public class ManageOfferSuccessResult implements XdrElement {
         case MANAGE_OFFER_UPDATED:
           decodedManageOfferSuccessResultOffer.offer = OfferEntry.decode(stream);
           break;
-        default:
+        case MANAGE_OFFER_DELETED:
           break;
       }
       return decodedManageOfferSuccessResultOffer;
@@ -198,7 +227,7 @@ public class ManageOfferSuccessResult implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.offer, this.effect);
+      return Objects.hash(this.offer, this.effect);
     }
 
     @Override
@@ -208,7 +237,31 @@ public class ManageOfferSuccessResult implements XdrElement {
       }
 
       ManageOfferSuccessResultOffer other = (ManageOfferSuccessResultOffer) object;
-      return Objects.equal(this.offer, other.offer) && Objects.equal(this.effect, other.effect);
+      return Objects.equals(this.offer, other.offer) && Objects.equals(this.effect, other.effect);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static ManageOfferSuccessResultOffer fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static ManageOfferSuccessResultOffer fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

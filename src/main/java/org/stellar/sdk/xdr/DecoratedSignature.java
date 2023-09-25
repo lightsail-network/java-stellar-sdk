@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -57,7 +62,7 @@ public class DecoratedSignature implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.hint, this.signature);
+    return Objects.hash(this.hint, this.signature);
   }
 
   @Override
@@ -67,7 +72,31 @@ public class DecoratedSignature implements XdrElement {
     }
 
     DecoratedSignature other = (DecoratedSignature) object;
-    return Objects.equal(this.hint, other.hint) && Objects.equal(this.signature, other.signature);
+    return Objects.equals(this.hint, other.hint) && Objects.equals(this.signature, other.signature);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static DecoratedSignature fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static DecoratedSignature fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -86,8 +115,8 @@ public class DecoratedSignature implements XdrElement {
 
     public DecoratedSignature build() {
       DecoratedSignature val = new DecoratedSignature();
-      val.setHint(hint);
-      val.setSignature(signature);
+      val.setHint(this.hint);
+      val.setSignature(this.signature);
       return val;
     }
   }

@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -80,7 +85,7 @@ public class CreateClaimableBalanceOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.asset, this.amount, Arrays.hashCode(this.claimants));
+    return Objects.hash(this.asset, this.amount, Arrays.hashCode(this.claimants));
   }
 
   @Override
@@ -90,9 +95,33 @@ public class CreateClaimableBalanceOp implements XdrElement {
     }
 
     CreateClaimableBalanceOp other = (CreateClaimableBalanceOp) object;
-    return Objects.equal(this.asset, other.asset)
-        && Objects.equal(this.amount, other.amount)
+    return Objects.equals(this.asset, other.asset)
+        && Objects.equals(this.amount, other.amount)
         && Arrays.equals(this.claimants, other.claimants);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static CreateClaimableBalanceOp fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static CreateClaimableBalanceOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -117,9 +146,9 @@ public class CreateClaimableBalanceOp implements XdrElement {
 
     public CreateClaimableBalanceOp build() {
       CreateClaimableBalanceOp val = new CreateClaimableBalanceOp();
-      val.setAsset(asset);
-      val.setAmount(amount);
-      val.setClaimants(claimants);
+      val.setAsset(this.asset);
+      val.setAmount(this.amount);
+      val.setClaimants(this.claimants);
       return val;
     }
   }

@@ -1,9 +1,8 @@
 package org.stellar.sdk;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
 import java.nio.charset.Charset;
+import java.util.Objects;
+import lombok.NonNull;
 
 /**
  * Network class is used to specify which Stellar network you want to use. Each network has a <code>
@@ -13,6 +12,10 @@ public class Network {
   public static final Network PUBLIC =
       new Network("Public Global Stellar Network ; September 2015");
   public static final Network TESTNET = new Network("Test SDF Network ; September 2015");
+  public static final Network FUTURENET = new Network("Test SDF Future Network ; October 2022");
+  public static final Network STANDALONE = new Network("Standalone Network ; February 2017");
+  public static final Network SANDBOX =
+      new Network("Local Sandbox Stellar Network ; September 2022");
 
   private final String networkPassphrase;
 
@@ -21,8 +24,8 @@ public class Network {
    *
    * @param networkPassphrase
    */
-  public Network(String networkPassphrase) {
-    this.networkPassphrase = checkNotNull(networkPassphrase, "networkPassphrase cannot be null");
+  public Network(@NonNull String networkPassphrase) {
+    this.networkPassphrase = networkPassphrase;
   }
 
   /** Returns network passphrase */
@@ -47,7 +50,7 @@ public class Network {
     }
 
     Network other = (Network) object;
-    return Objects.equal(this.networkPassphrase, other.networkPassphrase);
+    return Objects.equals(this.networkPassphrase, other.networkPassphrase);
   }
 
   @Override

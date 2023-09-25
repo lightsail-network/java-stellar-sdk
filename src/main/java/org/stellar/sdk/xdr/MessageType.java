@@ -3,7 +3,12 @@
 
 package org.stellar.sdk.xdr;
 
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 
 // === xdr source ============================================================
 
@@ -18,6 +23,7 @@ import java.io.IOException;
 //
 //      GET_TX_SET = 6, // gets a particular txset by hash
 //      TX_SET = 7,
+//      GENERALIZED_TX_SET = 17,
 //
 //      TRANSACTION = 8, // pass on a tx you have heard about
 //
@@ -33,7 +39,11 @@ import java.io.IOException;
 //      SURVEY_REQUEST = 14,
 //      SURVEY_RESPONSE = 15,
 //
-//      SEND_MORE = 16
+//      SEND_MORE = 16,
+//      SEND_MORE_EXTENDED = 20,
+//
+//      FLOOD_ADVERT = 18,
+//      FLOOD_DEMAND = 19
 //  };
 
 //  ===========================================================================
@@ -45,6 +55,7 @@ public enum MessageType implements XdrElement {
   PEERS(5),
   GET_TX_SET(6),
   TX_SET(7),
+  GENERALIZED_TX_SET(17),
   TRANSACTION(8),
   GET_SCP_QUORUMSET(9),
   SCP_QUORUMSET(10),
@@ -54,6 +65,9 @@ public enum MessageType implements XdrElement {
   SURVEY_REQUEST(14),
   SURVEY_RESPONSE(15),
   SEND_MORE(16),
+  SEND_MORE_EXTENDED(20),
+  FLOOD_ADVERT(18),
+  FLOOD_DEMAND(19),
   ;
   private int mValue;
 
@@ -82,6 +96,8 @@ public enum MessageType implements XdrElement {
         return GET_TX_SET;
       case 7:
         return TX_SET;
+      case 17:
+        return GENERALIZED_TX_SET;
       case 8:
         return TRANSACTION;
       case 9:
@@ -100,6 +116,12 @@ public enum MessageType implements XdrElement {
         return SURVEY_RESPONSE;
       case 16:
         return SEND_MORE;
+      case 20:
+        return SEND_MORE_EXTENDED;
+      case 18:
+        return FLOOD_ADVERT;
+      case 19:
+        return FLOOD_DEMAND;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
@@ -111,5 +133,29 @@ public enum MessageType implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static MessageType fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static MessageType fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

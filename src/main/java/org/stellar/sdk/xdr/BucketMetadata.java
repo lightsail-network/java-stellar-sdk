@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -65,7 +70,7 @@ public class BucketMetadata implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.ledgerVersion, this.ext);
+    return Objects.hash(this.ledgerVersion, this.ext);
   }
 
   @Override
@@ -75,8 +80,32 @@ public class BucketMetadata implements XdrElement {
     }
 
     BucketMetadata other = (BucketMetadata) object;
-    return Objects.equal(this.ledgerVersion, other.ledgerVersion)
-        && Objects.equal(this.ext, other.ext);
+    return Objects.equals(this.ledgerVersion, other.ledgerVersion)
+        && Objects.equals(this.ext, other.ext);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static BucketMetadata fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static BucketMetadata fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -95,13 +124,13 @@ public class BucketMetadata implements XdrElement {
 
     public BucketMetadata build() {
       BucketMetadata val = new BucketMetadata();
-      val.setLedgerVersion(ledgerVersion);
-      val.setExt(ext);
+      val.setLedgerVersion(this.ledgerVersion);
+      val.setExt(this.ext);
       return val;
     }
   }
 
-  public static class BucketMetadataExt {
+  public static class BucketMetadataExt implements XdrElement {
     public BucketMetadataExt() {}
 
     Integer v;
@@ -157,7 +186,7 @@ public class BucketMetadata implements XdrElement {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(this.v);
+      return Objects.hash(this.v);
     }
 
     @Override
@@ -167,7 +196,31 @@ public class BucketMetadata implements XdrElement {
       }
 
       BucketMetadataExt other = (BucketMetadataExt) object;
-      return Objects.equal(this.v, other.v);
+      return Objects.equals(this.v, other.v);
+    }
+
+    @Override
+    public String toXdrBase64() throws IOException {
+      return Base64.getEncoder().encodeToString(toXdrByteArray());
+    }
+
+    @Override
+    public byte[] toXdrByteArray() throws IOException {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+      encode(xdrDataOutputStream);
+      return byteArrayOutputStream.toByteArray();
+    }
+
+    public static BucketMetadataExt fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64.getDecoder().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static BucketMetadataExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
     }
   }
 }

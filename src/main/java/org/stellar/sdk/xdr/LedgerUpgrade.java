@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -20,6 +25,13 @@ import java.io.IOException;
 //      uint32 newBaseReserve; // update baseReserve
 //  case LEDGER_UPGRADE_FLAGS:
 //      uint32 newFlags; // update flags
+//  case LEDGER_UPGRADE_CONFIG:
+//      // Update arbitrary `ConfigSetting` entries identified by the key.
+//      ConfigUpgradeSetKey newConfig;
+//  case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+//      // Update ConfigSettingContractExecutionLanesV0.ledgerMaxTxCount without
+//      // using `LEDGER_UPGRADE_CONFIG`.
+//      uint32 newMaxSorobanTxSetSize;
 //  };
 
 //  ===========================================================================
@@ -86,6 +98,26 @@ public class LedgerUpgrade implements XdrElement {
     this.newFlags = value;
   }
 
+  private ConfigUpgradeSetKey newConfig;
+
+  public ConfigUpgradeSetKey getNewConfig() {
+    return this.newConfig;
+  }
+
+  public void setNewConfig(ConfigUpgradeSetKey value) {
+    this.newConfig = value;
+  }
+
+  private Uint32 newMaxSorobanTxSetSize;
+
+  public Uint32 getNewMaxSorobanTxSetSize() {
+    return this.newMaxSorobanTxSetSize;
+  }
+
+  public void setNewMaxSorobanTxSetSize(Uint32 value) {
+    this.newMaxSorobanTxSetSize = value;
+  }
+
   public static final class Builder {
     private LedgerUpgradeType discriminant;
     private Uint32 newLedgerVersion;
@@ -93,6 +125,8 @@ public class LedgerUpgrade implements XdrElement {
     private Uint32 newMaxTxSetSize;
     private Uint32 newBaseReserve;
     private Uint32 newFlags;
+    private ConfigUpgradeSetKey newConfig;
+    private Uint32 newMaxSorobanTxSetSize;
 
     public Builder discriminant(LedgerUpgradeType discriminant) {
       this.discriminant = discriminant;
@@ -124,14 +158,26 @@ public class LedgerUpgrade implements XdrElement {
       return this;
     }
 
+    public Builder newConfig(ConfigUpgradeSetKey newConfig) {
+      this.newConfig = newConfig;
+      return this;
+    }
+
+    public Builder newMaxSorobanTxSetSize(Uint32 newMaxSorobanTxSetSize) {
+      this.newMaxSorobanTxSetSize = newMaxSorobanTxSetSize;
+      return this;
+    }
+
     public LedgerUpgrade build() {
       LedgerUpgrade val = new LedgerUpgrade();
       val.setDiscriminant(discriminant);
-      val.setNewLedgerVersion(newLedgerVersion);
-      val.setNewBaseFee(newBaseFee);
-      val.setNewMaxTxSetSize(newMaxTxSetSize);
-      val.setNewBaseReserve(newBaseReserve);
-      val.setNewFlags(newFlags);
+      val.setNewLedgerVersion(this.newLedgerVersion);
+      val.setNewBaseFee(this.newBaseFee);
+      val.setNewMaxTxSetSize(this.newMaxTxSetSize);
+      val.setNewBaseReserve(this.newBaseReserve);
+      val.setNewFlags(this.newFlags);
+      val.setNewConfig(this.newConfig);
+      val.setNewMaxSorobanTxSetSize(this.newMaxSorobanTxSetSize);
       return val;
     }
   }
@@ -156,6 +202,12 @@ public class LedgerUpgrade implements XdrElement {
         break;
       case LEDGER_UPGRADE_FLAGS:
         Uint32.encode(stream, encodedLedgerUpgrade.newFlags);
+        break;
+      case LEDGER_UPGRADE_CONFIG:
+        ConfigUpgradeSetKey.encode(stream, encodedLedgerUpgrade.newConfig);
+        break;
+      case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+        Uint32.encode(stream, encodedLedgerUpgrade.newMaxSorobanTxSetSize);
         break;
     }
   }
@@ -184,18 +236,26 @@ public class LedgerUpgrade implements XdrElement {
       case LEDGER_UPGRADE_FLAGS:
         decodedLedgerUpgrade.newFlags = Uint32.decode(stream);
         break;
+      case LEDGER_UPGRADE_CONFIG:
+        decodedLedgerUpgrade.newConfig = ConfigUpgradeSetKey.decode(stream);
+        break;
+      case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+        decodedLedgerUpgrade.newMaxSorobanTxSetSize = Uint32.decode(stream);
+        break;
     }
     return decodedLedgerUpgrade;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.newLedgerVersion,
         this.newBaseFee,
         this.newMaxTxSetSize,
         this.newBaseReserve,
         this.newFlags,
+        this.newConfig,
+        this.newMaxSorobanTxSetSize,
         this.type);
   }
 
@@ -206,11 +266,37 @@ public class LedgerUpgrade implements XdrElement {
     }
 
     LedgerUpgrade other = (LedgerUpgrade) object;
-    return Objects.equal(this.newLedgerVersion, other.newLedgerVersion)
-        && Objects.equal(this.newBaseFee, other.newBaseFee)
-        && Objects.equal(this.newMaxTxSetSize, other.newMaxTxSetSize)
-        && Objects.equal(this.newBaseReserve, other.newBaseReserve)
-        && Objects.equal(this.newFlags, other.newFlags)
-        && Objects.equal(this.type, other.type);
+    return Objects.equals(this.newLedgerVersion, other.newLedgerVersion)
+        && Objects.equals(this.newBaseFee, other.newBaseFee)
+        && Objects.equals(this.newMaxTxSetSize, other.newMaxTxSetSize)
+        && Objects.equals(this.newBaseReserve, other.newBaseReserve)
+        && Objects.equals(this.newFlags, other.newFlags)
+        && Objects.equals(this.newConfig, other.newConfig)
+        && Objects.equals(this.newMaxSorobanTxSetSize, other.newMaxSorobanTxSetSize)
+        && Objects.equals(this.type, other.type);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerUpgrade fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerUpgrade fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -58,7 +63,7 @@ public class SignedSurveyRequestMessage implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.requestSignature, this.request);
+    return Objects.hash(this.requestSignature, this.request);
   }
 
   @Override
@@ -68,8 +73,32 @@ public class SignedSurveyRequestMessage implements XdrElement {
     }
 
     SignedSurveyRequestMessage other = (SignedSurveyRequestMessage) object;
-    return Objects.equal(this.requestSignature, other.requestSignature)
-        && Objects.equal(this.request, other.request);
+    return Objects.equals(this.requestSignature, other.requestSignature)
+        && Objects.equals(this.request, other.request);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SignedSurveyRequestMessage fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SignedSurveyRequestMessage fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -88,8 +117,8 @@ public class SignedSurveyRequestMessage implements XdrElement {
 
     public SignedSurveyRequestMessage build() {
       SignedSurveyRequestMessage val = new SignedSurveyRequestMessage();
-      val.setRequestSignature(requestSignature);
-      val.setRequest(request);
+      val.setRequestSignature(this.requestSignature);
+      val.setRequest(this.request);
       return val;
     }
   }

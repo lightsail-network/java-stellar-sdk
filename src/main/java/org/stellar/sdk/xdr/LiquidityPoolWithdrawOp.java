@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -84,7 +89,7 @@ public class LiquidityPoolWithdrawOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.liquidityPoolID, this.amount, this.minAmountA, this.minAmountB);
+    return Objects.hash(this.liquidityPoolID, this.amount, this.minAmountA, this.minAmountB);
   }
 
   @Override
@@ -94,10 +99,34 @@ public class LiquidityPoolWithdrawOp implements XdrElement {
     }
 
     LiquidityPoolWithdrawOp other = (LiquidityPoolWithdrawOp) object;
-    return Objects.equal(this.liquidityPoolID, other.liquidityPoolID)
-        && Objects.equal(this.amount, other.amount)
-        && Objects.equal(this.minAmountA, other.minAmountA)
-        && Objects.equal(this.minAmountB, other.minAmountB);
+    return Objects.equals(this.liquidityPoolID, other.liquidityPoolID)
+        && Objects.equals(this.amount, other.amount)
+        && Objects.equals(this.minAmountA, other.minAmountA)
+        && Objects.equals(this.minAmountB, other.minAmountB);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LiquidityPoolWithdrawOp fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LiquidityPoolWithdrawOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -128,10 +157,10 @@ public class LiquidityPoolWithdrawOp implements XdrElement {
 
     public LiquidityPoolWithdrawOp build() {
       LiquidityPoolWithdrawOp val = new LiquidityPoolWithdrawOp();
-      val.setLiquidityPoolID(liquidityPoolID);
-      val.setAmount(amount);
-      val.setMinAmountA(minAmountA);
-      val.setMinAmountB(minAmountB);
+      val.setLiquidityPoolID(this.liquidityPoolID);
+      val.setAmount(this.amount);
+      val.setMinAmountA(this.minAmountA);
+      val.setMinAmountB(this.minAmountB);
       return val;
     }
   }

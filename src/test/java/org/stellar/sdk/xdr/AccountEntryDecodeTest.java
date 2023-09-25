@@ -3,15 +3,10 @@ package org.stellar.sdk.xdr;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Test;
 
 public class AccountEntryDecodeTest {
-
-  BaseEncoding base64Encoding = BaseEncoding.base64();
 
   @Test
   public void testDecodeSignerPayload() throws IOException {
@@ -23,7 +18,7 @@ public class AccountEntryDecodeTest {
     signerKey.getEd25519SignedPayload().setPayload(new byte[] {1, 2, 3, 4});
     signerKey.getEd25519SignedPayload().setEd25519(new Uint256(new byte[32]));
     signer.setKey(signerKey);
-    signer.setWeight(new Uint32(1));
+    signer.setWeight(new Uint32(new XdrUnsignedInteger(1)));
     bldr.signers(new Signer[] {signer});
     bldr.accountID(
         new AccountID(
@@ -33,8 +28,8 @@ public class AccountEntryDecodeTest {
                 .build()));
     bldr.seqNum(new SequenceNumber(new Int64(1L)));
     bldr.balance(new Int64(0L));
-    bldr.numSubEntries(new Uint32(0));
-    bldr.flags(new Uint32(0));
+    bldr.numSubEntries(new Uint32(new XdrUnsignedInteger(0)));
+    bldr.flags(new Uint32(new XdrUnsignedInteger(0)));
     bldr.homeDomain(new String32(new XdrString("")));
     bldr.thresholds(new Thresholds(new byte[3]));
     bldr.ext(
@@ -52,8 +47,8 @@ public class AccountEntryDecodeTest {
                             .discriminant(2)
                             .v2(
                                 new AccountEntryExtensionV2.Builder()
-                                    .numSponsored(new Uint32(0))
-                                    .numSponsoring(new Uint32(0))
+                                    .numSponsored(new Uint32(new XdrUnsignedInteger(0)))
+                                    .numSponsoring(new Uint32(new XdrUnsignedInteger(0)))
                                     .signerSponsoringIDs(new SponsorshipDescriptor[] {})
                                     .ext(
                                         new AccountEntryExtensionV2.AccountEntryExtensionV2Ext
@@ -61,8 +56,12 @@ public class AccountEntryDecodeTest {
                                             .discriminant(3)
                                             .v3(
                                                 new AccountEntryExtensionV3.Builder()
-                                                    .seqLedger(new Uint32(1))
-                                                    .seqTime(new TimePoint(new Uint64(2L)))
+                                                    .seqLedger(
+                                                        new Uint32(new XdrUnsignedInteger(1)))
+                                                    .seqTime(
+                                                        new TimePoint(
+                                                            new Uint64(
+                                                                new XdrUnsignedHyperInteger(2L))))
                                                     .ext(
                                                         new ExtensionPoint.Builder()
                                                             .discriminant(0)
@@ -76,15 +75,7 @@ public class AccountEntryDecodeTest {
 
     AccountEntry xdr = bldr.build();
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    XdrDataOutputStream outputStream = new XdrDataOutputStream(baos);
-    AccountEntry.encode(outputStream, xdr);
-    String encodedXdr = base64Encoding.encode(baos.toByteArray());
-
-    byte[] decodedbBytes = base64Encoding.decode(encodedXdr);
-
-    AccountEntry accountEntry =
-        AccountEntry.decode(new XdrDataInputStream(new ByteArrayInputStream(decodedbBytes)));
+    AccountEntry accountEntry = AccountEntry.fromXdrBase64(xdr.toXdrBase64());
     assertArrayEquals(
         new byte[32],
         accountEntry.getSigners()[0].getKey().getEd25519SignedPayload().getEd25519().getUint256());
@@ -102,6 +93,7 @@ public class AccountEntryDecodeTest {
             .getV3()
             .getSeqLedger()
             .getUint32()
+            .getNumber()
             .longValue());
     assertEquals(
         2L,
@@ -115,6 +107,7 @@ public class AccountEntryDecodeTest {
             .getSeqTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue());
   }
 }

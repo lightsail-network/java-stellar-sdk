@@ -1,22 +1,13 @@
 package org.stellar.sdk;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
-import com.google.common.io.BaseEncoding;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
-import org.stellar.sdk.xdr.Int64;
-import org.stellar.sdk.xdr.PreconditionsV2;
-import org.stellar.sdk.xdr.SequenceNumber;
-import org.stellar.sdk.xdr.SignerKey;
-import org.stellar.sdk.xdr.SignerKeyType;
-import org.stellar.sdk.xdr.Uint256;
-import org.stellar.sdk.xdr.XdrDataInputStream;
+import org.stellar.sdk.xdr.*;
 
 public class TransactionBuilderTest {
 
@@ -67,14 +58,13 @@ public class TransactionBuilderTest {
         "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQLJxvwao6eyNHaDX2QFhgdqlxJUqkpgA03UUOqf4DwOXSV9GN4ZWut2uzRuza4DWyVGBEHmmnQX+SQKFo0Sb/wA=",
         transaction.toEnvelopeXdrBase64());
 
+    org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
+        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder().discriminant(0).build();
+    assertEquals(expectedExt, transaction.toEnvelopeXdr().getV1().getTx().getExt());
+
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -103,13 +93,8 @@ public class TransactionBuilderTest {
     transaction.sign(source);
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -143,13 +128,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timebounds are correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -160,6 +140,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         42);
     assertEquals(
@@ -171,6 +152,7 @@ public class TransactionBuilderTest {
             .getMaxTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         1337);
 
@@ -201,13 +183,8 @@ public class TransactionBuilderTest {
     transaction.sign(source);
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -248,17 +225,12 @@ public class TransactionBuilderTest {
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
 
-    assertEquals(42, transaction.getTimeBounds().getMinTime());
-    assertEquals(1337, transaction.getTimeBounds().getMaxTime());
+    assertEquals(42, transaction.getTimeBounds().getMinTime().intValue());
+    assertEquals(1337, transaction.getTimeBounds().getMaxTime().intValue());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -310,18 +282,13 @@ public class TransactionBuilderTest {
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
 
-    assertEquals(0, transaction.getTimeBounds().getMinTime());
-    assertTrue(currentUnix + 10 <= transaction.getTimeBounds().getMaxTime());
+    assertEquals(0, transaction.getTimeBounds().getMinTime().longValue());
+    assertTrue(currentUnix + 10 <= transaction.getTimeBounds().getMaxTime().longValue());
 
     // Convert transaction to binary XDR and back again to make sure timebounds are correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -343,7 +310,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .ledgerBounds(LedgerBounds.builder().minLedger(1).maxLedger(2).build())
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -352,13 +320,8 @@ public class TransactionBuilderTest {
     assertEquals(1, transaction.getPreconditions().getLedgerBounds().getMinLedger());
     assertEquals(2, transaction.getPreconditions().getLedgerBounds().getMaxLedger());
 
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -382,7 +345,7 @@ public class TransactionBuilderTest {
     SequenceNumber seqNum = new SequenceNumber();
     seqNum.setSequenceNumber(new Int64(5L));
     preconditionsV2.timeBounds(
-        TransactionBuilder.buildTimeBounds(0, TransactionPreconditions.TIMEOUT_INFINITE));
+        buildTimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE));
     preconditionsV2.minSeqNum(seqNum);
 
     Transaction transaction =
@@ -391,7 +354,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .minSeqNumber(5L)
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -400,13 +364,8 @@ public class TransactionBuilderTest {
     assertEquals(Long.valueOf(5), transaction.getPreconditions().getMinSeqNumber());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -432,22 +391,18 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
-                    .minSeqAge(5L)
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .minSeqAge(BigInteger.valueOf(5L))
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
 
-    assertEquals(5, transaction.getPreconditions().getMinSeqAge());
+    assertEquals(5, transaction.getPreconditions().getMinSeqAge().intValue());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -473,7 +428,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .minSeqLedgerGap(5)
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -482,13 +438,8 @@ public class TransactionBuilderTest {
     assertEquals(5, transaction.getPreconditions().getMinSeqLedgerGap());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -509,10 +460,9 @@ public class TransactionBuilderTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
 
     String accountStrKey = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
-    byte[] payload =
-        BaseEncoding.base16()
-            .decode(
-                "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
+
+    String encodedString = "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20";
+    byte[] payload = Util.hexToBytes(encodedString);
 
     SignerKey signerKey =
         new SignerKey.Builder()
@@ -530,8 +480,9 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
-                    .extraSigners(newArrayList(signerKey))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .extraSigners(Collections.singletonList(signerKey))
                     .minSeqLedgerGap(5)
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -539,22 +490,19 @@ public class TransactionBuilderTest {
 
     assertEquals(
         SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD,
-        newArrayList(transaction.getPreconditions().getExtraSigners()).get(0).getDiscriminant());
+        transaction.getPreconditions().getExtraSigners().get(0).getDiscriminant());
     assertArrayEquals(
         payload,
-        newArrayList(transaction.getPreconditions().getExtraSigners())
+        transaction
+            .getPreconditions()
+            .getExtraSigners()
             .get(0)
             .getEd25519SignedPayload()
             .getPayload());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                javax.xml.bind.DatatypeConverter.parseBase64Binary(
-                    transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
         (Transaction)
             Transaction.fromEnvelopeXdr(
@@ -576,9 +524,10 @@ public class TransactionBuilderTest {
               new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
           .addPreconditions(
               TransactionPreconditions.builder()
-                  .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                  .timeBounds(
+                      new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                   .extraSigners(
-                      newArrayList(
+                      Arrays.asList(
                           new SignerKey.Builder().build(),
                           new SignerKey.Builder().build(),
                           new SignerKey.Builder().build()))
@@ -604,14 +553,14 @@ public class TransactionBuilderTest {
                   // set min time to 120 seconds from now
                   .timeBounds(
                       new TimeBounds(
-                          (System.currentTimeMillis() / 1000) + 120,
+                          BigInteger.valueOf((System.currentTimeMillis() / 1000) + 120),
                           TransactionPreconditions.TIMEOUT_INFINITE))
                   .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .setTimeout(1); // sat max time to 1 second from now
       fail();
     } catch (IllegalArgumentException exception) {
-      assertTrue(exception.getMessage().contains("minTime must be >= maxTime"));
+      assertTrue(exception.getMessage().contains("minTime must be <= maxTime"));
     }
   }
 
@@ -624,7 +573,8 @@ public class TransactionBuilderTest {
                 new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
             .addPreconditions(
                 TransactionPreconditions.builder()
-                    .timeBounds(new TimeBounds(0L, TransactionPreconditions.TIMEOUT_INFINITE))
+                    .timeBounds(
+                        new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
@@ -710,12 +660,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -726,6 +672,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         0);
     assertEquals(
@@ -737,6 +684,7 @@ public class TransactionBuilderTest {
             .getMaxTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         0);
   }
@@ -762,12 +710,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -778,6 +722,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         0);
     assertTrue(
@@ -790,6 +735,7 @@ public class TransactionBuilderTest {
                 .getMaxTime()
                 .getTimePoint()
                 .getUint64()
+                .getNumber()
                 .longValue());
   }
 
@@ -806,7 +752,8 @@ public class TransactionBuilderTest {
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
                 new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-            .addTimeBounds(new TimeBounds(42, TransactionPreconditions.TIMEOUT_INFINITE))
+            .addTimeBounds(
+                new TimeBounds(BigInteger.valueOf(42), TransactionPreconditions.TIMEOUT_INFINITE))
             .setTimeout(10)
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
@@ -815,12 +762,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timeout is correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -831,6 +774,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         42);
     assertTrue(
@@ -843,6 +787,7 @@ public class TransactionBuilderTest {
                 .getMaxTime()
                 .getTimePoint()
                 .getUint64()
+                .getNumber()
                 .longValue());
   }
 
@@ -859,7 +804,8 @@ public class TransactionBuilderTest {
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
                 new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
-            .addTimeBounds(new TimeBounds(42, TransactionPreconditions.TIMEOUT_INFINITE))
+            .addTimeBounds(
+                new TimeBounds(BigInteger.valueOf(42), TransactionPreconditions.TIMEOUT_INFINITE))
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
             .setBaseFee(100)
@@ -869,12 +815,8 @@ public class TransactionBuilderTest {
 
     // Convert transaction to binary XDR and back again to make sure timebounds are correctly
     // de/serialized.
-    XdrDataInputStream is =
-        new XdrDataInputStream(
-            new ByteArrayInputStream(
-                BaseEncoding.base64().decode(transaction.toEnvelopeXdrBase64())));
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
-        org.stellar.sdk.xdr.TransactionEnvelope.decode(is);
+        org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
 
     assertEquals(
         decodedTransaction
@@ -885,6 +827,7 @@ public class TransactionBuilderTest {
             .getMinTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         42);
     assertEquals(
@@ -896,6 +839,7 @@ public class TransactionBuilderTest {
             .getMaxTime()
             .getTimePoint()
             .getUint64()
+            .getNumber()
             .longValue(),
         0);
   }
@@ -992,7 +936,152 @@ public class TransactionBuilderTest {
           .build();
       fail();
     } catch (NullPointerException e) {
-      assertTrue(e.getMessage().contains("Network cannot be null"));
+      assertTrue(e.getMessage().contains("network is marked non-null but is null"));
     }
+  }
+
+  @Test
+  public void voidBuilderSorobanDataXdrString() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination =
+        KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    LedgerKey ledgerKey =
+        new LedgerKey.Builder()
+            .discriminant(LedgerEntryType.ACCOUNT)
+            .account(
+                new LedgerKey.LedgerKeyAccount.Builder()
+                    .accountID(
+                        KeyPair.fromAccountId(
+                                "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
+                            .getXdrAccountId())
+                    .build())
+            .build();
+    SorobanTransactionData sorobanData =
+        new SorobanTransactionData.Builder()
+            .resources(
+                new SorobanResources.Builder()
+                    .footprint(
+                        new LedgerFootprint.Builder()
+                            .readOnly(new LedgerKey[] {ledgerKey})
+                            .readWrite(new LedgerKey[] {})
+                            .build())
+                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
+                    .instructions(new Uint32(new XdrUnsignedInteger(34567)))
+                    .build())
+            .refundableFee(new Int64(100L))
+            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .build();
+
+    long sequenceNumber = 2908908335136768L;
+    Account account = new Account(source.getAccountId(), sequenceNumber);
+    Transaction transaction =
+        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+            .addOperation(
+                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+            .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
+            .setBaseFee(Transaction.MIN_BASE_FEE)
+            .setSorobanData(sorobanData)
+            .build();
+
+    assertEquals(sorobanData, transaction.getSorobanData());
+    org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
+        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder()
+            .discriminant(1)
+            .sorobanData(sorobanData)
+            .build();
+    assertEquals(expectedExt, transaction.toEnvelopeXdr().getV1().getTx().getExt());
+  }
+
+  @Test
+  public void voidBuilderSorobanDataXdrObject() throws IOException {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+    KeyPair destination =
+        KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+    LedgerKey ledgerKey =
+        new LedgerKey.Builder()
+            .discriminant(LedgerEntryType.ACCOUNT)
+            .account(
+                new LedgerKey.LedgerKeyAccount.Builder()
+                    .accountID(
+                        KeyPair.fromAccountId(
+                                "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
+                            .getXdrAccountId())
+                    .build())
+            .build();
+    SorobanTransactionData sorobanData =
+        new SorobanTransactionData.Builder()
+            .resources(
+                new SorobanResources.Builder()
+                    .footprint(
+                        new LedgerFootprint.Builder()
+                            .readOnly(new LedgerKey[] {ledgerKey})
+                            .readWrite(new LedgerKey[] {})
+                            .build())
+                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
+                    .instructions(new Uint32(new XdrUnsignedInteger(34567)))
+                    .build())
+            .refundableFee(new Int64(100L))
+            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .build();
+    String sorobanDataString = sorobanData.toXdrBase64();
+
+    CreateContractArgs createContractArgs =
+        new CreateContractArgs.Builder()
+            .contractIDPreimage(
+                new ContractIDPreimage.Builder()
+                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+                    .fromAddress(
+                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                            .address(
+                                new Address(
+                                        "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
+                                    .toSCAddress())
+                            .salt(new Uint256(new byte[32]))
+                            .build())
+                    .build())
+            .executable(
+                new ContractExecutable.Builder()
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .build())
+            .build();
+    HostFunction hostFunction =
+        new HostFunction.Builder()
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
+            .createContract(createContractArgs)
+            .build();
+    InvokeHostFunctionOperation invokeHostFunctionOperation =
+        InvokeHostFunctionOperation.builder().hostFunction(hostFunction).build();
+
+    long sequenceNumber = 2908908335136768L;
+    Account account = new Account(source.getAccountId(), sequenceNumber);
+    Transaction transaction =
+        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+            .addOperation(invokeHostFunctionOperation)
+            .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
+            .setBaseFee(Transaction.MIN_BASE_FEE)
+            .setSorobanData(sorobanDataString)
+            .build();
+
+    assertEquals(sorobanData, transaction.getSorobanData());
+    org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
+        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder()
+            .discriminant(1)
+            .sorobanData(sorobanData)
+            .build();
+    assertEquals(expectedExt, transaction.toEnvelopeXdr().getV1().getTx().getExt());
+  }
+
+  private static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(
+      BigInteger minTime, BigInteger maxTime) {
+    return new org.stellar.sdk.xdr.TimeBounds.Builder()
+        .minTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(minTime))))
+        .maxTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(maxTime))))
+        .build();
   }
 }

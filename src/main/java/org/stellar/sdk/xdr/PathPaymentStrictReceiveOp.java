@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -123,7 +128,7 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.sendAsset,
         this.sendMax,
         this.destination,
@@ -139,12 +144,36 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
     }
 
     PathPaymentStrictReceiveOp other = (PathPaymentStrictReceiveOp) object;
-    return Objects.equal(this.sendAsset, other.sendAsset)
-        && Objects.equal(this.sendMax, other.sendMax)
-        && Objects.equal(this.destination, other.destination)
-        && Objects.equal(this.destAsset, other.destAsset)
-        && Objects.equal(this.destAmount, other.destAmount)
+    return Objects.equals(this.sendAsset, other.sendAsset)
+        && Objects.equals(this.sendMax, other.sendMax)
+        && Objects.equals(this.destination, other.destination)
+        && Objects.equals(this.destAsset, other.destAsset)
+        && Objects.equals(this.destAmount, other.destAmount)
         && Arrays.equals(this.path, other.path);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static PathPaymentStrictReceiveOp fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static PathPaymentStrictReceiveOp fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -187,12 +216,12 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
 
     public PathPaymentStrictReceiveOp build() {
       PathPaymentStrictReceiveOp val = new PathPaymentStrictReceiveOp();
-      val.setSendAsset(sendAsset);
-      val.setSendMax(sendMax);
-      val.setDestination(destination);
-      val.setDestAsset(destAsset);
-      val.setDestAmount(destAmount);
-      val.setPath(path);
+      val.setSendAsset(this.sendAsset);
+      val.setSendMax(this.sendMax);
+      val.setDestination(this.destination);
+      val.setDestAsset(this.destAsset);
+      val.setDestAmount(this.destAmount);
+      val.setPath(this.path);
       return val;
     }
   }

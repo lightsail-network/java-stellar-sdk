@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -12,7 +17,11 @@ import java.io.IOException;
 //  {
 //  case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
 //      void;
-//  default:
+//  case LIQUIDITY_POOL_WITHDRAW_MALFORMED:
+//  case LIQUIDITY_POOL_WITHDRAW_NO_TRUST:
+//  case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
+//  case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
+//  case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
 //      void;
 //  };
 
@@ -54,7 +63,11 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     switch (encodedLiquidityPoolWithdrawResult.getDiscriminant()) {
       case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
         break;
-      default:
+      case LIQUIDITY_POOL_WITHDRAW_MALFORMED:
+      case LIQUIDITY_POOL_WITHDRAW_NO_TRUST:
+      case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
+      case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
+      case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
         break;
     }
   }
@@ -71,7 +84,11 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     switch (decodedLiquidityPoolWithdrawResult.getDiscriminant()) {
       case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
         break;
-      default:
+      case LIQUIDITY_POOL_WITHDRAW_MALFORMED:
+      case LIQUIDITY_POOL_WITHDRAW_NO_TRUST:
+      case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
+      case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
+      case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
         break;
     }
     return decodedLiquidityPoolWithdrawResult;
@@ -79,7 +96,7 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.code);
+    return Objects.hash(this.code);
   }
 
   @Override
@@ -89,6 +106,30 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     }
 
     LiquidityPoolWithdrawResult other = (LiquidityPoolWithdrawResult) object;
-    return Objects.equal(this.code, other.code);
+    return Objects.equals(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LiquidityPoolWithdrawResult fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LiquidityPoolWithdrawResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

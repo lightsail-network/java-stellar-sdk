@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -147,7 +152,7 @@ public class Hello implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.ledgerVersion,
         this.overlayVersion,
         this.overlayMinVersion,
@@ -166,15 +171,39 @@ public class Hello implements XdrElement {
     }
 
     Hello other = (Hello) object;
-    return Objects.equal(this.ledgerVersion, other.ledgerVersion)
-        && Objects.equal(this.overlayVersion, other.overlayVersion)
-        && Objects.equal(this.overlayMinVersion, other.overlayMinVersion)
-        && Objects.equal(this.networkID, other.networkID)
-        && Objects.equal(this.versionStr, other.versionStr)
-        && Objects.equal(this.listeningPort, other.listeningPort)
-        && Objects.equal(this.peerID, other.peerID)
-        && Objects.equal(this.cert, other.cert)
-        && Objects.equal(this.nonce, other.nonce);
+    return Objects.equals(this.ledgerVersion, other.ledgerVersion)
+        && Objects.equals(this.overlayVersion, other.overlayVersion)
+        && Objects.equals(this.overlayMinVersion, other.overlayMinVersion)
+        && Objects.equals(this.networkID, other.networkID)
+        && Objects.equals(this.versionStr, other.versionStr)
+        && Objects.equals(this.listeningPort, other.listeningPort)
+        && Objects.equals(this.peerID, other.peerID)
+        && Objects.equals(this.cert, other.cert)
+        && Objects.equals(this.nonce, other.nonce);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static Hello fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static Hello fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -235,15 +264,15 @@ public class Hello implements XdrElement {
 
     public Hello build() {
       Hello val = new Hello();
-      val.setLedgerVersion(ledgerVersion);
-      val.setOverlayVersion(overlayVersion);
-      val.setOverlayMinVersion(overlayMinVersion);
-      val.setNetworkID(networkID);
-      val.setVersionStr(versionStr);
-      val.setListeningPort(listeningPort);
-      val.setPeerID(peerID);
-      val.setCert(cert);
-      val.setNonce(nonce);
+      val.setLedgerVersion(this.ledgerVersion);
+      val.setOverlayVersion(this.overlayVersion);
+      val.setOverlayMinVersion(this.overlayMinVersion);
+      val.setNetworkID(this.networkID);
+      val.setVersionStr(this.versionStr);
+      val.setListeningPort(this.listeningPort);
+      val.setPeerID(this.peerID);
+      val.setCert(this.cert);
+      val.setNonce(this.nonce);
       return val;
     }
   }

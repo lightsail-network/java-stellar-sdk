@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -66,7 +71,7 @@ public class TransactionSet implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.previousLedgerHash, Arrays.hashCode(this.txs));
+    return Objects.hash(this.previousLedgerHash, Arrays.hashCode(this.txs));
   }
 
   @Override
@@ -76,8 +81,32 @@ public class TransactionSet implements XdrElement {
     }
 
     TransactionSet other = (TransactionSet) object;
-    return Objects.equal(this.previousLedgerHash, other.previousLedgerHash)
+    return Objects.equals(this.previousLedgerHash, other.previousLedgerHash)
         && Arrays.equals(this.txs, other.txs);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static TransactionSet fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static TransactionSet fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -96,8 +125,8 @@ public class TransactionSet implements XdrElement {
 
     public TransactionSet build() {
       TransactionSet val = new TransactionSet();
-      val.setPreviousLedgerHash(previousLedgerHash);
-      val.setTxs(txs);
+      val.setPreviousLedgerHash(this.previousLedgerHash);
+      val.setTxs(this.txs);
       return val;
     }
   }

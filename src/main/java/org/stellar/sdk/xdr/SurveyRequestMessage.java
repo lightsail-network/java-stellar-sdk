@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -97,7 +102,7 @@ public class SurveyRequestMessage implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.surveyorPeerID,
         this.surveyedPeerID,
         this.ledgerNum,
@@ -112,11 +117,35 @@ public class SurveyRequestMessage implements XdrElement {
     }
 
     SurveyRequestMessage other = (SurveyRequestMessage) object;
-    return Objects.equal(this.surveyorPeerID, other.surveyorPeerID)
-        && Objects.equal(this.surveyedPeerID, other.surveyedPeerID)
-        && Objects.equal(this.ledgerNum, other.ledgerNum)
-        && Objects.equal(this.encryptionKey, other.encryptionKey)
-        && Objects.equal(this.commandType, other.commandType);
+    return Objects.equals(this.surveyorPeerID, other.surveyorPeerID)
+        && Objects.equals(this.surveyedPeerID, other.surveyedPeerID)
+        && Objects.equals(this.ledgerNum, other.ledgerNum)
+        && Objects.equals(this.encryptionKey, other.encryptionKey)
+        && Objects.equals(this.commandType, other.commandType);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SurveyRequestMessage fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SurveyRequestMessage fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -153,11 +182,11 @@ public class SurveyRequestMessage implements XdrElement {
 
     public SurveyRequestMessage build() {
       SurveyRequestMessage val = new SurveyRequestMessage();
-      val.setSurveyorPeerID(surveyorPeerID);
-      val.setSurveyedPeerID(surveyedPeerID);
-      val.setLedgerNum(ledgerNum);
-      val.setEncryptionKey(encryptionKey);
-      val.setCommandType(commandType);
+      val.setSurveyorPeerID(this.surveyorPeerID);
+      val.setSurveyedPeerID(this.surveyedPeerID);
+      val.setLedgerNum(this.ledgerNum);
+      val.setEncryptionKey(this.encryptionKey);
+      val.setCommandType(this.commandType);
       return val;
     }
   }

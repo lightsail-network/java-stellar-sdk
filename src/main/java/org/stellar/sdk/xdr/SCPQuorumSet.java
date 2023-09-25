@@ -3,9 +3,14 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -87,7 +92,7 @@ public class SCPQuorumSet implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
+    return Objects.hash(
         this.threshold, Arrays.hashCode(this.validators), Arrays.hashCode(this.innerSets));
   }
 
@@ -98,9 +103,33 @@ public class SCPQuorumSet implements XdrElement {
     }
 
     SCPQuorumSet other = (SCPQuorumSet) object;
-    return Objects.equal(this.threshold, other.threshold)
+    return Objects.equals(this.threshold, other.threshold)
         && Arrays.equals(this.validators, other.validators)
         && Arrays.equals(this.innerSets, other.innerSets);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static SCPQuorumSet fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static SCPQuorumSet fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -125,9 +154,9 @@ public class SCPQuorumSet implements XdrElement {
 
     public SCPQuorumSet build() {
       SCPQuorumSet val = new SCPQuorumSet();
-      val.setThreshold(threshold);
-      val.setValidators(validators);
-      val.setInnerSets(innerSets);
+      val.setThreshold(this.threshold);
+      val.setValidators(this.validators);
+      val.setInnerSets(this.innerSets);
       return val;
     }
   }

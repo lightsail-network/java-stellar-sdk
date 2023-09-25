@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -56,7 +61,7 @@ public class Error implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.code, this.msg);
+    return Objects.hash(this.code, this.msg);
   }
 
   @Override
@@ -66,7 +71,31 @@ public class Error implements XdrElement {
     }
 
     Error other = (Error) object;
-    return Objects.equal(this.code, other.code) && Objects.equal(this.msg, other.msg);
+    return Objects.equals(this.code, other.code) && Objects.equals(this.msg, other.msg);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static Error fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static Error fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
@@ -85,8 +114,8 @@ public class Error implements XdrElement {
 
     public Error build() {
       Error val = new Error();
-      val.setCode(code);
-      val.setMsg(msg);
+      val.setCode(this.code);
+      val.setMsg(this.msg);
       return val;
     }
   }

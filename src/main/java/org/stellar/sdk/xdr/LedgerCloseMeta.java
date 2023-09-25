@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -12,6 +17,10 @@ import java.io.IOException;
 //  {
 //  case 0:
 //      LedgerCloseMetaV0 v0;
+//  case 1:
+//      LedgerCloseMetaV1 v1;
+//  case 2:
+//      LedgerCloseMetaV2 v2;
 //  };
 
 //  ===========================================================================
@@ -38,9 +47,31 @@ public class LedgerCloseMeta implements XdrElement {
     this.v0 = value;
   }
 
+  private LedgerCloseMetaV1 v1;
+
+  public LedgerCloseMetaV1 getV1() {
+    return this.v1;
+  }
+
+  public void setV1(LedgerCloseMetaV1 value) {
+    this.v1 = value;
+  }
+
+  private LedgerCloseMetaV2 v2;
+
+  public LedgerCloseMetaV2 getV2() {
+    return this.v2;
+  }
+
+  public void setV2(LedgerCloseMetaV2 value) {
+    this.v2 = value;
+  }
+
   public static final class Builder {
     private Integer discriminant;
     private LedgerCloseMetaV0 v0;
+    private LedgerCloseMetaV1 v1;
+    private LedgerCloseMetaV2 v2;
 
     public Builder discriminant(Integer discriminant) {
       this.discriminant = discriminant;
@@ -52,10 +83,22 @@ public class LedgerCloseMeta implements XdrElement {
       return this;
     }
 
+    public Builder v1(LedgerCloseMetaV1 v1) {
+      this.v1 = v1;
+      return this;
+    }
+
+    public Builder v2(LedgerCloseMetaV2 v2) {
+      this.v2 = v2;
+      return this;
+    }
+
     public LedgerCloseMeta build() {
       LedgerCloseMeta val = new LedgerCloseMeta();
       val.setDiscriminant(discriminant);
-      val.setV0(v0);
+      val.setV0(this.v0);
+      val.setV1(this.v1);
+      val.setV2(this.v2);
       return val;
     }
   }
@@ -68,6 +111,12 @@ public class LedgerCloseMeta implements XdrElement {
     switch (encodedLedgerCloseMeta.getDiscriminant()) {
       case 0:
         LedgerCloseMetaV0.encode(stream, encodedLedgerCloseMeta.v0);
+        break;
+      case 1:
+        LedgerCloseMetaV1.encode(stream, encodedLedgerCloseMeta.v1);
+        break;
+      case 2:
+        LedgerCloseMetaV2.encode(stream, encodedLedgerCloseMeta.v2);
         break;
     }
   }
@@ -84,13 +133,19 @@ public class LedgerCloseMeta implements XdrElement {
       case 0:
         decodedLedgerCloseMeta.v0 = LedgerCloseMetaV0.decode(stream);
         break;
+      case 1:
+        decodedLedgerCloseMeta.v1 = LedgerCloseMetaV1.decode(stream);
+        break;
+      case 2:
+        decodedLedgerCloseMeta.v2 = LedgerCloseMetaV2.decode(stream);
+        break;
     }
     return decodedLedgerCloseMeta;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.v0, this.v);
+    return Objects.hash(this.v0, this.v1, this.v2, this.v);
   }
 
   @Override
@@ -100,6 +155,33 @@ public class LedgerCloseMeta implements XdrElement {
     }
 
     LedgerCloseMeta other = (LedgerCloseMeta) object;
-    return Objects.equal(this.v0, other.v0) && Objects.equal(this.v, other.v);
+    return Objects.equals(this.v0, other.v0)
+        && Objects.equals(this.v1, other.v1)
+        && Objects.equals(this.v2, other.v2)
+        && Objects.equals(this.v, other.v);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static LedgerCloseMeta fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static LedgerCloseMeta fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

@@ -1,8 +1,10 @@
 package org.stellar.sdk;
 
-import com.google.common.base.Objects;
+import java.math.BigInteger;
+import java.util.Objects;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /**
  * TimeBounds represents the time interval that a transaction is valid.
@@ -10,28 +12,39 @@ import org.stellar.sdk.xdr.Uint64;
  * @see Transaction
  */
 public final class TimeBounds {
-  private final long mMinTime;
-  private final long mMaxTime;
+  private final BigInteger mMinTime;
+  private final BigInteger mMaxTime;
+
+  /**
+   * @param minTime 64bit Unix timestamp
+   * @param maxTime 64bit Unix timestamp
+   */
+  public TimeBounds(BigInteger minTime, BigInteger maxTime) {
+    if (minTime.compareTo(XdrUnsignedHyperInteger.MIN_VALUE) < 0
+        || minTime.compareTo(XdrUnsignedHyperInteger.MAX_VALUE) > 0) {
+      throw new IllegalArgumentException("minTime must be between 0 and 2^64-1");
+    }
+
+    if (maxTime.compareTo(XdrUnsignedHyperInteger.MIN_VALUE) < 0
+        || maxTime.compareTo(XdrUnsignedHyperInteger.MAX_VALUE) > 0) {
+      throw new IllegalArgumentException("maxTime must be between 0 and 2^64-1");
+    }
+
+    if (!TransactionPreconditions.TIMEOUT_INFINITE.equals(maxTime)
+        && minTime.compareTo(maxTime) > 0) {
+      throw new IllegalArgumentException("minTime must be <= maxTime");
+    }
+
+    mMinTime = minTime;
+    mMaxTime = maxTime;
+  }
 
   /**
    * @param minTime 64bit Unix timestamp
    * @param maxTime 64bit Unix timestamp
    */
   public TimeBounds(long minTime, long maxTime) {
-    if (minTime < 0) {
-      throw new IllegalArgumentException("minTime cannot be negative");
-    }
-
-    if (maxTime < 0) {
-      throw new IllegalArgumentException("maxTime cannot be negative");
-    }
-
-    if (maxTime != TransactionPreconditions.TIMEOUT_INFINITE && minTime > maxTime) {
-      throw new IllegalArgumentException("minTime must be >= maxTime");
-    }
-
-    mMinTime = minTime;
-    mMaxTime = maxTime;
+    this(BigInteger.valueOf(minTime), BigInteger.valueOf(maxTime));
   }
 
   /**
@@ -46,11 +59,11 @@ public final class TimeBounds {
     return new TimeBounds(0, endTime);
   }
 
-  public long getMinTime() {
+  public BigInteger getMinTime() {
     return mMinTime;
   }
 
-  public long getMaxTime() {
+  public BigInteger getMaxTime() {
     return mMaxTime;
   }
 
@@ -60,8 +73,8 @@ public final class TimeBounds {
     }
 
     return new TimeBounds(
-        timeBounds.getMinTime().getTimePoint().getUint64(),
-        timeBounds.getMaxTime().getTimePoint().getUint64());
+        timeBounds.getMinTime().getTimePoint().getUint64().getNumber(),
+        timeBounds.getMaxTime().getTimePoint().getUint64().getNumber());
   }
 
   public org.stellar.sdk.xdr.TimeBounds toXdr() {
@@ -70,8 +83,8 @@ public final class TimeBounds {
     TimePoint maxTime = new TimePoint();
     Uint64 minTimeTemp = new Uint64();
     Uint64 maxTimeTemp = new Uint64();
-    minTimeTemp.setUint64(mMinTime);
-    maxTimeTemp.setUint64(mMaxTime);
+    minTimeTemp.setUint64(new XdrUnsignedHyperInteger(mMinTime));
+    maxTimeTemp.setUint64(new XdrUnsignedHyperInteger(mMaxTime));
     minTime.setTimePoint(minTimeTemp);
     maxTime.setTimePoint(maxTimeTemp);
     timeBounds.setMinTime(minTime);
@@ -88,11 +101,12 @@ public final class TimeBounds {
       return false;
     }
     TimeBounds that = (TimeBounds) o;
-    return mMinTime == that.mMinTime && mMaxTime == that.mMaxTime;
+    return Objects.equals(this.mMaxTime, that.mMaxTime)
+        && Objects.equals(this.mMinTime, that.mMinTime);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.mMaxTime, this.mMinTime);
+    return Objects.hash(this.mMaxTime, this.mMinTime);
   }
 }

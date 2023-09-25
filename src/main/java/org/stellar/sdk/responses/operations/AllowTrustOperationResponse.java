@@ -2,9 +2,9 @@ package org.stellar.sdk.responses.operations;
 
 import static org.stellar.sdk.Asset.create;
 
-import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
+import java.util.Optional;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
@@ -51,7 +51,7 @@ public class AllowTrustOperationResponse extends OperationResponse {
 
   public Optional<MuxedAccount> getTrusteeMuxed() {
     if (this.trusteeMuxed == null || this.trusteeMuxed.isEmpty()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.trusteeMuxed, this.trustee, this.trusteeMuxedId));
   }

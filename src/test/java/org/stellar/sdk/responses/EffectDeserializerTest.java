@@ -3,6 +3,7 @@ package org.stellar.sdk.responses;
 import static org.junit.Assert.assertArrayEquals;
 import static org.stellar.sdk.Asset.create;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -19,6 +20,8 @@ import org.stellar.sdk.responses.effects.AccountRemovedEffectResponse;
 import org.stellar.sdk.responses.effects.AccountThresholdsUpdatedEffectResponse;
 import org.stellar.sdk.responses.effects.ClaimableBalanceClaimantCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.ClaimableBalanceClawedBackEffectResponse;
+import org.stellar.sdk.responses.effects.ContractCreditedEffectResponse;
+import org.stellar.sdk.responses.effects.ContractDebitedEffectResponse;
 import org.stellar.sdk.responses.effects.DataCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.DataRemovedEffectResponse;
 import org.stellar.sdk.responses.effects.DataUpdatedEffectResponse;
@@ -379,7 +382,8 @@ public class EffectDeserializerTest extends TestCase {
     assertEquals(effect.getType(), "claimable_balance_claimant_created");
     assertSame(effect.getPredicate().getClass(), Predicate.AbsBefore.class);
     assertEquals(
-        ((Predicate.AbsBefore) effect.getPredicate()).getTimestampSeconds(), 1234567890982222222L);
+        ((Predicate.AbsBefore) effect.getPredicate()).getTimestampSeconds(),
+        BigInteger.valueOf(1234567890982222222L));
   }
 
   @Test
@@ -422,7 +426,9 @@ public class EffectDeserializerTest extends TestCase {
         "0000000071d3336fa6b6cf81fcbeda85a503ccfabc786ab1066594716f3f9551ea4b89ca");
     assertEquals(effect.getType(), "claimable_balance_claimant_created");
     assertSame(effect.getPredicate().getClass(), Predicate.AbsBefore.class);
-    assertEquals(((Predicate.AbsBefore) effect.getPredicate()).getTimestampSeconds(), 1637479450L);
+    assertEquals(
+        ((Predicate.AbsBefore) effect.getPredicate()).getTimestampSeconds(),
+        BigInteger.valueOf(1637479450L));
   }
 
   @Test
@@ -1412,5 +1418,87 @@ public class EffectDeserializerTest extends TestCase {
               "000000001843f844860fd96541993c96c72157c1a5eb9d522e6f5b99e2ab300ccee8e38d")
         });
     assertEquals(effect.getSharesRevoked(), "24452.3233794");
+  }
+
+  @Test
+  public void testDeserializeContractCreditedEffect() {
+    String json =
+        "{\n"
+            + "  \"_links\": {\n"
+            + "    \"operation\": {\n"
+            + "      \"href\": \"http://100.83.15.43:8000/operations/21517786157057\"\n"
+            + "    },\n"
+            + "    \"succeeds\": {\n"
+            + "      \"href\": \"http://100.83.15.43:8000/effects?order=desc&cursor=21517786157057-2\"\n"
+            + "    },\n"
+            + "    \"precedes\": {\n"
+            + "      \"href\": \"http://100.83.15.43:8000/effects?order=asc&cursor=21517786157057-2\"\n"
+            + "    }\n"
+            + "  },\n"
+            + "  \"id\": \"0000021517786157057-0000000002\",\n"
+            + "  \"paging_token\": \"21517786157057-2\",\n"
+            + "  \"account\": \"GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54\",\n"
+            + "  \"type\": \"contract_credited\",\n"
+            + "  \"type_i\": 96,\n"
+            + "  \"created_at\": \"2023-09-19T05:43:12Z\",\n"
+            + "  \"asset_type\": \"native\",\n"
+            + "  \"contract\": \"CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK\",\n"
+            + "  \"amount\": \"100.0000000\"\n"
+            + "}\n";
+
+    ContractCreditedEffectResponse effect =
+        (ContractCreditedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getType(), "contract_credited");
+    assertEquals(effect.getId(), "0000021517786157057-0000000002");
+    assertEquals(effect.getPagingToken(), "21517786157057-2");
+    assertEquals(effect.getAccount(), "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54");
+    assertEquals(effect.getCreatedAt(), "2023-09-19T05:43:12Z");
+    assertEquals(effect.getAmount(), "100.0000000");
+    assertEquals(effect.getAssetType(), "native");
+    assertNull(effect.getAssetCode());
+    assertNull(effect.getAssetIssuer());
+  }
+
+  @Test
+  public void testDeserializeContractDebitedEffect() {
+    String json =
+        "{\n"
+            + "  \"_links\": {\n"
+            + "    \"operation\": {\n"
+            + "      \"href\": \"http://100.83.15.43:8000/operations/21517786157057\"\n"
+            + "    },\n"
+            + "    \"succeeds\": {\n"
+            + "      \"href\": \"http://100.83.15.43:8000/effects?order=desc&cursor=21517786157057-2\"\n"
+            + "    },\n"
+            + "    \"precedes\": {\n"
+            + "      \"href\": \"http://100.83.15.43:8000/effects?order=asc&cursor=21517786157057-2\"\n"
+            + "    }\n"
+            + "  },\n"
+            + "  \"id\": \"0000021517786157057-0000000002\",\n"
+            + "  \"paging_token\": \"21517786157057-2\",\n"
+            + "  \"account\": \"GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54\",\n"
+            + "  \"type\": \"contract_debited\",\n"
+            + "  \"type_i\": 97,\n"
+            + "  \"created_at\": \"2023-09-19T05:43:12Z\",\n"
+            + "  \"asset_type\": \"native\",\n"
+            + "  \"contract\": \"CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK\",\n"
+            + "  \"amount\": \"100.0000000\"\n"
+            + "}\n";
+
+    ContractDebitedEffectResponse effect =
+        (ContractDebitedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals(effect.getType(), "contract_debited");
+    assertEquals(effect.getId(), "0000021517786157057-0000000002");
+    assertEquals(effect.getPagingToken(), "21517786157057-2");
+    assertEquals(effect.getAccount(), "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54");
+    assertEquals(effect.getCreatedAt(), "2023-09-19T05:43:12Z");
+    assertEquals(effect.getAmount(), "100.0000000");
+    assertEquals(effect.getAssetType(), "native");
+    assertNull(effect.getAssetCode());
+    assertNull(effect.getAssetIssuer());
   }
 }

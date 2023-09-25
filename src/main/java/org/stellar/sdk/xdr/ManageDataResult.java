@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -12,7 +17,10 @@ import java.io.IOException;
 //  {
 //  case MANAGE_DATA_SUCCESS:
 //      void;
-//  default:
+//  case MANAGE_DATA_NOT_SUPPORTED_YET:
+//  case MANAGE_DATA_NAME_NOT_FOUND:
+//  case MANAGE_DATA_LOW_RESERVE:
+//  case MANAGE_DATA_INVALID_NAME:
 //      void;
 //  };
 
@@ -53,7 +61,10 @@ public class ManageDataResult implements XdrElement {
     switch (encodedManageDataResult.getDiscriminant()) {
       case MANAGE_DATA_SUCCESS:
         break;
-      default:
+      case MANAGE_DATA_NOT_SUPPORTED_YET:
+      case MANAGE_DATA_NAME_NOT_FOUND:
+      case MANAGE_DATA_LOW_RESERVE:
+      case MANAGE_DATA_INVALID_NAME:
         break;
     }
   }
@@ -69,7 +80,10 @@ public class ManageDataResult implements XdrElement {
     switch (decodedManageDataResult.getDiscriminant()) {
       case MANAGE_DATA_SUCCESS:
         break;
-      default:
+      case MANAGE_DATA_NOT_SUPPORTED_YET:
+      case MANAGE_DATA_NAME_NOT_FOUND:
+      case MANAGE_DATA_LOW_RESERVE:
+      case MANAGE_DATA_INVALID_NAME:
         break;
     }
     return decodedManageDataResult;
@@ -77,7 +91,7 @@ public class ManageDataResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.code);
+    return Objects.hash(this.code);
   }
 
   @Override
@@ -87,6 +101,30 @@ public class ManageDataResult implements XdrElement {
     }
 
     ManageDataResult other = (ManageDataResult) object;
-    return Objects.equal(this.code, other.code);
+    return Objects.equals(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static ManageDataResult fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static ManageDataResult fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }

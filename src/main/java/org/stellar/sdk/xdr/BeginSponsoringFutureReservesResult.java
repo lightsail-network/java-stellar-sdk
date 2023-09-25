@@ -3,8 +3,13 @@
 
 package org.stellar.sdk.xdr;
 
-import com.google.common.base.Objects;
+import static org.stellar.sdk.xdr.Constants.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Objects;
 
 // === xdr source ============================================================
 
@@ -13,7 +18,9 @@ import java.io.IOException;
 //  {
 //  case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
 //      void;
-//  default:
+//  case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
+//  case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
+//  case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
 //      void;
 //  };
 
@@ -56,7 +63,9 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
     switch (encodedBeginSponsoringFutureReservesResult.getDiscriminant()) {
       case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
         break;
-      default:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
         break;
     }
   }
@@ -75,7 +84,9 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
     switch (decodedBeginSponsoringFutureReservesResult.getDiscriminant()) {
       case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
         break;
-      default:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
+      case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
         break;
     }
     return decodedBeginSponsoringFutureReservesResult;
@@ -83,7 +94,7 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.code);
+    return Objects.hash(this.code);
   }
 
   @Override
@@ -93,6 +104,31 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
     }
 
     BeginSponsoringFutureReservesResult other = (BeginSponsoringFutureReservesResult) object;
-    return Objects.equal(this.code, other.code);
+    return Objects.equals(this.code, other.code);
+  }
+
+  @Override
+  public String toXdrBase64() throws IOException {
+    return Base64.getEncoder().encodeToString(toXdrByteArray());
+  }
+
+  @Override
+  public byte[] toXdrByteArray() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
+    encode(xdrDataOutputStream);
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public static BeginSponsoringFutureReservesResult fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64.getDecoder().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  public static BeginSponsoringFutureReservesResult fromXdrByteArray(byte[] xdr)
+      throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
   }
 }
