@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
-import org.stellar.sdk.Base64;
+import org.stellar.sdk.Base64Factory;
 
 // === xdr source ============================================================
 
@@ -232,7 +232,7 @@ public class AccountEntry implements XdrElement {
 
   @Override
   public String toXdrBase64() throws IOException {
-    return Base64.encodeToString(toXdrByteArray());
+    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -244,7 +244,7 @@ public class AccountEntry implements XdrElement {
   }
 
   public static AccountEntry fromXdrBase64(String xdr) throws IOException {
-    byte[] bytes = Base64.decode(xdr);
+    byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -426,7 +426,7 @@ public class AccountEntry implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -438,7 +438,7 @@ public class AccountEntry implements XdrElement {
     }
 
     public static AccountEntryExt fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 

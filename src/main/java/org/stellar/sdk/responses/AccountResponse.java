@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import lombok.NonNull;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Base64;
+import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPoolID;
 
@@ -440,7 +440,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
      * @return raw value
      */
     public byte[] getDecoded(String key) {
-      return Base64.decode(this.get(key));
+      return Base64Factory.getInstance().decode(this.get(key));
     }
   }
 
