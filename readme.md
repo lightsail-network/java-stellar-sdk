@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.stellar:java-stellar-sdk:{version}'
+    implementation 'com.github.stellar:java-stellar-sdk-android-spi:{version}'
 }
 ```
 
@@ -32,6 +33,10 @@ For some examples on how to use this library, take a look at the [Get Started do
 
 ## Documentation
 Javadoc is available at https://stellar.github.io/java-stellar-sdk
+
+## Integrate into Android project
+If you want to integrate this SDK on Android platforms with API level 26 and above, you don't need any additional configuration. 
+However, if you need to include it on lower platforms, you may also need to add the [Java Stellar SDK Android SPI](https://github.com/stellar/java-stellar-sdk-android-spi).
 
 ## Contributing
 For information on how to contribute, please refer to our [contribution guide](https://github.com/stellar/java-stellar-sdk/blob/master/CONTRIBUTING.md).

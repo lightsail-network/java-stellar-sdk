@@ -5,6 +5,9 @@ import org.stellar.sdk.Base64;
 /**
  * An abstract class for service providers that provide implementations of the SDK.
  *
+ * <p>Note: we offer an Android specific implementation of this class, see <a
+ * href="https://github.com/stellar/java-stellar-sdk-android-spi">Java Stellar SDK Android SPI</a>.
+ *
  * @see <a href="https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html">Service Provider
  *     Interfaces</a>
  */
