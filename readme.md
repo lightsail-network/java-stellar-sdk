@@ -18,7 +18,6 @@ repositories {
 
 dependencies {
     implementation 'com.github.stellar:java-stellar-sdk:{version}'
-    implementation 'com.github.stellar:java-stellar-sdk-android-spi:{version}'
 }
 ```
 
