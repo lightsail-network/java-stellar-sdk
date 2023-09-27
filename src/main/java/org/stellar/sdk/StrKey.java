@@ -21,7 +21,7 @@ class StrKey {
 
   public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
   private static final byte[] b32Table = decodingTable();
-  private static final ApacheCodec.Base32 base32Codec = new ApacheCodec.Base32();
+  private static final Base32 base32Codec = Base32Factory.getInstance();
 
   public static String encodeContractId(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
@@ -234,35 +234,20 @@ class StrKey {
       outputStream.write(checksum);
       byte[] unencoded = outputStream.toByteArray();
 
-      if (VersionByte.SEED != versionByte) {
-        return bytesToChars(removeBase32Padding(base32Codec.encode(unencoded)));
-      }
-
-      // Why not use base32Codec.encode here?
-      // We don't want secret seed to be stored as String in memory because of security reasons.
-      // It's impossible
-      // to erase it from memory when we want it to be erased (ASAP).
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(unencoded.length);
-      ApacheCodec.Base32OutputStream base32OutputStream =
-          new ApacheCodec.Base32OutputStream(byteArrayOutputStream);
-      base32OutputStream.write(unencoded);
-      base32OutputStream.close();
-
-      byte[] encodedBytes = byteArrayOutputStream.toByteArray();
+      byte[] encodedBytes = base32Codec.encode(unencoded);
       byte[] unpaddedEncodedBytes = removeBase32Padding(encodedBytes);
       char[] charsEncoded = bytesToChars(unpaddedEncodedBytes);
 
+      if (VersionByte.SEED != versionByte) {
+        return charsEncoded;
+      }
+
+      // Erase all data from memory
       Arrays.fill(unencoded, (byte) 0);
       Arrays.fill(payload, (byte) 0);
       Arrays.fill(checksum, (byte) 0);
       Arrays.fill(encodedBytes, (byte) 0);
       Arrays.fill(unpaddedEncodedBytes, (byte) 0);
-
-      // Clean byteArrayOutputStream internal buffer
-      int size = byteArrayOutputStream.size();
-      byteArrayOutputStream.reset();
-      byteArrayOutputStream.write(new byte[size]);
-      byteArrayOutputStream.close();
 
       return charsEncoded;
     } catch (IOException e) {

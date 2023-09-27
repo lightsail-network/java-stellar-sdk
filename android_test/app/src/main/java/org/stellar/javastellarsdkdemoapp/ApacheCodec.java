@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.stellar.sdk;
-
-import static org.stellar.sdk.ApacheCodec.BaseNCodec.EOF;
+package org.stellar.javastellarsdkdemoapp;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -1792,9 +1790,9 @@ class ApacheCodec {
     public void eof() {
       // Notify encoder of EOF (-1).
       if (doEncode) {
-        baseNCodec.encode(singleByte, 0, EOF, context);
+        baseNCodec.encode(singleByte, 0, BaseNCodec.EOF, context);
       } else {
-        baseNCodec.decode(singleByte, 0, EOF, context);
+        baseNCodec.decode(singleByte, 0, BaseNCodec.EOF, context);
       }
     }
 
