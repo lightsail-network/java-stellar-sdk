@@ -57,6 +57,16 @@ tasks {
         archiveFileName = "stellar-sdk.jar"
     }
 
+    val sourcesJar by creating(Jar::class) {
+        manifest {
+            attributes["Implementation-Title"] = "stellar-sdk"
+            attributes["Implementation-Version"] = version
+        }
+        archiveClassifier = "sources"
+        archiveFileName = "stellar-sdk-sources.jar"
+        from(sourceSets.main.get().allSource)
+    }
+
     val uberJar by creating(Jar::class) {
         // https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_example
         manifest {
@@ -73,17 +83,6 @@ tasks {
         })
     }
 
-    val javadocJar by creating(Jar::class) {
-        manifest {
-            attributes["Implementation-Title"] = "stellar-sdk"
-            attributes["Implementation-Version"] = version
-        }
-        archiveClassifier = "javadoc"
-        archiveFileName = "stellar-sdk-javadoc.jar"
-        dependsOn(javadoc)
-        from(javadoc.get().destinationDir)
-    }
-
     javadoc {
         destinationDir = file("javadoc")
         isFailOnError = false
@@ -95,6 +94,17 @@ tasks {
             memberLevel = JavadocMemberLevel.PUBLIC
             encoding = "UTF-8"
         }
+    }
+
+    val javadocJar by creating(Jar::class) {
+        manifest {
+            attributes["Implementation-Title"] = "stellar-sdk"
+            attributes["Implementation-Version"] = version
+        }
+        archiveClassifier = "javadoc"
+        archiveFileName = "stellar-sdk-javadoc.jar"
+        dependsOn(javadoc)
+        from(javadoc.get().destinationDir) // It needs to be placed after the javadoc task, otherwise it cannot read the path we set.
     }
 
     register<Copy>("updateGitHook") {
@@ -118,6 +128,7 @@ artifacts {
     archives(tasks.jar)
     archives(tasks["uberJar"])
     archives(tasks["javadocJar"])
+    archives(tasks["sourcesJar"])
 }
 
 publishing {
@@ -126,6 +137,7 @@ publishing {
             from(components["java"])
             artifact(tasks["uberJar"])
             artifact(tasks["javadocJar"])
+            artifact(tasks["sourcesJar"])
             pom {
                 name.set("java-stellar-sdk")
                 description.set("The Java Stellar SDK library provides APIs to build transactions and connect to Horizon and Soroban-RPC server.")
