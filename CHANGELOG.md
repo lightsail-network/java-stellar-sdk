@@ -3,6 +3,7 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Pending
+* Fix issues where the validity of the encoded strkey is not verified in certain scenarios. ([#541](https://github.com/stellar/java-stellar-sdk/pull/541))
 * Fix the issue of javadocJar not including documentation. ([#539](https://github.com/stellar/java-stellar-sdk/pull/539))
 * Publish sourcesJar to the GitHub Release page. ([#539](https://github.com/stellar/java-stellar-sdk/pull/539))
 
