@@ -8,7 +8,7 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Base64;
+import org.stellar.sdk.Base64Factory;
 
 // === xdr source ============================================================
 
@@ -59,7 +59,7 @@ public enum ClaimAtomType implements XdrElement {
 
   @Override
   public String toXdrBase64() throws IOException {
-    return Base64.getEncoder().encodeToString(toXdrByteArray());
+    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -71,7 +71,7 @@ public enum ClaimAtomType implements XdrElement {
   }
 
   public static ClaimAtomType fromXdrBase64(String xdr) throws IOException {
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

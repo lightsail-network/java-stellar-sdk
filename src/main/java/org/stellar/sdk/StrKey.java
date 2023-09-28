@@ -3,11 +3,9 @@ package org.stellar.sdk;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
-import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.codec.binary.Base32OutputStream;
-import org.apache.commons.codec.binary.StringUtils;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -24,7 +22,7 @@ class StrKey {
 
   public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
   private static final byte[] b32Table = decodingTable();
-  private static final Base32 base32Codec = new Base32();
+  private static final Base32 base32Codec = Base32Factory.getInstance();
 
   public static String encodeContractId(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
@@ -140,7 +138,7 @@ class StrKey {
   }
 
   public static VersionByte decodeVersionByte(String data) {
-    byte[] dataBytes = StringUtils.getBytesUtf8(data);
+    byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
     byte[] decoded = base32decode(dataBytes);
     byte decodedVersionByte = decoded[0];
     Optional<VersionByte> versionByteOptional = VersionByte.findByValue(decodedVersionByte);
@@ -238,34 +236,20 @@ class StrKey {
       outputStream.write(checksum);
       byte[] unencoded = outputStream.toByteArray();
 
-      if (VersionByte.SEED != versionByte) {
-        return bytesToChars(removeBase32Padding(base32Codec.encode(unencoded)));
-      }
-
-      // Why not use base32Codec.encode here?
-      // We don't want secret seed to be stored as String in memory because of security reasons.
-      // It's impossible
-      // to erase it from memory when we want it to be erased (ASAP).
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(unencoded.length);
-      Base32OutputStream base32OutputStream = new Base32OutputStream(byteArrayOutputStream);
-      base32OutputStream.write(unencoded);
-      base32OutputStream.close();
-
-      byte[] encodedBytes = byteArrayOutputStream.toByteArray();
+      byte[] encodedBytes = base32Codec.encode(unencoded);
       byte[] unpaddedEncodedBytes = removeBase32Padding(encodedBytes);
       char[] charsEncoded = bytesToChars(unpaddedEncodedBytes);
 
+      if (VersionByte.SEED != versionByte) {
+        return charsEncoded;
+      }
+
+      // Erase all data from memory
       Arrays.fill(unencoded, (byte) 0);
       Arrays.fill(payload, (byte) 0);
       Arrays.fill(checksum, (byte) 0);
       Arrays.fill(encodedBytes, (byte) 0);
       Arrays.fill(unpaddedEncodedBytes, (byte) 0);
-
-      // Clean byteArrayOutputStream internal buffer
-      int size = byteArrayOutputStream.size();
-      byteArrayOutputStream.reset();
-      byteArrayOutputStream.write(new byte[size]);
-      byteArrayOutputStream.close();
 
       return charsEncoded;
     } catch (IOException e) {
@@ -430,9 +414,18 @@ class StrKey {
   private static byte[] base32decode(byte[] data) {
     // Apache commons codec Base32 class will auto remove the illegal characters, this is
     // what we don't want, so we need to check the data before decoding
-    if (!base32Codec.isInAlphabet(data, false)) {
+    if (!isInAlphabet(data)) {
       throw new IllegalArgumentException("Invalid base32 encoded string");
     }
     return base32Codec.decode(data);
+  }
+
+  private static boolean isInAlphabet(final byte[] arrayOctet) {
+    for (final byte octet : arrayOctet) {
+      if (!(octet >= 0 && octet < b32Table.length && b32Table[octet] != -1)) {
+        return false;
+      }
+    }
+    return true;
   }
 }

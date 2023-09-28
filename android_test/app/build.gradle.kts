@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "org.stellar.javastellarsdkdemoapp"
-        minSdk = 26
+        minSdk = 23
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -30,6 +30,11 @@ android {
         }
     }
     compileOptions {
+        // Flag to enable support for the new language APIs
+        // For AGP 4.1+
+        // https://developer.android.com/studio/write/java8-support
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -50,7 +55,9 @@ android {
 }
 
 dependencies {
-
+    // For AGP 7.4+
+    // https://developer.android.com/studio/write/java8-support
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
@@ -59,9 +66,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation(files("libs/stellar-sdk.jar"))
     // Since we are adding local jar(libs/stellar-sdk.jar) as dependency,
     // gradle cannot automatically download the required third-party dependencies.
+    implementation(files("libs/stellar-sdk.jar"))
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:okhttp-sse:4.11.0")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")

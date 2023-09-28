@@ -4,8 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Base64;
 import java.util.Objects;
+import org.stellar.sdk.Base64Factory;
 
 /**
  * Represents XDR Unsigned Hyper Integer.
@@ -61,7 +61,7 @@ public class XdrUnsignedHyperInteger implements XdrElement {
 
   @Override
   public String toXdrBase64() throws IOException {
-    return Base64.getEncoder().encodeToString(toXdrByteArray());
+    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -73,7 +73,7 @@ public class XdrUnsignedHyperInteger implements XdrElement {
   }
 
   public static XdrUnsignedHyperInteger fromXdrBase64(String xdr) throws IOException {
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

@@ -3,8 +3,8 @@ package org.stellar.sdk.xdr;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Objects;
+import org.stellar.sdk.Base64Factory;
 
 /**
  * Represents XDR Unsigned Integer.
@@ -49,7 +49,7 @@ public class XdrUnsignedInteger implements XdrElement {
 
   @Override
   public String toXdrBase64() throws IOException {
-    return Base64.getEncoder().encodeToString(toXdrByteArray());
+    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -61,7 +61,7 @@ public class XdrUnsignedInteger implements XdrElement {
   }
 
   public static XdrUnsignedInteger fromXdrBase64(String xdr) throws IOException {
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 

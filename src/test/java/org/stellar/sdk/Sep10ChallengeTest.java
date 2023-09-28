@@ -287,7 +287,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
@@ -395,7 +395,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), 100L);
     ManageDataOperation manageDataOperation1 =
@@ -440,7 +440,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation =
@@ -610,7 +610,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
@@ -653,7 +653,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[32];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
@@ -741,7 +741,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[47];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
@@ -827,7 +827,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
@@ -875,7 +875,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
@@ -923,7 +923,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
@@ -968,7 +968,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
@@ -1219,7 +1219,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation domainNameOperation =
@@ -1268,7 +1268,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation domainNameOperation =
@@ -1515,7 +1515,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
@@ -2064,7 +2064,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
@@ -2660,7 +2660,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
@@ -2713,7 +2713,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
@@ -2769,7 +2769,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
@@ -2821,7 +2821,7 @@ public class Sep10ChallengeTest {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
-    byte[] encodedNonce = Base64.getEncoder().encode(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =

@@ -75,7 +75,7 @@ jobs:
         # minSdk and targetSdk, see ${project_root}/android_test/app/build.gradle.kts
         # TODO: Investigate why it is unstable on API 33.
         emulator: [
-          { api-level: 26, target: google_apis },
+          { api-level: 23, target: google_apis },
           { api-level: 32, target: playstore }
         ]
     steps:
@@ -91,17 +91,20 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
       - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: Wandalen/wretry.action@master
         with:
-          working-directory: ./android_test
-          api-level: ${{ matrix.emulator.api-level }}
-          target: ${{ matrix.emulator.target }}
-          script: ./gradlew connectedCheck
-          arch: x86_64
-          profile: 'pixel_2'
+          attempt_limit: 3 # android test is not stable, let's retry it
+          action: reactivecircus/android-emulator-runner@v2
+          with: |
+            working-directory: ./android_test
+            api-level: ${{ matrix.emulator.api-level }}
+            target: ${{ matrix.emulator.target }}
+            script: ./gradlew connectedCheck
+            arch: x86_64
+            profile: 'pixel_2'
 
   deploy:
-    needs: [ build, javadoc ]  # TODO: add android-test when it is stable.
+    needs: [ build, javadoc, android-test ]
     permissions:
       contents: write
     if: github.event_name == 'release' && github.event.action == 'created'

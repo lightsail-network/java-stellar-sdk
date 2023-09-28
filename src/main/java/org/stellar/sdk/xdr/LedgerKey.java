@@ -8,8 +8,8 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Objects;
+import org.stellar.sdk.Base64Factory;
 
 // === xdr source ============================================================
 
@@ -397,7 +397,7 @@ public class LedgerKey implements XdrElement {
 
   @Override
   public String toXdrBase64() throws IOException {
-    return Base64.getEncoder().encodeToString(toXdrByteArray());
+    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
 
   @Override
@@ -409,7 +409,7 @@ public class LedgerKey implements XdrElement {
   }
 
   public static LedgerKey fromXdrBase64(String xdr) throws IOException {
-    byte[] bytes = Base64.getDecoder().decode(xdr);
+    byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
@@ -464,7 +464,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -476,7 +476,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyAccount fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -561,7 +561,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -573,7 +573,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyTrustLine fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -664,7 +664,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -676,7 +676,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyOffer fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -767,7 +767,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -779,7 +779,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyData fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -858,7 +858,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -870,7 +870,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyClaimableBalance fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -942,7 +942,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -954,7 +954,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyLiquidityPool fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -1052,7 +1052,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -1064,7 +1064,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyContractData fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -1150,7 +1150,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -1162,7 +1162,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyContractCode fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -1234,7 +1234,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -1246,7 +1246,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyConfigSetting fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
@@ -1318,7 +1318,7 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public String toXdrBase64() throws IOException {
-      return Base64.getEncoder().encodeToString(toXdrByteArray());
+      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
 
     @Override
@@ -1330,7 +1330,7 @@ public class LedgerKey implements XdrElement {
     }
 
     public static LedgerKeyExpiration fromXdrBase64(String xdr) throws IOException {
-      byte[] bytes = Base64.getDecoder().decode(xdr);
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
