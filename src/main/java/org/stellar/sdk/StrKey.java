@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
 import org.stellar.sdk.xdr.AccountID;
@@ -137,7 +138,8 @@ class StrKey {
   }
 
   public static VersionByte decodeVersionByte(String data) {
-    byte[] decoded = base32Codec.decode(data);
+    byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
+    byte[] decoded = base32decode(dataBytes);
     byte decodedVersionByte = decoded[0];
     Optional<VersionByte> versionByteOptional = VersionByte.findByValue(decodedVersionByte);
     if (!versionByteOptional.isPresent()) {
@@ -284,7 +286,7 @@ class StrKey {
       }
     }
 
-    byte[] decoded = base32Codec.decode(bytes);
+    byte[] decoded = base32decode(bytes);
     byte decodedVersionByte = decoded[0];
     byte[] payload = Arrays.copyOfRange(decoded, 0, decoded.length - 2);
     byte[] data = Arrays.copyOfRange(payload, 1, payload.length);
@@ -407,5 +409,23 @@ class StrKey {
       chars[i] = (char) (data[i] & 0xFF);
     }
     return chars;
+  }
+
+  private static byte[] base32decode(byte[] data) {
+    // Apache commons codec Base32 class will auto remove the illegal characters, this is
+    // what we don't want, so we need to check the data before decoding
+    if (!isInAlphabet(data)) {
+      throw new IllegalArgumentException("Invalid base32 encoded string");
+    }
+    return base32Codec.decode(data);
+  }
+
+  private static boolean isInAlphabet(final byte[] arrayOctet) {
+    for (final byte octet : arrayOctet) {
+      if (!(octet >= 0 && octet < b32Table.length && b32Table[octet] != -1)) {
+        return false;
+      }
+    }
+    return true;
   }
 }
