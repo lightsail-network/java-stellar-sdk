@@ -102,7 +102,7 @@ public class AllowTrustOperation extends Operation {
     private String mSourceAccount;
 
     Builder(AllowTrustOp op) {
-      trustor = StrKey.encodeStellarAccountId(op.getTrustor());
+      trustor = StrKey.encodeEd25519PublicKey(op.getTrustor());
       switch (op.getAsset().getDiscriminant()) {
         case ASSET_TYPE_CREDIT_ALPHANUM4:
           assetCode = new String(op.getAsset().getAssetCode4().getAssetCode4()).trim();

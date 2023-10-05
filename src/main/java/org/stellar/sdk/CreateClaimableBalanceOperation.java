@@ -84,7 +84,7 @@ public class CreateClaimableBalanceOperation extends Operation {
       for (org.stellar.sdk.xdr.Claimant c : op.getClaimants()) {
         claimants.add(
             new Claimant(
-                StrKey.encodeStellarAccountId(c.getV0().getDestination()),
+                StrKey.encodeEd25519PublicKey(c.getV0().getDestination()),
                 Predicate.fromXdr(c.getV0().getPredicate())));
       }
     }

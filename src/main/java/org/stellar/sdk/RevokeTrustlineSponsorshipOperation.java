@@ -54,7 +54,7 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
-      accountId = StrKey.encodeStellarAccountId(op.getLedgerKey().getTrustLine().getAccountID());
+      accountId = StrKey.encodeEd25519PublicKey(op.getLedgerKey().getTrustLine().getAccountID());
       asset = TrustLineAsset.fromXdr(op.getLedgerKey().getTrustLine().getAsset());
     }
 

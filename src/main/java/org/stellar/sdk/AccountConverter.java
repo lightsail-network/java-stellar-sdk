@@ -52,6 +52,6 @@ public class AccountConverter {
       return StrKey.encodeStellarMuxedAccount(account);
     }
 
-    return StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(account));
+    return StrKey.encodeEd25519PublicKey(StrKey.muxedAccountToAccountId(account));
   }
 }

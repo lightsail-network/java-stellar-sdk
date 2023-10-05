@@ -25,7 +25,7 @@ public class SignedPayloadSignerTest {
             "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2001"
                 .toUpperCase());
     try {
-      new SignedPayloadSigner(StrKey.decodeStellarAccountId(accountStrKey), payload);
+      new SignedPayloadSigner(StrKey.decodeEd25519PublicKey(accountStrKey), payload);
       fail("should not create a payload signer if payload > max length");
     } catch (IllegalArgumentException ignored) {
     }

@@ -18,28 +18,106 @@ import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
-class StrKey {
+/**
+ * StrKey is a helper class that allows encoding and decoding Stellar keys to/from strings, i.e.
+ * between their binary and string (i.e. "GABCD...", etc.) representations.
+ *
+ * <p>For encoding and decoding MuxedAccount, please see {@link AccountConverter}.
+ */
+public class StrKey {
 
-  public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
   private static final byte[] b32Table = decodingTable();
   private static final Base32 base32Codec = Base32Factory.getInstance();
 
-  public static String encodeContractId(byte[] data) {
-    char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
-    return String.valueOf(encoded);
-  }
-
-  public static String encodeStellarAccountId(byte[] data) {
+  /**
+   * Encodes raw data to strkey ed25519 public key (G...)
+   *
+   * @param data data to encode
+   * @return "G..." representation of the key
+   */
+  public static String encodeEd25519PublicKey(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.ACCOUNT_ID, data);
     return String.valueOf(encoded);
   }
 
-  public static String encodeStellarAccountId(AccountID accountID) {
-    char[] encoded =
-        encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
+  /**
+   * Decodes strkey ed25519 public key (G...) to raw data
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeEd25519PublicKey(String data) {
+    return decodeCheck(VersionByte.ACCOUNT_ID, data.toCharArray());
+  }
+
+  /**
+   * Encodes raw data to strkey ed25519 seed in char array (S...)
+   *
+   * @param data data to encode
+   * @return "S..." representation of the key in char array
+   */
+  public static char[] encodeEd25519SecretSeed(byte[] data) {
+    return encodeCheck(VersionByte.SEED, data);
+  }
+
+  /**
+   * Decodes strkey ed25519 seed char array (S...) to raw bytes
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeEd25519SecretSeed(char[] data) {
+    return decodeCheck(VersionByte.SEED, data);
+  }
+
+  /**
+   * Encodes raw data to strkey PreAuthTx (T...)
+   *
+   * @param data data to encode
+   * @return "T..." representation of the key
+   */
+  public static String encodePreAuthTx(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.PRE_AUTH_TX, data);
     return String.valueOf(encoded);
   }
 
+  /**
+   * Decodes strkey PreAuthTx (T...) to raw bytes
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodePreAuthTx(String data) {
+    return decodeCheck(VersionByte.PRE_AUTH_TX, data.toCharArray());
+  }
+
+  /**
+   * Encodes raw data to strkey SHA256 hash (X...)
+   *
+   * @param data data to encode
+   * @return "X..." representation of the key
+   */
+  public static String encodeSha256Hash(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.SHA256_HASH, data);
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Decodes strkey SHA256 hash (X...) to raw bytes
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeSha256Hash(String data) {
+    return decodeCheck(VersionByte.SHA256_HASH, data.toCharArray());
+  }
+
+  /**
+   * Encodes {@link SignedPayloadSigner} to strkey signed payload (P...)
+   *
+   * @param signedPayloadSigner the signed payload signer
+   * @return "P..." representation of the key
+   */
   public static String encodeSignedPayload(SignedPayloadSigner signedPayloadSigner) {
     try {
       SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner =
@@ -58,7 +136,66 @@ class StrKey {
     }
   }
 
-  public static String encodeStellarMuxedAccount(MuxedAccount muxedAccount) {
+  /**
+   * Decodes strkey signed payload (P...) to {@link SignedPayloadSigner}
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static SignedPayloadSigner decodeSignedPayload(String data) {
+    try {
+      byte[] signedPayloadRaw = decodeCheck(VersionByte.SIGNED_PAYLOAD, data.toCharArray());
+
+      SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner =
+          SignerKey.SignerKeyEd25519SignedPayload.fromXdrByteArray(signedPayloadRaw);
+
+      return new SignedPayloadSigner(
+          xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
+    } catch (Exception ex) {
+      throw new FormatException(ex.getMessage());
+    }
+  }
+
+  /**
+   * Encodes raw data to strkey contract ID (C...)
+   *
+   * @param data data to encode
+   * @return "C..." representation of the key
+   */
+  public static String encodeContract(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Decodes strkey contract ID (C...) to raw bytes.
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeContract(String data) {
+    return decodeCheck(VersionByte.CONTRACT, data.toCharArray());
+  }
+
+  /**
+   * Encodes raw data to strkey Stellar account ID (G...)
+   *
+   * @param accountID data to encode
+   * @return "G..." representation of the key
+   */
+  public static String encodeEd25519PublicKey(AccountID accountID) {
+    char[] encoded =
+        encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Encodes raw data to strkey Stellar muxed account ID (M... or G...)
+   *
+   * @param muxedAccount the muxed account to encode
+   * @return "M..." or "G..." representation of the key
+   */
+  static String encodeStellarMuxedAccount(MuxedAccount muxedAccount) {
     switch (muxedAccount.getDiscriminant()) {
       case KEY_TYPE_MUXED_ED25519:
         return String.valueOf(
@@ -71,7 +208,13 @@ class StrKey {
     }
   }
 
-  public static AccountID muxedAccountToAccountId(MuxedAccount account) {
+  /**
+   * Converts {@link MuxedAccount} to {@link AccountID}.
+   *
+   * @param account the account to convert
+   * @return {@link AccountID} representation of the key
+   */
+  static AccountID muxedAccountToAccountId(MuxedAccount account) {
     AccountID aid = new AccountID();
     PublicKey key = new PublicKey();
     key.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
@@ -89,12 +232,12 @@ class StrKey {
     return aid;
   }
 
-  public static AccountID encodeToXDRAccountId(String data) {
+  static AccountID encodeToXDRAccountId(String data) {
     AccountID accountID = new AccountID();
     PublicKey publicKey = new PublicKey();
     publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
     try {
-      publicKey.setEd25519(Uint256.fromXdrByteArray(decodeStellarAccountId(data)));
+      publicKey.setEd25519(Uint256.fromXdrByteArray(decodeEd25519PublicKey(data)));
     } catch (IOException e) {
       throw new IllegalArgumentException("invalid address: " + data, e);
     }
@@ -102,7 +245,7 @@ class StrKey {
     return accountID;
   }
 
-  public static MuxedAccount encodeToXDRMuxedAccount(String data) {
+  static MuxedAccount encodeToXDRMuxedAccount(String data) {
     MuxedAccount muxed = new MuxedAccount();
 
     if (data.isEmpty()) {
@@ -112,7 +255,7 @@ class StrKey {
       case ACCOUNT_ID:
         muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
         try {
-          muxed.setEd25519(Uint256.fromXdrByteArray(decodeStellarAccountId(data)));
+          muxed.setEd25519(Uint256.fromXdrByteArray(decodeEd25519PublicKey(data)));
         } catch (IOException e) {
           throw new IllegalArgumentException("invalid address: " + data, e);
         }
@@ -137,7 +280,7 @@ class StrKey {
     return muxed;
   }
 
-  public static VersionByte decodeVersionByte(String data) {
+  static VersionByte decodeVersionByte(String data) {
     byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
     byte[] decoded = base32decode(dataBytes);
     byte decodedVersionByte = decoded[0];
@@ -148,63 +291,15 @@ class StrKey {
     return versionByteOptional.get();
   }
 
-  public static byte[] decodeStellarAccountId(String data) {
-    return decodeCheck(VersionByte.ACCOUNT_ID, data.toCharArray());
-  }
-
-  public static byte[] decodeContractId(String data) {
-    return decodeCheck(VersionByte.CONTRACT, data.toCharArray());
-  }
-
-  public static char[] encodeStellarSecretSeed(byte[] data) {
-    return encodeCheck(VersionByte.SEED, data);
-  }
-
-  public static byte[] decodeStellarSecretSeed(char[] data) {
-    return decodeCheck(VersionByte.SEED, data);
-  }
-
-  public static SignedPayloadSigner decodeSignedPayload(char[] data) {
-    try {
-      byte[] signedPayloadRaw = decodeCheck(VersionByte.SIGNED_PAYLOAD, data);
-
-      SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner =
-          SignerKey.SignerKeyEd25519SignedPayload.fromXdrByteArray(signedPayloadRaw);
-
-      return new SignedPayloadSigner(
-          xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
-    } catch (Exception ex) {
-      throw new FormatException(ex.getMessage());
-    }
-  }
-
-  public static String encodePreAuthTx(byte[] data) {
-    char[] encoded = encodeCheck(VersionByte.PRE_AUTH_TX, data);
-    return String.valueOf(encoded);
-  }
-
-  public static byte[] decodePreAuthTx(String data) {
-    return decodeCheck(VersionByte.PRE_AUTH_TX, data.toCharArray());
-  }
-
-  public static String encodeSha256Hash(byte[] data) {
-    char[] encoded = encodeCheck(VersionByte.SHA256_HASH, data);
-    return String.valueOf(encoded);
-  }
-
-  public static byte[] decodeSha256Hash(String data) {
-    return decodeCheck(VersionByte.SHA256_HASH, data.toCharArray());
-  }
-
   /**
    * Checks validity of Stellar account ID (G...).
    *
    * @param accountID the account ID to check
    * @return true if the given Stellar account ID is a valid Stellar account ID, false otherwise
    */
-  public static boolean isValidStellarAccountId(String accountID) {
+  static boolean isValidEd25519PublicKey(String accountID) {
     try {
-      decodeStellarAccountId(accountID);
+      decodeEd25519PublicKey(accountID);
       return true;
     } catch (Exception e) {
       return false;
@@ -217,16 +312,16 @@ class StrKey {
    * @param contractId the contract ID to check
    * @return true if the given contract ID is a valid contract ID, false otherwise
    */
-  public static boolean isValidContractId(String contractId) {
+  static boolean isValidContract(String contractId) {
     try {
-      decodeContractId(contractId);
+      decodeContract(contractId);
       return true;
     } catch (Exception e) {
       return false;
     }
   }
 
-  protected static char[] encodeCheck(VersionByte versionByte, byte[] data) {
+  static char[] encodeCheck(VersionByte versionByte, byte[] data) {
     try {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       outputStream.write(versionByte.getValue());
@@ -257,7 +352,7 @@ class StrKey {
     }
   }
 
-  protected static byte[] decodeCheck(VersionByte versionByte, char[] encoded) {
+  static byte[] decodeCheck(VersionByte versionByte, char[] encoded) {
     byte[] bytes = new byte[encoded.length];
     for (int i = 0; i < encoded.length; i++) {
       bytes[i] = (byte) encoded[i];
@@ -311,7 +406,7 @@ class StrKey {
     return data;
   }
 
-  protected static byte[] calculateChecksum(byte[] bytes) {
+  private static byte[] calculateChecksum(byte[] bytes) {
     // This code calculates CRC16-XModem checksum
     // Ported from https://github.com/alexgorbatchev/node-crc
     int crc = 0x0000;
@@ -346,36 +441,6 @@ class StrKey {
       table[alphabet.charAt(i)] = (byte) i;
     }
     return table;
-  }
-
-  public enum VersionByte {
-    ACCOUNT_ID((byte) (6 << 3)), // G
-    MUXED((byte) (12 << 3)), // M
-    SEED((byte) (18 << 3)), // S
-    PRE_AUTH_TX((byte) (19 << 3)), // T
-    SHA256_HASH((byte) (23 << 3)), // X
-    SIGNED_PAYLOAD((byte) (15 << 3)), // P
-
-    CONTRACT((byte) (2 << 3)); // C
-
-    private final byte value;
-
-    VersionByte(byte value) {
-      this.value = value;
-    }
-
-    public static Optional<VersionByte> findByValue(byte value) {
-      for (VersionByte versionByte : values()) {
-        if (value == versionByte.value) {
-          return Optional.of(versionByte);
-        }
-      }
-      return Optional.empty();
-    }
-
-    public int getValue() {
-      return value;
-    }
   }
 
   private static byte[] getMuxedEd25519AccountBytes(MuxedAccount muxedAccount) {
@@ -427,5 +492,34 @@ class StrKey {
       }
     }
     return true;
+  }
+
+  enum VersionByte {
+    ACCOUNT_ID((byte) (6 << 3)), // G
+    MUXED((byte) (12 << 3)), // M
+    SEED((byte) (18 << 3)), // S
+    PRE_AUTH_TX((byte) (19 << 3)), // T
+    SHA256_HASH((byte) (23 << 3)), // X
+    SIGNED_PAYLOAD((byte) (15 << 3)), // P
+    CONTRACT((byte) (2 << 3)); // C
+
+    private final byte value;
+
+    VersionByte(byte value) {
+      this.value = value;
+    }
+
+    public static Optional<VersionByte> findByValue(byte value) {
+      for (VersionByte versionByte : values()) {
+        if (value == versionByte.value) {
+          return Optional.of(versionByte);
+        }
+      }
+      return Optional.empty();
+    }
+
+    public int getValue() {
+      return value;
+    }
   }
 }

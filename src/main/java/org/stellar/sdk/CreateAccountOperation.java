@@ -65,7 +65,7 @@ public class CreateAccountOperation extends Operation {
      * @param op {@link CreateAccountOp}
      */
     Builder(CreateAccountOp op) {
-      destination = StrKey.encodeStellarAccountId(op.getDestination());
+      destination = StrKey.encodeEd25519PublicKey(op.getDestination());
       startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64().longValue());
     }
 

@@ -45,7 +45,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
      * @param op {@link RevokeSponsorshipOp}
      */
     Builder(RevokeSponsorshipOp op) {
-      accountId = StrKey.encodeStellarAccountId(op.getLedgerKey().getAccount().getAccountID());
+      accountId = StrKey.encodeEd25519PublicKey(op.getLedgerKey().getAccount().getAccountID());
     }
 
     /**

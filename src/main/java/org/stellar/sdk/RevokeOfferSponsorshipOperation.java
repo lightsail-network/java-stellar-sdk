@@ -57,7 +57,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
      */
     Builder(RevokeSponsorshipOp op) {
       offerId = op.getLedgerKey().getOffer().getOfferID().getInt64();
-      seller = StrKey.encodeStellarAccountId(op.getLedgerKey().getOffer().getSellerID());
+      seller = StrKey.encodeEd25519PublicKey(op.getLedgerKey().getOffer().getSellerID());
     }
 
     /**

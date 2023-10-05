@@ -89,12 +89,12 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
       case ASSET_TYPE_CREDIT_ALPHANUM4:
         String assetCode4 =
             Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode().getAssetCode4());
-        accountId = StrKey.encodeStellarAccountId(xdr.getAlphaNum4().getIssuer());
+        accountId = StrKey.encodeEd25519PublicKey(xdr.getAlphaNum4().getIssuer());
         return ChangeTrustAsset.create(new AssetTypeCreditAlphaNum4(assetCode4, accountId));
       case ASSET_TYPE_CREDIT_ALPHANUM12:
         String assetCode12 =
             Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode().getAssetCode12());
-        accountId = StrKey.encodeStellarAccountId(xdr.getAlphaNum12().getIssuer());
+        accountId = StrKey.encodeEd25519PublicKey(xdr.getAlphaNum12().getIssuer());
         return ChangeTrustAsset.create(new AssetTypeCreditAlphaNum12(assetCode12, accountId));
       case ASSET_TYPE_POOL_SHARE:
         return new LiquidityPoolShareChangeTrustAsset(

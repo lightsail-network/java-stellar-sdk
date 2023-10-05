@@ -16,7 +16,7 @@ public class SignerTest {
         Util.hexToBytes(
             "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
     SignedPayloadSigner signedPayloadSigner =
-        new SignedPayloadSigner(StrKey.decodeStellarAccountId(accountStrKey), payload);
+        new SignedPayloadSigner(StrKey.decodeEd25519PublicKey(accountStrKey), payload);
     SignerKey signerKey = Signer.signedPayload(signedPayloadSigner);
 
     assertArrayEquals(signerKey.getEd25519SignedPayload().getPayload(), payload);
