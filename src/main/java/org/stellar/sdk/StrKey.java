@@ -183,7 +183,7 @@ public class StrKey {
    * @param accountID data to encode
    * @return "G..." representation of the key
    */
-  public static String encodeEd25519PublicKey(AccountID accountID) {
+  static String encodeEd25519PublicKey(AccountID accountID) {
     char[] encoded =
         encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
     return String.valueOf(encoded);
