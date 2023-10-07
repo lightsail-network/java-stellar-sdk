@@ -145,7 +145,7 @@ public class StrKeyTest {
             "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
     SignedPayloadSigner signedPayloadSigner =
         new SignedPayloadSigner(
-            StrKey.decodeStellarAccountId(
+            StrKey.decodeEd25519PublicKey(
                 "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ"),
             payload);
     String encoded = StrKey.encodeSignedPayload(signedPayloadSigner);
@@ -158,7 +158,7 @@ public class StrKeyTest {
         Util.hexToBytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d".toUpperCase());
     signedPayloadSigner =
         new SignedPayloadSigner(
-            StrKey.decodeStellarAccountId(
+            StrKey.decodeEd25519PublicKey(
                 "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ"),
             payload);
     encoded = StrKey.encodeSignedPayload(signedPayloadSigner);
@@ -241,8 +241,8 @@ public class StrKeyTest {
             0xfc, 0x7f, 0xe8, 0x9a);
 
     String encoded = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
-    assertEquals(encoded, StrKey.encodeContractId(data));
-    assertArrayEquals(data, StrKey.decodeContractId(encoded));
+    assertEquals(encoded, StrKey.encodeContract(data));
+    assertArrayEquals(data, StrKey.decodeContract(encoded));
   }
 
   @Test
@@ -288,13 +288,13 @@ public class StrKeyTest {
             173, 151, 52, 164, 162, 251, 13, 122, 3, 252, 127, 232, 154);
     AccountID account = StrKey.encodeToXDRAccountId(address);
     assertArrayEquals(ed25519, account.getAccountID().getEd25519().getUint256());
-    assertEquals(address, StrKey.encodeStellarAccountId(account));
+    assertEquals(address, StrKey.encodeEd25519PublicKey(account));
 
     MuxedAccount muxedAccount = StrKey.encodeToXDRMuxedAccount(address);
     assertEquals(CryptoKeyType.KEY_TYPE_ED25519, muxedAccount.getDiscriminant());
     assertArrayEquals(ed25519, muxedAccount.getEd25519().getUint256());
     assertEquals(
-        address, StrKey.encodeStellarAccountId(StrKey.muxedAccountToAccountId(muxedAccount)));
+        address, StrKey.encodeEd25519PublicKey(StrKey.muxedAccountToAccountId(muxedAccount)));
   }
 
   @Test
@@ -434,5 +434,234 @@ public class StrKeyTest {
       fail();
     } catch (IllegalArgumentException ignored) {
     }
+  }
+
+  @Test
+  public void testEncodeAndDecodeEd25519PublicKey() {
+    byte[] rawData = {
+      (byte) 0x52,
+      (byte) 0x23,
+      (byte) 0xd1,
+      (byte) 0x59,
+      (byte) 0x64,
+      (byte) 0xcb,
+      (byte) 0x25,
+      (byte) 0xb9,
+      (byte) 0x8d,
+      (byte) 0x17,
+      (byte) 0xdf,
+      (byte) 0xc9,
+      (byte) 0xcb,
+      (byte) 0x95,
+      (byte) 0x4a,
+      (byte) 0x43,
+      (byte) 0x31,
+      (byte) 0x61,
+      (byte) 0x7b,
+      (byte) 0xba,
+      (byte) 0xa4,
+      (byte) 0xe5,
+      (byte) 0xdc,
+      (byte) 0x14,
+      (byte) 0x4c,
+      (byte) 0x87,
+      (byte) 0xdf,
+      (byte) 0xb,
+      (byte) 0x8b,
+      (byte) 0x3b,
+      (byte) 0x47,
+      (byte) 0xd9
+    };
+    String strKey = "GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC";
+    assertEquals(strKey, StrKey.encodeEd25519PublicKey(rawData));
+    assertArrayEquals(rawData, StrKey.decodeEd25519PublicKey(strKey));
+  }
+
+  @Test
+  public void testEncodeAndDecodeEd25519SecretSeed() {
+    byte[] rawData = {
+      (byte) 0x7d,
+      (byte) 0xd6,
+      (byte) 0x1c,
+      (byte) 0xa0,
+      (byte) 0xd6,
+      (byte) 0x77,
+      (byte) 0xcd,
+      (byte) 0xe,
+      (byte) 0xfc,
+      (byte) 0x2b,
+      (byte) 0x54,
+      (byte) 0x73,
+      (byte) 0xe9,
+      (byte) 0x42,
+      (byte) 0x6c,
+      (byte) 0x7a,
+      (byte) 0x98,
+      (byte) 0xb3,
+      (byte) 0xe6,
+      (byte) 0x45,
+      (byte) 0x67,
+      (byte) 0x68,
+      (byte) 0x2d,
+      (byte) 0x46,
+      (byte) 0xee,
+      (byte) 0x7c,
+      (byte) 0xbd,
+      (byte) 0x80,
+      (byte) 0x7,
+      (byte) 0xe5,
+      (byte) 0x32,
+      (byte) 0xbc
+    };
+    String strKey = "SB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZV4E";
+    assertEquals(strKey, String.valueOf(StrKey.encodeEd25519SecretSeed(rawData)));
+    assertArrayEquals(rawData, StrKey.decodeEd25519SecretSeed(strKey.toCharArray()));
+  }
+
+  @Test
+  public void testEncodeAndDecodePreAuthTx() {
+    byte[] rawData = {
+      (byte) 0x7d,
+      (byte) 0xd6,
+      (byte) 0x1c,
+      (byte) 0xa0,
+      (byte) 0xd6,
+      (byte) 0x77,
+      (byte) 0xcd,
+      (byte) 0xe,
+      (byte) 0xfc,
+      (byte) 0x2b,
+      (byte) 0x54,
+      (byte) 0x73,
+      (byte) 0xe9,
+      (byte) 0x42,
+      (byte) 0x6c,
+      (byte) 0x7a,
+      (byte) 0x98,
+      (byte) 0xb3,
+      (byte) 0xe6,
+      (byte) 0x45,
+      (byte) 0x67,
+      (byte) 0x68,
+      (byte) 0x2d,
+      (byte) 0x46,
+      (byte) 0xee,
+      (byte) 0x7c,
+      (byte) 0xbd,
+      (byte) 0x80,
+      (byte) 0x7,
+      (byte) 0xe5,
+      (byte) 0x32,
+      (byte) 0xbc
+    };
+    String strKey = "TB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZM5K";
+    assertEquals(strKey, StrKey.encodePreAuthTx(rawData));
+    assertArrayEquals(rawData, StrKey.decodePreAuthTx(strKey));
+  }
+
+  @Test
+  public void testEncodeAndDecodeSha256Hash() {
+    byte[] rawData = {
+      (byte) 0x7d,
+      (byte) 0xd6,
+      (byte) 0x1c,
+      (byte) 0xa0,
+      (byte) 0xd6,
+      (byte) 0x77,
+      (byte) 0xcd,
+      (byte) 0xe,
+      (byte) 0xfc,
+      (byte) 0x2b,
+      (byte) 0x54,
+      (byte) 0x73,
+      (byte) 0xe9,
+      (byte) 0x42,
+      (byte) 0x6c,
+      (byte) 0x7a,
+      (byte) 0x98,
+      (byte) 0xb3,
+      (byte) 0xe6,
+      (byte) 0x45,
+      (byte) 0x67,
+      (byte) 0x68,
+      (byte) 0x2d,
+      (byte) 0x46,
+      (byte) 0xee,
+      (byte) 0x7c,
+      (byte) 0xbd,
+      (byte) 0x80,
+      (byte) 0x7,
+      (byte) 0xe5,
+      (byte) 0x32,
+      (byte) 0xbc
+    };
+    String strKey = "XB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLYIYT";
+    assertEquals(strKey, StrKey.encodeSha256Hash(rawData));
+    assertArrayEquals(rawData, StrKey.decodeSha256Hash(strKey));
+  }
+
+  @Test
+  public void testEncodeAndDecodeSignedPayload() {
+    AccountID accountID =
+        KeyPair.fromAccountId("GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC")
+            .getXdrAccountId();
+    byte[] payload = {
+      (byte) 0xd5,
+      (byte) 0xf1,
+      (byte) 0x3d,
+      (byte) 0xbd,
+      (byte) 0x95,
+      (byte) 0x5e,
+      (byte) 0x99,
+      (byte) 0xf9,
+      (byte) 0xd
+    };
+    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner(accountID, payload);
+    String expected =
+        "PBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5SAAAAAE5L4J5XWKV5GPZBUAAAAAYQ4";
+    assertEquals(expected, StrKey.encodeSignedPayload(signedPayloadSigner));
+    assertArrayEquals(payload, StrKey.decodeSignedPayload(expected).getPayload());
+    assertEquals(accountID, StrKey.decodeSignedPayload(expected).getSignerAccountId());
+  }
+
+  @Test
+  public void testEncodeAndDecodeContract() {
+    byte[] rawData = {
+      (byte) 0x7d,
+      (byte) 0xd6,
+      (byte) 0x1c,
+      (byte) 0xa0,
+      (byte) 0xd6,
+      (byte) 0x77,
+      (byte) 0xcd,
+      (byte) 0xe,
+      (byte) 0xfc,
+      (byte) 0x2b,
+      (byte) 0x54,
+      (byte) 0x73,
+      (byte) 0xe9,
+      (byte) 0x42,
+      (byte) 0x6c,
+      (byte) 0x7a,
+      (byte) 0x98,
+      (byte) 0xb3,
+      (byte) 0xe6,
+      (byte) 0x45,
+      (byte) 0x67,
+      (byte) 0x68,
+      (byte) 0x2d,
+      (byte) 0x46,
+      (byte) 0xee,
+      (byte) 0x7c,
+      (byte) 0xbd,
+      (byte) 0x80,
+      (byte) 0x7,
+      (byte) 0xe5,
+      (byte) 0x32,
+      (byte) 0xbc
+    };
+    String strKey = "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVKC";
+    assertEquals(strKey, StrKey.encodeContract(rawData));
+    assertArrayEquals(rawData, StrKey.decodeContract(strKey));
   }
 }

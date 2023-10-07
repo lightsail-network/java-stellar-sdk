@@ -40,7 +40,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
      * @param op {@link BeginSponsoringFutureReservesOp}
      */
     Builder(BeginSponsoringFutureReservesOp op) {
-      sponsoredId = StrKey.encodeStellarAccountId(op.getSponsoredID());
+      sponsoredId = StrKey.encodeEd25519PublicKey(op.getSponsoredID());
     }
 
     /**

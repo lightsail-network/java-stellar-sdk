@@ -54,7 +54,7 @@ public class AddressTest {
   @Test
   public void testFromAccountByte() {
     String accountId = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
-    byte[] accountIdBytes = StrKey.decodeStellarAccountId(accountId);
+    byte[] accountIdBytes = StrKey.decodeEd25519PublicKey(accountId);
     Address address = Address.fromAccount(accountIdBytes);
     assertEquals(address.toString(), accountId);
     assertEquals(address.getAddressType(), Address.AddressType.ACCOUNT);
@@ -63,7 +63,7 @@ public class AddressTest {
   @Test
   public void testFromContractByte() {
     String contractId = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
-    byte[] contractIdBytes = StrKey.decodeContractId(contractId);
+    byte[] contractIdBytes = StrKey.decodeContract(contractId);
     Address address = Address.fromContract(contractIdBytes);
     assertEquals(address.toString(), contractId);
     assertEquals(address.getAddressType(), Address.AddressType.CONTRACT);

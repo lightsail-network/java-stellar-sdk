@@ -70,7 +70,7 @@ public class KeyPair {
    * @return {@link KeyPair}
    */
   public static KeyPair fromSecretSeed(char[] seed) {
-    byte[] decoded = StrKey.decodeStellarSecretSeed(seed);
+    byte[] decoded = StrKey.decodeEd25519SecretSeed(seed);
     KeyPair keypair = fromSecretSeed(decoded);
     return keypair;
   }
@@ -87,7 +87,7 @@ public class KeyPair {
    */
   public static KeyPair fromSecretSeed(String seed) {
     char[] charSeed = seed.toCharArray();
-    byte[] decoded = StrKey.decodeStellarSecretSeed(charSeed);
+    byte[] decoded = StrKey.decodeEd25519SecretSeed(charSeed);
     KeyPair keypair = fromSecretSeed(decoded);
     Arrays.fill(charSeed, ' ');
     return keypair;
@@ -113,7 +113,7 @@ public class KeyPair {
    * @return {@link KeyPair}
    */
   public static KeyPair fromAccountId(String accountId) {
-    byte[] decoded = StrKey.decodeStellarAccountId(accountId);
+    byte[] decoded = StrKey.decodeEd25519PublicKey(accountId);
     return fromPublicKey(decoded);
   }
 
@@ -163,12 +163,12 @@ public class KeyPair {
 
   /** Returns the human readable account ID encoded in strkey. */
   public String getAccountId() {
-    return StrKey.encodeStellarAccountId(mPublicKey.getAbyte());
+    return StrKey.encodeEd25519PublicKey(mPublicKey.getAbyte());
   }
 
   /** Returns the human readable secret seed encoded in strkey. */
   public char[] getSecretSeed() {
-    return StrKey.encodeStellarSecretSeed(mPrivateKey.getSeed());
+    return StrKey.encodeEd25519SecretSeed(mPrivateKey.getSeed());
   }
 
   public byte[] getPublicKey() {

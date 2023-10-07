@@ -87,7 +87,7 @@ public class SetTrustlineFlagsOperation extends Operation {
     private String mSourceAccount;
 
     Builder(SetTrustLineFlagsOp op) {
-      trustor = StrKey.encodeStellarAccountId(op.getTrustor());
+      trustor = StrKey.encodeEd25519PublicKey(op.getTrustor());
       asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
       clearFlags = flagSetFromInt(op.getClearFlags().getUint32().getNumber().intValue());
       setFlags = flagSetFromInt(op.getSetFlags().getUint32().getNumber().intValue());

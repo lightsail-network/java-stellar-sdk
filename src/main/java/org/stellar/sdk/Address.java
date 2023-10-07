@@ -23,12 +23,12 @@ public class Address {
    * @param address the StrKey encoded format of Stellar public key or contract ID.
    */
   public Address(String address) {
-    if (StrKey.isValidStellarAccountId(address)) {
+    if (StrKey.isValidEd25519PublicKey(address)) {
       this.type = AddressType.ACCOUNT;
-      this.key = StrKey.decodeStellarAccountId(address);
-    } else if (StrKey.isValidContractId(address)) {
+      this.key = StrKey.decodeEd25519PublicKey(address);
+    } else if (StrKey.isValidContract(address)) {
       this.type = AddressType.CONTRACT;
-      this.key = StrKey.decodeContractId(address);
+      this.key = StrKey.decodeContract(address);
     } else {
       throw new IllegalArgumentException("Unsupported address type");
     }
@@ -41,7 +41,7 @@ public class Address {
    * @return a new {@link Address} object from the given Stellar public key.
    */
   public static Address fromAccount(byte[] accountId) {
-    return new Address(StrKey.encodeStellarAccountId(accountId));
+    return new Address(StrKey.encodeEd25519PublicKey(accountId));
   }
 
   /**
@@ -51,7 +51,7 @@ public class Address {
    * @return a new {@link Address} object from the given Stellar Contract ID.
    */
   public static Address fromContract(byte[] contractId) {
-    return new Address(StrKey.encodeContractId(contractId));
+    return new Address(StrKey.encodeContract(contractId));
   }
 
   /**
@@ -63,9 +63,9 @@ public class Address {
   public static Address fromSCAddress(SCAddress scAddress) {
     switch (scAddress.getDiscriminant()) {
       case SC_ADDRESS_TYPE_ACCOUNT:
-        return new Address(StrKey.encodeStellarAccountId(scAddress.getAccountId()));
+        return new Address(StrKey.encodeEd25519PublicKey(scAddress.getAccountId()));
       case SC_ADDRESS_TYPE_CONTRACT:
-        return new Address(StrKey.encodeContractId(scAddress.getContractId().getHash()));
+        return new Address(StrKey.encodeContract(scAddress.getContractId().getHash()));
       default:
         throw new IllegalArgumentException("Unsupported address type");
     }
@@ -142,9 +142,9 @@ public class Address {
   public String toString() {
     switch (this.type) {
       case ACCOUNT:
-        return StrKey.encodeStellarAccountId(this.key);
+        return StrKey.encodeEd25519PublicKey(this.key);
       case CONTRACT:
-        return StrKey.encodeContractId(this.key);
+        return StrKey.encodeContract(this.key);
       default:
         throw new IllegalArgumentException("Unsupported address type");
     }

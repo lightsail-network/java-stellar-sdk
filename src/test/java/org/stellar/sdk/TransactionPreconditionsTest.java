@@ -113,7 +113,7 @@ public class TransactionPreconditionsTest {
                     .payload(payload)
                     .ed25519(
                         new Uint256(
-                            StrKey.decodeStellarAccountId(
+                            StrKey.decodeEd25519PublicKey(
                                 "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")))
                     .build())
             .build();

@@ -470,7 +470,7 @@ public class TransactionBuilderTest {
             .ed25519SignedPayload(
                 new SignerKey.SignerKeyEd25519SignedPayload.Builder()
                     .payload(payload)
-                    .ed25519(new Uint256(StrKey.decodeStellarAccountId(accountStrKey)))
+                    .ed25519(new Uint256(StrKey.decodeEd25519PublicKey(accountStrKey)))
                     .build())
             .build();
 

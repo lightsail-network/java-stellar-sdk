@@ -258,7 +258,7 @@ public class Transaction extends AbstractTransaction {
     Transaction transaction =
         new Transaction(
             accountConverter,
-            StrKey.encodeStellarAccountId(envelope.getTx().getSourceAccountEd25519().getUint256()),
+            StrKey.encodeEd25519PublicKey(envelope.getTx().getSourceAccountEd25519().getUint256()),
             mFee,
             mSequenceNumber,
             mOperations,
