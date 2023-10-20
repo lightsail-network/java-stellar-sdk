@@ -44,6 +44,9 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   @SerializedName("last_modified_ledger")
   private Integer lastModifiedLedger;
 
+  @SerializedName("last_modified_time")
+  private String lastModifiedTime;
+
   @SerializedName("thresholds")
   private Thresholds thresholds;
 
@@ -132,6 +135,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
   public Integer getLastModifiedLedger() {
     return lastModifiedLedger;
+  }
+
+  public String getLastModifiedTime() {
+    return lastModifiedTime;
   }
 
   public Thresholds getThresholds() {
@@ -274,6 +281,9 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("is_authorized_to_maintain_liabilities")
     private final Boolean isAuthorizedToMaintainLiabilities;
 
+    @SerializedName("is_clawback_enabled")
+    private final Boolean isClawbackEnabled;
+
     @SerializedName("last_modified_ledger")
     private final Integer lastModifiedLedger;
 
@@ -291,6 +301,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
         @NonNull String sellingLiabilities,
         Boolean isAuthorized,
         Boolean isAuthorizedToMaintainLiabilities,
+        Boolean isClawbackEnabled,
         Integer lastModifiedLedger,
         String sponsor) {
       this.assetType = assetType;
@@ -303,6 +314,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       this.sellingLiabilities = sellingLiabilities;
       this.isAuthorized = isAuthorized;
       this.isAuthorizedToMaintainLiabilities = isAuthorizedToMaintainLiabilities;
+      this.isClawbackEnabled = isClawbackEnabled;
       this.lastModifiedLedger = lastModifiedLedger;
       // sponsor is an optional field
       this.sponsor = sponsor;
@@ -354,6 +366,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
     public Boolean getAuthorizedToMaintainLiabilities() {
       return isAuthorizedToMaintainLiabilities;
+    }
+
+    public Boolean getClawbackEnabled() {
+      return isClawbackEnabled;
     }
 
     public Integer getLastModifiedLedger() {

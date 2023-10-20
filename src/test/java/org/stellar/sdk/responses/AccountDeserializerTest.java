@@ -30,6 +30,7 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getBalances()[0].getSellingLiabilities(), Optional.of("100.7654321"));
     assertEquals(account.getBalances()[0].getAuthorized(), Boolean.FALSE);
     assertEquals(account.getBalances()[0].getAuthorizedToMaintainLiabilities(), Boolean.TRUE);
+    assertEquals(account.getBalances()[0].getClawbackEnabled(), Boolean.TRUE);
 
     assertEquals(account.getBalances()[1].getAssetType(), "native");
     assertEquals(account.getBalances()[1].getAsset(), Optional.of(new AssetTypeNative()));
@@ -46,6 +47,8 @@ public class AccountDeserializerTest extends TestCase {
         account.getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSequenceNumber(), Long.valueOf(2319149195853854L));
     assertEquals(account.getSubentryCount(), Integer.valueOf(0));
+    assertEquals(account.getLastModifiedLedger(), Integer.valueOf(117663));
+    assertEquals(account.getLastModifiedTime(), "2020-09-28T17:56:04Z");
     assertEquals(account.getSequenceUpdatedAtLedger().longValue(), 1234);
     assertEquals(account.getSequenceUpdatedAtTime().longValue(), 4567);
     assertEquals(
@@ -240,7 +243,8 @@ public class AccountDeserializerTest extends TestCase {
           + "      \"asset_code\": \"ABC\",\n"
           + "      \"asset_issuer\": \"GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU\",\n"
           + "      \"is_authorized\": false,\n"
-          + "      \"is_authorized_to_maintain_liabilities\": true\n"
+          + "      \"is_authorized_to_maintain_liabilities\": true,\n"
+          + "      \"is_clawback_enabled\": true\n"
           + "    },"
           + "    {\n"
           + "      \"asset_type\": \"native\",\n"
@@ -301,6 +305,8 @@ public class AccountDeserializerTest extends TestCase {
           + "  \"subentry_count\": 0,\n"
           + "  \"inflation_destination\": \"GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC\",\n"
           + "  \"home_domain\": \"stellar.org\",\n"
+          + "  \"last_modified_ledger\": 117663,\n"
+          + "  \"last_modified_time\": \"2020-09-28T17:56:04Z\",\n"
           + "  \"thresholds\": {\n"
           + "    \"low_threshold\": 10,\n"
           + "    \"med_threshold\": 20,\n"
