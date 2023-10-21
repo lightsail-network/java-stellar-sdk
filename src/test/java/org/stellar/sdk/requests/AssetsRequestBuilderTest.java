@@ -8,7 +8,7 @@ import org.stellar.sdk.Server;
 
 public class AssetsRequestBuilderTest {
   @Test
-  public void testAccounts() {
+  public void testAssets() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri =
         server
