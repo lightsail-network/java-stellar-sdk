@@ -1,228 +1,91 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents ledger response.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/ledger/" target="_blank">Ledger
- *     documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/ledgers"
+ *     target="_blank">Ledger documentation</a>
  * @see org.stellar.sdk.requests.LedgersRequestBuilder
  * @see org.stellar.sdk.Server#ledgers()
  */
+@Value
+@EqualsAndHashCode(callSuper = false)
 public class LedgerResponse extends Response implements Pageable {
-  @SerializedName("sequence")
-  private final Long sequence;
-
-  @SerializedName("hash")
-  private final String hash;
+  @SerializedName("id")
+  String id;
 
   @SerializedName("paging_token")
-  private final String pagingToken;
+  String pagingToken;
+
+  @SerializedName("hash")
+  String hash;
 
   @SerializedName("prev_hash")
-  private final String prevHash;
+  String prevHash;
 
-  @SerializedName("transaction_count")
-  private final Integer transactionCount;
+  @SerializedName("sequence")
+  Long sequence;
 
   @SerializedName("successful_transaction_count")
-  private final Integer successfulTransactionCount;
+  Integer successfulTransactionCount;
 
   @SerializedName("failed_transaction_count")
-  private final Integer failedTransactionCount;
+  Integer failedTransactionCount;
 
   @SerializedName("operation_count")
-  private final Integer operationCount;
+  Integer operationCount;
+
+  @SerializedName("tx_set_operation_count")
+  Integer txSetOperationCount;
 
   @SerializedName("closed_at")
-  private final String closedAt;
+  String closedAt;
 
   @SerializedName("total_coins")
-  private final String totalCoins;
+  String totalCoins;
 
   @SerializedName("fee_pool")
-  private final String feePool;
-
-  @SerializedName("base_fee")
-  private final Long baseFee;
-
-  @SerializedName("base_reserve")
-  private final String baseReserve;
+  String feePool;
 
   @SerializedName("base_fee_in_stroops")
-  private final String baseFeeInStroops;
+  String baseFeeInStroops;
 
   @SerializedName("base_reserve_in_stroops")
-  private final String baseReserveInStroops;
+  String baseReserveInStroops;
 
   @SerializedName("max_tx_set_size")
-  private final Integer maxTxSetSize;
+  Integer maxTxSetSize;
 
   @SerializedName("protocol_version")
-  private final Integer protocolVersion;
+  Integer protocolVersion;
 
   @SerializedName("header_xdr")
-  private final String headerXdr;
+  String headerXdr;
 
   @SerializedName("_links")
-  private final Links links;
-
-  LedgerResponse(
-      Long sequence,
-      String hash,
-      String pagingToken,
-      String prevHash,
-      Integer transactionCount,
-      Integer successfulTransactionCount,
-      Integer failedTransactionCount,
-      Integer operationCount,
-      String closedAt,
-      String totalCoins,
-      String feePool,
-      Long baseFee,
-      String baseReserve,
-      String baseFeeInStroops,
-      String baseReserveInStroops,
-      Integer maxTxSetSize,
-      Integer protocolVersion,
-      String headerXdr,
-      Links links) {
-    this.sequence = sequence;
-    this.hash = hash;
-    this.pagingToken = pagingToken;
-    this.prevHash = prevHash;
-    this.transactionCount = transactionCount;
-    this.successfulTransactionCount = successfulTransactionCount;
-    this.failedTransactionCount = failedTransactionCount;
-    this.operationCount = operationCount;
-    this.closedAt = closedAt;
-    this.totalCoins = totalCoins;
-    this.feePool = feePool;
-    this.baseFee = baseFee;
-    this.baseFeeInStroops = baseFeeInStroops;
-    this.baseReserve = baseReserve;
-    this.baseReserveInStroops = baseReserveInStroops;
-    this.maxTxSetSize = maxTxSetSize;
-    this.protocolVersion = protocolVersion;
-    this.headerXdr = headerXdr;
-    this.links = links;
-  }
-
-  public Long getSequence() {
-    return sequence;
-  }
-
-  public String getHash() {
-    return hash;
-  }
-
-  public String getPagingToken() {
-    return pagingToken;
-  }
-
-  public String getPrevHash() {
-    return prevHash;
-  }
-
-  /**
-   * @deprecated Will be removed in Horizon 0.17.0
-   */
-  public Integer getTransactionCount() {
-    return transactionCount;
-  }
-
-  public Integer getSuccessfulTransactionCount() {
-    return successfulTransactionCount;
-  }
-
-  public Integer getFailedTransactionCount() {
-    return failedTransactionCount;
-  }
-
-  public Integer getOperationCount() {
-    return operationCount;
-  }
-
-  public String getClosedAt() {
-    return closedAt;
-  }
-
-  public String getTotalCoins() {
-    return totalCoins;
-  }
-
-  public String getFeePool() {
-    return feePool;
-  }
-
-  public Long getBaseFee() {
-    return baseFee;
-  }
-
-  public String getBaseReserve() {
-    return baseReserve;
-  }
-
-  public String getBaseFeeInStroops() {
-    return baseFeeInStroops;
-  }
-
-  public String getBaseReserveInStroops() {
-    return baseReserveInStroops;
-  }
-
-  public Integer getMaxTxSetSize() {
-    return maxTxSetSize;
-  }
-
-  public Integer getProtocolVersion() {
-    return protocolVersion;
-  }
-
-  public String getHeaderXdr() {
-    return headerXdr;
-  }
-
-  public Links getLinks() {
-    return links;
-  }
+  Links links;
 
   /** Links connected to ledger. */
+  @Value
   public static class Links {
-    @SerializedName("effects")
-    private final Link effects;
-
-    @SerializedName("operations")
-    private final Link operations;
-
     @SerializedName("self")
-    private final Link self;
+    Link self;
 
     @SerializedName("transactions")
-    private final Link transactions;
+    Link transactions;
 
-    Links(Link effects, Link operations, Link self, Link transactions) {
-      this.effects = effects;
-      this.operations = operations;
-      this.self = self;
-      this.transactions = transactions;
-    }
+    @SerializedName("operations")
+    Link operations;
 
-    public Link getEffects() {
-      return effects;
-    }
+    @SerializedName("payments")
+    Link payments;
 
-    public Link getOperations() {
-      return operations;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
-
-    public Link getTransactions() {
-      return transactions;
-    }
+    @SerializedName("effects")
+    Link effects;
   }
 }

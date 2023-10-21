@@ -9,76 +9,81 @@ public class LedgerDeserializerTest extends TestCase {
     String json =
         "{\n"
             + "  \"_links\": {\n"
-            + "    \"effects\": {\n"
-            + "      \"href\": \"/ledgers/898826/effects{?cursor,limit,order}\",\n"
+            + "    \"self\": {\n"
+            + "      \"href\": \"https://horizon.stellar.org/ledgers/48637678\"\n"
+            + "    },\n"
+            + "    \"transactions\": {\n"
+            + "      \"href\": \"https://horizon.stellar.org/ledgers/48637678/transactions{?cursor,limit,order}\",\n"
             + "      \"templated\": true\n"
             + "    },\n"
             + "    \"operations\": {\n"
-            + "      \"href\": \"/ledgers/898826/operations{?cursor,limit,order}\",\n"
+            + "      \"href\": \"https://horizon.stellar.org/ledgers/48637678/operations{?cursor,limit,order}\",\n"
             + "      \"templated\": true\n"
             + "    },\n"
-            + "    \"self\": {\n"
-            + "      \"href\": \"/ledgers/898826\"\n"
+            + "    \"payments\": {\n"
+            + "      \"href\": \"https://horizon.stellar.org/ledgers/48637678/payments{?cursor,limit,order}\",\n"
+            + "      \"templated\": true\n"
             + "    },\n"
-            + "    \"transactions\": {\n"
-            + "      \"href\": \"/ledgers/898826/transactions{?cursor,limit,order}\",\n"
+            + "    \"effects\": {\n"
+            + "      \"href\": \"https://horizon.stellar.org/ledgers/48637678/effects{?cursor,limit,order}\",\n"
             + "      \"templated\": true\n"
             + "    }\n"
             + "  },\n"
-            + "  \"id\": \"686bb246db89b099cd3963a4633eb5e4315d89dfd3c00594c80b41a483847bfa\",\n"
-            + "  \"paging_token\": \"3860428274794496\",\n"
-            + "  \"hash\": \"686bb246db89b099cd3963a4633eb5e4315d89dfd3c00594c80b41a483847bfa\",\n"
-            + "  \"prev_hash\": \"50c8695eb32171a19858413e397cc50b504ceacc819010bdf8ff873aff7858d7\",\n"
-            + "  \"sequence\": 898826,\n"
-            + "  \"transaction_count\": 5,\n"
-            + "  \"successful_transaction_count\": 3,\n"
-            + "  \"failed_transaction_count\": 2,\n"
-            + "  \"operation_count\": 10,\n"
-            + "  \"closed_at\": \"2015-11-19T21:35:59Z\",\n"
-            + "  \"total_coins\": \"101343867604.8975480\",\n"
-            + "  \"fee_pool\": \"1908.2248818\",\n"
-            + "  \"base_fee\": 100,\n"
-            + "  \"base_reserve\": \"10.0000000\",\n"
-            + "  \"max_tx_set_size\": 50,\n"
-            + "  \"protocol_version\": 10,\n"
-            + "  \"header_xdr\": \"AAAACvkxR60p1bwRO3PdsRy48pkWVtuyF08xyvB3jU7u437r9tK/G7DoXa+J8N5ptWhpHGrc/"
-            + "a+5k9Ak3kHnZSAaiPgAAAAAW4aHyQAAAAAAAAAAyz4xx/YIt7Z9PLeCHj/ZrFGcDaNSJpQX+jpL1IX3uqSCiFrU4CFidqxjmmJzXNWN1rY4cBwliHN21hicu/"
-            + "JyawCkgzIOdhy8pVTcbQA+gekx1NpNAAAA2QAAAAAACsLiAAAAZABMS0AAAAAykmy96ckoDVk3UDBm7B4n8oC6+cdCxGDnWu7tO6aU34xipth5GRNy+I5Y8m+E/"
-            + "bHlElCDX2J8y6kuKr7yU6xvyjMb9nwaii7EHN74adNyyUuselmxQcKfEVf/tj3j5l9yOMqgE05NDyU0+LycHY47062IWxvG0o2yDaaxp2Z72pwAAAAA\"\n"
+            + "  \"id\": \"41cfd330183c18bc8b380a46e71769e496199b420356bffc9f03287bfb9ce7b6\",\n"
+            + "  \"paging_token\": \"208897236363378688\",\n"
+            + "  \"hash\": \"41cfd330183c18bc8b380a46e71769e496199b420356bffc9f03287bfb9ce7b6\",\n"
+            + "  \"prev_hash\": \"fa6f2b3fc10f441a5dfdcd973c73a78cc99f3257271f8da2d9b0bc4e2cf31bcf\",\n"
+            + "  \"sequence\": 48637678,\n"
+            + "  \"successful_transaction_count\": 98,\n"
+            + "  \"failed_transaction_count\": 505,\n"
+            + "  \"operation_count\": 443,\n"
+            + "  \"tx_set_operation_count\": 964,\n"
+            + "  \"closed_at\": \"2023-10-20T04:07:21Z\",\n"
+            + "  \"total_coins\": \"105443902087.3472865\",\n"
+            + "  \"fee_pool\": \"4230801.4837990\",\n"
+            + "  \"base_fee_in_stroops\": 100,\n"
+            + "  \"base_reserve_in_stroops\": 5000000,\n"
+            + "  \"max_tx_set_size\": 1000,\n"
+            + "  \"protocol_version\": 19,\n"
+            + "  \"header_xdr\": \"AAAAE/pvKz/BD0QaXf3Nlzxzp4zJnzJXJx+NotmwvE4s8xvP7qfvEc2qNS7fkzYsE0nuWzTntzk51lygSX3R4OohQqEAAAAAZTH8+QAAAAAAAAABAAAAAAaweClXqq3sjNIHBm/r6o1RY6yR5HqkHJCaZtEEdMUfAAAAQC8qa6+gFLyfrj2BLi7B6TJUF0AXAg5Tao+wfa46XK1Ap9MdCtNekddz5+yIuJfEXpZbDL026omNsGZAXApWWQWaqZFwC16SgweXoVDEoRR5DxOpX1KTw8mYFB1LQ5hXDnP0Q24AyMXFNS5889SWfmKJ23vRjsw2+dJ6d4ldcKKYAuYm7g6iHrPseVthAAAmepoyEOYAAAEWAAAAAFJPSV0AAABkAExLQAAAA+hqOATyc5yeP5Rbm04iZNfUsSSL5gjTrl9qiRrMyVBAmUnSjbHKF9M4otFOBK8dTBPBlwTILohIRKCKLrfzZZ3yAnnNpR07DmDiuC0VFFYqF4mp7+54u0NkorebGPfT+Oyzx+5JqY5nE8H+vi/tc2ytQwnV2PZQhsxBoaVJrJluHgAAAAA=\"\n"
             + "}";
 
     LedgerResponse ledger = GsonSingleton.getInstance().fromJson(json, LedgerResponse.class);
     assertEquals(
-        ledger.getHash(), "686bb246db89b099cd3963a4633eb5e4315d89dfd3c00594c80b41a483847bfa");
-    assertEquals(ledger.getPagingToken(), "3860428274794496");
+        ledger.getId(), "41cfd330183c18bc8b380a46e71769e496199b420356bffc9f03287bfb9ce7b6");
+    assertEquals(ledger.getPagingToken(), "208897236363378688");
     assertEquals(
-        ledger.getPrevHash(), "50c8695eb32171a19858413e397cc50b504ceacc819010bdf8ff873aff7858d7");
-    assertEquals(ledger.getSequence(), new Long(898826));
-    assertEquals(ledger.getTransactionCount(), new Integer(5));
-    assertEquals(ledger.getSuccessfulTransactionCount(), new Integer(3));
-    assertEquals(ledger.getFailedTransactionCount(), new Integer(2));
-    assertEquals(ledger.getOperationCount(), new Integer(10));
-    assertEquals(ledger.getClosedAt(), "2015-11-19T21:35:59Z");
-    assertEquals(ledger.getTotalCoins(), "101343867604.8975480");
-    assertEquals(ledger.getFeePool(), "1908.2248818");
-    assertEquals(ledger.getBaseFee(), new Long(100));
-    assertEquals(ledger.getBaseReserve(), "10.0000000");
-    assertEquals(ledger.getMaxTxSetSize(), new Integer(50));
-    assertEquals(ledger.getProtocolVersion(), new Integer(10));
+        ledger.getHash(), "41cfd330183c18bc8b380a46e71769e496199b420356bffc9f03287bfb9ce7b6");
+    assertEquals(
+        ledger.getPrevHash(), "fa6f2b3fc10f441a5dfdcd973c73a78cc99f3257271f8da2d9b0bc4e2cf31bcf");
+    assertEquals(ledger.getSequence(), Long.valueOf(48637678));
+    assertEquals(ledger.getSuccessfulTransactionCount(), Integer.valueOf(98));
+    assertEquals(ledger.getFailedTransactionCount(), Integer.valueOf(505));
+    assertEquals(ledger.getOperationCount(), Integer.valueOf(443));
+    assertEquals(ledger.getTxSetOperationCount(), Integer.valueOf(964));
+    assertEquals(ledger.getClosedAt(), "2023-10-20T04:07:21Z");
+    assertEquals(ledger.getTotalCoins(), "105443902087.3472865");
+    assertEquals(ledger.getFeePool(), "4230801.4837990");
+    assertEquals(ledger.getBaseFeeInStroops(), "100");
+    assertEquals(ledger.getBaseReserveInStroops(), "5000000");
+    assertEquals(ledger.getMaxTxSetSize(), Integer.valueOf(1000));
+    assertEquals(ledger.getProtocolVersion(), Integer.valueOf(19));
     assertEquals(
         ledger.getHeaderXdr(),
-        "AAAACvkxR60p1bwRO3PdsRy48pkWVtuyF08xyvB3jU7u437r9tK/G7DoXa+J8N5ptWhpHGrc/"
-            + "a+5k9Ak3kHnZSAaiPgAAAAAW4aHyQAAAAAAAAAAyz4xx/YIt7Z9PLeCHj/ZrFGcDaNSJpQX+jpL1IX3uqSCiFrU4CFidqxjmmJzXNWN1rY4cBwliHN21hicu/"
-            + "JyawCkgzIOdhy8pVTcbQA+gekx1NpNAAAA2QAAAAAACsLiAAAAZABMS0AAAAAykmy96ckoDVk3UDBm7B4n8oC6+cdCxGDnWu7tO6aU34xipth5GRNy+I5Y8m+E/"
-            + "bHlElCDX2J8y6kuKr7yU6xvyjMb9nwaii7EHN74adNyyUuselmxQcKfEVf/tj3j5l9yOMqgE05NDyU0+LycHY47062IWxvG0o2yDaaxp2Z72pwAAAAA");
+        "AAAAE/pvKz/BD0QaXf3Nlzxzp4zJnzJXJx+NotmwvE4s8xvP7qfvEc2qNS7fkzYsE0nuWzTntzk51lygSX3R4OohQqEAAAAAZTH8+QAAAAAAAAABAAAAAAaweClXqq3sjNIHBm/r6o1RY6yR5HqkHJCaZtEEdMUfAAAAQC8qa6+gFLyfrj2BLi7B6TJUF0AXAg5Tao+wfa46XK1Ap9MdCtNekddz5+yIuJfEXpZbDL026omNsGZAXApWWQWaqZFwC16SgweXoVDEoRR5DxOpX1KTw8mYFB1LQ5hXDnP0Q24AyMXFNS5889SWfmKJ23vRjsw2+dJ6d4ldcKKYAuYm7g6iHrPseVthAAAmepoyEOYAAAEWAAAAAFJPSV0AAABkAExLQAAAA+hqOATyc5yeP5Rbm04iZNfUsSSL5gjTrl9qiRrMyVBAmUnSjbHKF9M4otFOBK8dTBPBlwTILohIRKCKLrfzZZ3yAnnNpR07DmDiuC0VFFYqF4mp7+54u0NkorebGPfT+Oyzx+5JqY5nE8H+vi/tc2ytQwnV2PZQhsxBoaVJrJluHgAAAAA=");
     assertEquals(
-        ledger.getLinks().getEffects().getHref(), "/ledgers/898826/effects{?cursor,limit,order}");
-    assertEquals(
-        ledger.getLinks().getOperations().getHref(),
-        "/ledgers/898826/operations{?cursor,limit,order}");
-    assertEquals(ledger.getLinks().getSelf().getHref(), "/ledgers/898826");
+        ledger.getLinks().getSelf().getHref(), "https://horizon.stellar.org/ledgers/48637678");
     assertEquals(
         ledger.getLinks().getTransactions().getHref(),
-        "/ledgers/898826/transactions{?cursor,limit,order}");
+        "https://horizon.stellar.org/ledgers/48637678/transactions{?cursor,limit,order}");
+    assertEquals(
+        ledger.getLinks().getOperations().getHref(),
+        "https://horizon.stellar.org/ledgers/48637678/operations{?cursor,limit,order}");
+    assertEquals(
+        ledger.getLinks().getPayments().getHref(),
+        "https://horizon.stellar.org/ledgers/48637678/payments{?cursor,limit,order}");
+    assertEquals(
+        ledger.getLinks().getEffects().getHref(),
+        "https://horizon.stellar.org/ledgers/48637678/effects{?cursor,limit,order}");
   }
 }
