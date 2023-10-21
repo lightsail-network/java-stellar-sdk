@@ -10,8 +10,6 @@ import lombok.Value;
  * @see <a
  *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/ledgers"
  *     target="_blank">Ledger documentation</a>
- * @see <a href="https://developers.stellar.org/api/horizon/resources/ledgers/object/"
- *     target="_blank">Horizon API</a>
  * @see org.stellar.sdk.requests.LedgersRequestBuilder
  * @see org.stellar.sdk.Server#ledgers()
  */
