@@ -19,8 +19,8 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * Supports building {@link SorobanTransactionData} structures with various items set to specific
  * values.
  *
- * <p>This is recommended for when you are building {@link BumpFootprintExpirationOperation} and
- * {@link RestoreFootprintOperation} operations to avoid (re)building the entire data structure from
+ * <p>This is recommended for when you are building {@link ExtendFootprintTTLOperation} and {@link
+ * RestoreFootprintOperation} operations to avoid (re)building the entire data structure from
  * scratch.
  */
 public class SorobanDataBuilder {
@@ -41,7 +41,7 @@ public class SorobanDataBuilder {
                     .readBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .build())
-            .refundableFee(new Int64(0L))
+            .resourceFee(new Int64(0L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
             .build();
   }
@@ -73,13 +73,13 @@ public class SorobanDataBuilder {
   }
 
   /**
-   * Sets the "refundable" fee portion of the Soroban data.
+   * Sets the "resource" fee portion of the Soroban data.
    *
-   * @param fee the refundable fee to set (int64)
+   * @param fee the resource fee to set (int64)
    * @return this builder instance
    */
-  public SorobanDataBuilder setRefundableFee(long fee) {
-    data.setRefundableFee(new Int64(fee));
+  public SorobanDataBuilder setResourceFee(long fee) {
+    data.setResourceFee(new Int64(fee));
     return this;
   }
 

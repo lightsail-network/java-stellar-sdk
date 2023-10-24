@@ -51,7 +51,7 @@ public class InvokeHostFunctionOperationTest {
                   .build())
           .executable(
               new ContractExecutable.Builder()
-                  .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                  .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                   .build())
           .build();
 
@@ -180,7 +180,7 @@ public class InvokeHostFunctionOperationTest {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction2 =
@@ -410,7 +410,8 @@ public class InvokeHostFunctionOperationTest {
           0x1e, 0x1f
         };
     InvokeHostFunctionOperation operation =
-        InvokeHostFunctionOperation.createTokenContractOperationBuilder(address, salt).build();
+        InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(address, salt)
+            .build();
     CreateContractArgs createContractArgs =
         new CreateContractArgs.Builder()
             .contractIDPreimage(
@@ -424,7 +425,7 @@ public class InvokeHostFunctionOperationTest {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction expectedFunction =
@@ -447,7 +448,7 @@ public class InvokeHostFunctionOperationTest {
         new AssetTypeCreditAlphaNum4(
             "CAT", "GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
     InvokeHostFunctionOperation operation =
-        InvokeHostFunctionOperation.createTokenContractOperationBuilder(asset).build();
+        InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(asset).build();
     CreateContractArgs createContractArgs =
         new CreateContractArgs.Builder()
             .contractIDPreimage(
@@ -457,7 +458,7 @@ public class InvokeHostFunctionOperationTest {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction expectedFunction =

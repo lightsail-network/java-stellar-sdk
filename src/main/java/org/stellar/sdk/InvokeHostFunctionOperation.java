@@ -153,7 +153,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @param asset The classic asset to wrap.
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
-  public static InvokeHostFunctionOperationBuilder<?, ?> createTokenContractOperationBuilder(
+  public static InvokeHostFunctionOperationBuilder<?, ?> createStellarAssetContractOperationBuilder(
       Asset asset) {
     CreateContractArgs createContractArgs =
         new CreateContractArgs.Builder()
@@ -164,7 +164,7 @@ public class InvokeHostFunctionOperation extends Operation {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction =
@@ -185,7 +185,7 @@ public class InvokeHostFunctionOperation extends Operation {
    *     generated.
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
-  public static InvokeHostFunctionOperationBuilder<?, ?> createTokenContractOperationBuilder(
+  public static InvokeHostFunctionOperationBuilder<?, ?> createStellarAssetContractOperationBuilder(
       Address address, @Nullable byte[] salt) {
     if (salt == null) {
       salt = new byte[32];
@@ -207,7 +207,7 @@ public class InvokeHostFunctionOperation extends Operation {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction =

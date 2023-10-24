@@ -913,7 +913,7 @@ public class SorobanServerTest {
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
-            .refundableFee(new Int64(100L))
+            .resourceFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
             .build();
     Transaction transaction = buildSorobanTransaction(originSorobanData, null);
@@ -1020,7 +1020,7 @@ public class SorobanServerTest {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     SorobanAuthorizationEntry auth =

@@ -189,7 +189,7 @@ private fun testSDK(): String {
                     .instructions(Uint32(XdrUnsignedInteger(34567)))
                     .build()
             )
-            .refundableFee(Int64(100L))
+            .resourceFee(Int64(100L))
             .ext(ExtensionPoint.Builder().discriminant(0).build())
             .build()
         val sorobanDataString = sorobanData.toXdrBase64()
@@ -213,7 +213,7 @@ private fun testSDK(): String {
             )
             .executable(
                 ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build()
             )
             .build()

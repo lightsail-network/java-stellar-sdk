@@ -16,7 +16,6 @@ import org.stellar.sdk.Predicate;
 import org.stellar.sdk.Price;
 import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;
 import org.stellar.sdk.responses.operations.AllowTrustOperationResponse;
-import org.stellar.sdk.responses.operations.BumpFootprintExpirationOperationResponse;
 import org.stellar.sdk.responses.operations.BumpSequenceOperationResponse;
 import org.stellar.sdk.responses.operations.ChangeTrustOperationResponse;
 import org.stellar.sdk.responses.operations.ClaimClaimableBalanceOperationResponse;
@@ -25,6 +24,7 @@ import org.stellar.sdk.responses.operations.ClawbackOperationResponse;
 import org.stellar.sdk.responses.operations.CreateAccountOperationResponse;
 import org.stellar.sdk.responses.operations.CreateClaimableBalanceOperationResponse;
 import org.stellar.sdk.responses.operations.EndSponsoringFutureReservesOperationResponse;
+import org.stellar.sdk.responses.operations.ExtendFootprintTTLOperationResponse;
 import org.stellar.sdk.responses.operations.InflationOperationResponse;
 import org.stellar.sdk.responses.operations.InvokeHostFunctionOperationResponse;
 import org.stellar.sdk.responses.operations.LiquidityPoolDepositOperationResponse;
@@ -1959,7 +1959,7 @@ public class OperationDeserializerTest extends TestCase {
   }
 
   @Test
-  public void testDeserializeBumpFootprintExpirationOperation() {
+  public void testDeserializeExtendFootprintTTLOperation() {
     String json =
         "{\n"
             + "    \"_links\": {\n"
@@ -1987,11 +1987,11 @@ public class OperationDeserializerTest extends TestCase {
             + "    \"type_i\": 25,\n"
             + "    \"created_at\": \"2023-07-20T10:44:56Z\",\n"
             + "    \"transaction_hash\": \"c452cd9d1ff9692499d0d2aa2f8e898b8c38025300c0f293f4a2adde7295c82f\",\n"
-            + "    \"ledgers_to_expire\": \"2343241\"\n"
+            + "    \"extend_to\": \"2343241\"\n"
             + "}";
 
-    BumpFootprintExpirationOperationResponse operation =
-        (BumpFootprintExpirationOperationResponse)
+    ExtendFootprintTTLOperationResponse operation =
+        (ExtendFootprintTTLOperationResponse)
             GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
     assertEquals(
         operation.getLinks().getSelf().getHref(), "http://127.0.0.1:8000/operations/2224793063426");
@@ -2005,7 +2005,7 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(
         operation.getTransactionHash(),
         "c452cd9d1ff9692499d0d2aa2f8e898b8c38025300c0f293f4a2adde7295c82f");
-    assertEquals(operation.getLedgersToExpire().longValue(), 2343241);
+    assertEquals(operation.getExtendTo().longValue(), 2343241);
   }
 
   @Test
