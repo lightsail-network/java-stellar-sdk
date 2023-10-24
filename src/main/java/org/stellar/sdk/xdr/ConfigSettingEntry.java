@@ -36,8 +36,8 @@ import org.stellar.sdk.Base64Factory;
 //      uint32 contractDataKeySizeBytes;
 //  case CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES:
 //      uint32 contractDataEntrySizeBytes;
-//  case CONFIG_SETTING_STATE_EXPIRATION:
-//      StateExpirationSettings stateExpirationSettings;
+//  case CONFIG_SETTING_STATE_ARCHIVAL:
+//      StateArchivalSettings stateArchivalSettings;
 //  case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
 //      ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
 //  case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
@@ -160,14 +160,14 @@ public class ConfigSettingEntry implements XdrElement {
     this.contractDataEntrySizeBytes = value;
   }
 
-  private StateExpirationSettings stateExpirationSettings;
+  private StateArchivalSettings stateArchivalSettings;
 
-  public StateExpirationSettings getStateExpirationSettings() {
-    return this.stateExpirationSettings;
+  public StateArchivalSettings getStateArchivalSettings() {
+    return this.stateArchivalSettings;
   }
 
-  public void setStateExpirationSettings(StateExpirationSettings value) {
-    this.stateExpirationSettings = value;
+  public void setStateArchivalSettings(StateArchivalSettings value) {
+    this.stateArchivalSettings = value;
   }
 
   private ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
@@ -212,7 +212,7 @@ public class ConfigSettingEntry implements XdrElement {
     private ContractCostParams contractCostParamsMemBytes;
     private Uint32 contractDataKeySizeBytes;
     private Uint32 contractDataEntrySizeBytes;
-    private StateExpirationSettings stateExpirationSettings;
+    private StateArchivalSettings stateArchivalSettings;
     private ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
     private Uint64[] bucketListSizeWindow;
     private EvictionIterator evictionIterator;
@@ -273,8 +273,8 @@ public class ConfigSettingEntry implements XdrElement {
       return this;
     }
 
-    public Builder stateExpirationSettings(StateExpirationSettings stateExpirationSettings) {
-      this.stateExpirationSettings = stateExpirationSettings;
+    public Builder stateArchivalSettings(StateArchivalSettings stateArchivalSettings) {
+      this.stateArchivalSettings = stateArchivalSettings;
       return this;
     }
 
@@ -307,7 +307,7 @@ public class ConfigSettingEntry implements XdrElement {
       val.setContractCostParamsMemBytes(this.contractCostParamsMemBytes);
       val.setContractDataKeySizeBytes(this.contractDataKeySizeBytes);
       val.setContractDataEntrySizeBytes(this.contractDataEntrySizeBytes);
-      val.setStateExpirationSettings(this.stateExpirationSettings);
+      val.setStateArchivalSettings(this.stateArchivalSettings);
       val.setContractExecutionLanes(this.contractExecutionLanes);
       val.setBucketListSizeWindow(this.bucketListSizeWindow);
       val.setEvictionIterator(this.evictionIterator);
@@ -354,8 +354,8 @@ public class ConfigSettingEntry implements XdrElement {
       case CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES:
         Uint32.encode(stream, encodedConfigSettingEntry.contractDataEntrySizeBytes);
         break;
-      case CONFIG_SETTING_STATE_EXPIRATION:
-        StateExpirationSettings.encode(stream, encodedConfigSettingEntry.stateExpirationSettings);
+      case CONFIG_SETTING_STATE_ARCHIVAL:
+        StateArchivalSettings.encode(stream, encodedConfigSettingEntry.stateArchivalSettings);
         break;
       case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
         ConfigSettingContractExecutionLanesV0.encode(
@@ -416,8 +416,8 @@ public class ConfigSettingEntry implements XdrElement {
       case CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES:
         decodedConfigSettingEntry.contractDataEntrySizeBytes = Uint32.decode(stream);
         break;
-      case CONFIG_SETTING_STATE_EXPIRATION:
-        decodedConfigSettingEntry.stateExpirationSettings = StateExpirationSettings.decode(stream);
+      case CONFIG_SETTING_STATE_ARCHIVAL:
+        decodedConfigSettingEntry.stateArchivalSettings = StateArchivalSettings.decode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
         decodedConfigSettingEntry.contractExecutionLanes =
@@ -450,7 +450,7 @@ public class ConfigSettingEntry implements XdrElement {
         this.contractCostParamsMemBytes,
         this.contractDataKeySizeBytes,
         this.contractDataEntrySizeBytes,
-        this.stateExpirationSettings,
+        this.stateArchivalSettings,
         this.contractExecutionLanes,
         Arrays.hashCode(this.bucketListSizeWindow),
         this.evictionIterator,
@@ -474,7 +474,7 @@ public class ConfigSettingEntry implements XdrElement {
         && Objects.equals(this.contractCostParamsMemBytes, other.contractCostParamsMemBytes)
         && Objects.equals(this.contractDataKeySizeBytes, other.contractDataKeySizeBytes)
         && Objects.equals(this.contractDataEntrySizeBytes, other.contractDataEntrySizeBytes)
-        && Objects.equals(this.stateExpirationSettings, other.stateExpirationSettings)
+        && Objects.equals(this.stateArchivalSettings, other.stateArchivalSettings)
         && Objects.equals(this.contractExecutionLanes, other.contractExecutionLanes)
         && Arrays.equals(this.bucketListSizeWindow, other.bucketListSizeWindow)
         && Objects.equals(this.evictionIterator, other.evictionIterator)

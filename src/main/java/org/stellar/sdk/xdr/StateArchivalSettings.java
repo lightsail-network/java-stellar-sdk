@@ -13,17 +13,17 @@ import org.stellar.sdk.Base64Factory;
 
 // === xdr source ============================================================
 
-//  struct StateExpirationSettings {
-//      uint32 maxEntryExpiration;
-//      uint32 minTempEntryExpiration;
-//      uint32 minPersistentEntryExpiration;
+//  struct StateArchivalSettings {
+//      uint32 maxEntryTTL;
+//      uint32 minTemporaryTTL;
+//      uint32 minPersistentTTL;
 //
 //      // rent_fee = wfee_rate_average / rent_rate_denominator_for_type
 //      int64 persistentRentRateDenominator;
 //      int64 tempRentRateDenominator;
 //
-//      // max number of entries that emit expiration meta in a single ledger
-//      uint32 maxEntriesToExpire;
+//      // max number of entries that emit archival meta in a single ledger
+//      uint32 maxEntriesToArchive;
 //
 //      // Number of snapshots to use when calculating average BucketList size
 //      uint32 bucketListSizeWindowSampleSize;
@@ -36,37 +36,37 @@ import org.stellar.sdk.Base64Factory;
 //  };
 
 //  ===========================================================================
-public class StateExpirationSettings implements XdrElement {
-  public StateExpirationSettings() {}
+public class StateArchivalSettings implements XdrElement {
+  public StateArchivalSettings() {}
 
-  private Uint32 maxEntryExpiration;
+  private Uint32 maxEntryTTL;
 
-  public Uint32 getMaxEntryExpiration() {
-    return this.maxEntryExpiration;
+  public Uint32 getMaxEntryTTL() {
+    return this.maxEntryTTL;
   }
 
-  public void setMaxEntryExpiration(Uint32 value) {
-    this.maxEntryExpiration = value;
+  public void setMaxEntryTTL(Uint32 value) {
+    this.maxEntryTTL = value;
   }
 
-  private Uint32 minTempEntryExpiration;
+  private Uint32 minTemporaryTTL;
 
-  public Uint32 getMinTempEntryExpiration() {
-    return this.minTempEntryExpiration;
+  public Uint32 getMinTemporaryTTL() {
+    return this.minTemporaryTTL;
   }
 
-  public void setMinTempEntryExpiration(Uint32 value) {
-    this.minTempEntryExpiration = value;
+  public void setMinTemporaryTTL(Uint32 value) {
+    this.minTemporaryTTL = value;
   }
 
-  private Uint32 minPersistentEntryExpiration;
+  private Uint32 minPersistentTTL;
 
-  public Uint32 getMinPersistentEntryExpiration() {
-    return this.minPersistentEntryExpiration;
+  public Uint32 getMinPersistentTTL() {
+    return this.minPersistentTTL;
   }
 
-  public void setMinPersistentEntryExpiration(Uint32 value) {
-    this.minPersistentEntryExpiration = value;
+  public void setMinPersistentTTL(Uint32 value) {
+    this.minPersistentTTL = value;
   }
 
   private Int64 persistentRentRateDenominator;
@@ -89,14 +89,14 @@ public class StateExpirationSettings implements XdrElement {
     this.tempRentRateDenominator = value;
   }
 
-  private Uint32 maxEntriesToExpire;
+  private Uint32 maxEntriesToArchive;
 
-  public Uint32 getMaxEntriesToExpire() {
-    return this.maxEntriesToExpire;
+  public Uint32 getMaxEntriesToArchive() {
+    return this.maxEntriesToArchive;
   }
 
-  public void setMaxEntriesToExpire(Uint32 value) {
-    this.maxEntriesToExpire = value;
+  public void setMaxEntriesToArchive(Uint32 value) {
+    this.maxEntriesToArchive = value;
   }
 
   private Uint32 bucketListSizeWindowSampleSize;
@@ -130,46 +130,46 @@ public class StateExpirationSettings implements XdrElement {
   }
 
   public static void encode(
-      XdrDataOutputStream stream, StateExpirationSettings encodedStateExpirationSettings)
+      XdrDataOutputStream stream, StateArchivalSettings encodedStateArchivalSettings)
       throws IOException {
-    Uint32.encode(stream, encodedStateExpirationSettings.maxEntryExpiration);
-    Uint32.encode(stream, encodedStateExpirationSettings.minTempEntryExpiration);
-    Uint32.encode(stream, encodedStateExpirationSettings.minPersistentEntryExpiration);
-    Int64.encode(stream, encodedStateExpirationSettings.persistentRentRateDenominator);
-    Int64.encode(stream, encodedStateExpirationSettings.tempRentRateDenominator);
-    Uint32.encode(stream, encodedStateExpirationSettings.maxEntriesToExpire);
-    Uint32.encode(stream, encodedStateExpirationSettings.bucketListSizeWindowSampleSize);
-    Uint64.encode(stream, encodedStateExpirationSettings.evictionScanSize);
-    Uint32.encode(stream, encodedStateExpirationSettings.startingEvictionScanLevel);
+    Uint32.encode(stream, encodedStateArchivalSettings.maxEntryTTL);
+    Uint32.encode(stream, encodedStateArchivalSettings.minTemporaryTTL);
+    Uint32.encode(stream, encodedStateArchivalSettings.minPersistentTTL);
+    Int64.encode(stream, encodedStateArchivalSettings.persistentRentRateDenominator);
+    Int64.encode(stream, encodedStateArchivalSettings.tempRentRateDenominator);
+    Uint32.encode(stream, encodedStateArchivalSettings.maxEntriesToArchive);
+    Uint32.encode(stream, encodedStateArchivalSettings.bucketListSizeWindowSampleSize);
+    Uint64.encode(stream, encodedStateArchivalSettings.evictionScanSize);
+    Uint32.encode(stream, encodedStateArchivalSettings.startingEvictionScanLevel);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
 
-  public static StateExpirationSettings decode(XdrDataInputStream stream) throws IOException {
-    StateExpirationSettings decodedStateExpirationSettings = new StateExpirationSettings();
-    decodedStateExpirationSettings.maxEntryExpiration = Uint32.decode(stream);
-    decodedStateExpirationSettings.minTempEntryExpiration = Uint32.decode(stream);
-    decodedStateExpirationSettings.minPersistentEntryExpiration = Uint32.decode(stream);
-    decodedStateExpirationSettings.persistentRentRateDenominator = Int64.decode(stream);
-    decodedStateExpirationSettings.tempRentRateDenominator = Int64.decode(stream);
-    decodedStateExpirationSettings.maxEntriesToExpire = Uint32.decode(stream);
-    decodedStateExpirationSettings.bucketListSizeWindowSampleSize = Uint32.decode(stream);
-    decodedStateExpirationSettings.evictionScanSize = Uint64.decode(stream);
-    decodedStateExpirationSettings.startingEvictionScanLevel = Uint32.decode(stream);
-    return decodedStateExpirationSettings;
+  public static StateArchivalSettings decode(XdrDataInputStream stream) throws IOException {
+    StateArchivalSettings decodedStateArchivalSettings = new StateArchivalSettings();
+    decodedStateArchivalSettings.maxEntryTTL = Uint32.decode(stream);
+    decodedStateArchivalSettings.minTemporaryTTL = Uint32.decode(stream);
+    decodedStateArchivalSettings.minPersistentTTL = Uint32.decode(stream);
+    decodedStateArchivalSettings.persistentRentRateDenominator = Int64.decode(stream);
+    decodedStateArchivalSettings.tempRentRateDenominator = Int64.decode(stream);
+    decodedStateArchivalSettings.maxEntriesToArchive = Uint32.decode(stream);
+    decodedStateArchivalSettings.bucketListSizeWindowSampleSize = Uint32.decode(stream);
+    decodedStateArchivalSettings.evictionScanSize = Uint64.decode(stream);
+    decodedStateArchivalSettings.startingEvictionScanLevel = Uint32.decode(stream);
+    return decodedStateArchivalSettings;
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(
-        this.maxEntryExpiration,
-        this.minTempEntryExpiration,
-        this.minPersistentEntryExpiration,
+        this.maxEntryTTL,
+        this.minTemporaryTTL,
+        this.minPersistentTTL,
         this.persistentRentRateDenominator,
         this.tempRentRateDenominator,
-        this.maxEntriesToExpire,
+        this.maxEntriesToArchive,
         this.bucketListSizeWindowSampleSize,
         this.evictionScanSize,
         this.startingEvictionScanLevel);
@@ -177,17 +177,17 @@ public class StateExpirationSettings implements XdrElement {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof StateExpirationSettings)) {
+    if (!(object instanceof StateArchivalSettings)) {
       return false;
     }
 
-    StateExpirationSettings other = (StateExpirationSettings) object;
-    return Objects.equals(this.maxEntryExpiration, other.maxEntryExpiration)
-        && Objects.equals(this.minTempEntryExpiration, other.minTempEntryExpiration)
-        && Objects.equals(this.minPersistentEntryExpiration, other.minPersistentEntryExpiration)
+    StateArchivalSettings other = (StateArchivalSettings) object;
+    return Objects.equals(this.maxEntryTTL, other.maxEntryTTL)
+        && Objects.equals(this.minTemporaryTTL, other.minTemporaryTTL)
+        && Objects.equals(this.minPersistentTTL, other.minPersistentTTL)
         && Objects.equals(this.persistentRentRateDenominator, other.persistentRentRateDenominator)
         && Objects.equals(this.tempRentRateDenominator, other.tempRentRateDenominator)
-        && Objects.equals(this.maxEntriesToExpire, other.maxEntriesToExpire)
+        && Objects.equals(this.maxEntriesToArchive, other.maxEntriesToArchive)
         && Objects.equals(this.bucketListSizeWindowSampleSize, other.bucketListSizeWindowSampleSize)
         && Objects.equals(this.evictionScanSize, other.evictionScanSize)
         && Objects.equals(this.startingEvictionScanLevel, other.startingEvictionScanLevel);
@@ -206,40 +206,40 @@ public class StateExpirationSettings implements XdrElement {
     return byteArrayOutputStream.toByteArray();
   }
 
-  public static StateExpirationSettings fromXdrBase64(String xdr) throws IOException {
+  public static StateArchivalSettings fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static StateExpirationSettings fromXdrByteArray(byte[] xdr) throws IOException {
+  public static StateArchivalSettings fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
   }
 
   public static final class Builder {
-    private Uint32 maxEntryExpiration;
-    private Uint32 minTempEntryExpiration;
-    private Uint32 minPersistentEntryExpiration;
+    private Uint32 maxEntryTTL;
+    private Uint32 minTemporaryTTL;
+    private Uint32 minPersistentTTL;
     private Int64 persistentRentRateDenominator;
     private Int64 tempRentRateDenominator;
-    private Uint32 maxEntriesToExpire;
+    private Uint32 maxEntriesToArchive;
     private Uint32 bucketListSizeWindowSampleSize;
     private Uint64 evictionScanSize;
     private Uint32 startingEvictionScanLevel;
 
-    public Builder maxEntryExpiration(Uint32 maxEntryExpiration) {
-      this.maxEntryExpiration = maxEntryExpiration;
+    public Builder maxEntryTTL(Uint32 maxEntryTTL) {
+      this.maxEntryTTL = maxEntryTTL;
       return this;
     }
 
-    public Builder minTempEntryExpiration(Uint32 minTempEntryExpiration) {
-      this.minTempEntryExpiration = minTempEntryExpiration;
+    public Builder minTemporaryTTL(Uint32 minTemporaryTTL) {
+      this.minTemporaryTTL = minTemporaryTTL;
       return this;
     }
 
-    public Builder minPersistentEntryExpiration(Uint32 minPersistentEntryExpiration) {
-      this.minPersistentEntryExpiration = minPersistentEntryExpiration;
+    public Builder minPersistentTTL(Uint32 minPersistentTTL) {
+      this.minPersistentTTL = minPersistentTTL;
       return this;
     }
 
@@ -253,8 +253,8 @@ public class StateExpirationSettings implements XdrElement {
       return this;
     }
 
-    public Builder maxEntriesToExpire(Uint32 maxEntriesToExpire) {
-      this.maxEntriesToExpire = maxEntriesToExpire;
+    public Builder maxEntriesToArchive(Uint32 maxEntriesToArchive) {
+      this.maxEntriesToArchive = maxEntriesToArchive;
       return this;
     }
 
@@ -273,14 +273,14 @@ public class StateExpirationSettings implements XdrElement {
       return this;
     }
 
-    public StateExpirationSettings build() {
-      StateExpirationSettings val = new StateExpirationSettings();
-      val.setMaxEntryExpiration(this.maxEntryExpiration);
-      val.setMinTempEntryExpiration(this.minTempEntryExpiration);
-      val.setMinPersistentEntryExpiration(this.minPersistentEntryExpiration);
+    public StateArchivalSettings build() {
+      StateArchivalSettings val = new StateArchivalSettings();
+      val.setMaxEntryTTL(this.maxEntryTTL);
+      val.setMinTemporaryTTL(this.minTemporaryTTL);
+      val.setMinPersistentTTL(this.minPersistentTTL);
       val.setPersistentRentRateDenominator(this.persistentRentRateDenominator);
       val.setTempRentRateDenominator(this.tempRentRateDenominator);
-      val.setMaxEntriesToExpire(this.maxEntriesToExpire);
+      val.setMaxEntriesToArchive(this.maxEntriesToArchive);
       val.setBucketListSizeWindowSampleSize(this.bucketListSizeWindowSampleSize);
       val.setEvictionScanSize(this.evictionScanSize);
       val.setStartingEvictionScanLevel(this.startingEvictionScanLevel);

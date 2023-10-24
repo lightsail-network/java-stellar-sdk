@@ -39,7 +39,7 @@ import org.stellar.sdk.Base64Factory;
 //      LIQUIDITY_POOL_DEPOSIT = 22,
 //      LIQUIDITY_POOL_WITHDRAW = 23,
 //      INVOKE_HOST_FUNCTION = 24,
-//      BUMP_FOOTPRINT_EXPIRATION = 25,
+//      EXTEND_FOOTPRINT_TTL = 25,
 //      RESTORE_FOOTPRINT = 26
 //  };
 
@@ -70,7 +70,7 @@ public enum OperationType implements XdrElement {
   LIQUIDITY_POOL_DEPOSIT(22),
   LIQUIDITY_POOL_WITHDRAW(23),
   INVOKE_HOST_FUNCTION(24),
-  BUMP_FOOTPRINT_EXPIRATION(25),
+  EXTEND_FOOTPRINT_TTL(25),
   RESTORE_FOOTPRINT(26),
   ;
   private int mValue;
@@ -137,7 +137,7 @@ public enum OperationType implements XdrElement {
       case 24:
         return INVOKE_HOST_FUNCTION;
       case 25:
-        return BUMP_FOOTPRINT_EXPIRATION;
+        return EXTEND_FOOTPRINT_TTL;
       case 26:
         return RESTORE_FOOTPRINT;
       default:

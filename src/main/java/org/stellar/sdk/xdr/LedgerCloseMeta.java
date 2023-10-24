@@ -19,8 +19,6 @@ import org.stellar.sdk.Base64Factory;
 //      LedgerCloseMetaV0 v0;
 //  case 1:
 //      LedgerCloseMetaV1 v1;
-//  case 2:
-//      LedgerCloseMetaV2 v2;
 //  };
 
 //  ===========================================================================
@@ -57,21 +55,10 @@ public class LedgerCloseMeta implements XdrElement {
     this.v1 = value;
   }
 
-  private LedgerCloseMetaV2 v2;
-
-  public LedgerCloseMetaV2 getV2() {
-    return this.v2;
-  }
-
-  public void setV2(LedgerCloseMetaV2 value) {
-    this.v2 = value;
-  }
-
   public static final class Builder {
     private Integer discriminant;
     private LedgerCloseMetaV0 v0;
     private LedgerCloseMetaV1 v1;
-    private LedgerCloseMetaV2 v2;
 
     public Builder discriminant(Integer discriminant) {
       this.discriminant = discriminant;
@@ -88,17 +75,11 @@ public class LedgerCloseMeta implements XdrElement {
       return this;
     }
 
-    public Builder v2(LedgerCloseMetaV2 v2) {
-      this.v2 = v2;
-      return this;
-    }
-
     public LedgerCloseMeta build() {
       LedgerCloseMeta val = new LedgerCloseMeta();
       val.setDiscriminant(discriminant);
       val.setV0(this.v0);
       val.setV1(this.v1);
-      val.setV2(this.v2);
       return val;
     }
   }
@@ -114,9 +95,6 @@ public class LedgerCloseMeta implements XdrElement {
         break;
       case 1:
         LedgerCloseMetaV1.encode(stream, encodedLedgerCloseMeta.v1);
-        break;
-      case 2:
-        LedgerCloseMetaV2.encode(stream, encodedLedgerCloseMeta.v2);
         break;
     }
   }
@@ -136,16 +114,13 @@ public class LedgerCloseMeta implements XdrElement {
       case 1:
         decodedLedgerCloseMeta.v1 = LedgerCloseMetaV1.decode(stream);
         break;
-      case 2:
-        decodedLedgerCloseMeta.v2 = LedgerCloseMetaV2.decode(stream);
-        break;
     }
     return decodedLedgerCloseMeta;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.v0, this.v1, this.v2, this.v);
+    return Objects.hash(this.v0, this.v1, this.v);
   }
 
   @Override
@@ -157,7 +132,6 @@ public class LedgerCloseMeta implements XdrElement {
     LedgerCloseMeta other = (LedgerCloseMeta) object;
     return Objects.equals(this.v0, other.v0)
         && Objects.equals(this.v1, other.v1)
-        && Objects.equals(this.v2, other.v2)
         && Objects.equals(this.v, other.v);
   }
 

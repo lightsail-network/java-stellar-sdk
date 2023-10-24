@@ -37,8 +37,8 @@ import org.stellar.sdk.Base64Factory;
 //          ContractCodeEntry contractCode;
 //      case CONFIG_SETTING:
 //          ConfigSettingEntry configSetting;
-//      case EXPIRATION:
-//          ExpirationEntry expiration;
+//      case TTL:
+//          TTLEntry ttl;
 //      }
 //      data;
 //
@@ -279,14 +279,14 @@ public class LedgerEntry implements XdrElement {
       this.configSetting = value;
     }
 
-    private ExpirationEntry expiration;
+    private TTLEntry ttl;
 
-    public ExpirationEntry getExpiration() {
-      return this.expiration;
+    public TTLEntry getTtl() {
+      return this.ttl;
     }
 
-    public void setExpiration(ExpirationEntry value) {
-      this.expiration = value;
+    public void setTtl(TTLEntry value) {
+      this.ttl = value;
     }
 
     public static final class Builder {
@@ -300,7 +300,7 @@ public class LedgerEntry implements XdrElement {
       private ContractDataEntry contractData;
       private ContractCodeEntry contractCode;
       private ConfigSettingEntry configSetting;
-      private ExpirationEntry expiration;
+      private TTLEntry ttl;
 
       public Builder discriminant(LedgerEntryType discriminant) {
         this.discriminant = discriminant;
@@ -352,8 +352,8 @@ public class LedgerEntry implements XdrElement {
         return this;
       }
 
-      public Builder expiration(ExpirationEntry expiration) {
-        this.expiration = expiration;
+      public Builder ttl(TTLEntry ttl) {
+        this.ttl = ttl;
         return this;
       }
 
@@ -369,7 +369,7 @@ public class LedgerEntry implements XdrElement {
         val.setContractData(this.contractData);
         val.setContractCode(this.contractCode);
         val.setConfigSetting(this.configSetting);
-        val.setExpiration(this.expiration);
+        val.setTtl(this.ttl);
         return val;
       }
     }
@@ -407,8 +407,8 @@ public class LedgerEntry implements XdrElement {
         case CONFIG_SETTING:
           ConfigSettingEntry.encode(stream, encodedLedgerEntryData.configSetting);
           break;
-        case EXPIRATION:
-          ExpirationEntry.encode(stream, encodedLedgerEntryData.expiration);
+        case TTL:
+          TTLEntry.encode(stream, encodedLedgerEntryData.ttl);
           break;
       }
     }
@@ -449,8 +449,8 @@ public class LedgerEntry implements XdrElement {
         case CONFIG_SETTING:
           decodedLedgerEntryData.configSetting = ConfigSettingEntry.decode(stream);
           break;
-        case EXPIRATION:
-          decodedLedgerEntryData.expiration = ExpirationEntry.decode(stream);
+        case TTL:
+          decodedLedgerEntryData.ttl = TTLEntry.decode(stream);
           break;
       }
       return decodedLedgerEntryData;
@@ -468,7 +468,7 @@ public class LedgerEntry implements XdrElement {
           this.contractData,
           this.contractCode,
           this.configSetting,
-          this.expiration,
+          this.ttl,
           this.type);
     }
 
@@ -488,7 +488,7 @@ public class LedgerEntry implements XdrElement {
           && Objects.equals(this.contractData, other.contractData)
           && Objects.equals(this.contractCode, other.contractCode)
           && Objects.equals(this.configSetting, other.configSetting)
-          && Objects.equals(this.expiration, other.expiration)
+          && Objects.equals(this.ttl, other.ttl)
           && Objects.equals(this.type, other.type);
     }
 

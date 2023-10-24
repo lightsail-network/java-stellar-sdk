@@ -72,8 +72,8 @@ import org.stellar.sdk.Base64Factory;
 //          LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
 //      case INVOKE_HOST_FUNCTION:
 //          InvokeHostFunctionOp invokeHostFunctionOp;
-//      case BUMP_FOOTPRINT_EXPIRATION:
-//          BumpFootprintExpirationOp bumpFootprintExpirationOp;
+//      case EXTEND_FOOTPRINT_TTL:
+//          ExtendFootprintTTLOp extendFootprintTTLOp;
 //      case RESTORE_FOOTPRINT:
 //          RestoreFootprintOp restoreFootprintOp;
 //      }
@@ -434,14 +434,14 @@ public class Operation implements XdrElement {
       this.invokeHostFunctionOp = value;
     }
 
-    private BumpFootprintExpirationOp bumpFootprintExpirationOp;
+    private ExtendFootprintTTLOp extendFootprintTTLOp;
 
-    public BumpFootprintExpirationOp getBumpFootprintExpirationOp() {
-      return this.bumpFootprintExpirationOp;
+    public ExtendFootprintTTLOp getExtendFootprintTTLOp() {
+      return this.extendFootprintTTLOp;
     }
 
-    public void setBumpFootprintExpirationOp(BumpFootprintExpirationOp value) {
-      this.bumpFootprintExpirationOp = value;
+    public void setExtendFootprintTTLOp(ExtendFootprintTTLOp value) {
+      this.extendFootprintTTLOp = value;
     }
 
     private RestoreFootprintOp restoreFootprintOp;
@@ -479,7 +479,7 @@ public class Operation implements XdrElement {
       private LiquidityPoolDepositOp liquidityPoolDepositOp;
       private LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
       private InvokeHostFunctionOp invokeHostFunctionOp;
-      private BumpFootprintExpirationOp bumpFootprintExpirationOp;
+      private ExtendFootprintTTLOp extendFootprintTTLOp;
       private RestoreFootprintOp restoreFootprintOp;
 
       public Builder discriminant(OperationType discriminant) {
@@ -605,9 +605,8 @@ public class Operation implements XdrElement {
         return this;
       }
 
-      public Builder bumpFootprintExpirationOp(
-          BumpFootprintExpirationOp bumpFootprintExpirationOp) {
-        this.bumpFootprintExpirationOp = bumpFootprintExpirationOp;
+      public Builder extendFootprintTTLOp(ExtendFootprintTTLOp extendFootprintTTLOp) {
+        this.extendFootprintTTLOp = extendFootprintTTLOp;
         return this;
       }
 
@@ -642,7 +641,7 @@ public class Operation implements XdrElement {
         val.setLiquidityPoolDepositOp(this.liquidityPoolDepositOp);
         val.setLiquidityPoolWithdrawOp(this.liquidityPoolWithdrawOp);
         val.setInvokeHostFunctionOp(this.invokeHostFunctionOp);
-        val.setBumpFootprintExpirationOp(this.bumpFootprintExpirationOp);
+        val.setExtendFootprintTTLOp(this.extendFootprintTTLOp);
         val.setRestoreFootprintOp(this.restoreFootprintOp);
         return val;
       }
@@ -730,8 +729,8 @@ public class Operation implements XdrElement {
         case INVOKE_HOST_FUNCTION:
           InvokeHostFunctionOp.encode(stream, encodedOperationBody.invokeHostFunctionOp);
           break;
-        case BUMP_FOOTPRINT_EXPIRATION:
-          BumpFootprintExpirationOp.encode(stream, encodedOperationBody.bumpFootprintExpirationOp);
+        case EXTEND_FOOTPRINT_TTL:
+          ExtendFootprintTTLOp.encode(stream, encodedOperationBody.extendFootprintTTLOp);
           break;
         case RESTORE_FOOTPRINT:
           RestoreFootprintOp.encode(stream, encodedOperationBody.restoreFootprintOp);
@@ -824,8 +823,8 @@ public class Operation implements XdrElement {
         case INVOKE_HOST_FUNCTION:
           decodedOperationBody.invokeHostFunctionOp = InvokeHostFunctionOp.decode(stream);
           break;
-        case BUMP_FOOTPRINT_EXPIRATION:
-          decodedOperationBody.bumpFootprintExpirationOp = BumpFootprintExpirationOp.decode(stream);
+        case EXTEND_FOOTPRINT_TTL:
+          decodedOperationBody.extendFootprintTTLOp = ExtendFootprintTTLOp.decode(stream);
           break;
         case RESTORE_FOOTPRINT:
           decodedOperationBody.restoreFootprintOp = RestoreFootprintOp.decode(stream);
@@ -860,7 +859,7 @@ public class Operation implements XdrElement {
           this.liquidityPoolDepositOp,
           this.liquidityPoolWithdrawOp,
           this.invokeHostFunctionOp,
-          this.bumpFootprintExpirationOp,
+          this.extendFootprintTTLOp,
           this.restoreFootprintOp,
           this.type);
     }
@@ -896,7 +895,7 @@ public class Operation implements XdrElement {
           && Objects.equals(this.liquidityPoolDepositOp, other.liquidityPoolDepositOp)
           && Objects.equals(this.liquidityPoolWithdrawOp, other.liquidityPoolWithdrawOp)
           && Objects.equals(this.invokeHostFunctionOp, other.invokeHostFunctionOp)
-          && Objects.equals(this.bumpFootprintExpirationOp, other.bumpFootprintExpirationOp)
+          && Objects.equals(this.extendFootprintTTLOp, other.extendFootprintTTLOp)
           && Objects.equals(this.restoreFootprintOp, other.restoreFootprintOp)
           && Objects.equals(this.type, other.type);
     }

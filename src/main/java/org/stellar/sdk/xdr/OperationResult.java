@@ -68,8 +68,8 @@ import org.stellar.sdk.Base64Factory;
 //          LiquidityPoolWithdrawResult liquidityPoolWithdrawResult;
 //      case INVOKE_HOST_FUNCTION:
 //          InvokeHostFunctionResult invokeHostFunctionResult;
-//      case BUMP_FOOTPRINT_EXPIRATION:
-//          BumpFootprintExpirationResult bumpFootprintExpirationResult;
+//      case EXTEND_FOOTPRINT_TTL:
+//          ExtendFootprintTTLResult extendFootprintTTLResult;
 //      case RESTORE_FOOTPRINT:
 //          RestoreFootprintResult restoreFootprintResult;
 //      }
@@ -473,14 +473,14 @@ public class OperationResult implements XdrElement {
       this.invokeHostFunctionResult = value;
     }
 
-    private BumpFootprintExpirationResult bumpFootprintExpirationResult;
+    private ExtendFootprintTTLResult extendFootprintTTLResult;
 
-    public BumpFootprintExpirationResult getBumpFootprintExpirationResult() {
-      return this.bumpFootprintExpirationResult;
+    public ExtendFootprintTTLResult getExtendFootprintTTLResult() {
+      return this.extendFootprintTTLResult;
     }
 
-    public void setBumpFootprintExpirationResult(BumpFootprintExpirationResult value) {
-      this.bumpFootprintExpirationResult = value;
+    public void setExtendFootprintTTLResult(ExtendFootprintTTLResult value) {
+      this.extendFootprintTTLResult = value;
     }
 
     private RestoreFootprintResult restoreFootprintResult;
@@ -520,7 +520,7 @@ public class OperationResult implements XdrElement {
       private LiquidityPoolDepositResult liquidityPoolDepositResult;
       private LiquidityPoolWithdrawResult liquidityPoolWithdrawResult;
       private InvokeHostFunctionResult invokeHostFunctionResult;
-      private BumpFootprintExpirationResult bumpFootprintExpirationResult;
+      private ExtendFootprintTTLResult extendFootprintTTLResult;
       private RestoreFootprintResult restoreFootprintResult;
 
       public Builder discriminant(OperationType discriminant) {
@@ -663,9 +663,8 @@ public class OperationResult implements XdrElement {
         return this;
       }
 
-      public Builder bumpFootprintExpirationResult(
-          BumpFootprintExpirationResult bumpFootprintExpirationResult) {
-        this.bumpFootprintExpirationResult = bumpFootprintExpirationResult;
+      public Builder extendFootprintTTLResult(ExtendFootprintTTLResult extendFootprintTTLResult) {
+        this.extendFootprintTTLResult = extendFootprintTTLResult;
         return this;
       }
 
@@ -702,7 +701,7 @@ public class OperationResult implements XdrElement {
         val.setLiquidityPoolDepositResult(this.liquidityPoolDepositResult);
         val.setLiquidityPoolWithdrawResult(this.liquidityPoolWithdrawResult);
         val.setInvokeHostFunctionResult(this.invokeHostFunctionResult);
-        val.setBumpFootprintExpirationResult(this.bumpFootprintExpirationResult);
+        val.setExtendFootprintTTLResult(this.extendFootprintTTLResult);
         val.setRestoreFootprintResult(this.restoreFootprintResult);
         return val;
       }
@@ -800,9 +799,9 @@ public class OperationResult implements XdrElement {
           InvokeHostFunctionResult.encode(
               stream, encodedOperationResultTr.invokeHostFunctionResult);
           break;
-        case BUMP_FOOTPRINT_EXPIRATION:
-          BumpFootprintExpirationResult.encode(
-              stream, encodedOperationResultTr.bumpFootprintExpirationResult);
+        case EXTEND_FOOTPRINT_TTL:
+          ExtendFootprintTTLResult.encode(
+              stream, encodedOperationResultTr.extendFootprintTTLResult);
           break;
         case RESTORE_FOOTPRINT:
           RestoreFootprintResult.encode(stream, encodedOperationResultTr.restoreFootprintResult);
@@ -905,9 +904,9 @@ public class OperationResult implements XdrElement {
           decodedOperationResultTr.invokeHostFunctionResult =
               InvokeHostFunctionResult.decode(stream);
           break;
-        case BUMP_FOOTPRINT_EXPIRATION:
-          decodedOperationResultTr.bumpFootprintExpirationResult =
-              BumpFootprintExpirationResult.decode(stream);
+        case EXTEND_FOOTPRINT_TTL:
+          decodedOperationResultTr.extendFootprintTTLResult =
+              ExtendFootprintTTLResult.decode(stream);
           break;
         case RESTORE_FOOTPRINT:
           decodedOperationResultTr.restoreFootprintResult = RestoreFootprintResult.decode(stream);
@@ -944,7 +943,7 @@ public class OperationResult implements XdrElement {
           this.liquidityPoolDepositResult,
           this.liquidityPoolWithdrawResult,
           this.invokeHostFunctionResult,
-          this.bumpFootprintExpirationResult,
+          this.extendFootprintTTLResult,
           this.restoreFootprintResult,
           this.type);
     }
@@ -985,7 +984,7 @@ public class OperationResult implements XdrElement {
           && Objects.equals(this.liquidityPoolDepositResult, other.liquidityPoolDepositResult)
           && Objects.equals(this.liquidityPoolWithdrawResult, other.liquidityPoolWithdrawResult)
           && Objects.equals(this.invokeHostFunctionResult, other.invokeHostFunctionResult)
-          && Objects.equals(this.bumpFootprintExpirationResult, other.bumpFootprintExpirationResult)
+          && Objects.equals(this.extendFootprintTTLResult, other.extendFootprintTTLResult)
           && Objects.equals(this.restoreFootprintResult, other.restoreFootprintResult)
           && Objects.equals(this.type, other.type);
     }

@@ -13,15 +13,15 @@ import org.stellar.sdk.Base64Factory;
 
 // === xdr source ============================================================
 
-//  struct ExpirationEntry {
-//      // Hash of the LedgerKey that is associated with this ExpirationEntry
+//  struct TTLEntry {
+//      // Hash of the LedgerKey that is associated with this TTLEntry
 //      Hash keyHash;
-//      uint32 expirationLedgerSeq;
+//      uint32 liveUntilLedgerSeq;
 //  };
 
 //  ===========================================================================
-public class ExpirationEntry implements XdrElement {
-  public ExpirationEntry() {}
+public class TTLEntry implements XdrElement {
+  public TTLEntry() {}
 
   private Hash keyHash;
 
@@ -33,47 +33,47 @@ public class ExpirationEntry implements XdrElement {
     this.keyHash = value;
   }
 
-  private Uint32 expirationLedgerSeq;
+  private Uint32 liveUntilLedgerSeq;
 
-  public Uint32 getExpirationLedgerSeq() {
-    return this.expirationLedgerSeq;
+  public Uint32 getLiveUntilLedgerSeq() {
+    return this.liveUntilLedgerSeq;
   }
 
-  public void setExpirationLedgerSeq(Uint32 value) {
-    this.expirationLedgerSeq = value;
+  public void setLiveUntilLedgerSeq(Uint32 value) {
+    this.liveUntilLedgerSeq = value;
   }
 
-  public static void encode(XdrDataOutputStream stream, ExpirationEntry encodedExpirationEntry)
+  public static void encode(XdrDataOutputStream stream, TTLEntry encodedTTLEntry)
       throws IOException {
-    Hash.encode(stream, encodedExpirationEntry.keyHash);
-    Uint32.encode(stream, encodedExpirationEntry.expirationLedgerSeq);
+    Hash.encode(stream, encodedTTLEntry.keyHash);
+    Uint32.encode(stream, encodedTTLEntry.liveUntilLedgerSeq);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     encode(stream, this);
   }
 
-  public static ExpirationEntry decode(XdrDataInputStream stream) throws IOException {
-    ExpirationEntry decodedExpirationEntry = new ExpirationEntry();
-    decodedExpirationEntry.keyHash = Hash.decode(stream);
-    decodedExpirationEntry.expirationLedgerSeq = Uint32.decode(stream);
-    return decodedExpirationEntry;
+  public static TTLEntry decode(XdrDataInputStream stream) throws IOException {
+    TTLEntry decodedTTLEntry = new TTLEntry();
+    decodedTTLEntry.keyHash = Hash.decode(stream);
+    decodedTTLEntry.liveUntilLedgerSeq = Uint32.decode(stream);
+    return decodedTTLEntry;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.keyHash, this.expirationLedgerSeq);
+    return Objects.hash(this.keyHash, this.liveUntilLedgerSeq);
   }
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof ExpirationEntry)) {
+    if (!(object instanceof TTLEntry)) {
       return false;
     }
 
-    ExpirationEntry other = (ExpirationEntry) object;
+    TTLEntry other = (TTLEntry) object;
     return Objects.equals(this.keyHash, other.keyHash)
-        && Objects.equals(this.expirationLedgerSeq, other.expirationLedgerSeq);
+        && Objects.equals(this.liveUntilLedgerSeq, other.liveUntilLedgerSeq);
   }
 
   @Override
@@ -89,12 +89,12 @@ public class ExpirationEntry implements XdrElement {
     return byteArrayOutputStream.toByteArray();
   }
 
-  public static ExpirationEntry fromXdrBase64(String xdr) throws IOException {
+  public static TTLEntry fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static ExpirationEntry fromXdrByteArray(byte[] xdr) throws IOException {
+  public static TTLEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
@@ -102,22 +102,22 @@ public class ExpirationEntry implements XdrElement {
 
   public static final class Builder {
     private Hash keyHash;
-    private Uint32 expirationLedgerSeq;
+    private Uint32 liveUntilLedgerSeq;
 
     public Builder keyHash(Hash keyHash) {
       this.keyHash = keyHash;
       return this;
     }
 
-    public Builder expirationLedgerSeq(Uint32 expirationLedgerSeq) {
-      this.expirationLedgerSeq = expirationLedgerSeq;
+    public Builder liveUntilLedgerSeq(Uint32 liveUntilLedgerSeq) {
+      this.liveUntilLedgerSeq = liveUntilLedgerSeq;
       return this;
     }
 
-    public ExpirationEntry build() {
-      ExpirationEntry val = new ExpirationEntry();
+    public TTLEntry build() {
+      TTLEntry val = new TTLEntry();
       val.setKeyHash(this.keyHash);
-      val.setExpirationLedgerSeq(this.expirationLedgerSeq);
+      val.setLiveUntilLedgerSeq(this.liveUntilLedgerSeq);
       return val;
     }
   }

@@ -16,7 +16,7 @@ public class ScvContractInstanceTest {
         new SCContractInstance.Builder()
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
 

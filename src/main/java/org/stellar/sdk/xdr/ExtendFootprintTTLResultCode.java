@@ -12,27 +12,27 @@ import org.stellar.sdk.Base64Factory;
 
 // === xdr source ============================================================
 
-//  enum BumpFootprintExpirationResultCode
+//  enum ExtendFootprintTTLResultCode
 //  {
 //      // codes considered as "success" for the operation
-//      BUMP_FOOTPRINT_EXPIRATION_SUCCESS = 0,
+//      EXTEND_FOOTPRINT_TTL_SUCCESS = 0,
 //
 //      // codes considered as "failure" for the operation
-//      BUMP_FOOTPRINT_EXPIRATION_MALFORMED = -1,
-//      BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED = -2,
-//      BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE = -3
+//      EXTEND_FOOTPRINT_TTL_MALFORMED = -1,
+//      EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED = -2,
+//      EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE = -3
 //  };
 
 //  ===========================================================================
-public enum BumpFootprintExpirationResultCode implements XdrElement {
-  BUMP_FOOTPRINT_EXPIRATION_SUCCESS(0),
-  BUMP_FOOTPRINT_EXPIRATION_MALFORMED(-1),
-  BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED(-2),
-  BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE(-3),
+public enum ExtendFootprintTTLResultCode implements XdrElement {
+  EXTEND_FOOTPRINT_TTL_SUCCESS(0),
+  EXTEND_FOOTPRINT_TTL_MALFORMED(-1),
+  EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED(-2),
+  EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE(-3),
   ;
   private int mValue;
 
-  BumpFootprintExpirationResultCode(int value) {
+  ExtendFootprintTTLResultCode(int value) {
     mValue = value;
   }
 
@@ -40,24 +40,23 @@ public enum BumpFootprintExpirationResultCode implements XdrElement {
     return mValue;
   }
 
-  public static BumpFootprintExpirationResultCode decode(XdrDataInputStream stream)
-      throws IOException {
+  public static ExtendFootprintTTLResultCode decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0:
-        return BUMP_FOOTPRINT_EXPIRATION_SUCCESS;
+        return EXTEND_FOOTPRINT_TTL_SUCCESS;
       case -1:
-        return BUMP_FOOTPRINT_EXPIRATION_MALFORMED;
+        return EXTEND_FOOTPRINT_TTL_MALFORMED;
       case -2:
-        return BUMP_FOOTPRINT_EXPIRATION_RESOURCE_LIMIT_EXCEEDED;
+        return EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED;
       case -3:
-        return BUMP_FOOTPRINT_EXPIRATION_INSUFFICIENT_REFUNDABLE_FEE;
+        return EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, BumpFootprintExpirationResultCode value)
+  public static void encode(XdrDataOutputStream stream, ExtendFootprintTTLResultCode value)
       throws IOException {
     stream.writeInt(value.getValue());
   }
@@ -79,12 +78,12 @@ public enum BumpFootprintExpirationResultCode implements XdrElement {
     return byteArrayOutputStream.toByteArray();
   }
 
-  public static BumpFootprintExpirationResultCode fromXdrBase64(String xdr) throws IOException {
+  public static ExtendFootprintTTLResultCode fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static BumpFootprintExpirationResultCode fromXdrByteArray(byte[] xdr) throws IOException {
+  public static ExtendFootprintTTLResultCode fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);

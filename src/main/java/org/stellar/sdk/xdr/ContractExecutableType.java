@@ -15,13 +15,13 @@ import org.stellar.sdk.Base64Factory;
 //  enum ContractExecutableType
 //  {
 //      CONTRACT_EXECUTABLE_WASM = 0,
-//      CONTRACT_EXECUTABLE_TOKEN = 1
+//      CONTRACT_EXECUTABLE_STELLAR_ASSET = 1
 //  };
 
 //  ===========================================================================
 public enum ContractExecutableType implements XdrElement {
   CONTRACT_EXECUTABLE_WASM(0),
-  CONTRACT_EXECUTABLE_TOKEN(1),
+  CONTRACT_EXECUTABLE_STELLAR_ASSET(1),
   ;
   private int mValue;
 
@@ -39,7 +39,7 @@ public enum ContractExecutableType implements XdrElement {
       case 0:
         return CONTRACT_EXECUTABLE_WASM;
       case 1:
-        return CONTRACT_EXECUTABLE_TOKEN;
+        return CONTRACT_EXECUTABLE_STELLAR_ASSET;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }
