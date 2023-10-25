@@ -205,6 +205,8 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getFrom(), "GB6NVEN5HSUBKMYCE5ZOWSK5K23TBWRUQLZY3KNMXUZ3AQ2ESC4MY4AQ");
     assertEquals(operation.getTo(), "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
+    assertFalse(operation.getFromMuxed().isPresent());
+    assertFalse(operation.getToMuxed().isPresent());
     assertEquals(operation.getAmount(), "100.0");
     assertEquals(operation.getAsset(), new AssetTypeNative());
   }
@@ -252,10 +254,88 @@ public class OperationDeserializerTest extends TestCase {
 
     assertEquals(operation.getFrom(), "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
     assertEquals(operation.getTo(), "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
+    assertFalse(operation.getFromMuxed().isPresent());
+    assertFalse(operation.getToMuxed().isPresent());
     assertEquals(operation.getAmount(), "1000000000.0");
     assertEquals(
         operation.getAsset(),
         create(null, "EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+  }
+
+  @Test
+  public void testDeserializeMuxedPaymentOperation() {
+    String json =
+        "{\n"
+            + "  \"_links\": {\n"
+            + "    \"self\": {\n"
+            + "      \"href\": \"https://horizon-testnet.stellar.org/operations/9108208295616513\"\n"
+            + "    },\n"
+            + "    \"transaction\": {\n"
+            + "      \"href\": \"https://horizon-testnet.stellar.org/transactions/015097334b0d70476831d819db2a07c003da336cdcd90e810885e062c3e908b2\"\n"
+            + "    },\n"
+            + "    \"effects\": {\n"
+            + "      \"href\": \"https://horizon-testnet.stellar.org/operations/9108208295616513/effects\"\n"
+            + "    },\n"
+            + "    \"succeeds\": {\n"
+            + "      \"href\": \"https://horizon-testnet.stellar.org/effects?order=desc&cursor=9108208295616513\"\n"
+            + "    },\n"
+            + "    \"precedes\": {\n"
+            + "      \"href\": \"https://horizon-testnet.stellar.org/effects?order=asc&cursor=9108208295616513\"\n"
+            + "    }\n"
+            + "  },\n"
+            + "  \"id\": \"9108208295616513\",\n"
+            + "  \"paging_token\": \"9108208295616513\",\n"
+            + "  \"transaction_successful\": true,\n"
+            + "  \"source_account\": \"GDRNOJXOSJNN6XYO5WTFTOSDPJ2YHPWGTK76XIFWW4MITYVHXP2QMB6Y\",\n"
+            + "  \"source_account_muxed\": \"MDRNOJXOSJNN6XYO5WTFTOSDPJ2YHPWGTK76XIFWW4MITYVHXP2QMAAAAAAAOW6NCUZC4\",\n"
+            + "  \"source_account_muxed_id\": \"123456789\",\n"
+            + "  \"type\": \"payment\",\n"
+            + "  \"type_i\": 1,\n"
+            + "  \"created_at\": \"2023-10-21T09:49:13Z\",\n"
+            + "  \"transaction_hash\": \"015097334b0d70476831d819db2a07c003da336cdcd90e810885e062c3e908b2\",\n"
+            + "  \"asset_type\": \"native\",\n"
+            + "  \"from\": \"GDRNOJXOSJNN6XYO5WTFTOSDPJ2YHPWGTK76XIFWW4MITYVHXP2QMB6Y\",\n"
+            + "  \"from_muxed\": \"MDRNOJXOSJNN6XYO5WTFTOSDPJ2YHPWGTK76XIFWW4MITYVHXP2QMAAAAAAAOW6NCUZC4\",\n"
+            + "  \"from_muxed_id\": \"123456789\",\n"
+            + "  \"to\": \"GDQJVHV2EGSV2P7EETRKKY6VRFGIEP5MICKDWIR3ZWSJSYM7LAEXUIN6\",\n"
+            + "  \"to_muxed\": \"MDQJVHV2EGSV2P7EETRKKY6VRFGIEP5MICKDWIR3ZWSJSYM7LAEXUAAAAAADVXTIWGZD4\",\n"
+            + "  \"to_muxed_id\": \"987654321\",\n"
+            + "  \"amount\": \"350.1234567\"\n"
+            + "}\n";
+    PaymentOperationResponse operation =
+        (PaymentOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
+
+    assertEquals(operation.getId(), Long.valueOf(9108208295616513L));
+    assertEquals(operation.getPagingToken(), "9108208295616513");
+    assertTrue(operation.isTransactionSuccessful());
+    assertEquals(
+        operation.getSourceAccount(), "GDRNOJXOSJNN6XYO5WTFTOSDPJ2YHPWGTK76XIFWW4MITYVHXP2QMB6Y");
+    assertTrue(operation.getSourceAccountMuxed().isPresent());
+    assertEquals(
+        operation.getSourceAccountMuxed().get().getUnmuxedAddress(),
+        "GDRNOJXOSJNN6XYO5WTFTOSDPJ2YHPWGTK76XIFWW4MITYVHXP2QMB6Y");
+    assertEquals(operation.getSourceAccountMuxed().get().getId(), BigInteger.valueOf(123456789L));
+
+    assertEquals(operation.getType(), "payment");
+    assertEquals(operation.getCreatedAt(), "2023-10-21T09:49:13Z");
+    assertEquals(
+        operation.getTransactionHash(),
+        "015097334b0d70476831d819db2a07c003da336cdcd90e810885e062c3e908b2");
+    assertEquals(operation.getAsset(), new AssetTypeNative());
+    assertEquals(operation.getFrom(), "GDRNOJXOSJNN6XYO5WTFTOSDPJ2YHPWGTK76XIFWW4MITYVHXP2QMB6Y");
+    assertTrue(operation.getFromMuxed().isPresent());
+    assertEquals(
+        operation.getFromMuxed().get().getUnmuxedAddress(),
+        "GDRNOJXOSJNN6XYO5WTFTOSDPJ2YHPWGTK76XIFWW4MITYVHXP2QMB6Y");
+    assertEquals(operation.getFromMuxed().get().getId(), BigInteger.valueOf(123456789L));
+    assertEquals(operation.getTo(), "GDQJVHV2EGSV2P7EETRKKY6VRFGIEP5MICKDWIR3ZWSJSYM7LAEXUIN6");
+    assertTrue(operation.getToMuxed().isPresent());
+    assertEquals(
+        operation.getToMuxed().get().getUnmuxedAddress(),
+        "GDQJVHV2EGSV2P7EETRKKY6VRFGIEP5MICKDWIR3ZWSJSYM7LAEXUIN6");
+    assertEquals(operation.getToMuxed().get().getId(), BigInteger.valueOf(987654321L));
+    assertEquals(operation.getAmount(), "350.1234567");
   }
 
   @Test

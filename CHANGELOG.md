@@ -5,6 +5,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## Pending
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))
 * Update `LedgerResponse` and `AccountResponse`, remove outdated fields, and add missing fields. ([#549](https://github.com/stellar/java-stellar-sdk/pull/549))
+* Add support for muxed accounts in `PaymentOperationResponse`. ([#550](https://github.com/stellar/java-stellar-sdk/pull/550))
 
 ## 0.41.1
 * Add `org.stellar.sdk.spi.SdkProvider`, users can implement this interface to provide their own implementation of the SDK. We provide an [Android specific implementation](https://github.com/stellar/java-stellar-sdk-android-spi), if you are integrating this SDK into an Android project, be sure to check it out. ([#543](https://github.com/stellar/java-stellar-sdk/pull/543))
