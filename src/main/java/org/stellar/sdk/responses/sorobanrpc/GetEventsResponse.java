@@ -35,14 +35,8 @@ public class GetEventsResponse {
 
     List<String> topic;
 
-    EventInfoValue value;
+    String value;
 
     Boolean inSuccessfulContractCall;
-  }
-
-  @AllArgsConstructor
-  @Value
-  public static class EventInfoValue {
-    String xdr;
   }
 }
