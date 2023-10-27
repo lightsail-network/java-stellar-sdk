@@ -33,7 +33,7 @@ public class GetLedgerEntriesDeserializerTest {
             .longValue(),
         695);
     assertEquals(
-        getLedgerEntriesResponse.getResult().getEntries().get(0).getExpirationLedger().longValue(),
+        getLedgerEntriesResponse.getResult().getEntries().get(0).getLiveUntilLedger().longValue(),
         996);
   }
 
@@ -58,7 +58,7 @@ public class GetLedgerEntriesDeserializerTest {
           + "                \"key\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==\",\n"
           + "                \"xdr\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABdIcjmeAAAAfgAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAAAArcAAAAAZMIW+A==\",\n"
           + "                \"lastModifiedLedgerSeq\": \"695\",\n"
-          + "                \"expirationLedgerSeq\": \"996\"\n"
+          + "                \"liveUntilLedgerSeq\": \"996\"\n"
           + "            }\n"
           + "        ],\n"
           + "        \"latestLedger\": \"1457\"\n"

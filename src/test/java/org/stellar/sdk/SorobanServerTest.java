@@ -83,7 +83,7 @@ public class SorobanServerTest {
             + "                \"key\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==\",\n"
             + "                \"xdr\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABdIcDhpAAADHAAAAAwAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAABfI8AAAAAZMK3qQ==\",\n"
             + "                \"lastModifiedLedgerSeq\": \"97423\",\n"
-            + "                \"expirationLedgerSeq\": \"97673\"\n"
+            + "                \"liveUntilLedgerSeq\": \"97673\"\n"
             + "            }\n"
             + "        ],\n"
             + "        \"latestLedger\": \"108023\"\n"
@@ -218,7 +218,7 @@ public class SorobanServerTest {
             + "        \"key\": \"AAAABgAAAAFgdoLyR3pr6M3w/fMr4T1fJaaGzAlP2T1ao9e2gjLQwAAAABQAAAABAAAAAA==\",\n"
             + "        \"xdr\": \"AAAABgAAAAFgdoLyR3pr6M3w/fMr4T1fJaaGzAlP2T1ao9e2gjLQwAAAABQAAAABAAAAAAAAAAAAAAATAAAAALnBupvoT7RHZ+oTeaPHSiSufpac3O3mc0u663Kqbko/AAAAAQAAAAEAAAAPAAAAB0NPVU5URVIAAAAAAwAAAAEAABD1\",\n"
             + "        \"lastModifiedLedgerSeq\": \"290\",\n"
-            + "        \"expirationLedgerSeq\": \"490\"\n"
+            + "        \"liveUntilLedgerSeq\": \"490\"\n"
             + "      }\n"
             + "    ],\n"
             + "    \"latestLedger\": \"296\"\n"
@@ -276,7 +276,7 @@ public class SorobanServerTest {
         server.getContractData(contractId, key, SorobanServer.Durability.PERSISTENT);
     assertTrue(resp.isPresent());
     assertEquals(resp.get().getLastModifiedLedger().longValue(), 290L);
-    assertEquals(resp.get().getExpirationLedger().longValue(), 490L);
+    assertEquals(resp.get().getLiveUntilLedger().longValue(), 490L);
     assertEquals(
         resp.get().getKey(),
         "AAAABgAAAAFgdoLyR3pr6M3w/fMr4T1fJaaGzAlP2T1ao9e2gjLQwAAAABQAAAABAAAAAA==");
@@ -364,13 +364,13 @@ public class SorobanServerTest {
             + "        \"key\": \"AAAAAAAAAACynni6I2ACEzWuORVM1b2y0k1ZDni0W6JlC/Ad/mfCSg==\",\n"
             + "        \"xdr\": \"AAAAAAAAAACynni6I2ACEzWuORVM1b2y0k1ZDni0W6JlC/Ad/mfCSgAAABdIdugAAAAAnwAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA\",\n"
             + "        \"lastModifiedLedgerSeq\": \"159\",\n"
-            + "        \"expirationLedgerSeq\": \"499\"\n"
+            + "        \"liveUntilLedgerSeq\": \"499\"\n"
             + "      },\n"
             + "      {\n"
             + "        \"key\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==\",\n"
             + "        \"xdr\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABdIcmH6AAAAoQAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAAAHAkAAAAAZMPQ0g==\",\n"
             + "        \"lastModifiedLedgerSeq\": \"7177\",\n"
-            + "        \"expirationLedgerSeq\": \"7288\"\n"
+            + "        \"liveUntilLedgerSeq\": \"7288\"\n"
             + "      }\n"
             + "    ],\n"
             + "    \"latestLedger\": \"7943\"\n"

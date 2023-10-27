@@ -28,7 +28,7 @@ public class GetLedgerEntriesResponse {
     @SerializedName("lastModifiedLedgerSeq")
     Long lastModifiedLedger;
 
-    @SerializedName("expirationLedgerSeq")
-    Long expirationLedger;
+    @SerializedName("liveUntilLedgerSeq")
+    Long liveUntilLedger;
   }
 }
