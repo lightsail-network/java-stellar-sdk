@@ -17,14 +17,14 @@ public class ManageSellOfferOperation extends Operation {
   private final Asset selling;
   private final Asset buying;
   private final String amount;
-  private final String price;
+  private final Price price;
   private final long offerId;
 
   private ManageSellOfferOperation(
       @NonNull Asset selling,
       @NonNull Asset buying,
       @NonNull String amount,
-      @NonNull String price,
+      @NonNull Price price,
       long offerId) {
     this.selling = selling;
     this.buying = buying;
@@ -50,7 +50,7 @@ public class ManageSellOfferOperation extends Operation {
   }
 
   /** Price of 1 unit of selling in terms of buying. */
-  public String getPrice() {
+  public Price getPrice() {
     return price;
   }
 
@@ -67,10 +67,9 @@ public class ManageSellOfferOperation extends Operation {
     Int64 amount = new Int64();
     amount.setInt64(Operation.toXdrAmount(this.amount));
     op.setAmount(amount);
-    Price price = Price.fromString(this.price);
     op.setPrice(price.toXdr());
     Int64 offerId = new Int64();
-    offerId.setInt64(Long.valueOf(this.offerId));
+    offerId.setInt64(this.offerId);
     op.setOfferID(offerId);
 
     org.stellar.sdk.xdr.Operation.OperationBody body =
@@ -92,7 +91,7 @@ public class ManageSellOfferOperation extends Operation {
     private final Asset selling;
     private final Asset buying;
     private final String amount;
-    private final String price;
+    private final Price price;
     private long offerId = 0;
 
     private String mSourceAccount;
@@ -105,9 +104,9 @@ public class ManageSellOfferOperation extends Operation {
     Builder(ManageSellOfferOp op) {
       selling = Asset.fromXdr(op.getSelling());
       buying = Asset.fromXdr(op.getBuying());
-      amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
-      price = Price.fromXdr(op.getPrice()).toString();
-      offerId = op.getOfferID().getInt64().longValue();
+      amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+      price = Price.fromXdr(op.getPrice());
+      offerId = op.getOfferID().getInt64();
     }
 
     /**
@@ -124,11 +123,23 @@ public class ManageSellOfferOperation extends Operation {
         @NonNull Asset selling,
         @NonNull Asset buying,
         @NonNull String amount,
-        @NonNull String price) {
+        @NonNull Price price) {
       this.selling = selling;
       this.buying = buying;
       this.amount = amount;
       this.price = price;
+    }
+
+    /** An alias for {@link Builder#Builder(Asset, Asset, String, Price)} */
+    public Builder(
+        @NonNull Asset selling,
+        @NonNull Asset buying,
+        @NonNull String amount,
+        @NonNull String price) {
+      this.selling = selling;
+      this.buying = buying;
+      this.amount = amount;
+      this.price = Price.fromString(price);
     }
 
     /**
