@@ -5,6 +5,11 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## Pending
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))
 * Update `LedgerResponse` and `AccountResponse`, remove outdated fields, and add missing fields. ([#549](https://github.com/stellar/java-stellar-sdk/pull/549))
+* Update the SDK to the stable Protocol 20 release: [#553](https://github.com/stellar/java-stellar-sdk/pull/553)
+  - The `BumpFootprintExpirationOperation` is now `ExtendFootprintTTLOperation` and its `ledgersToExpire` field is now named `extendTo`, but it serves the same purpose.
+  - The `InvokeHostFunctionOperation.createTokenContractOperationBuilder` is now `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder`.
+  - `SorobanDataBuilder.setRefundableFee` is now `setResourceFee`.
+  - The RPC endpoint structure has changed, check [#552](https://github.com/stellar/java-stellar-sdk/issues/552) for more details.
 
 ## 0.41.1
 * Add `org.stellar.sdk.spi.SdkProvider`, users can implement this interface to provide their own implementation of the SDK. We provide an [Android specific implementation](https://github.com/stellar/java-stellar-sdk-android-spi), if you are integrating this SDK into an Android project, be sure to check it out. ([#543](https://github.com/stellar/java-stellar-sdk/pull/543))

@@ -401,7 +401,7 @@ public class InvokeHostFunctionOperationTest {
   }
 
   @Test
-  public void createTokenContractOperationBuilderWithAddress() {
+  public void createStellarAssetContractOperationBuilderWithAddress() {
     Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
     byte[] salt =
         new byte[] {
@@ -443,7 +443,7 @@ public class InvokeHostFunctionOperationTest {
   }
 
   @Test
-  public void createTokenContractOperationBuilderWithAsset() {
+  public void createStellarAssetContractOperationBuilderWithAsset() {
     Asset asset =
         new AssetTypeCreditAlphaNum4(
             "CAT", "GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
