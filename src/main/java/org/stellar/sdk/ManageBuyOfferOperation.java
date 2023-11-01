@@ -136,10 +136,7 @@ public class ManageBuyOfferOperation extends Operation {
         @NonNull Asset buying,
         @NonNull String amount,
         @NonNull String price) {
-      this.selling = selling;
-      this.buying = buying;
-      this.amount = amount;
-      this.price = Price.fromString(price);
+      this(selling, buying, amount, Price.fromString(price));
     }
 
     /**
