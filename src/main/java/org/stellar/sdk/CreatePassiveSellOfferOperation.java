@@ -18,13 +18,10 @@ public class CreatePassiveSellOfferOperation extends Operation {
   private final Asset selling;
   private final Asset buying;
   private final String amount;
-  private final String price;
+  private final Price price;
 
   private CreatePassiveSellOfferOperation(
-      @NonNull Asset selling,
-      @NonNull Asset buying,
-      @NonNull String amount,
-      @NonNull String price) {
+      @NonNull Asset selling, @NonNull Asset buying, @NonNull String amount, @NonNull Price price) {
     this.selling = selling;
     this.buying = buying;
     this.amount = amount;
@@ -47,7 +44,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
   }
 
   /** Price of 1 unit of selling in terms of buying. */
-  public String getPrice() {
+  public Price getPrice() {
     return price;
   }
 
@@ -59,7 +56,6 @@ public class CreatePassiveSellOfferOperation extends Operation {
     Int64 amount = new Int64();
     amount.setInt64(Operation.toXdrAmount(this.amount));
     op.setAmount(amount);
-    Price price = Price.fromString(this.price);
     op.setPrice(price.toXdr());
 
     org.stellar.sdk.xdr.Operation.OperationBody body =
@@ -80,7 +76,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
     private final Asset selling;
     private final Asset buying;
     private final String amount;
-    private final String price;
+    private final Price price;
 
     private String mSourceAccount;
 
@@ -92,8 +88,8 @@ public class CreatePassiveSellOfferOperation extends Operation {
     Builder(CreatePassiveSellOfferOp op) {
       selling = Asset.fromXdr(op.getSelling());
       buying = Asset.fromXdr(op.getBuying());
-      amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
-      price = Price.fromXdr(op.getPrice()).toString();
+      amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+      price = Price.fromXdr(op.getPrice());
     }
 
     /**
@@ -109,11 +105,20 @@ public class CreatePassiveSellOfferOperation extends Operation {
         @NonNull Asset selling,
         @NonNull Asset buying,
         @NonNull String amount,
-        @NonNull String price) {
+        @NonNull Price price) {
       this.selling = selling;
       this.buying = buying;
       this.amount = amount;
       this.price = price;
+    }
+
+    /** An alias for {@link Builder#Builder(Asset, Asset, String, Price)} */
+    public Builder(
+        @NonNull Asset selling,
+        @NonNull Asset buying,
+        @NonNull String amount,
+        @NonNull String price) {
+      this(selling, buying, amount, Price.fromString(price));
     }
 
     /**

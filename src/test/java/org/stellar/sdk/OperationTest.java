@@ -689,7 +689,7 @@ public class OperationTest {
     assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
     assertTrue(parsedOperation.getBuying().equals(buying));
     assertEquals(amount, parsedOperation.getAmount());
-    assertEquals(price, parsedOperation.getPrice());
+    assertEquals(new Price(5333399, 6250000), parsedOperation.getPrice());
     assertEquals(priceObj.getNumerator(), 5333399);
     assertEquals(priceObj.getDenominator(), 6250000);
     assertEquals(offerId, parsedOperation.getOfferId());
@@ -697,6 +697,35 @@ public class OperationTest {
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAMAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
         operation.toXdrBase64(AccountConverter.enableMuxed()));
+  }
+
+  @Test
+  public void testManageSellOfferOperationWithConstructorPrice() throws FormatException {
+    // See https://github.com/stellar/java-stellar-sdk/issues/292
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source =
+        KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+    // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
+    KeyPair issuer =
+        KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
+
+    Asset selling = new AssetTypeNative();
+    Asset buying = create(null, "USD", issuer.getAccountId());
+    String amount = "0.00001";
+    Price price = new Price(10000000, 50);
+    long offerId = 1;
+
+    ManageSellOfferOperation operation =
+        new ManageSellOfferOperation.Builder(selling, buying, amount, price)
+            .setOfferId(offerId)
+            .setSourceAccount(source.getAccountId())
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    ManageSellOfferOperation parsedOperation =
+        (ManageSellOfferOperation)
+            ManageSellOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    assertEquals(operation, parsedOperation);
   }
 
   @Test
@@ -731,7 +760,7 @@ public class OperationTest {
     assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
     assertTrue(parsedOperation.getBuying().equals(buying));
     assertEquals(amount, parsedOperation.getAmount());
-    assertEquals(price, parsedOperation.getPrice());
+    assertEquals(new Price(5333399, 6250000), parsedOperation.getPrice());
     assertEquals(priceObj.getNumerator(), 5333399);
     assertEquals(priceObj.getDenominator(), 6250000);
     assertEquals(offerId, parsedOperation.getOfferId());
@@ -739,6 +768,35 @@ public class OperationTest {
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAwAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
         operation.toXdrBase64(AccountConverter.enableMuxed()));
+  }
+
+  @Test
+  public void testManageBuyOfferOperationWithConstructorPrice() throws FormatException {
+    // See https://github.com/stellar/java-stellar-sdk/issues/292
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source =
+        KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+    // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
+    KeyPair issuer =
+        KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
+
+    Asset selling = new AssetTypeNative();
+    Asset buying = create(null, "USD", issuer.getAccountId());
+    String amount = "0.00001";
+    Price price = new Price(10000000, 50);
+    long offerId = 1;
+
+    ManageBuyOfferOperation operation =
+        new ManageBuyOfferOperation.Builder(selling, buying, amount, price)
+            .setOfferId(offerId)
+            .setSourceAccount(source.getAccountId())
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    ManageBuyOfferOperation parsedOperation =
+        (ManageBuyOfferOperation)
+            ManageBuyOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    assertEquals(operation, parsedOperation);
   }
 
   @Test
@@ -758,7 +816,7 @@ public class OperationTest {
                 AccountConverter.enableMuxed(),
                 transactionEnvelope.getV0().getTx().getOperations()[0]);
 
-    assertEquals("3397.893306099996", op.getPrice());
+    assertEquals(Price.fromString("3397.893306099996"), op.getPrice());
   }
 
   @Test
@@ -778,7 +836,7 @@ public class OperationTest {
                 AccountConverter.enableMuxed(),
                 transactionEnvelope.getV0().getTx().getOperations()[0]);
 
-    assertEquals("3397.893306099996", op.getPrice());
+    assertEquals(Price.fromString("3397.893306099996"), op.getPrice());
   }
 
   @Test
@@ -812,13 +870,41 @@ public class OperationTest {
     assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
     assertTrue(parsedOperation.getBuying().equals(buying));
     assertEquals(amount, parsedOperation.getAmount());
-    assertEquals(price, parsedOperation.getPrice());
+    assertEquals(new Price(36731261, 12500000), parsedOperation.getPrice());
     assertEquals(priceObj.getNumerator(), 36731261);
     assertEquals(priceObj.getDenominator(), 12500000);
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAQAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZAIweX0Avrwg",
         operation.toXdrBase64(AccountConverter.enableMuxed()));
+  }
+
+  @Test
+  public void testCreatePassiveSellOfferOperationWithConstructorPrice() throws FormatException {
+    // See https://github.com/stellar/java-stellar-sdk/issues/292
+    // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
+    KeyPair source =
+        KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+    // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
+    KeyPair issuer =
+        KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
+
+    Asset selling = new AssetTypeNative();
+    Asset buying = create(null, "USD", issuer.getAccountId());
+    String amount = "0.00001";
+    Price price = new Price(10000000, 50);
+
+    CreatePassiveSellOfferOperation operation =
+        new CreatePassiveSellOfferOperation.Builder(selling, buying, amount, price)
+            .setSourceAccount(source.getAccountId())
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    CreatePassiveSellOfferOperation parsedOperation =
+        (CreatePassiveSellOfferOperation)
+            CreatePassiveSellOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
+
+    assertEquals(operation, parsedOperation);
   }
 
   @Test

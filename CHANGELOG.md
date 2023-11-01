@@ -6,6 +6,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))
 * Update `LedgerResponse` and `AccountResponse`, remove outdated fields, and add missing fields. ([#549](https://github.com/stellar/java-stellar-sdk/pull/549))
 * Add support for muxed accounts in `PaymentOperationResponse`. ([#550](https://github.com/stellar/java-stellar-sdk/pull/550))
+* Use `Price` instead of `String` to represent prices. Change the type of `CreatePassiveSellOfferOperation.price`, `ManageBuyOfferOperation.price`, and `ManageBuyOfferOperation.price` from `String` to `Price`, this fixes the issue of incorrect operations parsed in certain specific scenarios. ([#554](https://github.com/stellar/java-stellar-sdk/pull/554))
 * Update the SDK to the stable Protocol 20 release: [#553](https://github.com/stellar/java-stellar-sdk/pull/553)
   - The `BumpFootprintExpirationOperation` is now `ExtendFootprintTTLOperation` and its `ledgersToExpire` field is now named `extendTo`, but it serves the same purpose.
   - The `InvokeHostFunctionOperation.createTokenContractOperationBuilder` is now `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder`.
