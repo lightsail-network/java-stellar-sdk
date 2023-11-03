@@ -27,5 +27,8 @@ public class GetLedgerEntriesResponse {
 
     @SerializedName("lastModifiedLedgerSeq")
     Long lastModifiedLedger;
+
+    @SerializedName("liveUntilLedgerSeq")
+    Long liveUntilLedger;
   }
 }

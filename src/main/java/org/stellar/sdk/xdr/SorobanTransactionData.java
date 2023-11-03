@@ -17,8 +17,16 @@ import org.stellar.sdk.Base64Factory;
 //  {
 //      ExtensionPoint ext;
 //      SorobanResources resources;
-//      // Portion of transaction `fee` allocated to refundable fees.
-//      int64 refundableFee;
+//      // Amount of the transaction `fee` allocated to the Soroban resource fees.
+//      // The fraction of `resourceFee` corresponding to `resources` specified
+//      // above is *not* refundable (i.e. fees for instructions, ledger I/O), as
+//      // well as fees for the transaction size.
+//      // The remaining part of the fee is refundable and the charged value is
+//      // based on the actual consumption of refundable resources (events, ledger
+//      // rent bumps).
+//      // The `inclusionFee` used for prioritization of the transaction is defined
+//      // as `tx.fee - resourceFee`.
+//      int64 resourceFee;
 //  };
 
 //  ===========================================================================
@@ -45,14 +53,14 @@ public class SorobanTransactionData implements XdrElement {
     this.resources = value;
   }
 
-  private Int64 refundableFee;
+  private Int64 resourceFee;
 
-  public Int64 getRefundableFee() {
-    return this.refundableFee;
+  public Int64 getResourceFee() {
+    return this.resourceFee;
   }
 
-  public void setRefundableFee(Int64 value) {
-    this.refundableFee = value;
+  public void setResourceFee(Int64 value) {
+    this.resourceFee = value;
   }
 
   public static void encode(
@@ -60,7 +68,7 @@ public class SorobanTransactionData implements XdrElement {
       throws IOException {
     ExtensionPoint.encode(stream, encodedSorobanTransactionData.ext);
     SorobanResources.encode(stream, encodedSorobanTransactionData.resources);
-    Int64.encode(stream, encodedSorobanTransactionData.refundableFee);
+    Int64.encode(stream, encodedSorobanTransactionData.resourceFee);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -71,13 +79,13 @@ public class SorobanTransactionData implements XdrElement {
     SorobanTransactionData decodedSorobanTransactionData = new SorobanTransactionData();
     decodedSorobanTransactionData.ext = ExtensionPoint.decode(stream);
     decodedSorobanTransactionData.resources = SorobanResources.decode(stream);
-    decodedSorobanTransactionData.refundableFee = Int64.decode(stream);
+    decodedSorobanTransactionData.resourceFee = Int64.decode(stream);
     return decodedSorobanTransactionData;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.ext, this.resources, this.refundableFee);
+    return Objects.hash(this.ext, this.resources, this.resourceFee);
   }
 
   @Override
@@ -89,7 +97,7 @@ public class SorobanTransactionData implements XdrElement {
     SorobanTransactionData other = (SorobanTransactionData) object;
     return Objects.equals(this.ext, other.ext)
         && Objects.equals(this.resources, other.resources)
-        && Objects.equals(this.refundableFee, other.refundableFee);
+        && Objects.equals(this.resourceFee, other.resourceFee);
   }
 
   @Override
@@ -119,7 +127,7 @@ public class SorobanTransactionData implements XdrElement {
   public static final class Builder {
     private ExtensionPoint ext;
     private SorobanResources resources;
-    private Int64 refundableFee;
+    private Int64 resourceFee;
 
     public Builder ext(ExtensionPoint ext) {
       this.ext = ext;
@@ -131,8 +139,8 @@ public class SorobanTransactionData implements XdrElement {
       return this;
     }
 
-    public Builder refundableFee(Int64 refundableFee) {
-      this.refundableFee = refundableFee;
+    public Builder resourceFee(Int64 resourceFee) {
+      this.resourceFee = resourceFee;
       return this;
     }
 
@@ -140,7 +148,7 @@ public class SorobanTransactionData implements XdrElement {
       SorobanTransactionData val = new SorobanTransactionData();
       val.setExt(this.ext);
       val.setResources(this.resources);
-      val.setRefundableFee(this.refundableFee);
+      val.setResourceFee(this.resourceFee);
       return val;
     }
   }

@@ -199,8 +199,8 @@ public abstract class Operation {
       case INVOKE_HOST_FUNCTION:
         operation = InvokeHostFunctionOperation.fromXdr(body.getInvokeHostFunctionOp());
         break;
-      case BUMP_FOOTPRINT_EXPIRATION:
-        operation = BumpFootprintExpirationOperation.fromXdr(body.getBumpFootprintExpirationOp());
+      case EXTEND_FOOTPRINT_TTL:
+        operation = ExtendFootprintTTLOperation.fromXdr(body.getExtendFootprintTTLOp());
         break;
       case RESTORE_FOOTPRINT:
         operation = RestoreFootprintOperation.fromXdr(body.getRestoreFootprintOp());

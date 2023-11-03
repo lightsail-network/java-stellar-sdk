@@ -55,7 +55,7 @@ public class SorobanDataBuilderTest {
                   .readBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .build())
-          .refundableFee(new Int64(0L))
+          .resourceFee(new Int64(0L))
           .ext(new ExtensionPoint.Builder().discriminant(0).build())
           .build();
 
@@ -72,7 +72,7 @@ public class SorobanDataBuilderTest {
                   .readBytes(new Uint32(new XdrUnsignedInteger(2)))
                   .writeBytes(new Uint32(new XdrUnsignedInteger(3)))
                   .build())
-          .refundableFee(new Int64(5L))
+          .resourceFee(new Int64(5L))
           .ext(new ExtensionPoint.Builder().discriminant(0).build())
           .build();
 
@@ -101,7 +101,7 @@ public class SorobanDataBuilderTest {
         new SorobanDataBuilder()
             .setReadOnly(singletonList(readOnly))
             .setReadWrite(singletonList(readWrite))
-            .setRefundableFee(5)
+            .setResourceFee(5)
             .setResources(
                 new SorobanDataBuilder.Resources.ResourcesBuilder()
                     .cpuInstructions(1L)

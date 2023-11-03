@@ -17,7 +17,7 @@ import org.stellar.sdk.Base64Factory;
 //  {
 //  case CONTRACT_EXECUTABLE_WASM:
 //      Hash wasm_hash;
-//  case CONTRACT_EXECUTABLE_TOKEN:
+//  case CONTRACT_EXECUTABLE_STELLAR_ASSET:
 //      void;
 //  };
 
@@ -76,7 +76,7 @@ public class ContractExecutable implements XdrElement {
       case CONTRACT_EXECUTABLE_WASM:
         Hash.encode(stream, encodedContractExecutable.wasm_hash);
         break;
-      case CONTRACT_EXECUTABLE_TOKEN:
+      case CONTRACT_EXECUTABLE_STELLAR_ASSET:
         break;
     }
   }
@@ -93,7 +93,7 @@ public class ContractExecutable implements XdrElement {
       case CONTRACT_EXECUTABLE_WASM:
         decodedContractExecutable.wasm_hash = Hash.decode(stream);
         break;
-      case CONTRACT_EXECUTABLE_TOKEN:
+      case CONTRACT_EXECUTABLE_STELLAR_ASSET:
         break;
     }
     return decodedContractExecutable;

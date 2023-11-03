@@ -82,7 +82,8 @@ public class SorobanServerTest {
             + "            {\n"
             + "                \"key\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==\",\n"
             + "                \"xdr\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABdIcDhpAAADHAAAAAwAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAABfI8AAAAAZMK3qQ==\",\n"
-            + "                \"lastModifiedLedgerSeq\": \"97423\"\n"
+            + "                \"lastModifiedLedgerSeq\": \"97423\",\n"
+            + "                \"liveUntilLedgerSeq\": \"97673\"\n"
             + "            }\n"
             + "        ],\n"
             + "        \"latestLedger\": \"108023\"\n"
@@ -216,7 +217,8 @@ public class SorobanServerTest {
             + "      {\n"
             + "        \"key\": \"AAAABgAAAAFgdoLyR3pr6M3w/fMr4T1fJaaGzAlP2T1ao9e2gjLQwAAAABQAAAABAAAAAA==\",\n"
             + "        \"xdr\": \"AAAABgAAAAFgdoLyR3pr6M3w/fMr4T1fJaaGzAlP2T1ao9e2gjLQwAAAABQAAAABAAAAAAAAAAAAAAATAAAAALnBupvoT7RHZ+oTeaPHSiSufpac3O3mc0u663Kqbko/AAAAAQAAAAEAAAAPAAAAB0NPVU5URVIAAAAAAwAAAAEAABD1\",\n"
-            + "        \"lastModifiedLedgerSeq\": \"290\"\n"
+            + "        \"lastModifiedLedgerSeq\": \"290\",\n"
+            + "        \"liveUntilLedgerSeq\": \"490\"\n"
             + "      }\n"
             + "    ],\n"
             + "    \"latestLedger\": \"296\"\n"
@@ -274,6 +276,7 @@ public class SorobanServerTest {
         server.getContractData(contractId, key, SorobanServer.Durability.PERSISTENT);
     assertTrue(resp.isPresent());
     assertEquals(resp.get().getLastModifiedLedger().longValue(), 290L);
+    assertEquals(resp.get().getLiveUntilLedger().longValue(), 490L);
     assertEquals(
         resp.get().getKey(),
         "AAAABgAAAAFgdoLyR3pr6M3w/fMr4T1fJaaGzAlP2T1ao9e2gjLQwAAAABQAAAABAAAAAA==");
@@ -360,12 +363,14 @@ public class SorobanServerTest {
             + "      {\n"
             + "        \"key\": \"AAAAAAAAAACynni6I2ACEzWuORVM1b2y0k1ZDni0W6JlC/Ad/mfCSg==\",\n"
             + "        \"xdr\": \"AAAAAAAAAACynni6I2ACEzWuORVM1b2y0k1ZDni0W6JlC/Ad/mfCSgAAABdIdugAAAAAnwAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA\",\n"
-            + "        \"lastModifiedLedgerSeq\": \"159\"\n"
+            + "        \"lastModifiedLedgerSeq\": \"159\",\n"
+            + "        \"liveUntilLedgerSeq\": \"499\"\n"
             + "      },\n"
             + "      {\n"
             + "        \"key\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==\",\n"
             + "        \"xdr\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABdIcmH6AAAAoQAAAAgAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAAAHAkAAAAAZMPQ0g==\",\n"
-            + "        \"lastModifiedLedgerSeq\": \"7177\"\n"
+            + "        \"lastModifiedLedgerSeq\": \"7177\",\n"
+            + "        \"liveUntilLedgerSeq\": \"7288\"\n"
             + "      }\n"
             + "    ],\n"
             + "    \"latestLedger\": \"7943\"\n"
@@ -508,32 +513,28 @@ public class SorobanServerTest {
             + "                \"type\": \"contract\",\n"
             + "                \"ledger\": \"107\",\n"
             + "                \"ledgerClosedAt\": \"2023-07-28T14:57:02Z\",\n"
-            + "                \"contractId\": \"607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0\",\n"
+            + "                \"contractId\": \"CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K\",\n"
             + "                \"id\": \"0000000459561504768-0000000000\",\n"
             + "                \"pagingToken\": \"0000000459561504768-0000000000\",\n"
             + "                \"topic\": [\n"
             + "                    \"AAAADwAAAAdDT1VOVEVSAA==\",\n"
             + "                    \"AAAADwAAAAlpbmNyZW1lbnQAAAA=\"\n"
             + "                ],\n"
-            + "                \"value\": {\n"
-            + "                    \"xdr\": \"AAAAAwAAAAQ=\"\n"
-            + "                },\n"
+            + "                \"value\": \"AAAAAwAAAAQ=\",\n"
             + "                \"inSuccessfulContractCall\": true\n"
             + "            },\n"
             + "            {\n"
             + "                \"type\": \"contract\",\n"
             + "                \"ledger\": \"109\",\n"
             + "                \"ledgerClosedAt\": \"2023-07-28T14:57:04Z\",\n"
-            + "                \"contractId\": \"607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0\",\n"
+            + "                \"contractId\": \"CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K\",\n"
             + "                \"id\": \"0000000468151439360-0000000000\",\n"
             + "                \"pagingToken\": \"0000000468151439360-0000000000\",\n"
             + "                \"topic\": [\n"
             + "                    \"AAAADwAAAAdDT1VOVEVSAA==\",\n"
             + "                    \"AAAADwAAAAlpbmNyZW1lbnQAAAA=\"\n"
             + "                ],\n"
-            + "                \"value\": {\n"
-            + "                    \"xdr\": \"AAAAAwAAAAU=\"\n"
-            + "                },\n"
+            + "                \"value\": \"AAAAAwAAAAU=\",\n"
             + "                \"inSuccessfulContractCall\": true\n"
             + "            }\n"
             + "        ],\n"
@@ -543,8 +544,7 @@ public class SorobanServerTest {
 
     GetEventsRequest.EventFilter eventFilter =
         GetEventsRequest.EventFilter.builder()
-            .contractIds(
-                singletonList("607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0"))
+            .contractIds(singletonList("CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K"))
             .type(EventFilterType.CONTRACT)
             .topic(Arrays.asList("AAAADwAAAAdDT1VOVEVSAA==", "AAAADwAAAAlpbmNyZW1lbnQAAAA="))
             .build();
@@ -592,13 +592,13 @@ public class SorobanServerTest {
     assertEquals(resp.getEvents().get(0).getLedgerClosedAt(), "2023-07-28T14:57:02Z");
     assertEquals(
         resp.getEvents().get(0).getContractId(),
-        "607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0");
+        "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K");
     assertEquals(resp.getEvents().get(0).getId(), "0000000459561504768-0000000000");
     assertEquals(resp.getEvents().get(0).getPagingToken(), "0000000459561504768-0000000000");
     assertEquals(resp.getEvents().get(0).getTopic().size(), 2);
     assertEquals(resp.getEvents().get(0).getTopic().get(0), "AAAADwAAAAdDT1VOVEVSAA==");
     assertEquals(resp.getEvents().get(0).getTopic().get(1), "AAAADwAAAAlpbmNyZW1lbnQAAAA=");
-    assertEquals(resp.getEvents().get(0).getValue().getXdr(), "AAAAAwAAAAQ=");
+    assertEquals(resp.getEvents().get(0).getValue(), "AAAAAwAAAAQ=");
     assertEquals(resp.getEvents().get(0).getInSuccessfulContractCall(), true);
 
     server.close();
@@ -913,7 +913,7 @@ public class SorobanServerTest {
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
-            .refundableFee(new Int64(100L))
+            .resourceFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
             .build();
     Transaction transaction = buildSorobanTransaction(originSorobanData, null);
@@ -1020,7 +1020,7 @@ public class SorobanServerTest {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     SorobanAuthorizationEntry auth =
@@ -1108,7 +1108,7 @@ public class SorobanServerTest {
             + "    \"jsonrpc\": \"2.0\",\n"
             + "    \"id\": \"7b6ada2bdec04ee28147d1557aadc3cf\",\n"
             + "    \"result\": {\n"
-            + "        \"error\": \"HostError: Error(WasmVm, MissingValue)\\n\\nEvent log (newest first):\\n   0: [Diagnostic Event] contract:607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0, topics:[error, Error(WasmVm, MissingValue)], data:[\\\"invoking unknown export\\\", increment]\\n   1: [Diagnostic Event] topics:[fn_call, Bytes(607682f2477a6be8cdf0fdf32be13d5f25a686cc094fd93d5aa3d7b68232d0c0), increment], data:[Address(Account(58b7c4a2c8f297aa8f3d2471281fdfccecafe48e5663313ec18e12a73eca98a1)), 10]\\n\\nBacktrace (newest first):\\n   0: soroban_env_host::vm::Vm::invoke_function_raw\\n   1: soroban_env_host::host::frame::<impl soroban_env_host::host::Host>::call_n_internal\\n   2: soroban_env_host::host::frame::<impl soroban_env_host::host::Host>::invoke_function\\n   3: preflight::preflight_invoke_hf_op::{{closure}}\\n   4: preflight::catch_preflight_panic\\n   5: _cgo_a3255893d7fd_Cfunc_preflight_invoke_hf_op\\n             at /tmp/go-build/cgo-gcc-prolog:99:11\\n   6: runtime.asmcgocall\\n             at ./runtime/asm_amd64.s:848\\n\\n\",\n"
+            + "        \"error\": \"HostError: Error(WasmVm, MissingValue)\\n\\nEvent log (newest first):\\n   0: [Diagnostic Event] contract:CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K, topics:[error, Error(WasmVm, MissingValue)], data:[\\\"invoking unknown export\\\", increment]\\n   1: [Diagnostic Event] topics:[fn_call, Bytes(CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K), increment], data:[Address(Account(58b7c4a2c8f297aa8f3d2471281fdfccecafe48e5663313ec18e12a73eca98a1)), 10]\\n\\nBacktrace (newest first):\\n   0: soroban_env_host::vm::Vm::invoke_function_raw\\n   1: soroban_env_host::host::frame::<impl soroban_env_host::host::Host>::call_n_internal\\n   2: soroban_env_host::host::frame::<impl soroban_env_host::host::Host>::invoke_function\\n   3: preflight::preflight_invoke_hf_op::{{closure}}\\n   4: preflight::catch_preflight_panic\\n   5: _cgo_a3255893d7fd_Cfunc_preflight_invoke_hf_op\\n             at /tmp/go-build/cgo-gcc-prolog:99:11\\n   6: runtime.asmcgocall\\n             at ./runtime/asm_amd64.s:848\\n\\n\",\n"
             + "        \"transactionData\": null,\n"
             + "        \"events\": null,\n"
             + "        \"minResourceFee\": \"0\",\n"

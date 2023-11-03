@@ -3,7 +3,9 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents BumpFootprintExpiration operation response.
+ * Represents ExtendFootprintTTL operation response.
+ *
+ * <p>TODO: update link
  *
  * @see <a
  *     href="https://github.com/stellar/go/blob/7ff6ffae29d278f979fcd6c6bed8cd0d4b4d2e08/protocols/horizon/operations/main.go#L376-L381">Horizon
@@ -13,15 +15,15 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
-public class BumpFootprintExpirationOperationResponse extends OperationResponse {
-  @SerializedName("ledgers_to_expire")
-  private final Long ledgersToExpire;
+public class ExtendFootprintTTLOperationResponse extends OperationResponse {
+  @SerializedName("extend_to")
+  private final Long extendTo;
 
-  public BumpFootprintExpirationOperationResponse(Long ledgersToExpire) {
-    this.ledgersToExpire = ledgersToExpire;
+  public ExtendFootprintTTLOperationResponse(Long extendTo) {
+    this.extendTo = extendTo;
   }
 
-  public Long getLedgersToExpire() {
-    return ledgersToExpire;
+  public Long getExtendTo() {
+    return extendTo;
   }
 }

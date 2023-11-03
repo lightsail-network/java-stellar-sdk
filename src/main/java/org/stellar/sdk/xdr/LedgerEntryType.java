@@ -23,7 +23,7 @@ import org.stellar.sdk.Base64Factory;
 //      CONTRACT_DATA = 6,
 //      CONTRACT_CODE = 7,
 //      CONFIG_SETTING = 8,
-//      EXPIRATION = 9
+//      TTL = 9
 //  };
 
 //  ===========================================================================
@@ -37,7 +37,7 @@ public enum LedgerEntryType implements XdrElement {
   CONTRACT_DATA(6),
   CONTRACT_CODE(7),
   CONFIG_SETTING(8),
-  EXPIRATION(9),
+  TTL(9),
   ;
   private int mValue;
 
@@ -71,7 +71,7 @@ public enum LedgerEntryType implements XdrElement {
       case 8:
         return CONFIG_SETTING;
       case 9:
-        return EXPIRATION;
+        return TTL;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

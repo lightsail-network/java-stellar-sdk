@@ -971,7 +971,7 @@ public class TransactionBuilderTest {
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
-            .refundableFee(new Int64(100L))
+            .resourceFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
             .build();
 
@@ -1026,7 +1026,7 @@ public class TransactionBuilderTest {
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
-            .refundableFee(new Int64(100L))
+            .resourceFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
             .build();
     String sorobanDataString = sorobanData.toXdrBase64();
@@ -1047,7 +1047,7 @@ public class TransactionBuilderTest {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction =

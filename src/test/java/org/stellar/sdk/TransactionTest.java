@@ -226,7 +226,7 @@ public class TransactionTest {
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
-            .refundableFee(new Int64(100L))
+            .resourceFee(new Int64(100L))
             .ext(new ExtensionPoint.Builder().discriminant(0).build())
             .build();
 
@@ -246,7 +246,7 @@ public class TransactionTest {
                     .build())
             .executable(
                 new ContractExecutable.Builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_TOKEN)
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction =
@@ -310,7 +310,7 @@ public class TransactionTest {
   }
 
   @Test
-  public void testIsSorobanTransactionBumpFootprintExpirationOperation() {
+  public void testIsSorobanTransactionExtendFootprintTTLOperation() {
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
@@ -330,8 +330,8 @@ public class TransactionTest {
                                 .build())
                         .build()))
             .build();
-    BumpFootprintExpirationOperation operation =
-        BumpFootprintExpirationOperation.builder().ledgersToExpire(4096L).build();
+    ExtendFootprintTTLOperation operation =
+        ExtendFootprintTTLOperation.builder().extendTo(4096L).build();
     Transaction transaction =
         new Transaction(
             AccountConverter.enableMuxed(),

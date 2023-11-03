@@ -70,12 +70,12 @@ import org.stellar.sdk.Base64Factory;
 //      {
 //          ConfigSettingID configSettingID;
 //      } configSetting;
-//  case EXPIRATION:
+//  case TTL:
 //      struct
 //      {
-//          // Hash of the LedgerKey that is associated with this ExpirationEntry
+//          // Hash of the LedgerKey that is associated with this TTLEntry
 //          Hash keyHash;
-//      } expiration;
+//      } ttl;
 //  };
 
 //  ===========================================================================
@@ -182,14 +182,14 @@ public class LedgerKey implements XdrElement {
     this.configSetting = value;
   }
 
-  private LedgerKeyExpiration expiration;
+  private LedgerKeyTtl ttl;
 
-  public LedgerKeyExpiration getExpiration() {
-    return this.expiration;
+  public LedgerKeyTtl getTtl() {
+    return this.ttl;
   }
 
-  public void setExpiration(LedgerKeyExpiration value) {
-    this.expiration = value;
+  public void setTtl(LedgerKeyTtl value) {
+    this.ttl = value;
   }
 
   public static final class Builder {
@@ -203,7 +203,7 @@ public class LedgerKey implements XdrElement {
     private LedgerKeyContractData contractData;
     private LedgerKeyContractCode contractCode;
     private LedgerKeyConfigSetting configSetting;
-    private LedgerKeyExpiration expiration;
+    private LedgerKeyTtl ttl;
 
     public Builder discriminant(LedgerEntryType discriminant) {
       this.discriminant = discriminant;
@@ -255,8 +255,8 @@ public class LedgerKey implements XdrElement {
       return this;
     }
 
-    public Builder expiration(LedgerKeyExpiration expiration) {
-      this.expiration = expiration;
+    public Builder ttl(LedgerKeyTtl ttl) {
+      this.ttl = ttl;
       return this;
     }
 
@@ -272,7 +272,7 @@ public class LedgerKey implements XdrElement {
       val.setContractData(this.contractData);
       val.setContractCode(this.contractCode);
       val.setConfigSetting(this.configSetting);
-      val.setExpiration(this.expiration);
+      val.setTtl(this.ttl);
       return val;
     }
   }
@@ -310,8 +310,8 @@ public class LedgerKey implements XdrElement {
       case CONFIG_SETTING:
         LedgerKeyConfigSetting.encode(stream, encodedLedgerKey.configSetting);
         break;
-      case EXPIRATION:
-        LedgerKeyExpiration.encode(stream, encodedLedgerKey.expiration);
+      case TTL:
+        LedgerKeyTtl.encode(stream, encodedLedgerKey.ttl);
         break;
     }
   }
@@ -352,8 +352,8 @@ public class LedgerKey implements XdrElement {
       case CONFIG_SETTING:
         decodedLedgerKey.configSetting = LedgerKeyConfigSetting.decode(stream);
         break;
-      case EXPIRATION:
-        decodedLedgerKey.expiration = LedgerKeyExpiration.decode(stream);
+      case TTL:
+        decodedLedgerKey.ttl = LedgerKeyTtl.decode(stream);
         break;
     }
     return decodedLedgerKey;
@@ -371,7 +371,7 @@ public class LedgerKey implements XdrElement {
         this.contractData,
         this.contractCode,
         this.configSetting,
-        this.expiration,
+        this.ttl,
         this.type);
   }
 
@@ -391,7 +391,7 @@ public class LedgerKey implements XdrElement {
         && Objects.equals(this.contractData, other.contractData)
         && Objects.equals(this.contractCode, other.contractCode)
         && Objects.equals(this.configSetting, other.configSetting)
-        && Objects.equals(this.expiration, other.expiration)
+        && Objects.equals(this.ttl, other.ttl)
         && Objects.equals(this.type, other.type);
   }
 
@@ -1272,8 +1272,8 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static class LedgerKeyExpiration implements XdrElement {
-    public LedgerKeyExpiration() {}
+  public static class LedgerKeyTtl implements XdrElement {
+    public LedgerKeyTtl() {}
 
     private Hash keyHash;
 
@@ -1285,20 +1285,19 @@ public class LedgerKey implements XdrElement {
       this.keyHash = value;
     }
 
-    public static void encode(
-        XdrDataOutputStream stream, LedgerKeyExpiration encodedLedgerKeyExpiration)
+    public static void encode(XdrDataOutputStream stream, LedgerKeyTtl encodedLedgerKeyTtl)
         throws IOException {
-      Hash.encode(stream, encodedLedgerKeyExpiration.keyHash);
+      Hash.encode(stream, encodedLedgerKeyTtl.keyHash);
     }
 
     public void encode(XdrDataOutputStream stream) throws IOException {
       encode(stream, this);
     }
 
-    public static LedgerKeyExpiration decode(XdrDataInputStream stream) throws IOException {
-      LedgerKeyExpiration decodedLedgerKeyExpiration = new LedgerKeyExpiration();
-      decodedLedgerKeyExpiration.keyHash = Hash.decode(stream);
-      return decodedLedgerKeyExpiration;
+    public static LedgerKeyTtl decode(XdrDataInputStream stream) throws IOException {
+      LedgerKeyTtl decodedLedgerKeyTtl = new LedgerKeyTtl();
+      decodedLedgerKeyTtl.keyHash = Hash.decode(stream);
+      return decodedLedgerKeyTtl;
     }
 
     @Override
@@ -1308,11 +1307,11 @@ public class LedgerKey implements XdrElement {
 
     @Override
     public boolean equals(Object object) {
-      if (!(object instanceof LedgerKeyExpiration)) {
+      if (!(object instanceof LedgerKeyTtl)) {
         return false;
       }
 
-      LedgerKeyExpiration other = (LedgerKeyExpiration) object;
+      LedgerKeyTtl other = (LedgerKeyTtl) object;
       return Objects.equals(this.keyHash, other.keyHash);
     }
 
@@ -1329,12 +1328,12 @@ public class LedgerKey implements XdrElement {
       return byteArrayOutputStream.toByteArray();
     }
 
-    public static LedgerKeyExpiration fromXdrBase64(String xdr) throws IOException {
+    public static LedgerKeyTtl fromXdrBase64(String xdr) throws IOException {
       byte[] bytes = Base64Factory.getInstance().decode(xdr);
       return fromXdrByteArray(bytes);
     }
 
-    public static LedgerKeyExpiration fromXdrByteArray(byte[] xdr) throws IOException {
+    public static LedgerKeyTtl fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
@@ -1348,8 +1347,8 @@ public class LedgerKey implements XdrElement {
         return this;
       }
 
-      public LedgerKeyExpiration build() {
-        LedgerKeyExpiration val = new LedgerKeyExpiration();
+      public LedgerKeyTtl build() {
+        LedgerKeyTtl val = new LedgerKeyTtl();
         val.setKeyHash(this.keyHash);
         return val;
       }
