@@ -102,6 +102,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
 
     // Start a timer to check if the client has not received any event for a long time.
     // If so, we will close the connection and restart it.
+    latestEventTime.set(System.currentTimeMillis());
     clientTimeoutTimer.scheduleAtFixedRate(
         () -> {
           if (System.currentTimeMillis() - latestEventTime.get() > reconnectTimeout) {
