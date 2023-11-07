@@ -7,8 +7,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.responses.LiquidityPoolResponse;
-import org.stellar.sdk.responses.Page;
+import org.stellar.sdk.responses.*;
 
 /** Builds requests connected to liquidity pools. */
 public class LiquidityPoolsRequestBuilder extends RequestBuilder {
@@ -116,12 +115,21 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link LiquidityPoolResponse} type
+   * @param reconnectTimeout Custom stream connection timeout in ms
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
   public SSEStream<LiquidityPoolResponse> stream(
-      final EventListener<LiquidityPoolResponse> listener) {
+      final EventListener<LiquidityPoolResponse> listener, long reconnectTimeout) {
+    return SSEStream.create(
+        httpClient, this, LiquidityPoolResponse.class, listener, reconnectTimeout);
+  }
 
-    return SSEStream.create(httpClient, this, LiquidityPoolResponse.class, listener);
+  /**
+   * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   */
+  public SSEStream<LiquidityPoolResponse> stream(
+      final EventListener<LiquidityPoolResponse> listener) {
+    return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
   }
 
   /**

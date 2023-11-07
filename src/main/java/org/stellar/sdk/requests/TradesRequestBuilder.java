@@ -133,9 +133,18 @@ public class TradesRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link TradeResponse} type
+   * @param reconnectTimeout Custom stream connection timeout in ms
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
+  public SSEStream<TradeResponse> stream(
+      final EventListener<TradeResponse> listener, long reconnectTimeout) {
+    return SSEStream.create(httpClient, this, TradeResponse.class, listener, reconnectTimeout);
+  }
+
+  /**
+   * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   */
   public SSEStream<TradeResponse> stream(final EventListener<TradeResponse> listener) {
-    return SSEStream.create(httpClient, this, TradeResponse.class, listener);
+    return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
   }
 }

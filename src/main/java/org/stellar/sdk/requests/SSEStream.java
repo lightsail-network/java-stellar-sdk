@@ -5,8 +5,10 @@ import java.net.SocketException;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,29 +25,42 @@ import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Pageable;
 
 public class SSEStream<T extends org.stellar.sdk.responses.Response> implements Closeable {
+  static final long DEFAULT_RECONNECT_TIMEOUT = 15 * 1000L;
   private final OkHttpClient okHttpClient;
   private final RequestBuilder requestBuilder;
   private final Class<T> responseClass;
   private final EventListener<T> listener;
-
   private final AtomicBoolean isStopped = new AtomicBoolean(false);
   private final AtomicBoolean serverSideClosed =
       new AtomicBoolean(true); // make sure we start correctly
+
+  // When the client closes the connection itself, it will be set to true.
+  // This is for handling cases where the SSE (Server-Sent Events) does not
+  // receive a response for a long time.
+  // If the server requests us to close the connection, we will set serverSideClosed to true.
+  private final AtomicBoolean clientSideClosed = new AtomicBoolean(true);
+  private final ScheduledExecutorService clientTimeoutTimer =
+      Executors.newSingleThreadScheduledExecutor();
+  private final AtomicLong latestEventTime =
+      new AtomicLong(0); // The timestamp of the last received event.
   private final AtomicReference<String> lastEventId = new AtomicReference<String>(null);
-  private ExecutorService executorService;
+  private final ExecutorService executorService;
   private EventSource eventSource = null;
   private final Lock lock = new ReentrantLock();
+  private final long reconnectTimeout;
 
   private SSEStream(
       final OkHttpClient okHttpClient,
       final RequestBuilder requestBuilder,
       final Class<T> responseClass,
-      final EventListener<T> listener) {
+      final EventListener<T> listener,
+      final long reconnectTimeout) {
     // Create a new client with no read timeout
     this.okHttpClient = okHttpClient.newBuilder().readTimeout(0, TimeUnit.MILLISECONDS).build();
     this.requestBuilder = requestBuilder;
     this.responseClass = responseClass;
     this.listener = listener;
+    this.reconnectTimeout = reconnectTimeout;
 
     executorService = Executors.newSingleThreadExecutor();
     requestBuilder.buildUri(); // call this once to add the segments
@@ -62,9 +77,10 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
             while (!isStopped.get()) {
               try {
                 Thread.sleep(200);
-                if (serverSideClosed.get()) {
+                if (serverSideClosed.get() || clientSideClosed.get()) {
                   // don't restart until true again
                   serverSideClosed.set(false);
+                  clientSideClosed.set(false);
                   if (!isStopped.get()) {
                     lock.lock();
                     try {
@@ -83,6 +99,19 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
             }
           }
         });
+
+    // Start a timer to check if the client has not received any event for a long time.
+    // If so, we will close the connection and restart it.
+    clientTimeoutTimer.scheduleAtFixedRate(
+        () -> {
+          if (System.currentTimeMillis() - latestEventTime.get() > reconnectTimeout) {
+            this.latestEventTime.set(System.currentTimeMillis());
+            clientSideClosed.set(true);
+          }
+        },
+        0,
+        300,
+        TimeUnit.MILLISECONDS);
   }
 
   public String lastPagingToken() {
@@ -90,6 +119,9 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   }
 
   private void restart() {
+    if (eventSource != null) {
+      eventSource.cancel();
+    }
     eventSource =
         doStreamRequest(
             this,
@@ -118,8 +150,10 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
       final OkHttpClient okHttpClient,
       final RequestBuilder requestBuilder,
       final Class<T> responseClass,
-      final EventListener<T> listener) {
-    SSEStream<T> stream = new SSEStream<T>(okHttpClient, requestBuilder, responseClass, listener);
+      final EventListener<T> listener,
+      final long reconnectTimeout) {
+    SSEStream<T> stream =
+        new SSEStream<T>(okHttpClient, requestBuilder, responseClass, listener, reconnectTimeout);
     stream.start();
     return stream;
   }
@@ -220,6 +254,9 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     @Override
     public void onEvent(
         EventSource eventSource, @Nullable String id, @Nullable String type, String data) {
+      // Update the timestamp of the last received event.
+      stream.latestEventTime.set(System.currentTimeMillis());
+
       if (data.equals("\"hello\"") || data.equals("\"byebye\"")) {
         return;
       }
@@ -231,5 +268,25 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
       stream.lastEventId.set(id);
       listener.onEvent(event);
     }
+  }
+
+  /**
+   * Check if the stream is stopped. Current implementation does not allow to restart the stream if
+   * it was stopped.
+   *
+   * @return true if the stream is stopped.
+   */
+  public boolean isStopped() {
+    return isStopped.get();
+  }
+
+  /**
+   * Check if the stream is closed. Current implementation will try to restart the stream if it was
+   * closed.
+   *
+   * @return true if the stream is closed.
+   */
+  public boolean isClosed() {
+    return serverSideClosed.get() || clientSideClosed.get();
   }
 }
