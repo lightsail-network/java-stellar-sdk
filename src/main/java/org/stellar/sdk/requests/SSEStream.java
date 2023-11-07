@@ -270,14 +270,4 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
       listener.onEvent(event);
     }
   }
-
-  /**
-   * Check if the stream is stopped. Current implementation does not allow to restart the stream if
-   * it was stopped.
-   *
-   * @return true if the stream is stopped.
-   */
-  public boolean isStopped() {
-    return isStopped.get();
-  }
 }

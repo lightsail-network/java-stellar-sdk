@@ -35,10 +35,8 @@ public class StreamingSmokeTest {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-      Assert.assertFalse(manager.isStopped());
 
       manager.close();
-      Assert.assertTrue(manager.isStopped());
 
       int eventCount = events.get();
       Assert.assertTrue(eventCount > 0);
