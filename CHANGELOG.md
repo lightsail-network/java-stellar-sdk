@@ -12,7 +12,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   - The `InvokeHostFunctionOperation.createTokenContractOperationBuilder` is now `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder`.
   - `SorobanDataBuilder.setRefundableFee` is now `setResourceFee`.
   - The RPC endpoint structure has changed, check [#552](https://github.com/stellar/java-stellar-sdk/issues/552) for more details.
-* Improve the reliability of `SSEStream`. Now, it will restart when necessary, and you can get its status through `SSEStream.isStopped()` and `SSEStream.isClosed()`. ([#555](https://github.com/stellar/java-stellar-sdk/pull/555))
+* Improve the reliability of `SSEStream`. Now, it will restart when necessary. ([#555](https://github.com/stellar/java-stellar-sdk/pull/555))
 
 ## 0.41.1
 * Add `org.stellar.sdk.spi.SdkProvider`, users can implement this interface to provide their own implementation of the SDK. We provide an [Android specific implementation](https://github.com/stellar/java-stellar-sdk-android-spi), if you are integrating this SDK into an Android project, be sure to check it out. ([#543](https://github.com/stellar/java-stellar-sdk/pull/543))

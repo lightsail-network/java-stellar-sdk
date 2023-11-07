@@ -36,7 +36,6 @@ public class StreamingSmokeTest {
         e.printStackTrace();
       }
       Assert.assertFalse(manager.isStopped());
-      Assert.assertFalse(manager.isClosed());
 
       manager.close();
       Assert.assertTrue(manager.isStopped());

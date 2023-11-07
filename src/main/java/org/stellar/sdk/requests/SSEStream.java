@@ -280,14 +280,4 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   public boolean isStopped() {
     return isStopped.get();
   }
-
-  /**
-   * Check if the stream is closed. Current implementation will try to restart the stream if it was
-   * closed.
-   *
-   * @return true if the stream is closed.
-   */
-  public boolean isClosed() {
-    return serverSideClosed.get() || clientSideClosed.get();
-  }
 }
