@@ -105,7 +105,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     clientTimeoutTimer.scheduleAtFixedRate(
         () -> {
           if (System.currentTimeMillis() - latestEventTime.get() > reconnectTimeout) {
-            this.latestEventTime.set(System.currentTimeMillis());
+            latestEventTime.set(System.currentTimeMillis());
             clientSideClosed.set(true);
           }
         },

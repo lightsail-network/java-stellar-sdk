@@ -7,7 +7,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.responses.*;
+import org.stellar.sdk.responses.LiquidityPoolResponse;
+import org.stellar.sdk.responses.Page;
 
 /** Builds requests connected to liquidity pools. */
 public class LiquidityPoolsRequestBuilder extends RequestBuilder {
@@ -38,10 +39,10 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
   /**
    * Requests <code>GET /liquidity_pools/{liquidity_pool_id}</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
-   *     Pool Details</a>
    * @param liquidityPoolID Liquidity Pool to fetch
    * @throws IOException
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
+   *     Pool Details</a>
    */
   public LiquidityPoolResponse liquidityPool(String liquidityPoolID) throws IOException {
     this.setSegments("liquidity_pools", liquidityPoolID);
@@ -51,10 +52,10 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
   /**
    * Requests <code>GET /liquidity_pools/{liquidity_pool_id}</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
-   *     Pool Details</a>
    * @param liquidityPoolID Liquidity Pool to fetch
    * @throws IOException
+   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
+   *     Pool Details</a>
    */
   public LiquidityPoolResponse liquidityPool(LiquidityPoolID liquidityPoolID) throws IOException {
     return this.liquidityPool(liquidityPoolID.toString());
@@ -111,12 +112,12 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * streaming mode using Server-Sent Events. This mode will keep the connection to horizon open and
    * horizon will continue to return responses as ledgers close.
    *
-   * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
-   *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link LiquidityPoolResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
+   * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
+   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   *     target="_blank">Response Format documentation</a>
    */
   public SSEStream<LiquidityPoolResponse> stream(
       final EventListener<LiquidityPoolResponse> listener, long reconnectTimeout) {
