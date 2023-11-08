@@ -190,10 +190,19 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link OperationResponse} implementation with {@link OperationResponse} type
+   * @param reconnectTimeout Custom stream connection timeout in ms
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
+  public SSEStream<OperationResponse> stream(
+      final EventListener<OperationResponse> listener, long reconnectTimeout) {
+    return SSEStream.create(httpClient, this, OperationResponse.class, listener, reconnectTimeout);
+  }
+
+  /**
+   * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   */
   public SSEStream<OperationResponse> stream(final EventListener<OperationResponse> listener) {
-    return SSEStream.create(httpClient, this, OperationResponse.class, listener);
+    return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
   }
 
   /**

@@ -7,22 +7,22 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.stellar.sdk.requests.EventListener;
 import org.stellar.sdk.requests.SSEStream;
-import org.stellar.sdk.responses.TradeResponse;
+import org.stellar.sdk.responses.LedgerResponse;
 
 public class StreamingSmokeTest {
 
   @Test
   @Ignore // lets not run this by default for now
-  public void shouldStreamPaymentsFromTestNet() {
+  public void shouldStreamLedgersFromTestNet() {
     final AtomicInteger events = new AtomicInteger();
     Server server = new Server("https://horizon-testnet.stellar.org/");
-    SSEStream<TradeResponse> manager = null;
+    SSEStream<LedgerResponse> manager = null;
     try {
       manager =
-          server.trades().limit(100).stream(
-              new EventListener<TradeResponse>() {
+          server.ledgers().limit(100).stream(
+              new EventListener<LedgerResponse>() {
                 @Override
-                public void onEvent(TradeResponse r) {
+                public void onEvent(LedgerResponse r) {
                   events.incrementAndGet();
                 }
 
@@ -35,7 +35,9 @@ public class StreamingSmokeTest {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
+
       manager.close();
+
       int eventCount = events.get();
       Assert.assertTrue(eventCount > 0);
 

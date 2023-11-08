@@ -117,10 +117,19 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link EffectResponse} type
+   * @param reconnectTimeout Custom stream connection timeout in ms
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    */
+  public SSEStream<EffectResponse> stream(
+      final EventListener<EffectResponse> listener, long reconnectTimeout) {
+    return SSEStream.create(httpClient, this, EffectResponse.class, listener, reconnectTimeout);
+  }
+
+  /**
+   * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   */
   public SSEStream<EffectResponse> stream(final EventListener<EffectResponse> listener) {
-    return SSEStream.create(httpClient, this, EffectResponse.class, listener);
+    return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
   }
 
   /**
