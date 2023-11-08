@@ -5,7 +5,6 @@ import java.net.SocketException;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -39,8 +38,6 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   // receive a response for a long time.
   // If the server requests us to close the connection, we will set serverSideClosed to true.
   private final AtomicBoolean clientSideClosed = new AtomicBoolean(true);
-  private final ScheduledExecutorService clientTimeoutTimer =
-      Executors.newSingleThreadScheduledExecutor();
   private final AtomicLong latestEventTime =
       new AtomicLong(0); // The timestamp of the last received event.
   private final AtomicReference<String> lastEventId = new AtomicReference<String>(null);
@@ -70,11 +67,21 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     if (isStopped.get()) {
       throw new IllegalStateException("Already stopped");
     }
+
     executorService.submit(
         new Runnable() {
           @Override
           public void run() {
+            latestEventTime.set(System.currentTimeMillis());
+
             while (!isStopped.get()) {
+              if (System.currentTimeMillis() - latestEventTime.get() > reconnectTimeout) {
+                // Check if the client has not received any event for a long time.
+                // If so, we will close the connection and restart it.
+                latestEventTime.set(System.currentTimeMillis());
+                clientSideClosed.set(true);
+              }
+
               try {
                 Thread.sleep(200);
                 if (serverSideClosed.get() || clientSideClosed.get()) {
@@ -99,20 +106,6 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
             }
           }
         });
-
-    // Start a timer to check if the client has not received any event for a long time.
-    // If so, we will close the connection and restart it.
-    latestEventTime.set(System.currentTimeMillis());
-    clientTimeoutTimer.scheduleAtFixedRate(
-        () -> {
-          if (System.currentTimeMillis() - latestEventTime.get() > reconnectTimeout) {
-            latestEventTime.set(System.currentTimeMillis());
-            clientSideClosed.set(true);
-          }
-        },
-        0,
-        300,
-        TimeUnit.MILLISECONDS);
   }
 
   public String lastPagingToken() {
