@@ -3,16 +3,21 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Pending
+
+## 0.42.0
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))
-* Update `LedgerResponse` and `AccountResponse`, remove outdated fields, and add missing fields. ([#549](https://github.com/stellar/java-stellar-sdk/pull/549))
 * Add support for muxed accounts in `PaymentOperationResponse`. ([#550](https://github.com/stellar/java-stellar-sdk/pull/550))
+* Improve the reliability of `SSEStream`. Now, it will restart when necessary. ([#555](https://github.com/stellar/java-stellar-sdk/pull/555))
+* Add the response code and body to `SubmitTransactionUnknownResponseException`. ([#556](https://github.com/stellar/java-stellar-sdk/pull/556))
+
+### Breaking changes
+* Update `LedgerResponse` and `AccountResponse`, remove outdated fields, and add missing fields. ([#549](https://github.com/stellar/java-stellar-sdk/pull/549))
 * Use `Price` instead of `String` to represent prices. Change the type of `CreatePassiveSellOfferOperation.price`, `ManageBuyOfferOperation.price`, and `ManageBuyOfferOperation.price` from `String` to `Price`, this fixes the issue of incorrect operations parsed in certain specific scenarios. ([#554](https://github.com/stellar/java-stellar-sdk/pull/554))
 * Update the SDK to the stable Protocol 20 release: [#553](https://github.com/stellar/java-stellar-sdk/pull/553)
-  - The `BumpFootprintExpirationOperation` is now `ExtendFootprintTTLOperation` and its `ledgersToExpire` field is now named `extendTo`, but it serves the same purpose.
-  - The `InvokeHostFunctionOperation.createTokenContractOperationBuilder` is now `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder`.
-  - `SorobanDataBuilder.setRefundableFee` is now `setResourceFee`.
-  - The RPC endpoint structure has changed, check [#552](https://github.com/stellar/java-stellar-sdk/issues/552) for more details.
-* Improve the reliability of `SSEStream`. Now, it will restart when necessary. ([#555](https://github.com/stellar/java-stellar-sdk/pull/555))
+    - The `BumpFootprintExpirationOperation` is now `ExtendFootprintTTLOperation` and its `ledgersToExpire` field is now named `extendTo`, but it serves the same purpose.
+    - The `InvokeHostFunctionOperation.createTokenContractOperationBuilder` is now `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder`.
+    - `SorobanDataBuilder.setRefundableFee` is now `setResourceFee`.
+    - The RPC endpoint structure has changed, check [#552](https://github.com/stellar/java-stellar-sdk/issues/552) for more details.
 
 ## 0.41.1
 * Add `org.stellar.sdk.spi.SdkProvider`, users can implement this interface to provide their own implementation of the SDK. We provide an [Android specific implementation](https://github.com/stellar/java-stellar-sdk-android-spi), if you are integrating this SDK into an Android project, be sure to check it out. ([#543](https://github.com/stellar/java-stellar-sdk/pull/543))
