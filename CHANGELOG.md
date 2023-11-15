@@ -8,6 +8,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))
 * Add support for muxed accounts in `PaymentOperationResponse`. ([#550](https://github.com/stellar/java-stellar-sdk/pull/550))
 * Improve the reliability of `SSEStream`. Now, it will restart when necessary. ([#555](https://github.com/stellar/java-stellar-sdk/pull/555))
+* Add the response code and body to `SubmitTransactionUnknownResponseException`. ([#556](https://github.com/stellar/java-stellar-sdk/pull/556))
 
 ### Breaking changes
 * Update `LedgerResponse` and `AccountResponse`, remove outdated fields, and add missing fields. ([#549](https://github.com/stellar/java-stellar-sdk/pull/549))
