@@ -11,7 +11,7 @@ public class SubmitTransactionUnknownResponseException extends RuntimeException 
 
   @Override
   public String getMessage() {
-    return "Unknown response from Horizon";
+    return String.format("Unknown response from Horizon: [%d] %s", code, body);
   }
 
   public int getCode() {
