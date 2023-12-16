@@ -15,7 +15,7 @@ import lombok.Value;
 @Value
 @Builder(toBuilder = true)
 public class GetEventsRequest {
-  @NonNull String startLedger;
+  @NonNull Long startLedger;
 
   @Singular("filter")
   Collection<EventFilter> filters;
