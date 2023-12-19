@@ -2,6 +2,7 @@ package org.stellar.sdk.requests.sorobanrpc;
 
 import java.math.BigInteger;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Value;
 
 /**
@@ -19,6 +20,7 @@ public class SimulateTransactionRequest {
 
   @Value
   @AllArgsConstructor
+  @Builder
   public static class ResourceConfig {
     BigInteger instructionLeeway;
   }

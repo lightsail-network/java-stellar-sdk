@@ -839,8 +839,9 @@ public class SorobanServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     SorobanServer server = new SorobanServer(baseUrl.toString());
 
-    SorobanServer.ResourceLeeway resourceLeeway = new SorobanServer.ResourceLeeway(cpuInstructions);
-    SimulateTransactionResponse resp = server.simulateTransaction(transaction, resourceLeeway);
+    SimulateTransactionRequest.ResourceConfig resourceConfig =
+        new SimulateTransactionRequest.ResourceConfig(cpuInstructions);
+    SimulateTransactionResponse resp = server.simulateTransaction(transaction, resourceConfig);
     assertEquals(resp.getLatestLedger().longValue(), 14245L);
     assertEquals(
         resp.getTransactionData(),

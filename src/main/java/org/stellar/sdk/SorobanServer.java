@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.Closeable;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,9 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Value;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -319,7 +315,7 @@ public class SorobanServer implements Closeable {
    * @param transaction The transaction to simulate. It should include exactly one operation, which
    *     must be one of {@link InvokeHostFunctionOperation}, {@link ExtendFootprintTTLOperation}, or
    *     {@link RestoreFootprintOperation}. Any provided footprint will be ignored.
-   * @param resourceLeeway Additional resource include in the simulation.
+   * @param resourceConfig Additional resource include in the simulation.
    * @return A {@link SimulateTransactionResponse} object containing the cost, footprint,
    *     result/auth requirements (if applicable), and error of the transaction.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
@@ -328,16 +324,9 @@ public class SorobanServer implements Closeable {
    * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
    */
   public SimulateTransactionResponse simulateTransaction(
-      Transaction transaction, @Nullable ResourceLeeway resourceLeeway)
+      Transaction transaction, @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig)
       throws IOException, SorobanRpcErrorResponse {
     // TODO: In the future, it may be necessary to consider FeeBumpTransaction.
-
-    SimulateTransactionRequest.ResourceConfig resourceConfig = null;
-    if (resourceLeeway != null && resourceLeeway.getCpuInstructions() != null) {
-      resourceConfig =
-          new SimulateTransactionRequest.ResourceConfig(resourceLeeway.getCpuInstructions());
-    }
-
     SimulateTransactionRequest params =
         new SimulateTransactionRequest(transaction.toEnvelopeXdrBase64(), resourceConfig);
     return this.sendRequest(
@@ -347,7 +336,7 @@ public class SorobanServer implements Closeable {
   }
 
   /**
-   * An alias for {@link #simulateTransaction(Transaction, ResourceLeeway)} with no resource leeway.
+   * An alias for {@link #simulateTransaction(Transaction, SimulateTransactionRequest.ResourceConfig) with no resource leeway.
    */
   public SimulateTransactionResponse simulateTransaction(Transaction transaction)
       throws IOException, SorobanRpcErrorResponse {
@@ -559,13 +548,5 @@ public class SorobanServer implements Closeable {
   public enum Durability {
     TEMPORARY,
     PERSISTENT
-  }
-
-  /** Describes additional resource leeways for transaction simulation. */
-  @Builder(toBuilder = true)
-  @Value
-  @AllArgsConstructor
-  public static class ResourceLeeway {
-    BigInteger cpuInstructions;
   }
 }
