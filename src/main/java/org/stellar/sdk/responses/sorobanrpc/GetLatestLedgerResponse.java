@@ -14,7 +14,7 @@ import lombok.Value;
 public class GetLatestLedgerResponse {
   String id;
 
-  Integer protocolVersion;
+  Long protocolVersion;
 
   Integer sequence;
 }

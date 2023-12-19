@@ -4,6 +4,14 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+### Breaking changes
+* The types of the following fields have changed. ([#560](https://github.com/stellar/java-stellar-sdk/pull/560))
+  | field                                   | before  | now  |
+  | --------------------------------------- | ------- | ---- |
+  | GetEventsRequest.startLedger            | String  | Long |
+  | GetEventsResponse.EventInfo.ledger      | Integer | Long |
+  | GetLatestLedgerResponse.protocolVersion | Integer | Long |
+
 ## 0.42.0
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))
 * Add support for muxed accounts in `PaymentOperationResponse`. ([#550](https://github.com/stellar/java-stellar-sdk/pull/550))

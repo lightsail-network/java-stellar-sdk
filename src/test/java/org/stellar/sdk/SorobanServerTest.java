@@ -555,7 +555,7 @@ public class SorobanServerTest {
             .build();
     GetEventsRequest getEventsRequest =
         GetEventsRequest.builder()
-            .startLedger("100")
+            .startLedger(100L)
             .filter(eventFilter)
             .pagination(paginationOptions)
             .build();

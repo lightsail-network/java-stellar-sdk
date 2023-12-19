@@ -23,7 +23,7 @@ public class GetEventsResponse {
   public static class EventInfo {
     EventFilterType type;
 
-    Integer ledger;
+    Long ledger;
 
     String ledgerClosedAt;
 
