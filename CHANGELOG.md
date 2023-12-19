@@ -4,6 +4,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+### Update
+* Support resource leeway parameter when simulating Soroban transactions. ([#561](https://github.com/stellar/java-stellar-sdk/pull/561))
 ### Breaking changes
 * The types of the following fields have changed. ([#560](https://github.com/stellar/java-stellar-sdk/pull/560))
   | field                                   | before  | now  |
