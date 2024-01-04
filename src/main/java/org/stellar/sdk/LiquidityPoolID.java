@@ -2,18 +2,30 @@ package org.stellar.sdk;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import org.stellar.sdk.xdr.*;
 
 /**
  * Base LiquidityPoolID class.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/encyclopedia/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools"
  *     target="_blank">Liquidity Pool</a>
  */
+@EqualsAndHashCode
+@AllArgsConstructor
 public final class LiquidityPoolID {
-  protected final byte[] hash;
+  private final byte[] hash;
 
+  /**
+   * Creates LiquidityPoolID object from a given parameters.
+   *
+   * @param type The type of the pool
+   * @param a First asset in the pool
+   * @param b Second asset in the pool
+   * @param fee Fee amount in base-points
+   */
   public LiquidityPoolID(LiquidityPoolType type, Asset a, Asset b, int fee) {
     if (a.compareTo(b) >= 0) {
       throw new RuntimeException("AssetA must be < AssetB");
@@ -29,12 +41,13 @@ public final class LiquidityPoolID {
     hash = Util.hash(byteArrayOutputStream.toByteArray());
   }
 
+  /**
+   * Creates LiquidityPoolID object from a given hex-encoded pool ID.
+   *
+   * @param hex hex string
+   */
   public LiquidityPoolID(String hex) {
     hash = Util.hexToBytes(hex.toUpperCase());
-  }
-
-  public LiquidityPoolID(byte[] bytes) {
-    hash = bytes;
   }
 
   /**
@@ -49,17 +62,6 @@ public final class LiquidityPoolID {
   @Override
   public String toString() {
     return Util.bytesToHex(hash).toLowerCase();
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (object == null || !this.getClass().equals(object.getClass())) {
-      return false;
-    }
-
-    LiquidityPoolID o = (LiquidityPoolID) object;
-
-    return Objects.equals(this.toString(), o.toString());
   }
 
   /** Generates XDR object from a given LiquidityPoolID object */

@@ -1,6 +1,5 @@
 package org.stellar.sdk.requests.sorobanrpc;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 /**
@@ -10,7 +9,6 @@ import lombok.Value;
  *     target="_blank">getTransaction documentation</a>
  */
 @Value
-@AllArgsConstructor
 public class GetTransactionRequest {
   String hash;
 }

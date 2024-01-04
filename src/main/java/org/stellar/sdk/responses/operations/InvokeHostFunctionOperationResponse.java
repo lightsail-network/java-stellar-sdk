@@ -2,6 +2,8 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.xdr.HostFunctionType;
 
 /**
@@ -15,154 +17,64 @@ import org.stellar.sdk.xdr.HostFunctionType;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class InvokeHostFunctionOperationResponse extends OperationResponse {
-  @SerializedName("function")
-  private final String function;
-
-  @SerializedName("parameters")
-  private final List<HostFunctionParameter> parameters;
-
-  @SerializedName("address")
-  private final String address;
-
-  @SerializedName("salt")
-  private final String salt;
-
-  @SerializedName("asset_balance_changes")
-  private final List<AssetContractBalanceChange> assetBalanceChanges;
-
-  public InvokeHostFunctionOperationResponse(
-      String function,
-      List<HostFunctionParameter> parameters,
-      String address,
-      String salt,
-      List<AssetContractBalanceChange> assetBalanceChanges) {
-    this.function = function;
-    this.parameters = parameters;
-    this.address = address;
-    this.salt = salt;
-    this.assetBalanceChanges = assetBalanceChanges;
-  }
-
   /**
-   * Returns the function type ({@link HostFunctionType}), which can have one of the following
-   * values:
+   * the function type ({@link HostFunctionType}), which can have one of the following values:
    *
    * <ul>
    *   <li>"HostFunctionTypeHostFunctionTypeInvokeContract"
    *   <li>"HostFunctionTypeHostFunctionTypeCreateContract"
    *   <li>"HostFunctionTypeHostFunctionTypeUploadContractWasm"
    * </ul>
-   *
-   * @return the function type of the host function
    */
-  public String getFunction() {
-    return function;
-  }
+  @SerializedName("function")
+  String function;
 
-  public List<HostFunctionParameter> getParameters() {
-    return parameters;
-  }
+  @SerializedName("parameters")
+  List<HostFunctionParameter> parameters;
 
-  public String getAddress() {
-    return address;
-  }
+  @SerializedName("address")
+  String address;
 
-  public String getSalt() {
-    return salt;
-  }
+  @SerializedName("salt")
+  String salt;
 
-  public List<AssetContractBalanceChange> getAssetBalanceChanges() {
-    return assetBalanceChanges;
-  }
+  @SerializedName("asset_balance_changes")
+  List<AssetContractBalanceChange> assetBalanceChanges;
 
+  @Value
   public static class HostFunctionParameter {
 
     @SerializedName("type")
-    private final String type;
+    String type;
 
     @SerializedName("value")
-    private final String value;
-
-    HostFunctionParameter(String type, String value) {
-      this.type = type;
-      this.value = value;
-    }
-
-    public String getType() {
-      return type;
-    }
-
-    public String getValue() {
-      return value;
-    }
+    String value;
   }
 
+  @Value
   public static class AssetContractBalanceChange {
     @SerializedName("asset_type")
-    private final String assetType;
+    String assetType;
 
     @SerializedName("asset_code")
-    private final String assetCode;
+    String assetCode;
 
     @SerializedName("asset_issuer")
-    private final String assetIssuer;
+    String assetIssuer;
 
     @SerializedName("type")
-    private final String type;
+    String type;
 
     @SerializedName("from")
-    private final String from;
+    String from;
 
     @SerializedName("to")
-    private final String to;
+    String to;
 
     @SerializedName("amount")
-    private final String amount;
-
-    AssetContractBalanceChange(
-        String assetType,
-        String assetCode,
-        String assetIssuer,
-        String type,
-        String from,
-        String to,
-        String amount) {
-      this.assetType = assetType;
-      this.assetCode = assetCode;
-      this.assetIssuer = assetIssuer;
-      this.type = type;
-      this.from = from;
-      this.to = to;
-      this.amount = amount;
-    }
-
-    public String getAssetType() {
-      return assetType;
-    }
-
-    public String getAssetCode() {
-      return assetCode;
-    }
-
-    public String getAssetIssuer() {
-      return assetIssuer;
-    }
-
-    public String getType() {
-      return type;
-    }
-
-    public String getFrom() {
-      return from;
-    }
-
-    public String getTo() {
-      return to;
-    }
-
-    public String getAmount() {
-      return amount;
-    }
+    String amount;
   }
 }

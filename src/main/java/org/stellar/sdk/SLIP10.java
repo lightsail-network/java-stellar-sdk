@@ -1,6 +1,6 @@
 package org.stellar.sdk;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
@@ -34,7 +34,7 @@ final class SLIP10 {
 
     // I = HMAC-SHA512(Key = bytes("ed25519 seed"), Data = seed)
     mac.init(
-        new SecretKeySpec("ed25519 seed".getBytes(Charset.forName("UTF-8")), hmacSHA512algorithm));
+        new SecretKeySpec("ed25519 seed".getBytes(StandardCharsets.UTF_8), hmacSHA512algorithm));
     mac.update(seed);
     mac.doFinal(I, 0);
 

@@ -1,9 +1,13 @@
 package org.stellar.sdk;
 
+import lombok.NonNull;
+
 /**
  * Base Asset class.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/assets/" target="_blank">Assets</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     target="_blank">Assets</a>
  */
 public abstract class Asset implements Comparable<Asset> {
   Asset() {}
@@ -127,10 +131,10 @@ public abstract class Asset implements Comparable<Asset> {
   public abstract boolean equals(Object object);
 
   @Override
-  public abstract int compareTo(Asset other);
+  public abstract int compareTo(@NonNull Asset other);
 
   private static Asset createNonNativeAsset(String code, String issuer) {
-    if (code.length() >= 1 && code.length() <= 4) {
+    if (!code.isEmpty() && code.length() <= 4) {
       return new AssetTypeCreditAlphaNum4(code, issuer);
     } else if (code.length() >= 5 && code.length() <= 12) {
       return new AssetTypeCreditAlphaNum12(code, issuer);

@@ -4,7 +4,9 @@ import java.math.BigInteger;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.stellar.sdk.xdr.ClaimPredicate;
 import org.stellar.sdk.xdr.ClaimPredicateType;
 import org.stellar.sdk.xdr.Duration;
@@ -13,6 +15,7 @@ import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
+/** Base class for predicates. */
 public abstract class Predicate {
 
   private static List<Predicate> convertXDRPredicates(ClaimPredicate[] predicates) {
@@ -53,17 +56,9 @@ public abstract class Predicate {
   /** Generates XDR object from a given Asset object */
   public abstract org.stellar.sdk.xdr.ClaimPredicate toXdr();
 
+  /** Represents a predicate that is always true. */
+  @EqualsAndHashCode(callSuper = false)
   public static class Unconditional extends Predicate {
-    @Override
-    public boolean equals(Object o) {
-      return (this == o) || (getClass() == o.getClass());
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
     @Override
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
@@ -72,29 +67,11 @@ public abstract class Predicate {
     }
   }
 
+  @EqualsAndHashCode(callSuper = false)
+  @AllArgsConstructor
+  @Getter
   public static class Not extends Predicate {
     private final Predicate inner;
-
-    public Not(Predicate inner) {
-      this.inner = inner;
-    }
-
-    public Predicate getInner() {
-      return inner;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      return (getClass() == o.getClass()) && Objects.equals(inner, ((Not) o).inner);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hashCode(inner);
-    }
 
     @Override
     public ClaimPredicate toXdr() {
@@ -105,29 +82,11 @@ public abstract class Predicate {
     }
   }
 
+  @EqualsAndHashCode(callSuper = false)
+  @AllArgsConstructor
+  @Getter
   public static class Or extends Predicate {
     private final List<Predicate> inner;
-
-    public Or(List<Predicate> inner) {
-      this.inner = inner;
-    }
-
-    public List<Predicate> getInner() {
-      return inner;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      return (getClass() == o.getClass()) && Objects.equals(inner, ((Or) o).inner);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hashCode(inner);
-    }
 
     @Override
     public ClaimPredicate toXdr() {
@@ -142,29 +101,11 @@ public abstract class Predicate {
     }
   }
 
+  @EqualsAndHashCode(callSuper = false)
+  @AllArgsConstructor
+  @Getter
   public static class And extends Predicate {
     private final List<Predicate> inner;
-
-    public And(List<Predicate> inner) {
-      this.inner = inner;
-    }
-
-    public List<Predicate> getInner() {
-      return inner;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      return (getClass() == o.getClass()) && Objects.equals(inner, ((And) o).inner);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hashCode(inner);
-    }
 
     @Override
     public ClaimPredicate toXdr() {
@@ -180,6 +121,7 @@ public abstract class Predicate {
   }
 
   /** Represents a predicate based on a maximum date and time. */
+  @EqualsAndHashCode(callSuper = false)
   public static class AbsBefore extends Predicate {
     private final TimePoint timePoint;
 
@@ -223,19 +165,6 @@ public abstract class Predicate {
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      return (getClass() == o.getClass()) && Objects.equals(timePoint, ((AbsBefore) o).timePoint);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hashCode(timePoint);
-    }
-
-    @Override
     public ClaimPredicate toXdr() {
       org.stellar.sdk.xdr.ClaimPredicate xdr = new org.stellar.sdk.xdr.ClaimPredicate();
       xdr.setDiscriminant(ClaimPredicateType.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME);
@@ -245,12 +174,10 @@ public abstract class Predicate {
   }
 
   /** Represents predicate based on maximum length of time */
+  @EqualsAndHashCode(callSuper = false)
+  @AllArgsConstructor
   public static class RelBefore extends Predicate {
     private final Duration duration;
-
-    public RelBefore(Duration secondsSinceClose) {
-      this.duration = secondsSinceClose;
-    }
 
     public RelBefore(long secondsSinceClose) {
       this(new Duration(new Uint64(new XdrUnsignedHyperInteger(secondsSinceClose))));
@@ -258,19 +185,6 @@ public abstract class Predicate {
 
     public long getSecondsSinceClose() {
       return duration.getDuration().getUint64().getNumber().longValue();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      return (getClass() == o.getClass()) && Objects.equals(duration, ((RelBefore) o).duration);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hashCode(duration);
     }
 
     @Override

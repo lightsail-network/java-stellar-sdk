@@ -1,45 +1,30 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PaymentOp;
 
 /**
- * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#payment"
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#payment"
  * target="_blank">Payment</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class PaymentOperation extends Operation {
-
-  private final String destination;
-  private final Asset asset;
-  private final String amount;
-
-  private PaymentOperation(
-      @NonNull String destination, @NonNull Asset asset, @NonNull String amount) {
-    this.destination = destination;
-    this.asset = asset;
-    this.amount = amount;
-  }
-
   /** Account that receives the payment. */
-  public String getDestination() {
-    return destination;
-  }
+  @NonNull private final String destination;
 
   /** Asset to send to the destination account. */
-  public Asset getAsset() {
-    return asset;
-  }
+  @NonNull private final Asset asset;
 
   /** Amount of the asset to send. */
-  public String getAmount() {
-    return amount;
-  }
+  @NonNull private final String amount;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -67,11 +52,12 @@ public class PaymentOperation extends Operation {
    * @see PaymentOperation
    */
   public static class Builder {
+
     private final String destination;
     private final Asset asset;
     private final String amount;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new PaymentOperation builder from a PaymentOp XDR.
@@ -81,7 +67,7 @@ public class PaymentOperation extends Operation {
     Builder(AccountConverter accountConverter, PaymentOp op) {
       destination = accountConverter.decode(op.getDestination());
       asset = Asset.fromXdr(op.getAsset());
-      amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
+      amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     }
 
     /**
@@ -105,34 +91,17 @@ public class PaymentOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(String account) {
-      mSourceAccount = account;
+      sourceAccount = account;
       return this;
     }
 
     /** Builds an operation */
     public PaymentOperation build() {
       PaymentOperation operation = new PaymentOperation(destination, asset, amount);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  public int hashCode() {
-    return Objects.hash(this.getSourceAccount(), this.asset, this.amount, this.destination);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PaymentOperation)) {
-      return false;
-    }
-
-    PaymentOperation other = (PaymentOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.destination, other.destination);
   }
 }

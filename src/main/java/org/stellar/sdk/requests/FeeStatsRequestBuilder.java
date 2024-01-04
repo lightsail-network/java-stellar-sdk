@@ -16,13 +16,14 @@ public class FeeStatsRequestBuilder extends RequestBuilder {
   /**
    * Requests <code>GET /fee_stats</code>
    *
-   * @throws IOException
-   * @throws TooManyRequestsException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @see <a href="https://developers.stellar.org/api/aggregations/fee-stats/">Fee Stats</a>
    */
   public FeeStatsResponse execute() throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<FeeStatsResponse>() {};
-    ResponseHandler<FeeStatsResponse> responseHandler = new ResponseHandler<FeeStatsResponse>(type);
+    TypeToken<FeeStatsResponse> type = new TypeToken<FeeStatsResponse>() {};
+    ResponseHandler<FeeStatsResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(this.buildUri()).build();
     Response response = httpClient.newCall(request).execute();

@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents BeginSponsoringFutureReserves operation response.
@@ -8,15 +10,9 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class BeginSponsoringFutureReservesOperationResponse extends OperationResponse {
   @SerializedName("sponsored_id")
-  private final String sponsoredId;
-
-  public BeginSponsoringFutureReservesOperationResponse(String sponsoredId) {
-    this.sponsoredId = sponsoredId;
-  }
-
-  public String getSponsoredId() {
-    return sponsoredId;
-  }
+  String sponsoredId;
 }

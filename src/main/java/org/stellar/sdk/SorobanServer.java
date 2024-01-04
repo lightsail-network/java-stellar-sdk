@@ -336,7 +336,8 @@ public class SorobanServer implements Closeable {
   }
 
   /**
-   * An alias for {@link #simulateTransaction(Transaction, SimulateTransactionRequest.ResourceConfig) with no resource leeway.
+   * An alias for {@link #simulateTransaction(Transaction,
+   * SimulateTransactionRequest.ResourceConfig)} with no resource leeway.
    */
   public SimulateTransactionResponse simulateTransaction(Transaction transaction)
       throws IOException, SorobanRpcErrorResponse {

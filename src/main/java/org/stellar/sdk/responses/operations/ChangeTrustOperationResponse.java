@@ -5,6 +5,8 @@ import static org.stellar.sdk.Asset.create;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.MuxedAccount;
 
@@ -16,51 +18,41 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ChangeTrustOperationResponse extends OperationResponse {
   @SerializedName("trustor")
-  private String trustor;
+  String trustor;
 
   @SerializedName("trustor_muxed")
-  private String trustorMuxed;
+  String trustorMuxed;
 
   @SerializedName("trustor_muxed_id")
-  private BigInteger trustorMuxedId;
+  BigInteger trustorMuxedId;
 
   @SerializedName("trustee")
-  private String trustee;
+  String trustee;
 
   @SerializedName("asset_type")
-  private String assetType;
+  String assetType;
 
   @SerializedName("asset_code")
-  private String assetCode;
+  String assetCode;
 
   @SerializedName("asset_issuer")
-  private String assetIssuer;
+  String assetIssuer;
 
   @SerializedName("limit")
-  private String limit;
+  String limit;
 
   @SerializedName("liquidity_pool_id")
-  private String liquidityPoolId;
+  String liquidityPoolId;
 
   public Optional<MuxedAccount> getTrustorMuxed() {
     if (this.trustorMuxed == null || this.trustorMuxed.isEmpty()) {
       return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.trustorMuxed, this.trustor, this.trustorMuxedId));
-  }
-
-  public String getTrustor() {
-    return trustor;
-  }
-
-  public String getTrustee() {
-    return trustee;
-  }
-
-  public String getLimit() {
-    return limit;
   }
 
   public Asset getAsset() {

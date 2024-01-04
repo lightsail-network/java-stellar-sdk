@@ -5,6 +5,8 @@ import static org.stellar.sdk.Asset.create;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
@@ -17,63 +19,38 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class PaymentOperationResponse extends OperationResponse {
   @SerializedName("amount")
-  protected final String amount;
+  String amount;
 
   @SerializedName("asset_type")
-  protected final String assetType;
+  String assetType;
 
   @SerializedName("asset_code")
-  protected final String assetCode;
+  String assetCode;
 
   @SerializedName("asset_issuer")
-  protected final String assetIssuer;
+  String assetIssuer;
 
   @SerializedName("from")
-  protected final String from;
+  String from;
 
   @SerializedName("from_muxed")
-  private String fromMuxed;
+  String fromMuxed;
 
   @SerializedName("from_muxed_id")
-  private BigInteger fromMuxedId;
+  BigInteger fromMuxedId;
 
   @SerializedName("to")
-  protected final String to;
+  String to;
 
   @SerializedName("to_muxed")
-  private String toMuxed;
+  String toMuxed;
 
   @SerializedName("to_muxed_id")
-  private BigInteger toMuxedId;
-
-  PaymentOperationResponse(
-      String amount,
-      String assetType,
-      String assetCode,
-      String assetIssuer,
-      String from,
-      String fromMuxed,
-      BigInteger fromMuxedId,
-      String to,
-      String toMuxed,
-      BigInteger toMuxedId) {
-    this.amount = amount;
-    this.assetType = assetType;
-    this.assetCode = assetCode;
-    this.assetIssuer = assetIssuer;
-    this.from = from;
-    this.fromMuxed = fromMuxed;
-    this.fromMuxedId = fromMuxedId;
-    this.to = to;
-    this.toMuxed = toMuxed;
-    this.toMuxedId = toMuxedId;
-  }
-
-  public String getAmount() {
-    return amount;
-  }
+  BigInteger toMuxedId;
 
   public Asset getAsset() {
     if (assetType.equals("native")) {
@@ -83,19 +60,11 @@ public class PaymentOperationResponse extends OperationResponse {
     }
   }
 
-  public String getFrom() {
-    return from;
-  }
-
   public Optional<MuxedAccount> getFromMuxed() {
     if (this.fromMuxed == null || this.fromMuxed.isEmpty()) {
       return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.fromMuxed, this.from, this.fromMuxedId));
-  }
-
-  public String getTo() {
-    return to;
   }
 
   public Optional<MuxedAccount> getToMuxed() {

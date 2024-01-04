@@ -26,12 +26,12 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link OperationResponse}. This method is
    * helpful for getting the links.
    *
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public OperationResponse operation(HttpUrl uri) throws IOException {
-    TypeToken type = new TypeToken<OperationResponse>() {};
-    ResponseHandler<OperationResponse> responseHandler =
-        new ResponseHandler<OperationResponse>(type);
+    TypeToken<OperationResponse> type = new TypeToken<OperationResponse>() {};
+    ResponseHandler<OperationResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -45,7 +45,8 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/operations/single/">Operation
    *     Details</a>
    * @param operationId Operation to fetch
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public OperationResponse operation(long operationId) throws IOException {
     this.setSegments("operations", String.valueOf(operationId));
@@ -167,13 +168,13 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OperationResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public static Page<OperationResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<OperationResponse>>() {};
-    ResponseHandler<Page<OperationResponse>> responseHandler =
-        new ResponseHandler<Page<OperationResponse>>(type);
+    TypeToken<Page<OperationResponse>> type = new TypeToken<Page<OperationResponse>>() {};
+    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -210,10 +211,11 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OperationResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public Page<OperationResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

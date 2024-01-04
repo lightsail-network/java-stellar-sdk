@@ -1,37 +1,28 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.CreateAccountOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 
 /**
- * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#create-account"
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#create-account"
  * target="_blank">CreateAccount</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class CreateAccountOperation extends Operation {
 
-  private final String destination;
-  private final String startingBalance;
-
-  private CreateAccountOperation(@NonNull String destination, @NonNull String startingBalance) {
-    this.destination = destination;
-    this.startingBalance = startingBalance;
-  }
+  /** Account that is created and funded */
+  @NonNull private final String destination;
 
   /** Amount of XLM to send to the newly created account. */
-  public String getStartingBalance() {
-    return startingBalance;
-  }
-
-  /** Account that is created and funded */
-  public String getDestination() {
-    return destination;
-  }
+  @NonNull private final String startingBalance;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -54,10 +45,11 @@ public class CreateAccountOperation extends Operation {
    * @see CreateAccountOperation
    */
   public static class Builder {
+
     private final String destination;
     private final String startingBalance;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new CreateAccount builder from a CreateAccountOp XDR.
@@ -66,7 +58,7 @@ public class CreateAccountOperation extends Operation {
      */
     Builder(CreateAccountOp op) {
       destination = StrKey.encodeEd25519PublicKey(op.getDestination());
-      startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64().longValue());
+      startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64());
     }
 
     /**
@@ -88,34 +80,17 @@ public class CreateAccountOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(String account) {
-      mSourceAccount = account;
+      sourceAccount = account;
       return this;
     }
 
     /** Builds an operation */
     public CreateAccountOperation build() {
       CreateAccountOperation operation = new CreateAccountOperation(destination, startingBalance);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.destination, this.startingBalance, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof CreateAccountOperation)) {
-      return false;
-    }
-
-    CreateAccountOperation other = (CreateAccountOperation) object;
-    return Objects.equals(this.destination, other.destination)
-        && Objects.equals(this.startingBalance, other.startingBalance)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

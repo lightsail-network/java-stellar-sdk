@@ -1,11 +1,16 @@
 package org.stellar.sdk;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 
 /**
  * TrustLineAsset class.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/assets/" target="_blank">Assets</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     target="_blank">Assets</a>
  */
 public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
   TrustLineAsset() {}
@@ -125,7 +130,7 @@ public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
   public abstract boolean equals(Object object);
 
   @Override
-  public abstract int compareTo(TrustLineAsset other);
+  public abstract int compareTo(@NonNull TrustLineAsset other);
 
   /**
    * Get the asset type
@@ -141,17 +146,11 @@ public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
    */
   public abstract org.stellar.sdk.xdr.TrustLineAsset toXdr();
 
+  @Getter
+  @EqualsAndHashCode(callSuper = false)
+  @AllArgsConstructor
   public static final class Wrapper extends TrustLineAsset {
-    private Asset asset;
-
-    public Wrapper(@NonNull Asset baseAsset) {
-      super();
-      asset = baseAsset;
-    }
-
-    public Asset getAsset() {
-      return asset;
-    }
+    private final Asset asset;
 
     @Override
     public String getType() {
@@ -159,18 +158,8 @@ public abstract class TrustLineAsset implements Comparable<TrustLineAsset> {
     }
 
     @Override
-    public final boolean equals(Object object) {
-      if (object == null || !this.getClass().equals(object.getClass())) {
-        return false;
-      }
-
-      TrustLineAsset.Wrapper o = (TrustLineAsset.Wrapper) object;
-      return this.getAsset().equals(o.getAsset());
-    }
-
-    @Override
-    public int compareTo(TrustLineAsset other) {
-      if (other.getType() == "pool_share") {
+    public int compareTo(@NonNull TrustLineAsset other) {
+      if ("pool_share".equals(other.getType())) {
         return -1;
       }
       return this.getAsset().compareTo(((TrustLineAsset.Wrapper) other).getAsset());

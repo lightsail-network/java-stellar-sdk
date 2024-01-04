@@ -1,17 +1,22 @@
 package org.stellar.sdk;
 
 import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.AssetType;
 
 /**
  * Class for LiquidityPoolShareTrustLineAsset
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/encyclopedia/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools"
  *     target="_blank">Liquidity Pool</a>
  */
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
-  protected final LiquidityPoolID mId;
+  @NonNull private final LiquidityPoolID id;
 
   /**
    * Constructor
@@ -19,16 +24,7 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
    * @param params the LiquidityPoolParameters
    */
   public LiquidityPoolShareTrustLineAsset(@NonNull LiquidityPoolParameters params) {
-    mId = params.getId();
-  }
-
-  /**
-   * Constructor
-   *
-   * @param id the LiquidityPoolID
-   */
-  public LiquidityPoolShareTrustLineAsset(@NonNull LiquidityPoolID id) {
-    mId = id;
+    id = params.getId();
   }
 
   /**
@@ -37,7 +33,7 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
    * @return LiquidityPoolID
    */
   public LiquidityPoolID getLiquidityPoolID() {
-    return mId;
+    return id;
   }
 
   @Override
@@ -51,23 +47,7 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hashCode(this.mId);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (object == null || !this.getClass().equals(object.getClass())) {
-      return false;
-    }
-
-    LiquidityPoolShareTrustLineAsset o = (LiquidityPoolShareTrustLineAsset) object;
-
-    return this.toString() == o.toString();
-  }
-
-  @Override
-  public int compareTo(TrustLineAsset other) {
+  public int compareTo(@NonNull TrustLineAsset other) {
     if (!Objects.equals(other.getType(), "pool_share")) {
       return 1;
     }
@@ -78,7 +58,7 @@ public final class LiquidityPoolShareTrustLineAsset extends TrustLineAsset {
   public org.stellar.sdk.xdr.TrustLineAsset toXdr() {
     org.stellar.sdk.xdr.TrustLineAsset xdr = new org.stellar.sdk.xdr.TrustLineAsset();
     xdr.setDiscriminant(AssetType.ASSET_TYPE_POOL_SHARE);
-    xdr.setLiquidityPoolID(mId.toXdr());
+    xdr.setLiquidityPoolID(id.toXdr());
     return xdr;
   }
 }

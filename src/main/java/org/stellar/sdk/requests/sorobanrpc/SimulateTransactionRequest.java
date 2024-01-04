@@ -11,7 +11,6 @@ import lombok.Value;
  * @see <a href="https://soroban.stellar.org/api/methods/simulateTransaction#parameters"
  *     target="_blank">simulateTransaction documentation</a>
  */
-@AllArgsConstructor
 @Value
 public class SimulateTransactionRequest {
   String transaction;

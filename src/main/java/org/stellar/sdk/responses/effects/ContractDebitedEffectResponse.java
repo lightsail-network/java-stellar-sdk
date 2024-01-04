@@ -1,8 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents contract_debited effect response.
@@ -13,19 +13,19 @@ import lombok.Getter;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
-@AllArgsConstructor
-@Getter
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ContractDebitedEffectResponse extends EffectResponse {
   @SerializedName("asset_type")
-  private final String assetType;
+  String assetType;
 
   @SerializedName("asset_code")
-  private final String assetCode;
+  String assetCode;
 
   @SerializedName("asset_issuer")
-  private final String assetIssuer;
+  String assetIssuer;
 
-  private final String contract;
+  String contract;
 
-  private final String amount;
+  String amount;
 }

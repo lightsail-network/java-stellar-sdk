@@ -1,10 +1,14 @@
 package org.stellar.sdk;
 
-import java.util.Arrays;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 
+@Getter
+@EqualsAndHashCode(callSuper = false)
 abstract class MemoHashAbstract extends Memo {
-  protected byte[] bytes;
+  /** 32 bytes long array contained in this memo. */
+  protected byte @NonNull [] bytes;
 
   public MemoHashAbstract(byte @NonNull [] bytes) {
     if (bytes.length != 32) {
@@ -14,13 +18,8 @@ abstract class MemoHashAbstract extends Memo {
   }
 
   public MemoHashAbstract(String hexString) {
-    // We change to lowercase because we want to decode both: upper cased and lower cased alphabets.
+    // We change to lowercase because we want to decode both: upper-cased and lower cased alphabets.
     this(Util.hexToBytes(hexString.toLowerCase()));
-  }
-
-  /** Returns 32 bytes long array contained in this memo. */
-  public byte[] getBytes() {
-    return bytes;
   }
 
   /**
@@ -39,20 +38,7 @@ abstract class MemoHashAbstract extends Memo {
   abstract org.stellar.sdk.xdr.Memo toXdr();
 
   @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.bytes);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    MemoHashAbstract that = (MemoHashAbstract) o;
-    return Arrays.equals(this.bytes, that.bytes);
-  }
-
-  @Override
   public String toString() {
-    return bytes == null ? "" : getHexValue();
+    return getHexValue();
   }
 }

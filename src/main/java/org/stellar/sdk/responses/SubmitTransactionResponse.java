@@ -5,6 +5,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.xdr.OperationResult;
@@ -17,11 +20,14 @@ import org.stellar.sdk.xdr.XdrDataInputStream;
  *
  * @see Server#submitTransaction(org.stellar.sdk.Transaction)
  */
+@EqualsAndHashCode(callSuper = false)
 public class SubmitTransactionResponse extends Response {
   @SerializedName("hash")
+  @Getter
   private final String hash;
 
   @SerializedName("ledger")
+  @Getter
   private final Long ledger;
 
   @SerializedName("envelope_xdr")
@@ -30,10 +36,15 @@ public class SubmitTransactionResponse extends Response {
   @SerializedName("result_xdr")
   private final String resultXdr;
 
+  /**
+   * Additional information returned by a server. This will be <code>null</code> if transaction
+   * succeeded.
+   */
+  @Getter
   @SerializedName("extras")
   private final Extras extras;
 
-  private TransactionResult transactionResult;
+  TransactionResult transactionResult;
 
   SubmitTransactionResponse(
       Extras extras, Long ledger, String hash, String envelopeXdr, String resultXdr) {
@@ -46,14 +57,6 @@ public class SubmitTransactionResponse extends Response {
 
   public boolean isSuccess() {
     return ledger != null;
-  }
-
-  public String getHash() {
-    return hash;
-  }
-
-  public Long getLedger() {
-    return ledger;
   }
 
   public Optional<String> getEnvelopeXdr() {
@@ -160,51 +163,17 @@ public class SubmitTransactionResponse extends Response {
     return Optional.of(this.transactionResult);
   }
 
-  /**
-   * Additional information returned by a server. This will be <code>null</code> if transaction
-   * succeeded.
-   */
-  public Extras getExtras() {
-    return extras;
-  }
-
   /** Additional information returned by a server. */
+  @Value
   public static class Extras {
     @SerializedName("envelope_xdr")
-    private final String envelopeXdr;
+    String envelopeXdr;
 
     @SerializedName("result_xdr")
-    private final String resultXdr;
+    String resultXdr;
 
     @SerializedName("result_codes")
-    private final ResultCodes resultCodes;
-
-    Extras(String envelopeXdr, String resultXdr, ResultCodes resultCodes) {
-      this.envelopeXdr = envelopeXdr;
-      this.resultXdr = resultXdr;
-      this.resultCodes = resultCodes;
-    }
-
-    /**
-     * Returns XDR TransactionEnvelope base64-encoded string. Use <a
-     * href="http://stellar.github.io/xdr-viewer/">xdr-viewer</a> to debug.
-     */
-    public String getEnvelopeXdr() {
-      return envelopeXdr;
-    }
-
-    /**
-     * Returns XDR TransactionResult base64-encoded string Use <a
-     * href="http://stellar.github.io/xdr-viewer/">xdr-viewer</a> to debug.
-     */
-    public String getResultXdr() {
-      return resultXdr;
-    }
-
-    /** Returns ResultCodes object that contains result codes for transaction. */
-    public ResultCodes getResultCodes() {
-      return resultCodes;
-    }
+    ResultCodes resultCodes;
 
     /**
      * Contains result codes for this transaction.
@@ -213,36 +182,16 @@ public class SubmitTransactionResponse extends Response {
      *     href="https://github.com/stellar/horizon/blob/master/src/github.com/stellar/horizon/codes/main.go"
      *     target="_blank">Possible values</a>
      */
+    @Value
     public static class ResultCodes {
       @SerializedName("transaction")
-      private final String transactionResultCode;
+      String transactionResultCode;
 
       @SerializedName("inner_transaction")
-      private final String innerTransactionResultCode;
+      String innerTransactionResultCode;
 
       @SerializedName("operations")
-      private final ArrayList<String> operationsResultCodes;
-
-      public ResultCodes(
-          String transactionResultCode,
-          String innerTransactionResultCode,
-          ArrayList<String> operationsResultCodes) {
-        this.transactionResultCode = transactionResultCode;
-        this.innerTransactionResultCode = innerTransactionResultCode;
-        this.operationsResultCodes = operationsResultCodes;
-      }
-
-      public String getTransactionResultCode() {
-        return transactionResultCode;
-      }
-
-      public String getInnerTransactionResultCode() {
-        return innerTransactionResultCode;
-      }
-
-      public ArrayList<String> getOperationsResultCodes() {
-        return operationsResultCodes;
-      }
+      ArrayList<String> operationsResultCodes;
     }
   }
 }

@@ -1,50 +1,39 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
  * @deprecated As of release 0.24.0, replaced by {@link SetTrustlineFlagsOperation}
  *     <p>Represents <a
- *     href="https://developers.stellar.org/docs/start/list-of-operations/#allow-trust"
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#allow-trust"
  *     target="_blank">AllowTrust</a> operation.
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class AllowTrustOperation extends Operation {
 
-  private final String trustor;
-  private final String assetCode;
-  private final boolean authorize;
-  private final boolean authorizeToMaintainLiabilities;
-
-  private AllowTrustOperation(
-      @NonNull String trustor,
-      @NonNull String assetCode,
-      boolean authorize,
-      boolean authorizeToMaintainLiabilities) {
-    this.trustor = trustor;
-    this.assetCode = assetCode;
-    this.authorize = authorize;
-    this.authorizeToMaintainLiabilities = authorizeToMaintainLiabilities;
-  }
-
   /** The account of the recipient of the trustline. */
-  public String getTrustor() {
-    return trustor;
-  }
+  @Getter @NonNull private final String trustor;
 
   /**
    * The asset of the trustline the source account is authorizing. For example, if a gateway wants
    * to allow another account to hold its USD credit, the type is USD.
    */
-  public String getAssetCode() {
-    return assetCode;
-  }
+  @Getter @NonNull private final String assetCode;
 
   /** Flag indicating whether the trustline is authorized. */
+  private final boolean authorize;
+
+  /** Flag indicating whether the trustline is authorized to maintain liabilities. */
+  @Getter private final boolean authorizeToMaintainLiabilities;
+
   public boolean getAuthorize() {
+    // lombok will generate a getter for authorize, but it will be `isAuthorize` instead of.
+    // For keep the same with the old version, we need to override the getter.
     return authorize;
   }
 
@@ -94,12 +83,13 @@ public class AllowTrustOperation extends Operation {
    * @see AllowTrustOperation
    */
   public static class Builder {
+
     private final String trustor;
     private final String assetCode;
     private final boolean authorize;
     private boolean authorizeToMaintainLiabilities;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     Builder(AllowTrustOp op) {
       trustor = StrKey.encodeEd25519PublicKey(op.getTrustor());
@@ -150,7 +140,7 @@ public class AllowTrustOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -158,34 +148,10 @@ public class AllowTrustOperation extends Operation {
     public AllowTrustOperation build() {
       AllowTrustOperation operation =
           new AllowTrustOperation(trustor, assetCode, authorize, authorizeToMaintainLiabilities);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.getSourceAccount(),
-        this.assetCode,
-        this.authorize,
-        this.authorizeToMaintainLiabilities,
-        this.trustor);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AllowTrustOperation)) {
-      return false;
-    }
-
-    AllowTrustOperation other = (AllowTrustOperation) object;
-    return Objects.equals(this.assetCode, other.assetCode)
-        && Objects.equals(this.authorize, other.authorize)
-        && Objects.equals(this.authorizeToMaintainLiabilities, other.authorizeToMaintainLiabilities)
-        && Objects.equals(this.trustor, other.trustor)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

@@ -26,9 +26,8 @@ public class AssetsRequestBuilder extends RequestBuilder {
 
   public static Page<AssetResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<AssetResponse>>() {};
-    ResponseHandler<Page<AssetResponse>> responseHandler =
-        new ResponseHandler<Page<AssetResponse>>(type);
+    TypeToken<Page<AssetResponse>> type = new TypeToken<Page<AssetResponse>>() {};
+    ResponseHandler<Page<AssetResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -37,7 +36,7 @@ public class AssetsRequestBuilder extends RequestBuilder {
   }
 
   public Page<AssetResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

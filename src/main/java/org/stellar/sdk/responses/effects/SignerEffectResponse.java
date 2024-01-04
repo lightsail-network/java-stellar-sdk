@@ -1,24 +1,17 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@Getter
 abstract class SignerEffectResponse extends EffectResponse {
   @SerializedName("weight")
-  protected final Integer weight;
+  private final Integer weight;
 
   @SerializedName("public_key")
-  protected final String publicKey;
-
-  public SignerEffectResponse(Integer weight, String publicKey) {
-    this.weight = weight;
-    this.publicKey = publicKey;
-  }
-
-  public Integer getWeight() {
-    return weight;
-  }
-
-  public String getPublicKey() {
-    return publicKey;
-  }
+  private final String publicKey;
 }

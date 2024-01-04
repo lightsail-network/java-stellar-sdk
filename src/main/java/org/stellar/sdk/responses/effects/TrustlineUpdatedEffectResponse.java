@@ -1,5 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
 /**
  * Represents trustline_updated effect response.
  *
@@ -8,4 +11,15 @@ package org.stellar.sdk.responses.effects;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
-public class TrustlineUpdatedEffectResponse extends TrustlineCUDResponse {}
+@Value
+@EqualsAndHashCode(callSuper = true)
+public class TrustlineUpdatedEffectResponse extends TrustlineCUDResponse {
+  public TrustlineUpdatedEffectResponse(
+      String limit,
+      String assetType,
+      String assetCode,
+      String assetIssuer,
+      String liquidityPoolId) {
+    super(limit, assetType, assetCode, assetIssuer, liquidityPoolId);
+  }
+}

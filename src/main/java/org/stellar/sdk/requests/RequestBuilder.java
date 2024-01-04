@@ -13,13 +13,13 @@ import org.stellar.sdk.AssetTypeNative;
 public abstract class RequestBuilder {
   protected HttpUrl.Builder uriBuilder;
   protected OkHttpClient httpClient;
-  private ArrayList<String> segments;
+  private final ArrayList<String> segments;
   private boolean segmentsAdded;
 
   RequestBuilder(OkHttpClient httpClient, HttpUrl serverURI, String defaultSegment) {
     this.httpClient = httpClient;
     uriBuilder = serverURI.newBuilder();
-    segments = new ArrayList<String>();
+    segments = new ArrayList<>();
     if (defaultSegment != null) {
       this.setSegments(defaultSegment);
     }
@@ -46,7 +46,8 @@ public abstract class RequestBuilder {
    *
    * @see <a href="https://developers.stellar.org/api/introduction/pagination/">Page
    *     documentation</a>
-   * @param cursor
+   * @param cursor A cursor is a value that points to a specific location in a collection of
+   *     resources.
    */
   public RequestBuilder cursor(String cursor) {
     uriBuilder.setQueryParameter("cursor", cursor);
@@ -112,7 +113,7 @@ public abstract class RequestBuilder {
   }
 
   HttpUrl buildUri() {
-    if (segments.size() > 0) {
+    if (!segments.isEmpty()) {
       for (String segment : segments) {
         uriBuilder.addPathSegment(segment);
       }

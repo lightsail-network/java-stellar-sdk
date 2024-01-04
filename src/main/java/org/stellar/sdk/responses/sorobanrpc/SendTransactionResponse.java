@@ -1,6 +1,5 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 /**
@@ -9,7 +8,6 @@ import lombok.Value;
  * @see <a href="https://soroban.stellar.org/api/methods/sendTransaction#returns"
  *     target="_blank">sendTransaction documentation</a>
  */
-@AllArgsConstructor
 @Value
 public class SendTransactionResponse {
   SendTransactionStatus status;

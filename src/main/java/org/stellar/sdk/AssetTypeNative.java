@@ -1,12 +1,16 @@
 package org.stellar.sdk;
 
+import lombok.NonNull;
 import org.stellar.sdk.xdr.AssetType;
 
 /**
- * Represents Stellar native asset - <a href="https://developers.stellar.org/docs/glossary/assets/"
+ * Represents Stellar native asset - <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
  * target="_blank">lumens (XLM)</a>
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/assets/" target="_blank">Assets</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     target="_blank">Assets</a>
  */
 public final class AssetTypeNative extends Asset {
 
@@ -44,8 +48,8 @@ public final class AssetTypeNative extends Asset {
   }
 
   @Override
-  public int compareTo(Asset other) {
-    if (other.getType() == "native") {
+  public int compareTo(@NonNull Asset other) {
+    if ("native".equals(other.getType())) {
       return 0;
     }
     return -1;

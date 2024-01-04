@@ -1,26 +1,22 @@
 package org.stellar.sdk;
 
 import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.AssetType;
 
 /**
  * Class for LiquidityPoolShareChangeTrustAsset
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/encyclopedia/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools"
  *     target="_blank">Liquidity Pool</a>
  */
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
-  protected final LiquidityPoolParameters mParams;
-
-  /**
-   * Constructor
-   *
-   * @param params the liquidity pool parameters
-   */
-  public LiquidityPoolShareChangeTrustAsset(@NonNull LiquidityPoolParameters params) {
-    mParams = params;
-  }
+  @NonNull private final LiquidityPoolParameters params;
 
   /**
    * Get the liquidity pool id
@@ -28,7 +24,7 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
    * @return LiquidityPoolID
    */
   public LiquidityPoolID getLiquidityPoolID() {
-    return mParams.getId();
+    return params.getId();
   }
 
   /**
@@ -37,7 +33,7 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
    * @return LiquidityPoolParameters
    */
   public LiquidityPoolParameters getLiquidityPoolParams() {
-    return mParams;
+    return params;
   }
 
   @Override
@@ -51,23 +47,7 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hashCode(this.mParams);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (object == null || !this.getClass().equals(object.getClass())) {
-      return false;
-    }
-
-    LiquidityPoolShareChangeTrustAsset o = (LiquidityPoolShareChangeTrustAsset) object;
-
-    return this.getLiquidityPoolParams().equals(o.getLiquidityPoolParams());
-  }
-
-  @Override
-  public int compareTo(ChangeTrustAsset other) {
+  public int compareTo(@NonNull ChangeTrustAsset other) {
     if (!Objects.equals(other.getType(), "pool_share")) {
       return 1;
     }
@@ -78,7 +58,7 @@ public final class LiquidityPoolShareChangeTrustAsset extends ChangeTrustAsset {
   public org.stellar.sdk.xdr.ChangeTrustAsset toXdr() {
     org.stellar.sdk.xdr.ChangeTrustAsset xdr = new org.stellar.sdk.xdr.ChangeTrustAsset();
     xdr.setDiscriminant(AssetType.ASSET_TYPE_POOL_SHARE);
-    org.stellar.sdk.xdr.LiquidityPoolParameters params = mParams.toXdr();
+    org.stellar.sdk.xdr.LiquidityPoolParameters params = this.params.toXdr();
     xdr.setLiquidityPool(params);
     return xdr;
   }

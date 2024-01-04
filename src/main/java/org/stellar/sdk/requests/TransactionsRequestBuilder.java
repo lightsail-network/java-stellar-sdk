@@ -21,12 +21,12 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link TransactionResponse}. This method is
    * helpful for getting the links.
    *
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public TransactionResponse transaction(HttpUrl uri) throws IOException {
-    TypeToken type = new TypeToken<TransactionResponse>() {};
-    ResponseHandler<TransactionResponse> responseHandler =
-        new ResponseHandler<TransactionResponse>(type);
+    TypeToken<TransactionResponse> type = new TypeToken<TransactionResponse>() {};
+    ResponseHandler<TransactionResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -40,7 +40,8 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/transactions/single/">Transaction
    *     Details</a>
    * @param transactionId Transaction to fetch
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public TransactionResponse transaction(String transactionId) throws IOException {
     this.setSegments("transactions", transactionId);
@@ -126,13 +127,13 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link TransactionResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public static Page<TransactionResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<TransactionResponse>>() {};
-    ResponseHandler<Page<TransactionResponse>> responseHandler =
-        new ResponseHandler<Page<TransactionResponse>>(type);
+    TypeToken<Page<TransactionResponse>> type = new TypeToken<Page<TransactionResponse>>() {};
+    ResponseHandler<Page<TransactionResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -170,10 +171,11 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link TransactionResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public Page<TransactionResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

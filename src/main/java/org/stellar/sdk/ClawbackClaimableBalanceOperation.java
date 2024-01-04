@@ -1,29 +1,25 @@
 package org.stellar.sdk;
 
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClawbackClaimableBalanceOp;
 import org.stellar.sdk.xdr.OperationType;
 
 /**
- * Represents a Clawback Claimable Balance operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
+ * Represents <a
+ * href="https://developers.stellar.org/docs/start/list-of-operations/#clawback-claimable-balance"
+ * target="_blank">ClawbackClaimableBalance</a> operation.
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ClawbackClaimableBalanceOperation extends Operation {
-  private final String balanceId;
-
-  private ClawbackClaimableBalanceOperation(@NonNull String balanceId) {
-    this.balanceId = balanceId;
-  }
-
   /** The id of the claimable balance which will be clawed back. */
-  public String getBalanceId() {
-    return balanceId;
-  }
+  @NonNull private final String balanceId;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -52,9 +48,10 @@ public class ClawbackClaimableBalanceOperation extends Operation {
    * @see ClawbackClaimableBalanceOperation
    */
   public static class Builder {
+
     private final String balanceId;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     Builder(ClawbackClaimableBalanceOp op) {
       try {
@@ -80,7 +77,7 @@ public class ClawbackClaimableBalanceOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -88,26 +85,10 @@ public class ClawbackClaimableBalanceOperation extends Operation {
     public ClawbackClaimableBalanceOperation build() {
       ClawbackClaimableBalanceOperation operation =
           new ClawbackClaimableBalanceOperation(balanceId);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.getSourceAccount(), this.balanceId);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClawbackClaimableBalanceOperation)) {
-      return false;
-    }
-
-    ClawbackClaimableBalanceOperation other = (ClawbackClaimableBalanceOperation) object;
-    return Objects.equals(this.balanceId, other.balanceId)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

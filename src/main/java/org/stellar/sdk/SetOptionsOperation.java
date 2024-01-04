@@ -1,28 +1,67 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/start/list-of-operations/#set-options">SetOptions</a>
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#set-options">SetOptions</a>
  * operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/">List of
- *     Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
 public class SetOptionsOperation extends Operation {
 
+  /** Account of the inflation destination. */
   private final String inflationDestination;
+
+  /**
+   * Indicates which flags to clear. For details about the flags, please refer to the <a
+   * href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
+   * You can also use {@link AccountFlag} enum.
+   */
   private final Integer clearFlags;
+
+  /**
+   * Indicates which flags to set. For details about the flags, please refer to the <a
+   * href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
+   * You can also use {@link AccountFlag} enum.
+   */
   private final Integer setFlags;
+
+  /** Weight of the master key. */
   private final Integer masterKeyWeight;
+
+  /**
+   * A number from 0-255 representing the threshold this account sets on all operations it performs
+   * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
+   * low threshold</a>.
+   */
   private final Integer lowThreshold;
+
+  /**
+   * A number from 0-255 representing the threshold this account sets on all operations it performs
+   * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
+   * medium threshold</a>.
+   */
   private final Integer mediumThreshold;
+
+  /**
+   * A number from 0-255 representing the threshold this account sets on all operations it performs
+   * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
+   * high threshold</a>.
+   */
   private final Integer highThreshold;
+
+  /** The home domain of an account. */
   private final String homeDomain;
+
+  /** Additional signer added/removed in this operation. */
   private final SignerKey signer;
+
+  /** Additional signer weight. The signer is deleted if the weight is 0. */
   private final Integer signerWeight;
 
   private SetOptionsOperation(
@@ -50,76 +89,6 @@ public class SetOptionsOperation extends Operation {
     if (this.homeDomain != null && new XdrString(this.homeDomain).getBytes().length > 32) {
       throw new IllegalArgumentException("home domain cannot exceed 32 bytes");
     }
-  }
-
-  /** Account of the inflation destination. */
-  public String getInflationDestination() {
-    return inflationDestination;
-  }
-
-  /**
-   * Indicates which flags to clear. For details about the flags, please refer to the <a
-   * href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
-   * You can also use {@link AccountFlag} enum.
-   */
-  public Integer getClearFlags() {
-    return clearFlags;
-  }
-
-  /**
-   * Indicates which flags to set. For details about the flags, please refer to the <a
-   * href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
-   * You can also use {@link AccountFlag} enum.
-   */
-  public Integer getSetFlags() {
-    return setFlags;
-  }
-
-  /** Weight of the master key. */
-  public Integer getMasterKeyWeight() {
-    return masterKeyWeight;
-  }
-
-  /**
-   * A number from 0-255 representing the threshold this account sets on all operations it performs
-   * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
-   * low threshold</a>.
-   */
-  public Integer getLowThreshold() {
-    return lowThreshold;
-  }
-
-  /**
-   * A number from 0-255 representing the threshold this account sets on all operations it performs
-   * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
-   * medium threshold</a>.
-   */
-  public Integer getMediumThreshold() {
-    return mediumThreshold;
-  }
-
-  /**
-   * A number from 0-255 representing the threshold this account sets on all operations it performs
-   * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
-   * high threshold</a>.
-   */
-  public Integer getHighThreshold() {
-    return highThreshold;
-  }
-
-  /** The home domain of an account. */
-  public String getHomeDomain() {
-    return homeDomain;
-  }
-
-  /** Additional signer added/removed in this operation. */
-  public SignerKey getSigner() {
-    return signer;
-  }
-
-  /** Additional signer weight. The signer is deleted if the weight is 0. */
-  public Integer getSignerWeight() {
-    return signerWeight;
   }
 
   @Override
@@ -185,6 +154,7 @@ public class SetOptionsOperation extends Operation {
    * @see SetOptionsOperation
    */
   public static class Builder {
+
     private String inflationDestination;
     private Integer clearFlags;
     private Integer setFlags;
@@ -375,41 +345,5 @@ public class SetOptionsOperation extends Operation {
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.getSourceAccount(),
-        this.inflationDestination,
-        this.clearFlags,
-        this.setFlags,
-        this.masterKeyWeight,
-        this.lowThreshold,
-        this.mediumThreshold,
-        this.highThreshold,
-        this.homeDomain,
-        this.signer,
-        this.signerWeight);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SetOptionsOperation)) {
-      return false;
-    }
-
-    SetOptionsOperation other = (SetOptionsOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.inflationDestination, other.inflationDestination)
-        && Objects.equals(this.clearFlags, other.clearFlags)
-        && Objects.equals(this.setFlags, other.setFlags)
-        && Objects.equals(this.masterKeyWeight, other.masterKeyWeight)
-        && Objects.equals(this.lowThreshold, other.lowThreshold)
-        && Objects.equals(this.mediumThreshold, other.mediumThreshold)
-        && Objects.equals(this.highThreshold, other.highThreshold)
-        && Objects.equals(this.homeDomain, other.homeDomain)
-        && Objects.equals(this.signer, other.signer)
-        && Objects.equals(this.signerWeight, other.signerWeight);
   }
 }

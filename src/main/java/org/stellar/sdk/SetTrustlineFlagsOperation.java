@@ -1,50 +1,30 @@
 package org.stellar.sdk;
 
 import java.util.EnumSet;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
- * Represents a Set Trustline Flags operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#set-trustline-flags"
+ * target="_blank">SetTrustlineFlags</a> operation.
  */
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class SetTrustlineFlagsOperation extends Operation {
-  private final String trustor;
-  private final AssetTypeCreditAlphaNum asset;
-  private final EnumSet<TrustLineFlags> clearFlags;
-  private final EnumSet<TrustLineFlags> setFlags;
-
-  private SetTrustlineFlagsOperation(
-      String trustor,
-      AssetTypeCreditAlphaNum asset,
-      EnumSet<TrustLineFlags> clearFlags,
-      EnumSet<TrustLineFlags> setFlags) {
-    this.trustor = trustor;
-    this.asset = asset;
-    this.clearFlags = clearFlags;
-    this.setFlags = setFlags;
-  }
-
   /** The account owning of the trustline. */
-  public String getTrustor() {
-    return trustor;
-  }
+  @Getter @NonNull private final String trustor;
+
+  @NonNull private final AssetTypeCreditAlphaNum asset;
+  @Getter @NonNull private final EnumSet<TrustLineFlags> clearFlags;
+  @Getter @NonNull private final EnumSet<TrustLineFlags> setFlags;
 
   /** The asset of the trustline. */
   public Asset getAsset() {
     return asset;
-  }
-
-  /** The flags to be set. */
-  public EnumSet<TrustLineFlags> getSetFlags() {
-    return setFlags;
-  }
-
-  /** The flags to be cleared. */
-  public EnumSet<TrustLineFlags> getClearFlags() {
-    return clearFlags;
   }
 
   private static Uint32 bitwiseOr(EnumSet<TrustLineFlags> set) {
@@ -79,12 +59,13 @@ public class SetTrustlineFlagsOperation extends Operation {
    * @see SetTrustlineFlagsOperation
    */
   public static class Builder {
+
     private final String trustor;
     private final AssetTypeCreditAlphaNum asset;
     private final EnumSet<TrustLineFlags> clearFlags;
     private final EnumSet<TrustLineFlags> setFlags;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     Builder(SetTrustLineFlagsOp op) {
       trustor = StrKey.encodeEd25519PublicKey(op.getTrustor());
@@ -129,7 +110,7 @@ public class SetTrustlineFlagsOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -137,30 +118,10 @@ public class SetTrustlineFlagsOperation extends Operation {
     public SetTrustlineFlagsOperation build() {
       SetTrustlineFlagsOperation operation =
           new SetTrustlineFlagsOperation(trustor, asset, clearFlags, setFlags);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.getSourceAccount(), this.trustor, this.asset, this.clearFlags, this.setFlags);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SetTrustlineFlagsOperation)) {
-      return false;
-    }
-
-    SetTrustlineFlagsOperation other = (SetTrustlineFlagsOperation) object;
-    return Objects.equals(this.trustor, other.trustor)
-        && Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.clearFlags, other.clearFlags)
-        && Objects.equals(this.setFlags, other.setFlags)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

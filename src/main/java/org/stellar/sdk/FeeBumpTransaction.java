@@ -2,7 +2,8 @@ package org.stellar.sdk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
@@ -14,11 +15,21 @@ import org.stellar.sdk.xdr.TransactionSignaturePayload;
 /**
  * Represents <a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0015.md"
  * target="_blank">Fee Bump Transaction</a> in Stellar network.
+ *
+ * @see <a href="https://developers.stellar.org/docs/encyclopedia/fee-bump-transactions">Fee-bump
+ *     Transactions</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
 public class FeeBumpTransaction extends AbstractTransaction {
-  private final long mFee;
-  private final String mFeeAccount;
-  private final Transaction mInner;
+  /** The max fee willing to be paid for this transaction. */
+  private final long fee;
+
+  /** The account paying for the transaction fee. */
+  @NonNull private final String feeAccount;
+
+  /** The inner transaction that is being wrapped by this fee bump transaction. */
+  @NonNull private final Transaction innerTransaction;
 
   FeeBumpTransaction(
       AccountConverter accountConverter,
@@ -26,21 +37,9 @@ public class FeeBumpTransaction extends AbstractTransaction {
       long fee,
       @NonNull Transaction innerTransaction) {
     super(accountConverter, innerTransaction.getNetwork());
-    this.mFeeAccount = feeAccount;
-    this.mInner = innerTransaction;
-    this.mFee = fee;
-  }
-
-  public long getFee() {
-    return mFee;
-  }
-
-  public String getFeeAccount() {
-    return mFeeAccount;
-  }
-
-  public Transaction getInnerTransaction() {
-    return mInner;
+    this.feeAccount = feeAccount;
+    this.innerTransaction = innerTransaction;
+    this.fee = fee;
   }
 
   public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(
@@ -53,7 +52,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
     long fee = envelope.getTx().getFee().getInt64();
 
     FeeBumpTransaction feeBump = new FeeBumpTransaction(accountConverter, feeAccount, fee, inner);
-    feeBump.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
+    feeBump.signatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return feeBump;
   }
@@ -69,15 +68,15 @@ public class FeeBumpTransaction extends AbstractTransaction {
     xdr.getExt().setDiscriminant(0);
 
     Int64 xdrFee = new Int64();
-    xdrFee.setInt64(mFee);
+    xdrFee.setInt64(fee);
     xdr.setFee(xdrFee);
 
-    xdr.setFeeSource(accountConverter.encode(this.mFeeAccount));
+    xdr.setFeeSource(accountConverter.encode(this.feeAccount));
 
     org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx innerXDR =
         new org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx();
     innerXDR.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
-    innerXDR.setV1(this.mInner.toEnvelopeXdr().getV1());
+    innerXDR.setV1(this.innerTransaction.toEnvelopeXdr().getV1());
     xdr.setInnerTx(innerXDR);
     return xdr;
   }
@@ -88,7 +87,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
         new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
     taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX_FEE_BUMP);
     taggedTransaction.setFeeBump(this.toXdr());
-    return getTransactionSignatureBase(taggedTransaction, mNetwork);
+    return getTransactionSignatureBase(taggedTransaction, network);
   }
 
   /** Generates TransactionEnvelope XDR object. */
@@ -100,8 +99,8 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
     feeBumpEnvelope.setTx(this.toXdr());
 
-    DecoratedSignature[] signatures = new DecoratedSignature[mSignatures.size()];
-    signatures = mSignatures.toArray(signatures);
+    DecoratedSignature[] signatures = new DecoratedSignature[this.signatures.size()];
+    signatures = this.signatures.toArray(signatures);
     feeBumpEnvelope.setSignatures(signatures);
 
     xdr.setFeeBump(feeBumpEnvelope);
@@ -110,10 +109,10 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
   /** Builds a new FeeBumpTransaction object. */
   public static class Builder {
-    private final Transaction mInner;
-    private Long mBaseFee;
-    private String mFeeAccount;
-    private final AccountConverter mAccountConverter;
+    private final Transaction innerTransaction;
+    private Long baseFee;
+    private String feeAccount;
+    private final AccountConverter accountConverter;
 
     /**
      * Construct a new fee bump transaction builder.
@@ -123,9 +122,9 @@ public class FeeBumpTransaction extends AbstractTransaction {
      */
     public Builder(@NonNull AccountConverter accountConverter, @NonNull final Transaction inner) {
       EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
-      this.mAccountConverter = accountConverter;
-      if (inner.toEnvelopeXdr().getDiscriminant() == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
-        this.mInner =
+      this.accountConverter = accountConverter;
+      if (txType == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
+        this.innerTransaction =
             new TransactionBuilder(
                     inner.accountConverter,
                     new Account(inner.getSourceAccount(), inner.getSequenceNumber() - 1),
@@ -138,9 +137,9 @@ public class FeeBumpTransaction extends AbstractTransaction {
                         .timeBounds(inner.getTimeBounds())
                         .build())
                 .build();
-        this.mInner.mSignatures = new ArrayList<>(inner.mSignatures);
+        this.innerTransaction.signatures = new ArrayList<>(inner.signatures);
       } else {
-        this.mInner = inner;
+        this.innerTransaction = inner;
       }
     }
 
@@ -154,7 +153,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
     }
 
     public FeeBumpTransaction.Builder setBaseFee(long baseFee) {
-      if (this.mBaseFee != null) {
+      if (this.baseFee != null) {
         throw new RuntimeException("base fee has been already set.");
       }
 
@@ -163,8 +162,8 @@ public class FeeBumpTransaction extends AbstractTransaction {
             "baseFee cannot be smaller than the BASE_FEE (" + MIN_BASE_FEE + "): " + baseFee);
       }
 
-      long innerBaseFee = this.mInner.getFee();
-      long numOperations = this.mInner.getOperations().length;
+      long innerBaseFee = this.innerTransaction.getFee();
+      long numOperations = this.innerTransaction.getOperations().length;
       if (numOperations > 0) {
         innerBaseFee = innerBaseFee / numOperations;
       }
@@ -179,47 +178,28 @@ public class FeeBumpTransaction extends AbstractTransaction {
         throw new IllegalArgumentException("fee overflows 64 bit int");
       }
 
-      this.mBaseFee = maxFee;
+      this.baseFee = maxFee;
       return this;
     }
 
     public FeeBumpTransaction.Builder setFeeAccount(@NonNull String feeAccount) {
-      if (this.mFeeAccount != null) {
+      if (this.feeAccount != null) {
         throw new RuntimeException("fee account has been already been set.");
       }
 
-      this.mFeeAccount = feeAccount;
+      this.feeAccount = feeAccount;
       return this;
     }
 
     public FeeBumpTransaction build() {
-      if (this.mFeeAccount == null) {
+      if (this.feeAccount == null) {
         throw new NullPointerException("fee account has to be set. you must call setFeeAccount().");
       }
-      if (this.mBaseFee == null) {
+      if (this.baseFee == null) {
         throw new NullPointerException("base fee has to be set. you must call setBaseFee().");
       }
       return new FeeBumpTransaction(
-          this.mAccountConverter, this.mFeeAccount, this.mBaseFee, this.mInner);
+          this.accountConverter, this.feeAccount, this.baseFee, this.innerTransaction);
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.mFee, this.mInner, this.mNetwork, this.mFeeAccount, this.mSignatures);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof FeeBumpTransaction)) {
-      return false;
-    }
-
-    FeeBumpTransaction other = (FeeBumpTransaction) object;
-    return Objects.equals(this.mFee, other.mFee)
-        && Objects.equals(this.mFeeAccount, other.mFeeAccount)
-        && Objects.equals(this.mInner, other.mInner)
-        && Objects.equals(this.mNetwork, other.mNetwork)
-        && Objects.equals(this.mSignatures, other.mSignatures);
   }
 }

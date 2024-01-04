@@ -1,11 +1,14 @@
 package org.stellar.sdk;
 
+import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
  * Represents all assets with codes 5-12 characters long.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/assets/" target="_blank">Assets</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     target="_blank">Assets</a>
  */
 public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
 
@@ -33,16 +36,16 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
     xdr.setDiscriminant(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12);
     org.stellar.sdk.xdr.AlphaNum12 credit = new org.stellar.sdk.xdr.AlphaNum12();
     AssetCode12 assetCode12 = new AssetCode12();
-    assetCode12.setAssetCode12(Util.paddedByteArray(mCode, 12));
+    assetCode12.setAssetCode12(Util.paddedByteArray(code, 12));
     credit.setAssetCode(assetCode12);
-    credit.setIssuer(StrKey.encodeToXDRAccountId(mIssuer));
+    credit.setIssuer(StrKey.encodeToXDRAccountId(issuer));
     xdr.setAlphaNum12(credit);
     return xdr;
   }
 
   @Override
-  public int compareTo(Asset other) {
-    if (other.getType() != "credit_alphanum12") {
+  public int compareTo(@NonNull Asset other) {
+    if (!"credit_alphanum12".equals(other.getType())) {
       return 1;
     }
 
@@ -51,7 +54,6 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
     if (!this.getCode().equals(o.getCode())) {
       return this.getCode().compareTo(o.getCode());
     }
-
     return this.getIssuer().compareTo(o.getIssuer());
   }
 }
