@@ -1,20 +1,23 @@
 package org.stellar.sdk;
 
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
+/**
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#claim-claimable-balance"
+ * target="_blank">ClaimClaimableBalance</a> operation.
+ */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ClaimClaimableBalanceOperation extends Operation {
-  private final String balanceId;
-
-  private ClaimClaimableBalanceOperation(@NonNull String balanceId) {
-    this.balanceId = balanceId;
-  }
-
-  public String getBalanceId() {
-    return balanceId;
-  }
+  /** The claimable balance id to be claimed. */
+  @NonNull private final String balanceId;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -36,9 +39,10 @@ public class ClaimClaimableBalanceOperation extends Operation {
   }
 
   public static class Builder {
+
     private final String balanceId;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new ClaimClaimableBalance builder from a ClaimClaimableBalance XDR.
@@ -69,33 +73,17 @@ public class ClaimClaimableBalanceOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public ClaimClaimableBalanceOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
     /** Builds an operation */
     public ClaimClaimableBalanceOperation build() {
       ClaimClaimableBalanceOperation operation = new ClaimClaimableBalanceOperation(balanceId);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.balanceId, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClaimClaimableBalanceOperation)) {
-      return false;
-    }
-
-    ClaimClaimableBalanceOperation other = (ClaimClaimableBalanceOperation) object;
-    return Objects.equals(this.balanceId, other.balanceId)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

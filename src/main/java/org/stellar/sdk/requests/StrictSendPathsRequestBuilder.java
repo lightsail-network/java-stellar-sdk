@@ -51,13 +51,13 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
 
   /**
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public static Page<PathResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<PathResponse>>() {};
-    ResponseHandler<Page<PathResponse>> responseHandler =
-        new ResponseHandler<Page<PathResponse>>(type);
+    TypeToken<Page<PathResponse>> type = new TypeToken<Page<PathResponse>>() {};
+    ResponseHandler<Page<PathResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -67,9 +67,10 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
 
   /**
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public Page<PathResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 }

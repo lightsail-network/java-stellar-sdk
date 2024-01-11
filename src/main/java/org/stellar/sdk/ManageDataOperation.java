@@ -1,19 +1,22 @@
 package org.stellar.sdk;
 
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
- * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#manage-data"
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#manage-data"
  * target="_blank">ManageData</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
 public class ManageDataOperation extends Operation {
+  /** The name of the data value */
   private final String name;
+
+  /** Data value */
   private final byte[] value;
 
   private ManageDataOperation(@NonNull String name, byte[] value) {
@@ -23,16 +26,6 @@ public class ManageDataOperation extends Operation {
     if (new XdrString(this.name).getBytes().length > 64) {
       throw new IllegalArgumentException("name cannot exceed 64 bytes");
     }
-  }
-
-  /** The name of the data value */
-  public String getName() {
-    return name;
-  }
-
-  /** Data value */
-  public byte[] getValue() {
-    return value;
   }
 
   @Override
@@ -57,10 +50,11 @@ public class ManageDataOperation extends Operation {
   }
 
   public static class Builder {
+
     private final String name;
     private final byte[] value;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new ManageOffer builder from a ManageDataOp XDR.
@@ -95,34 +89,17 @@ public class ManageDataOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
     /** Builds an operation */
     public ManageDataOperation build() {
       ManageDataOperation operation = new ManageDataOperation(name, value);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.getSourceAccount(), this.name, Arrays.hashCode(this.value));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ManageDataOperation)) {
-      return false;
-    }
-
-    ManageDataOperation other = (ManageDataOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.name, other.name)
-        && Arrays.equals(this.value, other.value);
   }
 }

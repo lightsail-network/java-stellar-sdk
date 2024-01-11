@@ -26,11 +26,12 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link AccountResponse}. This method is helpful
    * for getting the links.
    *
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public AccountResponse account(HttpUrl uri) throws IOException {
-    TypeToken type = new TypeToken<AccountResponse>() {};
-    ResponseHandler<AccountResponse> responseHandler = new ResponseHandler<AccountResponse>(type);
+    TypeToken<AccountResponse> type = new TypeToken<AccountResponse>() {};
+    ResponseHandler<AccountResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -44,7 +45,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/accounts/single/">Account
    *     Details</a>
    * @param account Account to fetch
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public AccountResponse account(String account) throws IOException {
     this.setSegments("accounts", account);
@@ -153,13 +155,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link AccountResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public static Page<AccountResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<AccountResponse>>() {};
-    ResponseHandler<Page<AccountResponse>> responseHandler =
-        new ResponseHandler<Page<AccountResponse>>(type);
+    TypeToken<Page<AccountResponse>> type = new TypeToken<Page<AccountResponse>>() {};
+    ResponseHandler<Page<AccountResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -197,10 +199,11 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link AccountResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public Page<AccountResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

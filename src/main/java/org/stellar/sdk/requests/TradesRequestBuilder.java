@@ -90,9 +90,8 @@ public class TradesRequestBuilder extends RequestBuilder {
 
   public static Page<TradeResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<TradeResponse>>() {};
-    ResponseHandler<Page<TradeResponse>> responseHandler =
-        new ResponseHandler<Page<TradeResponse>>(type);
+    TypeToken<Page<TradeResponse>> type = new TypeToken<Page<TradeResponse>>() {};
+    ResponseHandler<Page<TradeResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -100,7 +99,7 @@ public class TradesRequestBuilder extends RequestBuilder {
   }
 
   public Page<TradeResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   public TradesRequestBuilder offerId(Long offerId) {

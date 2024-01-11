@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Hash;
@@ -12,17 +14,25 @@ import org.stellar.sdk.xdr.SignatureHint;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
 
+/** Abstract class for transaction classes. */
+@EqualsAndHashCode(exclude = {"accountConverter"})
+// TODO: maybe we should not exclude accountConverter from equals and hashCode
 public abstract class AbstractTransaction {
+  /** The network that the transaction is to be submitted to. */
+  @NonNull @Getter protected final Network network;
 
-  protected final Network mNetwork;
-  protected final AccountConverter accountConverter;
-  protected List<DecoratedSignature> mSignatures;
+  /** The {@link AccountConverter} for this transaction. */
+  @Getter @NonNull protected final AccountConverter accountConverter;
+
+  /** List of signatures attached to this transaction. */
+  @NonNull protected List<DecoratedSignature> signatures;
+
   public static final int MIN_BASE_FEE = 100;
 
   AbstractTransaction(@NonNull AccountConverter accountConverter, @NonNull Network network) {
     this.accountConverter = accountConverter;
-    this.mNetwork = network;
-    this.mSignatures = new ArrayList<DecoratedSignature>();
+    this.network = network;
+    this.signatures = new ArrayList<>();
   }
 
   /**
@@ -32,7 +42,7 @@ public abstract class AbstractTransaction {
    */
   public void sign(@NonNull KeyPair signer) {
     byte[] txHash = this.hash();
-    mSignatures.add(signer.signDecorated(txHash));
+    signatures.add(signer.signDecorated(txHash));
   }
 
   /**
@@ -53,7 +63,7 @@ public abstract class AbstractTransaction {
     decoratedSignature.setHint(signatureHint);
     decoratedSignature.setSignature(signature);
 
-    mSignatures.add(decoratedSignature);
+    signatures.add(decoratedSignature);
   }
 
   /** Returns transaction hash. */
@@ -70,39 +80,21 @@ public abstract class AbstractTransaction {
   public abstract byte[] signatureBase();
 
   /**
-   * Gets the Network string for this transaction.
-   *
-   * @return the Network string
-   */
-  public Network getNetwork() {
-    return mNetwork;
-  }
-
-  /**
-   * Gets the {@link AccountConverter} for this transaction.
-   *
-   * @return the {@link AccountConverter} object
-   */
-  public AccountConverter getAccountConverter() {
-    return accountConverter;
-  }
-
-  /**
    * Gets read only list(immutable) of the signatures on transaction.
    *
    * @return immutable list of signatures
    */
   public List<DecoratedSignature> getSignatures() {
-    return Collections.unmodifiableList(mSignatures);
+    return Collections.unmodifiableList(signatures);
   }
 
   /**
-   * Adds an additional signature to the transaction's existing list of signatures.
+   * Adds a signature to the transaction's existing list of signatures.
    *
    * @param signature the signature to add
    */
   public void addSignature(DecoratedSignature signature) {
-    mSignatures.add(signature);
+    signatures.add(signature);
   }
 
   public abstract TransactionEnvelope toEnvelopeXdr();
@@ -123,8 +115,8 @@ public abstract class AbstractTransaction {
    * Creates a <code>AbstractTransaction</code> instance from previously build <code>
    * TransactionEnvelope</code>
    *
-   * @param envelope
-   * @return
+   * @param envelope the transaction envelope
+   * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
    */
   public static AbstractTransaction fromEnvelopeXdr(
       AccountConverter accountConverter, TransactionEnvelope envelope, Network network) {
@@ -146,8 +138,8 @@ public abstract class AbstractTransaction {
    * Creates a <code>AbstractTransaction</code> instance from previously build <code>
    * TransactionEnvelope</code>
    *
-   * @param envelope
-   * @return
+   * @param envelope the transaction envelope
+   * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
    */
   public static AbstractTransaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
     return fromEnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
@@ -158,8 +150,8 @@ public abstract class AbstractTransaction {
    * </code>
    *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
-   * @return
-   * @throws IOException
+   * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
+   * @throws IOException if the envelope is malformed
    */
   public static AbstractTransaction fromEnvelopeXdr(
       AccountConverter accountConverter, String envelope, Network network) throws IOException {
@@ -172,14 +164,21 @@ public abstract class AbstractTransaction {
    * </code>
    *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
-   * @return
-   * @throws IOException
+   * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
+   * @throws IOException if the envelope is malformed
    */
   public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network)
       throws IOException {
     return fromEnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
   }
 
+  /**
+   * Get the signature base of this transaction envelope.
+   *
+   * @param taggedTransaction the tagged transaction for signing
+   * @param network the network to sign on
+   * @return the signature base of this transaction envelope
+   */
   public static byte[] getTransactionSignatureBase(
       TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction,
       Network network) {

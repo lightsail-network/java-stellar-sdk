@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 
 /**
@@ -11,27 +13,16 @@ import org.stellar.sdk.Asset;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class TrustlineSponsorshipCreatedEffectResponse extends EffectResponse {
   @SerializedName("asset")
-  private final String assetString;
+  String assetString;
 
   @SerializedName("sponsor")
-  protected final String sponsor;
-
-  public TrustlineSponsorshipCreatedEffectResponse(String assetString, String sponsor) {
-    this.assetString = assetString;
-    this.sponsor = sponsor;
-  }
-
-  public String getAssetString() {
-    return assetString;
-  }
+  String sponsor;
 
   public Asset getAsset() {
     return Asset.create(assetString);
-  }
-
-  public String getSponsor() {
-    return sponsor;
   }
 }

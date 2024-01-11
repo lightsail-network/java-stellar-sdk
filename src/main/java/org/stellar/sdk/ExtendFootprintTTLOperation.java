@@ -12,13 +12,10 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 /**
  * Represents <a
- * href="https://github.com/stellar/go/blob/7ff6ffae29d278f979fcd6c6bed8cd0d4b4d2e08/txnbuild/bump_footprint_expiration.go#L8-L12"
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#extend-footprint-ttl"
  * target="_blank">ExtendFootprintTTL</a> operation.
  *
  * <p>Bump the expiration of a footprint (read and written ledger keys).
- *
- * @see <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations"
- *     target="_blank">List of Operations</a>
  */
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)

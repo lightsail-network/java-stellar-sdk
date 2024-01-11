@@ -1,19 +1,28 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
+/**
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#revoke-sponsorship"
+ * target="_blank">Revoke sponsorship</a> operation.
+ *
+ * <p>Revokes the sponsorship of an account entry.
+ *
+ * @see <a href="https://developers.stellar.org/docs/encyclopedia/sponsored-reserves"
+ *     target="_blank">Sponsored Reserves</a>
+ */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class RevokeAccountSponsorshipOperation extends Operation {
-  private final String accountId;
 
-  private RevokeAccountSponsorshipOperation(String accountId) {
-    this.accountId = accountId;
-  }
-
-  public String getAccountId() {
-    return accountId;
-  }
+  /** The account whose sponsorship will be revoked. */
+  @NonNull private final String accountId;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -35,9 +44,10 @@ public class RevokeAccountSponsorshipOperation extends Operation {
   }
 
   public static class Builder {
+
     private final String accountId;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new RevokeAccountSponsorshipOperation builder from a RevokeSponsorship XDR.
@@ -65,7 +75,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
      */
     public RevokeAccountSponsorshipOperation.Builder setSourceAccount(
         @NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -73,26 +83,10 @@ public class RevokeAccountSponsorshipOperation extends Operation {
     public RevokeAccountSponsorshipOperation build() {
       RevokeAccountSponsorshipOperation operation =
           new RevokeAccountSponsorshipOperation(accountId);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.accountId, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof RevokeAccountSponsorshipOperation)) {
-      return false;
-    }
-
-    RevokeAccountSponsorshipOperation other = (RevokeAccountSponsorshipOperation) object;
-    return Objects.equals(this.accountId, other.accountId)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

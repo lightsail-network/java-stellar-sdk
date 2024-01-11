@@ -3,6 +3,8 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -13,21 +15,23 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class CreateAccountOperationResponse extends OperationResponse {
   @SerializedName("account")
-  private String account;
+  String account;
 
   @SerializedName("funder")
-  private String funder;
+  String funder;
 
   @SerializedName("funder_muxed")
-  private String funderAccountMuxed;
+  String funderAccountMuxed;
 
   @SerializedName("funder_muxed_id")
-  private BigInteger funderAccountMuxedId;
+  BigInteger funderAccountMuxedId;
 
   @SerializedName("starting_balance")
-  private String startingBalance;
+  String startingBalance;
 
   public Optional<MuxedAccount> getFunderMuxed() {
     if (this.funderAccountMuxed == null || this.funderAccountMuxed.isEmpty()) {
@@ -35,17 +39,5 @@ public class CreateAccountOperationResponse extends OperationResponse {
     }
     return Optional.of(
         new MuxedAccount(this.funderAccountMuxed, this.funder, this.funderAccountMuxedId));
-  }
-
-  public String getAccount() {
-    return account;
-  }
-
-  public String getStartingBalance() {
-    return startingBalance;
-  }
-
-  public String getFunder() {
-    return funder;
   }
 }

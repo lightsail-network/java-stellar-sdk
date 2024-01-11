@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents ExtendFootprintTTL operation response.
@@ -15,15 +17,9 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ExtendFootprintTTLOperationResponse extends OperationResponse {
   @SerializedName("extend_to")
-  private final Long extendTo;
-
-  public ExtendFootprintTTLOperationResponse(Long extendTo) {
-    this.extendTo = extendTo;
-  }
-
-  public Long getExtendTo() {
-    return extendTo;
-  }
+  Long extendTo;
 }

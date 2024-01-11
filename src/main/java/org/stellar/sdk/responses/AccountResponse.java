@@ -5,7 +5,10 @@ import static org.stellar.sdk.Asset.create;
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.Optional;
-import lombok.NonNull;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.KeyPair;
@@ -20,6 +23,8 @@ import org.stellar.sdk.LiquidityPoolID;
  * @see org.stellar.sdk.requests.AccountsRequestBuilder
  * @see org.stellar.sdk.Server#accounts()
  */
+@Getter
+@EqualsAndHashCode(callSuper = false)
 public class AccountResponse extends Response implements org.stellar.sdk.TransactionBuilderAccount {
   @SerializedName("account_id")
   private String accountId;
@@ -114,97 +119,26 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     sequenceNumber++;
   }
 
-  public Long getSequenceUpdatedAtLedger() {
-    return sequenceUpdatedAtLedger;
-  }
-
-  public Long getSequenceUpdatedAtTime() {
-    return sequenceUpdatedAtTime;
-  }
-
-  public Integer getSubentryCount() {
-    return subentryCount;
-  }
-
-  public String getInflationDestination() {
-    return inflationDestination;
-  }
-
-  public String getHomeDomain() {
-    return homeDomain;
-  }
-
-  public Integer getLastModifiedLedger() {
-    return lastModifiedLedger;
-  }
-
-  public String getLastModifiedTime() {
-    return lastModifiedTime;
-  }
-
-  public Thresholds getThresholds() {
-    return thresholds;
-  }
-
-  public Flags getFlags() {
-    return flags;
-  }
-
-  public Balance[] getBalances() {
-    return balances;
-  }
-
-  public Signer[] getSigners() {
-    return signers;
-  }
-
-  public Data getData() {
-    return data;
-  }
-
-  public Integer getNumSponsoring() {
-    return numSponsoring;
-  }
-
-  public Integer getNumSponsored() {
-    return numSponsored;
-  }
-
   public Optional<String> getSponsor() {
     return Optional.ofNullable(this.sponsor);
   }
 
   /** Represents account thresholds. */
+  @Value
   public static class Thresholds {
     @SerializedName("low_threshold")
-    private final int lowThreshold;
+    int lowThreshold;
 
     @SerializedName("med_threshold")
-    private final int medThreshold;
+    int medThreshold;
 
     @SerializedName("high_threshold")
-    private final int highThreshold;
-
-    public Thresholds(int lowThreshold, int medThreshold, int highThreshold) {
-      this.lowThreshold = lowThreshold;
-      this.medThreshold = medThreshold;
-      this.highThreshold = highThreshold;
-    }
-
-    public int getLowThreshold() {
-      return lowThreshold;
-    }
-
-    public int getMedThreshold() {
-      return medThreshold;
-    }
-
-    public int getHighThreshold() {
-      return highThreshold;
-    }
+    int highThreshold;
   }
 
   /** Represents account flags. */
+  @AllArgsConstructor
+  @EqualsAndHashCode
   public static class Flags {
     @SerializedName("auth_required")
     private final boolean authRequired;
@@ -217,21 +151,6 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
     @SerializedName("auth_clawback_enabled")
     private final boolean authClawbackEnabled;
-
-    public Flags(boolean authRequired, boolean authRevocable, boolean authImmutable) {
-      this(authRequired, authRevocable, authImmutable, false);
-    }
-
-    public Flags(
-        boolean authRequired,
-        boolean authRevocable,
-        boolean authImmutable,
-        boolean authClawbackEnabled) {
-      this.authRequired = authRequired;
-      this.authRevocable = authRevocable;
-      this.authImmutable = authImmutable;
-      this.authClawbackEnabled = authClawbackEnabled;
-    }
 
     public boolean getAuthRequired() {
       return authRequired;
@@ -251,75 +170,46 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   }
 
   /** Represents account balance. */
+  @Value
   public static class Balance {
     @SerializedName("asset_type")
-    private final String assetType;
+    String assetType;
 
     @SerializedName("asset_code")
-    private String assetCode;
+    String assetCode;
 
     @SerializedName("asset_issuer")
-    private String assetIssuer;
+    String assetIssuer;
 
     @SerializedName("liquidity_pool_id")
-    private LiquidityPoolID liquidityPoolID;
+    LiquidityPoolID liquidityPoolID;
 
     @SerializedName("limit")
-    private final String limit;
+    String limit;
 
     @SerializedName("balance")
-    private final String balance;
+    String balance;
 
     @SerializedName("buying_liabilities")
-    private final String buyingLiabilities;
+    String buyingLiabilities;
 
     @SerializedName("selling_liabilities")
-    private final String sellingLiabilities;
+    String sellingLiabilities;
 
     @SerializedName("is_authorized")
-    private final Boolean isAuthorized;
+    Boolean isAuthorized;
 
     @SerializedName("is_authorized_to_maintain_liabilities")
-    private final Boolean isAuthorizedToMaintainLiabilities;
+    Boolean isAuthorizedToMaintainLiabilities;
 
     @SerializedName("is_clawback_enabled")
-    private final Boolean isClawbackEnabled;
+    Boolean isClawbackEnabled;
 
     @SerializedName("last_modified_ledger")
-    private final Integer lastModifiedLedger;
+    Integer lastModifiedLedger;
 
     @SerializedName("sponsor")
-    private String sponsor;
-
-    public Balance(
-        @NonNull String assetType,
-        String assetCode,
-        String assetIssuer,
-        LiquidityPoolID liquidityPoolID,
-        @NonNull String balance,
-        String limit,
-        @NonNull String buyingLiabilities,
-        @NonNull String sellingLiabilities,
-        Boolean isAuthorized,
-        Boolean isAuthorizedToMaintainLiabilities,
-        Boolean isClawbackEnabled,
-        Integer lastModifiedLedger,
-        String sponsor) {
-      this.assetType = assetType;
-      this.balance = balance;
-      this.limit = limit;
-      this.assetCode = assetCode;
-      this.assetIssuer = assetIssuer;
-      this.liquidityPoolID = liquidityPoolID;
-      this.buyingLiabilities = buyingLiabilities;
-      this.sellingLiabilities = sellingLiabilities;
-      this.isAuthorized = isAuthorized;
-      this.isAuthorizedToMaintainLiabilities = isAuthorizedToMaintainLiabilities;
-      this.isClawbackEnabled = isClawbackEnabled;
-      this.lastModifiedLedger = lastModifiedLedger;
-      // sponsor is an optional field
-      this.sponsor = sponsor;
-    }
+    String sponsor;
 
     public Optional<Asset> getAsset() {
       if (liquidityPoolID != null) {
@@ -327,10 +217,6 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       } else {
         return Optional.of(create(assetType, assetCode, assetIssuer));
       }
-    }
-
-    public String getAssetType() {
-      return assetType;
     }
 
     public Optional<String> getAssetCode() {
@@ -345,20 +231,12 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       return Optional.ofNullable(liquidityPoolID);
     }
 
-    public String getBalance() {
-      return balance;
-    }
-
     public Optional<String> getBuyingLiabilities() {
       return Optional.ofNullable(buyingLiabilities);
     }
 
     public Optional<String> getSellingLiabilities() {
       return Optional.ofNullable(sellingLiabilities);
-    }
-
-    public String getLimit() {
-      return limit;
     }
 
     public Boolean getAuthorized() {
@@ -373,38 +251,29 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       return isClawbackEnabled;
     }
 
-    public Integer getLastModifiedLedger() {
-      return lastModifiedLedger;
-    }
-
     public Optional<String> getSponsor() {
       return Optional.ofNullable(this.sponsor);
     }
   }
 
   /** Represents account signers. */
+  @Value
   public static class Signer {
     @SerializedName("key")
-    private final String key;
+    String key;
 
     @SerializedName("type")
-    private final String type;
+    String type;
 
     @SerializedName("weight")
-    private final int weight;
+    int weight;
 
     @SerializedName("sponsor")
-    private String sponsor;
-
-    public Signer(@NonNull String key, @NonNull String type, int weight, String sponsor) {
-      this.key = key;
-      this.type = type;
-      this.weight = weight;
-      // sponsor is an optional field
-      this.sponsor = sponsor;
-    }
+    String sponsor;
 
     /**
+     * TODO: remove this method
+     *
      * @deprecated Use {@link Signer#getKey()}
      * @return
      */
@@ -412,25 +281,9 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       return key;
     }
 
-    public String getKey() {
-      return key;
-    }
-
-    public int getWeight() {
-      return weight;
-    }
-
-    public String getType() {
-      return type;
-    }
-
     public Optional<String> getSponsor() {
       return Optional.ofNullable(this.sponsor);
     }
-  }
-
-  public Links getLinks() {
-    return links;
   }
 
   /** Data connected to account. */
@@ -462,48 +315,21 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   }
 
   /** Links connected to account. */
+  @Value
   public static class Links {
     @SerializedName("effects")
-    private final Link effects;
+    Link effects;
 
     @SerializedName("offers")
-    private final Link offers;
+    Link offers;
 
     @SerializedName("operations")
-    private final Link operations;
+    Link operations;
 
     @SerializedName("self")
-    private final Link self;
+    Link self;
 
     @SerializedName("transactions")
-    private final Link transactions;
-
-    public Links(Link effects, Link offers, Link operations, Link self, Link transactions) {
-      this.effects = effects;
-      this.offers = offers;
-      this.operations = operations;
-      this.self = self;
-      this.transactions = transactions;
-    }
-
-    public Link getEffects() {
-      return effects;
-    }
-
-    public Link getOffers() {
-      return offers;
-    }
-
-    public Link getOperations() {
-      return operations;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
-
-    public Link getTransactions() {
-      return transactions;
-    }
+    Link transactions;
   }
 }

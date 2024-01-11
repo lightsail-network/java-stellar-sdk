@@ -1,5 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
 /**
  * Represents signed_updated effect response.
  *
@@ -8,6 +11,8 @@ package org.stellar.sdk.responses.effects;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class SignerUpdatedEffectResponse extends SignerEffectResponse {
   SignerUpdatedEffectResponse(Integer weight, String publicKey) {
     super(weight, publicKey);

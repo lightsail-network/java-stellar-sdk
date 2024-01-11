@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents account_sponsorship_updated effect response.
@@ -10,23 +12,12 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AccountSponsorshipUpdatedEffectResponse extends EffectResponse {
   @SerializedName("former_sponsor")
-  private final String formerSponsor;
+  String formerSponsor;
 
   @SerializedName("new_sponsor")
-  private final String newSponsor;
-
-  public AccountSponsorshipUpdatedEffectResponse(String formerSponsor, String newSponsor) {
-    this.formerSponsor = formerSponsor;
-    this.newSponsor = newSponsor;
-  }
-
-  public String getFormerSponsor() {
-    return formerSponsor;
-  }
-
-  public String getNewSponsor() {
-    return newSponsor;
-  }
+  String newSponsor;
 }

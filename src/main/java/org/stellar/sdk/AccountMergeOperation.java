@@ -1,29 +1,24 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
 
 /**
- * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#account-merge"
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#account-merge"
  * target="_blank">AccountMerge</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class AccountMergeOperation extends Operation {
 
-  private final String destination;
-
-  private AccountMergeOperation(@NonNull String destination) {
-    this.destination = destination;
-  }
-
   /** The account that receives the remaining XLM balance of the source account. */
-  public String getDestination() {
-    return destination;
-  }
+  @NonNull private final String destination;
 
   @Override
   OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -39,9 +34,10 @@ public class AccountMergeOperation extends Operation {
    * @see AccountMergeOperation
    */
   public static class Builder {
+
     private final String destination;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     Builder(AccountConverter accountConverter, OperationBody op) {
       destination = accountConverter.decode(op.getDestination());
@@ -63,32 +59,17 @@ public class AccountMergeOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
     /** Builds an operation */
     public AccountMergeOperation build() {
       AccountMergeOperation operation = new AccountMergeOperation(destination);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  public int hashCode() {
-    return Objects.hash(this.destination, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AccountMergeOperation)) {
-      return false;
-    }
-
-    AccountMergeOperation other = (AccountMergeOperation) object;
-    return Objects.equals(this.destination, other.destination)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

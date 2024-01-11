@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents ManageDataoperation response.
@@ -10,23 +12,12 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ManageDataOperationResponse extends OperationResponse {
   @SerializedName("name")
-  protected final String name;
+  String name;
 
   @SerializedName("value")
-  protected final String value;
-
-  ManageDataOperationResponse(String name, String value) {
-    this.name = name;
-    this.value = value;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getValue() {
-    return value;
-  }
+  String value;
 }

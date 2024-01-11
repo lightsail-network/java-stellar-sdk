@@ -21,11 +21,12 @@ public class OffersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link OfferResponse}. This method is helpful
    * for getting the links.
    *
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public OfferResponse offer(HttpUrl uri) throws IOException {
-    TypeToken type = new TypeToken<OfferResponse>() {};
-    ResponseHandler<OfferResponse> responseHandler = new ResponseHandler<OfferResponse>(type);
+    TypeToken<OfferResponse> type = new TypeToken<OfferResponse>() {};
+    ResponseHandler<OfferResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -38,7 +39,8 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param offerId specifies which offer to load.
    * @return The offer details.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public OfferResponse offer(long offerId) throws IOException {
     this.setSegments("offers", String.valueOf(offerId));
@@ -112,13 +114,13 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OfferResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<OfferResponse>>() {};
-    ResponseHandler<Page<OfferResponse>> responseHandler =
-        new ResponseHandler<Page<OfferResponse>>(type);
+    TypeToken<Page<OfferResponse>> type = new TypeToken<Page<OfferResponse>>() {};
+    ResponseHandler<Page<OfferResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -155,10 +157,11 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OfferResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public Page<OfferResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

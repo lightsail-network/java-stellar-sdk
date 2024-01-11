@@ -14,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 public abstract class Operation {
   Operation() {}
 
+  /** The source account for the operation. */
   @Getter @Setter private String sourceAccount;
 
   private static final BigDecimal ONE = new BigDecimal(10).pow(7);

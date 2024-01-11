@@ -222,7 +222,7 @@ public class Sep10ChallengeTest {
             .addPreconditions(transaction.getPreconditions())
             .build();
 
-    for (DecoratedSignature signature : transaction.mSignatures) {
+    for (DecoratedSignature signature : transaction.signatures) {
       withMuxedClient.addSignature(signature);
     }
 

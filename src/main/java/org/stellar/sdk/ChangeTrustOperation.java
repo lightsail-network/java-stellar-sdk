@@ -1,43 +1,34 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.ChangeTrustOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 
 /**
- * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#change-trust"
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#change-trust"
  * target="_blank">ChangeTrust</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ChangeTrustOperation extends Operation {
-
-  private final ChangeTrustAsset asset;
-  private final String limit;
-
-  private ChangeTrustOperation(@NonNull ChangeTrustAsset asset, @NonNull String limit) {
-    this.asset = asset;
-    this.limit = limit;
-  }
 
   /**
    * The asset of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a
    * user, the line is USD.
    */
-  public ChangeTrustAsset getAsset() {
-    return asset;
-  }
+  @NonNull private final ChangeTrustAsset asset;
 
   /**
    * The limit of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a
    * user, the limit is 200.
    */
-  public String getLimit() {
-    return limit;
-  }
+  @NonNull private final String limit;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -60,10 +51,11 @@ public class ChangeTrustOperation extends Operation {
    * @see ChangeTrustOperation
    */
   public static class Builder {
+
     private final ChangeTrustAsset asset;
     private final String limit;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     Builder(ChangeTrustOp op) {
       asset = ChangeTrustAsset.fromXdr(op.getLine());
@@ -91,34 +83,17 @@ public class ChangeTrustOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
     /** Builds an operation */
     public ChangeTrustOperation build() {
       ChangeTrustOperation operation = new ChangeTrustOperation(asset, limit);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.asset, this.limit, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ChangeTrustOperation)) {
-      return false;
-    }
-
-    ChangeTrustOperation other = (ChangeTrustOperation) object;
-    return Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.limit, other.limit)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

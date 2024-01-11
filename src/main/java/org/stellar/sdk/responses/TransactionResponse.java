@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.Memo;
@@ -16,75 +19,78 @@ import org.stellar.sdk.Memo;
  * @see org.stellar.sdk.requests.TransactionsRequestBuilder
  * @see org.stellar.sdk.Server#transactions()
  */
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class TransactionResponse extends Response implements Pageable {
   @SerializedName("hash")
-  private String hash;
+  private final String hash;
 
   @SerializedName("ledger")
-  private Long ledger;
+  private final Long ledger;
 
   @SerializedName("created_at")
-  private String createdAt;
+  private final String createdAt;
 
   @SerializedName("source_account")
-  private String sourceAccount;
+  private final String sourceAccount;
 
   @SerializedName("fee_account")
-  private String feeAccount;
+  private final String feeAccount;
 
   @SerializedName("successful")
-  private Boolean successful;
+  private final Boolean successful;
 
   @SerializedName("paging_token")
-  private String pagingToken;
+  private final String pagingToken;
 
   @SerializedName("source_account_sequence")
-  private Long sourceAccountSequence;
+  private final Long sourceAccountSequence;
 
   @SerializedName("max_fee")
-  private Long maxFee;
+  private final Long maxFee;
 
   @SerializedName("fee_charged")
-  private Long feeCharged;
+  private final Long feeCharged;
 
   @SerializedName("operation_count")
-  private Integer operationCount;
+  private final Integer operationCount;
 
   @SerializedName("envelope_xdr")
-  private String envelopeXdr;
+  private final String envelopeXdr;
 
   @SerializedName("result_xdr")
-  private String resultXdr;
+  private final String resultXdr;
 
   @SerializedName("result_meta_xdr")
-  private String resultMetaXdr;
+  private final String resultMetaXdr;
 
   @SerializedName("signatures")
-  private List<String> signatures;
+  private final List<String> signatures;
 
   @SerializedName("fee_bump_transaction")
-  private FeeBumpTransaction feeBumpTransaction;
+  private final FeeBumpTransaction feeBumpTransaction;
 
   @SerializedName("preconditions")
-  private Preconditions preconditions;
+  private final Preconditions preconditions;
 
   @SerializedName("inner_transaction")
-  private InnerTransaction innerTransaction;
+  private final InnerTransaction innerTransaction;
 
   @SerializedName("account_muxed")
-  private String accountMuxed;
+  private final String accountMuxed;
 
   @SerializedName("account_muxed_id")
-  private BigInteger accountMuxedId;
+  private final BigInteger accountMuxedId;
 
   @SerializedName("fee_account_muxed")
-  private String feeAccountMuxed;
+  private final String feeAccountMuxed;
 
   @SerializedName("fee_account_muxed_id")
-  private BigInteger feeAccountMuxedId;
+  private final BigInteger feeAccountMuxedId;
 
   @SerializedName("_links")
-  private Links links;
+  private final Links links;
 
   // GSON won't serialize `transient` variables automatically. We need this behaviour
   // because Memo is an abstract class and GSON tries to instantiate it.
@@ -106,30 +112,6 @@ public class TransactionResponse extends Response implements Pageable {
         new MuxedAccount(this.feeAccountMuxed, this.feeAccount, this.feeAccountMuxedId));
   }
 
-  public String getHash() {
-    return hash;
-  }
-
-  public Long getLedger() {
-    return ledger;
-  }
-
-  public String getCreatedAt() {
-    return createdAt;
-  }
-
-  public String getSourceAccount() {
-    return sourceAccount;
-  }
-
-  public String getFeeAccount() {
-    return feeAccount;
-  }
-
-  public List<String> getSignatures() {
-    return signatures;
-  }
-
   public Optional<FeeBumpTransaction> getFeeBump() {
     return Optional.ofNullable(this.feeBumpTransaction);
   }
@@ -142,44 +124,8 @@ public class TransactionResponse extends Response implements Pageable {
     return Optional.ofNullable(this.preconditions);
   }
 
-  public String getPagingToken() {
-    return pagingToken;
-  }
-
   public Boolean isSuccessful() {
     return successful;
-  }
-
-  public Long getSourceAccountSequence() {
-    return sourceAccountSequence;
-  }
-
-  public Long getMaxFee() {
-    return maxFee;
-  }
-
-  public Long getFeeCharged() {
-    return feeCharged;
-  }
-
-  public Integer getOperationCount() {
-    return operationCount;
-  }
-
-  public String getEnvelopeXdr() {
-    return envelopeXdr;
-  }
-
-  public String getResultXdr() {
-    return resultXdr;
-  }
-
-  public String getResultMetaXdr() {
-    return resultMetaXdr;
-  }
-
-  public Memo getMemo() {
-    return memo;
   }
 
   public void setMemo(@NonNull Memo memo) {
@@ -187,10 +133,6 @@ public class TransactionResponse extends Response implements Pageable {
       throw new RuntimeException("Memo has been already set.");
     }
     this.memo = memo;
-  }
-
-  public Links getLinks() {
-    return links;
   }
 
   /**
@@ -241,25 +183,13 @@ public class TransactionResponse extends Response implements Pageable {
    * transaction or is wrapped by a fee bump transaction. The object has two fields: the hash of the
    * fee bump transaction and the signatures present in the fee bump transaction envelope.
    */
+  @Value
   public static class FeeBumpTransaction {
     @SerializedName("hash")
-    private String hash;
+    String hash;
 
     @SerializedName("signatures")
-    private List<String> signatures;
-
-    FeeBumpTransaction(String hash, List<String> signatures) {
-      this.hash = hash;
-      this.signatures = signatures;
-    }
-
-    public String getHash() {
-      return hash;
-    }
-
-    public List<String> getSignatures() {
-      return signatures;
-    }
+    List<String> signatures;
   }
 
   /**
@@ -268,101 +198,40 @@ public class TransactionResponse extends Response implements Pageable {
    * the inner transaction wrapped by the fee bump transaction, the max fee set in the inner
    * transaction, and the signatures present in the inner transaction envelope.
    */
+  @Value
   public static class InnerTransaction {
     @SerializedName("hash")
-    private String hash;
+    String hash;
 
     @SerializedName("signatures")
-    private List<String> signatures;
+    List<String> signatures;
 
     @SerializedName("max_fee")
-    private Long maxFee;
-
-    InnerTransaction(String hash, List<String> signatures, Long maxFee) {
-      this.hash = hash;
-      this.signatures = signatures;
-      this.maxFee = maxFee;
-    }
-
-    public String getHash() {
-      return hash;
-    }
-
-    public List<String> getSignatures() {
-      return signatures;
-    }
-
-    public Long getMaxFee() {
-      return maxFee;
-    }
+    Long maxFee;
   }
 
   /** Links connected to transaction. */
+  @Value
   public static class Links {
     @SerializedName("account")
-    private Link account;
+    Link account;
 
     @SerializedName("effects")
-    private Link effects;
+    Link effects;
 
     @SerializedName("ledger")
-    private Link ledger;
+    Link ledger;
 
     @SerializedName("operations")
-    private Link operations;
+    Link operations;
 
     @SerializedName("precedes")
-    private Link precedes;
+    Link precedes;
 
     @SerializedName("self")
-    private Link self;
+    Link self;
 
     @SerializedName("succeeds")
-    private Link succeeds;
-
-    Links(
-        Link account,
-        Link effects,
-        Link ledger,
-        Link operations,
-        Link self,
-        Link precedes,
-        Link succeeds) {
-      this.account = account;
-      this.effects = effects;
-      this.ledger = ledger;
-      this.operations = operations;
-      this.self = self;
-      this.precedes = precedes;
-      this.succeeds = succeeds;
-    }
-
-    public Link getAccount() {
-      return account;
-    }
-
-    public Link getEffects() {
-      return effects;
-    }
-
-    public Link getLedger() {
-      return ledger;
-    }
-
-    public Link getOperations() {
-      return operations;
-    }
-
-    public Link getPrecedes() {
-      return precedes;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
-
-    public Link getSucceeds() {
-      return succeeds;
-    }
+    Link succeeds;
   }
 }

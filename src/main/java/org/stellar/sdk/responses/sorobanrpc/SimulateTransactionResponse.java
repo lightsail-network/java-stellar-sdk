@@ -3,7 +3,6 @@ package org.stellar.sdk.responses.sorobanrpc;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 /**
@@ -19,7 +18,6 @@ import lombok.Value;
  * target="_blank">Soroban simulateTransaction documentation</a> for details on which members of the
  * simulation response model are keyed to each type of response.
  */
-@AllArgsConstructor
 @Value
 public class SimulateTransactionResponse {
   String error;
@@ -42,7 +40,6 @@ public class SimulateTransactionResponse {
 
   Long latestLedger;
 
-  @AllArgsConstructor
   @Value
   public static class SimulateHostFunctionResult {
     List<String> auth;
@@ -50,7 +47,6 @@ public class SimulateTransactionResponse {
     String xdr;
   }
 
-  @AllArgsConstructor
   @Value
   public static class SimulateTransactionCost {
     @SerializedName("cpuInsns")
@@ -60,7 +56,6 @@ public class SimulateTransactionResponse {
     BigInteger memoryBytes;
   }
 
-  @AllArgsConstructor
   @Value
   public static class RestorePreamble {
     String transactionData;

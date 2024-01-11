@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents claimable_balance_sponsorship_created effect response.
@@ -10,23 +12,12 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ClaimableBalanceSponsorshipCreatedEffectResponse extends EffectResponse {
   @SerializedName("sponsor")
-  private final String sponsor;
+  String sponsor;
 
   @SerializedName("balance_id")
-  private final String balanceId;
-
-  public ClaimableBalanceSponsorshipCreatedEffectResponse(String balanceId, String sponsor) {
-    this.balanceId = balanceId;
-    this.sponsor = sponsor;
-  }
-
-  public String getSponsor() {
-    return sponsor;
-  }
-
-  public String getBalanceId() {
-    return balanceId;
-  }
+  String balanceId;
 }

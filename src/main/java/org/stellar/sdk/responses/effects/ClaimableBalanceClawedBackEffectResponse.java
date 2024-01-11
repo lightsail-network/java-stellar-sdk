@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents claimable_balance_clawed_back effect response.
@@ -10,15 +12,9 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ClaimableBalanceClawedBackEffectResponse extends EffectResponse {
   @SerializedName("balance_id")
-  protected final String balanceId;
-
-  public ClaimableBalanceClawedBackEffectResponse(String balanceId) {
-    this.balanceId = balanceId;
-  }
-
-  public String getBalanceId() {
-    return balanceId;
-  }
+  String balanceId;
 }

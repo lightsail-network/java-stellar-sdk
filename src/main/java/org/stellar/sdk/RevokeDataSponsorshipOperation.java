@@ -1,25 +1,30 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
+/**
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#revoke-sponsorship"
+ * target="_blank">Revoke sponsorship</a> operation.
+ *
+ * <p>Revokes the sponsorship of a data
+ *
+ * @see <a href="https://developers.stellar.org/docs/encyclopedia/sponsored-reserves"
+ *     target="_blank">Sponsored Reserves</a>
+ */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class RevokeDataSponsorshipOperation extends Operation {
-  private final String accountId;
-  private final String dataName;
+  /** The account whose data entry will be revoked. */
+  @NonNull private final String accountId;
 
-  private RevokeDataSponsorshipOperation(String accountId, String dataName) {
-    this.accountId = accountId;
-    this.dataName = dataName;
-  }
-
-  public String getAccountId() {
-    return accountId;
-  }
-
-  public String getDataName() {
-    return dataName;
-  }
+  /** The name of the data entry which will be revoked. */
+  @NonNull private final String dataName;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -48,7 +53,7 @@ public class RevokeDataSponsorshipOperation extends Operation {
     private final String accountId;
     private final String dataName;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new RevokeDataSponsorshipOperation builder from a RevokeSponsorship XDR.
@@ -78,7 +83,7 @@ public class RevokeDataSponsorshipOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public RevokeDataSponsorshipOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -86,27 +91,10 @@ public class RevokeDataSponsorshipOperation extends Operation {
     public RevokeDataSponsorshipOperation build() {
       RevokeDataSponsorshipOperation operation =
           new RevokeDataSponsorshipOperation(accountId, dataName);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.accountId, this.dataName, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof RevokeDataSponsorshipOperation)) {
-      return false;
-    }
-
-    RevokeDataSponsorshipOperation other = (RevokeDataSponsorshipOperation) object;
-    return Objects.equals(this.accountId, other.accountId)
-        && Objects.equals(this.dataName, other.dataName)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

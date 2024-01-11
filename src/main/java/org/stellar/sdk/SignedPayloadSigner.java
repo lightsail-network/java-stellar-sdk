@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.PublicKey;
@@ -11,11 +13,16 @@ import org.stellar.sdk.xdr.Uint256;
  * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#xdr-changes"
  * target="_blank">signed payload signer</a>
  */
+@Getter
+@EqualsAndHashCode
 public class SignedPayloadSigner {
   public static final int SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH = 64;
 
-  private AccountID signerAccountId;
-  private byte[] payload;
+  /** The account that represents the signed payload signer */
+  private final AccountID signerAccountId;
+
+  /** The payload that signatures are produced from */
+  private final byte[] payload;
 
   /**
    * constructor
@@ -54,26 +61,5 @@ public class SignedPayloadSigner {
                 .ed25519(new Uint256(signerED25519PublicKey))
                 .build()),
         payload);
-  }
-
-  /**
-   * get the account that represents the signed payload signer
-   *
-   * @return stellar account
-   */
-  public AccountID getSignerAccountId() {
-    return signerAccountId;
-  }
-
-  /**
-   * get the payload that signatures are produced from.
-   *
-   * @see <a
-   *     href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#semantics">CAP-0040
-   *     Semantics</a>
-   * @return
-   */
-  public byte[] getPayload() {
-    return payload;
   }
 }

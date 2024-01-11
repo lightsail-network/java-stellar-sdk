@@ -1,19 +1,22 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
+/**
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#begin-sponsoring-future-reserves"
+ * target="_blank">BeginSponsoringFutureReserves</a> operation.
+ */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class BeginSponsoringFutureReservesOperation extends Operation {
-  private final String sponsoredId;
-
-  private BeginSponsoringFutureReservesOperation(String sponsoredId) {
-    this.sponsoredId = sponsoredId;
-  }
-
-  public String getSponsoredId() {
-    return sponsoredId;
-  }
+  /** The sponsored account id. * */
+  @NonNull private final String sponsoredId;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -29,9 +32,10 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
   }
 
   public static class Builder {
+
     private final String sponsoredId;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new BeginSponsoringFutureReserves builder from a BeginSponsoringFutureReserves
@@ -60,7 +64,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
      */
     public BeginSponsoringFutureReservesOperation.Builder setSourceAccount(
         @NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -68,26 +72,10 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
     public BeginSponsoringFutureReservesOperation build() {
       BeginSponsoringFutureReservesOperation operation =
           new BeginSponsoringFutureReservesOperation(sponsoredId);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.sponsoredId, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BeginSponsoringFutureReservesOperation)) {
-      return false;
-    }
-
-    BeginSponsoringFutureReservesOperation other = (BeginSponsoringFutureReservesOperation) object;
-    return Objects.equals(this.sponsoredId, other.sponsoredId)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

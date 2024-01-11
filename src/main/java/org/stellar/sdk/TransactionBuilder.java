@@ -16,14 +16,14 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /** Builds a new Transaction object. */
 public class TransactionBuilder {
-  private final TransactionBuilderAccount mSourceAccount;
-  private final AccountConverter mAccountConverter;
-  private Memo mMemo;
-  private List<Operation> mOperations;
-  private Long mBaseFee;
-  private Network mNetwork;
-  private TransactionPreconditions mPreconditions;
-  private SorobanTransactionData mSorobanData;
+  private final TransactionBuilderAccount sourceAccount;
+  private final AccountConverter accountConverter;
+  private Memo memo;
+  private final List<Operation> operations;
+  private Long baseFee;
+  private final Network network;
+  private TransactionPreconditions preconditions;
+  private SorobanTransactionData sorobanData;
 
   /**
    * Construct a new transaction builder.
@@ -38,11 +38,11 @@ public class TransactionBuilder {
       @NonNull AccountConverter accountConverter,
       @NonNull TransactionBuilderAccount sourceAccount,
       @NonNull Network network) {
-    mAccountConverter = accountConverter;
-    mSourceAccount = sourceAccount;
-    mNetwork = network;
-    mOperations = new ArrayList<>();
-    mPreconditions = TransactionPreconditions.builder().build();
+    this.accountConverter = accountConverter;
+    this.sourceAccount = sourceAccount;
+    this.network = network;
+    operations = new ArrayList<>();
+    preconditions = TransactionPreconditions.builder().build();
   }
 
   /**
@@ -58,19 +58,19 @@ public class TransactionBuilder {
   }
 
   public int getOperationsCount() {
-    return mOperations.size();
+    return operations.size();
   }
 
   /**
    * Adds a new <a href="https://developers.stellar.org/docs/start/list-of-operations/"
    * target="_blank">operation</a> to this transaction.
    *
-   * @param operation
+   * @param operation the operation to add
    * @return Builder object so you can chain methods.
    * @see Operation
    */
   public TransactionBuilder addOperation(@NonNull Operation operation) {
-    mOperations.add(operation);
+    operations.add(operation);
     return this;
   }
 
@@ -83,7 +83,7 @@ public class TransactionBuilder {
    * @see Operation
    */
   public TransactionBuilder addOperations(@NonNull Collection<Operation> operations) {
-    mOperations.addAll(operations);
+    this.operations.addAll(operations);
     return this;
   }
 
@@ -95,7 +95,7 @@ public class TransactionBuilder {
    * @return updated Builder object
    */
   public TransactionBuilder addPreconditions(@NonNull TransactionPreconditions preconditions) {
-    this.mPreconditions = preconditions;
+    this.preconditions = preconditions;
     return this;
   }
 
@@ -103,15 +103,15 @@ public class TransactionBuilder {
    * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/#memo"
    * target="_blank">memo</a> to this transaction.
    *
-   * @param memo
+   * @param memo memo to add
    * @return Builder object so you can chain methods.
    * @see Memo
    */
   public TransactionBuilder addMemo(@NonNull Memo memo) {
-    if (mMemo != null) {
+    if (this.memo != null) {
       throw new RuntimeException("Memo has been already added.");
     }
-    mMemo = memo;
+    this.memo = memo;
     return this;
   }
 
@@ -126,11 +126,11 @@ public class TransactionBuilder {
    *     </code> instead for more control over preconditions.
    */
   public TransactionBuilder addTimeBounds(@NonNull TimeBounds timeBounds) {
-    if (mPreconditions.getTimeBounds() != null) {
+    if (preconditions.getTimeBounds() != null) {
       throw new RuntimeException("TimeBounds already set.");
     }
 
-    mPreconditions = mPreconditions.toBuilder().timeBounds(timeBounds).build();
+    preconditions = preconditions.toBuilder().timeBounds(timeBounds).build();
     return this;
   }
 
@@ -154,9 +154,11 @@ public class TransactionBuilder {
    * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
    *     </code> with TimeBound set instead for more control over preconditions.
    */
+  // TODO: timebounds is the most commonly used precondition, I think
+  //  we can keep this function and not mark it as deprecated?
   public TransactionBuilder setTimeout(BigInteger timeout) {
-    if (mPreconditions.getTimeBounds() != null
-        && !TIMEOUT_INFINITE.equals(mPreconditions.getTimeBounds().getMaxTime())) {
+    if (preconditions.getTimeBounds() != null
+        && !TIMEOUT_INFINITE.equals(preconditions.getTimeBounds().getMaxTime())) {
       throw new RuntimeException(
           "TimeBounds.max_time has been already set - setting timeout would overwrite it.");
     }
@@ -170,14 +172,14 @@ public class TransactionBuilder {
             ? timeout.add(BigInteger.valueOf(System.currentTimeMillis() / 1000L))
             : TIMEOUT_INFINITE;
 
-    TransactionPreconditionsBuilder preconditionsBuilder = mPreconditions.toBuilder();
-    if (mPreconditions.getTimeBounds() == null) {
+    TransactionPreconditionsBuilder preconditionsBuilder = preconditions.toBuilder();
+    if (preconditions.getTimeBounds() == null) {
       preconditionsBuilder.timeBounds(new TimeBounds(BigInteger.ZERO, timeoutTimestamp));
     } else {
       preconditionsBuilder.timeBounds(
-          new TimeBounds(mPreconditions.getTimeBounds().getMinTime(), timeoutTimestamp));
+          new TimeBounds(preconditions.getTimeBounds().getMinTime(), timeoutTimestamp));
     }
-    mPreconditions = preconditionsBuilder.build();
+    preconditions = preconditionsBuilder.build();
     return this;
   }
 
@@ -202,7 +204,7 @@ public class TransactionBuilder {
               + baseFee);
     }
 
-    this.mBaseFee = baseFee;
+    this.baseFee = baseFee;
     return this;
   }
 
@@ -211,31 +213,31 @@ public class TransactionBuilder {
    * is constructed.
    */
   public Transaction build() {
-    mPreconditions.isValid();
+    preconditions.isValid();
 
-    if (mBaseFee == null) {
+    if (baseFee == null) {
       throw new FormatException("mBaseFee has to be set. you must call setBaseFee().");
     }
 
-    if (mNetwork == null) {
+    if (network == null) {
       throw new NoNetworkSelectedException();
     }
 
-    long sequenceNumber = mSourceAccount.getIncrementedSequenceNumber();
-    Operation[] operations = new Operation[mOperations.size()];
-    operations = mOperations.toArray(operations);
+    long sequenceNumber = sourceAccount.getIncrementedSequenceNumber();
+    Operation[] operations = new Operation[this.operations.size()];
+    operations = this.operations.toArray(operations);
     Transaction transaction =
         new Transaction(
-            mAccountConverter,
-            mSourceAccount.getAccountId(),
-            operations.length * mBaseFee,
+            accountConverter,
+            sourceAccount.getAccountId(),
+            operations.length * baseFee,
             sequenceNumber,
             operations,
-            mMemo,
-            mPreconditions,
-            mSorobanData,
-            mNetwork);
-    mSourceAccount.setSequenceNumber(sequenceNumber);
+            memo,
+            preconditions,
+            sorobanData,
+            network);
+    sourceAccount.setSequenceNumber(sequenceNumber);
     return transaction;
   }
 
@@ -267,7 +269,7 @@ public class TransactionBuilder {
    * @return Builder object so you can chain methods.
    */
   public TransactionBuilder setSorobanData(SorobanTransactionData sorobanData) {
-    this.mSorobanData = new SorobanDataBuilder(sorobanData).build();
+    this.sorobanData = new SorobanDataBuilder(sorobanData).build();
     return this;
   }
 
@@ -284,7 +286,7 @@ public class TransactionBuilder {
    * @return Builder object so you can chain methods.
    */
   public TransactionBuilder setSorobanData(String sorobanData) {
-    this.mSorobanData = new SorobanDataBuilder(sorobanData).build();
+    this.sorobanData = new SorobanDataBuilder(sorobanData).build();
     return this;
   }
 }

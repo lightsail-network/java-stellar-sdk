@@ -1,40 +1,29 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
- * Represents a Clawback operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
+ * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#clawback"
+ * target="_blank">Clawback</a> operation.
  */
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ClawbackOperation extends Operation {
-  private final String mFrom;
-  private final AssetTypeCreditAlphaNum mAsset;
-  private final String mAmount;
-
-  private ClawbackOperation(
-      @NonNull String from, @NonNull AssetTypeCreditAlphaNum asset, @NonNull String amount) {
-    mFrom = from;
-    mAsset = asset;
-    mAmount = amount;
-  }
-
   /** The account owning of the trustline. */
-  public String getFrom() {
-    return mFrom;
-  }
+  @Getter @NonNull private final String from;
+
+  @NonNull private final AssetTypeCreditAlphaNum asset;
 
   /** The amount to be clawed back. */
-  public String getAmount() {
-    return mAmount;
-  }
+  @Getter @NonNull private final String amount;
 
   /** The asset to be clawed back. */
   public Asset getAsset() {
-    return mAsset;
+    return asset;
   }
 
   @Override
@@ -42,12 +31,12 @@ public class ClawbackOperation extends Operation {
     ClawbackOp op = new ClawbackOp();
 
     // trustor
-    op.setFrom(accountConverter.encode(mFrom));
+    op.setFrom(accountConverter.encode(from));
 
     Int64 amount = new Int64();
-    amount.setInt64(Operation.toXdrAmount(mAmount));
+    amount.setInt64(Operation.toXdrAmount(this.amount));
     op.setAmount(amount);
-    op.setAsset(mAsset.toXdr());
+    op.setAsset(asset.toXdr());
 
     org.stellar.sdk.xdr.Operation.OperationBody body =
         new org.stellar.sdk.xdr.Operation.OperationBody();
@@ -62,11 +51,12 @@ public class ClawbackOperation extends Operation {
    * @see ClawbackOperation
    */
   public static class Builder {
+
     private final String from;
     private final AssetTypeCreditAlphaNum asset;
     private final String amount;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     Builder(AccountConverter accountConverter, ClawbackOp op) {
       from = accountConverter.decode(op.getFrom());
@@ -94,35 +84,17 @@ public class ClawbackOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
     /** Builds an operation */
     public ClawbackOperation build() {
       ClawbackOperation operation = new ClawbackOperation(from, asset, amount);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.getSourceAccount(), this.mFrom, this.mAsset, this.mAmount);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClawbackOperation)) {
-      return false;
-    }
-
-    ClawbackOperation other = (ClawbackOperation) object;
-    return Objects.equals(this.mFrom, other.mFrom)
-        && Objects.equals(this.mAsset, other.mAsset)
-        && Objects.equals(this.mAmount, other.mAmount)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

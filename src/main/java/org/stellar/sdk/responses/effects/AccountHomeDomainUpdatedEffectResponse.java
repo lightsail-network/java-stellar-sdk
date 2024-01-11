@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents account_home_domain_updated effect response.
@@ -10,15 +12,9 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AccountHomeDomainUpdatedEffectResponse extends EffectResponse {
   @SerializedName("home_domain")
-  protected final String homeDomain;
-
-  AccountHomeDomainUpdatedEffectResponse(String homeDomain) {
-    this.homeDomain = homeDomain;
-  }
-
-  public String getHomeDomain() {
-    return homeDomain;
-  }
+  String homeDomain;
 }

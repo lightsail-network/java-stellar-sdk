@@ -20,12 +20,12 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link ClaimableBalanceResponse}. This method is
    * helpful for getting the links.
    *
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public ClaimableBalanceResponse claimableBalance(HttpUrl uri) throws IOException {
-    TypeToken type = new TypeToken<ClaimableBalanceResponse>() {};
-    ResponseHandler<ClaimableBalanceResponse> responseHandler =
-        new ResponseHandler<ClaimableBalanceResponse>(type);
+    TypeToken<ClaimableBalanceResponse> type = new TypeToken<ClaimableBalanceResponse>() {};
+    ResponseHandler<ClaimableBalanceResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -38,7 +38,8 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    *
    * @param id specifies which claimable balance to load.
    * @return The claimable balance details.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public ClaimableBalanceResponse claimableBalance(String id) throws IOException {
     this.setSegments("claimable_balances", id);
@@ -84,13 +85,14 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link ClaimableBalanceResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public static Page<ClaimableBalanceResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<ClaimableBalanceResponse>>() {};
-    ResponseHandler<Page<ClaimableBalanceResponse>> responseHandler =
-        new ResponseHandler<Page<ClaimableBalanceResponse>>(type);
+    TypeToken<Page<ClaimableBalanceResponse>> type =
+        new TypeToken<Page<ClaimableBalanceResponse>>() {};
+    ResponseHandler<Page<ClaimableBalanceResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -103,10 +105,11 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link ClaimableBalanceResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public Page<ClaimableBalanceResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

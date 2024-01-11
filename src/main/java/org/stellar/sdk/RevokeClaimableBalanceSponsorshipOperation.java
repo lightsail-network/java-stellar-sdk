@@ -1,20 +1,28 @@
 package org.stellar.sdk;
 
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
+/**
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#revoke-sponsorship"
+ * target="_blank">Revoke sponsorship</a> operation.
+ *
+ * <p>Revokes the sponsorship of a claimable balance entry.
+ *
+ * @see <a href="https://developers.stellar.org/docs/encyclopedia/sponsored-reserves"
+ *     target="_blank">Sponsored Reserves</a>
+ */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
-  private final String balanceId;
-
-  private RevokeClaimableBalanceSponsorshipOperation(String balanceId) {
-    this.balanceId = balanceId;
-  }
-
-  public String getBalanceId() {
-    return balanceId;
-  }
+  /** The id of the claimable balance whose sponsorship will be revoked. */
+  @NonNull private final String balanceId;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -48,7 +56,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
   public static class Builder {
     private final String balanceId;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new RevokeClaimableBalanceSponsorshipOperation builder from a RevokeSponsorship
@@ -83,7 +91,7 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
      */
     public RevokeClaimableBalanceSponsorshipOperation.Builder setSourceAccount(
         @NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -91,27 +99,10 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
     public RevokeClaimableBalanceSponsorshipOperation build() {
       RevokeClaimableBalanceSponsorshipOperation operation =
           new RevokeClaimableBalanceSponsorshipOperation(balanceId);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.balanceId, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof RevokeClaimableBalanceSponsorshipOperation)) {
-      return false;
-    }
-
-    RevokeClaimableBalanceSponsorshipOperation other =
-        (RevokeClaimableBalanceSponsorshipOperation) object;
-    return Objects.equals(this.balanceId, other.balanceId)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

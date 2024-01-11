@@ -1,40 +1,20 @@
 package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.Objects;
+import lombok.Value;
 
-public final class AssetAmount {
+/** Represents an amount of asset. */
+@Value
+public class AssetAmount {
+  /*
+   * The asset.
+   */
   @SerializedName("asset")
-  private final Asset asset;
+  Asset asset;
 
+  /*
+   * The amount.
+   */
   @SerializedName("amount")
-  private final String amount;
-
-  public AssetAmount(Asset asset, String amount) {
-    this.asset = asset;
-    this.amount = amount;
-  }
-
-  public Asset getAsset() {
-    return this.asset;
-  }
-
-  public String getAmount() {
-    return this.amount;
-  }
-
-  public int hashCode() {
-    return Objects.hash(asset, amount);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AssetAmount)) {
-      return false;
-    }
-
-    AssetAmount o = (AssetAmount) object;
-    return Objects.equals(this.getAsset(), o.getAsset())
-        && Objects.equals(this.getAmount(), o.getAmount());
-  }
+  String amount;
 }

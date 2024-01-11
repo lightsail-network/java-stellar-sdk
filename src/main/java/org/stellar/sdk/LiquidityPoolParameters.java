@@ -5,7 +5,8 @@ import org.stellar.sdk.xdr.*;
 /**
  * Base LiquidityPoolParameters class.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/liquidity-pool/"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/encyclopedia/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools"
  *     target="_blank">Liquidity Pool</a>
  */
 public abstract class LiquidityPoolParameters {
@@ -49,5 +50,8 @@ public abstract class LiquidityPoolParameters {
   /** Generates XDR object from a given LiquidityPoolParameters object */
   public abstract org.stellar.sdk.xdr.LiquidityPoolParameters toXdr();
 
+  /**
+   * @return the liquidity pool ID.
+   */
   public abstract org.stellar.sdk.LiquidityPoolID getId();
 }

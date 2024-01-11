@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.LiquidityPoolID;
 
 /**
@@ -11,15 +13,9 @@ import org.stellar.sdk.LiquidityPoolID;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class LiquidityPoolRemovedEffectResponse extends EffectResponse {
   @SerializedName("liquidity_pool_id")
-  protected final LiquidityPoolID liquidityPoolID;
-
-  public LiquidityPoolRemovedEffectResponse(LiquidityPoolID liquidityPoolID) {
-    this.liquidityPoolID = liquidityPoolID;
-  }
-
-  public LiquidityPoolID getLiquidityPoolID() {
-    return liquidityPoolID;
-  }
+  LiquidityPoolID liquidityPoolID;
 }

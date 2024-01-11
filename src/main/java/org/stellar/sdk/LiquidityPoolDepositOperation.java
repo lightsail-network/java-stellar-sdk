@@ -1,6 +1,9 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.LiquidityPoolDepositOp;
 import org.stellar.sdk.xdr.LiquidityPoolType;
@@ -9,36 +12,32 @@ import org.stellar.sdk.xdr.OperationType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/start/list-of-operations/#liquidity-pool-deposit"
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#liquidity-pool-deposit"
  * target="_blank">LiquidityPoolDeposit</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class LiquidityPoolDepositOperation extends Operation {
-  private final LiquidityPoolID liquidityPoolID;
-  private final String maxAmountA;
-  private final String maxAmountB;
-  private final Price minPrice;
-  private final Price maxPrice;
+  /** The liquidity pool ID. * */
+  @NonNull private final LiquidityPoolID liquidityPoolID;
 
-  public LiquidityPoolDepositOperation(
-      @NonNull LiquidityPoolID liquidityPoolID,
-      @NonNull String maxAmountA,
-      @NonNull String maxAmountB,
-      @NonNull Price minPrice,
-      @NonNull Price maxPrice) {
-    this.liquidityPoolID = liquidityPoolID;
-    this.maxAmountA = maxAmountA;
-    this.maxAmountB = maxAmountB;
-    this.minPrice = minPrice;
-    this.maxPrice = maxPrice;
-  }
+  /** Maximum amount of first asset to deposit. * */
+  @NonNull private final String maxAmountA;
+
+  /** Maximum amount of second asset to deposit. * */
+  @NonNull private final String maxAmountB;
+
+  /** Minimum deposit_a/deposit_b price. * */
+  @NonNull private final Price minPrice;
+
+  /** Maximum deposit_a/deposit_b price. * */
+  @NonNull private final Price maxPrice;
 
   public LiquidityPoolDepositOperation(LiquidityPoolDepositOp op) {
     this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
-    this.maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64().longValue());
-    this.maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64().longValue());
+    this.maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64());
+    this.maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64());
     this.minPrice = Price.fromXdr(op.getMinPrice());
     this.maxPrice = Price.fromXdr(op.getMaxPrice());
   }
@@ -60,26 +59,6 @@ public class LiquidityPoolDepositOperation extends Operation {
     this.maxPrice = maxPrice;
   }
 
-  public LiquidityPoolID getLiquidityPoolID() {
-    return liquidityPoolID;
-  }
-
-  public String getMaxAmountA() {
-    return maxAmountA;
-  }
-
-  public String getMaxAmountB() {
-    return maxAmountB;
-  }
-
-  public Price getMinPrice() {
-    return minPrice;
-  }
-
-  public Price getMaxPrice() {
-    return maxPrice;
-  }
-
   @Override
   OperationBody toOperationBody(AccountConverter accountConverter) {
     LiquidityPoolDepositOp op = new LiquidityPoolDepositOp();
@@ -93,25 +72,5 @@ public class LiquidityPoolDepositOperation extends Operation {
     body.setDiscriminant(OperationType.LIQUIDITY_POOL_DEPOSIT);
     body.setLiquidityPoolDepositOp(op);
     return body;
-  }
-
-  public int hashCode() {
-    return Objects.hash(
-        this.getSourceAccount(), liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LiquidityPoolDepositOperation)) {
-      return false;
-    }
-
-    LiquidityPoolDepositOperation o = (LiquidityPoolDepositOperation) object;
-    return Objects.equals(this.getLiquidityPoolID(), o.getLiquidityPoolID())
-        && Objects.equals(this.getMaxAmountA(), o.getMaxAmountA())
-        && Objects.equals(this.getMaxAmountB(), o.getMaxAmountB())
-        && Objects.equals(this.getMinPrice(), o.getMinPrice())
-        && Objects.equals(this.getMaxPrice(), o.getMaxPrice())
-        && Objects.equals(this.getSourceAccount(), o.getSourceAccount());
   }
 }

@@ -1,22 +1,24 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.BumpSequenceOp;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.SequenceNumber;
 
+/**
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#bump-sequence"
+ * target="_blank">BumpSequence</a> operation.
+ */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class BumpSequenceOperation extends Operation {
   private final long bumpTo;
-
-  private BumpSequenceOperation(long bumpTo) {
-    this.bumpTo = bumpTo;
-  }
-
-  public long getBumpTo() {
-    return bumpTo;
-  }
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -36,9 +38,10 @@ public class BumpSequenceOperation extends Operation {
   }
 
   public static class Builder {
+
     private final long bumpTo;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new BumpSequence builder from a BumpSequence XDR.
@@ -65,33 +68,17 @@ public class BumpSequenceOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public BumpSequenceOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
     /** Builds an operation */
     public BumpSequenceOperation build() {
       BumpSequenceOperation operation = new BumpSequenceOperation(bumpTo);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.bumpTo, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BumpSequenceOperation)) {
-      return false;
-    }
-
-    BumpSequenceOperation other = (BumpSequenceOperation) object;
-    return Objects.equals(this.bumpTo, other.bumpTo)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents PATH_PAYMENT_STRICT_SEND operation response.
@@ -10,11 +12,9 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class PathPaymentStrictSendOperationResponse extends PathPaymentBaseOperationResponse {
   @SerializedName("destination_min")
-  private String destinationMin;
-
-  public String getDestinationMin() {
-    return destinationMin;
-  }
+  String destinationMin;
 }

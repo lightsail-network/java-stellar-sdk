@@ -9,7 +9,7 @@ import java.util.Optional;
  *     target="_blank">Rate Limiting</a>
  */
 public class TooManyRequestsException extends RuntimeException {
-  private Integer retryAfter;
+  private final Integer retryAfter;
 
   public TooManyRequestsException(Integer retryAfter) {
     super("The rate limit for the requesting IP address is over its alloted limit.");

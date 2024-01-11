@@ -3,6 +3,8 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -11,15 +13,17 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class EndSponsoringFutureReservesOperationResponse extends OperationResponse {
   @SerializedName("begin_sponsor")
-  private String beginSponsor;
+  String beginSponsor;
 
   @SerializedName("begin_sponsor_muxed")
-  private String beginSponsorMuxed;
+  String beginSponsorMuxed;
 
   @SerializedName("begin_sponsor_muxed_id")
-  private BigInteger beginSponsorMuxedId;
+  BigInteger beginSponsorMuxedId;
 
   public Optional<MuxedAccount> getBeginSponsorMuxed() {
     if (this.beginSponsorMuxed == null || this.beginSponsorMuxed.isEmpty()) {
@@ -27,9 +31,5 @@ public class EndSponsoringFutureReservesOperationResponse extends OperationRespo
     }
     return Optional.of(
         new MuxedAccount(this.beginSponsorMuxed, this.beginSponsor, this.beginSponsorMuxedId));
-  }
-
-  public String getBeginSponsor() {
-    return beginSponsor;
   }
 }

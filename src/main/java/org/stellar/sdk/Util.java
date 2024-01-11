@@ -5,10 +5,21 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+/**
+ * Utility class for common operations.
+ *
+ * <p>note: For some reason we need to make it public, but I don't recommend to use it directly.
+ */
 public class Util {
-
+  // TODO: make HEX_ARRAY private
   public static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
+  /**
+   * Returns hex representation of <code>bytes</code> array.
+   *
+   * @param bytes byte array to convert to hex
+   * @return hex representation of the byte array
+   */
   public static String bytesToHex(byte[] bytes) {
     char[] hexChars = new char[bytes.length * 2];
     for (int j = 0; j < bytes.length; j++) {
@@ -19,6 +30,12 @@ public class Util {
     return new String(hexChars);
   }
 
+  /**
+   * Returns byte array representation of <code>hex</code> string.
+   *
+   * @param s hex string to convert to byte array
+   * @return byte array representation of the hex string
+   */
   public static byte[] hexToBytes(String s) {
     int len = s.length();
     byte[] data = new byte[len / 2];
@@ -32,7 +49,8 @@ public class Util {
   /**
    * Returns SHA-256 hash of <code>data</code>.
    *
-   * @param data
+   * @param data byte array to hash
+   * @return SHA-256 hash of the data
    */
   public static byte[] hash(byte[] data) {
     try {
@@ -47,8 +65,9 @@ public class Util {
   /**
    * Pads <code>bytes</code> array to <code>length</code> with zeros.
    *
-   * @param bytes
-   * @param length
+   * @param bytes byte array to pad
+   * @param length length of the resulting array
+   * @return padded byte array
    */
   static byte[] paddedByteArray(byte[] bytes, int length) {
     byte[] finalBytes = new byte[length];
@@ -60,8 +79,9 @@ public class Util {
   /**
    * Pads <code>string</code> to <code>length</code> with zeros.
    *
-   * @param string
-   * @param length
+   * @param string string to pad
+   * @param length length of the resulting array
+   * @return padded byte array
    */
   static byte[] paddedByteArray(String string, int length) {
     return Util.paddedByteArray(string.getBytes(), length);
@@ -70,7 +90,8 @@ public class Util {
   /**
    * Remove zeros from the end of <code>bytes</code> array.
    *
-   * @param bytes
+   * @param bytes byte array to trim
+   * @return trimmed byte array
    */
   static String paddedByteArrayToString(byte[] bytes) {
     String[] strArray = new String(bytes).split("\0");
@@ -94,6 +115,11 @@ public class Util {
     return clientVersion;
   }
 
+  /**
+   * Throws {@link IllegalArgumentException} if the given asset is native (XLM).
+   *
+   * @param asset The asset to check
+   */
   public static AssetTypeCreditAlphaNum assertNonNativeAsset(Asset asset) {
     if (asset instanceof AssetTypeCreditAlphaNum) {
       return (AssetTypeCreditAlphaNum) asset;
