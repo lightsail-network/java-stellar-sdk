@@ -6,6 +6,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ### Update
 * Support resource leeway parameter when simulating Soroban transactions. ([#561](https://github.com/stellar/java-stellar-sdk/pull/561))
+* Remove deprecated classes and methods. ([#565](https://github.com/stellar/java-stellar-sdk/pull/565))
+
 ### Breaking changes
 * The types of the following fields have changed. ([#560](https://github.com/stellar/java-stellar-sdk/pull/560))
   | field                                   | before  | now  |
@@ -13,6 +15,14 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   | GetEventsRequest.startLedger            | String  | Long |
   | GetEventsResponse.EventInfo.ledger      | Integer | Long |
   | GetLatestLedgerResponse.protocolVersion | Integer | Long |
+
+* The following classes and methods have been marked as deprecated in previous releases, and now they have been removed. ([#565](https://github.com/stellar/java-stellar-sdk/pull/565))
+  * `AccountResponse.Signer#getAccountId()`
+  * `OffersRequestBuilder#forAccount(String)`
+  * `RootResponse#getGrotocolVersion()`
+  * `SetOptionsOperationResponse#getSigner()`
+  * `Transaction.Builder`
+  * `TransactionBuilder#buildTimeBounds(long, long)`
 
 ## 0.42.0
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))

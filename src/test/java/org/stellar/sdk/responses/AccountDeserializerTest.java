@@ -90,7 +90,7 @@ public class AccountDeserializerTest extends TestCase {
     assertFalse(account.getBalances()[1].getSponsor().isPresent());
 
     assertEquals(
-        account.getSigners()[0].getAccountId(),
+        account.getSigners()[0].getKey(),
         "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSigners()[0].getWeight(), 0);
     assertEquals(account.getSigners()[0].getType(), "ed25519_public_key");

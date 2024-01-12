@@ -30,12 +30,6 @@ public class RootResponse extends Response {
   @SerializedName("network_passphrase")
   String networkPassphrase;
 
-  /**
-   * @deprecated Will be removed in Horizon 0.17.0
-   */
-  @SerializedName("protocol_version")
-  int protocolVersion;
-
   @SerializedName("current_protocol_version")
   int currentProtocolVersion;
 

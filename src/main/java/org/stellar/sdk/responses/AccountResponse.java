@@ -271,16 +271,6 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     String sponsor;
 
-    /**
-     * TODO: remove this method
-     *
-     * @deprecated Use {@link Signer#getKey()}
-     * @return
-     */
-    public String getAccountId() {
-      return key;
-    }
-
     public Optional<String> getSponsor() {
       return Optional.ofNullable(this.sponsor);
     }

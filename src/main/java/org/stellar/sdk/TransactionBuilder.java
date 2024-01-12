@@ -10,9 +10,6 @@ import java.util.function.Function;
 import lombok.NonNull;
 import org.stellar.sdk.TransactionPreconditions.TransactionPreconditionsBuilder;
 import org.stellar.sdk.xdr.SorobanTransactionData;
-import org.stellar.sdk.xdr.TimePoint;
-import org.stellar.sdk.xdr.Uint64;
-import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /** Builds a new Transaction object. */
 public class TransactionBuilder {
@@ -122,8 +119,6 @@ public class TransactionBuilder {
    * @param timeBounds tx can be accepted within this time bound range
    * @return Builder object so you can chain methods.
    * @see TimeBounds
-   * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
-   *     </code> instead for more control over preconditions.
    */
   public TransactionBuilder addTimeBounds(@NonNull TimeBounds timeBounds) {
     if (preconditions.getTimeBounds() != null) {
@@ -142,7 +137,7 @@ public class TransactionBuilder {
    * setTimeout</code> does internally; if there's <code>minTime</code> set but no <code>maxTime
    * </code> it will be added). Call to <code>Builder.setTimeout</code> is required if Transaction
    * does not have <code>max_time</code> set. If you don't want to set timeout, use <code>
-   * TIMEOUT_INFINITE</code>. In general you should set <code>TIMEOUT_INFINITE</code> only in smart
+   * TIMEOUT_INFINITE</code>. In general, you should set <code>TIMEOUT_INFINITE</code> only in smart
    * contracts. Please note that Horizon may still return <code>504 Gateway Timeout</code> error,
    * even for short timeouts. In such case you need to resubmit the same transaction again without
    * making any changes to receive a status. This method is using the machine system time (UTC),
@@ -151,11 +146,7 @@ public class TransactionBuilder {
    * @param timeout Timeout in seconds.
    * @return updated Builder
    * @see TimeBounds
-   * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
-   *     </code> with TimeBound set instead for more control over preconditions.
    */
-  // TODO: timebounds is the most commonly used precondition, I think
-  //  we can keep this function and not mark it as deprecated?
   public TransactionBuilder setTimeout(BigInteger timeout) {
     if (preconditions.getTimeBounds() != null
         && !TIMEOUT_INFINITE.equals(preconditions.getTimeBounds().getMaxTime())) {
@@ -188,8 +179,6 @@ public class TransactionBuilder {
    *
    * @param timeout Timeout in seconds.
    * @return updated Builder
-   * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
-   *     </code> with TimeBound set instead for more control over preconditions.
    */
   public TransactionBuilder setTimeout(long timeout) {
     return setTimeout(BigInteger.valueOf(timeout));
@@ -247,14 +236,6 @@ public class TransactionBuilder {
    */
   public static Function<TransactionBuilderAccount, Long> IncrementedSequenceNumberFunc =
       TransactionBuilderAccount::getIncrementedSequenceNumber;
-
-  @Deprecated
-  public static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(long minTime, long maxTime) {
-    return new org.stellar.sdk.xdr.TimeBounds.Builder()
-        .minTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(minTime))))
-        .maxTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(maxTime))))
-        .build();
-  }
 
   /**
    * Sets the transaction's internal Soroban transaction data (resources, footprint, etc.).
