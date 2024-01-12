@@ -15,8 +15,7 @@ import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
 
 /** Abstract class for transaction classes. */
-@EqualsAndHashCode(exclude = {"accountConverter"})
-// TODO: maybe we should not exclude accountConverter from equals and hashCode
+@EqualsAndHashCode
 public abstract class AbstractTransaction {
   /** The network that the transaction is to be submitted to. */
   @NonNull @Getter protected final Network network;
