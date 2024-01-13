@@ -24,10 +24,13 @@ public class GetTransactionResponse {
 
   Boolean feeBump;
 
+  /** The field can be parsed as {@link org.stellar.sdk.xdr.TransactionEnvelope} object. */
   String envelopeXdr;
 
+  /** The field can be parsed as {@link org.stellar.sdk.xdr.TransactionResult} object. */
   String resultXdr;
 
+  /** The field can be parsed as {@link org.stellar.sdk.xdr.TransactionMeta} object. */
   String resultMetaXdr;
 
   Long ledger;

@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
+import java.util.List;
 import lombok.Value;
 
 /**
@@ -12,7 +13,11 @@ import lombok.Value;
 public class SendTransactionResponse {
   SendTransactionStatus status;
 
+  /** The field can be parsed as {@link org.stellar.sdk.xdr.TransactionResult} object. */
   String errorResultXdr;
+
+  /** The elements inside can be parsed as {@link org.stellar.sdk.xdr.DiagnosticEvent} objects. */
+  List<String> diagnosticEventsXdr;
 
   String hash;
 
