@@ -17,12 +17,13 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   | GetLatestLedgerResponse.protocolVersion | Integer | Long |
 
 * The following classes and methods have been marked as deprecated in previous releases, and now they have been removed. ([#565](https://github.com/stellar/java-stellar-sdk/pull/565))
-  * `AccountResponse.Signer#getAccountId()`
-  * `OffersRequestBuilder#forAccount(String)`
-  * `RootResponse#getGrotocolVersion()`
-  * `SetOptionsOperationResponse#getSigner()`
-  * `Transaction.Builder`
-  * `TransactionBuilder#buildTimeBounds(long, long)`
+  * `AccountResponse.Signer#getAccountId()` has been removed, use `AccountResponse.Signer#getKey()` instead.
+  * `OffersRequestBuilder#forAccount(String)` has been removed, use `OffersRequestBuilder#forSeller(String)` instead.
+  * `RootResponse#getProtocolVersion()` has been removed, use `RootResponse#getCurrentProtocolVersion()` instead.
+  * `SetOptionsOperationResponse#getSigner()` has been removed, use `SetOptionsOperationResponse#getSignerKey()` instead.
+  * `Transaction.Builder` has been removed, use `TransactionBuilder` instead.
+  * `TransactionBuilder#buildTimeBounds(long, long)` has been removed, use `TimeBounds#TimeBounds(long, long)` instead.
+  * `TransactionBuilder#addTimeBounds(TimeBounds)` has been removed, use `TransactionBuilder#addPreconditions(TransactionPreconditions)` instead.
 
 ## 0.42.0
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))

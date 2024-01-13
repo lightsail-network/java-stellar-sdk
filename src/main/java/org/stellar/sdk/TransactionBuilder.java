@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import lombok.NonNull;
-import org.stellar.sdk.TransactionPreconditions.TransactionPreconditionsBuilder;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 
 /** Builds a new Transaction object. */
@@ -19,8 +18,9 @@ public class TransactionBuilder {
   private final List<Operation> operations;
   private Long baseFee;
   private final Network network;
-  private TransactionPreconditions preconditions;
+  @NonNull private TransactionPreconditions preconditions;
   private SorobanTransactionData sorobanData;
+  private BigInteger txTimeout;
 
   /**
    * Construct a new transaction builder.
@@ -113,23 +113,6 @@ public class TransactionBuilder {
   }
 
   /**
-   * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/"
-   * target="_blank">time-bounds</a> to this transaction.
-   *
-   * @param timeBounds tx can be accepted within this time bound range
-   * @return Builder object so you can chain methods.
-   * @see TimeBounds
-   */
-  public TransactionBuilder addTimeBounds(@NonNull TimeBounds timeBounds) {
-    if (preconditions.getTimeBounds() != null) {
-      throw new RuntimeException("TimeBounds already set.");
-    }
-
-    preconditions = preconditions.toBuilder().timeBounds(timeBounds).build();
-    return this;
-  }
-
-  /**
    * Because of the distributed nature of the Stellar network it is possible that the status of your
    * transaction will be determined after a long time if the network is highly congested. If you
    * want to be sure to receive the status of the transaction within a given period you should set
@@ -148,29 +131,11 @@ public class TransactionBuilder {
    * @see TimeBounds
    */
   public TransactionBuilder setTimeout(BigInteger timeout) {
-    if (preconditions.getTimeBounds() != null
-        && !TIMEOUT_INFINITE.equals(preconditions.getTimeBounds().getMaxTime())) {
-      throw new RuntimeException(
-          "TimeBounds.max_time has been already set - setting timeout would overwrite it.");
-    }
-
     if (timeout.compareTo(BigInteger.ZERO) < 0) {
       throw new RuntimeException("timeout cannot be negative");
     }
 
-    BigInteger timeoutTimestamp =
-        !TIMEOUT_INFINITE.equals(timeout)
-            ? timeout.add(BigInteger.valueOf(System.currentTimeMillis() / 1000L))
-            : TIMEOUT_INFINITE;
-
-    TransactionPreconditionsBuilder preconditionsBuilder = preconditions.toBuilder();
-    if (preconditions.getTimeBounds() == null) {
-      preconditionsBuilder.timeBounds(new TimeBounds(BigInteger.ZERO, timeoutTimestamp));
-    } else {
-      preconditionsBuilder.timeBounds(
-          new TimeBounds(preconditions.getTimeBounds().getMinTime(), timeoutTimestamp));
-    }
-    preconditions = preconditionsBuilder.build();
+    txTimeout = timeout;
     return this;
   }
 
@@ -202,10 +167,25 @@ public class TransactionBuilder {
    * is constructed.
    */
   public Transaction build() {
+    // ensure that the preconditions are valid
+    if (preconditions.getTimeBounds() != null && txTimeout != null) {
+      throw new IllegalArgumentException(
+          "Can not set both TransactionPreconditions.timeBounds and timeout.");
+    }
+
+    if (txTimeout != null) {
+      BigInteger maxTime =
+          !TIMEOUT_INFINITE.equals(txTimeout)
+              ? txTimeout.add(BigInteger.valueOf(System.currentTimeMillis() / 1000L))
+              : TIMEOUT_INFINITE;
+      preconditions =
+          preconditions.toBuilder().timeBounds(new TimeBounds(BigInteger.ZERO, maxTime)).build();
+    }
+
     preconditions.isValid();
 
     if (baseFee == null) {
-      throw new FormatException("mBaseFee has to be set. you must call setBaseFee().");
+      throw new FormatException("baseFee has to be set. you must call setBaseFee().");
     }
 
     if (network == null) {
