@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
@@ -15,7 +14,6 @@ import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
 
 /** Abstract class for transaction classes. */
-@EqualsAndHashCode
 public abstract class AbstractTransaction {
   /** The network that the transaction is to be submitted to. */
   @NonNull @Getter protected final Network network;

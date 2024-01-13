@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -435,5 +436,55 @@ public class TransactionTest {
             null,
             Network.TESTNET);
     assertFalse(transaction.isSorobanTransaction());
+  }
+
+  @Test
+  public void testHashCodeAndEquals() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+
+    Account account = new Account(source.getAccountId(), 2908908335136768L);
+    BumpSequenceOperation operation = new BumpSequenceOperation.Builder(0L).build();
+
+    Transaction transaction1 =
+        new Transaction(
+            AccountConverter.enableMuxed(),
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation},
+            null,
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            null,
+            Network.TESTNET);
+    Transaction transaction2 =
+        new Transaction(
+            AccountConverter.disableMuxed(), // they get different account converters
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation},
+            null,
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            null,
+            Network.TESTNET);
+    assertEquals(transaction1.hashCode(), transaction2.hashCode());
+    assertEquals(transaction1, transaction2);
+
+    Transaction transaction3 =
+        new Transaction(
+            AccountConverter.enableMuxed(),
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation},
+            Memo.text("not equal tx"),
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            null,
+            Network.TESTNET);
+    assertNotEquals(transaction1, transaction3);
   }
 }

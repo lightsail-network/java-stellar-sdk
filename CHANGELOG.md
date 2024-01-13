@@ -6,7 +6,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ### Update
 * Support resource leeway parameter when simulating Soroban transactions. ([#561](https://github.com/stellar/java-stellar-sdk/pull/561))
-* Add `accountConverter` to the `equals` and `hashCode` of `AbstractTransaction`. ([#566](https://github.com/stellar/java-stellar-sdk/pull/566))
+* Fix the `hashCode` and `equals` methods in `Transaction` and `FeeBumpTransaction`. ([#566](https://github.com/stellar/java-stellar-sdk/pull/566))
 
 ### Breaking changes
 * The types of the following fields have changed. ([#560](https://github.com/stellar/java-stellar-sdk/pull/560))
@@ -15,7 +15,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   | GetEventsRequest.startLedger            | String  | Long |
   | GetEventsResponse.EventInfo.ledger      | Integer | Long |
   | GetLatestLedgerResponse.protocolVersion | Integer | Long |
-* Add `accountConverter` to the `equals` and `hashCode` of `AbstractTransaction`, this will affect `Transaction` and `FeeBumpTransaction`, in previous versions, they would ignore `accountConverter`. ([#566](https://github.com/stellar/java-stellar-sdk/pull/566))
+* Fix the `hashCode` and `equals` methods in `Transaction` and `FeeBumpTransaction`, now they will compare based on the final generated XDR objects. If the XDR objects are the same, then the original instances are considered equal. ([#566](https://github.com/stellar/java-stellar-sdk/pull/566))
 
 ## 0.42.0
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))

@@ -244,4 +244,30 @@ public class FeeBumpTransactionTest {
     assertEquals(1, feeBump.getSignatures().size());
     signer.verify(feeBump.hash(), feeBump.getSignatures().get(0).getSignature().getSignature());
   }
+
+  @Test
+  public void testHashCodeAndEquals() {
+    Transaction inner = createInnerTransaction();
+
+    FeeBumpTransaction feeBump0 =
+        new FeeBumpTransaction.Builder(AccountConverter.enableMuxed(), inner)
+            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
+            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
+            .build();
+    FeeBumpTransaction feeBump1 =
+        new FeeBumpTransaction.Builder(AccountConverter.disableMuxed(), inner)
+            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
+            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
+            .build();
+    assertEquals(feeBump0.hashCode(), feeBump1.hashCode());
+    assertEquals(feeBump0, feeBump1);
+
+    FeeBumpTransaction feeBump2 =
+        new FeeBumpTransaction.Builder(AccountConverter.enableMuxed(), inner)
+            .setBaseFee(Transaction.MIN_BASE_FEE * 3)
+            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
+            .build();
+    System.out.println(feeBump2.toEnvelopeXdr());
+    assertNotEquals(feeBump0, feeBump2);
+  }
 }
