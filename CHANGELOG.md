@@ -4,10 +4,12 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.43.0
 ### Update
 * Support resource leeway parameter when simulating Soroban transactions. ([#561](https://github.com/stellar/java-stellar-sdk/pull/561))
 * Support for the new, optional `diagnosticEventsXdr` field on the `SorobanServer.sendTransaction` method. ([#564](https://github.com/stellar/java-stellar-sdk/pull/564))
 * Add `TransactionBuilder#TransactionBuilder(Transaction)` constructor. ([#567](https://github.com/stellar/java-stellar-sdk/pull/567))
+* Add `toString`, `hashCode`, and `equals` methods to most classes. ([#562](https://github.com/stellar/java-stellar-sdk/pull/562))
 
 ### Breaking changes
 * The types of the following fields have changed. ([#560](https://github.com/stellar/java-stellar-sdk/pull/560))
