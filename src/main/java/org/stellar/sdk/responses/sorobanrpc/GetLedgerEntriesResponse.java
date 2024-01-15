@@ -18,8 +18,12 @@ public class GetLedgerEntriesResponse {
 
   @Value
   public static class LedgerEntryResult {
+    /** The field can be parsed as {@link org.stellar.sdk.xdr.LedgerKey} object. */
     String key;
 
+    /**
+     * The field can be parsed as {@link org.stellar.sdk.xdr.LedgerEntry.LedgerEntryData} object.
+     */
     String xdr;
 
     @SerializedName("lastModifiedLedgerSeq")
