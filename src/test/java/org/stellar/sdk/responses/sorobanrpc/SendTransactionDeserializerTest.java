@@ -17,6 +17,10 @@ public class SendTransactionDeserializerTest {
                 new TypeToken<SorobanRpcResponse<SendTransactionResponse>>() {}.getType());
     SendTransactionResponse data = getTransactionResponse.getResult();
     assertEquals(data.getErrorResultXdr(), "AAAAAAAAf67////6AAAAAA==");
+    assertEquals(data.getDiagnosticEventsXdr().size(), 1);
+    assertEquals(
+        data.getDiagnosticEventsXdr().get(0),
+        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgr/p6gt6h8MrmSw+WNJnu3+sCP9dHXx7jR8IH0sG6Cy0AAAAPAAAABWhlbGxvAAAAAAAADwAAAAVBbG9oYQAAAA==");
     assertEquals(data.getStatus(), SendTransactionResponse.SendTransactionStatus.ERROR);
     assertEquals(
         data.getHash(), "3b0c982bb8245be869d34ec822f999deb68f3a8480cf6e663643cf2f6e397e64");
@@ -33,6 +37,7 @@ public class SendTransactionDeserializerTest {
                 new TypeToken<SorobanRpcResponse<SendTransactionResponse>>() {}.getType());
     SendTransactionResponse data = getTransactionResponse.getResult();
     assertNull(data.getErrorResultXdr());
+    assertNull(data.getDiagnosticEventsXdr());
     assertEquals(data.getStatus(), SendTransactionResponse.SendTransactionStatus.PENDING);
     assertEquals(
         data.getHash(), "5e58bb3530cf4ff852805ad1a5077b181b227e541301bdfa17f5a66991910d13");
@@ -49,6 +54,7 @@ public class SendTransactionDeserializerTest {
                 new TypeToken<SorobanRpcResponse<SendTransactionResponse>>() {}.getType());
     SendTransactionResponse data = getTransactionResponse.getResult();
     assertNull(data.getErrorResultXdr());
+    assertNull(data.getDiagnosticEventsXdr());
     assertEquals(data.getStatus(), SendTransactionResponse.SendTransactionStatus.DUPLICATE);
     assertEquals(
         data.getHash(), "5e58bb3530cf4ff852805ad1a5077b181b227e541301bdfa17f5a66991910d13");
@@ -65,6 +71,7 @@ public class SendTransactionDeserializerTest {
                 new TypeToken<SorobanRpcResponse<SendTransactionResponse>>() {}.getType());
     SendTransactionResponse data = getTransactionResponse.getResult();
     assertNull(data.getErrorResultXdr());
+    assertNull(data.getDiagnosticEventsXdr());
     assertEquals(data.getStatus(), SendTransactionResponse.SendTransactionStatus.TRY_AGAIN_LATER);
     assertEquals(
         data.getHash(), "5e58bb3530cf4ff852805ad1a5077b181b227e541301bdfa17f5a66991910d13");
@@ -78,6 +85,7 @@ public class SendTransactionDeserializerTest {
           + "    \"id\": \"b96311af98d54d7cbb8736dbb0ed7730\",\n"
           + "    \"result\": {\n"
           + "        \"errorResultXdr\": \"AAAAAAAAf67////6AAAAAA==\",\n"
+          + "        \"diagnosticEventsXdr\": [\"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgr/p6gt6h8MrmSw+WNJnu3+sCP9dHXx7jR8IH0sG6Cy0AAAAPAAAABWhlbGxvAAAAAAAADwAAAAVBbG9oYQAAAA==\"],"
           + "        \"status\": \"ERROR\",\n"
           + "        \"hash\": \"3b0c982bb8245be869d34ec822f999deb68f3a8480cf6e663643cf2f6e397e64\",\n"
           + "        \"latestLedger\": \"62\",\n"
