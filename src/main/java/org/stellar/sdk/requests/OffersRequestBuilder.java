@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
-import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,19 +44,6 @@ public class OffersRequestBuilder extends RequestBuilder {
   public OfferResponse offer(long offerId) throws IOException {
     this.setSegments("offers", String.valueOf(offerId));
     return this.offer(this.buildUri());
-  }
-
-  /**
-   * @param account Account for which to get offers
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/offers/">Offers for
-   *     Account</a>
-   * @deprecated Use {@link OffersRequestBuilder#forSeller} Builds request to <code>
-   *     GET /accounts/{account}/offers</code>
-   */
-  @Deprecated
-  public OffersRequestBuilder forAccount(@NonNull String account) {
-    this.setSegments("accounts", account, "offers");
-    return this;
   }
 
   /**

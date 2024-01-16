@@ -46,7 +46,6 @@ public class AllowTrustOperationResponse extends OperationResponse {
   @SerializedName("authorize")
   boolean authorize;
 
-  // TODO: fix, is_authorized_to_maintain_liabilities
   @SerializedName("authorize_to_maintain_liabilities")
   boolean authorizeToMaintainLiabilities;
 

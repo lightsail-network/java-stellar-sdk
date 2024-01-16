@@ -16,7 +16,6 @@ public class RootDeserializerTest extends TestCase {
     assertEquals(root.getHistoryElderLedger(), 1);
     assertEquals(root.getCoreLatestLedger(), 18369117);
     assertEquals(root.getNetworkPassphrase(), "Public Global Stellar Network ; September 2015");
-    assertEquals(root.getProtocolVersion(), 9);
     assertEquals(root.getCurrentProtocolVersion(), 10);
     assertEquals(root.getCoreSupportedProtocolVersion(), 11);
   }

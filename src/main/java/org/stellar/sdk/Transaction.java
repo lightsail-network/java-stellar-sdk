@@ -314,25 +314,6 @@ public class Transaction extends AbstractTransaction {
   }
 
   /**
-   * Maintain backwards compatibility references to Transaction.Builder
-   *
-   * @deprecated will be removed in upcoming releases. Use <code>TransactionBuilder</code> instead.
-   * @see org.stellar.sdk.TransactionBuilder
-   */
-  public static class Builder extends TransactionBuilder {
-    public Builder(
-        AccountConverter accountConverter,
-        TransactionBuilderAccount sourceAccount,
-        Network network) {
-      super(accountConverter, sourceAccount, network);
-    }
-
-    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
-      super(sourceAccount, network);
-    }
-  }
-
-  /**
    * Returns true if this transaction is a Soroban transaction.
    *
    * @return true if this transaction is a Soroban transaction.

@@ -3,7 +3,6 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.KeyPair;
 
 /**
  * Represents SetOptions operation response.
@@ -67,13 +66,5 @@ public class SetOptionsOperationResponse extends OperationResponse {
     this.masterKeyWeight = masterKeyWeight;
     this.clearFlags = clearFlags;
     this.setFlags = setFlags;
-  }
-
-  /**
-   * @deprecated Use {@link SetOptionsOperationResponse#getSignerKey()}
-   * @return
-   */
-  public KeyPair getSigner() {
-    return KeyPair.fromAccountId(signerKey);
   }
 }
