@@ -10,13 +10,13 @@ import org.stellar.sdk.xdr.EnvelopeType;
 
 public class FeeBumpTransactionTest {
 
-  private Transaction createInnerTransaction(int baseFee) {
+  private Transaction createInnerTransaction(int baseFee, Network network) {
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction inner =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(AccountConverter.enableMuxed(), account, network)
             .addOperation(
                 new PaymentOperation.Builder(
                         "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ",
@@ -33,7 +33,15 @@ public class FeeBumpTransactionTest {
   }
 
   private Transaction createInnerTransaction() {
-    return createInnerTransaction(Transaction.MIN_BASE_FEE);
+    return createInnerTransaction(Transaction.MIN_BASE_FEE, Network.TESTNET);
+  }
+
+  private Transaction createInnerTransaction(int baseFee) {
+    return createInnerTransaction(baseFee, Network.TESTNET);
+  }
+
+  private Transaction createInnerTransaction(Network network) {
+    return createInnerTransaction(Transaction.MIN_BASE_FEE, network);
   }
 
   @Test
@@ -222,7 +230,6 @@ public class FeeBumpTransactionTest {
     assertEquals(0, feeBump.getSignatures().size());
 
     assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, innerV0.toEnvelopeXdr().getDiscriminant());
-    assertNotEquals(innerV0, feeBump.getInnerTransaction());
     innerV0.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX);
     assertEquals(innerV0, feeBump.getInnerTransaction());
 
@@ -244,5 +251,43 @@ public class FeeBumpTransactionTest {
 
     assertEquals(1, feeBump.getSignatures().size());
     signer.verify(feeBump.hash(), feeBump.getSignatures().get(0).getSignature().getSignature());
+  }
+
+  @Test
+  public void testHashCodeAndEquals() {
+    Transaction inner = createInnerTransaction();
+
+    FeeBumpTransaction feeBump0 =
+        new FeeBumpTransaction.Builder(AccountConverter.enableMuxed(), inner)
+            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
+            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
+            .build();
+
+    // they get different account converters
+    FeeBumpTransaction feeBump1 =
+        new FeeBumpTransaction.Builder(AccountConverter.disableMuxed(), inner)
+            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
+            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
+            .build();
+    assertEquals(feeBump0.hashCode(), feeBump1.hashCode());
+    assertEquals(feeBump0, feeBump1);
+
+    // they get different base fee
+    FeeBumpTransaction feeBump2 =
+        new FeeBumpTransaction.Builder(AccountConverter.enableMuxed(), inner)
+            .setBaseFee(Transaction.MIN_BASE_FEE * 3)
+            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
+            .build();
+    System.out.println(feeBump2.toEnvelopeXdr());
+    assertNotEquals(feeBump0, feeBump2);
+
+    // they get different network
+    FeeBumpTransaction feeBump3 =
+        new FeeBumpTransaction.Builder(
+                AccountConverter.enableMuxed(), createInnerTransaction(Network.PUBLIC))
+            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
+            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
+            .build();
+    assertNotEquals(feeBump0, feeBump3);
   }
 }

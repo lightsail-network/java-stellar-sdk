@@ -2,7 +2,6 @@ package org.stellar.sdk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
@@ -20,7 +19,6 @@ import org.stellar.sdk.xdr.TransactionSignaturePayload;
  *     Transactions</a>
  */
 @Getter
-@EqualsAndHashCode(callSuper = true)
 public class FeeBumpTransaction extends AbstractTransaction {
   /** The max fee willing to be paid for this transaction. */
   private final long fee;
@@ -201,5 +199,22 @@ public class FeeBumpTransaction extends AbstractTransaction {
       return new FeeBumpTransaction(
           this.accountConverter, this.feeAccount, this.baseFee, this.innerTransaction);
     }
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (object == null || getClass() != object.getClass()) {
+      return false;
+    }
+    FeeBumpTransaction that = (FeeBumpTransaction) object;
+    return Arrays.equals(signatureBase(), that.signatureBase());
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(signatureBase());
   }
 }
