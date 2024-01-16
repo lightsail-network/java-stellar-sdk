@@ -3,9 +3,9 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("project-report")
-    id("com.diffplug.spotless") version "6.21.0"
-    id("com.github.ben-manes.versions") version "0.48.0"
-    id("io.freefair.lombok") version "8.3"
+    id("com.diffplug.spotless") version "6.24.0"
+    id("com.github.ben-manes.versions") version "0.50.0"
+    id("io.freefair.lombok") version "8.4"
 }
 
 group = "stellar"
@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    val okhttpVersion = "4.11.0"
+    val okhttpVersion = "4.12.0"
 
     implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
     implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
@@ -38,10 +38,11 @@ dependencies {
     implementation("net.i2p.crypto:eddsa:0.3.0")
     implementation("commons-codec:commons-codec:1.16.0")
 
-    testImplementation("org.mockito:mockito-core:5.5.0")
+    testImplementation("org.mockito:mockito-core:5.9.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.junit.vintage:junit-vintage-engine:5.10.0")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.10.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks {
