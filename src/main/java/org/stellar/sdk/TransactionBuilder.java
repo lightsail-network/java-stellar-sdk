@@ -2,8 +2,10 @@ package org.stellar.sdk;
 
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -52,6 +54,41 @@ public class TransactionBuilder {
    */
   public TransactionBuilder(TransactionBuilderAccount sourceAccount, Network network) {
     this(AccountConverter.enableMuxed(), sourceAccount, network);
+  }
+
+  /**
+   * Construct a new transaction builder from a transaction.
+   *
+   * @param transaction the transaction to rebuild
+   */
+  public TransactionBuilder(Transaction transaction) {
+    AbstractTransaction abstractTransaction;
+    try {
+      // deep copy
+      abstractTransaction =
+          Transaction.fromEnvelopeXdr(
+              transaction.getAccountConverter(),
+              transaction.toEnvelopeXdrBase64(),
+              transaction.getNetwork());
+    } catch (IOException e) {
+      // This should never happen
+      throw new RuntimeException(e);
+    }
+
+    if (!(abstractTransaction instanceof Transaction)) {
+      // This should never happen
+      throw new RuntimeException("TransactionBuilder can only be used to rebuild a Transaction");
+    }
+    Transaction tx = (Transaction) abstractTransaction;
+
+    this.sourceAccount = new Account(tx.getSourceAccount(), tx.getSequenceNumber() - 1);
+    this.accountConverter = tx.accountConverter;
+    this.memo = tx.getMemo();
+    this.operations = Arrays.asList(tx.getOperations());
+    this.baseFee = tx.getFee() / tx.getOperations().length;
+    this.network = tx.getNetwork();
+    this.preconditions = tx.getPreconditions();
+    this.sorobanData = tx.getSorobanData();
   }
 
   public int getOperationsCount() {

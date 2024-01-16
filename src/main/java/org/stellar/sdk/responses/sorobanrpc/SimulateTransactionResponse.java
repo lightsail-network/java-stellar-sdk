@@ -22,8 +22,10 @@ import lombok.Value;
 public class SimulateTransactionResponse {
   String error;
 
+  /** The field can be parsed as {@link org.stellar.sdk.xdr.SorobanTransactionData} object. */
   String transactionData;
 
+  /** The elements inside can be parsed as {@link org.stellar.sdk.xdr.DiagnosticEvent} objects. */
   List<String> events;
 
   Long minResourceFee;
@@ -42,8 +44,14 @@ public class SimulateTransactionResponse {
 
   @Value
   public static class SimulateHostFunctionResult {
+
+    /**
+     * The elements inside can be parsed as {@link org.stellar.sdk.xdr.SorobanAuthorizationEntry}
+     * objects.
+     */
     List<String> auth;
 
+    /** The field can be parsed as {@link org.stellar.sdk.xdr.SCVal} object. */
     String xdr;
   }
 
@@ -58,6 +66,7 @@ public class SimulateTransactionResponse {
 
   @Value
   public static class RestorePreamble {
+    /** The field can be parsed as {@link org.stellar.sdk.xdr.SorobanTransactionData} object. */
     String transactionData;
 
     Long minResourceFee;
