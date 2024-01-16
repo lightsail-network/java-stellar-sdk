@@ -2,7 +2,6 @@ package org.stellar.sdk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.DecoratedSignature;
@@ -211,11 +210,11 @@ public class FeeBumpTransaction extends AbstractTransaction {
       return false;
     }
     FeeBumpTransaction that = (FeeBumpTransaction) object;
-    return Objects.equals(toEnvelopeXdr(), that.toEnvelopeXdr());
+    return Arrays.equals(signatureBase(), that.signatureBase());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(toEnvelopeXdr());
+    return Arrays.hashCode(signatureBase());
   }
 }

@@ -3,7 +3,6 @@ package org.stellar.sdk;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.AccountID;
@@ -356,11 +355,11 @@ public class Transaction extends AbstractTransaction {
       return false;
     }
     Transaction that = (Transaction) object;
-    return Objects.equals(toEnvelopeXdr(), that.toEnvelopeXdr());
+    return Arrays.equals(signatureBase(), that.signatureBase());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(toEnvelopeXdr());
+    return Arrays.hashCode(signatureBase());
   }
 }

@@ -15,7 +15,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   | GetEventsRequest.startLedger            | String  | Long |
   | GetEventsResponse.EventInfo.ledger      | Integer | Long |
   | GetLatestLedgerResponse.protocolVersion | Integer | Long |
-* Fix the `hashCode` and `equals` methods in `Transaction` and `FeeBumpTransaction`, now they will compare based on the final generated XDR objects. If the XDR objects are the same, then the original instances are considered equal. ([#566](https://github.com/stellar/java-stellar-sdk/pull/566))
+* Fix the `hashCode` and `equals` methods in `Transaction` and `FeeBumpTransaction`, now they will compare based on the `signatureBase()`. ([#566](https://github.com/stellar/java-stellar-sdk/pull/566))
 
 ## 0.42.0
 * Make `StrKey` public, this allows users to conveniently encode and decode Stellar keys to/from strings. ([#548](https://github.com/stellar/java-stellar-sdk/pull/548))

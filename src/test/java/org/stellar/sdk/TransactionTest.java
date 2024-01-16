@@ -458,9 +458,11 @@ public class TransactionTest {
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
             null,
             Network.TESTNET);
+
+    // they get different account converters
     Transaction transaction2 =
         new Transaction(
-            AccountConverter.disableMuxed(), // they get different account converters
+            AccountConverter.disableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -473,6 +475,7 @@ public class TransactionTest {
     assertEquals(transaction1.hashCode(), transaction2.hashCode());
     assertEquals(transaction1, transaction2);
 
+    // they get different memo
     Transaction transaction3 =
         new Transaction(
             AccountConverter.enableMuxed(),
@@ -486,5 +489,20 @@ public class TransactionTest {
             null,
             Network.TESTNET);
     assertNotEquals(transaction1, transaction3);
+
+    // they get different network
+    Transaction transaction4 =
+        new Transaction(
+            AccountConverter.enableMuxed(),
+            account.getAccountId(),
+            Transaction.MIN_BASE_FEE,
+            account.getIncrementedSequenceNumber(),
+            new org.stellar.sdk.Operation[] {operation},
+            null,
+            new TransactionPreconditions(
+                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            null,
+            Network.PUBLIC);
+    assertNotEquals(transaction1, transaction4);
   }
 }
