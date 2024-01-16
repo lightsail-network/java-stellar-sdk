@@ -24,7 +24,8 @@ public class FeeBumpTransactionTest {
                         "200")
                     .build())
             .setBaseFee(baseFee)
-            .addTimeBounds(new TimeBounds(10, 11))
+            .addPreconditions(
+                TransactionPreconditions.builder().timeBounds(new TimeBounds(10, 11)).build())
             .build();
 
     inner.sign(source);
