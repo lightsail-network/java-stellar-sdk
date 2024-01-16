@@ -3,7 +3,6 @@ package org.stellar.sdk;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.AccountID;
@@ -29,7 +28,6 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * Represents <a href="https://developers.stellar.org/docs/glossary/transactions/"
  * target="_blank">Transaction</a> in Stellar network.
  */
-@EqualsAndHashCode(callSuper = true)
 public class Transaction extends AbstractTransaction {
   /** fee paid for transaction in stroops (1 stroop = 0.0000001 XLM). */
   @Getter private final long fee;
@@ -316,8 +314,8 @@ public class Transaction extends AbstractTransaction {
   /**
    * Maintain backwards compatibility references to Transaction.Builder
    *
-   * @deprecated will be removed in upcoming releases. Use <code>TransactionBuilder</code> instead.
    * @see org.stellar.sdk.TransactionBuilder
+   * @deprecated will be removed in upcoming releases. Use <code>TransactionBuilder</code> instead.
    */
   public static class Builder extends TransactionBuilder {
     public Builder(
@@ -346,5 +344,22 @@ public class Transaction extends AbstractTransaction {
     return op instanceof InvokeHostFunctionOperation
         || op instanceof ExtendFootprintTTLOperation
         || op instanceof RestoreFootprintOperation;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (object == null || getClass() != object.getClass()) {
+      return false;
+    }
+    Transaction that = (Transaction) object;
+    return Arrays.equals(signatureBase(), that.signatureBase());
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(signatureBase());
   }
 }

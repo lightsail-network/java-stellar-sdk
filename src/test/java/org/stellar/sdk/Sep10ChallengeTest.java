@@ -1286,7 +1286,7 @@ public class Sep10ChallengeTest {
     Operation[] operations =
         new Operation[] {domainNameOperation, webAuthDomainOperation, otherDomainOperation};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())

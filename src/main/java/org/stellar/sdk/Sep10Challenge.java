@@ -114,7 +114,7 @@ public class Sep10Challenge {
 
     TransactionBuilder builder =
         new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
-            .addTimeBounds(timebounds)
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timebounds).build())
             .setBaseFee(100)
             .addOperation(domainNameOperation)
             .addOperation(webAuthDomainOperation);
