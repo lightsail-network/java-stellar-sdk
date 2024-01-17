@@ -12,6 +12,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 * Fix the `hashCode` and `equals` methods in `Transaction` and `FeeBumpTransaction`. ([#566](https://github.com/stellar/java-stellar-sdk/pull/566))
 * Add `TransactionBuilder#TransactionBuilder(Transaction)` constructor. ([#567](https://github.com/stellar/java-stellar-sdk/pull/567))
 * Add `toString`, `hashCode`, and `equals` methods to most classes. ([#562](https://github.com/stellar/java-stellar-sdk/pull/562))
+* Bump dependencies. ([#569](https://github.com/stellar/java-stellar-sdk/pull/569))
 
 ### Breaking changes
 * Fix the `hashCode` and `equals` methods in `Transaction` and `FeeBumpTransaction`, now they will compare based on the `signatureBase()`. ([#566](https://github.com/stellar/java-stellar-sdk/pull/566))
