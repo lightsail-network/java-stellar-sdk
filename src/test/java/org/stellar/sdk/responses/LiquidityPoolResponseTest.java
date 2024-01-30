@@ -46,7 +46,9 @@ public class LiquidityPoolResponseTest extends TestCase {
             + "  ],\n"
             + "  \"total_shares\": \"5000.0000000\",\n"
             + "  \"total_trustlines\": \"300\",\n"
-            + "  \"type\": \"constant_product\"\n"
+            + "  \"type\": \"constant_product\",\n"
+            + "  \"last_modified_ledger\": 50160557,\n"
+            + "  \"last_modified_time\": \"2024-01-31T05:44:24Z\"\n"
             + "}";
 
     LiquidityPoolResponse liquidityPool =
@@ -68,9 +70,6 @@ public class LiquidityPoolResponseTest extends TestCase {
         },
         liquidityPool.getReserves());
     assertEquals(
-        "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/effects{?cursor,limit,order}",
-        liquidityPool.getLinks().getEffects().getHref());
-    assertEquals(
         "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/operations{?cursor,limit,order}",
         liquidityPool.getLinks().getOperations().getHref());
     assertEquals(
@@ -79,6 +78,8 @@ public class LiquidityPoolResponseTest extends TestCase {
     assertEquals(
         "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/transactions{?cursor,limit,order}",
         liquidityPool.getLinks().getTransactions().getHref());
+    assertEquals(liquidityPool.getLastModifiedLedger().longValue(), 50160557);
+    assertEquals("2024-01-31T05:44:24Z", liquidityPool.getLastModifiedTime());
   }
 
   @Test

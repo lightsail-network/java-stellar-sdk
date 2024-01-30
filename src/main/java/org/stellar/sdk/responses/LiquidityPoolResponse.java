@@ -41,6 +41,12 @@ public class LiquidityPoolResponse extends Response {
   @SerializedName("reserves")
   Reserve[] reserves;
 
+  @SerializedName("last_modified_ledger")
+  Long lastModifiedLedger;
+
+  @SerializedName("last_modified_time")
+  String lastModifiedTime;
+
   @SerializedName("_links")
   Links links;
 
@@ -67,14 +73,11 @@ public class LiquidityPoolResponse extends Response {
   /** Links connected to account. */
   @Value
   public static class Links {
-    @SerializedName("effects")
-    Link effects;
+    @SerializedName("self")
+    Link self;
 
     @SerializedName("operations")
     Link operations;
-
-    @SerializedName("self")
-    Link self;
 
     @SerializedName("transactions")
     Link transactions;

@@ -26,14 +26,26 @@ public class TradeAggregationResponse extends Response {
   @SerializedName("high")
   String high;
 
+  @SerializedName("high_r")
+  TradePrice highR;
+
   @SerializedName("low")
   String low;
+
+  @SerializedName("low_r")
+  TradePrice lowR;
 
   @SerializedName("open")
   String open;
 
+  @SerializedName("open_r")
+  TradePrice openR;
+
   @SerializedName("close")
   String close;
+
+  @SerializedName("close_r")
+  TradePrice closeR;
 
   public Date getDate() {
     return new Date(this.timestamp);

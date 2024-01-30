@@ -43,9 +43,6 @@ public class LiquidityPoolsPageDeserializerTest extends TestCase {
         },
         liquidityPool.getReserves());
     assertEquals(
-        "https://horizon.stellar.org/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/effects{?cursor,limit,order}",
-        liquidityPool.getLinks().getEffects().getHref());
-    assertEquals(
         "https://horizon.stellar.org/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/operations{?cursor,limit,order}",
         liquidityPool.getLinks().getOperations().getHref());
     assertEquals(

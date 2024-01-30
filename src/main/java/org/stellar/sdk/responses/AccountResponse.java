@@ -26,20 +26,23 @@ import org.stellar.sdk.LiquidityPoolID;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class AccountResponse extends Response implements org.stellar.sdk.TransactionBuilderAccount {
+  @SerializedName("id")
+  private String id;
+
   @SerializedName("account_id")
   private String accountId;
 
   @SerializedName("sequence")
   private Long sequenceNumber;
 
-  @SerializedName("subentry_count")
-  private Integer subentryCount;
-
   @SerializedName("sequence_ledger")
   private Long sequenceUpdatedAtLedger;
 
   @SerializedName("sequence_time")
   private Long sequenceUpdatedAtTime;
+
+  @SerializedName("subentry_count")
+  private Integer subentryCount;
 
   @SerializedName("inflation_destination")
   private String inflationDestination;
@@ -68,9 +71,6 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   @SerializedName("data")
   private Data data;
 
-  @SerializedName("_links")
-  private Links links;
-
   @SerializedName("num_sponsoring")
   private Integer numSponsoring;
 
@@ -79,6 +79,12 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
   @SerializedName("sponsor")
   private String sponsor;
+
+  @SerializedName("paging_token")
+  private String pagingToken;
+
+  @SerializedName("_links")
+  private Links links;
 
   AccountResponse(String accountId) {
     this.accountId = accountId;
@@ -307,19 +313,28 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   /** Links connected to account. */
   @Value
   public static class Links {
+    @SerializedName("self")
+    Link self;
+
+    @SerializedName("transactions")
+    Link transactions;
+
+    @SerializedName("operations")
+    Link operations;
+
+    @SerializedName("payments")
+    Link payments;
+
     @SerializedName("effects")
     Link effects;
 
     @SerializedName("offers")
     Link offers;
 
-    @SerializedName("operations")
-    Link operations;
+    @SerializedName("trades")
+    Link trades;
 
-    @SerializedName("self")
-    Link self;
-
-    @SerializedName("transactions")
-    Link transactions;
+    @SerializedName("data")
+    Link data;
   }
 }
