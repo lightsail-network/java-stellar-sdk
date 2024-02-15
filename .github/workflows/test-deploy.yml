@@ -67,7 +67,7 @@ jobs:
 
   android-test:
     needs: build
-    runs-on: macos-13
+    runs-on: macos-14
     name: android-test (api ${{ matrix.emulator.api-level }})
     strategy:
       fail-fast: false
