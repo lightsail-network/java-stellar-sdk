@@ -100,7 +100,7 @@ jobs:
             api-level: ${{ matrix.emulator.api-level }}
             target: ${{ matrix.emulator.target }}
             script: ./gradlew connectedCheck
-            arch: x86_64
+            arch: arm64-v8a
             profile: 'pixel_2'
 
   deploy:
