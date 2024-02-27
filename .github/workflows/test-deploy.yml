@@ -26,6 +26,8 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
       - name: Test
         run: ./gradlew check
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
 
   build:
     needs: test
