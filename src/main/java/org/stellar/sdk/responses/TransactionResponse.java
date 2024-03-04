@@ -23,6 +23,15 @@ import org.stellar.sdk.Memo;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class TransactionResponse extends Response implements Pageable {
+  @SerializedName("id")
+  private final String id;
+
+  @SerializedName("paging_token")
+  private final String pagingToken;
+
+  @SerializedName("successful")
+  private final Boolean successful;
+
   @SerializedName("hash")
   private final String hash;
 
@@ -35,23 +44,29 @@ public class TransactionResponse extends Response implements Pageable {
   @SerializedName("source_account")
   private final String sourceAccount;
 
-  @SerializedName("fee_account")
-  private final String feeAccount;
+  @SerializedName("account_muxed")
+  private final String accountMuxed;
 
-  @SerializedName("successful")
-  private final Boolean successful;
-
-  @SerializedName("paging_token")
-  private final String pagingToken;
+  @SerializedName("account_muxed_id")
+  private final BigInteger accountMuxedId;
 
   @SerializedName("source_account_sequence")
   private final Long sourceAccountSequence;
 
-  @SerializedName("max_fee")
-  private final Long maxFee;
+  @SerializedName("fee_account")
+  private final String feeAccount;
+
+  @SerializedName("fee_account_muxed")
+  private final String feeAccountMuxed;
+
+  @SerializedName("fee_account_muxed_id")
+  private final BigInteger feeAccountMuxedId;
 
   @SerializedName("fee_charged")
   private final Long feeCharged;
+
+  @SerializedName("max_fee")
+  private final Long maxFee;
 
   @SerializedName("operation_count")
   private final Integer operationCount;
@@ -65,36 +80,27 @@ public class TransactionResponse extends Response implements Pageable {
   @SerializedName("result_meta_xdr")
   private final String resultMetaXdr;
 
-  @SerializedName("signatures")
-  private final List<String> signatures;
-
-  @SerializedName("fee_bump_transaction")
-  private final FeeBumpTransaction feeBumpTransaction;
-
-  @SerializedName("preconditions")
-  private final Preconditions preconditions;
-
-  @SerializedName("inner_transaction")
-  private final InnerTransaction innerTransaction;
-
-  @SerializedName("account_muxed")
-  private final String accountMuxed;
-
-  @SerializedName("account_muxed_id")
-  private final BigInteger accountMuxedId;
-
-  @SerializedName("fee_account_muxed")
-  private final String feeAccountMuxed;
-
-  @SerializedName("fee_account_muxed_id")
-  private final BigInteger feeAccountMuxedId;
-
-  @SerializedName("_links")
-  private final Links links;
+  @SerializedName("fee_meta_xdr")
+  private final String feeMetaXdr;
 
   // GSON won't serialize `transient` variables automatically. We need this behaviour
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
+
+  @SerializedName("signatures")
+  private final List<String> signatures;
+
+  @SerializedName("preconditions")
+  private final Preconditions preconditions;
+
+  @SerializedName("fee_bump_transaction")
+  private final FeeBumpTransaction feeBumpTransaction;
+
+  @SerializedName("inner_transaction")
+  private final InnerTransaction innerTransaction;
+
+  @SerializedName("_links")
+  private final Links links;
 
   public Optional<MuxedAccount> getSourceAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
@@ -213,11 +219,11 @@ public class TransactionResponse extends Response implements Pageable {
   /** Links connected to transaction. */
   @Value
   public static class Links {
+    @SerializedName("self")
+    Link self;
+
     @SerializedName("account")
     Link account;
-
-    @SerializedName("effects")
-    Link effects;
 
     @SerializedName("ledger")
     Link ledger;
@@ -225,11 +231,11 @@ public class TransactionResponse extends Response implements Pageable {
     @SerializedName("operations")
     Link operations;
 
+    @SerializedName("effects")
+    Link effects;
+
     @SerializedName("precedes")
     Link precedes;
-
-    @SerializedName("self")
-    Link self;
 
     @SerializedName("succeeds")
     Link succeeds;

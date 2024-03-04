@@ -30,17 +30,20 @@ public class TradeResponse extends Response implements Pageable {
   @SerializedName("offer_id")
   Long offerId;
 
-  @SerializedName("base_is_seller")
-  boolean baseIsSeller;
+  @SerializedName("trade_type")
+  String tradeType;
 
-  @SerializedName("base_account")
-  String baseAccount;
+  @SerializedName("liquidity_pool_fee_bp")
+  Long liquidityPoolFeeBP;
 
   @SerializedName("base_liquidity_pool_id")
   LiquidityPoolID baseLiquidityPoolID;
 
   @SerializedName("base_offer_id")
   Long baseOfferId;
+
+  @SerializedName("base_account")
+  String baseAccount;
 
   @SerializedName("base_amount")
   String baseAmount;
@@ -54,14 +57,14 @@ public class TradeResponse extends Response implements Pageable {
   @SerializedName("base_asset_issuer")
   String baseAssetIssuer;
 
-  @SerializedName("counter_account")
-  String counterAccount;
-
   @SerializedName("counter_liquidity_pool_id")
   LiquidityPoolID counterLiquidityPoolID;
 
   @SerializedName("counter_offer_id")
   Long counterOfferId;
+
+  @SerializedName("counter_account")
+  String counterAccount;
 
   @SerializedName("counter_amount")
   String counterAmount;
@@ -74,6 +77,9 @@ public class TradeResponse extends Response implements Pageable {
 
   @SerializedName("counter_asset_issuer")
   String counterAssetIssuer;
+
+  @SerializedName("base_is_seller")
+  boolean baseIsSeller;
 
   @SerializedName("price")
   TradePrice price;

@@ -48,21 +48,11 @@ public class PathResponse extends Response {
   @SerializedName("path")
   ArrayList<Asset> path;
 
-  @SerializedName("_links")
-  Links links;
-
   public Asset getDestinationAsset() {
     return create(destinationAssetType, destinationAssetCode, destinationAssetIssuer);
   }
 
   public Asset getSourceAsset() {
     return create(sourceAssetType, sourceAssetCode, sourceAssetIssuer);
-  }
-
-  /** Links connected to path. */
-  @Value
-  public static class Links {
-    @SerializedName("self")
-    Link self;
   }
 }

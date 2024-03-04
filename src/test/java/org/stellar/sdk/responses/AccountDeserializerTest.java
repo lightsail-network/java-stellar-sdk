@@ -43,6 +43,7 @@ public class AccountDeserializerTest extends TestCase {
   @Test
   public void testDeserialize() {
     AccountResponse account = GsonSingleton.getInstance().fromJson(json, AccountResponse.class);
+    assertEquals(account.getId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(
         account.getAccountId(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
     assertEquals(account.getSequenceNumber(), Long.valueOf(2319149195853854L));
@@ -108,6 +109,8 @@ public class AccountDeserializerTest extends TestCase {
     assertTrue(Arrays.equals(account.getData().getDecoded("entry1"), "test".getBytes()));
     assertEquals(account.getData().get("entry2"), "dGVzdDI=");
     assertTrue(Arrays.equals(account.getData().getDecoded("entry2"), "test2".getBytes()));
+    assertEquals(
+        account.getPagingToken(), "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
 
     assertEquals(
         account.getLinks().getEffects().getHref(),
@@ -124,6 +127,15 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(
         account.getLinks().getTransactions().getHref(),
         "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}");
+    assertEquals(
+        account.getLinks().getPayments().getHref(),
+        "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/payments{?cursor,limit,order}");
+    assertEquals(
+        account.getLinks().getTrades().getHref(),
+        "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/trades{?cursor,limit,order}");
+    assertEquals(
+        account.getLinks().getData().getHref(),
+        "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/data/{key}");
   }
 
   @Test
@@ -276,6 +288,21 @@ public class AccountDeserializerTest extends TestCase {
   String json =
       "{\n"
           + "  \"_links\": {\n"
+          + "    \"self\": {\n"
+          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\"\n"
+          + "    },\n"
+          + "    \"transactions\": {\n"
+          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}\",\n"
+          + "      \"templated\": true\n"
+          + "    },\n"
+          + "    \"operations\": {\n"
+          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}\",\n"
+          + "      \"templated\": true\n"
+          + "    },\n"
+          + "    \"payments\": {\n"
+          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/payments{?cursor,limit,order}\",\n"
+          + "      \"templated\": true\n"
+          + "    },\n"
           + "    \"effects\": {\n"
           + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/effects{?cursor,limit,order}\",\n"
           + "      \"templated\": true\n"
@@ -284,20 +311,17 @@ public class AccountDeserializerTest extends TestCase {
           + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/offers{?cursor,limit,order}\",\n"
           + "      \"templated\": true\n"
           + "    },\n"
-          + "    \"operations\": {\n"
-          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}\",\n"
+          + "    \"trades\": {\n"
+          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/trades{?cursor,limit,order}\",\n"
           + "      \"templated\": true\n"
           + "    },\n"
-          + "    \"self\": {\n"
-          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\"\n"
-          + "    },\n"
-          + "    \"transactions\": {\n"
-          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}\",\n"
+          + "    \"data\": {\n"
+          + "      \"href\": \"/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/data/{key}\",\n"
           + "      \"templated\": true\n"
           + "    }\n"
-          + "  },"
+          + "  },\n"
           + "  \"id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n"
-          + "  \"paging_token\": \"1\",\n"
+          + "  \"paging_token\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n"
           + "  \"account_id\": \"GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7\",\n"
           + "  \"sequence\": 2319149195853854,\n"
           + "  \"sequence_ledger\": 1234,\n"
@@ -327,7 +351,7 @@ public class AccountDeserializerTest extends TestCase {
           + "      \"asset_type\": \"credit_alphanum4\",\n"
           + "      \"asset_code\": \"ABC\",\n"
           + "      \"asset_issuer\": \"GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU\"\n"
-          + "    },"
+          + "    },\n"
           + "    {\n"
           + "      \"asset_type\": \"native\",\n"
           + "      \"balance\": \"20.0000300\",\n"
@@ -352,7 +376,7 @@ public class AccountDeserializerTest extends TestCase {
           + "  \"data\": {\n"
           + "    \"entry1\": \"dGVzdA==\",\n"
           + "    \"entry2\": \"dGVzdDI=\"\n"
-          + "  }"
+          + "  }\n"
           + "}";
 
   String jsonV9 =

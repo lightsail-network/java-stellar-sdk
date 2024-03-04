@@ -7,14 +7,14 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class FeeStatsResponse extends Response {
-  @SerializedName("ledger_capacity_usage")
-  Float ledgerCapacityUsage;
+  @SerializedName("last_ledger")
+  Long lastLedger;
 
   @SerializedName("last_ledger_base_fee")
   Long lastLedgerBaseFee;
 
-  @SerializedName("last_ledger")
-  Long lastLedger;
+  @SerializedName("ledger_capacity_usage")
+  Float ledgerCapacityUsage;
 
   @SerializedName("fee_charged")
   FeeDistribution feeCharged;
