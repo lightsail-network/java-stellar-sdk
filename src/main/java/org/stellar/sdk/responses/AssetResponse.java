@@ -24,8 +24,6 @@ public class AssetResponse extends Response implements Pageable {
   @SerializedName("contract_id")
   String contractID;
 
-  // TODO: The following fields will be removed in Horizon 3.0,
-  //  and we should also remove them at that time.
   @SerializedName("num_accounts")
   int numAccounts;
 
@@ -40,8 +38,6 @@ public class AssetResponse extends Response implements Pageable {
 
   @SerializedName("num_archived_contracts")
   int numArchivedContracts;
-
-  // TODO: remove the above fields when Horizon 3.0 is released.
 
   @SerializedName("amount")
   String amount;
