@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.stellar.sdk.Asset.create;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -208,5 +209,29 @@ public class AssetTest {
     Collections.shuffle(assets);
     Collections.sort(assets);
     assertArrayEquals(expected, assets.toArray());
+  }
+
+  @Test
+  public void testGetContractId() throws IOException {
+    // native + testnet
+    assertEquals(
+        "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+        new AssetTypeNative().getContractId(Network.TESTNET));
+    // native + public
+    assertEquals(
+        "CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA",
+        new AssetTypeNative().getContractId(Network.PUBLIC));
+    // alphanum4 + public
+    assertEquals(
+        "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
+        new AssetTypeCreditAlphaNum4(
+                "USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN")
+            .getContractId(Network.PUBLIC));
+    // alphanum12 + public
+    assertEquals(
+        "CDOFW7HNKLUZRLFZST4EW7V3AV4JI5IHMT6BPXXSY2IEFZ4NE5TWU2P4",
+        new AssetTypeCreditAlphaNum12(
+                "yUSDC", "GDGTVWSM4MGS4T7Z6W4RPWOCHE2I6RDFCIFZGS3DOA63LWQTRNZNTTFF")
+            .getContractId(Network.PUBLIC));
   }
 }

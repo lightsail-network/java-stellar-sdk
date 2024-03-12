@@ -5,6 +5,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## Pending
 ### Update
 * Update `org.stellar.sdk.responses`, add missing fields. ([#570](https://github.com/stellar/java-stellar-sdk/pull/570))
+* Add `Asset.getContractId()` for calculating the id of the asset contract. ([#574](https://github.com/stellar/java-stellar-sdk/pull/574))
 
 ## 0.43.0
 ### Update
