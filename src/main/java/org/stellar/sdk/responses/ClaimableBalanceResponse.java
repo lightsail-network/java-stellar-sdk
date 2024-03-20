@@ -17,7 +17,6 @@ import org.stellar.sdk.Claimant;
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class ClaimableBalanceResponse extends Response implements Pageable {
-
   @SerializedName("id")
   String id;
 
@@ -36,14 +35,17 @@ public class ClaimableBalanceResponse extends Response implements Pageable {
   @SerializedName("last_modified_time")
   String lastModifiedTime;
 
+  @SerializedName("claimants")
+  List<Claimant> claimants;
+
+  @SerializedName("flags")
+  Flags flags;
+
   @SerializedName("paging_token")
   String pagingToken;
 
   @SerializedName("_links")
   Links links;
-
-  @SerializedName("claimants")
-  List<Claimant> claimants;
 
   public Asset getAsset() {
     return Asset.create(assetString);
@@ -53,10 +55,22 @@ public class ClaimableBalanceResponse extends Response implements Pageable {
     return Optional.ofNullable(this.sponsor);
   }
 
+  @Value
+  public static class Flags {
+    @SerializedName("clawback_enabled")
+    Boolean clawbackEnabled;
+  }
+
   /** Links connected to claimable balance. */
   @Value
   public static class Links {
     @SerializedName("self")
     Link self;
+
+    @SerializedName("transactions")
+    Link transactions;
+
+    @SerializedName("operations")
+    Link operations;
   }
 }

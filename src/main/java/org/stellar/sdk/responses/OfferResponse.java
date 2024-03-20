@@ -35,6 +35,9 @@ public class OfferResponse extends Response implements Pageable {
   @SerializedName("amount")
   String amount;
 
+  @SerializedName("price_r")
+  TradePrice priceR;
+
   @SerializedName("price")
   String price;
 
@@ -45,11 +48,11 @@ public class OfferResponse extends Response implements Pageable {
   @SerializedName("last_modified_time")
   String lastModifiedTime;
 
-  @SerializedName("_links")
-  Links links;
-
   @SerializedName("sponsor")
   String sponsor;
+
+  @SerializedName("_links")
+  Links links;
 
   public Optional<String> getSponsor() {
     // For backwards compatibility

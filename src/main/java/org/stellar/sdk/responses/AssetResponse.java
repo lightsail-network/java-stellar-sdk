@@ -24,24 +24,6 @@ public class AssetResponse extends Response implements Pageable {
   @SerializedName("contract_id")
   String contractID;
 
-  @SerializedName("accounts")
-  AssetResponse.Accounts accounts;
-
-  @SerializedName("balances")
-  AssetResponse.Balances balances;
-
-  @SerializedName("amount")
-  String amount;
-
-  @SerializedName("claimable_balances_amount")
-  String claimableBalancesAmount;
-
-  @SerializedName("liquidity_pools_amount")
-  String liquidityPoolsAmount;
-
-  @SerializedName("contracts_amount")
-  String contractsAmount;
-
   @SerializedName("num_accounts")
   int numAccounts;
 
@@ -53,6 +35,30 @@ public class AssetResponse extends Response implements Pageable {
 
   @SerializedName("num_contracts")
   int numContracts;
+
+  @SerializedName("num_archived_contracts")
+  int numArchivedContracts;
+
+  @SerializedName("amount")
+  String amount;
+
+  @SerializedName("accounts")
+  AssetResponse.Accounts accounts;
+
+  @SerializedName("claimable_balances_amount")
+  String claimableBalancesAmount;
+
+  @SerializedName("liquidity_pools_amount")
+  String liquidityPoolsAmount;
+
+  @SerializedName("contracts_amount")
+  String contractsAmount;
+
+  @SerializedName("archived_contracts_amount")
+  String archivedContractsAmount;
+
+  @SerializedName("balances")
+  AssetResponse.Balances balances;
 
   @SerializedName("flags")
   AssetResponse.Flags flags;
@@ -124,6 +130,12 @@ public class AssetResponse extends Response implements Pageable {
 
     @SerializedName("auth_revocable")
     boolean authRevocable;
+
+    @SerializedName("auth_immutable")
+    boolean authImmutable;
+
+    @SerializedName("auth_clawback_enabled")
+    boolean authClawbackEnabled;
   }
 
   /** Links connected to asset. */

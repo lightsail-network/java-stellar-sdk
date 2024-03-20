@@ -58,6 +58,8 @@ public class TradesPageDeserializerTest extends TestCase {
         Optional.of(
             new LiquidityPoolID(
                 "a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7bbase")));
+    assertEquals(tradesPage.getRecords().get(0).getTradeType(), "liquidity_pool");
+    assertEquals(tradesPage.getRecords().get(0).getLiquidityPoolFeeBP().longValue(), 30);
     assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.empty());
     assertEquals(tradesPage.getRecords().get(1).getBaseLiquidityPoolID(), Optional.empty());
     assertEquals(
