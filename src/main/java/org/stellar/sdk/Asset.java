@@ -1,6 +1,12 @@
 package org.stellar.sdk;
 
+import java.io.IOException;
 import lombok.NonNull;
+import org.stellar.sdk.xdr.ContractIDPreimage;
+import org.stellar.sdk.xdr.ContractIDPreimageType;
+import org.stellar.sdk.xdr.EnvelopeType;
+import org.stellar.sdk.xdr.Hash;
+import org.stellar.sdk.xdr.HashIDPreimage;
 
 /**
  * Base Asset class.
@@ -141,5 +147,29 @@ public abstract class Asset implements Comparable<Asset> {
     } else {
       throw new AssetCodeLengthInvalidException();
     }
+  }
+
+  /**
+   * Returns the contract Id for the asset contract.
+   *
+   * @param network The network where the asset is located.
+   * @return The contract Id for the asset contract.
+   */
+  public String getContractId(Network network) throws IOException {
+    HashIDPreimage preimage =
+        new HashIDPreimage.Builder()
+            .discriminant(EnvelopeType.ENVELOPE_TYPE_CONTRACT_ID)
+            .contractID(
+                new HashIDPreimage.HashIDPreimageContractID.Builder()
+                    .networkID(new Hash(network.getNetworkId()))
+                    .contractIDPreimage(
+                        new ContractIDPreimage.Builder()
+                            .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
+                            .fromAsset(this.toXdr())
+                            .build())
+                    .build())
+            .build();
+    byte[] rawContractId = Util.hash(preimage.toXdrByteArray());
+    return StrKey.encodeContract(rawContractId);
   }
 }
