@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("java-library")
+    id("jacoco")
     id("maven-publish")
     id("project-report")
     id("com.diffplug.spotless") version "6.24.0"
@@ -114,6 +115,21 @@ tasks {
         doLast {
             file(".git/hooks/pre-commit").setExecutable(true)
         }
+    }
+
+
+    jacocoTestReport {
+        reports {
+            html.required = true
+            xml.required = true
+        }
+        classDirectories.setFrom(files(classDirectories.files.map { fileTree(it) {
+            exclude("org/stellar/sdk/xdr/**")
+        } }))
+    }
+
+    check {
+        dependsOn(jacocoTestReport)
     }
 
     compileJava {

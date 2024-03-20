@@ -19,3 +19,6 @@ build
 
 # Mac
 .DS_Store
+
+# Javadoc
+javadoc/
