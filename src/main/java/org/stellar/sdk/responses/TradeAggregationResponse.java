@@ -2,93 +2,52 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.Date;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
+@Value
+@EqualsAndHashCode(callSuper = false)
 public class TradeAggregationResponse extends Response {
   @SerializedName("timestamp")
-  private final long timestamp;
+  long timestamp;
 
   @SerializedName("trade_count")
-  private final int tradeCount;
+  int tradeCount;
 
   @SerializedName("base_volume")
-  private final String baseVolume;
+  String baseVolume;
 
   @SerializedName("counter_volume")
-  private final String counterVolume;
+  String counterVolume;
 
   @SerializedName("avg")
-  private final String avg;
+  String avg;
 
   @SerializedName("high")
-  private final String high;
+  String high;
+
+  @SerializedName("high_r")
+  TradePrice highR;
 
   @SerializedName("low")
-  private final String low;
+  String low;
+
+  @SerializedName("low_r")
+  TradePrice lowR;
 
   @SerializedName("open")
-  private final String open;
+  String open;
+
+  @SerializedName("open_r")
+  TradePrice openR;
 
   @SerializedName("close")
-  private final String close;
+  String close;
 
-  public TradeAggregationResponse(
-      long timestamp,
-      int tradeCount,
-      String baseVolume,
-      String counterVolume,
-      String avg,
-      String high,
-      String low,
-      String open,
-      String close) {
-    this.timestamp = timestamp;
-    this.tradeCount = tradeCount;
-    this.baseVolume = baseVolume;
-    this.counterVolume = counterVolume;
-    this.avg = avg;
-    this.high = high;
-    this.low = low;
-    this.open = open;
-    this.close = close;
-  }
-
-  public long getTimestamp() {
-    return timestamp;
-  }
+  @SerializedName("close_r")
+  TradePrice closeR;
 
   public Date getDate() {
-    return new Date(Long.valueOf(this.timestamp));
-  }
-
-  public int getTradeCount() {
-    return tradeCount;
-  }
-
-  public String getBaseVolume() {
-    return baseVolume;
-  }
-
-  public String getCounterVolume() {
-    return counterVolume;
-  }
-
-  public String getAvg() {
-    return avg;
-  }
-
-  public String getHigh() {
-    return high;
-  }
-
-  public String getLow() {
-    return low;
-  }
-
-  public String getOpen() {
-    return open;
-  }
-
-  public String getClose() {
-    return close;
+    return new Date(this.timestamp);
   }
 }

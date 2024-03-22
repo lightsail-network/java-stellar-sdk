@@ -1,6 +1,5 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 /**
@@ -9,7 +8,6 @@ import lombok.Value;
  * @see <a href="https://soroban.stellar.org/api/methods/getTransaction#returns"
  *     target="_blank">getTransaction documentation</a>
  */
-@AllArgsConstructor
 @Value
 public class GetTransactionResponse {
   GetTransactionStatus status;
@@ -26,10 +24,13 @@ public class GetTransactionResponse {
 
   Boolean feeBump;
 
+  /** The field can be parsed as {@link org.stellar.sdk.xdr.TransactionEnvelope} object. */
   String envelopeXdr;
 
+  /** The field can be parsed as {@link org.stellar.sdk.xdr.TransactionResult} object. */
   String resultXdr;
 
+  /** The field can be parsed as {@link org.stellar.sdk.xdr.TransactionMeta} object. */
   String resultMetaXdr;
 
   Long ledger;

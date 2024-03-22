@@ -11,8 +11,8 @@ public class Signer {
    * Create <code>ed25519PublicKey</code> {@link org.stellar.sdk.xdr.SignerKey} from a {@link
    * org.stellar.sdk.KeyPair}
    *
-   * @param keyPair
-   * @return org.stellar.sdk.xdr.SignerKey
+   * @param keyPair the keypair
+   * @return the <code>ed25519PublicKey</code> {@link org.stellar.sdk.xdr.SignerKey} object.
    */
   public static SignerKey ed25519PublicKey(@NonNull KeyPair keyPair) {
     return keyPair.getXdrSignerKey();
@@ -22,8 +22,8 @@ public class Signer {
    * Create <code>sha256Hash</code> {@link org.stellar.sdk.xdr.SignerKey} from a sha256 hash of a
    * preimage.
    *
-   * @param hash
-   * @return org.stellar.sdk.xdr.SignerKey
+   * @param hash the hash of a preimage
+   * @return the <code>sha256Hash</code> {@link org.stellar.sdk.xdr.SignerKey} object.
    */
   public static SignerKey sha256Hash(byte @NonNull [] hash) {
     SignerKey signerKey = new SignerKey();
@@ -39,8 +39,8 @@ public class Signer {
    * Create <code>preAuthTx</code> {@link org.stellar.sdk.xdr.SignerKey} from a {@link
    * org.stellar.sdk.xdr.Transaction} hash.
    *
-   * @param tx
-   * @return org.stellar.sdk.xdr.SignerKey
+   * @param tx the transaction
+   * @return the <code>preAuthTx</code> {@link org.stellar.sdk.xdr.SignerKey} object.
    */
   public static SignerKey preAuthTx(@NonNull Transaction tx) {
     SignerKey signerKey = new SignerKey();
@@ -55,8 +55,8 @@ public class Signer {
   /**
    * Create <code>preAuthTx</code> {@link org.stellar.sdk.xdr.SignerKey} from a transaction hash.
    *
-   * @param hash
-   * @return org.stellar.sdk.xdr.SignerKey
+   * @param hash the hash of a transaction
+   * @return the <code>preAuthTx</code> {@link org.stellar.sdk.xdr.SignerKey} object.
    */
   public static SignerKey preAuthTx(byte @NonNull [] hash) {
     SignerKey signerKey = new SignerKey();
@@ -72,7 +72,7 @@ public class Signer {
    * Create <code>SignerKey</code> {@link org.stellar.sdk.xdr.SignerKey} from {@link
    * org.stellar.sdk.SignedPayloadSigner}
    *
-   * @param signedPayloadSigner - signed payload values
+   * @param signedPayloadSigner signed payload values
    * @return org.stellar.sdk.xdr.SignerKey
    */
   public static SignerKey signedPayload(SignedPayloadSigner signedPayloadSigner) {

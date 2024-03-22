@@ -5,11 +5,12 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.Int32;
 
 /** Represents Price. Price in Stellar is represented as a fraction. */
+@EqualsAndHashCode
 public class Price {
   @SerializedName("n")
   private final int n;
@@ -79,7 +80,7 @@ public class Price {
 
   /** Generates a Price SDK object from the XDR representation. */
   public static Price fromXdr(org.stellar.sdk.xdr.Price price) {
-    return new Price(price.getN().getInt32().intValue(), price.getD().getInt32().intValue());
+    return new Price(price.getN().getInt32(), price.getD().getInt32());
   }
 
   /** Generates Price XDR object. */
@@ -100,21 +101,5 @@ public class Price {
     BigDecimal result = new BigDecimal(this.n).divide(new BigDecimal(this.d), mc);
 
     return result.toString();
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.getNumerator(), this.getDenominator());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Price)) {
-      return false;
-    }
-
-    Price other = (Price) object;
-    return this.getNumerator() == other.getNumerator()
-        && this.getDenominator() == other.getDenominator();
   }
 }

@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents account_created effect response.
@@ -10,15 +12,9 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AccountCreatedEffectResponse extends EffectResponse {
   @SerializedName("starting_balance")
-  protected final String startingBalance;
-
-  AccountCreatedEffectResponse(String startingBalance) {
-    this.startingBalance = startingBalance;
-  }
-
-  public String getStartingBalance() {
-    return startingBalance;
-  }
+  String startingBalance;
 }

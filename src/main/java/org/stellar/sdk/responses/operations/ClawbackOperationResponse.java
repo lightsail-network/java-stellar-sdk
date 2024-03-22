@@ -5,6 +5,8 @@ import static org.stellar.sdk.Asset.create;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.MuxedAccount;
 
@@ -14,50 +16,32 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ClawbackOperationResponse extends OperationResponse {
   @SerializedName("asset_type")
-  private String assetType;
+  String assetType;
 
   @SerializedName("asset_code")
-  private String assetCode;
+  String assetCode;
 
   @SerializedName("asset_issuer")
-  private String assetIssuer;
+  String assetIssuer;
 
   @SerializedName("amount")
-  private String amount;
+  String amount;
 
   @SerializedName("from")
-  private String from;
+  String from;
 
   @SerializedName("from_muxed")
-  private String fromMuxed;
+  String fromMuxed;
 
   @SerializedName("from_muxed_id")
-  private BigInteger fromMuxedId;
-
-  public String getAssetType() {
-    return assetType;
-  }
-
-  public String getAssetIssuer() {
-    return assetIssuer;
-  }
-
-  public String getAssetCode() {
-    return assetCode;
-  }
+  BigInteger fromMuxedId;
 
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer);
-  }
-
-  public String getAmount() {
-    return amount;
-  }
-
-  public String getFrom() {
-    return from;
   }
 
   public Optional<MuxedAccount> getFromMuxed() {

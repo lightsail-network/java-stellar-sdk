@@ -3,6 +3,8 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -13,24 +15,26 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AccountMergeOperationResponse extends OperationResponse {
   @SerializedName("account")
-  private String account;
+  String account;
 
   @SerializedName("account_muxed")
-  private String accountMuxed;
+  String accountMuxed;
 
   @SerializedName("account_muxed_id")
-  private BigInteger accountMuxedId;
+  BigInteger accountMuxedId;
 
   @SerializedName("into")
-  private String into;
+  String into;
 
   @SerializedName("into_muxed")
-  private String intoMuxed;
+  String intoMuxed;
 
   @SerializedName("into_muxed_id")
-  private BigInteger intoMuxedId;
+  BigInteger intoMuxedId;
 
   public Optional<MuxedAccount> getAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
@@ -44,13 +48,5 @@ public class AccountMergeOperationResponse extends OperationResponse {
       return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.intoMuxed, this.into, this.intoMuxedId));
-  }
-
-  public String getAccount() {
-    return account;
-  }
-
-  public String getInto() {
-    return into;
   }
 }

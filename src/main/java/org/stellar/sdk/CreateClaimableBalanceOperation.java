@@ -2,13 +2,25 @@ package org.stellar.sdk;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
+/**
+ * Represents <a
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#create-claimable-balance"
+ * target="_blank">CreateClaimableBalance</a> operation.
+ */
+@Getter
+@EqualsAndHashCode(callSuper = true)
 public class CreateClaimableBalanceOperation extends Operation {
-  private final String amount;
-  private final Asset asset;
+
+  /* The amount of the asset. */
+  @NonNull private final String amount;
+  /* The asset for the claimable balance. */
+  @NonNull private final Asset asset;
+  /* The list of claimants for the claimable balance. */
   private final List<Claimant> claimants;
 
   private CreateClaimableBalanceOperation(
@@ -19,18 +31,6 @@ public class CreateClaimableBalanceOperation extends Operation {
     if (this.claimants.isEmpty()) {
       throw new IllegalArgumentException("claimants cannot be empty");
     }
-  }
-
-  public Asset getAsset() {
-    return asset;
-  }
-
-  public String getAmount() {
-    return amount;
-  }
-
-  public List<Claimant> getClaimants() {
-    return claimants;
   }
 
   @Override
@@ -66,11 +66,12 @@ public class CreateClaimableBalanceOperation extends Operation {
   }
 
   public static class Builder {
+
     private final String amount;
     private final Asset asset;
     private final List<Claimant> claimants;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new CreateClaimableBalance builder from a CreateClaimableBalance XDR.
@@ -79,7 +80,7 @@ public class CreateClaimableBalanceOperation extends Operation {
      */
     Builder(CreateClaimableBalanceOp op) {
       asset = Asset.fromXdr(op.getAsset());
-      amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
+      amount = Operation.fromXdrAmount(op.getAmount().getInt64());
       claimants = new ArrayList<>();
       for (org.stellar.sdk.xdr.Claimant c : op.getClaimants()) {
         claimants.add(
@@ -109,7 +110,7 @@ public class CreateClaimableBalanceOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public CreateClaimableBalanceOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -117,28 +118,10 @@ public class CreateClaimableBalanceOperation extends Operation {
     public CreateClaimableBalanceOperation build() {
       CreateClaimableBalanceOperation operation =
           new CreateClaimableBalanceOperation(amount, asset, claimants);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.amount, this.asset, this.claimants, this.getSourceAccount());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof CreateClaimableBalanceOperation)) {
-      return false;
-    }
-
-    CreateClaimableBalanceOperation other = (CreateClaimableBalanceOperation) object;
-    return Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.claimants, other.claimants)
-        && Objects.equals(this.getSourceAccount(), other.getSourceAccount());
   }
 }

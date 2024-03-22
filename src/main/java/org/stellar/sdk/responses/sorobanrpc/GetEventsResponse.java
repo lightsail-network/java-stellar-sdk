@@ -1,7 +1,6 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
 
@@ -11,19 +10,17 @@ import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
  * @see <a href="https://soroban.stellar.org/api/methods/getEvents#returns"
  *     target="_blank">getEvents documentation</a>
  */
-@AllArgsConstructor
 @Value
 public class GetEventsResponse {
   List<EventInfo> events;
 
   Long latestLedger;
 
-  @AllArgsConstructor
   @Value
   public static class EventInfo {
     EventFilterType type;
 
-    Integer ledger;
+    Long ledger;
 
     String ledgerClosedAt;
 

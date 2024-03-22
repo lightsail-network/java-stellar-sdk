@@ -30,11 +30,9 @@ import org.stellar.sdk.xdr.XdrString;
 
 /**
  * Represents <a
- * href="https://github.com/stellar/go/blob/7ff6ffae29d278f979fcd6c6bed8cd0d4b4d2e08/txnbuild/invoke_host_function.go#L8-L13"
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#invoke-host-function"
  * target="_blank">InvokeHostFunction</a> operation.
  *
- * @see <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations"
- *     target="_blank">List of Operations</a>
  * @see org.stellar.sdk.scval.Scv
  */
 @EqualsAndHashCode(callSuper = true)

@@ -3,7 +3,7 @@ package org.stellar.sdk;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
@@ -29,13 +29,27 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction extends AbstractTransaction {
-  private final long mFee;
-  private final String mSourceAccount;
-  private final long mSequenceNumber;
-  private final Operation[] mOperations;
-  private final Memo mMemo;
-  private final TransactionPreconditions mPreconditions;
-  private final SorobanTransactionData mSorobanData;
+  /** fee paid for transaction in stroops (1 stroop = 0.0000001 XLM). */
+  @Getter private final long fee;
+
+  /** The source account for this transaction. */
+  @Getter @NonNull private final String sourceAccount;
+
+  /** The sequence number of the account creating this transaction. */
+  @Getter private final long sequenceNumber;
+
+  /** Operations included in the transaction. */
+  @Getter @NonNull private final Operation[] operations;
+
+  /** Memo attached to the transaction. */
+  @Getter @NonNull private final Memo memo;
+
+  /** The preconditions for the transaction. */
+  @Getter private final TransactionPreconditions preconditions;
+
+  /** The Soroban data for the transaction. */
+  @Getter private final SorobanTransactionData sorobanData;
+
   private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;
 
   Transaction(
@@ -49,16 +63,16 @@ public class Transaction extends AbstractTransaction {
       SorobanTransactionData sorobanData,
       Network network) {
     super(accountConverter, network);
-    this.mSourceAccount = sourceAccount;
-    this.mSequenceNumber = sequenceNumber;
-    this.mOperations = operations;
+    this.sourceAccount = sourceAccount;
+    this.sequenceNumber = sequenceNumber;
+    this.operations = operations;
     if (operations.length == 0) {
       throw new IllegalArgumentException("At least one operation required");
     }
-    this.mPreconditions = preconditions;
-    this.mFee = fee;
-    this.mMemo = memo != null ? memo : Memo.none();
-    this.mSorobanData = sorobanData != null ? new SorobanDataBuilder(sorobanData).build() : null;
+    this.preconditions = preconditions;
+    this.fee = fee;
+    this.memo = memo != null ? memo : Memo.none();
+    this.sorobanData = sorobanData != null ? new SorobanDataBuilder(sorobanData).build() : null;
   }
 
   // setEnvelopeType is only used in tests which is why this method is package protected
@@ -72,37 +86,7 @@ public class Transaction extends AbstractTransaction {
         new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction();
     taggedTransaction.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
     taggedTransaction.setTx(this.toV1Xdr(accountConverter));
-    return getTransactionSignatureBase(taggedTransaction, mNetwork);
-  }
-
-  public String getSourceAccount() {
-    return mSourceAccount;
-  }
-
-  public long getSequenceNumber() {
-    return mSequenceNumber;
-  }
-
-  public Memo getMemo() {
-    return mMemo;
-  }
-
-  /**
-   * Get the Soroban data for the transaction.
-   *
-   * @return SorobanTransactionData if the transaction includes SorobanData, otherwise null.
-   */
-  public SorobanTransactionData getSorobanData() {
-    return mSorobanData;
-  }
-
-  /**
-   * Get the pre-conditions for the transaction
-   *
-   * @return TransactionPreconditions
-   */
-  public TransactionPreconditions getPreconditions() {
-    return mPreconditions;
+    return getTransactionSignatureBase(taggedTransaction, network);
   }
 
   /**
@@ -111,17 +95,7 @@ public class Transaction extends AbstractTransaction {
    * @return TimeBounds
    */
   public TimeBounds getTimeBounds() {
-    return mPreconditions.getTimeBounds();
-  }
-
-  /** Returns fee paid for transaction in stroops (1 stroop = 0.0000001 XLM). */
-  public long getFee() {
-    return mFee;
-  }
-
-  /** Returns operations in this transaction. */
-  public Operation[] getOperations() {
-    return mOperations;
+    return preconditions.getTimeBounds();
   }
 
   /**
@@ -129,16 +103,16 @@ public class Transaction extends AbstractTransaction {
    * within the transaction.
    */
   public String getClaimableBalanceId(int index) throws IOException {
-    if (index < 0 || index >= mOperations.length) {
+    if (index < 0 || index >= operations.length) {
       throw new IllegalArgumentException(
           "index: " + index + " is outside the bounds of the operations within this transaction");
     }
-    if (!(mOperations[index] instanceof CreateClaimableBalanceOperation)) {
+    if (!(operations[index] instanceof CreateClaimableBalanceOperation)) {
       throw new IllegalArgumentException(
           "operation at index "
               + index
               + " is not of type CreateClaimableBalanceOperation: "
-              + mOperations[index].getClass());
+              + operations[index].getClass());
     }
 
     // We mimic the relevant code from Stellar Core
@@ -177,17 +151,17 @@ public class Transaction extends AbstractTransaction {
   private TransactionV0 toXdr() {
     // fee
     Uint32 fee = new Uint32();
-    fee.setUint32(new XdrUnsignedInteger(mFee));
+    fee.setUint32(new XdrUnsignedInteger(this.fee));
     // sequenceNumber
     Int64 sequenceNumberUint = new Int64();
-    sequenceNumberUint.setInt64(mSequenceNumber);
+    sequenceNumberUint.setInt64(sequenceNumber);
     SequenceNumber sequenceNumber = new SequenceNumber();
     sequenceNumber.setSequenceNumber(sequenceNumberUint);
     // operations
     org.stellar.sdk.xdr.Operation[] operations =
-        new org.stellar.sdk.xdr.Operation[mOperations.length];
-    for (int i = 0; i < mOperations.length; i++) {
-      operations[i] = mOperations[i].toXdr(AccountConverter.enableMuxed());
+        new org.stellar.sdk.xdr.Operation[this.operations.length];
+    for (int i = 0; i < this.operations.length; i++) {
+      operations[i] = this.operations[i].toXdr(AccountConverter.enableMuxed());
     }
     // ext
     TransactionV0.TransactionV0Ext ext = new TransactionV0.TransactionV0Ext();
@@ -197,9 +171,9 @@ public class Transaction extends AbstractTransaction {
     transaction.setFee(fee);
     transaction.setSeqNum(sequenceNumber);
     transaction.setSourceAccountEd25519(
-        StrKey.encodeToXDRAccountId(this.mSourceAccount).getAccountID().getEd25519());
+        StrKey.encodeToXDRAccountId(this.sourceAccount).getAccountID().getEd25519());
     transaction.setOperations(operations);
-    transaction.setMemo(mMemo.toXdr());
+    transaction.setMemo(memo.toXdr());
     transaction.setTimeBounds(getTimeBounds() == null ? null : getTimeBounds().toXdr());
     transaction.setExt(ext);
     return transaction;
@@ -209,24 +183,24 @@ public class Transaction extends AbstractTransaction {
 
     // fee
     Uint32 fee = new Uint32();
-    fee.setUint32((new XdrUnsignedInteger(mFee)));
+    fee.setUint32((new XdrUnsignedInteger(this.fee)));
     // sequenceNumber
     Int64 sequenceNumberUint = new Int64();
-    sequenceNumberUint.setInt64(mSequenceNumber);
+    sequenceNumberUint.setInt64(sequenceNumber);
     SequenceNumber sequenceNumber = new SequenceNumber();
     sequenceNumber.setSequenceNumber(sequenceNumberUint);
     // operations
     org.stellar.sdk.xdr.Operation[] operations =
-        new org.stellar.sdk.xdr.Operation[mOperations.length];
-    for (int i = 0; i < mOperations.length; i++) {
-      operations[i] = mOperations[i].toXdr(accountConverter);
+        new org.stellar.sdk.xdr.Operation[this.operations.length];
+    for (int i = 0; i < this.operations.length; i++) {
+      operations[i] = this.operations[i].toXdr(accountConverter);
     }
     // ext
     org.stellar.sdk.xdr.Transaction.TransactionExt ext =
         new org.stellar.sdk.xdr.Transaction.TransactionExt();
-    if (this.mSorobanData != null) {
+    if (this.sorobanData != null) {
       ext.setDiscriminant(1);
-      ext.setSorobanData(this.mSorobanData);
+      ext.setSorobanData(this.sorobanData);
     } else {
       ext.setDiscriminant(0);
     }
@@ -234,10 +208,10 @@ public class Transaction extends AbstractTransaction {
     org.stellar.sdk.xdr.Transaction v1Tx = new org.stellar.sdk.xdr.Transaction();
     v1Tx.setFee(fee);
     v1Tx.setSeqNum(sequenceNumber);
-    v1Tx.setSourceAccount(accountConverter.encode(mSourceAccount));
+    v1Tx.setSourceAccount(accountConverter.encode(sourceAccount));
     v1Tx.setOperations(operations);
-    v1Tx.setMemo(mMemo.toXdr());
-    v1Tx.setCond(mPreconditions.toXdr());
+    v1Tx.setMemo(memo.toXdr());
+    v1Tx.setCond(preconditions.toXdr());
     v1Tx.setExt(ext);
 
     return v1Tx;
@@ -268,7 +242,7 @@ public class Transaction extends AbstractTransaction {
             network);
     transaction.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
 
-    transaction.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
+    transaction.signatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return transaction;
   }
@@ -302,7 +276,7 @@ public class Transaction extends AbstractTransaction {
             sorobanData,
             network);
 
-    transaction.mSignatures.addAll(Arrays.asList(envelope.getSignatures()));
+    transaction.signatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return transaction;
   }
@@ -315,8 +289,8 @@ public class Transaction extends AbstractTransaction {
   @Override
   public TransactionEnvelope toEnvelopeXdr() {
     TransactionEnvelope xdr = new TransactionEnvelope();
-    DecoratedSignature[] signatures = new DecoratedSignature[mSignatures.size()];
-    signatures = mSignatures.toArray(signatures);
+    DecoratedSignature[] signatures = new DecoratedSignature[this.signatures.size()];
+    signatures = this.signatures.toArray(signatures);
 
     if (this.envelopeType == EnvelopeType.ENVELOPE_TYPE_TX) {
       TransactionV1Envelope v1Envelope = new TransactionV1Envelope();
@@ -337,45 +311,11 @@ public class Transaction extends AbstractTransaction {
     return xdr;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.envelopeType,
-        this.mFee,
-        this.mSourceAccount,
-        this.mSequenceNumber,
-        Arrays.hashCode(this.mOperations),
-        this.mMemo,
-        this.mPreconditions,
-        this.mSignatures,
-        this.mNetwork,
-        this.mSorobanData);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Transaction)) {
-      return false;
-    }
-
-    Transaction other = (Transaction) object;
-    return Objects.equals(this.envelopeType, other.envelopeType)
-        && Objects.equals(this.mFee, other.mFee)
-        && Objects.equals(this.mSourceAccount, other.mSourceAccount)
-        && Objects.equals(this.mSequenceNumber, other.mSequenceNumber)
-        && Arrays.equals(this.mOperations, other.mOperations)
-        && Objects.equals(this.mMemo, other.mMemo)
-        && Objects.equals(this.mPreconditions, other.mPreconditions)
-        && Objects.equals(this.mNetwork, other.mNetwork)
-        && Objects.equals(this.mSignatures, other.mSignatures)
-        && Objects.equals(this.mSorobanData, other.mSorobanData);
-  }
-
   /**
    * Maintain backwards compatibility references to Transaction.Builder
    *
-   * @deprecated will be removed in upcoming releases. Use <code>TransactionBuilder</code> instead.
    * @see org.stellar.sdk.TransactionBuilder
+   * @deprecated will be removed in upcoming releases. Use <code>TransactionBuilder</code> instead.
    */
   public static class Builder extends TransactionBuilder {
     public Builder(
@@ -396,13 +336,30 @@ public class Transaction extends AbstractTransaction {
    * @return true if this transaction is a Soroban transaction.
    */
   public boolean isSorobanTransaction() {
-    if (mOperations.length != 1) {
+    if (operations.length != 1) {
       return false;
     }
 
-    Operation op = mOperations[0];
+    Operation op = operations[0];
     return op instanceof InvokeHostFunctionOperation
         || op instanceof ExtendFootprintTTLOperation
         || op instanceof RestoreFootprintOperation;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (object == null || getClass() != object.getClass()) {
+      return false;
+    }
+    Transaction that = (Transaction) object;
+    return Arrays.equals(signatureBase(), that.signatureBase());
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(signatureBase());
   }
 }

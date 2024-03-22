@@ -1,7 +1,7 @@
 package org.stellar.sdk;
 
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
@@ -9,20 +9,34 @@ import org.stellar.sdk.xdr.PathPaymentStrictReceiveOp;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/start/list-of-operations/#path-payment-strict-receive"
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#path-payment-strict-receive"
  * target="_blank">PathPaymentStrictReceive</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
 public class PathPaymentStrictReceiveOperation extends Operation {
 
-  private final Asset sendAsset;
-  private final String sendMax;
-  private final String destination;
-  private final Asset destAsset;
-  private final String destAmount;
-  private final Asset[] path;
+  /** The asset deducted from the sender's account. */
+  @NonNull private final Asset sendAsset;
+
+  /** The maximum amount of send asset to deduct (excluding fees) */
+  @NonNull private final String sendMax;
+
+  /** Account that receives the payment. */
+  @NonNull private final String destination;
+
+  /** The asset the destination account receives. */
+  @NonNull private final Asset destAsset;
+
+  /** The amount of destination asset the destination account receives. */
+  @NonNull private final String destAmount;
+
+  /**
+   * The assets (other than send asset and destination asset) involved in the offers the path takes.
+   * For example, if you can only find a path from USD to EUR through XLM and BTC, the path would be
+   * USD -&raquo; XLM -&raquo; BTC -&raquo; EUR and the path would contain XLM and BTC.
+   */
+  @NonNull private final Asset[] path;
 
   private PathPaymentStrictReceiveOperation(
       @NonNull Asset sendAsset,
@@ -44,40 +58,6 @@ public class PathPaymentStrictReceiveOperation extends Operation {
       }
       this.path = path;
     }
-  }
-
-  /** The asset deducted from the sender's account. */
-  public Asset getSendAsset() {
-    return sendAsset;
-  }
-
-  /** The maximum amount of send asset to deduct (excluding fees) */
-  public String getSendMax() {
-    return sendMax;
-  }
-
-  /** Account that receives the payment. */
-  public String getDestination() {
-    return destination;
-  }
-
-  /** The asset the destination account receives. */
-  public Asset getDestAsset() {
-    return destAsset;
-  }
-
-  /** The amount of destination asset the destination account receives. */
-  public String getDestAmount() {
-    return destAmount;
-  }
-
-  /**
-   * The assets (other than send asset and destination asset) involved in the offers the path takes.
-   * For example, if you can only find a path from USD to EUR through XLM and BTC, the path would be
-   * USD -&raquo; XLM -&raquo; BTC -&raquo; EUR and the path would contain XLM and BTC.
-   */
-  public Asset[] getPath() {
-    return path;
   }
 
   @Override
@@ -118,6 +98,7 @@ public class PathPaymentStrictReceiveOperation extends Operation {
    * @see PathPaymentStrictReceiveOperation
    */
   public static class Builder {
+
     private final Asset sendAsset;
     private final String sendMax;
     private final String destination;
@@ -125,7 +106,7 @@ public class PathPaymentStrictReceiveOperation extends Operation {
     private final String destAmount;
     private Asset[] path;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     Builder(AccountConverter accountConverter, PathPaymentStrictReceiveOp op) {
       sendAsset = Asset.fromXdr(op.getSendAsset());
@@ -187,7 +168,7 @@ public class PathPaymentStrictReceiveOperation extends Operation {
      */
     public PathPaymentStrictReceiveOperation.Builder setSourceAccount(
         @NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -196,37 +177,10 @@ public class PathPaymentStrictReceiveOperation extends Operation {
       PathPaymentStrictReceiveOperation operation =
           new PathPaymentStrictReceiveOperation(
               sendAsset, sendMax, destination, destAsset, destAmount, path);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  public int hashCode() {
-    return Objects.hash(
-        this.getSourceAccount(),
-        this.destAmount,
-        this.destAsset,
-        this.destination,
-        Arrays.hashCode(this.path),
-        this.sendAsset,
-        this.sendMax);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PathPaymentStrictReceiveOperation)) {
-      return false;
-    }
-
-    PathPaymentStrictReceiveOperation other = (PathPaymentStrictReceiveOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.destAmount, other.destAmount)
-        && Objects.equals(this.destAsset, other.destAsset)
-        && Objects.equals(this.destination, other.destination)
-        && Arrays.equals(this.path, other.path)
-        && Objects.equals(this.sendAsset, other.sendAsset)
-        && Objects.equals(this.sendMax, other.sendMax);
   }
 }

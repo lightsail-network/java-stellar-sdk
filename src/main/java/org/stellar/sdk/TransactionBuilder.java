@@ -2,28 +2,27 @@ package org.stellar.sdk;
 
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import lombok.NonNull;
-import org.stellar.sdk.TransactionPreconditions.TransactionPreconditionsBuilder;
 import org.stellar.sdk.xdr.SorobanTransactionData;
-import org.stellar.sdk.xdr.TimePoint;
-import org.stellar.sdk.xdr.Uint64;
-import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /** Builds a new Transaction object. */
 public class TransactionBuilder {
-  private final TransactionBuilderAccount mSourceAccount;
-  private final AccountConverter mAccountConverter;
-  private Memo mMemo;
-  private List<Operation> mOperations;
-  private Long mBaseFee;
-  private Network mNetwork;
-  private TransactionPreconditions mPreconditions;
-  private SorobanTransactionData mSorobanData;
+  private final TransactionBuilderAccount sourceAccount;
+  private final AccountConverter accountConverter;
+  private Memo memo;
+  private final List<Operation> operations;
+  private Long baseFee;
+  private final Network network;
+  @NonNull private TransactionPreconditions preconditions;
+  private SorobanTransactionData sorobanData;
+  private BigInteger txTimeout;
 
   /**
    * Construct a new transaction builder.
@@ -38,11 +37,11 @@ public class TransactionBuilder {
       @NonNull AccountConverter accountConverter,
       @NonNull TransactionBuilderAccount sourceAccount,
       @NonNull Network network) {
-    mAccountConverter = accountConverter;
-    mSourceAccount = sourceAccount;
-    mNetwork = network;
-    mOperations = new ArrayList<>();
-    mPreconditions = TransactionPreconditions.builder().build();
+    this.accountConverter = accountConverter;
+    this.sourceAccount = sourceAccount;
+    this.network = network;
+    operations = new ArrayList<>();
+    preconditions = TransactionPreconditions.builder().build();
   }
 
   /**
@@ -57,20 +56,55 @@ public class TransactionBuilder {
     this(AccountConverter.enableMuxed(), sourceAccount, network);
   }
 
+  /**
+   * Construct a new transaction builder from a transaction.
+   *
+   * @param transaction the transaction to rebuild
+   */
+  public TransactionBuilder(Transaction transaction) {
+    AbstractTransaction abstractTransaction;
+    try {
+      // deep copy
+      abstractTransaction =
+          Transaction.fromEnvelopeXdr(
+              transaction.getAccountConverter(),
+              transaction.toEnvelopeXdrBase64(),
+              transaction.getNetwork());
+    } catch (IOException e) {
+      // This should never happen
+      throw new RuntimeException(e);
+    }
+
+    if (!(abstractTransaction instanceof Transaction)) {
+      // This should never happen
+      throw new RuntimeException("TransactionBuilder can only be used to rebuild a Transaction");
+    }
+    Transaction tx = (Transaction) abstractTransaction;
+
+    this.sourceAccount = new Account(tx.getSourceAccount(), tx.getSequenceNumber() - 1);
+    this.accountConverter = tx.accountConverter;
+    this.memo = tx.getMemo();
+    this.operations = Arrays.asList(tx.getOperations());
+    this.baseFee = tx.getFee() / tx.getOperations().length;
+    this.network = tx.getNetwork();
+    this.preconditions = tx.getPreconditions();
+    this.sorobanData = tx.getSorobanData();
+  }
+
   public int getOperationsCount() {
-    return mOperations.size();
+    return operations.size();
   }
 
   /**
    * Adds a new <a href="https://developers.stellar.org/docs/start/list-of-operations/"
    * target="_blank">operation</a> to this transaction.
    *
-   * @param operation
+   * @param operation the operation to add
    * @return Builder object so you can chain methods.
    * @see Operation
    */
   public TransactionBuilder addOperation(@NonNull Operation operation) {
-    mOperations.add(operation);
+    operations.add(operation);
     return this;
   }
 
@@ -83,7 +117,7 @@ public class TransactionBuilder {
    * @see Operation
    */
   public TransactionBuilder addOperations(@NonNull Collection<Operation> operations) {
-    mOperations.addAll(operations);
+    this.operations.addAll(operations);
     return this;
   }
 
@@ -95,7 +129,7 @@ public class TransactionBuilder {
    * @return updated Builder object
    */
   public TransactionBuilder addPreconditions(@NonNull TransactionPreconditions preconditions) {
-    this.mPreconditions = preconditions;
+    this.preconditions = preconditions;
     return this;
   }
 
@@ -103,34 +137,15 @@ public class TransactionBuilder {
    * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/#memo"
    * target="_blank">memo</a> to this transaction.
    *
-   * @param memo
+   * @param memo memo to add
    * @return Builder object so you can chain methods.
    * @see Memo
    */
   public TransactionBuilder addMemo(@NonNull Memo memo) {
-    if (mMemo != null) {
+    if (this.memo != null) {
       throw new RuntimeException("Memo has been already added.");
     }
-    mMemo = memo;
-    return this;
-  }
-
-  /**
-   * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/"
-   * target="_blank">time-bounds</a> to this transaction.
-   *
-   * @param timeBounds tx can be accepted within this time bound range
-   * @return Builder object so you can chain methods.
-   * @see TimeBounds
-   * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
-   *     </code> instead for more control over preconditions.
-   */
-  public TransactionBuilder addTimeBounds(@NonNull TimeBounds timeBounds) {
-    if (mPreconditions.getTimeBounds() != null) {
-      throw new RuntimeException("TimeBounds already set.");
-    }
-
-    mPreconditions = mPreconditions.toBuilder().timeBounds(timeBounds).build();
+    this.memo = memo;
     return this;
   }
 
@@ -142,7 +157,7 @@ public class TransactionBuilder {
    * setTimeout</code> does internally; if there's <code>minTime</code> set but no <code>maxTime
    * </code> it will be added). Call to <code>Builder.setTimeout</code> is required if Transaction
    * does not have <code>max_time</code> set. If you don't want to set timeout, use <code>
-   * TIMEOUT_INFINITE</code>. In general you should set <code>TIMEOUT_INFINITE</code> only in smart
+   * TIMEOUT_INFINITE</code>. In general, you should set <code>TIMEOUT_INFINITE</code> only in smart
    * contracts. Please note that Horizon may still return <code>504 Gateway Timeout</code> error,
    * even for short timeouts. In such case you need to resubmit the same transaction again without
    * making any changes to receive a status. This method is using the machine system time (UTC),
@@ -151,33 +166,13 @@ public class TransactionBuilder {
    * @param timeout Timeout in seconds.
    * @return updated Builder
    * @see TimeBounds
-   * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
-   *     </code> with TimeBound set instead for more control over preconditions.
    */
   public TransactionBuilder setTimeout(BigInteger timeout) {
-    if (mPreconditions.getTimeBounds() != null
-        && !TIMEOUT_INFINITE.equals(mPreconditions.getTimeBounds().getMaxTime())) {
-      throw new RuntimeException(
-          "TimeBounds.max_time has been already set - setting timeout would overwrite it.");
-    }
-
     if (timeout.compareTo(BigInteger.ZERO) < 0) {
       throw new RuntimeException("timeout cannot be negative");
     }
 
-    BigInteger timeoutTimestamp =
-        !TIMEOUT_INFINITE.equals(timeout)
-            ? timeout.add(BigInteger.valueOf(System.currentTimeMillis() / 1000L))
-            : TIMEOUT_INFINITE;
-
-    TransactionPreconditionsBuilder preconditionsBuilder = mPreconditions.toBuilder();
-    if (mPreconditions.getTimeBounds() == null) {
-      preconditionsBuilder.timeBounds(new TimeBounds(BigInteger.ZERO, timeoutTimestamp));
-    } else {
-      preconditionsBuilder.timeBounds(
-          new TimeBounds(mPreconditions.getTimeBounds().getMinTime(), timeoutTimestamp));
-    }
-    mPreconditions = preconditionsBuilder.build();
+    txTimeout = timeout;
     return this;
   }
 
@@ -186,8 +181,6 @@ public class TransactionBuilder {
    *
    * @param timeout Timeout in seconds.
    * @return updated Builder
-   * @deprecated this method will be removed in upcoming releases, use <code>addPreconditions()
-   *     </code> with TimeBound set instead for more control over preconditions.
    */
   public TransactionBuilder setTimeout(long timeout) {
     return setTimeout(BigInteger.valueOf(timeout));
@@ -202,7 +195,7 @@ public class TransactionBuilder {
               + baseFee);
     }
 
-    this.mBaseFee = baseFee;
+    this.baseFee = baseFee;
     return this;
   }
 
@@ -211,31 +204,46 @@ public class TransactionBuilder {
    * is constructed.
    */
   public Transaction build() {
-    mPreconditions.isValid();
-
-    if (mBaseFee == null) {
-      throw new FormatException("mBaseFee has to be set. you must call setBaseFee().");
+    // ensure that the preconditions are valid
+    if (preconditions.getTimeBounds() != null && txTimeout != null) {
+      throw new IllegalArgumentException(
+          "Can not set both TransactionPreconditions.timeBounds and timeout.");
     }
 
-    if (mNetwork == null) {
+    if (txTimeout != null) {
+      BigInteger maxTime =
+          !TIMEOUT_INFINITE.equals(txTimeout)
+              ? txTimeout.add(BigInteger.valueOf(System.currentTimeMillis() / 1000L))
+              : TIMEOUT_INFINITE;
+      preconditions =
+          preconditions.toBuilder().timeBounds(new TimeBounds(BigInteger.ZERO, maxTime)).build();
+    }
+
+    preconditions.isValid();
+
+    if (baseFee == null) {
+      throw new FormatException("baseFee has to be set. you must call setBaseFee().");
+    }
+
+    if (network == null) {
       throw new NoNetworkSelectedException();
     }
 
-    long sequenceNumber = mSourceAccount.getIncrementedSequenceNumber();
-    Operation[] operations = new Operation[mOperations.size()];
-    operations = mOperations.toArray(operations);
+    long sequenceNumber = sourceAccount.getIncrementedSequenceNumber();
+    Operation[] operations = new Operation[this.operations.size()];
+    operations = this.operations.toArray(operations);
     Transaction transaction =
         new Transaction(
-            mAccountConverter,
-            mSourceAccount.getAccountId(),
-            operations.length * mBaseFee,
+            accountConverter,
+            sourceAccount.getAccountId(),
+            operations.length * baseFee,
             sequenceNumber,
             operations,
-            mMemo,
-            mPreconditions,
-            mSorobanData,
-            mNetwork);
-    mSourceAccount.setSequenceNumber(sequenceNumber);
+            memo,
+            preconditions,
+            sorobanData,
+            network);
+    sourceAccount.setSequenceNumber(sequenceNumber);
     return transaction;
   }
 
@@ -245,14 +253,6 @@ public class TransactionBuilder {
    */
   public static Function<TransactionBuilderAccount, Long> IncrementedSequenceNumberFunc =
       TransactionBuilderAccount::getIncrementedSequenceNumber;
-
-  @Deprecated
-  public static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(long minTime, long maxTime) {
-    return new org.stellar.sdk.xdr.TimeBounds.Builder()
-        .minTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(minTime))))
-        .maxTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(maxTime))))
-        .build();
-  }
 
   /**
    * Sets the transaction's internal Soroban transaction data (resources, footprint, etc.).
@@ -267,7 +267,7 @@ public class TransactionBuilder {
    * @return Builder object so you can chain methods.
    */
   public TransactionBuilder setSorobanData(SorobanTransactionData sorobanData) {
-    this.mSorobanData = new SorobanDataBuilder(sorobanData).build();
+    this.sorobanData = new SorobanDataBuilder(sorobanData).build();
     return this;
   }
 
@@ -284,7 +284,7 @@ public class TransactionBuilder {
    * @return Builder object so you can chain methods.
    */
   public TransactionBuilder setSorobanData(String sorobanData) {
-    this.mSorobanData = new SorobanDataBuilder(sorobanData).build();
+    this.sorobanData = new SorobanDataBuilder(sorobanData).build();
     return this;
   }
 }

@@ -1,7 +1,8 @@
 package org.stellar.sdk;
 
 import java.math.BigInteger;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
@@ -9,11 +10,23 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 /**
  * TimeBounds represents the time interval that a transaction is valid.
  *
+ * <p>The UNIX timestamp (in seconds), determined by ledger time, of a lower and upper bound of when
+ * this transaction will be valid. If a transaction is submitted too early or too late, it will fail
+ * to make it into the transaction set.
+ *
+ * @see <a
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/operations-and-transactions#time-bounds"
+ *     target="_blank">Time Bounds</a>
  * @see Transaction
  */
+@Getter
+@EqualsAndHashCode
 public final class TimeBounds {
-  private final BigInteger mMinTime;
-  private final BigInteger mMaxTime;
+  /** the UNIX timestamp (in seconds) */
+  private final BigInteger minTime;
+
+  /** the UNIX timestamp (in seconds) */
+  private final BigInteger maxTime;
 
   /**
    * @param minTime 64bit Unix timestamp
@@ -35,8 +48,8 @@ public final class TimeBounds {
       throw new IllegalArgumentException("minTime must be <= maxTime");
     }
 
-    mMinTime = minTime;
-    mMaxTime = maxTime;
+    this.minTime = minTime;
+    this.maxTime = maxTime;
   }
 
   /**
@@ -59,14 +72,6 @@ public final class TimeBounds {
     return new TimeBounds(0, endTime);
   }
 
-  public BigInteger getMinTime() {
-    return mMinTime;
-  }
-
-  public BigInteger getMaxTime() {
-    return mMaxTime;
-  }
-
   public static TimeBounds fromXdr(org.stellar.sdk.xdr.TimeBounds timeBounds) {
     if (timeBounds == null) {
       return null;
@@ -83,30 +88,12 @@ public final class TimeBounds {
     TimePoint maxTime = new TimePoint();
     Uint64 minTimeTemp = new Uint64();
     Uint64 maxTimeTemp = new Uint64();
-    minTimeTemp.setUint64(new XdrUnsignedHyperInteger(mMinTime));
-    maxTimeTemp.setUint64(new XdrUnsignedHyperInteger(mMaxTime));
+    minTimeTemp.setUint64(new XdrUnsignedHyperInteger(this.minTime));
+    maxTimeTemp.setUint64(new XdrUnsignedHyperInteger(this.maxTime));
     minTime.setTimePoint(minTimeTemp);
     maxTime.setTimePoint(maxTimeTemp);
     timeBounds.setMinTime(minTime);
     timeBounds.setMaxTime(maxTime);
     return timeBounds;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    TimeBounds that = (TimeBounds) o;
-    return Objects.equals(this.mMaxTime, that.mMaxTime)
-        && Objects.equals(this.mMinTime, that.mMinTime);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.mMaxTime, this.mMinTime);
   }
 }

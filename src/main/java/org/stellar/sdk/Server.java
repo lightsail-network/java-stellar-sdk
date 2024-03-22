@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.*;
 import okhttp3.Response;
 import org.stellar.sdk.requests.*;
@@ -18,13 +20,13 @@ import org.stellar.sdk.xdr.CryptoKeyType;
 
 /** Main class used to connect to Horizon server. */
 public class Server implements Closeable {
-  private HttpUrl serverURI;
-  private OkHttpClient httpClient;
+  private final HttpUrl serverURI;
+  @Getter @Setter private OkHttpClient httpClient;
   private Optional<Network> network;
-  private ReentrantReadWriteLock networkLock;
+  private final ReentrantReadWriteLock networkLock;
 
   /** submitHttpClient is used only for submitting transactions. The read timeout is longer. */
-  private OkHttpClient submitHttpClient;
+  @Getter @Setter private OkHttpClient submitHttpClient;
 
   /**
    * HORIZON_SUBMIT_TIMEOUT is a time in seconds after Horizon sends a timeout response after
@@ -66,26 +68,10 @@ public class Server implements Closeable {
     this.networkLock = new ReentrantReadWriteLock();
   }
 
-  public OkHttpClient getHttpClient() {
-    return httpClient;
-  }
-
-  public OkHttpClient getSubmitHttpClient() {
-    return submitHttpClient;
-  }
-
-  public void setHttpClient(OkHttpClient httpClient) {
-    this.httpClient = httpClient;
-  }
-
-  public void setSubmitHttpClient(OkHttpClient submitHttpClient) {
-    this.submitHttpClient = submitHttpClient;
-  }
-
   /** Returns {@link RootResponse}. */
   public RootResponse root() throws IOException {
-    TypeToken type = new TypeToken<RootResponse>() {};
-    ResponseHandler<RootResponse> responseHandler = new ResponseHandler<RootResponse>(type);
+    TypeToken<RootResponse> type = new TypeToken<RootResponse>() {};
+    ResponseHandler<RootResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(serverURI).build();
     Response response = httpClient.newCall(request).execute();

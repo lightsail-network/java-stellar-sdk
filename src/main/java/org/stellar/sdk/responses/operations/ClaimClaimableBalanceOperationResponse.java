@@ -3,6 +3,8 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -11,31 +13,25 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ClaimClaimableBalanceOperationResponse extends OperationResponse {
   @SerializedName("balance_id")
-  private String balanceId;
+  String balanceId;
 
   @SerializedName("claimant")
-  private String claimant;
+  String claimant;
 
   @SerializedName("claimant_muxed")
-  private String claimantMuxed;
+  String claimantMuxed;
 
   @SerializedName("claimant_muxed_id")
-  private BigInteger claimantMuxedId;
+  BigInteger claimantMuxedId;
 
   public Optional<MuxedAccount> getClaimantMuxed() {
     if (this.claimantMuxed == null || this.claimantMuxed.isEmpty()) {
       return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.claimantMuxed, this.claimant, this.claimantMuxedId));
-  }
-
-  public String getBalanceId() {
-    return balanceId;
-  }
-
-  public String getClaimant() {
-    return claimant;
   }
 }

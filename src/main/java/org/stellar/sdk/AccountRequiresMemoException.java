@@ -1,5 +1,7 @@
 package org.stellar.sdk;
 
+import lombok.Getter;
+
 /**
  * AccountRequiresMemoException is thrown when a transaction is trying to submit an operation to an
  * account which requires a memo.
@@ -7,8 +9,12 @@ package org.stellar.sdk;
  * <p>See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md"
  * target="_blank">SEP-0029</a> for more information.
  */
+@Getter
 public class AccountRequiresMemoException extends Exception {
+  /** the account requiring the memo * */
   private final String accountId;
+
+  /** the operation where the account is the destination * */
   private final int operationIndex;
 
   /**
@@ -20,13 +26,5 @@ public class AccountRequiresMemoException extends Exception {
     super(message);
     this.accountId = accountId;
     this.operationIndex = operationIndex;
-  }
-
-  public String getAccountId() {
-    return accountId;
-  }
-
-  public int getOperationIndex() {
-    return operationIndex;
   }
 }

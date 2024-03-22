@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
-import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,11 +20,12 @@ public class OffersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link OfferResponse}. This method is helpful
    * for getting the links.
    *
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public OfferResponse offer(HttpUrl uri) throws IOException {
-    TypeToken type = new TypeToken<OfferResponse>() {};
-    ResponseHandler<OfferResponse> responseHandler = new ResponseHandler<OfferResponse>(type);
+    TypeToken<OfferResponse> type = new TypeToken<OfferResponse>() {};
+    ResponseHandler<OfferResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -38,24 +38,12 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param offerId specifies which offer to load.
    * @return The offer details.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public OfferResponse offer(long offerId) throws IOException {
     this.setSegments("offers", String.valueOf(offerId));
     return this.offer(this.buildUri());
-  }
-
-  /**
-   * @param account Account for which to get offers
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/offers/">Offers for
-   *     Account</a>
-   * @deprecated Use {@link OffersRequestBuilder#forSeller} Builds request to <code>
-   *     GET /accounts/{account}/offers</code>
-   */
-  @Deprecated
-  public OffersRequestBuilder forAccount(@NonNull String account) {
-    this.setSegments("accounts", account, "offers");
-    return this;
   }
 
   /**
@@ -112,13 +100,13 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OfferResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<OfferResponse>>() {};
-    ResponseHandler<Page<OfferResponse>> responseHandler =
-        new ResponseHandler<Page<OfferResponse>>(type);
+    TypeToken<Page<OfferResponse>> type = new TypeToken<Page<OfferResponse>>() {};
+    ResponseHandler<Page<OfferResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -155,10 +143,11 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OfferResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public Page<OfferResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

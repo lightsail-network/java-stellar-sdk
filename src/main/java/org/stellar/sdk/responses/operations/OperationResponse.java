@@ -3,6 +3,9 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Value;
 import org.stellar.sdk.responses.*;
 
 /**
@@ -13,6 +16,8 @@ import org.stellar.sdk.responses.*;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Getter
+@EqualsAndHashCode(callSuper = false)
 public abstract class OperationResponse extends Response implements Pageable {
   @SerializedName("id")
   private Long id;
@@ -55,54 +60,8 @@ public abstract class OperationResponse extends Response implements Pageable {
         new MuxedAccount(this.sourceAccountMuxed, this.sourceAccount, this.sourceAccountMuxedId));
   }
 
-  public Long getId() {
-    return id;
-  }
-
-  public String getSourceAccount() {
-    return sourceAccount;
-  }
-
-  public String getPagingToken() {
-    return pagingToken;
-  }
-
-  /**
-   * Returns operation type. Possible types:
-   *
-   * <ul>
-   *   <li>create_account
-   *   <li>payment
-   *   <li>allow_trust
-   *   <li>change_trust
-   *   <li>set_options
-   *   <li>account_merge
-   *   <li>manage_offer
-   *   <li>path_payment
-   *   <li>create_passive_offer
-   *   <li>inflation
-   *   <li>manage_data
-   * </ul>
-   */
-  public String getType() {
-    return type;
-  }
-
-  public String getCreatedAt() {
-    return createdAt;
-  }
-
-  /** Returns transaction hash of transaction this operation belongs to. */
-  public String getTransactionHash() {
-    return transactionHash;
-  }
-
   public Boolean isTransactionSuccessful() {
     return transactionSuccessful;
-  }
-
-  public Links getLinks() {
-    return links;
   }
 
   public Optional<TransactionResponse> getTransaction() {
@@ -110,48 +69,21 @@ public abstract class OperationResponse extends Response implements Pageable {
   }
 
   /** Represents operation links. */
+  @Value
   public static class Links {
     @SerializedName("effects")
-    private final Link effects;
+    Link effects;
 
     @SerializedName("precedes")
-    private final Link precedes;
+    Link precedes;
 
     @SerializedName("self")
-    private final Link self;
+    Link self;
 
     @SerializedName("succeeds")
-    private final Link succeeds;
+    Link succeeds;
 
     @SerializedName("transaction")
-    private final Link transaction;
-
-    public Links(Link effects, Link precedes, Link self, Link succeeds, Link transaction) {
-      this.effects = effects;
-      this.precedes = precedes;
-      this.self = self;
-      this.succeeds = succeeds;
-      this.transaction = transaction;
-    }
-
-    public Link getEffects() {
-      return effects;
-    }
-
-    public Link getPrecedes() {
-      return precedes;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
-
-    public Link getSucceeds() {
-      return succeeds;
-    }
-
-    public Link getTransaction() {
-      return transaction;
-    }
+    Link transaction;
   }
 }

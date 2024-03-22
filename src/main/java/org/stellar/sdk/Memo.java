@@ -28,7 +28,7 @@ public abstract class Memo {
   /**
    * Creates new {@link MemoText} instance.
    *
-   * @param text
+   * @param text Memo text.
    */
   public static MemoText text(String text) {
     return new MemoText(text);
@@ -37,7 +37,7 @@ public abstract class Memo {
   /**
    * Creates new {@link MemoText} instance.
    *
-   * @param text
+   * @param text Memo text as bytes.
    */
   public static MemoText text(byte[] text) {
     return new MemoText(text);
@@ -46,7 +46,7 @@ public abstract class Memo {
   /**
    * Creates new {@link MemoId} instance.
    *
-   * @param id
+   * @param id Memo id.
    */
   public static MemoId id(BigInteger id) {
     return new MemoId(id);
@@ -55,7 +55,7 @@ public abstract class Memo {
   /**
    * Creates new {@link MemoId} instance.
    *
-   * @param id
+   * @param id Memo id.
    */
   public static MemoId id(Long id) {
     return new MemoId(id);
@@ -64,7 +64,7 @@ public abstract class Memo {
   /**
    * Creates new {@link MemoHash} instance from byte array.
    *
-   * @param bytes
+   * @param bytes Memo hash bytes.
    */
   public static MemoHash hash(byte[] bytes) {
     return new MemoHash(bytes);
@@ -73,7 +73,7 @@ public abstract class Memo {
   /**
    * Creates new {@link MemoHash} instance from hex-encoded string
    *
-   * @param hexString
+   * @param hexString Memo hash hex-encoded string
    */
   public static MemoHash hash(String hexString) {
     return new MemoHash(hexString);
@@ -82,7 +82,7 @@ public abstract class Memo {
   /**
    * Creates new {@link MemoReturnHash} instance from byte array.
    *
-   * @param bytes
+   * @param bytes Memo return hash bytes.
    */
   public static MemoReturnHash returnHash(byte[] bytes) {
     return new MemoReturnHash(bytes);
@@ -91,7 +91,7 @@ public abstract class Memo {
   /**
    * Creates new {@link MemoReturnHash} instance from hex-encoded string.
    *
-   * @param hexString
+   * @param hexString Memo return hash hex-encoded string.
    */
   public static MemoReturnHash returnHash(String hexString) {
     return new MemoReturnHash(hexString);

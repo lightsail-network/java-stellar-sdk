@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents account_flags_updated effect response.
@@ -10,23 +12,12 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AccountFlagsUpdatedEffectResponse extends EffectResponse {
   @SerializedName("auth_required_flag")
-  protected final Boolean authRequiredFlag;
+  Boolean authRequiredFlag;
 
   @SerializedName("auth_revokable_flag")
-  protected final Boolean authRevokableFlag;
-
-  AccountFlagsUpdatedEffectResponse(Boolean authRequiredFlag, Boolean authRevokableFlag) {
-    this.authRequiredFlag = authRequiredFlag;
-    this.authRevokableFlag = authRevokableFlag;
-  }
-
-  public Boolean getAuthRequiredFlag() {
-    return authRequiredFlag;
-  }
-
-  public Boolean getAuthRevokableFlag() {
-    return authRevokableFlag;
-  }
+  Boolean authRevokableFlag;
 }

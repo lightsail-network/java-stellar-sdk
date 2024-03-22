@@ -1,63 +1,38 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.*;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/start/list-of-operations/#manage-sell-offer"
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#manage-sell-offer"
  * target="_blank">ManageSellOffer</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ManageSellOfferOperation extends Operation {
 
-  private final Asset selling;
-  private final Asset buying;
-  private final String amount;
-  private final Price price;
-  private final long offerId;
-
-  private ManageSellOfferOperation(
-      @NonNull Asset selling,
-      @NonNull Asset buying,
-      @NonNull String amount,
-      @NonNull Price price,
-      long offerId) {
-    this.selling = selling;
-    this.buying = buying;
-    this.amount = amount;
-    this.price = price;
-    // offerId can be null
-    this.offerId = offerId;
-  }
-
   /** The asset being sold in this operation */
-  public Asset getSelling() {
-    return selling;
-  }
+  @NonNull private final Asset selling;
 
   /** The asset being bought in this operation */
-  public Asset getBuying() {
-    return buying;
-  }
+  @NonNull private final Asset buying;
 
   /** Amount of selling being sold. */
-  public String getAmount() {
-    return amount;
-  }
+  @NonNull private final String amount;
 
   /** Price of 1 unit of selling in terms of buying. */
-  public Price getPrice() {
-    return price;
-  }
+  @NonNull private final Price price;
 
-  /** The ID of the offer. */
-  public long getOfferId() {
-    return offerId;
-  }
+  /**
+   * The ID of the offer, when it is 0, represents creating a new offer, otherwise updates an
+   * existing offer.
+   */
+  private final long offerId;
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -94,7 +69,7 @@ public class ManageSellOfferOperation extends Operation {
     private final Price price;
     private long offerId = 0;
 
-    private String mSourceAccount;
+    private String sourceAccount;
 
     /**
      * Construct a new ManageSellOffer builder from a ManageSellOfferOp XDR.
@@ -156,7 +131,7 @@ public class ManageSellOfferOperation extends Operation {
      * @return Builder object so you can chain methods.
      */
     public Builder setSourceAccount(@NonNull String sourceAccount) {
-      mSourceAccount = sourceAccount;
+      this.sourceAccount = sourceAccount;
       return this;
     }
 
@@ -164,31 +139,10 @@ public class ManageSellOfferOperation extends Operation {
     public ManageSellOfferOperation build() {
       ManageSellOfferOperation operation =
           new ManageSellOfferOperation(selling, buying, amount, price, offerId);
-      if (mSourceAccount != null) {
-        operation.setSourceAccount(mSourceAccount);
+      if (sourceAccount != null) {
+        operation.setSourceAccount(sourceAccount);
       }
       return operation;
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.getSourceAccount(), this.amount, this.buying, this.offerId, this.price, this.selling);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ManageSellOfferOperation)) {
-      return false;
-    }
-
-    ManageSellOfferOperation other = (ManageSellOfferOperation) object;
-    return Objects.equals(this.getSourceAccount(), other.getSourceAccount())
-        && Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.buying, other.buying)
-        && Objects.equals(this.offerId, other.offerId)
-        && Objects.equals(this.price, other.price)
-        && Objects.equals(this.selling, other.selling);
   }
 }

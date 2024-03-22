@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents account_thresholds_updated effect response.
@@ -10,32 +12,15 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AccountThresholdsUpdatedEffectResponse extends EffectResponse {
   @SerializedName("low_threshold")
-  protected final Integer lowThreshold;
+  Integer lowThreshold;
 
   @SerializedName("med_threshold")
-  protected final Integer medThreshold;
+  Integer medThreshold;
 
   @SerializedName("high_threshold")
-  protected final Integer highThreshold;
-
-  AccountThresholdsUpdatedEffectResponse(
-      Integer lowThreshold, Integer medThreshold, Integer highThreshold) {
-    this.lowThreshold = lowThreshold;
-    this.medThreshold = medThreshold;
-    this.highThreshold = highThreshold;
-  }
-
-  public Integer getLowThreshold() {
-    return lowThreshold;
-  }
-
-  public Integer getMedThreshold() {
-    return medThreshold;
-  }
-
-  public Integer getHighThreshold() {
-    return highThreshold;
-  }
+  Integer highThreshold;
 }

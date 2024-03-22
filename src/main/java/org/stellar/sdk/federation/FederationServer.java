@@ -5,6 +5,7 @@ import com.moandjiezana.toml.Toml;
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+import lombok.Getter;
 import okhttp3.*;
 import org.stellar.sdk.requests.ResponseHandler;
 
@@ -20,8 +21,12 @@ import org.stellar.sdk.requests.ResponseHandler;
  *     target="_blank">Federation docs</a>
  */
 public class FederationServer {
-  private final HttpUrl serverUri;
-  private final String domain;
+  /** Returns a federation server URI. */
+  @Getter private final HttpUrl serverUri;
+
+  /** Returns a domain this server is responsible for. */
+  @Getter private final String domain;
+
   private final OkHttpClient httpClient;
 
   /**
@@ -138,9 +143,8 @@ public class FederationServer {
     uriBuilder.setQueryParameter("q", address);
     HttpUrl uri = uriBuilder.build();
 
-    TypeToken type = new TypeToken<FederationResponse>() {};
-    ResponseHandler<FederationResponse> responseHandler =
-        new ResponseHandler<FederationResponse>(type);
+    TypeToken<FederationResponse> type = new TypeToken<FederationResponse>() {};
+    ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = null;
@@ -158,23 +162,5 @@ public class FederationServer {
         response.close();
       }
     }
-  }
-
-  /**
-   * Returns a federation server URI.
-   *
-   * @return URI
-   */
-  public HttpUrl getServerUri() {
-    return serverUri;
-  }
-
-  /**
-   * Returns a domain this server is responsible for.
-   *
-   * @return String
-   */
-  public String getDomain() {
-    return domain;
   }
 }

@@ -1,12 +1,14 @@
 package org.stellar.sdk;
 
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.XdrString;
 
 /** Represents MEMO_TEXT. */
+@EqualsAndHashCode(callSuper = false)
 public class MemoText extends Memo {
-  private XdrString text;
+  @NonNull private final XdrString text;
 
   public MemoText(@NonNull String text) {
     this(new XdrString(text));
@@ -40,20 +42,7 @@ public class MemoText extends Memo {
   }
 
   @Override
-  public int hashCode() {
-    return this.text.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    MemoText memoText = (MemoText) o;
-    return this.text.equals(memoText.text);
-  }
-
-  @Override
   public String toString() {
-    return text == null ? "" : this.getText();
+    return this.getText();
   }
 }

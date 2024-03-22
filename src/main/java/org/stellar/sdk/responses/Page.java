@@ -5,6 +5,9 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Value;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.stellar.sdk.requests.ResponseHandler;
@@ -15,6 +18,8 @@ import org.stellar.sdk.requests.ResponseHandler;
  * @see <a href="https://developers.stellar.org/api/introduction/pagination/" target="_blank">Page
  *     documentation</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = false)
 public class Page<T> extends Response implements TypedResponse<Page<T>> {
 
   @SerializedName("records")
@@ -26,14 +31,6 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
   private TypeToken<Page<T>> type;
 
   Page() {}
-
-  public ArrayList<T> getRecords() {
-    return records;
-  }
-
-  public Links getLinks() {
-    return links;
-  }
 
   /**
    * @return The next page of results or null when there is no link for the next page of results
@@ -65,32 +62,15 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
   }
 
   /** Links connected to page response. */
+  @Value
   public static class Links {
     @SerializedName("next")
-    private final Link next;
+    Link next;
 
     @SerializedName("prev")
-    private final Link prev;
+    Link prev;
 
     @SerializedName("self")
-    private final Link self;
-
-    Links(Link next, Link prev, Link self) {
-      this.next = next;
-      this.prev = prev;
-      this.self = self;
-    }
-
-    public Link getNext() {
-      return next;
-    }
-
-    public Link getPrev() {
-      return prev;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
+    Link self;
   }
 }

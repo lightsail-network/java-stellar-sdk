@@ -1,14 +1,18 @@
 package org.stellar.sdk;
 
 import java.math.BigInteger;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
 import org.stellar.sdk.xdr.MemoType;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /** Represents MEMO_ID. */
+@Getter
+@EqualsAndHashCode(callSuper = false)
 public class MemoId extends Memo {
-  private final BigInteger id;
+  @NonNull private final BigInteger id;
 
   public MemoId(BigInteger id) {
     if (id.compareTo(XdrUnsignedHyperInteger.MIN_VALUE) < 0
@@ -22,10 +26,6 @@ public class MemoId extends Memo {
     this(BigInteger.valueOf(id));
   }
 
-  public BigInteger getId() {
-    return id;
-  }
-
   @Override
   org.stellar.sdk.xdr.Memo toXdr() {
     org.stellar.sdk.xdr.Memo memo = new org.stellar.sdk.xdr.Memo();
@@ -33,19 +33,6 @@ public class MemoId extends Memo {
     Uint64 idXdr = new Uint64(new XdrUnsignedHyperInteger(id));
     memo.setId(idXdr);
     return memo;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(this.id);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    MemoId memoId = (MemoId) o;
-    return Objects.equals(id, memoId.id);
   }
 
   @Override

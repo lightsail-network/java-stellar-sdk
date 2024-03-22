@@ -19,11 +19,12 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link LedgerResponse}. This method is helpful
    * for getting the links.
    *
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public LedgerResponse ledger(HttpUrl uri) throws IOException {
-    TypeToken type = new TypeToken<LedgerResponse>() {};
-    ResponseHandler<LedgerResponse> responseHandler = new ResponseHandler<LedgerResponse>(type);
+    TypeToken<LedgerResponse> type = new TypeToken<LedgerResponse>() {};
+    ResponseHandler<LedgerResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -36,7 +37,8 @@ public class LedgersRequestBuilder extends RequestBuilder {
    *
    * @see <a href="https://developers.stellar.org/api/resources/ledgers/single/">Ledger Details</a>
    * @param ledgerSeq Ledger to fetch
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public LedgerResponse ledger(long ledgerSeq) throws IOException {
     this.setSegments("ledgers", String.valueOf(ledgerSeq));
@@ -49,13 +51,13 @@ public class LedgersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link LedgerResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public static Page<LedgerResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<LedgerResponse>>() {};
-    ResponseHandler<Page<LedgerResponse>> responseHandler =
-        new ResponseHandler<Page<LedgerResponse>>(type);
+    TypeToken<Page<LedgerResponse>> type = new TypeToken<Page<LedgerResponse>>() {};
+    ResponseHandler<Page<LedgerResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -92,10 +94,11 @@ public class LedgersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link LedgerResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException
+   * @throws IOException if the request fails due to an IOException, including but not limited to a
+   *     timeout, connection failure etc.
    */
   public Page<LedgerResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

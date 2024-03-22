@@ -5,6 +5,8 @@ import static org.stellar.sdk.Asset.create;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.responses.MuxedAccount;
 
@@ -16,64 +18,50 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class TradeEffectResponse extends EffectResponse {
   @SerializedName("seller")
-  private String seller;
+  String seller;
 
   @SerializedName("seller_muxed")
-  private String sellerMuxed;
+  String sellerMuxed;
 
   @SerializedName("seller_muxed_id")
-  private BigInteger sellerMuxedId;
+  BigInteger sellerMuxedId;
 
   @SerializedName("offer_id")
-  private Long offerId;
+  Long offerId;
 
   @SerializedName("sold_amount")
-  private String soldAmount;
+  String soldAmount;
 
   @SerializedName("sold_asset_type")
-  private String soldAssetType;
+  String soldAssetType;
 
   @SerializedName("sold_asset_code")
-  private String soldAssetCode;
+  String soldAssetCode;
 
   @SerializedName("sold_asset_issuer")
-  private String soldAssetIssuer;
+  String soldAssetIssuer;
 
   @SerializedName("bought_amount")
-  private String boughtAmount;
+  String boughtAmount;
 
   @SerializedName("bought_asset_type")
-  private String boughtAssetType;
+  String boughtAssetType;
 
   @SerializedName("bought_asset_code")
-  private String boughtAssetCode;
+  String boughtAssetCode;
 
   @SerializedName("bought_asset_issuer")
-  private String boughtAssetIssuer;
+  String boughtAssetIssuer;
 
   public Optional<MuxedAccount> getSellerMuxed() {
     if (this.sellerMuxed == null || this.sellerMuxed.isEmpty()) {
       return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.sellerMuxed, this.seller, this.sellerMuxedId));
-  }
-
-  public String getSeller() {
-    return seller;
-  }
-
-  public Long getOfferId() {
-    return offerId;
-  }
-
-  public String getSoldAmount() {
-    return soldAmount;
-  }
-
-  public String getBoughtAmount() {
-    return boughtAmount;
   }
 
   public Asset getSoldAsset() {

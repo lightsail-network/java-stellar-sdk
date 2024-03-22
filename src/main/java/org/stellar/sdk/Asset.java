@@ -1,9 +1,19 @@
 package org.stellar.sdk;
 
+import java.io.IOException;
+import lombok.NonNull;
+import org.stellar.sdk.xdr.ContractIDPreimage;
+import org.stellar.sdk.xdr.ContractIDPreimageType;
+import org.stellar.sdk.xdr.EnvelopeType;
+import org.stellar.sdk.xdr.Hash;
+import org.stellar.sdk.xdr.HashIDPreimage;
+
 /**
  * Base Asset class.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/assets/" target="_blank">Assets</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     target="_blank">Assets</a>
  */
 public abstract class Asset implements Comparable<Asset> {
   Asset() {}
@@ -127,15 +137,39 @@ public abstract class Asset implements Comparable<Asset> {
   public abstract boolean equals(Object object);
 
   @Override
-  public abstract int compareTo(Asset other);
+  public abstract int compareTo(@NonNull Asset other);
 
   private static Asset createNonNativeAsset(String code, String issuer) {
-    if (code.length() >= 1 && code.length() <= 4) {
+    if (!code.isEmpty() && code.length() <= 4) {
       return new AssetTypeCreditAlphaNum4(code, issuer);
     } else if (code.length() >= 5 && code.length() <= 12) {
       return new AssetTypeCreditAlphaNum12(code, issuer);
     } else {
       throw new AssetCodeLengthInvalidException();
     }
+  }
+
+  /**
+   * Returns the contract Id for the asset contract.
+   *
+   * @param network The network where the asset is located.
+   * @return The contract Id for the asset contract.
+   */
+  public String getContractId(Network network) throws IOException {
+    HashIDPreimage preimage =
+        new HashIDPreimage.Builder()
+            .discriminant(EnvelopeType.ENVELOPE_TYPE_CONTRACT_ID)
+            .contractID(
+                new HashIDPreimage.HashIDPreimageContractID.Builder()
+                    .networkID(new Hash(network.getNetworkId()))
+                    .contractIDPreimage(
+                        new ContractIDPreimage.Builder()
+                            .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
+                            .fromAsset(this.toXdr())
+                            .build())
+                    .build())
+            .build();
+    byte[] rawContractId = Util.hash(preimage.toXdrByteArray());
+    return StrKey.encodeContract(rawContractId);
   }
 }

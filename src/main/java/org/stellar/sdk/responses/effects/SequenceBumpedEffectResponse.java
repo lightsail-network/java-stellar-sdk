@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents sequence_bumped effect response.
@@ -10,15 +12,9 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class SequenceBumpedEffectResponse extends EffectResponse {
   @SerializedName("new_seq")
-  protected final Long newSequence;
-
-  public SequenceBumpedEffectResponse(Long newSequence) {
-    this.newSequence = newSequence;
-  }
-
-  public Long getNewSequence() {
-    return newSequence;
-  }
+  Long newSequence;
 }

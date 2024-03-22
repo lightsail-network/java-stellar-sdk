@@ -19,21 +19,43 @@ import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
-@Value
-@Builder(toBuilder = true)
 /**
  * Preconditions of a transaction per <a
  * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21</a>
  */
+@Value
+@Builder(toBuilder = true)
 public class TransactionPreconditions {
   public static final long MAX_EXTRA_SIGNERS_COUNT = 2;
   public static final BigInteger TIMEOUT_INFINITE = BigInteger.ZERO;
 
+  /** The ledger bounds for the transaction. */
   LedgerBounds ledgerBounds;
+
+  /**
+   * The minimum source account sequence number this transaction is valid for. if <code>null</code>,
+   * the transaction is valid when **source account's sequence number == tx.sequence - 1**.
+   */
   Long minSeqNumber; // int64
+
+  /**
+   * The minimum amount of time between source account sequence time and the ledger time when this
+   * transaction will become valid. If the value is <code>0</code>, the transaction is unrestricted
+   * by the account sequence age. Cannot be negative.
+   */
   @Builder.Default BigInteger minSeqAge = BigInteger.ZERO; // uint64
+
+  /**
+   * The minimum number of ledgers between source account sequence and the ledger number when this
+   * transaction will become valid. If the value is <code>0</code>, the transaction is unrestricted
+   * by the account sequence ledger. Cannot be negative.
+   */
   long minSeqLedgerGap; // uint32
+
+  /** Required extra signers. */
   @Singular @NonNull List<SignerKey> extraSigners;
+
+  /** The time bounds for the transaction. */
   TimeBounds timeBounds;
 
   public void isValid() {

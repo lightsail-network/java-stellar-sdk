@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.Memo;
@@ -16,79 +19,88 @@ import org.stellar.sdk.Memo;
  * @see org.stellar.sdk.requests.TransactionsRequestBuilder
  * @see org.stellar.sdk.Server#transactions()
  */
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class TransactionResponse extends Response implements Pageable {
-  @SerializedName("hash")
-  private String hash;
-
-  @SerializedName("ledger")
-  private Long ledger;
-
-  @SerializedName("created_at")
-  private String createdAt;
-
-  @SerializedName("source_account")
-  private String sourceAccount;
-
-  @SerializedName("fee_account")
-  private String feeAccount;
-
-  @SerializedName("successful")
-  private Boolean successful;
+  @SerializedName("id")
+  private final String id;
 
   @SerializedName("paging_token")
-  private String pagingToken;
+  private final String pagingToken;
 
-  @SerializedName("source_account_sequence")
-  private Long sourceAccountSequence;
+  @SerializedName("successful")
+  private final Boolean successful;
 
-  @SerializedName("max_fee")
-  private Long maxFee;
+  @SerializedName("hash")
+  private final String hash;
 
-  @SerializedName("fee_charged")
-  private Long feeCharged;
+  @SerializedName("ledger")
+  private final Long ledger;
 
-  @SerializedName("operation_count")
-  private Integer operationCount;
+  @SerializedName("created_at")
+  private final String createdAt;
 
-  @SerializedName("envelope_xdr")
-  private String envelopeXdr;
-
-  @SerializedName("result_xdr")
-  private String resultXdr;
-
-  @SerializedName("result_meta_xdr")
-  private String resultMetaXdr;
-
-  @SerializedName("signatures")
-  private List<String> signatures;
-
-  @SerializedName("fee_bump_transaction")
-  private FeeBumpTransaction feeBumpTransaction;
-
-  @SerializedName("preconditions")
-  private Preconditions preconditions;
-
-  @SerializedName("inner_transaction")
-  private InnerTransaction innerTransaction;
+  @SerializedName("source_account")
+  private final String sourceAccount;
 
   @SerializedName("account_muxed")
-  private String accountMuxed;
+  private final String accountMuxed;
 
   @SerializedName("account_muxed_id")
-  private BigInteger accountMuxedId;
+  private final BigInteger accountMuxedId;
+
+  @SerializedName("source_account_sequence")
+  private final Long sourceAccountSequence;
+
+  @SerializedName("fee_account")
+  private final String feeAccount;
 
   @SerializedName("fee_account_muxed")
-  private String feeAccountMuxed;
+  private final String feeAccountMuxed;
 
   @SerializedName("fee_account_muxed_id")
-  private BigInteger feeAccountMuxedId;
+  private final BigInteger feeAccountMuxedId;
 
-  @SerializedName("_links")
-  private Links links;
+  @SerializedName("fee_charged")
+  private final Long feeCharged;
+
+  @SerializedName("max_fee")
+  private final Long maxFee;
+
+  @SerializedName("operation_count")
+  private final Integer operationCount;
+
+  @SerializedName("envelope_xdr")
+  private final String envelopeXdr;
+
+  @SerializedName("result_xdr")
+  private final String resultXdr;
+
+  @SerializedName("result_meta_xdr")
+  private final String resultMetaXdr;
+
+  @SerializedName("fee_meta_xdr")
+  private final String feeMetaXdr;
 
   // GSON won't serialize `transient` variables automatically. We need this behaviour
   // because Memo is an abstract class and GSON tries to instantiate it.
   private transient Memo memo;
+
+  @SerializedName("signatures")
+  private final List<String> signatures;
+
+  @SerializedName("preconditions")
+  private final Preconditions preconditions;
+
+  @SerializedName("fee_bump_transaction")
+  private final FeeBumpTransaction feeBumpTransaction;
+
+  @SerializedName("inner_transaction")
+  private final InnerTransaction innerTransaction;
+
+  @SerializedName("_links")
+  private final Links links;
 
   public Optional<MuxedAccount> getSourceAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
@@ -106,30 +118,6 @@ public class TransactionResponse extends Response implements Pageable {
         new MuxedAccount(this.feeAccountMuxed, this.feeAccount, this.feeAccountMuxedId));
   }
 
-  public String getHash() {
-    return hash;
-  }
-
-  public Long getLedger() {
-    return ledger;
-  }
-
-  public String getCreatedAt() {
-    return createdAt;
-  }
-
-  public String getSourceAccount() {
-    return sourceAccount;
-  }
-
-  public String getFeeAccount() {
-    return feeAccount;
-  }
-
-  public List<String> getSignatures() {
-    return signatures;
-  }
-
   public Optional<FeeBumpTransaction> getFeeBump() {
     return Optional.ofNullable(this.feeBumpTransaction);
   }
@@ -142,44 +130,8 @@ public class TransactionResponse extends Response implements Pageable {
     return Optional.ofNullable(this.preconditions);
   }
 
-  public String getPagingToken() {
-    return pagingToken;
-  }
-
   public Boolean isSuccessful() {
     return successful;
-  }
-
-  public Long getSourceAccountSequence() {
-    return sourceAccountSequence;
-  }
-
-  public Long getMaxFee() {
-    return maxFee;
-  }
-
-  public Long getFeeCharged() {
-    return feeCharged;
-  }
-
-  public Integer getOperationCount() {
-    return operationCount;
-  }
-
-  public String getEnvelopeXdr() {
-    return envelopeXdr;
-  }
-
-  public String getResultXdr() {
-    return resultXdr;
-  }
-
-  public String getResultMetaXdr() {
-    return resultMetaXdr;
-  }
-
-  public Memo getMemo() {
-    return memo;
   }
 
   public void setMemo(@NonNull Memo memo) {
@@ -187,10 +139,6 @@ public class TransactionResponse extends Response implements Pageable {
       throw new RuntimeException("Memo has been already set.");
     }
     this.memo = memo;
-  }
-
-  public Links getLinks() {
-    return links;
   }
 
   /**
@@ -241,25 +189,13 @@ public class TransactionResponse extends Response implements Pageable {
    * transaction or is wrapped by a fee bump transaction. The object has two fields: the hash of the
    * fee bump transaction and the signatures present in the fee bump transaction envelope.
    */
+  @Value
   public static class FeeBumpTransaction {
     @SerializedName("hash")
-    private String hash;
+    String hash;
 
     @SerializedName("signatures")
-    private List<String> signatures;
-
-    FeeBumpTransaction(String hash, List<String> signatures) {
-      this.hash = hash;
-      this.signatures = signatures;
-    }
-
-    public String getHash() {
-      return hash;
-    }
-
-    public List<String> getSignatures() {
-      return signatures;
-    }
+    List<String> signatures;
   }
 
   /**
@@ -268,101 +204,40 @@ public class TransactionResponse extends Response implements Pageable {
    * the inner transaction wrapped by the fee bump transaction, the max fee set in the inner
    * transaction, and the signatures present in the inner transaction envelope.
    */
+  @Value
   public static class InnerTransaction {
     @SerializedName("hash")
-    private String hash;
+    String hash;
 
     @SerializedName("signatures")
-    private List<String> signatures;
+    List<String> signatures;
 
     @SerializedName("max_fee")
-    private Long maxFee;
-
-    InnerTransaction(String hash, List<String> signatures, Long maxFee) {
-      this.hash = hash;
-      this.signatures = signatures;
-      this.maxFee = maxFee;
-    }
-
-    public String getHash() {
-      return hash;
-    }
-
-    public List<String> getSignatures() {
-      return signatures;
-    }
-
-    public Long getMaxFee() {
-      return maxFee;
-    }
+    Long maxFee;
   }
 
   /** Links connected to transaction. */
+  @Value
   public static class Links {
-    @SerializedName("account")
-    private Link account;
+    @SerializedName("self")
+    Link self;
 
-    @SerializedName("effects")
-    private Link effects;
+    @SerializedName("account")
+    Link account;
 
     @SerializedName("ledger")
-    private Link ledger;
+    Link ledger;
 
     @SerializedName("operations")
-    private Link operations;
+    Link operations;
+
+    @SerializedName("effects")
+    Link effects;
 
     @SerializedName("precedes")
-    private Link precedes;
-
-    @SerializedName("self")
-    private Link self;
+    Link precedes;
 
     @SerializedName("succeeds")
-    private Link succeeds;
-
-    Links(
-        Link account,
-        Link effects,
-        Link ledger,
-        Link operations,
-        Link self,
-        Link precedes,
-        Link succeeds) {
-      this.account = account;
-      this.effects = effects;
-      this.ledger = ledger;
-      this.operations = operations;
-      this.self = self;
-      this.precedes = precedes;
-      this.succeeds = succeeds;
-    }
-
-    public Link getAccount() {
-      return account;
-    }
-
-    public Link getEffects() {
-      return effects;
-    }
-
-    public Link getLedger() {
-      return ledger;
-    }
-
-    public Link getOperations() {
-      return operations;
-    }
-
-    public Link getPrecedes() {
-      return precedes;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
-
-    public Link getSucceeds() {
-      return succeeds;
-    }
+    Link succeeds;
   }
 }

@@ -1,97 +1,126 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents root endpoint response.
  *
  * @see org.stellar.sdk.Server#root()
  */
+@Value
+@EqualsAndHashCode(callSuper = false)
 public class RootResponse extends Response {
   @SerializedName("horizon_version")
-  private final String horizonVersion;
+  String horizonVersion;
 
   @SerializedName("core_version")
-  private final String stellarCoreVersion;
+  String stellarCoreVersion;
+
+  @SerializedName("ingest_latest_ledger")
+  Long ingestLatestLedger;
 
   @SerializedName("history_latest_ledger")
-  private final int historyLatestLedger;
+  int historyLatestLedger;
+
+  @SerializedName("history_latest_ledger_closed_at")
+  String historyLatestLedgerClosedAt;
 
   @SerializedName("history_elder_ledger")
-  private final int historyElderLedger;
+  int historyElderLedger;
 
   @SerializedName("core_latest_ledger")
-  private final int coreLatestLedger;
+  int coreLatestLedger;
 
   @SerializedName("network_passphrase")
-  private final String networkPassphrase;
-
-  @SerializedName("protocol_version")
-  private final int protocolVersion;
+  String networkPassphrase;
 
   @SerializedName("current_protocol_version")
-  private final int currentProtocolVersion;
+  int currentProtocolVersion;
+
+  @SerializedName("supported_protocol_version")
+  Long supportedProtocolVersion;
 
   @SerializedName("core_supported_protocol_version")
-  private final int coreSupportedProtocolVersion;
+  int coreSupportedProtocolVersion;
 
-  public String getHorizonVersion() {
-    return horizonVersion;
-  }
+  @SerializedName("_links")
+  Links links;
 
-  public String getStellarCoreVersion() {
-    return stellarCoreVersion;
-  }
+  @Value
+  public static class Links {
 
-  public int getHistoryLatestLedger() {
-    return historyLatestLedger;
-  }
+    @SerializedName("account")
+    Link account;
 
-  public int getHistoryElderLedger() {
-    return historyElderLedger;
-  }
+    @SerializedName("accounts")
+    Link accounts;
 
-  public int getCoreLatestLedger() {
-    return coreLatestLedger;
-  }
+    @SerializedName("account_transactions")
+    Link accountTransactions;
 
-  public String getNetworkPassphrase() {
-    return networkPassphrase;
-  }
+    @SerializedName("claimable_balances")
+    Link claimableBalances;
 
-  /**
-   * @deprecated Will be removed in Horizon 0.17.0
-   */
-  public int getProtocolVersion() {
-    return protocolVersion;
-  }
+    @SerializedName("assets")
+    Link assets;
 
-  public int getCurrentProtocolVersion() {
-    return currentProtocolVersion;
-  }
+    @SerializedName("effects")
+    Link effects;
 
-  public int getCoreSupportedProtocolVersion() {
-    return coreSupportedProtocolVersion;
-  }
+    @SerializedName("fee_stats")
+    Link feeStats;
 
-  public RootResponse(
-      String horizonVersion,
-      String stellarCoreVersion,
-      int historyLatestLedger,
-      int historyElderLedger,
-      int coreLatestLedger,
-      String networkPassphrase,
-      int protocolVersion,
-      int currentProtocolVersion,
-      int coreSupportedProtocolVersion) {
-    this.horizonVersion = horizonVersion;
-    this.stellarCoreVersion = stellarCoreVersion;
-    this.historyLatestLedger = historyLatestLedger;
-    this.historyElderLedger = historyElderLedger;
-    this.coreLatestLedger = coreLatestLedger;
-    this.networkPassphrase = networkPassphrase;
-    this.protocolVersion = protocolVersion;
-    this.currentProtocolVersion = currentProtocolVersion;
-    this.coreSupportedProtocolVersion = coreSupportedProtocolVersion;
+    @SerializedName("friendbot")
+    Link friendbot;
+
+    @SerializedName("ledger")
+    Link ledger;
+
+    @SerializedName("ledgers")
+    Link ledgers;
+
+    @SerializedName("liquidity_pools")
+    Link liquidityPools;
+
+    @SerializedName("offer")
+    Link offer;
+
+    @SerializedName("offers")
+    Link offers;
+
+    @SerializedName("operation")
+    Link operation;
+
+    @SerializedName("operations")
+    Link operations;
+
+    @SerializedName("order_book")
+    Link orderBook;
+
+    @SerializedName("payments")
+    Link payments;
+
+    @SerializedName("self")
+    Link self;
+
+    @SerializedName("strict_receive_paths")
+    Link strictReceivePaths;
+
+    @SerializedName("strict_send_paths")
+    Link strictSendPaths;
+
+    @SerializedName("trade_aggregations")
+    Link tradeAggregations;
+
+    @SerializedName("trades")
+    Link trades;
+
+    @SerializedName("transaction")
+    Link transaction;
+
+    @SerializedName("transactions")
+    Link transactions;
   }
 }

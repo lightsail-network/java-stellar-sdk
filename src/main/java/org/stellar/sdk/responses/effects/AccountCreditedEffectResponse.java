@@ -3,6 +3,8 @@ package org.stellar.sdk.responses.effects;
 import static org.stellar.sdk.Asset.create;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 
 /**
@@ -13,30 +15,20 @@ import org.stellar.sdk.Asset;
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AccountCreditedEffectResponse extends EffectResponse {
   @SerializedName("amount")
-  protected final String amount;
+  String amount;
 
   @SerializedName("asset_type")
-  protected final String assetType;
+  String assetType;
 
   @SerializedName("asset_code")
-  protected final String assetCode;
+  String assetCode;
 
   @SerializedName("asset_issuer")
-  protected final String assetIssuer;
-
-  AccountCreditedEffectResponse(
-      String amount, String assetType, String assetCode, String assetIssuer) {
-    this.amount = amount;
-    this.assetType = assetType;
-    this.assetCode = assetCode;
-    this.assetIssuer = assetIssuer;
-  }
-
-  public String getAmount() {
-    return amount;
-  }
+  String assetIssuer;
 
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer);

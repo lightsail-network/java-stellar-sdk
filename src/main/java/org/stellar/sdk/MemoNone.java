@@ -1,8 +1,10 @@
 package org.stellar.sdk;
 
+import lombok.EqualsAndHashCode;
 import org.stellar.sdk.xdr.MemoType;
 
 /** Represents MEMO_NONE. */
+@EqualsAndHashCode(callSuper = false)
 public class MemoNone extends Memo {
   @Override
   org.stellar.sdk.xdr.Memo toXdr() {
@@ -11,18 +13,7 @@ public class MemoNone extends Memo {
     return memo;
   }
 
-  @Override
-  public int hashCode() {
-    return 0;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    return true;
-  }
-
+  // TODO: return a more meaningful value?
   @Override
   public String toString() {
     return "";

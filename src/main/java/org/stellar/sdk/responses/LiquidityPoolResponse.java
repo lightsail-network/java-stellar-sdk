@@ -1,8 +1,10 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.xdr.LiquidityPoolType;
@@ -15,140 +17,69 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
  * @see org.stellar.sdk.requests.LiquidityPoolsRequestBuilder
  * @see org.stellar.sdk.Server#liquidityPools()
  */
+@Value
+@EqualsAndHashCode(callSuper = false)
 public class LiquidityPoolResponse extends Response {
   @SerializedName("id")
-  private LiquidityPoolID id;
+  LiquidityPoolID id;
 
   @SerializedName("paging_token")
-  private String pagingToken;
+  String pagingToken;
 
   @SerializedName("fee_bp")
-  private Integer feeBP;
+  Integer feeBP;
 
   @SerializedName("type")
-  private LiquidityPoolType type;
+  LiquidityPoolType type;
 
   @SerializedName("total_trustlines")
-  private Long totalTrustlines;
+  Long totalTrustlines;
 
   @SerializedName("total_shares")
-  private String totalShares;
+  String totalShares;
 
   @SerializedName("reserves")
-  private Reserve[] reserves;
+  Reserve[] reserves;
+
+  @SerializedName("last_modified_ledger")
+  Long lastModifiedLedger;
+
+  @SerializedName("last_modified_time")
+  String lastModifiedTime;
 
   @SerializedName("_links")
-  private Links links;
-
-  LiquidityPoolResponse(LiquidityPoolID id) {
-    this.id = id;
-  }
+  Links links;
 
   public LiquidityPoolID getID() {
+    // For backwards compatibility
     return id;
   }
 
-  public String getPagingToken() {
-    return pagingToken;
-  }
-
-  public Integer getFeeBP() {
-    return feeBP;
-  }
-
-  public LiquidityPoolType getType() {
-    return type;
-  }
-
-  public Long getTotalTrustlines() {
-    return totalTrustlines;
-  }
-
-  public String getTotalShares() {
-    return totalShares;
-  }
-
-  public Reserve[] getReserves() {
-    return reserves;
-  }
-
   /** Represents liquidity pool reserves. */
+  @Value
+  @AllArgsConstructor
   public static class Reserve {
     @SerializedName("amount")
-    private final String amount;
+    String amount;
 
     @SerializedName("asset")
-    private final Asset asset;
+    Asset asset;
 
     public Reserve(@NonNull String amount, @NonNull String asset) {
-      this.amount = amount;
-      this.asset = Asset.create(asset);
+      this(amount, Asset.create(asset));
     }
-
-    public Reserve(@NonNull String amount, @NonNull Asset asset) {
-      this.amount = amount;
-      this.asset = asset;
-    }
-
-    public Asset getAsset() {
-      return asset;
-    }
-
-    public String getAmount() {
-      return amount;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-      if (!(other instanceof LiquidityPoolResponse.Reserve)) {
-        return false;
-      }
-
-      LiquidityPoolResponse.Reserve o = (LiquidityPoolResponse.Reserve) other;
-      return Objects.equals(this.getAsset(), o.getAsset())
-          && Objects.equals(this.getAmount(), o.getAmount());
-    }
-  }
-
-  public Links getLinks() {
-    return links;
   }
 
   /** Links connected to account. */
+  @Value
   public static class Links {
-    @SerializedName("effects")
-    private final Link effects;
+    @SerializedName("self")
+    Link self;
 
     @SerializedName("operations")
-    private final Link operations;
-
-    @SerializedName("self")
-    private final Link self;
+    Link operations;
 
     @SerializedName("transactions")
-    private final Link transactions;
-
-    Links(Link effects, Link operations, Link self, Link transactions) {
-      this.effects = effects;
-      this.operations = operations;
-      this.self = self;
-      this.transactions = transactions;
-    }
-
-    public Link getEffects() {
-      return effects;
-    }
-
-    public Link getOperations() {
-      return operations;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
-
-    public Link getTransactions() {
-      return transactions;
-    }
+    Link transactions;
   }
 }

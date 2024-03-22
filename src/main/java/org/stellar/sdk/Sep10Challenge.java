@@ -17,6 +17,12 @@ import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Signature;
 import org.stellar.sdk.xdr.SignatureHint;
 
+/**
+ * Stellar Web Authentication Utilities.
+ *
+ * @see <a
+ *     href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md">SEP-0010</a>
+ */
 public class Sep10Challenge {
   static final BigInteger GRACE_PERIOD_SECONDS = BigInteger.valueOf(5 * 60);
   static final String CLIENT_DOMAIN_DATA_NAME = "client_domain";
@@ -108,7 +114,7 @@ public class Sep10Challenge {
 
     TransactionBuilder builder =
         new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
-            .addTimeBounds(timebounds)
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timebounds).build())
             .setBaseFee(100)
             .addOperation(domainNameOperation)
             .addOperation(webAuthDomainOperation);

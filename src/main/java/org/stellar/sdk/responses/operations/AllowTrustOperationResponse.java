@@ -5,6 +5,8 @@ import static org.stellar.sdk.Asset.create;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.MuxedAccount;
@@ -17,51 +19,41 @@ import org.stellar.sdk.responses.MuxedAccount;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AllowTrustOperationResponse extends OperationResponse {
   @SerializedName("trustor")
-  private String trustor;
+  String trustor;
 
   @SerializedName("trustee")
-  private String trustee;
+  String trustee;
 
   @SerializedName("trustee_muxed")
-  private String trusteeMuxed;
+  String trusteeMuxed;
 
   @SerializedName("trustee_muxed_id")
-  private BigInteger trusteeMuxedId;
+  BigInteger trusteeMuxedId;
 
   @SerializedName("asset_type")
-  private String assetType;
+  String assetType;
 
   @SerializedName("asset_code")
-  private String assetCode;
+  String assetCode;
 
   @SerializedName("asset_issuer")
-  private String assetIssuer;
+  String assetIssuer;
 
   @SerializedName("authorize")
-  private boolean authorize;
+  boolean authorize;
 
   @SerializedName("authorize_to_maintain_liabilities")
-  private boolean authorizeToMaintainLiabilities;
-
-  public String getTrustor() {
-    return trustor;
-  }
+  boolean authorizeToMaintainLiabilities;
 
   public Optional<MuxedAccount> getTrusteeMuxed() {
     if (this.trusteeMuxed == null || this.trusteeMuxed.isEmpty()) {
       return Optional.empty();
     }
     return Optional.of(new MuxedAccount(this.trusteeMuxed, this.trustee, this.trusteeMuxedId));
-  }
-
-  public String getTrustee() {
-    return trustee;
-  }
-
-  public boolean isAuthorize() {
-    return authorize;
   }
 
   public boolean isAuthorizedToMaintainLiabilities() {

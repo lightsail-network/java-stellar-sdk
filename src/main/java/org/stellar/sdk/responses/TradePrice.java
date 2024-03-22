@@ -3,26 +3,20 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 /** Represents Price. Price in Stellar is represented as a fraction. */
+@EqualsAndHashCode
+@AllArgsConstructor
 public class TradePrice {
+  /** numerator */
   @SerializedName("n")
-  private final Long n;
+  Long n;
 
+  /** denominator */
   @SerializedName("d")
-  private final Long d;
-
-  /**
-   * Create a new price. Price in Stellar is represented as a fraction.
-   *
-   * @param n numerator
-   * @param d denominator
-   */
-  public TradePrice(Long n, Long d) {
-    this.n = n;
-    this.d = d;
-  }
+  Long d;
 
   /** Returns numerator. */
   public Long getNumerator() {
@@ -40,21 +34,5 @@ public class TradePrice {
     BigDecimal result = new BigDecimal(this.n).divide(new BigDecimal(this.d), mc);
 
     return result.toString();
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.getNumerator(), this.getDenominator());
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TradePrice)) {
-      return false;
-    }
-
-    TradePrice other = (TradePrice) object;
-    return Objects.equals(this.getNumerator(), other.getNumerator())
-        && Objects.equals(this.getDenominator(), other.getDenominator());
   }
 }

@@ -26,6 +26,8 @@ public class OfferPageDeserializerTest extends TestCase {
         create(null, "USD", "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD"));
     assertEquals(offerPage.getRecords().get(0).getAmount(), "10.0000000");
     assertEquals(offerPage.getRecords().get(0).getPrice(), "11.0000000");
+    assertEquals(offerPage.getRecords().get(0).getPriceR().getDenominator().longValue(), 1);
+    assertEquals(offerPage.getRecords().get(0).getPriceR().getNumerator().longValue(), 10);
     assertEquals(offerPage.getRecords().get(0).getLastModifiedLedger(), new Integer(22200794));
     assertEquals(offerPage.getRecords().get(0).getLastModifiedTime(), "2019-01-28T12:30:38Z");
     assertFalse(offerPage.getRecords().get(0).getSponsor().isPresent());

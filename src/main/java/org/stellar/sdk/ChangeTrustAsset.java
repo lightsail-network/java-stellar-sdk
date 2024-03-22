@@ -1,11 +1,16 @@
 package org.stellar.sdk;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 
 /**
  * ChangeTrustAsset class.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/assets/" target="_blank">Assets</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     target="_blank">Assets</a>
  */
 public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
   ChangeTrustAsset() {}
@@ -108,7 +113,7 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
   public abstract boolean equals(Object object);
 
   @Override
-  public abstract int compareTo(ChangeTrustAsset other);
+  public abstract int compareTo(@NonNull ChangeTrustAsset other);
 
   /**
    * Get the asset type
@@ -124,17 +129,12 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
    */
   public abstract org.stellar.sdk.xdr.ChangeTrustAsset toXdr();
 
+  @Getter
+  @AllArgsConstructor
+  @EqualsAndHashCode(callSuper = false)
+  // TODO: add docs
   public static final class Wrapper extends ChangeTrustAsset {
-    private Asset asset;
-
-    public Wrapper(@NonNull Asset baseAsset) {
-      super();
-      asset = baseAsset;
-    }
-
-    public Asset getAsset() {
-      return asset;
-    }
+    @NonNull private final Asset asset;
 
     @Override
     public String getType() {
@@ -142,18 +142,8 @@ public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
     }
 
     @Override
-    public final boolean equals(Object object) {
-      if (object == null || !this.getClass().equals(object.getClass())) {
-        return false;
-      }
-
-      ChangeTrustAsset.Wrapper o = (ChangeTrustAsset.Wrapper) object;
-      return this.getAsset().equals(o.getAsset());
-    }
-
-    @Override
-    public int compareTo(ChangeTrustAsset other) {
-      if (other.getType() == "pool_share") {
+    public int compareTo(@NonNull ChangeTrustAsset other) {
+      if ("pool_share".equals(other.getType())) {
         return -1;
       }
       return this.getAsset().compareTo(((ChangeTrustAsset.Wrapper) other).getAsset());

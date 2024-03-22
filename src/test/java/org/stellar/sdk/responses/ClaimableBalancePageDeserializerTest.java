@@ -38,6 +38,7 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
         Optional.of("GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO"));
     assertEquals(
         claimableBalancePage.getRecords().get(0).getLastModifiedLedger().intValue(), 117663);
+    assertFalse(claimableBalancePage.getRecords().get(0).getFlags().getClawbackEnabled());
     assertEquals(
         claimableBalancePage.getRecords().get(0).getPagingToken(),
         "117663-00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2");
@@ -52,6 +53,15 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
     Predicate.RelBefore relBefore = (Predicate.RelBefore) or.getInner().get(1);
     assertEquals(absBefore.getDate().toString(), "2020-09-28T17:57:04Z");
     assertEquals(relBefore.getSecondsSinceClose(), 12L);
+    assertEquals(
+        claimableBalancePage.getRecords().get(0).getLinks().getSelf().getHref(),
+        "https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2");
+    assertEquals(
+        claimableBalancePage.getRecords().get(0).getLinks().getTransactions().getHref(),
+        "https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2/transactions{?cursor,limit,order}");
+    assertEquals(
+        claimableBalancePage.getRecords().get(0).getLinks().getOperations().getHref(),
+        "https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2/operations{?cursor,limit,order}");
 
     assertEquals(
         claimableBalancePage.getRecords().get(1).getId(),
@@ -62,6 +72,7 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
     assertFalse(claimableBalancePage.getRecords().get(1).getSponsor().isPresent());
     assertEquals(
         claimableBalancePage.getRecords().get(1).getLastModifiedLedger().intValue(), 117663);
+    assertFalse(claimableBalancePage.getRecords().get(1).getFlags().getClawbackEnabled());
     assertEquals(
         claimableBalancePage.getRecords().get(1).getPagingToken(),
         "117663-00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd3");
@@ -102,10 +113,18 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
           + "    \"records\": [\n"
           + "      {\n"
           + "        \"_links\": {\n"
-          + "          \"self\": {\n"
-          + "            \"href\": \"https://horizon-protocol14.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2\"\n"
-          + "          }\n"
-          + "        },\n"
+          + "    \"self\": {\n"
+          + "      \"href\": \"https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2\"\n"
+          + "    },\n"
+          + "    \"transactions\": {\n"
+          + "      \"href\": \"https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2/transactions{?cursor,limit,order}\",\n"
+          + "      \"templated\": true\n"
+          + "    },\n"
+          + "    \"operations\": {\n"
+          + "      \"href\": \"https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2/operations{?cursor,limit,order}\",\n"
+          + "      \"templated\": true\n"
+          + "    }\n"
+          + "  },\n"
           + "        \"id\": \"00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2\",\n"
           + "        \"asset\": \"COP:GB56OJGSA6VHEUFZDX6AL2YDVG2TS5JDZYQJHDYHBDH7PCD5NIQKLSDO\",\n"
           + "        \"amount\": \"1000.0000000\",\n"
@@ -126,14 +145,25 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
           + "            }\n"
           + "          }\n"
           + "        ],\n"
+          + "        \"flags\": {\n"
+          + "                \"clawback_enabled\": false\n"
+          + "        },"
           + "        \"paging_token\": \"117663-00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd2\"\n"
           + "      },\n"
           + "            {\n"
           + "        \"_links\": {\n"
-          + "          \"self\": {\n"
-          + "            \"href\": \"https://horizon-protocol14.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd3\"\n"
-          + "          }\n"
-          + "        },\n"
+          + "    \"self\": {\n"
+          + "      \"href\": \"https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd3\"\n"
+          + "    },\n"
+          + "    \"transactions\": {\n"
+          + "      \"href\": \"https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd3/transactions{?cursor,limit,order}\",\n"
+          + "      \"templated\": true\n"
+          + "    },\n"
+          + "    \"operations\": {\n"
+          + "      \"href\": \"https://horizon.stellar.org/claimable_balances/00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd3/operations{?cursor,limit,order}\",\n"
+          + "      \"templated\": true\n"
+          + "    }\n"
+          + "  },\n"
           + "        \"id\": \"00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd3\",\n"
           + "        \"asset\": \"native\",\n"
           + "        \"amount\": \"2000.0000000\",\n"
@@ -155,6 +185,9 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
           + "            }\n"
           + "          }\n"
           + "        ],\n"
+          + "        \"flags\": {\n"
+          + "                \"clawback_enabled\": false\n"
+          + "        },"
           + "        \"paging_token\": \"117663-00000000ae76f49e8513d0922b6bcbc8a3f5c4c0a5161871f27924e08724646acab56cd3\"\n"
           + "      }\n"
           + "    ]\n"

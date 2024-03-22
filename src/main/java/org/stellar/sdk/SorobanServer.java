@@ -315,6 +315,7 @@ public class SorobanServer implements Closeable {
    * @param transaction The transaction to simulate. It should include exactly one operation, which
    *     must be one of {@link InvokeHostFunctionOperation}, {@link ExtendFootprintTTLOperation}, or
    *     {@link RestoreFootprintOperation}. Any provided footprint will be ignored.
+   * @param resourceConfig Additional resource include in the simulation.
    * @return A {@link SimulateTransactionResponse} object containing the cost, footprint,
    *     result/auth requirements (if applicable), and error of the transaction.
    * @throws IOException If the request could not be executed due to cancellation, a connectivity
@@ -322,15 +323,25 @@ public class SorobanServer implements Closeable {
    *     remote server accepted the request before the failure.
    * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
    */
-  public SimulateTransactionResponse simulateTransaction(Transaction transaction)
+  public SimulateTransactionResponse simulateTransaction(
+      Transaction transaction, @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig)
       throws IOException, SorobanRpcErrorResponse {
     // TODO: In the future, it may be necessary to consider FeeBumpTransaction.
     SimulateTransactionRequest params =
-        new SimulateTransactionRequest(transaction.toEnvelopeXdrBase64());
+        new SimulateTransactionRequest(transaction.toEnvelopeXdrBase64(), resourceConfig);
     return this.sendRequest(
         "simulateTransaction",
         params,
         new TypeToken<SorobanRpcResponse<SimulateTransactionResponse>>() {});
+  }
+
+  /**
+   * An alias for {@link #simulateTransaction(Transaction,
+   * SimulateTransactionRequest.ResourceConfig)} with no resource leeway.
+   */
+  public SimulateTransactionResponse simulateTransaction(Transaction transaction)
+      throws IOException, SorobanRpcErrorResponse {
+    return simulateTransaction(transaction, null);
   }
 
   /**

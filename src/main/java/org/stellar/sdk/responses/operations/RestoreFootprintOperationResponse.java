@@ -1,5 +1,7 @@
 package org.stellar.sdk.responses.operations;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * Represents RestoreFootprint operation response.
  *
@@ -11,4 +13,5 @@ package org.stellar.sdk.responses.operations;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@EqualsAndHashCode(callSuper = true)
 public class RestoreFootprintOperationResponse extends OperationResponse {}

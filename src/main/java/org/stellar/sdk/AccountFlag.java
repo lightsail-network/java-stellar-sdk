@@ -1,13 +1,15 @@
 package org.stellar.sdk;
 
+import lombok.Getter;
 import org.stellar.sdk.xdr.AccountFlags;
 
 /**
  * AccountFlag is the <code>enum</code> that can be used in {@link SetOptionsOperation}.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/accounts/#flags"
- *     target="_blank">Account Flags</a>
+ * @see <a href="https://developers.stellar.org/docs/glossary#flags" target="_blank">Account
+ *     Flags</a>
  */
+@Getter
 public enum AccountFlag {
   /**
    * Authorization required (0x1): Requires the issuing account to give other accounts permission
@@ -30,9 +32,5 @@ public enum AccountFlag {
 
   AccountFlag(int value) {
     this.value = value;
-  }
-
-  public int getValue() {
-    return value;
   }
 }

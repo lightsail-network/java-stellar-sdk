@@ -38,9 +38,8 @@ public class OrderBookRequestBuilder extends RequestBuilder {
 
   public static OrderBookResponse execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<OrderBookResponse>() {};
-    ResponseHandler<OrderBookResponse> responseHandler =
-        new ResponseHandler<OrderBookResponse>(type);
+    TypeToken<OrderBookResponse> type = new TypeToken<OrderBookResponse>() {};
+    ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -73,7 +72,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
   }
 
   public OrderBookResponse execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 
   @Override

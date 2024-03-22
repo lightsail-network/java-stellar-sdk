@@ -37,11 +37,15 @@ public class AssetsPageDeserializerTest extends TestCase {
     assertEquals(page.getRecords().get(0).getClaimableBalancesAmount(), "0.0000000");
     assertEquals(page.getRecords().get(0).getAmount(), "200.0000000");
     assertEquals(page.getRecords().get(0).getNumAccounts(), 1);
+    assertEquals(page.getRecords().get(0).getNumArchivedContracts(), 3);
+    assertEquals(page.getRecords().get(0).getArchivedContractsAmount(), "1.3330000");
     assertEquals(
         page.getRecords().get(0).getLinks().getToml().getHref(),
         "https://www.stellar.org/.well-known/stellar.toml");
     assertTrue(page.getRecords().get(0).getFlags().isAuthRequired());
     assertFalse(page.getRecords().get(0).getFlags().isAuthRevocable());
+    assertFalse(page.getRecords().get(0).getFlags().isAuthImmutable());
+    assertFalse(page.getRecords().get(0).getFlags().isAuthClawbackEnabled());
     assertEquals(
         page.getRecords().get(0).getContractID(),
         "CAKBXQ7XXRMY5F6YFAY4D45HY25VHNKOGWHS3KZX5ULP6E5TRVITMJS2");
@@ -79,6 +83,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"num_claimable_balances\": 0,\n"
           + "        \"num_liquidity_pools\": 0,\n"
           + "        \"num_contracts\": 2,\n"
+          + "        \"num_archived_contracts\": 3,\n"
           + "        \"amount\": \"200.0000000\",\n"
           + "        \"accounts\": {\n"
           + "          \"authorized\": 1,\n"
@@ -88,6 +93,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"claimable_balances_amount\": \"0.0000000\",\n"
           + "        \"liquidity_pools_amount\": \"0.0000000\",\n"
           + "        \"contracts_amount\": \"25.1230000\",\n"
+          + "        \"archived_contracts_amount\": \"1.3330000\",\n"
           + "        \"balances\": {\n"
           + "          \"authorized\": \"200.0000000\",\n"
           + "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n"
@@ -114,6 +120,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"num_claimable_balances\": 0,\n"
           + "        \"num_liquidity_pools\": 0,\n"
           + "        \"num_contracts\": 0,\n"
+          + "        \"num_archived_contracts\": 0,\n"
           + "        \"amount\": \"200.0000000\",\n"
           + "        \"accounts\": {\n"
           + "          \"authorized\": 1,\n"
@@ -123,6 +130,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"claimable_balances_amount\": \"0.0000000\",\n"
           + "        \"liquidity_pools_amount\": \"0.0000000\",\n"
           + "        \"contracts_amount\": \"0.0000000\",\n"
+          + "        \"archived_contracts_amount\": \"0.0000000\",\n"
           + "        \"balances\": {\n"
           + "          \"authorized\": \"200.0000000\",\n"
           + "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n"
@@ -150,6 +158,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"num_claimable_balances\": 0,\n"
           + "        \"num_liquidity_pools\": 0,\n"
           + "        \"num_contracts\": 0,\n"
+          + "        \"num_archived_contracts\": 0,\n"
           + "        \"amount\": \"200.0000000\",\n"
           + "        \"accounts\": {\n"
           + "          \"authorized\": 1,\n"
@@ -159,6 +168,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"claimable_balances_amount\": \"0.0000000\",\n"
           + "        \"liquidity_pools_amount\": \"0.0000000\",\n"
           + "        \"contracts_amount\": \"0.0000000\",\n"
+          + "        \"archived_contracts_amount\": \"0.0000000\",\n"
           + "        \"balances\": {\n"
           + "          \"authorized\": \"200.0000000\",\n"
           + "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n"
@@ -186,6 +196,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"num_claimable_balances\": 0,\n"
           + "        \"num_liquidity_pools\": 0,\n"
           + "        \"num_contracts\": 0,\n"
+          + "        \"num_archived_contracts\": 0,\n"
           + "        \"amount\": \"200.0000000\",\n"
           + "        \"accounts\": {\n"
           + "          \"authorized\": 1,\n"
@@ -195,6 +206,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"claimable_balances_amount\": \"0.0000000\",\n"
           + "        \"liquidity_pools_amount\": \"0.0000000\",\n"
           + "        \"contracts_amount\": \"0.0000000\",\n"
+          + "        \"archived_contracts_amount\": \"0.0000000\",\n"
           + "        \"balances\": {\n"
           + "          \"authorized\": \"200.0000000\",\n"
           + "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n"
@@ -222,6 +234,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"num_claimable_balances\": 0,\n"
           + "        \"num_liquidity_pools\": 0,\n"
           + "        \"num_contracts\": 0,\n"
+          + "        \"num_archived_contracts\": 0,\n"
           + "        \"amount\": \"200.0000000\",\n"
           + "        \"accounts\": {\n"
           + "          \"authorized\": 1,\n"
@@ -231,6 +244,7 @@ public class AssetsPageDeserializerTest extends TestCase {
           + "        \"claimable_balances_amount\": \"0.0000000\",\n"
           + "        \"liquidity_pools_amount\": \"0.0000000\",\n"
           + "        \"contracts_amount\": \"0.0000000\",\n"
+          + "        \"archived_contracts_amount\": \"0.0000000\",\n"
           + "        \"balances\": {\n"
           + "          \"authorized\": \"200.0000000\",\n"
           + "          \"authorized_to_maintain_liabilities\": \"0.0000000\",\n"

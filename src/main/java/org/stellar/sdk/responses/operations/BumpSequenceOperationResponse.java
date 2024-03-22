@@ -1,6 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents BumpSequence operation response.
@@ -10,15 +12,9 @@ import com.google.gson.annotations.SerializedName;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class BumpSequenceOperationResponse extends OperationResponse {
   @SerializedName("bump_to")
-  protected final Long bumpTo;
-
-  public BumpSequenceOperationResponse(Long bumpTo) {
-    this.bumpTo = bumpTo;
-  }
-
-  public Long getBumpTo() {
-    return bumpTo;
-  }
+  Long bumpTo;
 }

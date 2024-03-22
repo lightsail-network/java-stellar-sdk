@@ -1,7 +1,8 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
-import org.stellar.sdk.KeyPair;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * Represents SetOptions operation response.
@@ -11,36 +12,38 @@ import org.stellar.sdk.KeyPair;
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class SetOptionsOperationResponse extends OperationResponse {
   @SerializedName("low_threshold")
-  protected final Integer lowThreshold;
+  Integer lowThreshold;
 
   @SerializedName("med_threshold")
-  protected final Integer medThreshold;
+  Integer medThreshold;
 
   @SerializedName("high_threshold")
-  protected final Integer highThreshold;
+  Integer highThreshold;
 
   @SerializedName("inflation_dest")
-  protected final String inflationDestination;
+  String inflationDestination;
 
   @SerializedName("home_domain")
-  protected final String homeDomain;
+  String homeDomain;
 
   @SerializedName("signer_key")
-  protected final String signerKey;
+  String signerKey;
 
   @SerializedName("signer_weight")
-  protected final Integer signerWeight;
+  Integer signerWeight;
 
   @SerializedName("master_key_weight")
-  protected final Integer masterKeyWeight;
+  Integer masterKeyWeight;
 
   @SerializedName("clear_flags_s")
-  protected final String[] clearFlags;
+  String[] clearFlags;
 
   @SerializedName("set_flags_s")
-  protected final String[] setFlags;
+  String[] setFlags;
 
   SetOptionsOperationResponse(
       Integer lowThreshold,
@@ -63,53 +66,5 @@ public class SetOptionsOperationResponse extends OperationResponse {
     this.masterKeyWeight = masterKeyWeight;
     this.clearFlags = clearFlags;
     this.setFlags = setFlags;
-  }
-
-  public Integer getLowThreshold() {
-    return lowThreshold;
-  }
-
-  public Integer getMedThreshold() {
-    return medThreshold;
-  }
-
-  public Integer getHighThreshold() {
-    return highThreshold;
-  }
-
-  public String getInflationDestination() {
-    return inflationDestination;
-  }
-
-  public String getHomeDomain() {
-    return homeDomain;
-  }
-
-  public String getSignerKey() {
-    return signerKey;
-  }
-
-  /**
-   * @deprecated Use {@link SetOptionsOperationResponse#getSignerKey()}
-   * @return
-   */
-  public KeyPair getSigner() {
-    return KeyPair.fromAccountId(signerKey);
-  }
-
-  public Integer getSignerWeight() {
-    return signerWeight;
-  }
-
-  public Integer getMasterKeyWeight() {
-    return masterKeyWeight;
-  }
-
-  public String[] getClearFlags() {
-    return clearFlags;
-  }
-
-  public String[] getSetFlags() {
-    return setFlags;
   }
 }

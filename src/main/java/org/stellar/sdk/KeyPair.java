@@ -9,7 +9,7 @@ import java.security.MessageDigest;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Arrays;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
@@ -30,18 +30,18 @@ import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 /** Holds a Stellar keypair. */
+@EqualsAndHashCode
 public class KeyPair {
-
   private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.ED_25519_CURVE_SPEC;
 
-  private final EdDSAPublicKey mPublicKey;
-  private final EdDSAPrivateKey mPrivateKey;
+  private final EdDSAPublicKey publicKey;
+  private final EdDSAPrivateKey privateKey;
 
   /**
    * Creates a new KeyPair without a private key. Useful to simply verify a signature from a given
    * public address.
    *
-   * @param publicKey
+   * @param publicKey The public key for this KeyPair.
    */
   public KeyPair(EdDSAPublicKey publicKey) {
     this(publicKey, null);
@@ -50,17 +50,17 @@ public class KeyPair {
   /**
    * Creates a new KeyPair from the given public and private keys.
    *
-   * @param publicKey
-   * @param privateKey
+   * @param publicKey The public key for this KeyPair.
+   * @param privateKey The private key for this KeyPair or null if you want a public key only
    */
   public KeyPair(@NonNull EdDSAPublicKey publicKey, EdDSAPrivateKey privateKey) {
-    mPublicKey = publicKey;
-    mPrivateKey = privateKey;
+    this.publicKey = publicKey;
+    this.privateKey = privateKey;
   }
 
   /** Returns true if this Keypair is capable of signing */
   public boolean canSign() {
-    return mPrivateKey != null;
+    return privateKey != null;
   }
 
   /**
@@ -71,8 +71,7 @@ public class KeyPair {
    */
   public static KeyPair fromSecretSeed(char[] seed) {
     byte[] decoded = StrKey.decodeEd25519SecretSeed(seed);
-    KeyPair keypair = fromSecretSeed(decoded);
-    return keypair;
+    return fromSecretSeed(decoded);
   }
 
   /**
@@ -161,18 +160,18 @@ public class KeyPair {
         (EdDSAPublicKey) keypair.getPublic(), (EdDSAPrivateKey) keypair.getPrivate());
   }
 
-  /** Returns the human readable account ID encoded in strkey. */
+  /** Returns the human-readable account ID encoded in strkey. */
   public String getAccountId() {
-    return StrKey.encodeEd25519PublicKey(mPublicKey.getAbyte());
+    return StrKey.encodeEd25519PublicKey(publicKey.getAbyte());
   }
 
-  /** Returns the human readable secret seed encoded in strkey. */
+  /** Returns the human-readable secret seed encoded in strkey. */
   public char[] getSecretSeed() {
-    return StrKey.encodeEd25519SecretSeed(mPrivateKey.getSeed());
+    return StrKey.encodeEd25519SecretSeed(privateKey.getSeed());
   }
 
   public byte[] getPublicKey() {
-    return mPublicKey.getAbyte();
+    return publicKey.getAbyte();
   }
 
   public SignatureHint getSignatureHint() {
@@ -231,13 +230,13 @@ public class KeyPair {
    * @return signed bytes, null if the private key for this keypair is null.
    */
   public byte[] sign(byte[] data) {
-    if (mPrivateKey == null) {
+    if (privateKey == null) {
       throw new RuntimeException(
           "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
     }
     try {
       Signature sgr = new EdDSAEngine(MessageDigest.getInstance("SHA-512"));
-      sgr.initSign(mPrivateKey);
+      sgr.initSign(privateKey);
       sgr.update(data);
       return sgr.sign();
     } catch (GeneralSecurityException e) {
@@ -298,12 +297,11 @@ public class KeyPair {
    * @param data The data that was signed.
    * @param signature The signature.
    * @return True if they match, false otherwise.
-   * @throws RuntimeException
    */
   public boolean verify(byte[] data, byte[] signature) {
     try {
       Signature sgr = new EdDSAEngine(MessageDigest.getInstance("SHA-512"));
-      sgr.initVerify(mPublicKey);
+      sgr.initVerify(publicKey);
       sgr.update(data);
       return sgr.verify(signature);
     } catch (SignatureException e) {
@@ -311,20 +309,5 @@ public class KeyPair {
     } catch (GeneralSecurityException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  public int hashCode() {
-    return Objects.hash(this.mPrivateKey, this.mPublicKey);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof KeyPair)) {
-      return false;
-    }
-
-    KeyPair other = (KeyPair) object;
-    return Objects.equals(this.mPrivateKey, other.mPrivateKey)
-        && this.mPublicKey.equals(other.mPublicKey);
   }
 }

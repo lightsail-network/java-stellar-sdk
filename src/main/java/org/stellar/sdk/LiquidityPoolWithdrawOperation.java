@@ -1,6 +1,9 @@
 package org.stellar.sdk;
 
-import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 import org.stellar.sdk.xdr.LiquidityPoolWithdrawOp;
@@ -9,34 +12,30 @@ import org.stellar.sdk.xdr.OperationType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/start/list-of-operations/#liquidity-pool-deposit"
+ * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#liquidity-pool-deposit"
  * target="_blank">LiquidityPoolDeposit</a> operation.
- *
- * @see <a href="https://developers.stellar.org/docs/start/list-of-operations/" target="_blank">List
- *     of Operations</a>
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class LiquidityPoolWithdrawOperation extends Operation {
-  private final LiquidityPoolID liquidityPoolID;
-  private final String amount;
-  private final String minAmountA;
-  private final String minAmountB;
+  /** The liquidity pool ID. * */
+  @NonNull private final LiquidityPoolID liquidityPoolID;
 
-  public LiquidityPoolWithdrawOperation(
-      @NonNull LiquidityPoolID liquidityPoolID,
-      @NonNull String amount,
-      @NonNull String minAmountA,
-      @NonNull String minAmountB) {
-    this.liquidityPoolID = liquidityPoolID;
-    this.amount = amount;
-    this.minAmountA = minAmountA;
-    this.minAmountB = minAmountB;
-  }
+  /** Amount of pool shares to withdraw. * */
+  @NonNull private final String amount;
+
+  /** Minimum amount of first asset to withdraw. * */
+  @NonNull private final String minAmountA;
+
+  /** Minimum amount of second asset to withdraw. * */
+  @NonNull private final String minAmountB;
 
   public LiquidityPoolWithdrawOperation(LiquidityPoolWithdrawOp op) {
     this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
-    this.amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
-    this.minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64().longValue());
-    this.minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64().longValue());
+    this.amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    this.minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64());
+    this.minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64());
   }
 
   public LiquidityPoolWithdrawOperation(AssetAmount a, AssetAmount b, @NonNull String amount) {
@@ -51,22 +50,6 @@ public class LiquidityPoolWithdrawOperation extends Operation {
     this.minAmountB = b.getAmount();
   }
 
-  public LiquidityPoolID getLiquidityPoolID() {
-    return liquidityPoolID;
-  }
-
-  public String getAmount() {
-    return amount;
-  }
-
-  public String getMinAmountA() {
-    return minAmountA;
-  }
-
-  public String getMinAmountB() {
-    return minAmountB;
-  }
-
   @Override
   OperationBody toOperationBody(AccountConverter accountConverter) {
     LiquidityPoolWithdrawOp op = new LiquidityPoolWithdrawOp();
@@ -79,23 +62,5 @@ public class LiquidityPoolWithdrawOperation extends Operation {
     body.setDiscriminant(OperationType.LIQUIDITY_POOL_WITHDRAW);
     body.setLiquidityPoolWithdrawOp(op);
     return body;
-  }
-
-  public int hashCode() {
-    return Objects.hash(this.getSourceAccount(), liquidityPoolID, amount, minAmountA, minAmountB);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LiquidityPoolWithdrawOperation)) {
-      return false;
-    }
-
-    LiquidityPoolWithdrawOperation o = (LiquidityPoolWithdrawOperation) object;
-    return Objects.equals(this.getLiquidityPoolID(), o.getLiquidityPoolID())
-        && Objects.equals(this.getAmount(), o.getAmount())
-        && Objects.equals(this.getMinAmountA(), o.getMinAmountA())
-        && Objects.equals(this.getMinAmountB(), o.getMinAmountB())
-        && Objects.equals(this.getSourceAccount(), o.getSourceAccount());
   }
 }

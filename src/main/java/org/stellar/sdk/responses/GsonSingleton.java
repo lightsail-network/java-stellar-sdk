@@ -17,18 +17,23 @@ public class GsonSingleton {
 
   public static Gson getInstance() {
     if (instance == null) {
-      TypeToken accountPageType = new TypeToken<Page<AccountResponse>>() {};
-      TypeToken assetPageType = new TypeToken<Page<AssetResponse>>() {};
-      TypeToken effectPageType = new TypeToken<Page<EffectResponse>>() {};
-      TypeToken ledgerPageType = new TypeToken<Page<LedgerResponse>>() {};
-      TypeToken liquidityPoolPageType = new TypeToken<Page<LiquidityPoolResponse>>() {};
-      TypeToken offerPageType = new TypeToken<Page<OfferResponse>>() {};
-      TypeToken operationPageType = new TypeToken<Page<OperationResponse>>() {};
-      TypeToken pathPageType = new TypeToken<Page<PathResponse>>() {};
-      TypeToken tradePageType = new TypeToken<Page<TradeResponse>>() {};
-      TypeToken tradeAggregationPageType = new TypeToken<Page<TradeAggregationResponse>>() {};
-      TypeToken transactionPageType = new TypeToken<Page<TransactionResponse>>() {};
-      TypeToken claimableBalancePageType = new TypeToken<Page<ClaimableBalanceResponse>>() {};
+      TypeToken<Page<AccountResponse>> accountPageType = new TypeToken<Page<AccountResponse>>() {};
+      TypeToken<Page<AssetResponse>> assetPageType = new TypeToken<Page<AssetResponse>>() {};
+      TypeToken<Page<EffectResponse>> effectPageType = new TypeToken<Page<EffectResponse>>() {};
+      TypeToken<Page<LedgerResponse>> ledgerPageType = new TypeToken<Page<LedgerResponse>>() {};
+      TypeToken<Page<LiquidityPoolResponse>> liquidityPoolPageType =
+          new TypeToken<Page<LiquidityPoolResponse>>() {};
+      TypeToken<Page<OfferResponse>> offerPageType = new TypeToken<Page<OfferResponse>>() {};
+      TypeToken<Page<OperationResponse>> operationPageType =
+          new TypeToken<Page<OperationResponse>>() {};
+      TypeToken<Page<PathResponse>> pathPageType = new TypeToken<Page<PathResponse>>() {};
+      TypeToken<Page<TradeResponse>> tradePageType = new TypeToken<Page<TradeResponse>>() {};
+      TypeToken<Page<TradeAggregationResponse>> tradeAggregationPageType =
+          new TypeToken<Page<TradeAggregationResponse>>() {};
+      TypeToken<Page<TransactionResponse>> transactionPageType =
+          new TypeToken<Page<TransactionResponse>>() {};
+      TypeToken<Page<ClaimableBalanceResponse>> claimableBalancePageType =
+          new TypeToken<Page<ClaimableBalanceResponse>>() {};
 
       instance =
           new GsonBuilder()
@@ -40,34 +45,25 @@ public class GsonSingleton {
               .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
               .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
               .registerTypeAdapter(
-                  accountPageType.getType(), new PageDeserializer<AccountResponse>(accountPageType))
+                  accountPageType.getType(), new PageDeserializer<>(accountPageType))
+              .registerTypeAdapter(assetPageType.getType(), new PageDeserializer<>(assetPageType))
+              .registerTypeAdapter(effectPageType.getType(), new PageDeserializer<>(effectPageType))
+              .registerTypeAdapter(ledgerPageType.getType(), new PageDeserializer<>(ledgerPageType))
               .registerTypeAdapter(
-                  assetPageType.getType(), new PageDeserializer<AssetResponse>(assetPageType))
+                  liquidityPoolPageType.getType(), new PageDeserializer<>(liquidityPoolPageType))
+              .registerTypeAdapter(offerPageType.getType(), new PageDeserializer<>(offerPageType))
               .registerTypeAdapter(
-                  effectPageType.getType(), new PageDeserializer<AccountResponse>(effectPageType))
-              .registerTypeAdapter(
-                  ledgerPageType.getType(), new PageDeserializer<LedgerResponse>(ledgerPageType))
-              .registerTypeAdapter(
-                  liquidityPoolPageType.getType(),
-                  new PageDeserializer<LiquidityPoolResponse>(liquidityPoolPageType))
-              .registerTypeAdapter(
-                  offerPageType.getType(), new PageDeserializer<OfferResponse>(offerPageType))
-              .registerTypeAdapter(
-                  operationPageType.getType(),
-                  new PageDeserializer<OperationResponse>(operationPageType))
-              .registerTypeAdapter(
-                  pathPageType.getType(), new PageDeserializer<PathResponse>(pathPageType))
-              .registerTypeAdapter(
-                  tradePageType.getType(), new PageDeserializer<TradeResponse>(tradePageType))
+                  operationPageType.getType(), new PageDeserializer<>(operationPageType))
+              .registerTypeAdapter(pathPageType.getType(), new PageDeserializer<>(pathPageType))
+              .registerTypeAdapter(tradePageType.getType(), new PageDeserializer<>(tradePageType))
               .registerTypeAdapter(
                   tradeAggregationPageType.getType(),
-                  new PageDeserializer<TradeAggregationResponse>(tradeAggregationPageType))
+                  new PageDeserializer<>(tradeAggregationPageType))
               .registerTypeAdapter(
-                  transactionPageType.getType(),
-                  new PageDeserializer<TransactionResponse>(transactionPageType))
+                  transactionPageType.getType(), new PageDeserializer<>(transactionPageType))
               .registerTypeAdapter(
                   claimableBalancePageType.getType(),
-                  new PageDeserializer<ClaimableBalanceResponse>(claimableBalancePageType))
+                  new PageDeserializer<>(claimableBalancePageType))
               .create();
     }
     return instance;

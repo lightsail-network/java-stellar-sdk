@@ -1,6 +1,5 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 /**
@@ -9,12 +8,11 @@ import lombok.Value;
  * @see <a href="https://soroban.stellar.org/api/methods/getLatestLedger#returns"
  *     target="_blank">getLatestLedger documentation</a>
  */
-@AllArgsConstructor
 @Value
 public class GetLatestLedgerResponse {
   String id;
 
-  Integer protocolVersion;
+  Long protocolVersion;
 
   Integer sequence;
 }

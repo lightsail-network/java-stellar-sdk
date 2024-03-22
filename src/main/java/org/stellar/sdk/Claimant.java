@@ -1,25 +1,19 @@
 package org.stellar.sdk;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.NonNull;
+import lombok.Value;
 
 /** Represents an entity who is eligible to claim the claimable balance. */
+@Value
 public class Claimant {
+  /** The destination account id. */
   @SerializedName("destination")
-  private final String destination;
+  @NonNull
+  String destination;
 
+  /** The predicate for this claimable balance. */
   @SerializedName("predicate")
-  private final Predicate predicate;
-
-  public Claimant(String destination, Predicate predicate) {
-    this.destination = destination;
-    this.predicate = predicate;
-  }
-
-  public String getDestination() {
-    return destination;
-  }
-
-  public Predicate getPredicate() {
-    return predicate;
-  }
+  @NonNull
+  Predicate predicate;
 }

@@ -10,6 +10,7 @@ import static org.stellar.sdk.xdr.SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -555,7 +556,7 @@ public class SorobanServerTest {
             .build();
     GetEventsRequest getEventsRequest =
         GetEventsRequest.builder()
-            .startLedger("100")
+            .startLedger(100L)
             .filter(eventFilter)
             .pagination(paginationOptions)
             .build();
@@ -750,6 +751,97 @@ public class SorobanServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     SorobanServer server = new SorobanServer(baseUrl.toString());
     SimulateTransactionResponse resp = server.simulateTransaction(transaction);
+    assertEquals(resp.getLatestLedger().longValue(), 14245L);
+    assertEquals(
+        resp.getTransactionData(),
+        "AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==");
+    assertEquals(resp.getEvents().size(), 2);
+    assertEquals(
+        resp.getEvents().get(0),
+        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=");
+    assertEquals(
+        resp.getEvents().get(1),
+        "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=");
+    assertEquals(resp.getMinResourceFee().longValue(), 58181L);
+    assertEquals(resp.getResults().size(), 1);
+    assertEquals(resp.getResults().get(0).getAuth().size(), 1);
+    assertEquals(
+        resp.getResults().get(0).getAuth().get(0),
+        "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
+    assertEquals(resp.getResults().get(0).getXdr(), "AAAAAwAAABQ=");
+    assertEquals(resp.getCost().getCpuInstructions().longValue(), 1646885L);
+    assertEquals(resp.getCost().getMemoryBytes().longValue(), 1296481L);
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testSimulateTransactionWithResourceLeeway()
+      throws IOException, SorobanRpcErrorResponse {
+    String json =
+        "{\n"
+            + "  \"jsonrpc\": \"2.0\",\n"
+            + "  \"id\": \"7a469b9d6ed4444893491be530862ce3\",\n"
+            + "  \"result\": {\n"
+            + "    \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==\",\n"
+            + "    \"minResourceFee\": \"58181\",\n"
+            + "    \"events\": [\n"
+            + "      \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
+            + "      \"AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
+            + "    ],\n"
+            + "    \"results\": [\n"
+            + "      {\n"
+            + "        \"auth\": [\n"
+            + "          \"AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
+            + "        ],\n"
+            + "        \"xdr\": \"AAAAAwAAABQ=\"\n"
+            + "      }\n"
+            + "    ],\n"
+            + "    \"cost\": { \"cpuInsns\": \"1646885\", \"memBytes\": \"1296481\" },\n"
+            + "    \"latestLedger\": \"14245\"\n"
+            + "  }\n"
+            + "}\n";
+
+    Transaction transaction = buildSorobanTransaction(null, null);
+
+    BigInteger cpuInstructions = BigInteger.valueOf(20000L);
+
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())
+                && sorobanRpcRequest
+                    .getParams()
+                    .getResourceConfig()
+                    .getInstructionLeeway()
+                    .equals(cpuInstructions)) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+
+    SimulateTransactionRequest.ResourceConfig resourceConfig =
+        new SimulateTransactionRequest.ResourceConfig(cpuInstructions);
+    SimulateTransactionResponse resp = server.simulateTransaction(transaction, resourceConfig);
     assertEquals(resp.getLatestLedger().longValue(), 14245L);
     assertEquals(
         resp.getTransactionData(),

@@ -2,6 +2,8 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.stellar.sdk.Asset;
 
 /**
@@ -12,129 +14,58 @@ import org.stellar.sdk.Asset;
  * @see org.stellar.sdk.requests.OffersRequestBuilder
  * @see org.stellar.sdk.Server#offers()
  */
+@Value
+@EqualsAndHashCode(callSuper = false)
 public class OfferResponse extends Response implements Pageable {
   @SerializedName("id")
-  private final Long id;
+  Long id;
 
   @SerializedName("paging_token")
-  private final String pagingToken;
+  String pagingToken;
 
   @SerializedName("seller")
-  private final String seller;
+  String seller;
 
   @SerializedName("selling")
-  private final Asset selling;
+  Asset selling;
 
   @SerializedName("buying")
-  private final Asset buying;
+  Asset buying;
 
   @SerializedName("amount")
-  private final String amount;
+  String amount;
+
+  @SerializedName("price_r")
+  TradePrice priceR;
 
   @SerializedName("price")
-  private final String price;
+  String price;
 
+  /** Can be null if ledger adding an offer has not been ingested yet. * */
   @SerializedName("last_modified_ledger")
-  private final Integer lastModifiedLedger;
+  Integer lastModifiedLedger;
 
   @SerializedName("last_modified_time")
-  private final String lastModifiedTime;
-
-  @SerializedName("_links")
-  private final Links links;
+  String lastModifiedTime;
 
   @SerializedName("sponsor")
-  private String sponsor;
+  String sponsor;
 
-  public OfferResponse(
-      Long id,
-      String pagingToken,
-      String seller,
-      Asset selling,
-      Asset buying,
-      String amount,
-      String price,
-      Integer lastModifiedLedger,
-      String lastModifiedTime,
-      String sponsor,
-      Links links) {
-    this.id = id;
-    this.pagingToken = pagingToken;
-    this.seller = seller;
-    this.selling = selling;
-    this.buying = buying;
-    this.amount = amount;
-    this.price = price;
-    this.lastModifiedLedger = lastModifiedLedger;
-    this.lastModifiedTime = lastModifiedTime;
-    this.sponsor = sponsor;
-    this.links = links;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getPagingToken() {
-    return pagingToken;
-  }
-
-  public String getSeller() {
-    return seller;
-  }
-
-  public Asset getSelling() {
-    return selling;
-  }
-
-  public Asset getBuying() {
-    return buying;
-  }
-
-  public String getAmount() {
-    return amount;
-  }
-
-  public String getPrice() {
-    return price;
-  }
-
-  public Integer getLastModifiedLedger() {
-    return lastModifiedLedger;
-  }
-
-  // Can be null if ledger adding an offer has not been ingested yet.
-  public String getLastModifiedTime() {
-    return lastModifiedTime;
-  }
+  @SerializedName("_links")
+  Links links;
 
   public Optional<String> getSponsor() {
+    // For backwards compatibility
     return Optional.ofNullable(this.sponsor);
   }
 
-  public Links getLinks() {
-    return links;
-  }
-
   /** Links connected to ledger. */
+  @Value
   public static class Links {
     @SerializedName("self")
-    private final Link self;
+    Link self;
 
     @SerializedName("offer_maker")
-    private final Link offerMaker;
-
-    public Links(Link self, Link offerMaker) {
-      this.self = self;
-      this.offerMaker = offerMaker;
-    }
-
-    public Link getSelf() {
-      return self;
-    }
-
-    public Link getOfferMaker() {
-      return offerMaker;
-    }
+    Link offerMaker;
   }
 }

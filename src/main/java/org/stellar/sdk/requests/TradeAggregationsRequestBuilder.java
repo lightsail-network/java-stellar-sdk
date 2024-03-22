@@ -52,9 +52,9 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
 
   public static Page<TradeAggregationResponse> execute(OkHttpClient httpClient, HttpUrl uri)
       throws IOException, TooManyRequestsException {
-    TypeToken type = new TypeToken<Page<TradeAggregationResponse>>() {};
-    ResponseHandler<Page<TradeAggregationResponse>> responseHandler =
-        new ResponseHandler<Page<TradeAggregationResponse>>(type);
+    TypeToken<Page<TradeAggregationResponse>> type =
+        new TypeToken<Page<TradeAggregationResponse>>() {};
+    ResponseHandler<Page<TradeAggregationResponse>> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
     Response response = httpClient.newCall(request).execute();
@@ -63,6 +63,6 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
   }
 
   public Page<TradeAggregationResponse> execute() throws IOException, TooManyRequestsException {
-    return this.execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.buildUri());
   }
 }
