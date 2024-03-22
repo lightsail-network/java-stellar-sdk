@@ -1,3 +1,4 @@
+# XDR files from https://github.com/stellar/stellar-xdr
 XDRS = xdr/Stellar-SCP.x \
 xdr/Stellar-ledger-entries.x \
 xdr/Stellar-ledger.x \
@@ -11,8 +12,8 @@ xdr/Stellar-contract.x \
 xdr/Stellar-internal.x \
 xdr/Stellar-contract-config-setting.x
 
-XDRGEN_COMMIT=7c9349c62844e376bc637be678695387e88d125f
-XDRNEXT_COMMIT=6a620d160aab22609c982d54578ff6a63bfcdc01
+XDRGEN_COMMIT=7c9349c62844e376bc637be678695387e88d125f # xdrgen commit to use, see https://github.com/stellar/xdrgen
+XDRNEXT_COMMIT=6a620d160aab22609c982d54578ff6a63bfcdc01 # stellar-xdr commit to use, see https://github.com/stellar/stellar-xdr
 
 .PHONY: xdr xdr-clean xdr-update
 
