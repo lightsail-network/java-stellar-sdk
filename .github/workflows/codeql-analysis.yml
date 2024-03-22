@@ -19,6 +19,10 @@ on:
   schedule:
     - cron: '20 06 * * 2'
 
+env:
+  JAVA_VERSION: '17'
+  JAVA_DISTRIBUTION: 'microsoft'
+
 jobs:
   analyze:
     name: Analyze
@@ -48,6 +52,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
