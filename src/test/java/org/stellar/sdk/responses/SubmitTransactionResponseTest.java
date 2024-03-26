@@ -140,14 +140,14 @@ public class SubmitTransactionResponseTest extends TestCase {
     assertEquals(
         submitTransactionResponse.getHash(),
         "ee14b93fcd31d4cfe835b941a0a8744e23a6677097db1fafe0552d8657bed940");
-    assertEquals(submitTransactionResponse.getLedger(), new Long(3128812));
+    assertEquals(submitTransactionResponse.getLedger().longValue(), 3128812);
     assertEquals(
         submitTransactionResponse.getEnvelopeXdr().get(),
         "AAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAZAAT3TUAAAAwAAAAAAAAAAAAAAABAAAAAAAAAAMAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAAAAAAG/dhGXAAAAQLuStfImg0OeeGAQmvLkJSZ1MPSkCzCYNbGqX5oYNuuOqZ5SmWhEsC7uOD9ha4V7KengiwNlc0oMNqBVo22S7gk=");
     assertEquals(
         submitTransactionResponse.getResultXdr().get(),
         "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAAAAPEAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAA==");
-    assertEquals(submitTransactionResponse.getOfferIdFromResult(0).get(), new Long(241));
+    assertEquals(submitTransactionResponse.getOfferIdFromResult(0).get().longValue(), 241);
     TransactionResult transactionResult =
         submitTransactionResponse.getDecodedTransactionResult().get();
     assertEquals(transactionResult.getResult().getDiscriminant(), TransactionResultCode.txSUCCESS);

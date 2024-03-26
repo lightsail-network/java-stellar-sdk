@@ -317,7 +317,9 @@ public class Transaction extends AbstractTransaction {
    * @see org.stellar.sdk.TransactionBuilder
    * @deprecated will be removed in upcoming releases. Use <code>TransactionBuilder</code> instead.
    */
+  @Deprecated
   public static class Builder extends TransactionBuilder {
+    // TODO: remove this class in the next release
     public Builder(
         AccountConverter accountConverter,
         TransactionBuilderAccount sourceAccount,

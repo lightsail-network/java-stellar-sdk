@@ -63,6 +63,7 @@ public abstract class Operation {
    *
    * @param xdr XDR object
    */
+  @SuppressWarnings("deprecation")
   public static Operation fromXdr(
       AccountConverter accountConverter, org.stellar.sdk.xdr.Operation xdr) {
     org.stellar.sdk.xdr.Operation.OperationBody body = xdr.getBody();

@@ -19,8 +19,8 @@ public class TransactionDecodeTest {
 
     TransactionEnvelope transactionEnvelope = TransactionEnvelope.fromXdrBase64(txBody);
     assertEquals(
-        new Long(2373025265623291L),
-        transactionEnvelope.getV0().getTx().getSeqNum().getSequenceNumber().getInt64());
+        2373025265623291L,
+        transactionEnvelope.getV0().getTx().getSeqNum().getSequenceNumber().getInt64().longValue());
   }
 
   @Test

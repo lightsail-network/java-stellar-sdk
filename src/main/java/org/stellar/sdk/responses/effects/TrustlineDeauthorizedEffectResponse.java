@@ -13,6 +13,7 @@ import lombok.Value;
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
+@Deprecated
 public class TrustlineDeauthorizedEffectResponse extends TrustlineAuthorizationResponse {
   TrustlineDeauthorizedEffectResponse(String trustor, String assetType, String assetCode) {
     super(trustor, assetType, assetCode);
