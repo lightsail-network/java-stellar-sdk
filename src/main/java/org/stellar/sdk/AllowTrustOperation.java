@@ -14,6 +14,7 @@ import org.stellar.sdk.xdr.*;
  */
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@Deprecated
 public class AllowTrustOperation extends Operation {
 
   /** The account of the recipient of the trustline. */

@@ -21,6 +21,7 @@ import org.stellar.sdk.responses.MuxedAccount;
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
+@Deprecated
 public class AllowTrustOperationResponse extends OperationResponse {
   @SerializedName("trustor")
   String trustor;
