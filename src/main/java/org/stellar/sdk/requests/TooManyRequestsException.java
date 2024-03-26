@@ -12,7 +12,7 @@ public class TooManyRequestsException extends RuntimeException {
   private final Integer retryAfter;
 
   public TooManyRequestsException(Integer retryAfter) {
-    super("The rate limit for the requesting IP address is over its alloted limit.");
+    super("The rate limit for the requesting IP address is over its allowed limit.");
     this.retryAfter = retryAfter;
   }
 

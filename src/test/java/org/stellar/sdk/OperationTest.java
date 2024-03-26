@@ -425,6 +425,7 @@ public class OperationTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testAllowTrustOperation() throws IOException, FormatException {
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source =
@@ -456,6 +457,7 @@ public class OperationTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testAllowTrustOperationAssetCodeBuffer() throws IOException, FormatException {
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source =
@@ -603,7 +605,7 @@ public class OperationTest {
     assertEquals(null, parsedOperation.getHighThreshold());
     assertEquals(null, parsedOperation.getHomeDomain());
     assertTrue(Arrays.equals(hash, parsedOperation.getSigner().getHashX().getUint256()));
-    assertEquals(new Integer(10), parsedOperation.getSignerWeight());
+    assertEquals(10, parsedOperation.getSignerWeight().intValue());
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
 
     assertEquals(

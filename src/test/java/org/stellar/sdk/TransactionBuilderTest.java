@@ -269,7 +269,7 @@ public class TransactionBuilderTest {
       fail();
     } catch (RuntimeException exception) {
       assertTrue(exception.getMessage().contains("timeout cannot be negative"));
-      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
+      assertEquals(2908908335136768L, account.getSequenceNumber().longValue());
     }
   }
 
@@ -579,7 +579,7 @@ public class TransactionBuilderTest {
       fail();
     } catch (RuntimeException exception) {
       assertTrue(exception.getMessage().contains("Invalid preconditions, must define timebounds"));
-      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
+      assertEquals(2908908335136768L, account.getSequenceNumber().longValue());
     }
   }
 
@@ -831,7 +831,7 @@ public class TransactionBuilderTest {
       fail();
     } catch (RuntimeException exception) {
       assertTrue(exception.getMessage().contains("At least one operation required"));
-      assertEquals(new Long(2908908335136768L), account.getSequenceNumber());
+      assertEquals(2908908335136768L, account.getSequenceNumber().longValue());
     }
   }
 

@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -59,7 +60,7 @@ public class Price {
       if (number.compareTo(maxInt) > 0) {
         break;
       }
-      a = number.setScale(0, BigDecimal.ROUND_FLOOR);
+      a = number.setScale(0, RoundingMode.FLOOR);
       f = number.subtract(a);
       BigDecimal h = a.multiply(fractions.get(i - 1)[0]).add(fractions.get(i - 2)[0]);
       BigDecimal k = a.multiply(fractions.get(i - 1)[1]).add(fractions.get(i - 2)[1]);
@@ -70,7 +71,7 @@ public class Price {
       if (f.compareTo(BigDecimal.ZERO) == 0) {
         break;
       }
-      number = new BigDecimal(1).divide(f, 20, BigDecimal.ROUND_HALF_UP);
+      number = new BigDecimal(1).divide(f, 20, RoundingMode.HALF_UP);
       i = i + 1;
     }
     BigDecimal n = fractions.get(fractions.size() - 1)[0];

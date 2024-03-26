@@ -241,9 +241,9 @@ public class EffectDeserializerTest extends TestCase {
             GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    assertEquals(effect.getLowThreshold(), new Integer(2));
-    assertEquals(effect.getMedThreshold(), new Integer(3));
-    assertEquals(effect.getHighThreshold(), new Integer(4));
+    assertEquals(effect.getLowThreshold().intValue(), 2);
+    assertEquals(effect.getMedThreshold().intValue(), 3);
+    assertEquals(effect.getHighThreshold().intValue(), 4);
 
     assertEquals(
         effect.getLinks().getOperation().getHref(),
@@ -326,8 +326,8 @@ public class EffectDeserializerTest extends TestCase {
             GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    assertEquals(effect.getAuthRequiredFlag(), new Boolean(false));
-    assertEquals(effect.getAuthRevokableFlag(), new Boolean(true));
+    assertEquals(effect.getAuthRequiredFlag(), Boolean.FALSE);
+    assertEquals(effect.getAuthRevokableFlag(), Boolean.TRUE);
 
     assertEquals(
         effect.getLinks().getOperation().getHref(),
@@ -491,7 +491,7 @@ public class EffectDeserializerTest extends TestCase {
             GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount(), "GB24LPGAHYTWRYOXIDKXLI55SBRWW42T3TZKDAAW3BOJX4ADVIATFTLU");
-    assertEquals(effect.getWeight(), new Integer(1));
+    assertEquals(effect.getWeight().intValue(), 1);
     assertEquals(effect.getPublicKey(), "GB24LPGAHYTWRYOXIDKXLI55SBRWW42T3TZKDAAW3BOJX4ADVIATFTLU");
 
     assertEquals(
@@ -534,7 +534,7 @@ public class EffectDeserializerTest extends TestCase {
             GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount(), "GCFKT6BN2FEASCEVDNHEC4LLFT2KLUUPEMKM4OJPEJ65H2AEZ7IH4RV6");
-    assertEquals(effect.getWeight(), new Integer(0));
+    assertEquals(effect.getWeight().intValue(), 0);
     assertEquals(effect.getPublicKey(), "GCFKT6BN2FEASCEVDNHEC4LLFT2KLUUPEMKM4OJPEJ65H2AEZ7IH4RV6");
 
     assertEquals(
@@ -577,7 +577,7 @@ public class EffectDeserializerTest extends TestCase {
             GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
-    assertEquals(effect.getWeight(), new Integer(2));
+    assertEquals(effect.getWeight().intValue(), 2);
     assertEquals(effect.getPublicKey(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
 
     assertEquals(
@@ -844,6 +844,7 @@ public class EffectDeserializerTest extends TestCase {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testDeserializeTrustlineAuthorizedEffect() {
     String json =
         "{\n"
@@ -889,6 +890,7 @@ public class EffectDeserializerTest extends TestCase {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testDeserializeTrustlineAuthorizedToMaintainLiabilitiesEffect() {
     String json =
         "{\n"
@@ -934,6 +936,7 @@ public class EffectDeserializerTest extends TestCase {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testDeserializeTrustlineDeauthorizedEffect() {
     String json =
         "{\n"
@@ -1015,7 +1018,7 @@ public class EffectDeserializerTest extends TestCase {
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
     assertEquals(effect.getSeller(), "GCVHDLN6EHZBYW2M3BQIY32C23E4GPIRZZDBNF2Q73DAZ5VJDRGSMYRB");
-    assertEquals(effect.getOfferId(), new Long(1));
+    assertEquals(effect.getOfferId().longValue(), 1);
     assertEquals(effect.getSoldAmount(), "1000.0");
     assertEquals(
         effect.getSoldAsset(),
@@ -1159,7 +1162,7 @@ public class EffectDeserializerTest extends TestCase {
 
     assertEquals(effect.getAccount(), "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF");
     assertEquals(effect.getCreatedAt(), "2018-06-06T10:23:57Z");
-    assertEquals(effect.getNewSequence(), new Long(79473726952833048L));
+    assertEquals(effect.getNewSequence().longValue(), 79473726952833048L);
   }
 
   @Test

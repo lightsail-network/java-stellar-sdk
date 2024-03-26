@@ -338,6 +338,7 @@ public class OperationDeserializerTest extends TestCase {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testDeserializeAllowTrustOperation() {
     String json =
         "{\n"
@@ -389,6 +390,7 @@ public class OperationDeserializerTest extends TestCase {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testDeserializeMuxedAllowTrustOperation() {
     String json =
         "{\n"
@@ -443,6 +445,7 @@ public class OperationDeserializerTest extends TestCase {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testDeserializeAllowTrustOperationAuthorizeToMaintainLiabilities() {
     String json =
         "{\n"
@@ -692,15 +695,15 @@ public class OperationDeserializerTest extends TestCase {
         operation.getSignerKey(), "GD3ZYXVC7C3ECD5I4E5NGPBFJJSULJ6HJI2FBHGKYFV34DSIWB4YEKJZ");
     assertEquals(
         operation.getSignerKey(), "GD3ZYXVC7C3ECD5I4E5NGPBFJJSULJ6HJI2FBHGKYFV34DSIWB4YEKJZ");
-    assertEquals(operation.getSignerWeight(), new Integer(1));
+    assertEquals(operation.getSignerWeight().intValue(), 1);
     assertEquals(operation.getHomeDomain(), "stellar.org");
     assertEquals(
         operation.getInflationDestination(),
         "GBYWSY4NPLLPTP22QYANGTT7PEHND64P4D4B6LFEUHGUZRVYJK2H4TBE");
-    assertEquals(operation.getLowThreshold(), new Integer(1));
-    assertEquals(operation.getMedThreshold(), new Integer(2));
-    assertEquals(operation.getHighThreshold(), new Integer(3));
-    assertEquals(operation.getMasterKeyWeight(), new Integer(4));
+    assertEquals(operation.getLowThreshold().intValue(), 1);
+    assertEquals(operation.getMedThreshold().intValue(), 2);
+    assertEquals(operation.getHighThreshold().intValue(), 3);
+    assertEquals(operation.getMasterKeyWeight().intValue(), 4);
     assertEquals(operation.getSetFlags()[0], "auth_required_flag");
     assertEquals(operation.getClearFlags()[0], "auth_revocable_flag");
   }

@@ -15,6 +15,7 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
 
 class EffectDeserializer implements JsonDeserializer<EffectResponse> {
   @Override
+  @SuppressWarnings("deprecation")
   public EffectResponse deserialize(
       JsonElement json, Type typeOfT, JsonDeserializationContext context)
       throws JsonParseException {

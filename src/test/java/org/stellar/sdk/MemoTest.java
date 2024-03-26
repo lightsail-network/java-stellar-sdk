@@ -72,7 +72,7 @@ public class MemoTest {
   public void testParseMemoId() {
     String maxId = "18446744073709551615";
     JsonElement element =
-        new JsonParser().parse(String.format("{ \"memo_type\": \"id\", \"memo\": \"%s\" }", maxId));
+        JsonParser.parseString(String.format("{ \"memo_type\": \"id\", \"memo\": \"%s\" }", maxId));
     TransactionResponse transactionResponse =
         new TransactionDeserializer().deserialize(element, null, null);
     MemoId memoId = (MemoId) transactionResponse.getMemo();

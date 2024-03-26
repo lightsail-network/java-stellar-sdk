@@ -54,18 +54,18 @@ public class TransactionDeserializerTest extends TestCase {
         transaction.getId(), "5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b");
     assertEquals(
         transaction.getHash(), "5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b");
-    assertEquals(transaction.getLedger(), new Long(915744));
+    assertEquals(transaction.getLedger().longValue(), 915744);
     assertEquals(transaction.getCreatedAt(), "2015-11-20T17:01:28Z");
     assertEquals(transaction.getPagingToken(), "3933090531512320");
-    assertEquals(transaction.isSuccessful(), new Boolean(true));
+    assertEquals(transaction.isSuccessful(), Boolean.TRUE);
     assertEquals(
         transaction.getSourceAccount(), "GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK");
     assertFalse(transaction.getSourceAccountMuxed().isPresent());
     assertFalse(transaction.getFeeAccountMuxed().isPresent());
-    assertEquals(transaction.getSourceAccountSequence(), new Long(2373051035426646L));
-    assertEquals(transaction.getMaxFee(), new Long(200));
-    assertEquals(transaction.getFeeCharged(), new Long(100));
-    assertEquals(transaction.getOperationCount(), new Integer(1));
+    assertEquals(transaction.getSourceAccountSequence().longValue(), 2373051035426646L);
+    assertEquals(transaction.getMaxFee().longValue(), 200);
+    assertEquals(transaction.getFeeCharged().longValue(), 100);
+    assertEquals(transaction.getOperationCount().intValue(), 1);
     assertEquals(
         transaction.getEnvelopeXdr(),
         "AAAAAKgfpXwD1fWpPmZL+GkzWcBmhRQH7ouPsoTN3RoaGCfrAAAAZAAIbkcAAB9WAAAAAAAAAANRBBZE6D1qyGjISUGLY5Ldvp31PwAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAP1qe44j+i4uIT+arbD4QDQBt8ryEeJd7a0jskQ3nwDeAAAAAAAAAADA7RnarSzCwj3OT+M2btCMFpVBdqxJS+Sr00qBjtFv7gAAAABLCs/QAAAAAAAAAAEaGCfrAAAAQG/56Cj2J8W/KCZr+oC4sWND1CTGWfaccHNtuibQH8kZIb+qBSDY94g7hiaAXrlIeg9b7oz/XuP3x9MWYw2jtwM=");

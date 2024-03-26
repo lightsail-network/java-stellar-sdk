@@ -6,9 +6,10 @@ import okhttp3.Response;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.TypedResponse;
 
+@SuppressWarnings("unchecked")
 public class ResponseHandler<T> {
 
-  private TypeToken<T> type;
+  private final TypeToken<T> type;
 
   /**
    * "Generics on a type are typically erased at runtime, except when the type is compiled with the
@@ -50,7 +51,7 @@ public class ResponseHandler<T> {
         ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
       }
       if (object instanceof TypedResponse) {
-        ((TypedResponse) object).setType(type);
+        ((TypedResponse<T>) object).setType(type);
       }
       return object;
     } finally {

@@ -63,17 +63,29 @@ public abstract class AbstractTransaction {
     signatures.add(decoratedSignature);
   }
 
-  /** Returns transaction hash. */
+  /**
+   * Returns transaction hash.
+   *
+   * @return the transaction hash
+   */
   public byte[] hash() {
     return Util.hash(this.signatureBase());
   }
 
-  /** Returns transaction hash encoded as a hexadecimal string. */
+  /**
+   * Returns transaction hash encoded as a hexadecimal string.
+   *
+   * @return the transaction hash as a hexadecimal string
+   */
   public String hashHex() {
     return Util.bytesToHex(this.hash()).toLowerCase();
   }
 
-  /** Returns signature base. */
+  /**
+   * Returns signature base.
+   *
+   * @return the signature base
+   */
   public abstract byte[] signatureBase();
 
   /**
@@ -99,6 +111,8 @@ public abstract class AbstractTransaction {
   /**
    * Returns base64-encoded TransactionEnvelope XDR object. Transaction need to have at least one
    * signature.
+   *
+   * @return the base64-encoded TransactionEnvelope XDR object.
    */
   public String toEnvelopeXdrBase64() {
     try {
@@ -112,7 +126,9 @@ public abstract class AbstractTransaction {
    * Creates a <code>AbstractTransaction</code> instance from previously build <code>
    * TransactionEnvelope</code>
    *
+   * @param accountConverter the {@link AccountConverter} to use for this transaction
    * @param envelope the transaction envelope
+   * @param network the network that the transaction is to be submitted to
    * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
    */
   public static AbstractTransaction fromEnvelopeXdr(
@@ -136,6 +152,7 @@ public abstract class AbstractTransaction {
    * TransactionEnvelope</code>
    *
    * @param envelope the transaction envelope
+   * @param network the network that the transaction is to be submitted to
    * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
    */
   public static AbstractTransaction fromEnvelopeXdr(TransactionEnvelope envelope, Network network) {
@@ -173,7 +190,7 @@ public abstract class AbstractTransaction {
    * Get the signature base of this transaction envelope.
    *
    * @param taggedTransaction the tagged transaction for signing
-   * @param network the network to sign on
+   * @param network the network that the transaction is to be submitted to
    * @return the signature base of this transaction envelope
    */
   public static byte[] getTransactionSignatureBase(

@@ -18,6 +18,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
   private static final OperationType[] AllOperationTypes = OperationType.values();
 
   @Override
+  @SuppressWarnings("deprecation")
   public OperationResponse deserialize(
       JsonElement json, Type typeOfT, JsonDeserializationContext context)
       throws JsonParseException {
