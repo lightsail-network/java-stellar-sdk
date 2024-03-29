@@ -1,15 +1,16 @@
 plugins {
     id("java")
-    id("java-library")
     id("jacoco")
+    id("signing")
     id("maven-publish")
     id("project-report")
     id("com.diffplug.spotless") version "6.24.0"
     id("com.github.ben-manes.versions") version "0.50.0"
     id("io.freefair.lombok") version "8.4"
+    id("com.gradleup.nmcp") version "0.0.4"
 }
 
-group = "stellar"
+group = "network.lightsail"
 version = "0.43.0"
 
 java {
@@ -51,32 +52,14 @@ tasks {
         useJUnitPlatform()
     }
 
-    jar {
-        manifest {
-            attributes["Implementation-Title"] = "stellar-sdk"
-            attributes["Implementation-Version"] = version
-        }
-        archiveFileName = "stellar-sdk.jar"
-    }
-
     val sourcesJar by creating(Jar::class) {
-        manifest {
-            attributes["Implementation-Title"] = "stellar-sdk"
-            attributes["Implementation-Version"] = version
-        }
         archiveClassifier = "sources"
-        archiveFileName = "stellar-sdk-sources.jar"
         from(sourceSets.main.get().allSource)
     }
 
     val uberJar by creating(Jar::class) {
-        // https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_example
-        manifest {
-            attributes["Implementation-Title"] = "stellar-sdk"
-            attributes["Implementation-Version"] = version
-        }
+        // https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_exampl
         archiveClassifier = "uber"
-        archiveFileName = "stellar-sdk-uber.jar"
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         from(sourceSets.main.get().output)
         dependsOn(configurations.runtimeClasspath)
@@ -86,7 +69,7 @@ tasks {
     }
 
     javadoc {
-        destinationDir = file("javadoc")
+        setDestinationDir(file("javadoc"))
         isFailOnError = false
         exclude("org/stellar/sdk/xdr/**")
         options {
@@ -99,12 +82,7 @@ tasks {
     }
 
     val javadocJar by creating(Jar::class) {
-        manifest {
-            attributes["Implementation-Title"] = "stellar-sdk"
-            attributes["Implementation-Version"] = version
-        }
         archiveClassifier = "javadoc"
-        archiveFileName = "stellar-sdk-javadoc.jar"
         dependsOn(javadoc)
         from(javadoc.get().destinationDir) // It needs to be placed after the javadoc task, otherwise it cannot read the path we set.
     }
@@ -123,9 +101,11 @@ tasks {
             html.required = true
             xml.required = true
         }
-        classDirectories.setFrom(files(classDirectories.files.map { fileTree(it) {
-            exclude("org/stellar/sdk/xdr/**")
-        } }))
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it) {
+                exclude("org/stellar/sdk/xdr/**")
+            }
+        }))
     }
 
     check {
@@ -151,27 +131,69 @@ artifacts {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
+            artifactId = "stellar-sdk"
             from(components["java"])
             artifact(tasks["uberJar"])
             artifact(tasks["javadocJar"])
             artifact(tasks["sourcesJar"])
             pom {
-                name.set("java-stellar-sdk")
+                name.set("stellar-sdk")
                 description.set("The Java Stellar SDK library provides APIs to build transactions and connect to Horizon and Soroban-RPC server.")
-                url.set("https://github.com/stellar/java-stellar-sdk")
+                url.set("https://github.com/lightsail-network/java-stellar-sdk")
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
-                        url.set("https://github.com/stellar/java-stellar-sdk/blob/master/LICENSE")
+                        url.set("https://github.com/lightsail-network/java-stellar-sdk/blob/master/LICENSE")
+                        distribution.set("https://github.com/lightsail-network/java-stellar-sdk/blob/master/LICENSE")
                     }
                 }
                 developers {
                     developer {
-                        id.set("stellar")
-                        name.set("Stellar Development Foundation")
+                        id.set("overcat")
+                        name.set("Jun Luo")
+                        url.set("https://github.com/overcat")
                     }
+                    organization {
+                        name.set("Lightsail Network")
+                        url.set("https://github.com/lightsail-network")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/lightsail-network/java-stellar-sdk")
+                    connection.set("scm:git:https://github.com/lightsail-network/java-stellar-sdk.git")
+                    developerConnection.set("scm:git:ssh://git@github.com/lightsail-network/java-stellar-sdk.git")
                 }
             }
         }
+    }
+}
+
+
+signing {
+    val publishCommand = "publishAllPublicationsToCentralPortal"
+    isRequired = gradle.startParameter.taskNames.contains(publishCommand)
+    println("Need to sign? $isRequired")
+    // https://docs.gradle.org/current/userguide/signing_plugin.html#using_in_memory_ascii_armored_openpgp_subkeys
+    // export SIGNING_KEY=$(gpg2 --export-secret-keys --armor {SIGNING_KEY_ID} | grep -v '\-\-' | grep -v '^=.' | tr -d '\n')
+    val signingKey = System.getenv("SIGNING_KEY")
+    val signingKeyId = System.getenv("SIGNING_KEY_ID")
+    val signingPassword = System.getenv("SIGNING_PASSWORD")
+    if (isRequired && (signingKey == null || signingKeyId == null || signingPassword == null)) {
+        throw IllegalStateException("Please set the SIGNING_KEY, SIGNING_KEY_ID, and SIGNING_PASSWORD environment variables.")
+    }
+    println("Signing Key ID: $signingKeyId")
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    sign(publishing.publications["mavenJava"])
+}
+
+nmcp {
+    // https://github.com/GradleUp/nmcp
+    publishAllProjectsProbablyBreakingProjectIsolation {
+        username = System.getenv("SONATYPE_USERNAME")
+        password = System.getenv("SONATYPE_PASSWORD")
+        // publish manually from the portal
+        publicationType = "USER_MANAGED"
+        // or if you want to publish automatically
+        // publicationType = "AUTOMATIC"
     }
 }
