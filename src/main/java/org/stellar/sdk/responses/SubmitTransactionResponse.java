@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
-import org.stellar.sdk.Memo;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.xdr.OperationResult;
 import org.stellar.sdk.xdr.OperationType;
@@ -33,7 +32,7 @@ public class SubmitTransactionResponse extends TransactionResponse {
   @SerializedName("extras")
   private final Extras extras;
 
-  TransactionResult transactionResult;
+  private TransactionResult transactionResult;
 
   public SubmitTransactionResponse(
       String id,
@@ -56,11 +55,13 @@ public class SubmitTransactionResponse extends TransactionResponse {
       String resultXdr,
       String resultMetaXdr,
       String feeMetaXdr,
-      Memo memo,
       List<String> signatures,
       Preconditions preconditions,
       FeeBumpTransaction feeBumpTransaction,
       InnerTransaction innerTransaction,
+      String memoType,
+      String memoBytes,
+      String memoValue,
       Links links,
       Extras extras) {
     super(
@@ -84,11 +85,13 @@ public class SubmitTransactionResponse extends TransactionResponse {
         resultXdr,
         resultMetaXdr,
         feeMetaXdr,
-        memo,
         signatures,
         preconditions,
         feeBumpTransaction,
         innerTransaction,
+        memoType,
+        memoBytes,
+        memoValue,
         links);
     this.extras = extras;
   }
