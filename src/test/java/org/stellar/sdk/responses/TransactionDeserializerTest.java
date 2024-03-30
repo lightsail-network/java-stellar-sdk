@@ -8,7 +8,10 @@ import java.util.Optional;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.MemoHash;
+import org.stellar.sdk.MemoId;
 import org.stellar.sdk.MemoNone;
+import org.stellar.sdk.MemoReturnHash;
+import org.stellar.sdk.MemoText;
 
 public class TransactionDeserializerTest extends TestCase {
   @Test
@@ -147,6 +150,86 @@ public class TransactionDeserializerTest extends TestCase {
         "0000000000000000000000000000000000000000000000000000000000000000", memoHash.getHexValue());
     assertEquals(
         "0000000000000000000000000000000000000000000000000000000000000000", memoHash.toString());
+  }
+
+  @Test
+  public void testDeserializeTextMemo() {
+    String json =
+        "{\n"
+            + "  \"memo\": \"emoji \uD83D\uDE04\",\n"
+            + "  \"memo_bytes\": \"ZW1vamkg8J+YhA==\",\n"
+            + "  \"memo_type\": \"text\",\n"
+            + "  \"id\": \"51bf8242aa62965ef74103db370e1562bdc72806a7f3a2f92f889ef89c0cec35\"\n"
+            + "}\n";
+    TransactionResponse transaction =
+        GsonSingleton.getInstance().fromJson(json, TransactionResponse.class);
+    assertTrue(transaction.getMemo() instanceof MemoText);
+    MemoText memo = (MemoText) transaction.getMemo();
+    assertEquals(memo, MemoText.text("emoji 😄"));
+  }
+
+  @Test
+  public void testDeserializeEmptyTextMemo() {
+    String json =
+        "{\n"
+            + "  \"memo\": \"\",\n"
+            + "  \"memo_bytes\": \"\",\n"
+            + "  \"memo_type\": \"text\",\n"
+            + "  \"id\": \"51bf8242aa62965ef74103db370e1562bdc72806a7f3a2f92f889ef89c0cec35\"\n"
+            + "}\n";
+    TransactionResponse transaction =
+        GsonSingleton.getInstance().fromJson(json, TransactionResponse.class);
+    assertTrue(transaction.getMemo() instanceof MemoText);
+    MemoText memo = (MemoText) transaction.getMemo();
+    assertEquals(memo, MemoText.text(""));
+  }
+
+  @Test
+  public void testDeserializeIdMemo() {
+    String json =
+        "{\n"
+            + "  \"memo\": \"2354354356\",\n"
+            + "  \"memo_type\": \"id\",\n"
+            + "  \"id\": \"51bf8242aa62965ef74103db370e1562bdc72806a7f3a2f92f889ef89c0cec35\"\n"
+            + "}\n";
+    TransactionResponse transaction =
+        GsonSingleton.getInstance().fromJson(json, TransactionResponse.class);
+    assertTrue(transaction.getMemo() instanceof MemoId);
+    MemoId memo = (MemoId) transaction.getMemo();
+    assertEquals(memo, MemoId.id(2354354356L));
+  }
+
+  @Test
+  public void testDeserializeHashMemo() {
+    String json =
+        "{\n"
+            + "  \"memo\": \"8l5BBDu28EujbUFtWIWrkxAKBp0/H1XAV1vcg/njov8=\",\n"
+            + "  \"memo_type\": \"hash\",\n"
+            + "  \"id\": \"51bf8242aa62965ef74103db370e1562bdc72806a7f3a2f92f889ef89c0cec35\"\n"
+            + "}\n";
+    TransactionResponse transaction =
+        GsonSingleton.getInstance().fromJson(json, TransactionResponse.class);
+    assertTrue(transaction.getMemo() instanceof MemoHash);
+    MemoHash memo = (MemoHash) transaction.getMemo();
+    assertEquals(
+        memo, MemoHash.hash("f25e41043bb6f04ba36d416d5885ab93100a069d3f1f55c0575bdc83f9e3a2ff"));
+  }
+
+  @Test
+  public void testDeserializeReturnHashMemo() {
+    String json =
+        "{\n"
+            + "  \"memo\": \"8l5BBDu28EujbUFtWIWrkxAKBp0/H1XAV1vcg/njov8=\",\n"
+            + "  \"memo_type\": \"return\",\n"
+            + "  \"id\": \"51bf8242aa62965ef74103db370e1562bdc72806a7f3a2f92f889ef89c0cec35\"\n"
+            + "}\n";
+    TransactionResponse transaction =
+        GsonSingleton.getInstance().fromJson(json, TransactionResponse.class);
+    assertTrue(transaction.getMemo() instanceof MemoReturnHash);
+    MemoReturnHash memo = (MemoReturnHash) transaction.getMemo();
+    assertEquals(
+        memo,
+        MemoHash.returnHash("f25e41043bb6f04ba36d416d5885ab93100a069d3f1f55c0575bdc83f9e3a2ff"));
   }
 
   @Test

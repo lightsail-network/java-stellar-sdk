@@ -7,8 +7,8 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Value;
+import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.Memo;
 
 /**
@@ -19,88 +19,134 @@ import org.stellar.sdk.Memo;
  * @see org.stellar.sdk.requests.TransactionsRequestBuilder
  * @see org.stellar.sdk.Server#transactions()
  */
-@Getter
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class TransactionResponse extends Response implements Pageable {
+  @Getter
   @SerializedName("id")
   private final String id;
 
+  @Getter
   @SerializedName("paging_token")
   private final String pagingToken;
 
+  @Getter
   @SerializedName("successful")
   private final Boolean successful;
 
+  @Getter
   @SerializedName("hash")
   private final String hash;
 
+  @Getter
   @SerializedName("ledger")
   private final Long ledger;
 
+  @Getter
   @SerializedName("created_at")
   private final String createdAt;
 
+  @Getter
   @SerializedName("source_account")
   private final String sourceAccount;
 
+  @Getter
   @SerializedName("account_muxed")
   private final String accountMuxed;
 
+  @Getter
   @SerializedName("account_muxed_id")
   private final BigInteger accountMuxedId;
 
+  @Getter
   @SerializedName("source_account_sequence")
   private final Long sourceAccountSequence;
 
+  @Getter
   @SerializedName("fee_account")
   private final String feeAccount;
 
   @SerializedName("fee_account_muxed")
   private final String feeAccountMuxed;
 
+  @Getter
   @SerializedName("fee_account_muxed_id")
   private final BigInteger feeAccountMuxedId;
 
+  @Getter
   @SerializedName("fee_charged")
   private final Long feeCharged;
 
+  @Getter
   @SerializedName("max_fee")
   private final Long maxFee;
 
+  @Getter
   @SerializedName("operation_count")
   private final Integer operationCount;
 
+  @Getter
   @SerializedName("envelope_xdr")
   private final String envelopeXdr;
 
+  @Getter
   @SerializedName("result_xdr")
   private final String resultXdr;
 
+  @Getter
   @SerializedName("result_meta_xdr")
   private final String resultMetaXdr;
 
+  @Getter
   @SerializedName("fee_meta_xdr")
   private final String feeMetaXdr;
 
-  // GSON won't serialize `transient` variables automatically. We need this behaviour
-  // because Memo is an abstract class and GSON tries to instantiate it.
-  private transient Memo memo;
-
+  @Getter
   @SerializedName("signatures")
   private final List<String> signatures;
 
   @SerializedName("preconditions")
   private final Preconditions preconditions;
 
+  @Getter
   @SerializedName("fee_bump_transaction")
   private final FeeBumpTransaction feeBumpTransaction;
 
+  @Getter
   @SerializedName("inner_transaction")
   private final InnerTransaction innerTransaction;
 
+  @SerializedName("memo_type")
+  private final String memoType;
+
+  @SerializedName("memo_bytes")
+  private final String memoBytes;
+
+  @SerializedName("memo")
+  private final String memoValue;
+
+  @Getter
   @SerializedName("_links")
   private final Links links;
+
+  /**
+   * @return {@link Memo} object from this transaction.
+   */
+  public Memo getMemo() {
+    if ("none".equals(memoType)) {
+      return Memo.none();
+    } else if ("text".equals(memoType)) {
+      return Memo.text(Base64Factory.getInstance().decode(memoBytes));
+    } else if ("id".equals(memoType)) {
+      return Memo.id(new BigInteger(memoValue));
+    } else if ("hash".equals(memoType)) {
+      return Memo.hash(Base64Factory.getInstance().decode(memoValue));
+    } else if ("return".equals(memoType)) {
+      return Memo.returnHash(Base64Factory.getInstance().decode(memoValue));
+    } else {
+      throw new IllegalArgumentException("Invalid memo type: " + memoType);
+    }
+  }
 
   public Optional<MuxedAccount> getSourceAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
@@ -132,13 +178,6 @@ public class TransactionResponse extends Response implements Pageable {
 
   public Boolean isSuccessful() {
     return successful;
-  }
-
-  public void setMemo(@NonNull Memo memo) {
-    if (this.memo != null) {
-      throw new RuntimeException("Memo has been already set.");
-    }
-    this.memo = memo;
   }
 
   /**

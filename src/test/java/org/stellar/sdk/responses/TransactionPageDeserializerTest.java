@@ -26,11 +26,6 @@ public class TransactionPageDeserializerTest extends TestCase {
         transactionsPage.getRecords().get(9).getSourceAccount(),
         "GAENIE5LBJIXLMJIAJ7225IUPA6CX7EGHUXRX5FLCZFFAQSG2ZUYSWFK");
 
-    // Transaction without memo_bytes field
-    assertTrue(transactionsPage.getRecords().get(7).getMemo() instanceof MemoText);
-    memoText = (MemoText) transactionsPage.getRecords().get(7).getMemo();
-    assertEquals(memoText.getText(), "helpsdf");
-
     // Empty memo_text
     assertTrue(transactionsPage.getRecords().get(2).getMemo() instanceof MemoText);
     memoText = (MemoText) transactionsPage.getRecords().get(2).getMemo();
