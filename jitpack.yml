@@ -1,4 +1,4 @@
 before_install:
-  - sdk install java 17.0.8.1-ms
-  - sdk use java 17.0.8.1-ms
+  - sdk install java 21.0.2-ms
+  - sdk use java 21.0.2-ms
 
