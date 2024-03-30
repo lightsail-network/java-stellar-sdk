@@ -1,2 +1,2 @@
-rootProject.name = "java-stellar-sdk"
+rootProject.name = "stellar-sdk"
 
