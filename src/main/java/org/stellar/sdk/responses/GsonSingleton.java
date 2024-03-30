@@ -43,7 +43,6 @@ public class GsonSingleton {
               .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
               .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
               .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
-              .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
               .registerTypeAdapter(
                   SubmitTransactionResponse.class, new SubmitTransactionDeserializer())
               .registerTypeAdapter(

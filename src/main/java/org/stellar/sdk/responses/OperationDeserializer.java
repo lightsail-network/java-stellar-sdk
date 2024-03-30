@@ -27,7 +27,6 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
         new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
-            .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
             .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
             .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
             .create();
