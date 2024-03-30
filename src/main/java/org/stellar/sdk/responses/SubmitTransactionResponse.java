@@ -3,12 +3,15 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.Memo;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.xdr.OperationResult;
 import org.stellar.sdk.xdr.OperationType;
@@ -20,22 +23,8 @@ import org.stellar.sdk.xdr.XdrDataInputStream;
  *
  * @see Server#submitTransaction(org.stellar.sdk.Transaction)
  */
-@EqualsAndHashCode(callSuper = false)
-public class SubmitTransactionResponse extends Response {
-  @SerializedName("hash")
-  @Getter
-  private final String hash;
-
-  @SerializedName("ledger")
-  @Getter
-  private final Long ledger;
-
-  @SerializedName("envelope_xdr")
-  private final String envelopeXdr;
-
-  @SerializedName("result_xdr")
-  private final String resultXdr;
-
+@EqualsAndHashCode(callSuper = true)
+public class SubmitTransactionResponse extends TransactionResponse {
   /**
    * Additional information returned by a server. This will be <code>null</code> if transaction
    * succeeded.
@@ -46,39 +35,66 @@ public class SubmitTransactionResponse extends Response {
 
   TransactionResult transactionResult;
 
-  SubmitTransactionResponse(
-      Extras extras, Long ledger, String hash, String envelopeXdr, String resultXdr) {
+  public SubmitTransactionResponse(
+      String id,
+      String pagingToken,
+      Boolean successful,
+      String hash,
+      Long ledger,
+      String createdAt,
+      String sourceAccount,
+      String accountMuxed,
+      BigInteger accountMuxedId,
+      Long sourceAccountSequence,
+      String feeAccount,
+      String feeAccountMuxed,
+      BigInteger feeAccountMuxedId,
+      Long feeCharged,
+      Long maxFee,
+      Integer operationCount,
+      String envelopeXdr,
+      String resultXdr,
+      String resultMetaXdr,
+      String feeMetaXdr,
+      Memo memo,
+      List<String> signatures,
+      Preconditions preconditions,
+      FeeBumpTransaction feeBumpTransaction,
+      InnerTransaction innerTransaction,
+      Links links,
+      Extras extras) {
+    super(
+        id,
+        pagingToken,
+        successful,
+        hash,
+        ledger,
+        createdAt,
+        sourceAccount,
+        accountMuxed,
+        accountMuxedId,
+        sourceAccountSequence,
+        feeAccount,
+        feeAccountMuxed,
+        feeAccountMuxedId,
+        feeCharged,
+        maxFee,
+        operationCount,
+        envelopeXdr,
+        resultXdr,
+        resultMetaXdr,
+        feeMetaXdr,
+        memo,
+        signatures,
+        preconditions,
+        feeBumpTransaction,
+        innerTransaction,
+        links);
     this.extras = extras;
-    this.ledger = ledger;
-    this.hash = hash;
-    this.envelopeXdr = envelopeXdr;
-    this.resultXdr = resultXdr;
   }
 
   public boolean isSuccess() {
-    return ledger != null;
-  }
-
-  public Optional<String> getEnvelopeXdr() {
-    if (this.isSuccess()) {
-      return Optional.of(this.envelopeXdr);
-    } else {
-      if (this.getExtras() != null) {
-        return Optional.of(this.getExtras().getEnvelopeXdr());
-      }
-      return Optional.empty();
-    }
-  }
-
-  public Optional<String> getResultXdr() {
-    if (this.isSuccess()) {
-      return Optional.of(this.resultXdr);
-    } else {
-      if (this.getExtras() != null) {
-        return Optional.of(this.getExtras().getResultXdr());
-      }
-      return Optional.empty();
-    }
+    return this.getLedger() != null;
   }
 
   /**
@@ -150,11 +166,11 @@ public class SubmitTransactionResponse extends Response {
     }
 
     if (this.transactionResult == null) {
-      Optional<String> resultXDR = this.getResultXdr();
-      if (!resultXDR.isPresent()) {
+      String resultXDR = this.getResultXdr();
+      if (resultXDR == null) {
         return Optional.empty();
       }
-      byte[] bytes = Base64Factory.getInstance().decode(resultXDR.get());
+      byte[] bytes = Base64Factory.getInstance().decode(resultXDR);
       ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
       XdrDataInputStream xdrInputStream = new XdrDataInputStream(inputStream);
       this.transactionResult = TransactionResult.decode(xdrInputStream);

@@ -45,6 +45,8 @@ public class GsonSingleton {
               .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
               .registerTypeAdapter(TransactionResponse.class, new TransactionDeserializer())
               .registerTypeAdapter(
+                  SubmitTransactionResponse.class, new SubmitTransactionDeserializer())
+              .registerTypeAdapter(
                   accountPageType.getType(), new PageDeserializer<>(accountPageType))
               .registerTypeAdapter(assetPageType.getType(), new PageDeserializer<>(assetPageType))
               .registerTypeAdapter(effectPageType.getType(), new PageDeserializer<>(effectPageType))
