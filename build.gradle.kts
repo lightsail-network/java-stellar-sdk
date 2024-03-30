@@ -1,5 +1,5 @@
 plugins {
-    id("java-library")
+    id("java")
     id("jacoco")
     id("signing")
     id("maven-publish")
