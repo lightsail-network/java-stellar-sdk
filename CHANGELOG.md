@@ -4,8 +4,12 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 ### Update
+* Migrate the project from `stellar/java-stellar-sdk` to `lightsail-network/stellar-stellar-sdk`.
 * Update `org.stellar.sdk.responses`, add missing fields. ([#570](https://github.com/lightsail-network/java-stellar-sdk/pull/570))
 * Add `Asset.getContractId()` for calculating the id of the asset contract. ([#574](https://github.com/lightsail-network/java-stellar-sdk/pull/574))
+* Publish the publication to Maven Central. ([#580](https://github.com/lightsail-network/java-stellar-sdk/pull/580))
+* Build the project with JDK 21. ([#580](https://github.com/lightsail-network/java-stellar-sdk/pull/580))
+* Optimize the way of parsing memo in `TransactionResponse`. ([#582](https://github.com/lightsail-network/java-stellar-sdk/pull/582))
 
 ## 0.43.0
 ### Update
