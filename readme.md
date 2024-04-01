@@ -36,7 +36,7 @@ For some examples on how to use this library, take a look at the [Get Started do
 Javadoc is available at https://javadoc.io/doc/network.lightsail/stellar-sdk
 
 ## Integrate into Android project
-If you want to integrate this SDK on Android platforms with API level 26 and above, you don't need any additional configuration. 
+If you want to integrate this SDK on Android platforms with API level 28 and above, you don't need any additional configuration. 
 However, if you need to include it on lower platforms, you may also need to add the [Java Stellar SDK Android SPI](https://github.com/lightsail-network/java-stellar-sdk-android-spi).
 
 ## Contributing
