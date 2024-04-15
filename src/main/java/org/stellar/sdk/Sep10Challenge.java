@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import lombok.Value;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Signature;
 import org.stellar.sdk.xdr.SignatureHint;
@@ -248,7 +248,7 @@ public class Sep10Challenge {
     }
 
     Memo memo = transaction.getMemo();
-    if (memo != null && !(memo instanceof MemoNone || memo instanceof MemoId)) {
+    if (!(memo instanceof MemoNone || memo instanceof MemoId)) {
       throw new InvalidSep10ChallengeException("only memo type `id` is supported");
     }
 
@@ -726,87 +726,17 @@ public class Sep10Challenge {
    * Used to store the results produced by {@link Sep10Challenge#readChallengeTransaction(String,
    * String, Network, String[], String)}.
    */
+  @Value
   public static class ChallengeTransaction {
-    private final Transaction transaction;
-    private final String clientAccountId;
-    private final String matchedHomeDomain;
-
-    public ChallengeTransaction(
-        Transaction transaction, String clientAccountId, String matchedHomeDomain) {
-      this.transaction = transaction;
-      this.clientAccountId = clientAccountId;
-      this.matchedHomeDomain = matchedHomeDomain;
-    }
-
-    public Transaction getTransaction() {
-      return transaction;
-    }
-
-    public String getClientAccountId() {
-      return clientAccountId;
-    }
-
-    public String getMatchedHomeDomain() {
-      return matchedHomeDomain;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.transaction.hashHex(), this.clientAccountId);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (object == this) {
-        return true;
-      }
-
-      if (!(object instanceof ChallengeTransaction)) {
-        return false;
-      }
-
-      ChallengeTransaction other = (ChallengeTransaction) object;
-      return Objects.equals(this.transaction.hashHex(), other.transaction.hashHex())
-          && Objects.equals(this.clientAccountId, other.clientAccountId)
-          && Objects.equals(this.matchedHomeDomain, other.matchedHomeDomain);
-    }
+    Transaction transaction;
+    String clientAccountId;
+    String matchedHomeDomain;
   }
 
   /** Represents a transaction signer. */
+  @Value
   public static class Signer {
-    private final String key;
-    private final int weight;
-
-    public Signer(String key, int weight) {
-      this.key = key;
-      this.weight = weight;
-    }
-
-    public String getKey() {
-      return key;
-    }
-
-    public int getWeight() {
-      return weight;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.key, this.weight);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (object == this) {
-        return true;
-      }
-
-      if (!(object instanceof Signer)) {
-        return false;
-      }
-
-      Signer other = (Signer) object;
-      return Objects.equals(this.key, other.key) && Objects.equals(this.weight, other.weight);
-    }
+    String key;
+    int weight;
   }
 }
