@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import lombok.Value;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Signature;
 import org.stellar.sdk.xdr.SignatureHint;
@@ -248,7 +248,7 @@ public class Sep10Challenge {
     }
 
     Memo memo = transaction.getMemo();
-    if (memo != null && !(memo instanceof MemoNone || memo instanceof MemoId)) {
+    if (!(memo instanceof MemoNone || memo instanceof MemoId)) {
       throw new InvalidSep10ChallengeException("only memo type `id` is supported");
     }
 
@@ -416,7 +416,7 @@ public class Sep10Challenge {
    * @param webAuthDomain The home domain that is expected to be included as the value of the Manage
    *     Data operation with the 'web_auth_domain' key, if present.
    * @param signers The signers of client account.
-   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
    * @throws IOException If read XDR string fails, the exception will be thrown.
@@ -449,7 +449,7 @@ public class Sep10Challenge {
    * @param webAuthDomain The home domain that is expected to be included as the value of the Manage
    *     Data operation with the 'web_auth_domain' key, if present.
    * @param signers The signers of client account.
-   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
    * @throws IOException If read XDR string fails, the exception will be thrown.
@@ -513,7 +513,7 @@ public class Sep10Challenge {
     // hit. We do this in one hit here even though the server signature was
     // checked in the readChallengeTx to ensure that every signature and signer
     // are consumed only once on the transaction.
-    Set<String> allSigners = new HashSet<String>(clientSigners);
+    Set<String> allSigners = new HashSet<>(clientSigners);
     allSigners.add(serverKeyPair.getAccountId());
     Optional<String> clientDomainSigner = Optional.empty();
 
@@ -587,7 +587,7 @@ public class Sep10Challenge {
    *     Data operation with the 'web_auth_domain' key, if present.
    * @param threshold The threshold on the client account.
    * @param signers The signers of client account.
-   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
    * @throws IOException If read XDR string fails, the exception will be thrown.
@@ -651,7 +651,7 @@ public class Sep10Challenge {
    *     Data operation with the 'web_auth_domain' key, if present.
    * @param threshold The threshold on the client account.
    * @param signers The signers of client account.
-   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
    * @throws IOException If read XDR string fails, the exception will be thrown.
@@ -726,87 +726,17 @@ public class Sep10Challenge {
    * Used to store the results produced by {@link Sep10Challenge#readChallengeTransaction(String,
    * String, Network, String[], String)}.
    */
+  @Value
   public static class ChallengeTransaction {
-    private final Transaction transaction;
-    private final String clientAccountId;
-    private final String matchedHomeDomain;
-
-    public ChallengeTransaction(
-        Transaction transaction, String clientAccountId, String matchedHomeDomain) {
-      this.transaction = transaction;
-      this.clientAccountId = clientAccountId;
-      this.matchedHomeDomain = matchedHomeDomain;
-    }
-
-    public Transaction getTransaction() {
-      return transaction;
-    }
-
-    public String getClientAccountId() {
-      return clientAccountId;
-    }
-
-    public String getMatchedHomeDomain() {
-      return matchedHomeDomain;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.transaction.hashHex(), this.clientAccountId);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (object == this) {
-        return true;
-      }
-
-      if (!(object instanceof ChallengeTransaction)) {
-        return false;
-      }
-
-      ChallengeTransaction other = (ChallengeTransaction) object;
-      return Objects.equals(this.transaction.hashHex(), other.transaction.hashHex())
-          && Objects.equals(this.clientAccountId, other.clientAccountId)
-          && Objects.equals(this.matchedHomeDomain, other.matchedHomeDomain);
-    }
+    Transaction transaction;
+    String clientAccountId;
+    String matchedHomeDomain;
   }
 
   /** Represents a transaction signer. */
+  @Value
   public static class Signer {
-    private final String key;
-    private final int weight;
-
-    public Signer(String key, int weight) {
-      this.key = key;
-      this.weight = weight;
-    }
-
-    public String getKey() {
-      return key;
-    }
-
-    public int getWeight() {
-      return weight;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.key, this.weight);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (object == this) {
-        return true;
-      }
-
-      if (!(object instanceof Signer)) {
-        return false;
-      }
-
-      Signer other = (Signer) object;
-      return Objects.equals(this.key, other.key) && Objects.equals(this.weight, other.weight);
-    }
+    String key;
+    int weight;
   }
 }

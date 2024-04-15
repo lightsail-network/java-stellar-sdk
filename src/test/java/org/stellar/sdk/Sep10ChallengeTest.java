@@ -87,6 +87,66 @@ public class Sep10ChallengeTest {
   }
 
   @Test
+  public void testNewChallengeRejectsMuxedClientSigningKey() {
+    try {
+      KeyPair server = KeyPair.random();
+      KeyPair client = KeyPair.random();
+      long now = System.currentTimeMillis() / 1000L;
+      long end = now + 300;
+      TimeBounds timeBounds = new TimeBounds(now, end);
+      String domainName = "example.com";
+      String webAuthDomain = "example.com";
+      String clientDomain = "client.domain.com";
+      String clientSigningKey =
+          "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26";
+
+      Sep10Challenge.newChallenge(
+          server,
+          Network.TESTNET,
+          client.getAccountId(),
+          domainName,
+          webAuthDomain,
+          timeBounds,
+          clientDomain,
+          clientSigningKey);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals(
+          "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26 is not a valid account id",
+          e.getMessage());
+    }
+  }
+
+  @Test
+  public void testNewChallengeRejectsInvalidMemo() {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+    String webAuthDomain = "example.com";
+    Memo memo = Memo.text("invalid memo");
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    try {
+      Sep10Challenge.newChallenge(
+          server,
+          network,
+          client.getAccountId(),
+          domainName,
+          webAuthDomain,
+          timeBounds,
+          "",
+          "",
+          memo);
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("only memo type `id` is supported", e.getMessage());
+    }
+  }
+
+  @Test
   public void testReadChallengeTransactionValidSignedByServer()
       throws InvalidSep10ChallengeException, IOException {
     KeyPair server = KeyPair.random();
@@ -1301,6 +1361,225 @@ public class Sep10ChallengeTest {
     assertEquals(transaction, challengeTransaction.getTransaction());
     assertEquals(client.getAccountId(), challengeTransaction.getClientAccountId());
     assertEquals(domainName, challengeTransaction.getMatchedHomeDomain());
+  }
+
+  @Test
+  public void testReadChallengeTransactionValidMemoId()
+      throws InvalidSep10ChallengeException, IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+    String domainName = "example.com";
+    String webAuthDomain = "example.com";
+    Memo memo = Memo.id(123456L);
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    Transaction transaction =
+        Sep10Challenge.newChallenge(
+            server,
+            network,
+            client.getAccountId(),
+            domainName,
+            webAuthDomain,
+            timeBounds,
+            "",
+            "",
+            memo);
+
+    Sep10Challenge.ChallengeTransaction challengeTransaction =
+        Sep10Challenge.readChallengeTransaction(
+            transaction.toEnvelopeXdrBase64(),
+            server.getAccountId(),
+            Network.TESTNET,
+            domainName,
+            webAuthDomain);
+    assertEquals(
+        new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId(), domainName),
+        challengeTransaction);
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidNotMemoId() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    String domainName = "example.com";
+    String webAuthDomain = "example.com";
+    Memo memo = Memo.text("invalid memo");
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation manageDataOperation1 =
+        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+            .setSourceAccount(client.getAccountId())
+            .build();
+
+    Operation[] operations = new Operation[] {manageDataOperation1};
+    Transaction transaction =
+        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addMemo(memo)
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
+
+    transaction.sign(server);
+    String challenge = transaction.toEnvelopeXdrBase64();
+    try {
+      Sep10Challenge.readChallengeTransaction(
+          challenge, server.getAccountId(), Network.TESTNET, domainName, webAuthDomain);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("only memo type `id` is supported", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionRejectFeeBumpTransaction() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    String domainName = "example.com";
+    String webAuthDomain = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation manageDataOperation1 =
+        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+            .setSourceAccount(client.getAccountId())
+            .build();
+
+    Operation[] operations = new Operation[] {manageDataOperation1};
+    Transaction transaction =
+        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
+
+    transaction.sign(server);
+    FeeBumpTransaction feeBumpTransaction =
+        new FeeBumpTransaction.Builder(transaction)
+            .setBaseFee(500)
+            .setFeeAccount(server.getAccountId())
+            .build();
+    String challenge = feeBumpTransaction.toEnvelopeXdrBase64();
+    try {
+      Sep10Challenge.readChallengeTransaction(
+          challenge, server.getAccountId(), Network.TESTNET, domainName, webAuthDomain);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("Transaction cannot be a fee bump transaction", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionRejectMuxedClientAccountId() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    String domainName = "example.com";
+    String webAuthDomain = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation manageDataOperation1 =
+        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+            .setSourceAccount(
+                "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG")
+            .build();
+
+    Operation[] operations = new Operation[] {manageDataOperation1};
+    Transaction transaction =
+        new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
+
+    transaction.sign(server);
+    String challenge = transaction.toEnvelopeXdrBase64();
+    try {
+      Sep10Challenge.readChallengeTransaction(
+          challenge, server.getAccountId(), Network.TESTNET, domainName, webAuthDomain);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals(
+          "clientAccountId: MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG is not a valid account id",
+          e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadChallengeTransactionInvalidNoSignature() throws IOException {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    String domainName = "example.com";
+    String webAuthDomain = "example.com";
+
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+
+    byte[] nonce = new byte[48];
+    SecureRandom random = new SecureRandom();
+    random.nextBytes(nonce);
+    byte[] encodedNonce = java.util.Base64.getEncoder().encode(nonce);
+
+    Account sourceAccount = new Account(server.getAccountId(), -1L);
+    ManageDataOperation manageDataOperation1 =
+        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
+            .setSourceAccount(client.getAccountId())
+            .build();
+
+    Operation[] operations = new Operation[] {manageDataOperation1};
+    Transaction transaction =
+        new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
+            .setBaseFee(100 * operations.length)
+            .addOperations(Arrays.asList(operations))
+            .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
+            .build();
+
+    String challenge = transaction.toEnvelopeXdrBase64();
+    try {
+      Sep10Challenge.readChallengeTransaction(
+          challenge, server.getAccountId(), Network.TESTNET, domainName, webAuthDomain);
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals("Transaction has no signatures.", e.getMessage());
+    }
   }
 
   @Test

@@ -4,6 +4,10 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 ### Update
+* `Sep10Challenge.ChallengeTransaction`'s equals behavior has changed, will compare the transaction's `signatureBase`, not just the transaction hash. ([#588](https://github.com/lightsail-network/java-stellar-sdk/pull/588))
+
+## 0.43.1
+### Update
 * Migrate the project from `stellar/java-stellar-sdk` to `lightsail-network/stellar-stellar-sdk`.
 * Update `org.stellar.sdk.responses`, add missing fields. ([#570](https://github.com/lightsail-network/java-stellar-sdk/pull/570))
 * Add `Asset.getContractId()` for calculating the id of the asset contract. ([#574](https://github.com/lightsail-network/java-stellar-sdk/pull/574))
