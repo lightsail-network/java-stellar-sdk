@@ -4,7 +4,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 ### Update
-* `Sep10Challenge.ChallengeTransaction` equals behavior has changed, will compare the transaction's signatureBase, not just the transaction hash. ([#588](https://github.com/lightsail-network/java-stellar-sdk/pull/588))
+* `Sep10Challenge.ChallengeTransaction`'s equals behavior has changed, will compare the transaction's signatureBase, not just the transaction hash. ([#588](https://github.com/lightsail-network/java-stellar-sdk/pull/588))
 
 ## 0.43.1
 ### Update
