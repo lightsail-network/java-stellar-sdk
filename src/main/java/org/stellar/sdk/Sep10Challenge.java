@@ -519,7 +519,7 @@ public class Sep10Challenge {
 
     for (Operation op : transaction.getOperations()) {
       if (!(op instanceof ManageDataOperation)) {
-        throw new InvalidSep10ChallengeException("Operation type should be ManageData2.");
+        throw new InvalidSep10ChallengeException("Operation type should be ManageData.");
       }
       ManageDataOperation manageDataOp = (ManageDataOperation) op;
       if (manageDataOp.getSourceAccount() == null) {
