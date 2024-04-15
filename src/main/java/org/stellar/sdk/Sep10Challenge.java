@@ -416,7 +416,7 @@ public class Sep10Challenge {
    * @param webAuthDomain The home domain that is expected to be included as the value of the Manage
    *     Data operation with the 'web_auth_domain' key, if present.
    * @param signers The signers of client account.
-   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
    * @throws IOException If read XDR string fails, the exception will be thrown.
@@ -449,7 +449,7 @@ public class Sep10Challenge {
    * @param webAuthDomain The home domain that is expected to be included as the value of the Manage
    *     Data operation with the 'web_auth_domain' key, if present.
    * @param signers The signers of client account.
-   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
    * @throws IOException If read XDR string fails, the exception will be thrown.
@@ -513,13 +513,13 @@ public class Sep10Challenge {
     // hit. We do this in one hit here even though the server signature was
     // checked in the readChallengeTx to ensure that every signature and signer
     // are consumed only once on the transaction.
-    Set<String> allSigners = new HashSet<String>(clientSigners);
+    Set<String> allSigners = new HashSet<>(clientSigners);
     allSigners.add(serverKeyPair.getAccountId());
     Optional<String> clientDomainSigner = Optional.empty();
 
     for (Operation op : transaction.getOperations()) {
       if (!(op instanceof ManageDataOperation)) {
-        throw new InvalidSep10ChallengeException("Operation type should be ManageData.");
+        throw new InvalidSep10ChallengeException("Operation type should be ManageData2.");
       }
       ManageDataOperation manageDataOp = (ManageDataOperation) op;
       if (manageDataOp.getSourceAccount() == null) {
@@ -587,7 +587,7 @@ public class Sep10Challenge {
    *     Data operation with the 'web_auth_domain' key, if present.
    * @param threshold The threshold on the client account.
    * @param signers The signers of client account.
-   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
    * @throws IOException If read XDR string fails, the exception will be thrown.
@@ -651,7 +651,7 @@ public class Sep10Challenge {
    *     Data operation with the 'web_auth_domain' key, if present.
    * @param threshold The threshold on the client account.
    * @param signers The signers of client account.
-   * @return a list of signers that were found is returned, excluding the server account ID.
+   * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
    * @throws IOException If read XDR string fails, the exception will be thrown.
