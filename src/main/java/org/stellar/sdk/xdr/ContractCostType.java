@@ -47,8 +47,9 @@ import org.stellar.sdk.Base64Factory;
 //      InvokeVmFunction = 13,
 //      // Cost of computing a keccak256 hash from bytes.
 //      ComputeKeccak256Hash = 14,
-//      // Cost of computing an ECDSA secp256k1 signature from bytes.
-//      ComputeEcdsaSecp256k1Sig = 15,
+//      // Cost of decoding an ECDSA signature computed from a 256-bit prime modulus
+//      // curve (e.g. secp256k1 and secp256r1)
+//      DecodeEcdsaCurve256Sig = 15,
 //      // Cost of recovering an ECDSA secp256k1 key from a signature.
 //      RecoverEcdsaSecp256k1Key = 16,
 //      // Cost of int256 addition (`+`) and subtraction (`-`) operations
@@ -62,7 +63,55 @@ import org.stellar.sdk.Base64Factory;
 //      // Cost of int256 shift (`shl`, `shr`) operation
 //      Int256Shift = 21,
 //      // Cost of drawing random bytes using a ChaCha20 PRNG
-//      ChaCha20DrawBytes = 22
+//      ChaCha20DrawBytes = 22,
+//
+//      // Cost of parsing wasm bytes that only encode instructions.
+//      ParseWasmInstructions = 23,
+//      // Cost of parsing a known number of wasm functions.
+//      ParseWasmFunctions = 24,
+//      // Cost of parsing a known number of wasm globals.
+//      ParseWasmGlobals = 25,
+//      // Cost of parsing a known number of wasm table entries.
+//      ParseWasmTableEntries = 26,
+//      // Cost of parsing a known number of wasm types.
+//      ParseWasmTypes = 27,
+//      // Cost of parsing a known number of wasm data segments.
+//      ParseWasmDataSegments = 28,
+//      // Cost of parsing a known number of wasm element segments.
+//      ParseWasmElemSegments = 29,
+//      // Cost of parsing a known number of wasm imports.
+//      ParseWasmImports = 30,
+//      // Cost of parsing a known number of wasm exports.
+//      ParseWasmExports = 31,
+//      // Cost of parsing a known number of data segment bytes.
+//      ParseWasmDataSegmentBytes = 32,
+//
+//      // Cost of instantiating wasm bytes that only encode instructions.
+//      InstantiateWasmInstructions = 33,
+//      // Cost of instantiating a known number of wasm functions.
+//      InstantiateWasmFunctions = 34,
+//      // Cost of instantiating a known number of wasm globals.
+//      InstantiateWasmGlobals = 35,
+//      // Cost of instantiating a known number of wasm table entries.
+//      InstantiateWasmTableEntries = 36,
+//      // Cost of instantiating a known number of wasm types.
+//      InstantiateWasmTypes = 37,
+//      // Cost of instantiating a known number of wasm data segments.
+//      InstantiateWasmDataSegments = 38,
+//      // Cost of instantiating a known number of wasm element segments.
+//      InstantiateWasmElemSegments = 39,
+//      // Cost of instantiating a known number of wasm imports.
+//      InstantiateWasmImports = 40,
+//      // Cost of instantiating a known number of wasm exports.
+//      InstantiateWasmExports = 41,
+//      // Cost of instantiating a known number of data segment bytes.
+//      InstantiateWasmDataSegmentBytes = 42,
+//
+//      // Cost of decoding a bytes array representing an uncompressed SEC-1 encoded
+//      // point on a 256-bit elliptic curve
+//      Sec1DecodePointUncompressed = 43,
+//      // Cost of verifying an ECDSA Secp256r1 signature
+//      VerifyEcdsaSecp256r1Sig = 44
 //  };
 
 //  ===========================================================================
@@ -82,7 +131,7 @@ public enum ContractCostType implements XdrElement {
   VmCachedInstantiation(12),
   InvokeVmFunction(13),
   ComputeKeccak256Hash(14),
-  ComputeEcdsaSecp256k1Sig(15),
+  DecodeEcdsaCurve256Sig(15),
   RecoverEcdsaSecp256k1Key(16),
   Int256AddSub(17),
   Int256Mul(18),
@@ -90,6 +139,28 @@ public enum ContractCostType implements XdrElement {
   Int256Pow(20),
   Int256Shift(21),
   ChaCha20DrawBytes(22),
+  ParseWasmInstructions(23),
+  ParseWasmFunctions(24),
+  ParseWasmGlobals(25),
+  ParseWasmTableEntries(26),
+  ParseWasmTypes(27),
+  ParseWasmDataSegments(28),
+  ParseWasmElemSegments(29),
+  ParseWasmImports(30),
+  ParseWasmExports(31),
+  ParseWasmDataSegmentBytes(32),
+  InstantiateWasmInstructions(33),
+  InstantiateWasmFunctions(34),
+  InstantiateWasmGlobals(35),
+  InstantiateWasmTableEntries(36),
+  InstantiateWasmTypes(37),
+  InstantiateWasmDataSegments(38),
+  InstantiateWasmElemSegments(39),
+  InstantiateWasmImports(40),
+  InstantiateWasmExports(41),
+  InstantiateWasmDataSegmentBytes(42),
+  Sec1DecodePointUncompressed(43),
+  VerifyEcdsaSecp256r1Sig(44),
   ;
   private int mValue;
 
@@ -135,7 +206,7 @@ public enum ContractCostType implements XdrElement {
       case 14:
         return ComputeKeccak256Hash;
       case 15:
-        return ComputeEcdsaSecp256k1Sig;
+        return DecodeEcdsaCurve256Sig;
       case 16:
         return RecoverEcdsaSecp256k1Key;
       case 17:
@@ -150,6 +221,50 @@ public enum ContractCostType implements XdrElement {
         return Int256Shift;
       case 22:
         return ChaCha20DrawBytes;
+      case 23:
+        return ParseWasmInstructions;
+      case 24:
+        return ParseWasmFunctions;
+      case 25:
+        return ParseWasmGlobals;
+      case 26:
+        return ParseWasmTableEntries;
+      case 27:
+        return ParseWasmTypes;
+      case 28:
+        return ParseWasmDataSegments;
+      case 29:
+        return ParseWasmElemSegments;
+      case 30:
+        return ParseWasmImports;
+      case 31:
+        return ParseWasmExports;
+      case 32:
+        return ParseWasmDataSegmentBytes;
+      case 33:
+        return InstantiateWasmInstructions;
+      case 34:
+        return InstantiateWasmFunctions;
+      case 35:
+        return InstantiateWasmGlobals;
+      case 36:
+        return InstantiateWasmTableEntries;
+      case 37:
+        return InstantiateWasmTypes;
+      case 38:
+        return InstantiateWasmDataSegments;
+      case 39:
+        return InstantiateWasmElemSegments;
+      case 40:
+        return InstantiateWasmImports;
+      case 41:
+        return InstantiateWasmExports;
+      case 42:
+        return InstantiateWasmDataSegmentBytes;
+      case 43:
+        return Sec1DecodePointUncompressed;
+      case 44:
+        return VerifyEcdsaSecp256r1Sig;
       default:
         throw new RuntimeException("Unknown enum value: " + value);
     }

@@ -16,9 +16,7 @@ import org.stellar.sdk.Base64Factory;
 
 //  struct LedgerCloseMetaV1
 //  {
-//      // We forgot to add an ExtensionPoint in v0 but at least
-//      // we can add one now in v1.
-//      ExtensionPoint ext;
+//      LedgerCloseMetaExt ext;
 //
 //      LedgerHeaderHistoryEntry ledgerHeader;
 //
@@ -51,13 +49,13 @@ import org.stellar.sdk.Base64Factory;
 public class LedgerCloseMetaV1 implements XdrElement {
   public LedgerCloseMetaV1() {}
 
-  private ExtensionPoint ext;
+  private LedgerCloseMetaExt ext;
 
-  public ExtensionPoint getExt() {
+  public LedgerCloseMetaExt getExt() {
     return this.ext;
   }
 
-  public void setExt(ExtensionPoint value) {
+  public void setExt(LedgerCloseMetaExt value) {
     this.ext = value;
   }
 
@@ -143,7 +141,7 @@ public class LedgerCloseMetaV1 implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, LedgerCloseMetaV1 encodedLedgerCloseMetaV1)
       throws IOException {
-    ExtensionPoint.encode(stream, encodedLedgerCloseMetaV1.ext);
+    LedgerCloseMetaExt.encode(stream, encodedLedgerCloseMetaV1.ext);
     LedgerHeaderHistoryEntry.encode(stream, encodedLedgerCloseMetaV1.ledgerHeader);
     GeneralizedTransactionSet.encode(stream, encodedLedgerCloseMetaV1.txSet);
     int txProcessingsize = encodedLedgerCloseMetaV1.getTxProcessing().length;
@@ -182,7 +180,7 @@ public class LedgerCloseMetaV1 implements XdrElement {
 
   public static LedgerCloseMetaV1 decode(XdrDataInputStream stream) throws IOException {
     LedgerCloseMetaV1 decodedLedgerCloseMetaV1 = new LedgerCloseMetaV1();
-    decodedLedgerCloseMetaV1.ext = ExtensionPoint.decode(stream);
+    decodedLedgerCloseMetaV1.ext = LedgerCloseMetaExt.decode(stream);
     decodedLedgerCloseMetaV1.ledgerHeader = LedgerHeaderHistoryEntry.decode(stream);
     decodedLedgerCloseMetaV1.txSet = GeneralizedTransactionSet.decode(stream);
     int txProcessingsize = stream.readInt();
@@ -273,7 +271,7 @@ public class LedgerCloseMetaV1 implements XdrElement {
   }
 
   public static final class Builder {
-    private ExtensionPoint ext;
+    private LedgerCloseMetaExt ext;
     private LedgerHeaderHistoryEntry ledgerHeader;
     private GeneralizedTransactionSet txSet;
     private TransactionResultMeta[] txProcessing;
@@ -283,7 +281,7 @@ public class LedgerCloseMetaV1 implements XdrElement {
     private LedgerKey[] evictedTemporaryLedgerKeys;
     private LedgerEntry[] evictedPersistentLedgerEntries;
 
-    public Builder ext(ExtensionPoint ext) {
+    public Builder ext(LedgerCloseMetaExt ext) {
       this.ext = ext;
       return this;
     }
