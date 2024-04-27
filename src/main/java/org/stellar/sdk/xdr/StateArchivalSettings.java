@@ -28,8 +28,11 @@ import org.stellar.sdk.Base64Factory;
 //      // Number of snapshots to use when calculating average BucketList size
 //      uint32 bucketListSizeWindowSampleSize;
 //
+//      // How often to sample the BucketList size for the average, in ledgers
+//      uint32 bucketListWindowSamplePeriod;
+//
 //      // Maximum number of bytes that we scan for eviction per ledger
-//      uint64 evictionScanSize;
+//      uint32 evictionScanSize;
 //
 //      // Lowest BucketList level to be scanned to evict entries
 //      uint32 startingEvictionScanLevel;
@@ -109,13 +112,23 @@ public class StateArchivalSettings implements XdrElement {
     this.bucketListSizeWindowSampleSize = value;
   }
 
-  private Uint64 evictionScanSize;
+  private Uint32 bucketListWindowSamplePeriod;
 
-  public Uint64 getEvictionScanSize() {
+  public Uint32 getBucketListWindowSamplePeriod() {
+    return this.bucketListWindowSamplePeriod;
+  }
+
+  public void setBucketListWindowSamplePeriod(Uint32 value) {
+    this.bucketListWindowSamplePeriod = value;
+  }
+
+  private Uint32 evictionScanSize;
+
+  public Uint32 getEvictionScanSize() {
     return this.evictionScanSize;
   }
 
-  public void setEvictionScanSize(Uint64 value) {
+  public void setEvictionScanSize(Uint32 value) {
     this.evictionScanSize = value;
   }
 
@@ -139,7 +152,8 @@ public class StateArchivalSettings implements XdrElement {
     Int64.encode(stream, encodedStateArchivalSettings.tempRentRateDenominator);
     Uint32.encode(stream, encodedStateArchivalSettings.maxEntriesToArchive);
     Uint32.encode(stream, encodedStateArchivalSettings.bucketListSizeWindowSampleSize);
-    Uint64.encode(stream, encodedStateArchivalSettings.evictionScanSize);
+    Uint32.encode(stream, encodedStateArchivalSettings.bucketListWindowSamplePeriod);
+    Uint32.encode(stream, encodedStateArchivalSettings.evictionScanSize);
     Uint32.encode(stream, encodedStateArchivalSettings.startingEvictionScanLevel);
   }
 
@@ -156,7 +170,8 @@ public class StateArchivalSettings implements XdrElement {
     decodedStateArchivalSettings.tempRentRateDenominator = Int64.decode(stream);
     decodedStateArchivalSettings.maxEntriesToArchive = Uint32.decode(stream);
     decodedStateArchivalSettings.bucketListSizeWindowSampleSize = Uint32.decode(stream);
-    decodedStateArchivalSettings.evictionScanSize = Uint64.decode(stream);
+    decodedStateArchivalSettings.bucketListWindowSamplePeriod = Uint32.decode(stream);
+    decodedStateArchivalSettings.evictionScanSize = Uint32.decode(stream);
     decodedStateArchivalSettings.startingEvictionScanLevel = Uint32.decode(stream);
     return decodedStateArchivalSettings;
   }
@@ -171,6 +186,7 @@ public class StateArchivalSettings implements XdrElement {
         this.tempRentRateDenominator,
         this.maxEntriesToArchive,
         this.bucketListSizeWindowSampleSize,
+        this.bucketListWindowSamplePeriod,
         this.evictionScanSize,
         this.startingEvictionScanLevel);
   }
@@ -189,6 +205,7 @@ public class StateArchivalSettings implements XdrElement {
         && Objects.equals(this.tempRentRateDenominator, other.tempRentRateDenominator)
         && Objects.equals(this.maxEntriesToArchive, other.maxEntriesToArchive)
         && Objects.equals(this.bucketListSizeWindowSampleSize, other.bucketListSizeWindowSampleSize)
+        && Objects.equals(this.bucketListWindowSamplePeriod, other.bucketListWindowSamplePeriod)
         && Objects.equals(this.evictionScanSize, other.evictionScanSize)
         && Objects.equals(this.startingEvictionScanLevel, other.startingEvictionScanLevel);
   }
@@ -225,7 +242,8 @@ public class StateArchivalSettings implements XdrElement {
     private Int64 tempRentRateDenominator;
     private Uint32 maxEntriesToArchive;
     private Uint32 bucketListSizeWindowSampleSize;
-    private Uint64 evictionScanSize;
+    private Uint32 bucketListWindowSamplePeriod;
+    private Uint32 evictionScanSize;
     private Uint32 startingEvictionScanLevel;
 
     public Builder maxEntryTTL(Uint32 maxEntryTTL) {
@@ -263,7 +281,12 @@ public class StateArchivalSettings implements XdrElement {
       return this;
     }
 
-    public Builder evictionScanSize(Uint64 evictionScanSize) {
+    public Builder bucketListWindowSamplePeriod(Uint32 bucketListWindowSamplePeriod) {
+      this.bucketListWindowSamplePeriod = bucketListWindowSamplePeriod;
+      return this;
+    }
+
+    public Builder evictionScanSize(Uint32 evictionScanSize) {
       this.evictionScanSize = evictionScanSize;
       return this;
     }
@@ -282,6 +305,7 @@ public class StateArchivalSettings implements XdrElement {
       val.setTempRentRateDenominator(this.tempRentRateDenominator);
       val.setMaxEntriesToArchive(this.maxEntriesToArchive);
       val.setBucketListSizeWindowSampleSize(this.bucketListSizeWindowSampleSize);
+      val.setBucketListWindowSamplePeriod(this.bucketListWindowSamplePeriod);
       val.setEvictionScanSize(this.evictionScanSize);
       val.setStartingEvictionScanLevel(this.startingEvictionScanLevel);
       return val;

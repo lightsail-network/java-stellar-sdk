@@ -16,7 +16,7 @@ import org.stellar.sdk.Base64Factory;
 
 //  struct SorobanTransactionMeta
 //  {
-//      ExtensionPoint ext;
+//      SorobanTransactionMetaExt ext;
 //
 //      ContractEvent events<>;             // custom events populated by the
 //                                          // contracts themselves.
@@ -32,13 +32,13 @@ import org.stellar.sdk.Base64Factory;
 public class SorobanTransactionMeta implements XdrElement {
   public SorobanTransactionMeta() {}
 
-  private ExtensionPoint ext;
+  private SorobanTransactionMetaExt ext;
 
-  public ExtensionPoint getExt() {
+  public SorobanTransactionMetaExt getExt() {
     return this.ext;
   }
 
-  public void setExt(ExtensionPoint value) {
+  public void setExt(SorobanTransactionMetaExt value) {
     this.ext = value;
   }
 
@@ -75,7 +75,7 @@ public class SorobanTransactionMeta implements XdrElement {
   public static void encode(
       XdrDataOutputStream stream, SorobanTransactionMeta encodedSorobanTransactionMeta)
       throws IOException {
-    ExtensionPoint.encode(stream, encodedSorobanTransactionMeta.ext);
+    SorobanTransactionMetaExt.encode(stream, encodedSorobanTransactionMeta.ext);
     int eventssize = encodedSorobanTransactionMeta.getEvents().length;
     stream.writeInt(eventssize);
     for (int i = 0; i < eventssize; i++) {
@@ -95,7 +95,7 @@ public class SorobanTransactionMeta implements XdrElement {
 
   public static SorobanTransactionMeta decode(XdrDataInputStream stream) throws IOException {
     SorobanTransactionMeta decodedSorobanTransactionMeta = new SorobanTransactionMeta();
-    decodedSorobanTransactionMeta.ext = ExtensionPoint.decode(stream);
+    decodedSorobanTransactionMeta.ext = SorobanTransactionMetaExt.decode(stream);
     int eventssize = stream.readInt();
     decodedSorobanTransactionMeta.events = new ContractEvent[eventssize];
     for (int i = 0; i < eventssize; i++) {
@@ -157,12 +157,12 @@ public class SorobanTransactionMeta implements XdrElement {
   }
 
   public static final class Builder {
-    private ExtensionPoint ext;
+    private SorobanTransactionMetaExt ext;
     private ContractEvent[] events;
     private SCVal returnValue;
     private DiagnosticEvent[] diagnosticEvents;
 
-    public Builder ext(ExtensionPoint ext) {
+    public Builder ext(SorobanTransactionMetaExt ext) {
       this.ext = ext;
       return this;
     }
