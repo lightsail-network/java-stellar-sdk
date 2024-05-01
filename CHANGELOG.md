@@ -3,8 +3,10 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Pending
+
+## 0.43.2
 ### Update
-* Bump stellar-xdr to v21.1. ([#590](https://github.com/lightsail-network/java-stellar-sdk/pull/590))
+- The generated XDR has been upgraded to match the upcoming Protocol 21, namely [stellar/stellar-xdr@v21.1](https://github.com/stellar/stellar-xdr/tree/v21.1). ([#590](https://github.com/lightsail-network/java-stellar-sdk/pull/590))
 
 ## 0.43.1
 ### Update
