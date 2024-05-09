@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import lombok.Value;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
@@ -35,5 +36,8 @@ public class GetEventsResponse {
     String value;
 
     Boolean inSuccessfulContractCall;
+
+    @SerializedName("txHash")
+    String transactionHash;
   }
 }

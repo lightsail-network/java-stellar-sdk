@@ -28,6 +28,9 @@ public class GetEventsDeserializerTest {
     assertEquals(eventInfo0.getTopic().get(1), "AAAADwAAAAlpbmNyZW1lbnQAAAA=");
     assertEquals(eventInfo0.getValue(), "AAAAAwAAAAE=");
     assertEquals(eventInfo0.getInSuccessfulContractCall(), true);
+    assertEquals(
+        eventInfo0.getTransactionHash(),
+        "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d");
 
     GetEventsResponse.EventInfo eventInfo1 = getEventsResponse.getResult().getEvents().get(1);
     assertEquals(eventInfo1.getType(), EventFilterType.SYSTEM);
@@ -54,7 +57,8 @@ public class GetEventsDeserializerTest {
           + "                    \"AAAADwAAAAlpbmNyZW1lbnQAAAA=\"\n"
           + "                ],\n"
           + "                \"value\": \"AAAAAwAAAAE=\",\n"
-          + "                \"inSuccessfulContractCall\": true\n"
+          + "                \"inSuccessfulContractCall\": true,\n"
+          + "                \"txHash\": \"db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d\"\n"
           + "            },\n"
           + "            {\n"
           + "                \"type\": \"system\",\n"
@@ -68,7 +72,8 @@ public class GetEventsDeserializerTest {
           + "                    \"AAAADwAAAAlpbmNyZW1lbnQAAAA=\"\n"
           + "                ],\n"
           + "                \"value\": \"AAAAAwAAAAI=\",\n"
-          + "                \"inSuccessfulContractCall\": true\n"
+          + "                \"inSuccessfulContractCall\": true,\n"
+          + "                \"txHash\": \"db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d\"\n"
           + "            },\n"
           + "            {\n"
           + "                \"type\": \"diagnostic\",\n"
@@ -82,7 +87,8 @@ public class GetEventsDeserializerTest {
           + "                    \"AAAADwAAAAlpbmNyZW1lbnQAAAA=\"\n"
           + "                ],\n"
           + "                \"value\": \"AAAAAwAAAAM=\",\n"
-          + "                \"inSuccessfulContractCall\": true\n"
+          + "                \"inSuccessfulContractCall\": true,\n"
+          + "                \"txHash\": \"db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d\"\n"
           + "            }\n"
           + "        ],\n"
           + "        \"latestLedger\": \"169\"\n"

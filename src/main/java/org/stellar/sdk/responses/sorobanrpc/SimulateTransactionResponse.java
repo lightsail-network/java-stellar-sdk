@@ -40,6 +40,8 @@ public class SimulateTransactionResponse {
 
   RestorePreamble restorePreamble;
 
+  List<LedgerEntryChange> stateChanges;
+
   Long latestLedger;
 
   @Value
@@ -70,5 +72,18 @@ public class SimulateTransactionResponse {
     String transactionData;
 
     Long minResourceFee;
+  }
+
+  /**
+   * LedgerEntryChange designates a change in a ledger entry. Before and After cannot be omitted at
+   * the same time. If Before is omitted, it constitutes a creation, if After is omitted, it
+   * constitutes a deletion.
+   */
+  @Value
+  public static class LedgerEntryChange {
+    String type;
+    String key;
+    String before;
+    String after;
   }
 }
