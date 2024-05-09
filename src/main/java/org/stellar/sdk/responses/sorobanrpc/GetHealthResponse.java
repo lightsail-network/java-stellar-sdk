@@ -11,4 +11,7 @@ import lombok.Value;
 @Value
 public class GetHealthResponse {
   String status;
+  Long latestLedger;
+  Long oldestLedger;
+  Long ledgerRetentionWindow;
 }

@@ -35,6 +35,15 @@ public class SimulateTransactionDeserializerTest {
     assertEquals(data.getResults().get(0).getXdr(), "AAAAAwAAAAo=");
     assertEquals(data.getCost().getCpuInstructions().longValue(), 1274180L);
     assertEquals(data.getCost().getMemoryBytes().longValue(), 162857L);
+    assertEquals(data.getStateChanges().size(), 1);
+    assertEquals(data.getStateChanges().get(0).getType(), "created");
+    assertEquals(
+        data.getStateChanges().get(0).getKey(),
+        "AAAAAAAAAABuaCbVXZ2DlXWarV6UxwbW3GNJgpn3ASChIFp5bxSIWg==");
+    assertNull(data.getStateChanges().get(0).getBefore());
+    assertEquals(
+        data.getStateChanges().get(0).getAfter(),
+        "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=");
     assertEquals(data.getLatestLedger().longValue(), 694L);
     assertNull(data.getError());
   }
@@ -81,6 +90,14 @@ public class SimulateTransactionDeserializerTest {
           + "            \"cpuInsns\": \"1274180\",\n"
           + "            \"memBytes\": \"162857\"\n"
           + "        },\n"
+          + "        \"stateChanges\": [\n"
+          + "            {\n"
+          + "                \"type\": \"created\",\n"
+          + "                \"key\": \"AAAAAAAAAABuaCbVXZ2DlXWarV6UxwbW3GNJgpn3ASChIFp5bxSIWg==\",\n"
+          + "                \"before\": null,\n"
+          + "                \"after\": \"AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"\n"
+          + "            }\n"
+          + "        ],\n"
           + "        \"latestLedger\": \"694\"\n"
           + "    }\n"
           + "}";
