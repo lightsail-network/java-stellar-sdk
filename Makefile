@@ -35,6 +35,6 @@ xdr/%.x:
 
 xdr-clean:
 	rm xdr/*.x || true
-	rm src/main/java/org/stellar/sdk/xdr/*.java || true
+	find src/main/java/org/stellar/sdk/xdr -type f -name "*.java" ! -name "package-info.java" -delete
 
 xdr-update: xdr-clean xdr-generate
