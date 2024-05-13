@@ -71,7 +71,6 @@ tasks {
     javadoc {
         setDestinationDir(file("javadoc"))
         isFailOnError = false
-        exclude("org/stellar/sdk/xdr/**")
         options {
             // https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
             this as StandardJavadocDocletOptions
