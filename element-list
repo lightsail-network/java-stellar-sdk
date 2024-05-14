@@ -8,3 +8,4 @@ org.stellar.sdk.responses.operations
 org.stellar.sdk.responses.sorobanrpc
 org.stellar.sdk.scval
 org.stellar.sdk.spi
+org.stellar.sdk.xdr
