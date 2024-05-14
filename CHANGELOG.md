@@ -3,8 +3,11 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Pending
+
+## 0.44.0
 ### Update
-- feat: add support for Soroban-RPC v21.
+- feat: add support for Soroban-RPC v21. ([#593](https://github.com/lightsail-network/java-stellar-sdk/pull/593))
+- chore: include `org.stellar.sdk.xdr` in docs. ([#594](https://github.com/lightsail-network/java-stellar-sdk/pull/594))
 
 ## 0.43.2
 ### Update
