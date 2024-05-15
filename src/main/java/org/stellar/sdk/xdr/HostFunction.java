@@ -12,19 +12,21 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union HostFunction switch (HostFunctionType type)
-//  {
-//  case HOST_FUNCTION_TYPE_INVOKE_CONTRACT:
-//      InvokeContractArgs invokeContract;
-//  case HOST_FUNCTION_TYPE_CREATE_CONTRACT:
-//      CreateContractArgs createContract;
-//  case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
-//      opaque wasm<>;
-//  };
-
-//  ===========================================================================
+/**
+ * HostFunction's original definition in the XDR file is:
+ *
+ * <pre>
+ * union HostFunction switch (HostFunctionType type)
+ * {
+ * case HOST_FUNCTION_TYPE_INVOKE_CONTRACT:
+ *     InvokeContractArgs invokeContract;
+ * case HOST_FUNCTION_TYPE_CREATE_CONTRACT:
+ *     CreateContractArgs createContract;
+ * case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
+ *     opaque wasm&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class HostFunction implements XdrElement {
   public HostFunction() {}
 

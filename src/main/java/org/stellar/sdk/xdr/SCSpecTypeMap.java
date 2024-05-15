@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecTypeMap
-//  {
-//      SCSpecTypeDef keyType;
-//      SCSpecTypeDef valueType;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecTypeMap's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecTypeMap
+ * {
+ *     SCSpecTypeDef keyType;
+ *     SCSpecTypeDef valueType;
+ * };
+ * </pre>
+ */
 public class SCSpecTypeMap implements XdrElement {
   public SCSpecTypeMap() {}
 

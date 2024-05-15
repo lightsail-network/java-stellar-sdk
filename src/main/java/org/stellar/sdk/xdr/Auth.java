@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Auth
-//  {
-//      int flags;
-//  };
-
-//  ===========================================================================
+/**
+ * Auth's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Auth
+ * {
+ *     int flags;
+ * };
+ * </pre>
+ */
 public class Auth implements XdrElement {
   public Auth() {}
 

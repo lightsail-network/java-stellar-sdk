@@ -12,38 +12,40 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct AccountEntry
-//  {
-//      AccountID accountID;      // master public key for this account
-//      int64 balance;            // in stroops
-//      SequenceNumber seqNum;    // last sequence number used for this account
-//      uint32 numSubEntries;     // number of sub-entries this account has
-//                                // drives the reserve
-//      AccountID* inflationDest; // Account to vote for during inflation
-//      uint32 flags;             // see AccountFlags
-//
-//      string32 homeDomain; // can be used for reverse federation and memo lookup
-//
-//      // fields used for signatures
-//      // thresholds stores unsigned bytes: [weight of master|low|medium|high]
-//      Thresholds thresholds;
-//
-//      Signer signers<MAX_SIGNERS>; // possible signers for this account
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      case 1:
-//          AccountEntryExtensionV1 v1;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * AccountEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct AccountEntry
+ * {
+ *     AccountID accountID;      // master public key for this account
+ *     int64 balance;            // in stroops
+ *     SequenceNumber seqNum;    // last sequence number used for this account
+ *     uint32 numSubEntries;     // number of sub-entries this account has
+ *                               // drives the reserve
+ *     AccountID&#42; inflationDest; // Account to vote for during inflation
+ *     uint32 flags;             // see AccountFlags
+ *
+ *     string32 homeDomain; // can be used for reverse federation and memo lookup
+ *
+ *     // fields used for signatures
+ *     // thresholds stores unsigned bytes: [weight of master|low|medium|high]
+ *     Thresholds thresholds;
+ *
+ *     Signer signers&lt;MAX_SIGNERS&gt;; // possible signers for this account
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 1:
+ *         AccountEntryExtensionV1 v1;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class AccountEntry implements XdrElement {
   public AccountEntry() {}
 
@@ -332,6 +334,19 @@ public class AccountEntry implements XdrElement {
     }
   }
 
+  /**
+   * AccountEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 1:
+   *         AccountEntryExtensionV1 v1;
+   *     }
+   * </pre>
+   */
   public static class AccountEntryExt implements XdrElement {
     public AccountEntryExt() {}
 

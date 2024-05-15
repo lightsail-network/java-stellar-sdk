@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SimplePaymentResult
-//  {
-//      AccountID destination;
-//      Asset asset;
-//      int64 amount;
-//  };
-
-//  ===========================================================================
+/**
+ * SimplePaymentResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SimplePaymentResult
+ * {
+ *     AccountID destination;
+ *     Asset asset;
+ *     int64 amount;
+ * };
+ * </pre>
+ */
 public class SimplePaymentResult implements XdrElement {
   public SimplePaymentResult() {}
 

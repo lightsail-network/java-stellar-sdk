@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct CreatePassiveSellOfferOp
-//  {
-//      Asset selling; // A
-//      Asset buying;  // B
-//      int64 amount;  // amount taker gets
-//      Price price;   // cost of A in terms of B
-//  };
-
-//  ===========================================================================
+/**
+ * CreatePassiveSellOfferOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct CreatePassiveSellOfferOp
+ * {
+ *     Asset selling; // A
+ *     Asset buying;  // B
+ *     int64 amount;  // amount taker gets
+ *     Price price;   // cost of A in terms of B
+ * };
+ * </pre>
+ */
 public class CreatePassiveSellOfferOp implements XdrElement {
   public CreatePassiveSellOfferOp() {}
 

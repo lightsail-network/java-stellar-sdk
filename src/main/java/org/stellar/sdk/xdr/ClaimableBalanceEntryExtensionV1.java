@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ClaimableBalanceEntryExtensionV1
-//  {
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//
-//      uint32 flags; // see ClaimableBalanceFlags
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimableBalanceEntryExtensionV1's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ClaimableBalanceEntryExtensionV1
+ * {
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ *
+ *     uint32 flags; // see ClaimableBalanceFlags
+ * };
+ * </pre>
+ */
 public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
   public ClaimableBalanceEntryExtensionV1() {}
 
@@ -132,6 +134,17 @@ public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
     }
   }
 
+  /**
+   * ClaimableBalanceEntryExtensionV1Ext's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class ClaimableBalanceEntryExtensionV1Ext implements XdrElement {
     public ClaimableBalanceEntryExtensionV1Ext() {}
 

@@ -11,18 +11,20 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct AllowTrustOp
-//  {
-//      AccountID trustor;
-//      AssetCode asset;
-//
-//      // One of 0, AUTHORIZED_FLAG, or AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG
-//      uint32 authorize;
-//  };
-
-//  ===========================================================================
+/**
+ * AllowTrustOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct AllowTrustOp
+ * {
+ *     AccountID trustor;
+ *     AssetCode asset;
+ *
+ *     // One of 0, AUTHORIZED_FLAG, or AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG
+ *     uint32 authorize;
+ * };
+ * </pre>
+ */
 public class AllowTrustOp implements XdrElement {
   public AllowTrustOp() {}
 

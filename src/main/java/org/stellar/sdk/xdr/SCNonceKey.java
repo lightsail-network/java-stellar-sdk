@@ -11,13 +11,15 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCNonceKey {
-//      int64 nonce;
-//  };
-
-//  ===========================================================================
+/**
+ * SCNonceKey's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCNonceKey {
+ *     int64 nonce;
+ * };
+ * </pre>
+ */
 public class SCNonceKey implements XdrElement {
   public SCNonceKey() {}
 

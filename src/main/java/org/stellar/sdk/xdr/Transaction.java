@@ -12,38 +12,40 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Transaction
-//  {
-//      // account used to run the transaction
-//      MuxedAccount sourceAccount;
-//
-//      // the fee the sourceAccount will pay
-//      uint32 fee;
-//
-//      // sequence number to consume in the account
-//      SequenceNumber seqNum;
-//
-//      // validity conditions
-//      Preconditions cond;
-//
-//      Memo memo;
-//
-//      Operation operations<MAX_OPS_PER_TX>;
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      case 1:
-//          SorobanTransactionData sorobanData;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * Transaction's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Transaction
+ * {
+ *     // account used to run the transaction
+ *     MuxedAccount sourceAccount;
+ *
+ *     // the fee the sourceAccount will pay
+ *     uint32 fee;
+ *
+ *     // sequence number to consume in the account
+ *     SequenceNumber seqNum;
+ *
+ *     // validity conditions
+ *     Preconditions cond;
+ *
+ *     Memo memo;
+ *
+ *     Operation operations&lt;MAX_OPS_PER_TX&gt;;
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 1:
+ *         SorobanTransactionData sorobanData;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class Transaction implements XdrElement {
   public Transaction() {}
 
@@ -261,6 +263,19 @@ public class Transaction implements XdrElement {
     }
   }
 
+  /**
+   * TransactionExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 1:
+   *         SorobanTransactionData sorobanData;
+   *     }
+   * </pre>
+   */
   public static class TransactionExt implements XdrElement {
     public TransactionExt() {}
 

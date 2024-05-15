@@ -10,23 +10,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum LedgerEntryType
-//  {
-//      ACCOUNT = 0,
-//      TRUSTLINE = 1,
-//      OFFER = 2,
-//      DATA = 3,
-//      CLAIMABLE_BALANCE = 4,
-//      LIQUIDITY_POOL = 5,
-//      CONTRACT_DATA = 6,
-//      CONTRACT_CODE = 7,
-//      CONFIG_SETTING = 8,
-//      TTL = 9
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerEntryType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum LedgerEntryType
+ * {
+ *     ACCOUNT = 0,
+ *     TRUSTLINE = 1,
+ *     OFFER = 2,
+ *     DATA = 3,
+ *     CLAIMABLE_BALANCE = 4,
+ *     LIQUIDITY_POOL = 5,
+ *     CONTRACT_DATA = 6,
+ *     CONTRACT_CODE = 7,
+ *     CONFIG_SETTING = 8,
+ *     TTL = 9
+ * };
+ * </pre>
+ */
 public enum LedgerEntryType implements XdrElement {
   ACCOUNT(0),
   TRUSTLINE(1),

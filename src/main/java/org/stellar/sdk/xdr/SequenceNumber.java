@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef int64 SequenceNumber;
-
-//  ===========================================================================
+/**
+ * SequenceNumber's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef int64 SequenceNumber;
+ * </pre>
+ */
 public class SequenceNumber implements XdrElement {
   private Int64 SequenceNumber;
 

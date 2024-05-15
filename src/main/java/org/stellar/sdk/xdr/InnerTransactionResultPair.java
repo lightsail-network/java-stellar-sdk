@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct InnerTransactionResultPair
-//  {
-//      Hash transactionHash;          // hash of the inner transaction
-//      InnerTransactionResult result; // result for the inner transaction
-//  };
-
-//  ===========================================================================
+/**
+ * InnerTransactionResultPair's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct InnerTransactionResultPair
+ * {
+ *     Hash transactionHash;          // hash of the inner transaction
+ *     InnerTransactionResult result; // result for the inner transaction
+ * };
+ * </pre>
+ */
 public class InnerTransactionResultPair implements XdrElement {
   public InnerTransactionResultPair() {}
 

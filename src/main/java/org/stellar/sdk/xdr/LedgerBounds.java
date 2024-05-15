@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerBounds
-//  {
-//      uint32 minLedger;
-//      uint32 maxLedger; // 0 here means no maxLedger
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerBounds's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerBounds
+ * {
+ *     uint32 minLedger;
+ *     uint32 maxLedger; // 0 here means no maxLedger
+ * };
+ * </pre>
+ */
 public class LedgerBounds implements XdrElement {
   public LedgerBounds() {}
 

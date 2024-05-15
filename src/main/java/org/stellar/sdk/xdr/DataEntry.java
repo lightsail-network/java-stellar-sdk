@@ -11,24 +11,26 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct DataEntry
-//  {
-//      AccountID accountID; // account this data belongs to
-//      string64 dataName;
-//      DataValue dataValue;
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * DataEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct DataEntry
+ * {
+ *     AccountID accountID; // account this data belongs to
+ *     string64 dataName;
+ *     DataValue dataValue;
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class DataEntry implements XdrElement {
   public DataEntry() {}
 
@@ -171,6 +173,17 @@ public class DataEntry implements XdrElement {
     }
   }
 
+  /**
+   * DataEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class DataEntryExt implements XdrElement {
     public DataEntryExt() {}
 

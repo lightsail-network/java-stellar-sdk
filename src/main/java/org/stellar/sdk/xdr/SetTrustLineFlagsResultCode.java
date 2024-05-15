@@ -10,23 +10,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SetTrustLineFlagsResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      SET_TRUST_LINE_FLAGS_SUCCESS = 0,
-//
-//      // codes considered as "failure" for the operation
-//      SET_TRUST_LINE_FLAGS_MALFORMED = -1,
-//      SET_TRUST_LINE_FLAGS_NO_TRUST_LINE = -2,
-//      SET_TRUST_LINE_FLAGS_CANT_REVOKE = -3,
-//      SET_TRUST_LINE_FLAGS_INVALID_STATE = -4,
-//      SET_TRUST_LINE_FLAGS_LOW_RESERVE = -5 // claimable balances can't be created
-//                                            // on revoke due to low reserves
-//  };
-
-//  ===========================================================================
+/**
+ * SetTrustLineFlagsResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SetTrustLineFlagsResultCode
+ * {
+ *     // codes considered as "success" for the operation
+ *     SET_TRUST_LINE_FLAGS_SUCCESS = 0,
+ *
+ *     // codes considered as "failure" for the operation
+ *     SET_TRUST_LINE_FLAGS_MALFORMED = -1,
+ *     SET_TRUST_LINE_FLAGS_NO_TRUST_LINE = -2,
+ *     SET_TRUST_LINE_FLAGS_CANT_REVOKE = -3,
+ *     SET_TRUST_LINE_FLAGS_INVALID_STATE = -4,
+ *     SET_TRUST_LINE_FLAGS_LOW_RESERVE = -5 // claimable balances can't be created
+ *                                           // on revoke due to low reserves
+ * };
+ * </pre>
+ */
 public enum SetTrustLineFlagsResultCode implements XdrElement {
   SET_TRUST_LINE_FLAGS_SUCCESS(0),
   SET_TRUST_LINE_FLAGS_MALFORMED(-1),

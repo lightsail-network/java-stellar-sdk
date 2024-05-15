@@ -11,74 +11,76 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union LedgerKey switch (LedgerEntryType type)
-//  {
-//  case ACCOUNT:
-//      struct
-//      {
-//          AccountID accountID;
-//      } account;
-//
-//  case TRUSTLINE:
-//      struct
-//      {
-//          AccountID accountID;
-//          TrustLineAsset asset;
-//      } trustLine;
-//
-//  case OFFER:
-//      struct
-//      {
-//          AccountID sellerID;
-//          int64 offerID;
-//      } offer;
-//
-//  case DATA:
-//      struct
-//      {
-//          AccountID accountID;
-//          string64 dataName;
-//      } data;
-//
-//  case CLAIMABLE_BALANCE:
-//      struct
-//      {
-//          ClaimableBalanceID balanceID;
-//      } claimableBalance;
-//
-//  case LIQUIDITY_POOL:
-//      struct
-//      {
-//          PoolID liquidityPoolID;
-//      } liquidityPool;
-//  case CONTRACT_DATA:
-//      struct
-//      {
-//          SCAddress contract;
-//          SCVal key;
-//          ContractDataDurability durability;
-//      } contractData;
-//  case CONTRACT_CODE:
-//      struct
-//      {
-//          Hash hash;
-//      } contractCode;
-//  case CONFIG_SETTING:
-//      struct
-//      {
-//          ConfigSettingID configSettingID;
-//      } configSetting;
-//  case TTL:
-//      struct
-//      {
-//          // Hash of the LedgerKey that is associated with this TTLEntry
-//          Hash keyHash;
-//      } ttl;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerKey's original definition in the XDR file is:
+ *
+ * <pre>
+ * union LedgerKey switch (LedgerEntryType type)
+ * {
+ * case ACCOUNT:
+ *     struct
+ *     {
+ *         AccountID accountID;
+ *     } account;
+ *
+ * case TRUSTLINE:
+ *     struct
+ *     {
+ *         AccountID accountID;
+ *         TrustLineAsset asset;
+ *     } trustLine;
+ *
+ * case OFFER:
+ *     struct
+ *     {
+ *         AccountID sellerID;
+ *         int64 offerID;
+ *     } offer;
+ *
+ * case DATA:
+ *     struct
+ *     {
+ *         AccountID accountID;
+ *         string64 dataName;
+ *     } data;
+ *
+ * case CLAIMABLE_BALANCE:
+ *     struct
+ *     {
+ *         ClaimableBalanceID balanceID;
+ *     } claimableBalance;
+ *
+ * case LIQUIDITY_POOL:
+ *     struct
+ *     {
+ *         PoolID liquidityPoolID;
+ *     } liquidityPool;
+ * case CONTRACT_DATA:
+ *     struct
+ *     {
+ *         SCAddress contract;
+ *         SCVal key;
+ *         ContractDataDurability durability;
+ *     } contractData;
+ * case CONTRACT_CODE:
+ *     struct
+ *     {
+ *         Hash hash;
+ *     } contractCode;
+ * case CONFIG_SETTING:
+ *     struct
+ *     {
+ *         ConfigSettingID configSettingID;
+ *     } configSetting;
+ * case TTL:
+ *     struct
+ *     {
+ *         // Hash of the LedgerKey that is associated with this TTLEntry
+ *         Hash keyHash;
+ *     } ttl;
+ * };
+ * </pre>
+ */
 public class LedgerKey implements XdrElement {
   public LedgerKey() {}
 
@@ -419,6 +421,16 @@ public class LedgerKey implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * LedgerKeyAccount's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         AccountID accountID;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyAccount implements XdrElement {
     public LedgerKeyAccount() {}
 
@@ -502,6 +514,17 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyTrustLine's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         AccountID accountID;
+   *         TrustLineAsset asset;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyTrustLine implements XdrElement {
     public LedgerKeyTrustLine() {}
 
@@ -606,6 +629,17 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyOffer's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         AccountID sellerID;
+   *         int64 offerID;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyOffer implements XdrElement {
     public LedgerKeyOffer() {}
 
@@ -709,6 +743,17 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyData's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         AccountID accountID;
+   *         string64 dataName;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyData implements XdrElement {
     public LedgerKeyData() {}
 
@@ -812,6 +857,16 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyClaimableBalance's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         ClaimableBalanceID balanceID;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyClaimableBalance implements XdrElement {
     public LedgerKeyClaimableBalance() {}
 
@@ -896,6 +951,16 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyLiquidityPool's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         PoolID liquidityPoolID;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyLiquidityPool implements XdrElement {
     public LedgerKeyLiquidityPool() {}
 
@@ -980,6 +1045,18 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyContractData's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         SCAddress contract;
+   *         SCVal key;
+   *         ContractDataDurability durability;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyContractData implements XdrElement {
     public LedgerKeyContractData() {}
 
@@ -1104,6 +1181,16 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyContractCode's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         Hash hash;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyContractCode implements XdrElement {
     public LedgerKeyContractCode() {}
 
@@ -1188,6 +1275,16 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyConfigSetting's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         ConfigSettingID configSettingID;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyConfigSetting implements XdrElement {
     public LedgerKeyConfigSetting() {}
 
@@ -1272,6 +1369,17 @@ public class LedgerKey implements XdrElement {
     }
   }
 
+  /**
+   * LedgerKeyTtl's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         // Hash of the LedgerKey that is associated with this TTLEntry
+   *         Hash keyHash;
+   *     }
+   * </pre>
+   */
   public static class LedgerKeyTtl implements XdrElement {
     public LedgerKeyTtl() {}
 

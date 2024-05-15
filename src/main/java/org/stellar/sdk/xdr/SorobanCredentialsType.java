@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SorobanCredentialsType
-//  {
-//      SOROBAN_CREDENTIALS_SOURCE_ACCOUNT = 0,
-//      SOROBAN_CREDENTIALS_ADDRESS = 1
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanCredentialsType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SorobanCredentialsType
+ * {
+ *     SOROBAN_CREDENTIALS_SOURCE_ACCOUNT = 0,
+ *     SOROBAN_CREDENTIALS_ADDRESS = 1
+ * };
+ * </pre>
+ */
 public enum SorobanCredentialsType implements XdrElement {
   SOROBAN_CREDENTIALS_SOURCE_ACCOUNT(0),
   SOROBAN_CREDENTIALS_ADDRESS(1),

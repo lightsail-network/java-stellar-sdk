@@ -12,49 +12,51 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct InnerTransactionResult
-//  {
-//      // Always 0. Here for binary compatibility.
-//      int64 feeCharged;
-//
-//      union switch (TransactionResultCode code)
-//      {
-//      // txFEE_BUMP_INNER_SUCCESS is not included
-//      case txSUCCESS:
-//      case txFAILED:
-//          OperationResult results<>;
-//      case txTOO_EARLY:
-//      case txTOO_LATE:
-//      case txMISSING_OPERATION:
-//      case txBAD_SEQ:
-//      case txBAD_AUTH:
-//      case txINSUFFICIENT_BALANCE:
-//      case txNO_ACCOUNT:
-//      case txINSUFFICIENT_FEE:
-//      case txBAD_AUTH_EXTRA:
-//      case txINTERNAL_ERROR:
-//      case txNOT_SUPPORTED:
-//      // txFEE_BUMP_INNER_FAILED is not included
-//      case txBAD_SPONSORSHIP:
-//      case txBAD_MIN_SEQ_AGE_OR_GAP:
-//      case txMALFORMED:
-//      case txSOROBAN_INVALID:
-//          void;
-//      }
-//      result;
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * InnerTransactionResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct InnerTransactionResult
+ * {
+ *     // Always 0. Here for binary compatibility.
+ *     int64 feeCharged;
+ *
+ *     union switch (TransactionResultCode code)
+ *     {
+ *     // txFEE_BUMP_INNER_SUCCESS is not included
+ *     case txSUCCESS:
+ *     case txFAILED:
+ *         OperationResult results&lt;&gt;;
+ *     case txTOO_EARLY:
+ *     case txTOO_LATE:
+ *     case txMISSING_OPERATION:
+ *     case txBAD_SEQ:
+ *     case txBAD_AUTH:
+ *     case txINSUFFICIENT_BALANCE:
+ *     case txNO_ACCOUNT:
+ *     case txINSUFFICIENT_FEE:
+ *     case txBAD_AUTH_EXTRA:
+ *     case txINTERNAL_ERROR:
+ *     case txNOT_SUPPORTED:
+ *     // txFEE_BUMP_INNER_FAILED is not included
+ *     case txBAD_SPONSORSHIP:
+ *     case txBAD_MIN_SEQ_AGE_OR_GAP:
+ *     case txMALFORMED:
+ *     case txSOROBAN_INVALID:
+ *         void;
+ *     }
+ *     result;
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class InnerTransactionResult implements XdrElement {
   public InnerTransactionResult() {}
 
@@ -178,6 +180,36 @@ public class InnerTransactionResult implements XdrElement {
     }
   }
 
+  /**
+   * InnerTransactionResultResult's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (TransactionResultCode code)
+   *     {
+   *     // txFEE_BUMP_INNER_SUCCESS is not included
+   *     case txSUCCESS:
+   *     case txFAILED:
+   *         OperationResult results&lt;&gt;;
+   *     case txTOO_EARLY:
+   *     case txTOO_LATE:
+   *     case txMISSING_OPERATION:
+   *     case txBAD_SEQ:
+   *     case txBAD_AUTH:
+   *     case txINSUFFICIENT_BALANCE:
+   *     case txNO_ACCOUNT:
+   *     case txINSUFFICIENT_FEE:
+   *     case txBAD_AUTH_EXTRA:
+   *     case txINTERNAL_ERROR:
+   *     case txNOT_SUPPORTED:
+   *     // txFEE_BUMP_INNER_FAILED is not included
+   *     case txBAD_SPONSORSHIP:
+   *     case txBAD_MIN_SEQ_AGE_OR_GAP:
+   *     case txMALFORMED:
+   *     case txSOROBAN_INVALID:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class InnerTransactionResultResult implements XdrElement {
     public InnerTransactionResultResult() {}
 
@@ -337,6 +369,17 @@ public class InnerTransactionResult implements XdrElement {
     }
   }
 
+  /**
+   * InnerTransactionResultExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class InnerTransactionResultExt implements XdrElement {
     public InnerTransactionResultExt() {}
 

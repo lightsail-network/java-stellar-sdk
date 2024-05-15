@@ -12,25 +12,27 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ManageOfferSuccessResult
-//  {
-//      // offers that got claimed while creating this offer
-//      ClaimAtom offersClaimed<>;
-//
-//      union switch (ManageOfferEffect effect)
-//      {
-//      case MANAGE_OFFER_CREATED:
-//      case MANAGE_OFFER_UPDATED:
-//          OfferEntry offer;
-//      case MANAGE_OFFER_DELETED:
-//          void;
-//      }
-//      offer;
-//  };
-
-//  ===========================================================================
+/**
+ * ManageOfferSuccessResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ManageOfferSuccessResult
+ * {
+ *     // offers that got claimed while creating this offer
+ *     ClaimAtom offersClaimed&lt;&gt;;
+ *
+ *     union switch (ManageOfferEffect effect)
+ *     {
+ *     case MANAGE_OFFER_CREATED:
+ *     case MANAGE_OFFER_UPDATED:
+ *         OfferEntry offer;
+ *     case MANAGE_OFFER_DELETED:
+ *         void;
+ *     }
+ *     offer;
+ * };
+ * </pre>
+ */
 public class ManageOfferSuccessResult implements XdrElement {
   public ManageOfferSuccessResult() {}
 
@@ -142,6 +144,20 @@ public class ManageOfferSuccessResult implements XdrElement {
     }
   }
 
+  /**
+   * ManageOfferSuccessResultOffer's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (ManageOfferEffect effect)
+   *     {
+   *     case MANAGE_OFFER_CREATED:
+   *     case MANAGE_OFFER_UPDATED:
+   *         OfferEntry offer;
+   *     case MANAGE_OFFER_DELETED:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class ManageOfferSuccessResultOffer implements XdrElement {
     public ManageOfferSuccessResultOffer() {}
 

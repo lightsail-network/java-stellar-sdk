@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef ContractCostParamEntry ContractCostParams<CONTRACT_COST_COUNT_LIMIT>;
-
-//  ===========================================================================
+/**
+ * ContractCostParams's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef ContractCostParamEntry ContractCostParams&lt;CONTRACT_COST_COUNT_LIMIT&gt;;
+ * </pre>
+ */
 public class ContractCostParams implements XdrElement {
   private ContractCostParamEntry[] ContractCostParams;
 

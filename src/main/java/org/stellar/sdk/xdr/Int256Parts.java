@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Int256Parts {
-//      int64 hi_hi;
-//      uint64 hi_lo;
-//      uint64 lo_hi;
-//      uint64 lo_lo;
-//  };
-
-//  ===========================================================================
+/**
+ * Int256Parts's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Int256Parts {
+ *     int64 hi_hi;
+ *     uint64 hi_lo;
+ *     uint64 lo_hi;
+ *     uint64 lo_lo;
+ * };
+ * </pre>
+ */
 public class Int256Parts implements XdrElement {
   public Int256Parts() {}
 

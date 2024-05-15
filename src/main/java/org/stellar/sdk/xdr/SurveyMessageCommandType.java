@@ -10,14 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SurveyMessageCommandType
-//  {
-//      SURVEY_TOPOLOGY = 0
-//  };
-
-//  ===========================================================================
+/**
+ * SurveyMessageCommandType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SurveyMessageCommandType
+ * {
+ *     SURVEY_TOPOLOGY = 0
+ * };
+ * </pre>
+ */
 public enum SurveyMessageCommandType implements XdrElement {
   SURVEY_TOPOLOGY(0),
   ;

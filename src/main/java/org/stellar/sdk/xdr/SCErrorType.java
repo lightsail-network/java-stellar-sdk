@@ -10,23 +10,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SCErrorType
-//  {
-//      SCE_CONTRACT = 0,          // Contract-specific, user-defined codes.
-//      SCE_WASM_VM = 1,           // Errors while interpreting WASM bytecode.
-//      SCE_CONTEXT = 2,           // Errors in the contract's host context.
-//      SCE_STORAGE = 3,           // Errors accessing host storage.
-//      SCE_OBJECT = 4,            // Errors working with host objects.
-//      SCE_CRYPTO = 5,            // Errors in cryptographic operations.
-//      SCE_EVENTS = 6,            // Errors while emitting events.
-//      SCE_BUDGET = 7,            // Errors relating to budget limits.
-//      SCE_VALUE = 8,             // Errors working with host values or SCVals.
-//      SCE_AUTH = 9               // Errors from the authentication subsystem.
-//  };
-
-//  ===========================================================================
+/**
+ * SCErrorType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SCErrorType
+ * {
+ *     SCE_CONTRACT = 0,          // Contract-specific, user-defined codes.
+ *     SCE_WASM_VM = 1,           // Errors while interpreting WASM bytecode.
+ *     SCE_CONTEXT = 2,           // Errors in the contract's host context.
+ *     SCE_STORAGE = 3,           // Errors accessing host storage.
+ *     SCE_OBJECT = 4,            // Errors working with host objects.
+ *     SCE_CRYPTO = 5,            // Errors in cryptographic operations.
+ *     SCE_EVENTS = 6,            // Errors while emitting events.
+ *     SCE_BUDGET = 7,            // Errors relating to budget limits.
+ *     SCE_VALUE = 8,             // Errors working with host values or SCVals.
+ *     SCE_AUTH = 9               // Errors from the authentication subsystem.
+ * };
+ * </pre>
+ */
 public enum SCErrorType implements XdrElement {
   SCE_CONTRACT(0),
   SCE_WASM_VM(1),

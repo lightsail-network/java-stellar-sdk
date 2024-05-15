@@ -10,20 +10,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ClawbackClaimableBalanceResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      CLAWBACK_CLAIMABLE_BALANCE_SUCCESS = 0,
-//
-//      // codes considered as "failure" for the operation
-//      CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST = -1,
-//      CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER = -2,
-//      CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED = -3
-//  };
-
-//  ===========================================================================
+/**
+ * ClawbackClaimableBalanceResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ClawbackClaimableBalanceResultCode
+ * {
+ *     // codes considered as "success" for the operation
+ *     CLAWBACK_CLAIMABLE_BALANCE_SUCCESS = 0,
+ *
+ *     // codes considered as "failure" for the operation
+ *     CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST = -1,
+ *     CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER = -2,
+ *     CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED = -3
+ * };
+ * </pre>
+ */
 public enum ClawbackClaimableBalanceResultCode implements XdrElement {
   CLAWBACK_CLAIMABLE_BALANCE_SUCCESS(0),
   CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST(-1),

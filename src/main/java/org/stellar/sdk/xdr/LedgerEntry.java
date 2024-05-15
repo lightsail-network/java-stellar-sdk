@@ -11,49 +11,51 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerEntry
-//  {
-//      uint32 lastModifiedLedgerSeq; // ledger the LedgerEntry was last changed
-//
-//      union switch (LedgerEntryType type)
-//      {
-//      case ACCOUNT:
-//          AccountEntry account;
-//      case TRUSTLINE:
-//          TrustLineEntry trustLine;
-//      case OFFER:
-//          OfferEntry offer;
-//      case DATA:
-//          DataEntry data;
-//      case CLAIMABLE_BALANCE:
-//          ClaimableBalanceEntry claimableBalance;
-//      case LIQUIDITY_POOL:
-//          LiquidityPoolEntry liquidityPool;
-//      case CONTRACT_DATA:
-//          ContractDataEntry contractData;
-//      case CONTRACT_CODE:
-//          ContractCodeEntry contractCode;
-//      case CONFIG_SETTING:
-//          ConfigSettingEntry configSetting;
-//      case TTL:
-//          TTLEntry ttl;
-//      }
-//      data;
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      case 1:
-//          LedgerEntryExtensionV1 v1;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerEntry
+ * {
+ *     uint32 lastModifiedLedgerSeq; // ledger the LedgerEntry was last changed
+ *
+ *     union switch (LedgerEntryType type)
+ *     {
+ *     case ACCOUNT:
+ *         AccountEntry account;
+ *     case TRUSTLINE:
+ *         TrustLineEntry trustLine;
+ *     case OFFER:
+ *         OfferEntry offer;
+ *     case DATA:
+ *         DataEntry data;
+ *     case CLAIMABLE_BALANCE:
+ *         ClaimableBalanceEntry claimableBalance;
+ *     case LIQUIDITY_POOL:
+ *         LiquidityPoolEntry liquidityPool;
+ *     case CONTRACT_DATA:
+ *         ContractDataEntry contractData;
+ *     case CONTRACT_CODE:
+ *         ContractCodeEntry contractCode;
+ *     case CONFIG_SETTING:
+ *         ConfigSettingEntry configSetting;
+ *     case TTL:
+ *         TTLEntry ttl;
+ *     }
+ *     data;
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 1:
+ *         LedgerEntryExtensionV1 v1;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class LedgerEntry implements XdrElement {
   public LedgerEntry() {}
 
@@ -176,6 +178,35 @@ public class LedgerEntry implements XdrElement {
     }
   }
 
+  /**
+   * LedgerEntryData's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (LedgerEntryType type)
+   *     {
+   *     case ACCOUNT:
+   *         AccountEntry account;
+   *     case TRUSTLINE:
+   *         TrustLineEntry trustLine;
+   *     case OFFER:
+   *         OfferEntry offer;
+   *     case DATA:
+   *         DataEntry data;
+   *     case CLAIMABLE_BALANCE:
+   *         ClaimableBalanceEntry claimableBalance;
+   *     case LIQUIDITY_POOL:
+   *         LiquidityPoolEntry liquidityPool;
+   *     case CONTRACT_DATA:
+   *         ContractDataEntry contractData;
+   *     case CONTRACT_CODE:
+   *         ContractCodeEntry contractCode;
+   *     case CONFIG_SETTING:
+   *         ConfigSettingEntry configSetting;
+   *     case TTL:
+   *         TTLEntry ttl;
+   *     }
+   * </pre>
+   */
   public static class LedgerEntryData implements XdrElement {
     public LedgerEntryData() {}
 
@@ -517,6 +548,19 @@ public class LedgerEntry implements XdrElement {
     }
   }
 
+  /**
+   * LedgerEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 1:
+   *         LedgerEntryExtensionV1 v1;
+   *     }
+   * </pre>
+   */
   public static class LedgerEntryExt implements XdrElement {
     public LedgerEntryExt() {}
 

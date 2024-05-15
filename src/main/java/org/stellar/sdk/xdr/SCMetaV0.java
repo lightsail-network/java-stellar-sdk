@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCMetaV0
-//  {
-//      string key<>;
-//      string val<>;
-//  };
-
-//  ===========================================================================
+/**
+ * SCMetaV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCMetaV0
+ * {
+ *     string key&lt;&gt;;
+ *     string val&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class SCMetaV0 implements XdrElement {
   public SCMetaV0() {}
 

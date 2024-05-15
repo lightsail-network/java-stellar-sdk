@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque AssetCode12[12];
-
-//  ===========================================================================
+/**
+ * AssetCode12's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque AssetCode12[12];
+ * </pre>
+ */
 public class AssetCode12 implements XdrElement {
   private byte[] AssetCode12;
 

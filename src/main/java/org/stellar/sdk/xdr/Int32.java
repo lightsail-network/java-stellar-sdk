@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef int int32;
-
-//  ===========================================================================
+/**
+ * Int32's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef int int32;
+ * </pre>
+ */
 public class Int32 implements XdrElement {
   private Integer int32;
 

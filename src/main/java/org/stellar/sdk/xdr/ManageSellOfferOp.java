@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ManageSellOfferOp
-//  {
-//      Asset selling;
-//      Asset buying;
-//      int64 amount; // amount being sold. if set to 0, delete the offer
-//      Price price;  // price of thing being sold in terms of what you are buying
-//
-//      // 0=create a new offer, otherwise edit an existing offer
-//      int64 offerID;
-//  };
-
-//  ===========================================================================
+/**
+ * ManageSellOfferOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ManageSellOfferOp
+ * {
+ *     Asset selling;
+ *     Asset buying;
+ *     int64 amount; // amount being sold. if set to 0, delete the offer
+ *     Price price;  // price of thing being sold in terms of what you are buying
+ *
+ *     // 0=create a new offer, otherwise edit an existing offer
+ *     int64 offerID;
+ * };
+ * </pre>
+ */
 public class ManageSellOfferOp implements XdrElement {
   public ManageSellOfferOp() {}
 

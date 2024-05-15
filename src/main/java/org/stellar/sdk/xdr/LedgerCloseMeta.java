@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union LedgerCloseMeta switch (int v)
-//  {
-//  case 0:
-//      LedgerCloseMetaV0 v0;
-//  case 1:
-//      LedgerCloseMetaV1 v1;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerCloseMeta's original definition in the XDR file is:
+ *
+ * <pre>
+ * union LedgerCloseMeta switch (int v)
+ * {
+ * case 0:
+ *     LedgerCloseMetaV0 v0;
+ * case 1:
+ *     LedgerCloseMetaV1 v1;
+ * };
+ * </pre>
+ */
 public class LedgerCloseMeta implements XdrElement {
   public LedgerCloseMeta() {}
 

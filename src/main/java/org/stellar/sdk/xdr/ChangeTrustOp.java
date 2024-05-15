@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ChangeTrustOp
-//  {
-//      ChangeTrustAsset line;
-//
-//      // if limit is set to 0, deletes the trust line
-//      int64 limit;
-//  };
-
-//  ===========================================================================
+/**
+ * ChangeTrustOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ChangeTrustOp
+ * {
+ *     ChangeTrustAsset line;
+ *
+ *     // if limit is set to 0, deletes the trust line
+ *     int64 limit;
+ * };
+ * </pre>
+ */
 public class ChangeTrustOp implements XdrElement {
   public ChangeTrustOp() {}
 

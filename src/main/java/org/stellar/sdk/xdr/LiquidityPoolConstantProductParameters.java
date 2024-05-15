@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LiquidityPoolConstantProductParameters
-//  {
-//      Asset assetA; // assetA < assetB
-//      Asset assetB;
-//      int32 fee; // Fee is in basis points, so the actual rate is (fee/100)%
-//  };
-
-//  ===========================================================================
+/**
+ * LiquidityPoolConstantProductParameters's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LiquidityPoolConstantProductParameters
+ * {
+ *     Asset assetA; // assetA &lt; assetB
+ *     Asset assetB;
+ *     int32 fee; // Fee is in basis points, so the actual rate is (fee/100)%
+ * };
+ * </pre>
+ */
 public class LiquidityPoolConstantProductParameters implements XdrElement {
   public LiquidityPoolConstantProductParameters() {}
 

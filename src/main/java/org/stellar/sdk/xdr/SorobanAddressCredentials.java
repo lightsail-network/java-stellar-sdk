@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SorobanAddressCredentials
-//  {
-//      SCAddress address;
-//      int64 nonce;
-//      uint32 signatureExpirationLedger;
-//      SCVal signature;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanAddressCredentials's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SorobanAddressCredentials
+ * {
+ *     SCAddress address;
+ *     int64 nonce;
+ *     uint32 signatureExpirationLedger;
+ *     SCVal signature;
+ * };
+ * </pre>
+ */
 public class SorobanAddressCredentials implements XdrElement {
   public SorobanAddressCredentials() {}
 

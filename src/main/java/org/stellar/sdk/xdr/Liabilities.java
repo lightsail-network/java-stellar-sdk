@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Liabilities
-//  {
-//      int64 buying;
-//      int64 selling;
-//  };
-
-//  ===========================================================================
+/**
+ * Liabilities's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Liabilities
+ * {
+ *     int64 buying;
+ *     int64 selling;
+ * };
+ * </pre>
+ */
 public class Liabilities implements XdrElement {
   public Liabilities() {}
 

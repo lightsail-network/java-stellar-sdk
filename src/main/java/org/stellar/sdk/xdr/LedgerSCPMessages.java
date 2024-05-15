@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerSCPMessages
-//  {
-//      uint32 ledgerSeq;
-//      SCPEnvelope messages<>;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerSCPMessages's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerSCPMessages
+ * {
+ *     uint32 ledgerSeq;
+ *     SCPEnvelope messages&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class LedgerSCPMessages implements XdrElement {
   public LedgerSCPMessages() {}
 

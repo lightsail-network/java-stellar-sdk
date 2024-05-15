@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCSpecEntry switch (SCSpecEntryKind kind)
-//  {
-//  case SC_SPEC_ENTRY_FUNCTION_V0:
-//      SCSpecFunctionV0 functionV0;
-//  case SC_SPEC_ENTRY_UDT_STRUCT_V0:
-//      SCSpecUDTStructV0 udtStructV0;
-//  case SC_SPEC_ENTRY_UDT_UNION_V0:
-//      SCSpecUDTUnionV0 udtUnionV0;
-//  case SC_SPEC_ENTRY_UDT_ENUM_V0:
-//      SCSpecUDTEnumV0 udtEnumV0;
-//  case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
-//      SCSpecUDTErrorEnumV0 udtErrorEnumV0;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCSpecEntry switch (SCSpecEntryKind kind)
+ * {
+ * case SC_SPEC_ENTRY_FUNCTION_V0:
+ *     SCSpecFunctionV0 functionV0;
+ * case SC_SPEC_ENTRY_UDT_STRUCT_V0:
+ *     SCSpecUDTStructV0 udtStructV0;
+ * case SC_SPEC_ENTRY_UDT_UNION_V0:
+ *     SCSpecUDTUnionV0 udtUnionV0;
+ * case SC_SPEC_ENTRY_UDT_ENUM_V0:
+ *     SCSpecUDTEnumV0 udtEnumV0;
+ * case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
+ *     SCSpecUDTErrorEnumV0 udtErrorEnumV0;
+ * };
+ * </pre>
+ */
 public class SCSpecEntry implements XdrElement {
   public SCSpecEntry() {}
 

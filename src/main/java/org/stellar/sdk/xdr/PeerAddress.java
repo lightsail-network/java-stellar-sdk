@@ -12,23 +12,25 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct PeerAddress
-//  {
-//      union switch (IPAddrType type)
-//      {
-//      case IPv4:
-//          opaque ipv4[4];
-//      case IPv6:
-//          opaque ipv6[16];
-//      }
-//      ip;
-//      uint32 port;
-//      uint32 numFailures;
-//  };
-
-//  ===========================================================================
+/**
+ * PeerAddress's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct PeerAddress
+ * {
+ *     union switch (IPAddrType type)
+ *     {
+ *     case IPv4:
+ *         opaque ipv4[4];
+ *     case IPv6:
+ *         opaque ipv6[16];
+ *     }
+ *     ip;
+ *     uint32 port;
+ *     uint32 numFailures;
+ * };
+ * </pre>
+ */
 public class PeerAddress implements XdrElement {
   public PeerAddress() {}
 
@@ -151,6 +153,19 @@ public class PeerAddress implements XdrElement {
     }
   }
 
+  /**
+   * PeerAddressIp's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (IPAddrType type)
+   *     {
+   *     case IPv4:
+   *         opaque ipv4[4];
+   *     case IPv6:
+   *         opaque ipv6[16];
+   *     }
+   * </pre>
+   */
   public static class PeerAddressIp implements XdrElement {
     public PeerAddressIp() {}
 

@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct BumpSequenceOp
-//  {
-//      SequenceNumber bumpTo;
-//  };
-
-//  ===========================================================================
+/**
+ * BumpSequenceOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct BumpSequenceOp
+ * {
+ *     SequenceNumber bumpTo;
+ * };
+ * </pre>
+ */
 public class BumpSequenceOp implements XdrElement {
   public BumpSequenceOp() {}
 

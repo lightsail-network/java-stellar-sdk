@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque Hash[32];
-
-//  ===========================================================================
+/**
+ * Hash's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque Hash[32];
+ * </pre>
+ */
 public class Hash implements XdrElement {
   private byte[] Hash;
 

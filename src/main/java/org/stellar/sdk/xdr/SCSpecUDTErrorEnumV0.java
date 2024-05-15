@@ -12,17 +12,19 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecUDTErrorEnumV0
-//  {
-//      string doc<SC_SPEC_DOC_LIMIT>;
-//      string lib<80>;
-//      string name<60>;
-//      SCSpecUDTErrorEnumCaseV0 cases<50>;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecUDTErrorEnumV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecUDTErrorEnumV0
+ * {
+ *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
+ *     string lib&lt;80&gt;;
+ *     string name&lt;60&gt;;
+ *     SCSpecUDTErrorEnumCaseV0 cases&lt;50&gt;;
+ * };
+ * </pre>
+ */
 public class SCSpecUDTErrorEnumV0 implements XdrElement {
   public SCSpecUDTErrorEnumV0() {}
 

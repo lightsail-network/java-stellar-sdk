@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SorobanCredentials switch (SorobanCredentialsType type)
-//  {
-//  case SOROBAN_CREDENTIALS_SOURCE_ACCOUNT:
-//      void;
-//  case SOROBAN_CREDENTIALS_ADDRESS:
-//      SorobanAddressCredentials address;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanCredentials's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SorobanCredentials switch (SorobanCredentialsType type)
+ * {
+ * case SOROBAN_CREDENTIALS_SOURCE_ACCOUNT:
+ *     void;
+ * case SOROBAN_CREDENTIALS_ADDRESS:
+ *     SorobanAddressCredentials address;
+ * };
+ * </pre>
+ */
 public class SorobanCredentials implements XdrElement {
   public SorobanCredentials() {}
 

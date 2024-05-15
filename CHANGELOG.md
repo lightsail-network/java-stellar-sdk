@@ -3,6 +3,8 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Pending
+### Update
+chore: display the original definition in the XDR class document.
 
 ## 0.44.0
 ### Update

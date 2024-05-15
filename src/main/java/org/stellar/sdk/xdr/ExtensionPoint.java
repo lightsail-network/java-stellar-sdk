@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ExtensionPoint switch (int v)
-//  {
-//  case 0:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * ExtensionPoint's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ExtensionPoint switch (int v)
+ * {
+ * case 0:
+ *     void;
+ * };
+ * </pre>
+ */
 public class ExtensionPoint implements XdrElement {
   public ExtensionPoint() {}
 

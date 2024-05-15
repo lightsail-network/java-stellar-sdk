@@ -10,14 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SCEnvMetaKind
-//  {
-//      SC_ENV_META_KIND_INTERFACE_VERSION = 0
-//  };
-
-//  ===========================================================================
+/**
+ * SCEnvMetaKind's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SCEnvMetaKind
+ * {
+ *     SC_ENV_META_KIND_INTERFACE_VERSION = 0
+ * };
+ * </pre>
+ */
 public enum SCEnvMetaKind implements XdrElement {
   SC_ENV_META_KIND_INTERFACE_VERSION(0),
   ;

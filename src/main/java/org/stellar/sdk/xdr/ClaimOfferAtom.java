@@ -11,24 +11,26 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ClaimOfferAtom
-//  {
-//      // emitted to identify the offer
-//      AccountID sellerID; // Account that owns the offer
-//      int64 offerID;
-//
-//      // amount and asset taken from the owner
-//      Asset assetSold;
-//      int64 amountSold;
-//
-//      // amount and asset sent to the owner
-//      Asset assetBought;
-//      int64 amountBought;
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimOfferAtom's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ClaimOfferAtom
+ * {
+ *     // emitted to identify the offer
+ *     AccountID sellerID; // Account that owns the offer
+ *     int64 offerID;
+ *
+ *     // amount and asset taken from the owner
+ *     Asset assetSold;
+ *     int64 amountSold;
+ *
+ *     // amount and asset sent to the owner
+ *     Asset assetBought;
+ *     int64 amountBought;
+ * };
+ * </pre>
+ */
 public class ClaimOfferAtom implements XdrElement {
   public ClaimOfferAtom() {}
 

@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SorobanTransactionMetaExt switch (int v)
-//  {
-//  case 0:
-//      void;
-//  case 1:
-//      SorobanTransactionMetaExtV1 v1;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanTransactionMetaExt's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SorobanTransactionMetaExt switch (int v)
+ * {
+ * case 0:
+ *     void;
+ * case 1:
+ *     SorobanTransactionMetaExtV1 v1;
+ * };
+ * </pre>
+ */
 public class SorobanTransactionMetaExt implements XdrElement {
   public SorobanTransactionMetaExt() {}
 

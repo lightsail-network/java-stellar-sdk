@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ConfigSettingContractExecutionLanesV0
-//  {
-//      // maximum number of Soroban transactions per ledger
-//      uint32 ledgerMaxTxCount;
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigSettingContractExecutionLanesV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ConfigSettingContractExecutionLanesV0
+ * {
+ *     // maximum number of Soroban transactions per ledger
+ *     uint32 ledgerMaxTxCount;
+ * };
+ * </pre>
+ */
 public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
   public ConfigSettingContractExecutionLanesV0() {}
 

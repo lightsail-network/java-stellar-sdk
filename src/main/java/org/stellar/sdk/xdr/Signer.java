@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Signer
-//  {
-//      SignerKey key;
-//      uint32 weight; // really only need 1 byte
-//  };
-
-//  ===========================================================================
+/**
+ * Signer's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Signer
+ * {
+ *     SignerKey key;
+ *     uint32 weight; // really only need 1 byte
+ * };
+ * </pre>
+ */
 public class Signer implements XdrElement {
   public Signer() {}
 

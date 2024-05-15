@@ -10,21 +10,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum OperationResultCode
-//  {
-//      opINNER = 0, // inner object result is valid
-//
-//      opBAD_AUTH = -1,            // too few valid signatures / wrong network
-//      opNO_ACCOUNT = -2,          // source account was not found
-//      opNOT_SUPPORTED = -3,       // operation not supported at this time
-//      opTOO_MANY_SUBENTRIES = -4, // max number of subentries already reached
-//      opEXCEEDED_WORK_LIMIT = -5, // operation did too much work
-//      opTOO_MANY_SPONSORING = -6  // account is sponsoring too many entries
-//  };
-
-//  ===========================================================================
+/**
+ * OperationResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum OperationResultCode
+ * {
+ *     opINNER = 0, // inner object result is valid
+ *
+ *     opBAD_AUTH = -1,            // too few valid signatures / wrong network
+ *     opNO_ACCOUNT = -2,          // source account was not found
+ *     opNOT_SUPPORTED = -3,       // operation not supported at this time
+ *     opTOO_MANY_SUBENTRIES = -4, // max number of subentries already reached
+ *     opEXCEEDED_WORK_LIMIT = -5, // operation did too much work
+ *     opTOO_MANY_SPONSORING = -6  // account is sponsoring too many entries
+ * };
+ * </pre>
+ */
 public enum OperationResultCode implements XdrElement {
   opINNER(0),
   opBAD_AUTH(-1),

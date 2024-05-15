@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SorobanAuthorizedFunction switch (SorobanAuthorizedFunctionType type)
-//  {
-//  case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
-//      InvokeContractArgs contractFn;
-//  case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
-//      CreateContractArgs createContractHostFn;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanAuthorizedFunction's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SorobanAuthorizedFunction switch (SorobanAuthorizedFunctionType type)
+ * {
+ * case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
+ *     InvokeContractArgs contractFn;
+ * case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
+ *     CreateContractArgs createContractHostFn;
+ * };
+ * </pre>
+ */
 public class SorobanAuthorizedFunction implements XdrElement {
   public SorobanAuthorizedFunction() {}
 

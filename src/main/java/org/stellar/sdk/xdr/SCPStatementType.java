@@ -10,17 +10,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SCPStatementType
-//  {
-//      SCP_ST_PREPARE = 0,
-//      SCP_ST_CONFIRM = 1,
-//      SCP_ST_EXTERNALIZE = 2,
-//      SCP_ST_NOMINATE = 3
-//  };
-
-//  ===========================================================================
+/**
+ * SCPStatementType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SCPStatementType
+ * {
+ *     SCP_ST_PREPARE = 0,
+ *     SCP_ST_CONFIRM = 1,
+ *     SCP_ST_EXTERNALIZE = 2,
+ *     SCP_ST_NOMINATE = 3
+ * };
+ * </pre>
+ */
 public enum SCPStatementType implements XdrElement {
   SCP_ST_PREPARE(0),
   SCP_ST_CONFIRM(1),

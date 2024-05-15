@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionSignaturePayload
-//  {
-//      Hash networkId;
-//      union switch (EnvelopeType type)
-//      {
-//      // Backwards Compatibility: Use ENVELOPE_TYPE_TX to sign ENVELOPE_TYPE_TX_V0
-//      case ENVELOPE_TYPE_TX:
-//          Transaction tx;
-//      case ENVELOPE_TYPE_TX_FEE_BUMP:
-//          FeeBumpTransaction feeBump;
-//      }
-//      taggedTransaction;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionSignaturePayload's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionSignaturePayload
+ * {
+ *     Hash networkId;
+ *     union switch (EnvelopeType type)
+ *     {
+ *     // Backwards Compatibility: Use ENVELOPE_TYPE_TX to sign ENVELOPE_TYPE_TX_V0
+ *     case ENVELOPE_TYPE_TX:
+ *         Transaction tx;
+ *     case ENVELOPE_TYPE_TX_FEE_BUMP:
+ *         FeeBumpTransaction feeBump;
+ *     }
+ *     taggedTransaction;
+ * };
+ * </pre>
+ */
 public class TransactionSignaturePayload implements XdrElement {
   public TransactionSignaturePayload() {}
 
@@ -135,6 +137,20 @@ public class TransactionSignaturePayload implements XdrElement {
     }
   }
 
+  /**
+   * TransactionSignaturePayloadTaggedTransaction's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (EnvelopeType type)
+   *     {
+   *     // Backwards Compatibility: Use ENVELOPE_TYPE_TX to sign ENVELOPE_TYPE_TX_V0
+   *     case ENVELOPE_TYPE_TX:
+   *         Transaction tx;
+   *     case ENVELOPE_TYPE_TX_FEE_BUMP:
+   *         FeeBumpTransaction feeBump;
+   *     }
+   * </pre>
+   */
   public static class TransactionSignaturePayloadTaggedTransaction implements XdrElement {
     public TransactionSignaturePayloadTaggedTransaction() {}
 

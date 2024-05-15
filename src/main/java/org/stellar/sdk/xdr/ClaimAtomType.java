@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ClaimAtomType
-//  {
-//      CLAIM_ATOM_TYPE_V0 = 0,
-//      CLAIM_ATOM_TYPE_ORDER_BOOK = 1,
-//      CLAIM_ATOM_TYPE_LIQUIDITY_POOL = 2
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimAtomType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ClaimAtomType
+ * {
+ *     CLAIM_ATOM_TYPE_V0 = 0,
+ *     CLAIM_ATOM_TYPE_ORDER_BOOK = 1,
+ *     CLAIM_ATOM_TYPE_LIQUIDITY_POOL = 2
+ * };
+ * </pre>
+ */
 public enum ClaimAtomType implements XdrElement {
   CLAIM_ATOM_TYPE_V0(0),
   CLAIM_ATOM_TYPE_ORDER_BOOK(1),

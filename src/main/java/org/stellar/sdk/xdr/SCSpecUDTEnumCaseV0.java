@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecUDTEnumCaseV0
-//  {
-//      string doc<SC_SPEC_DOC_LIMIT>;
-//      string name<60>;
-//      uint32 value;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecUDTEnumCaseV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecUDTEnumCaseV0
+ * {
+ *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
+ *     string name&lt;60&gt;;
+ *     uint32 value;
+ * };
+ * </pre>
+ */
 public class SCSpecUDTEnumCaseV0 implements XdrElement {
   public SCSpecUDTEnumCaseV0() {}
 

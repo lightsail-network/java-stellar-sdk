@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union AssetCode switch (AssetType type)
-//  {
-//  case ASSET_TYPE_CREDIT_ALPHANUM4:
-//      AssetCode4 assetCode4;
-//
-//  case ASSET_TYPE_CREDIT_ALPHANUM12:
-//      AssetCode12 assetCode12;
-//
-//      // add other asset types here in the future
-//  };
-
-//  ===========================================================================
+/**
+ * AssetCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * union AssetCode switch (AssetType type)
+ * {
+ * case ASSET_TYPE_CREDIT_ALPHANUM4:
+ *     AssetCode4 assetCode4;
+ *
+ * case ASSET_TYPE_CREDIT_ALPHANUM12:
+ *     AssetCode12 assetCode12;
+ *
+ *     // add other asset types here in the future
+ * };
+ * </pre>
+ */
 public class AssetCode implements XdrElement {
   public AssetCode() {}
 

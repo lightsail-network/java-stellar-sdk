@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ContractExecutableType
-//  {
-//      CONTRACT_EXECUTABLE_WASM = 0,
-//      CONTRACT_EXECUTABLE_STELLAR_ASSET = 1
-//  };
-
-//  ===========================================================================
+/**
+ * ContractExecutableType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ContractExecutableType
+ * {
+ *     CONTRACT_EXECUTABLE_WASM = 0,
+ *     CONTRACT_EXECUTABLE_STELLAR_ASSET = 1
+ * };
+ * </pre>
+ */
 public enum ContractExecutableType implements XdrElement {
   CONTRACT_EXECUTABLE_WASM(0),
   CONTRACT_EXECUTABLE_STELLAR_ASSET(1),

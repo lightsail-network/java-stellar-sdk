@@ -11,29 +11,31 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SetOptionsOp
-//  {
-//      AccountID* inflationDest; // sets the inflation destination
-//
-//      uint32* clearFlags; // which flags to clear
-//      uint32* setFlags;   // which flags to set
-//
-//      // account threshold manipulation
-//      uint32* masterWeight; // weight of the master account
-//      uint32* lowThreshold;
-//      uint32* medThreshold;
-//      uint32* highThreshold;
-//
-//      string32* homeDomain; // sets the home domain
-//
-//      // Add, update or remove a signer for the account
-//      // signer is deleted if the weight is 0
-//      Signer* signer;
-//  };
-
-//  ===========================================================================
+/**
+ * SetOptionsOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SetOptionsOp
+ * {
+ *     AccountID&#42; inflationDest; // sets the inflation destination
+ *
+ *     uint32&#42; clearFlags; // which flags to clear
+ *     uint32&#42; setFlags;   // which flags to set
+ *
+ *     // account threshold manipulation
+ *     uint32&#42; masterWeight; // weight of the master account
+ *     uint32&#42; lowThreshold;
+ *     uint32&#42; medThreshold;
+ *     uint32&#42; highThreshold;
+ *
+ *     string32&#42; homeDomain; // sets the home domain
+ *
+ *     // Add, update or remove a signer for the account
+ *     // signer is deleted if the weight is 0
+ *     Signer&#42; signer;
+ * };
+ * </pre>
+ */
 public class SetOptionsOp implements XdrElement {
   public SetOptionsOp() {}
 

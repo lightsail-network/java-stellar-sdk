@@ -11,25 +11,27 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union PaymentResult switch (PaymentResultCode code)
-//  {
-//  case PAYMENT_SUCCESS:
-//      void;
-//  case PAYMENT_MALFORMED:
-//  case PAYMENT_UNDERFUNDED:
-//  case PAYMENT_SRC_NO_TRUST:
-//  case PAYMENT_SRC_NOT_AUTHORIZED:
-//  case PAYMENT_NO_DESTINATION:
-//  case PAYMENT_NO_TRUST:
-//  case PAYMENT_NOT_AUTHORIZED:
-//  case PAYMENT_LINE_FULL:
-//  case PAYMENT_NO_ISSUER:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * PaymentResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union PaymentResult switch (PaymentResultCode code)
+ * {
+ * case PAYMENT_SUCCESS:
+ *     void;
+ * case PAYMENT_MALFORMED:
+ * case PAYMENT_UNDERFUNDED:
+ * case PAYMENT_SRC_NO_TRUST:
+ * case PAYMENT_SRC_NOT_AUTHORIZED:
+ * case PAYMENT_NO_DESTINATION:
+ * case PAYMENT_NO_TRUST:
+ * case PAYMENT_NOT_AUTHORIZED:
+ * case PAYMENT_LINE_FULL:
+ * case PAYMENT_NO_ISSUER:
+ *     void;
+ * };
+ * </pre>
+ */
 public class PaymentResult implements XdrElement {
   public PaymentResult() {}
 

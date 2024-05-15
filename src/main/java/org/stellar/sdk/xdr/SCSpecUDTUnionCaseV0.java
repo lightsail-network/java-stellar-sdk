@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCSpecUDTUnionCaseV0 switch (SCSpecUDTUnionCaseV0Kind kind)
-//  {
-//  case SC_SPEC_UDT_UNION_CASE_VOID_V0:
-//      SCSpecUDTUnionCaseVoidV0 voidCase;
-//  case SC_SPEC_UDT_UNION_CASE_TUPLE_V0:
-//      SCSpecUDTUnionCaseTupleV0 tupleCase;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecUDTUnionCaseV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCSpecUDTUnionCaseV0 switch (SCSpecUDTUnionCaseV0Kind kind)
+ * {
+ * case SC_SPEC_UDT_UNION_CASE_VOID_V0:
+ *     SCSpecUDTUnionCaseVoidV0 voidCase;
+ * case SC_SPEC_UDT_UNION_CASE_TUPLE_V0:
+ *     SCSpecUDTUnionCaseTupleV0 tupleCase;
+ * };
+ * </pre>
+ */
 public class SCSpecUDTUnionCaseV0 implements XdrElement {
   public SCSpecUDTUnionCaseV0() {}
 

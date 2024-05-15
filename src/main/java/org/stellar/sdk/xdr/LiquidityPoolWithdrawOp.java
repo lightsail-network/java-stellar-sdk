@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LiquidityPoolWithdrawOp
-//  {
-//      PoolID liquidityPoolID;
-//      int64 amount;     // amount of pool shares to withdraw
-//      int64 minAmountA; // minimum amount of first asset to withdraw
-//      int64 minAmountB; // minimum amount of second asset to withdraw
-//  };
-
-//  ===========================================================================
+/**
+ * LiquidityPoolWithdrawOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LiquidityPoolWithdrawOp
+ * {
+ *     PoolID liquidityPoolID;
+ *     int64 amount;     // amount of pool shares to withdraw
+ *     int64 minAmountA; // minimum amount of first asset to withdraw
+ *     int64 minAmountB; // minimum amount of second asset to withdraw
+ * };
+ * </pre>
+ */
 public class LiquidityPoolWithdrawOp implements XdrElement {
   public LiquidityPoolWithdrawOp() {}
 

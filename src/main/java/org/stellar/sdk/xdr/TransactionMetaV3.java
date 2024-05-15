@@ -12,22 +12,24 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionMetaV3
-//  {
-//      ExtensionPoint ext;
-//
-//      LedgerEntryChanges txChangesBefore;  // tx level changes before operations
-//                                           // are applied if any
-//      OperationMeta operations<>;          // meta for each operation
-//      LedgerEntryChanges txChangesAfter;   // tx level changes after operations are
-//                                           // applied if any
-//      SorobanTransactionMeta* sorobanMeta; // Soroban-specific meta (only for
-//                                           // Soroban transactions).
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionMetaV3's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionMetaV3
+ * {
+ *     ExtensionPoint ext;
+ *
+ *     LedgerEntryChanges txChangesBefore;  // tx level changes before operations
+ *                                          // are applied if any
+ *     OperationMeta operations&lt;&gt;;          // meta for each operation
+ *     LedgerEntryChanges txChangesAfter;   // tx level changes after operations are
+ *                                          // applied if any
+ *     SorobanTransactionMeta&#42; sorobanMeta; // Soroban-specific meta (only for
+ *                                          // Soroban transactions).
+ * };
+ * </pre>
+ */
 public class TransactionMetaV3 implements XdrElement {
   public TransactionMetaV3() {}
 

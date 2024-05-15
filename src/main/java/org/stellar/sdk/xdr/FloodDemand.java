@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct FloodDemand
-//  {
-//      TxDemandVector txHashes;
-//  };
-
-//  ===========================================================================
+/**
+ * FloodDemand's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct FloodDemand
+ * {
+ *     TxDemandVector txHashes;
+ * };
+ * </pre>
+ */
 public class FloodDemand implements XdrElement {
   public FloodDemand() {}
 

@@ -11,34 +11,36 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct StateArchivalSettings {
-//      uint32 maxEntryTTL;
-//      uint32 minTemporaryTTL;
-//      uint32 minPersistentTTL;
-//
-//      // rent_fee = wfee_rate_average / rent_rate_denominator_for_type
-//      int64 persistentRentRateDenominator;
-//      int64 tempRentRateDenominator;
-//
-//      // max number of entries that emit archival meta in a single ledger
-//      uint32 maxEntriesToArchive;
-//
-//      // Number of snapshots to use when calculating average BucketList size
-//      uint32 bucketListSizeWindowSampleSize;
-//
-//      // How often to sample the BucketList size for the average, in ledgers
-//      uint32 bucketListWindowSamplePeriod;
-//
-//      // Maximum number of bytes that we scan for eviction per ledger
-//      uint32 evictionScanSize;
-//
-//      // Lowest BucketList level to be scanned to evict entries
-//      uint32 startingEvictionScanLevel;
-//  };
-
-//  ===========================================================================
+/**
+ * StateArchivalSettings's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct StateArchivalSettings {
+ *     uint32 maxEntryTTL;
+ *     uint32 minTemporaryTTL;
+ *     uint32 minPersistentTTL;
+ *
+ *     // rent_fee = wfee_rate_average / rent_rate_denominator_for_type
+ *     int64 persistentRentRateDenominator;
+ *     int64 tempRentRateDenominator;
+ *
+ *     // max number of entries that emit archival meta in a single ledger
+ *     uint32 maxEntriesToArchive;
+ *
+ *     // Number of snapshots to use when calculating average BucketList size
+ *     uint32 bucketListSizeWindowSampleSize;
+ *
+ *     // How often to sample the BucketList size for the average, in ledgers
+ *     uint32 bucketListWindowSamplePeriod;
+ *
+ *     // Maximum number of bytes that we scan for eviction per ledger
+ *     uint32 evictionScanSize;
+ *
+ *     // Lowest BucketList level to be scanned to evict entries
+ *     uint32 startingEvictionScanLevel;
+ * };
+ * </pre>
+ */
 public class StateArchivalSettings implements XdrElement {
   public StateArchivalSettings() {}
 

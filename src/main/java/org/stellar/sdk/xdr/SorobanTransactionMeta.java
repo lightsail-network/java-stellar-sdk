@@ -12,23 +12,25 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SorobanTransactionMeta
-//  {
-//      SorobanTransactionMetaExt ext;
-//
-//      ContractEvent events<>;             // custom events populated by the
-//                                          // contracts themselves.
-//      SCVal returnValue;                  // return value of the host fn invocation
-//
-//      // Diagnostics events that are not hashed.
-//      // This will contain all contract and diagnostic events. Even ones
-//      // that were emitted in a failed contract call.
-//      DiagnosticEvent diagnosticEvents<>;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanTransactionMeta's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SorobanTransactionMeta
+ * {
+ *     SorobanTransactionMetaExt ext;
+ *
+ *     ContractEvent events&lt;&gt;;             // custom events populated by the
+ *                                         // contracts themselves.
+ *     SCVal returnValue;                  // return value of the host fn invocation
+ *
+ *     // Diagnostics events that are not hashed.
+ *     // This will contain all contract and diagnostic events. Even ones
+ *     // that were emitted in a failed contract call.
+ *     DiagnosticEvent diagnosticEvents&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class SorobanTransactionMeta implements XdrElement {
   public SorobanTransactionMeta() {}
 

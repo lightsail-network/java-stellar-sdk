@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TimeBounds
-//  {
-//      TimePoint minTime;
-//      TimePoint maxTime; // 0 here means no maxTime
-//  };
-
-//  ===========================================================================
+/**
+ * TimeBounds's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TimeBounds
+ * {
+ *     TimePoint minTime;
+ *     TimePoint maxTime; // 0 here means no maxTime
+ * };
+ * </pre>
+ */
 public class TimeBounds implements XdrElement {
   public TimeBounds() {}
 

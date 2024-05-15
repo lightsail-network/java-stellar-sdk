@@ -11,22 +11,24 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union AllowTrustResult switch (AllowTrustResultCode code)
-//  {
-//  case ALLOW_TRUST_SUCCESS:
-//      void;
-//  case ALLOW_TRUST_MALFORMED:
-//  case ALLOW_TRUST_NO_TRUST_LINE:
-//  case ALLOW_TRUST_TRUST_NOT_REQUIRED:
-//  case ALLOW_TRUST_CANT_REVOKE:
-//  case ALLOW_TRUST_SELF_NOT_ALLOWED:
-//  case ALLOW_TRUST_LOW_RESERVE:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * AllowTrustResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union AllowTrustResult switch (AllowTrustResultCode code)
+ * {
+ * case ALLOW_TRUST_SUCCESS:
+ *     void;
+ * case ALLOW_TRUST_MALFORMED:
+ * case ALLOW_TRUST_NO_TRUST_LINE:
+ * case ALLOW_TRUST_TRUST_NOT_REQUIRED:
+ * case ALLOW_TRUST_CANT_REVOKE:
+ * case ALLOW_TRUST_SELF_NOT_ALLOWED:
+ * case ALLOW_TRUST_LOW_RESERVE:
+ *     void;
+ * };
+ * </pre>
+ */
 public class AllowTrustResult implements XdrElement {
   public AllowTrustResult() {}
 

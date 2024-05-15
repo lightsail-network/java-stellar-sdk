@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCAddress switch (SCAddressType type)
-//  {
-//  case SC_ADDRESS_TYPE_ACCOUNT:
-//      AccountID accountId;
-//  case SC_ADDRESS_TYPE_CONTRACT:
-//      Hash contractId;
-//  };
-
-//  ===========================================================================
+/**
+ * SCAddress's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCAddress switch (SCAddressType type)
+ * {
+ * case SC_ADDRESS_TYPE_ACCOUNT:
+ *     AccountID accountId;
+ * case SC_ADDRESS_TYPE_CONTRACT:
+ *     Hash contractId;
+ * };
+ * </pre>
+ */
 public class SCAddress implements XdrElement {
   public SCAddress() {}
 

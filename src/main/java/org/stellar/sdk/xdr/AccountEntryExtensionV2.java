@@ -12,25 +12,27 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct AccountEntryExtensionV2
-//  {
-//      uint32 numSponsored;
-//      uint32 numSponsoring;
-//      SponsorshipDescriptor signerSponsoringIDs<MAX_SIGNERS>;
-//
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      case 3:
-//          AccountEntryExtensionV3 v3;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * AccountEntryExtensionV2's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct AccountEntryExtensionV2
+ * {
+ *     uint32 numSponsored;
+ *     uint32 numSponsoring;
+ *     SponsorshipDescriptor signerSponsoringIDs&lt;MAX_SIGNERS&gt;;
+ *
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 3:
+ *         AccountEntryExtensionV3 v3;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class AccountEntryExtensionV2 implements XdrElement {
   public AccountEntryExtensionV2() {}
 
@@ -184,6 +186,19 @@ public class AccountEntryExtensionV2 implements XdrElement {
     }
   }
 
+  /**
+   * AccountEntryExtensionV2Ext's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 3:
+   *         AccountEntryExtensionV3 v3;
+   *     }
+   * </pre>
+   */
   public static class AccountEntryExtensionV2Ext implements XdrElement {
     public AccountEntryExtensionV2Ext() {}
 

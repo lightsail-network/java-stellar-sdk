@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SendMoreExtended
-//  {
-//      uint32 numMessages;
-//      uint32 numBytes;
-//  };
-
-//  ===========================================================================
+/**
+ * SendMoreExtended's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SendMoreExtended
+ * {
+ *     uint32 numMessages;
+ *     uint32 numBytes;
+ * };
+ * </pre>
+ */
 public class SendMoreExtended implements XdrElement {
   public SendMoreExtended() {}
 

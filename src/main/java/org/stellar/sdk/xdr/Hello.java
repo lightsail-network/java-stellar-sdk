@@ -11,22 +11,24 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Hello
-//  {
-//      uint32 ledgerVersion;
-//      uint32 overlayVersion;
-//      uint32 overlayMinVersion;
-//      Hash networkID;
-//      string versionStr<100>;
-//      int listeningPort;
-//      NodeID peerID;
-//      AuthCert cert;
-//      uint256 nonce;
-//  };
-
-//  ===========================================================================
+/**
+ * Hello's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Hello
+ * {
+ *     uint32 ledgerVersion;
+ *     uint32 overlayVersion;
+ *     uint32 overlayMinVersion;
+ *     Hash networkID;
+ *     string versionStr&lt;100&gt;;
+ *     int listeningPort;
+ *     NodeID peerID;
+ *     AuthCert cert;
+ *     uint256 nonce;
+ * };
+ * </pre>
+ */
 public class Hello implements XdrElement {
   public Hello() {}
 

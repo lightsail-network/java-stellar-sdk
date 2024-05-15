@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SCSpecUDTUnionCaseV0Kind
-//  {
-//      SC_SPEC_UDT_UNION_CASE_VOID_V0 = 0,
-//      SC_SPEC_UDT_UNION_CASE_TUPLE_V0 = 1
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecUDTUnionCaseV0Kind's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SCSpecUDTUnionCaseV0Kind
+ * {
+ *     SC_SPEC_UDT_UNION_CASE_VOID_V0 = 0,
+ *     SC_SPEC_UDT_UNION_CASE_TUPLE_V0 = 1
+ * };
+ * </pre>
+ */
 public enum SCSpecUDTUnionCaseV0Kind implements XdrElement {
   SC_SPEC_UDT_UNION_CASE_VOID_V0(0),
   SC_SPEC_UDT_UNION_CASE_TUPLE_V0(1),

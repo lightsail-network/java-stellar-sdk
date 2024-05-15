@@ -10,14 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum LiquidityPoolType
-//  {
-//      LIQUIDITY_POOL_CONSTANT_PRODUCT = 0
-//  };
-
-//  ===========================================================================
+/**
+ * LiquidityPoolType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum LiquidityPoolType
+ * {
+ *     LIQUIDITY_POOL_CONSTANT_PRODUCT = 0
+ * };
+ * </pre>
+ */
 public enum LiquidityPoolType implements XdrElement {
   LIQUIDITY_POOL_CONSTANT_PRODUCT(0),
   ;

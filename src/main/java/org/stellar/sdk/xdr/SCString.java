@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef string SCString<>;
-
-//  ===========================================================================
+/**
+ * SCString's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef string SCString&lt;&gt;;
+ * </pre>
+ */
 public class SCString implements XdrElement {
   private XdrString SCString;
 

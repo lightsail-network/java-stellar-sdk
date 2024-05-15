@@ -10,18 +10,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum EndSponsoringFutureReservesResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      END_SPONSORING_FUTURE_RESERVES_SUCCESS = 0,
-//
-//      // codes considered as "failure" for the operation
-//      END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED = -1
-//  };
-
-//  ===========================================================================
+/**
+ * EndSponsoringFutureReservesResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum EndSponsoringFutureReservesResultCode
+ * {
+ *     // codes considered as "success" for the operation
+ *     END_SPONSORING_FUTURE_RESERVES_SUCCESS = 0,
+ *
+ *     // codes considered as "failure" for the operation
+ *     END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED = -1
+ * };
+ * </pre>
+ */
 public enum EndSponsoringFutureReservesResultCode implements XdrElement {
   END_SPONSORING_FUTURE_RESERVES_SUCCESS(0),
   END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED(-1),

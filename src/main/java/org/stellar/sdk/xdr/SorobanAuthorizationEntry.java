@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SorobanAuthorizationEntry
-//  {
-//      SorobanCredentials credentials;
-//      SorobanAuthorizedInvocation rootInvocation;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanAuthorizationEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SorobanAuthorizationEntry
+ * {
+ *     SorobanCredentials credentials;
+ *     SorobanAuthorizedInvocation rootInvocation;
+ * };
+ * </pre>
+ */
 public class SorobanAuthorizationEntry implements XdrElement {
   public SorobanAuthorizationEntry() {}
 

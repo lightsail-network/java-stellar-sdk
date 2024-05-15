@@ -12,50 +12,52 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionResult
-//  {
-//      int64 feeCharged; // actual fee charged for the transaction
-//
-//      union switch (TransactionResultCode code)
-//      {
-//      case txFEE_BUMP_INNER_SUCCESS:
-//      case txFEE_BUMP_INNER_FAILED:
-//          InnerTransactionResultPair innerResultPair;
-//      case txSUCCESS:
-//      case txFAILED:
-//          OperationResult results<>;
-//      case txTOO_EARLY:
-//      case txTOO_LATE:
-//      case txMISSING_OPERATION:
-//      case txBAD_SEQ:
-//      case txBAD_AUTH:
-//      case txINSUFFICIENT_BALANCE:
-//      case txNO_ACCOUNT:
-//      case txINSUFFICIENT_FEE:
-//      case txBAD_AUTH_EXTRA:
-//      case txINTERNAL_ERROR:
-//      case txNOT_SUPPORTED:
-//      // case txFEE_BUMP_INNER_FAILED: handled above
-//      case txBAD_SPONSORSHIP:
-//      case txBAD_MIN_SEQ_AGE_OR_GAP:
-//      case txMALFORMED:
-//      case txSOROBAN_INVALID:
-//          void;
-//      }
-//      result;
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionResult
+ * {
+ *     int64 feeCharged; // actual fee charged for the transaction
+ *
+ *     union switch (TransactionResultCode code)
+ *     {
+ *     case txFEE_BUMP_INNER_SUCCESS:
+ *     case txFEE_BUMP_INNER_FAILED:
+ *         InnerTransactionResultPair innerResultPair;
+ *     case txSUCCESS:
+ *     case txFAILED:
+ *         OperationResult results&lt;&gt;;
+ *     case txTOO_EARLY:
+ *     case txTOO_LATE:
+ *     case txMISSING_OPERATION:
+ *     case txBAD_SEQ:
+ *     case txBAD_AUTH:
+ *     case txINSUFFICIENT_BALANCE:
+ *     case txNO_ACCOUNT:
+ *     case txINSUFFICIENT_FEE:
+ *     case txBAD_AUTH_EXTRA:
+ *     case txINTERNAL_ERROR:
+ *     case txNOT_SUPPORTED:
+ *     // case txFEE_BUMP_INNER_FAILED: handled above
+ *     case txBAD_SPONSORSHIP:
+ *     case txBAD_MIN_SEQ_AGE_OR_GAP:
+ *     case txMALFORMED:
+ *     case txSOROBAN_INVALID:
+ *         void;
+ *     }
+ *     result;
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class TransactionResult implements XdrElement {
   public TransactionResult() {}
 
@@ -178,6 +180,38 @@ public class TransactionResult implements XdrElement {
     }
   }
 
+  /**
+   * TransactionResultResult's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (TransactionResultCode code)
+   *     {
+   *     case txFEE_BUMP_INNER_SUCCESS:
+   *     case txFEE_BUMP_INNER_FAILED:
+   *         InnerTransactionResultPair innerResultPair;
+   *     case txSUCCESS:
+   *     case txFAILED:
+   *         OperationResult results&lt;&gt;;
+   *     case txTOO_EARLY:
+   *     case txTOO_LATE:
+   *     case txMISSING_OPERATION:
+   *     case txBAD_SEQ:
+   *     case txBAD_AUTH:
+   *     case txINSUFFICIENT_BALANCE:
+   *     case txNO_ACCOUNT:
+   *     case txINSUFFICIENT_FEE:
+   *     case txBAD_AUTH_EXTRA:
+   *     case txINTERNAL_ERROR:
+   *     case txNOT_SUPPORTED:
+   *     // case txFEE_BUMP_INNER_FAILED: handled above
+   *     case txBAD_SPONSORSHIP:
+   *     case txBAD_MIN_SEQ_AGE_OR_GAP:
+   *     case txMALFORMED:
+   *     case txSOROBAN_INVALID:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class TransactionResultResult implements XdrElement {
     public TransactionResultResult() {}
 
@@ -362,6 +396,17 @@ public class TransactionResult implements XdrElement {
     }
   }
 
+  /**
+   * TransactionResultExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class TransactionResultExt implements XdrElement {
     public TransactionResultExt() {}
 

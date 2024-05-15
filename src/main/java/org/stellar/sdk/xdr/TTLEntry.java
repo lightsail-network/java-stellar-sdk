@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TTLEntry {
-//      // Hash of the LedgerKey that is associated with this TTLEntry
-//      Hash keyHash;
-//      uint32 liveUntilLedgerSeq;
-//  };
-
-//  ===========================================================================
+/**
+ * TTLEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TTLEntry {
+ *     // Hash of the LedgerKey that is associated with this TTLEntry
+ *     Hash keyHash;
+ *     uint32 liveUntilLedgerSeq;
+ * };
+ * </pre>
+ */
 public class TTLEntry implements XdrElement {
   public TTLEntry() {}
 

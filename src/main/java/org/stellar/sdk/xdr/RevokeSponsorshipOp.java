@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union RevokeSponsorshipOp switch (RevokeSponsorshipType type)
-//  {
-//  case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
-//      LedgerKey ledgerKey;
-//  case REVOKE_SPONSORSHIP_SIGNER:
-//      struct
-//      {
-//          AccountID accountID;
-//          SignerKey signerKey;
-//      } signer;
-//  };
-
-//  ===========================================================================
+/**
+ * RevokeSponsorshipOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * union RevokeSponsorshipOp switch (RevokeSponsorshipType type)
+ * {
+ * case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
+ *     LedgerKey ledgerKey;
+ * case REVOKE_SPONSORSHIP_SIGNER:
+ *     struct
+ *     {
+ *         AccountID accountID;
+ *         SignerKey signerKey;
+ *     } signer;
+ * };
+ * </pre>
+ */
 public class RevokeSponsorshipOp implements XdrElement {
   public RevokeSponsorshipOp() {}
 
@@ -164,6 +166,17 @@ public class RevokeSponsorshipOp implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * RevokeSponsorshipOpSigner's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         AccountID accountID;
+   *         SignerKey signerKey;
+   *     }
+   * </pre>
+   */
   public static class RevokeSponsorshipOpSigner implements XdrElement {
     public RevokeSponsorshipOpSigner() {}
 

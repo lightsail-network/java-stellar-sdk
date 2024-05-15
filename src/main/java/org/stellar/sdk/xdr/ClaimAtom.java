@@ -11,19 +11,21 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ClaimAtom switch (ClaimAtomType type)
-//  {
-//  case CLAIM_ATOM_TYPE_V0:
-//      ClaimOfferAtomV0 v0;
-//  case CLAIM_ATOM_TYPE_ORDER_BOOK:
-//      ClaimOfferAtom orderBook;
-//  case CLAIM_ATOM_TYPE_LIQUIDITY_POOL:
-//      ClaimLiquidityAtom liquidityPool;
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimAtom's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ClaimAtom switch (ClaimAtomType type)
+ * {
+ * case CLAIM_ATOM_TYPE_V0:
+ *     ClaimOfferAtomV0 v0;
+ * case CLAIM_ATOM_TYPE_ORDER_BOOK:
+ *     ClaimOfferAtom orderBook;
+ * case CLAIM_ATOM_TYPE_LIQUIDITY_POOL:
+ *     ClaimLiquidityAtom liquidityPool;
+ * };
+ * </pre>
+ */
 public class ClaimAtom implements XdrElement {
   public ClaimAtom() {}
 

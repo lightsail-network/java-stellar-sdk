@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef Hash PoolID;
-
-//  ===========================================================================
+/**
+ * PoolID's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef Hash PoolID;
+ * </pre>
+ */
 public class PoolID implements XdrElement {
   private Hash PoolID;
 

@@ -11,28 +11,30 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ManageBuyOfferResult switch (ManageBuyOfferResultCode code)
-//  {
-//  case MANAGE_BUY_OFFER_SUCCESS:
-//      ManageOfferSuccessResult success;
-//  case MANAGE_BUY_OFFER_MALFORMED:
-//  case MANAGE_BUY_OFFER_SELL_NO_TRUST:
-//  case MANAGE_BUY_OFFER_BUY_NO_TRUST:
-//  case MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED:
-//  case MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED:
-//  case MANAGE_BUY_OFFER_LINE_FULL:
-//  case MANAGE_BUY_OFFER_UNDERFUNDED:
-//  case MANAGE_BUY_OFFER_CROSS_SELF:
-//  case MANAGE_BUY_OFFER_SELL_NO_ISSUER:
-//  case MANAGE_BUY_OFFER_BUY_NO_ISSUER:
-//  case MANAGE_BUY_OFFER_NOT_FOUND:
-//  case MANAGE_BUY_OFFER_LOW_RESERVE:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * ManageBuyOfferResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ManageBuyOfferResult switch (ManageBuyOfferResultCode code)
+ * {
+ * case MANAGE_BUY_OFFER_SUCCESS:
+ *     ManageOfferSuccessResult success;
+ * case MANAGE_BUY_OFFER_MALFORMED:
+ * case MANAGE_BUY_OFFER_SELL_NO_TRUST:
+ * case MANAGE_BUY_OFFER_BUY_NO_TRUST:
+ * case MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED:
+ * case MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED:
+ * case MANAGE_BUY_OFFER_LINE_FULL:
+ * case MANAGE_BUY_OFFER_UNDERFUNDED:
+ * case MANAGE_BUY_OFFER_CROSS_SELF:
+ * case MANAGE_BUY_OFFER_SELL_NO_ISSUER:
+ * case MANAGE_BUY_OFFER_BUY_NO_ISSUER:
+ * case MANAGE_BUY_OFFER_NOT_FOUND:
+ * case MANAGE_BUY_OFFER_LOW_RESERVE:
+ *     void;
+ * };
+ * </pre>
+ */
 public class ManageBuyOfferResult implements XdrElement {
   public ManageBuyOfferResult() {}
 

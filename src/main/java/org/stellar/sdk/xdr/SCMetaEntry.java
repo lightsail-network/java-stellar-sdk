@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCMetaEntry switch (SCMetaKind kind)
-//  {
-//  case SC_META_V0:
-//      SCMetaV0 v0;
-//  };
-
-//  ===========================================================================
+/**
+ * SCMetaEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCMetaEntry switch (SCMetaKind kind)
+ * {
+ * case SC_META_V0:
+ *     SCMetaV0 v0;
+ * };
+ * </pre>
+ */
 public class SCMetaEntry implements XdrElement {
   public SCMetaEntry() {}
 

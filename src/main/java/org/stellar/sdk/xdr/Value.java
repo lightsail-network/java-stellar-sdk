@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque Value<>;
-
-//  ===========================================================================
+/**
+ * Value's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque Value&lt;&gt;;
+ * </pre>
+ */
 public class Value implements XdrElement {
   private byte[] Value;
 

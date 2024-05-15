@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct AccountEntryExtensionV1
-//  {
-//      Liabilities liabilities;
-//
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      case 2:
-//          AccountEntryExtensionV2 v2;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * AccountEntryExtensionV1's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct AccountEntryExtensionV1
+ * {
+ *     Liabilities liabilities;
+ *
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 2:
+ *         AccountEntryExtensionV2 v2;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class AccountEntryExtensionV1 implements XdrElement {
   public AccountEntryExtensionV1() {}
 
@@ -131,6 +133,19 @@ public class AccountEntryExtensionV1 implements XdrElement {
     }
   }
 
+  /**
+   * AccountEntryExtensionV1Ext's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 2:
+   *         AccountEntryExtensionV2 v2;
+   *     }
+   * </pre>
+   */
   public static class AccountEntryExtensionV1Ext implements XdrElement {
     public AccountEntryExtensionV1Ext() {}
 

@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct CreateContractArgs
-//  {
-//      ContractIDPreimage contractIDPreimage;
-//      ContractExecutable executable;
-//  };
-
-//  ===========================================================================
+/**
+ * CreateContractArgs's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct CreateContractArgs
+ * {
+ *     ContractIDPreimage contractIDPreimage;
+ *     ContractExecutable executable;
+ * };
+ * </pre>
+ */
 public class CreateContractArgs implements XdrElement {
   public CreateContractArgs() {}
 

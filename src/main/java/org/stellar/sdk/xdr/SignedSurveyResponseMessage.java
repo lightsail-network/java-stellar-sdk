@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SignedSurveyResponseMessage
-//  {
-//      Signature responseSignature;
-//      SurveyResponseMessage response;
-//  };
-
-//  ===========================================================================
+/**
+ * SignedSurveyResponseMessage's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SignedSurveyResponseMessage
+ * {
+ *     Signature responseSignature;
+ *     SurveyResponseMessage response;
+ * };
+ * </pre>
+ */
 public class SignedSurveyResponseMessage implements XdrElement {
   public SignedSurveyResponseMessage() {}
 

@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ContractIDPreimageType
-//  {
-//      CONTRACT_ID_PREIMAGE_FROM_ADDRESS = 0,
-//      CONTRACT_ID_PREIMAGE_FROM_ASSET = 1
-//  };
-
-//  ===========================================================================
+/**
+ * ContractIDPreimageType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ContractIDPreimageType
+ * {
+ *     CONTRACT_ID_PREIMAGE_FROM_ADDRESS = 0,
+ *     CONTRACT_ID_PREIMAGE_FROM_ASSET = 1
+ * };
+ * </pre>
+ */
 public enum ContractIDPreimageType implements XdrElement {
   CONTRACT_ID_PREIMAGE_FROM_ADDRESS(0),
   CONTRACT_ID_PREIMAGE_FROM_ASSET(1),

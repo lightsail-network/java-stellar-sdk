@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ClawbackClaimableBalanceResult switch (
-//      ClawbackClaimableBalanceResultCode code)
-//  {
-//  case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
-//      void;
-//  case CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
-//  case CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER:
-//  case CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * ClawbackClaimableBalanceResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ClawbackClaimableBalanceResult switch (
+ *     ClawbackClaimableBalanceResultCode code)
+ * {
+ * case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
+ *     void;
+ * case CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+ * case CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER:
+ * case CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
+ *     void;
+ * };
+ * </pre>
+ */
 public class ClawbackClaimableBalanceResult implements XdrElement {
   public ClawbackClaimableBalanceResult() {}
 

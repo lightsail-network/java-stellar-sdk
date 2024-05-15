@@ -12,18 +12,20 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionMetaV2
-//  {
-//      LedgerEntryChanges txChangesBefore; // tx level changes before operations
-//                                          // are applied if any
-//      OperationMeta operations<>;         // meta for each operation
-//      LedgerEntryChanges txChangesAfter;  // tx level changes after operations are
-//                                          // applied if any
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionMetaV2's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionMetaV2
+ * {
+ *     LedgerEntryChanges txChangesBefore; // tx level changes before operations
+ *                                         // are applied if any
+ *     OperationMeta operations&lt;&gt;;         // meta for each operation
+ *     LedgerEntryChanges txChangesAfter;  // tx level changes after operations are
+ *                                         // applied if any
+ * };
+ * </pre>
+ */
 public class TransactionMetaV2 implements XdrElement {
   public TransactionMetaV2() {}
 

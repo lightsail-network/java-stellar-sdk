@@ -10,23 +10,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum EnvelopeType
-//  {
-//      ENVELOPE_TYPE_TX_V0 = 0,
-//      ENVELOPE_TYPE_SCP = 1,
-//      ENVELOPE_TYPE_TX = 2,
-//      ENVELOPE_TYPE_AUTH = 3,
-//      ENVELOPE_TYPE_SCPVALUE = 4,
-//      ENVELOPE_TYPE_TX_FEE_BUMP = 5,
-//      ENVELOPE_TYPE_OP_ID = 6,
-//      ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
-//      ENVELOPE_TYPE_CONTRACT_ID = 8,
-//      ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
-//  };
-
-//  ===========================================================================
+/**
+ * EnvelopeType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum EnvelopeType
+ * {
+ *     ENVELOPE_TYPE_TX_V0 = 0,
+ *     ENVELOPE_TYPE_SCP = 1,
+ *     ENVELOPE_TYPE_TX = 2,
+ *     ENVELOPE_TYPE_AUTH = 3,
+ *     ENVELOPE_TYPE_SCPVALUE = 4,
+ *     ENVELOPE_TYPE_TX_FEE_BUMP = 5,
+ *     ENVELOPE_TYPE_OP_ID = 6,
+ *     ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
+ *     ENVELOPE_TYPE_CONTRACT_ID = 8,
+ *     ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
+ * };
+ * </pre>
+ */
 public enum EnvelopeType implements XdrElement {
   ENVELOPE_TYPE_TX_V0(0),
   ENVELOPE_TYPE_SCP(1),

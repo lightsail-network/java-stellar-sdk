@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union TransactionPhase switch (int v)
-//  {
-//  case 0:
-//      TxSetComponent v0Components<>;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionPhase's original definition in the XDR file is:
+ *
+ * <pre>
+ * union TransactionPhase switch (int v)
+ * {
+ * case 0:
+ *     TxSetComponent v0Components&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class TransactionPhase implements XdrElement {
   public TransactionPhase() {}
 

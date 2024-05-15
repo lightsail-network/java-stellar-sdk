@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct PaymentOp
-//  {
-//      MuxedAccount destination; // recipient of the payment
-//      Asset asset;              // what they end up with
-//      int64 amount;             // amount they end up with
-//  };
-
-//  ===========================================================================
+/**
+ * PaymentOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct PaymentOp
+ * {
+ *     MuxedAccount destination; // recipient of the payment
+ *     Asset asset;              // what they end up with
+ *     int64 amount;             // amount they end up with
+ * };
+ * </pre>
+ */
 public class PaymentOp implements XdrElement {
   public PaymentOp() {}
 

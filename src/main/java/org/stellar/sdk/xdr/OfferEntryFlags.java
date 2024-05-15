@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum OfferEntryFlags
-//  {
-//      // an offer with this flag will not act on and take a reverse offer of equal
-//      // price
-//      PASSIVE_FLAG = 1
-//  };
-
-//  ===========================================================================
+/**
+ * OfferEntryFlags's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum OfferEntryFlags
+ * {
+ *     // an offer with this flag will not act on and take a reverse offer of equal
+ *     // price
+ *     PASSIVE_FLAG = 1
+ * };
+ * </pre>
+ */
 public enum OfferEntryFlags implements XdrElement {
   PASSIVE_FLAG(1),
   ;

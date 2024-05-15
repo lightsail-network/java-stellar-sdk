@@ -12,19 +12,21 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union TxSetComponent switch (TxSetComponentType type)
-//  {
-//  case TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE:
-//    struct
-//    {
-//      int64* baseFee;
-//      TransactionEnvelope txs<>;
-//    } txsMaybeDiscountedFee;
-//  };
-
-//  ===========================================================================
+/**
+ * TxSetComponent's original definition in the XDR file is:
+ *
+ * <pre>
+ * union TxSetComponent switch (TxSetComponentType type)
+ * {
+ * case TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE:
+ *   struct
+ *   {
+ *     int64&#42; baseFee;
+ *     TransactionEnvelope txs&lt;&gt;;
+ *   } txsMaybeDiscountedFee;
+ * };
+ * </pre>
+ */
 public class TxSetComponent implements XdrElement {
   public TxSetComponent() {}
 
@@ -141,6 +143,17 @@ public class TxSetComponent implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * TxSetComponentTxsMaybeDiscountedFee's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *   {
+   *     int64&#42; baseFee;
+   *     TransactionEnvelope txs&lt;&gt;;
+   *   }
+   * </pre>
+   */
   public static class TxSetComponentTxsMaybeDiscountedFee implements XdrElement {
     public TxSetComponentTxsMaybeDiscountedFee() {}
 

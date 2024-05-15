@@ -11,27 +11,29 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct FeeBumpTransaction
-//  {
-//      MuxedAccount feeSource;
-//      int64 fee;
-//      union switch (EnvelopeType type)
-//      {
-//      case ENVELOPE_TYPE_TX:
-//          TransactionV1Envelope v1;
-//      }
-//      innerTx;
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * FeeBumpTransaction's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct FeeBumpTransaction
+ * {
+ *     MuxedAccount feeSource;
+ *     int64 fee;
+ *     union switch (EnvelopeType type)
+ *     {
+ *     case ENVELOPE_TYPE_TX:
+ *         TransactionV1Envelope v1;
+ *     }
+ *     innerTx;
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class FeeBumpTransaction implements XdrElement {
   public FeeBumpTransaction() {}
 
@@ -174,6 +176,17 @@ public class FeeBumpTransaction implements XdrElement {
     }
   }
 
+  /**
+   * FeeBumpTransactionInnerTx's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (EnvelopeType type)
+   *     {
+   *     case ENVELOPE_TYPE_TX:
+   *         TransactionV1Envelope v1;
+   *     }
+   * </pre>
+   */
   public static class FeeBumpTransactionInnerTx implements XdrElement {
     public FeeBumpTransactionInnerTx() {}
 
@@ -288,6 +301,17 @@ public class FeeBumpTransaction implements XdrElement {
     }
   }
 
+  /**
+   * FeeBumpTransactionExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class FeeBumpTransactionExt implements XdrElement {
     public FeeBumpTransactionExt() {}
 

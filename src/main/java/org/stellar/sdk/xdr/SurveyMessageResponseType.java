@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SurveyMessageResponseType
-//  {
-//      SURVEY_TOPOLOGY_RESPONSE_V0 = 0,
-//      SURVEY_TOPOLOGY_RESPONSE_V1 = 1
-//  };
-
-//  ===========================================================================
+/**
+ * SurveyMessageResponseType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SurveyMessageResponseType
+ * {
+ *     SURVEY_TOPOLOGY_RESPONSE_V0 = 0,
+ *     SURVEY_TOPOLOGY_RESPONSE_V1 = 1
+ * };
+ * </pre>
+ */
 public enum SurveyMessageResponseType implements XdrElement {
   SURVEY_TOPOLOGY_RESPONSE_V0(0),
   SURVEY_TOPOLOGY_RESPONSE_V1(1),

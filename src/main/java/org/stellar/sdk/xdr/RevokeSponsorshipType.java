@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum RevokeSponsorshipType
-//  {
-//      REVOKE_SPONSORSHIP_LEDGER_ENTRY = 0,
-//      REVOKE_SPONSORSHIP_SIGNER = 1
-//  };
-
-//  ===========================================================================
+/**
+ * RevokeSponsorshipType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum RevokeSponsorshipType
+ * {
+ *     REVOKE_SPONSORSHIP_LEDGER_ENTRY = 0,
+ *     REVOKE_SPONSORSHIP_SIGNER = 1
+ * };
+ * </pre>
+ */
 public enum RevokeSponsorshipType implements XdrElement {
   REVOKE_SPONSORSHIP_LEDGER_ENTRY(0),
   REVOKE_SPONSORSHIP_SIGNER(1),

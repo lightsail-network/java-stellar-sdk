@@ -11,45 +11,47 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ConfigSettingContractLedgerCostV0
-//  {
-//      // Maximum number of ledger entry read operations per ledger
-//      uint32 ledgerMaxReadLedgerEntries;
-//      // Maximum number of bytes that can be read per ledger
-//      uint32 ledgerMaxReadBytes;
-//      // Maximum number of ledger entry write operations per ledger
-//      uint32 ledgerMaxWriteLedgerEntries;
-//      // Maximum number of bytes that can be written per ledger
-//      uint32 ledgerMaxWriteBytes;
-//
-//      // Maximum number of ledger entry read operations per transaction
-//      uint32 txMaxReadLedgerEntries;
-//      // Maximum number of bytes that can be read per transaction
-//      uint32 txMaxReadBytes;
-//      // Maximum number of ledger entry write operations per transaction
-//      uint32 txMaxWriteLedgerEntries;
-//      // Maximum number of bytes that can be written per transaction
-//      uint32 txMaxWriteBytes;
-//
-//      int64 feeReadLedgerEntry;  // Fee per ledger entry read
-//      int64 feeWriteLedgerEntry; // Fee per ledger entry write
-//
-//      int64 feeRead1KB;  // Fee for reading 1KB
-//
-//      // The following parameters determine the write fee per 1KB.
-//      // Write fee grows linearly until bucket list reaches this size
-//      int64 bucketListTargetSizeBytes;
-//      // Fee per 1KB write when the bucket list is empty
-//      int64 writeFee1KBBucketListLow;
-//      // Fee per 1KB write when the bucket list has reached `bucketListTargetSizeBytes`
-//      int64 writeFee1KBBucketListHigh;
-//      // Write fee multiplier for any additional data past the first `bucketListTargetSizeBytes`
-//      uint32 bucketListWriteFeeGrowthFactor;
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigSettingContractLedgerCostV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ConfigSettingContractLedgerCostV0
+ * {
+ *     // Maximum number of ledger entry read operations per ledger
+ *     uint32 ledgerMaxReadLedgerEntries;
+ *     // Maximum number of bytes that can be read per ledger
+ *     uint32 ledgerMaxReadBytes;
+ *     // Maximum number of ledger entry write operations per ledger
+ *     uint32 ledgerMaxWriteLedgerEntries;
+ *     // Maximum number of bytes that can be written per ledger
+ *     uint32 ledgerMaxWriteBytes;
+ *
+ *     // Maximum number of ledger entry read operations per transaction
+ *     uint32 txMaxReadLedgerEntries;
+ *     // Maximum number of bytes that can be read per transaction
+ *     uint32 txMaxReadBytes;
+ *     // Maximum number of ledger entry write operations per transaction
+ *     uint32 txMaxWriteLedgerEntries;
+ *     // Maximum number of bytes that can be written per transaction
+ *     uint32 txMaxWriteBytes;
+ *
+ *     int64 feeReadLedgerEntry;  // Fee per ledger entry read
+ *     int64 feeWriteLedgerEntry; // Fee per ledger entry write
+ *
+ *     int64 feeRead1KB;  // Fee for reading 1KB
+ *
+ *     // The following parameters determine the write fee per 1KB.
+ *     // Write fee grows linearly until bucket list reaches this size
+ *     int64 bucketListTargetSizeBytes;
+ *     // Fee per 1KB write when the bucket list is empty
+ *     int64 writeFee1KBBucketListLow;
+ *     // Fee per 1KB write when the bucket list has reached `bucketListTargetSizeBytes`
+ *     int64 writeFee1KBBucketListHigh;
+ *     // Write fee multiplier for any additional data past the first `bucketListTargetSizeBytes`
+ *     uint32 bucketListWriteFeeGrowthFactor;
+ * };
+ * </pre>
+ */
 public class ConfigSettingContractLedgerCostV0 implements XdrElement {
   public ConfigSettingContractLedgerCostV0() {}
 

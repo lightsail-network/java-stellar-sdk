@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque DataValue<64>;
-
-//  ===========================================================================
+/**
+ * DataValue's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque DataValue&lt;64&gt;;
+ * </pre>
+ */
 public class DataValue implements XdrElement {
   private byte[] DataValue;
 

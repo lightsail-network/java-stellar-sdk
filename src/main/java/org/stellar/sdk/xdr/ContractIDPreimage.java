@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ContractIDPreimage switch (ContractIDPreimageType type)
-//  {
-//  case CONTRACT_ID_PREIMAGE_FROM_ADDRESS:
-//      struct
-//      {
-//          SCAddress address;
-//          uint256 salt;
-//      } fromAddress;
-//  case CONTRACT_ID_PREIMAGE_FROM_ASSET:
-//      Asset fromAsset;
-//  };
-
-//  ===========================================================================
+/**
+ * ContractIDPreimage's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ContractIDPreimage switch (ContractIDPreimageType type)
+ * {
+ * case CONTRACT_ID_PREIMAGE_FROM_ADDRESS:
+ *     struct
+ *     {
+ *         SCAddress address;
+ *         uint256 salt;
+ *     } fromAddress;
+ * case CONTRACT_ID_PREIMAGE_FROM_ASSET:
+ *     Asset fromAsset;
+ * };
+ * </pre>
+ */
 public class ContractIDPreimage implements XdrElement {
   public ContractIDPreimage() {}
 
@@ -163,6 +165,17 @@ public class ContractIDPreimage implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * ContractIDPreimageFromAddress's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         SCAddress address;
+   *         uint256 salt;
+   *     }
+   * </pre>
+   */
   public static class ContractIDPreimageFromAddress implements XdrElement {
     public ContractIDPreimageFromAddress() {}
 

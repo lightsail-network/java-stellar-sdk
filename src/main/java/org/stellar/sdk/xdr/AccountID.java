@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef PublicKey AccountID;
-
-//  ===========================================================================
+/**
+ * AccountID's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef PublicKey AccountID;
+ * </pre>
+ */
 public class AccountID implements XdrElement {
   private PublicKey AccountID;
 

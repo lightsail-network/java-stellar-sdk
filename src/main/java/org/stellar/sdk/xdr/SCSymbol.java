@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef string SCSymbol<SCSYMBOL_LIMIT>;
-
-//  ===========================================================================
+/**
+ * SCSymbol's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef string SCSymbol&lt;SCSYMBOL_LIMIT&gt;;
+ * </pre>
+ */
 public class SCSymbol implements XdrElement {
   private XdrString SCSymbol;
 

@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef string string32<32>;
-
-//  ===========================================================================
+/**
+ * String32's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef string string32&lt;32&gt;;
+ * </pre>
+ */
 public class String32 implements XdrElement {
   private XdrString string32;
 

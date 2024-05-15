@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ClaimClaimableBalanceOp
-//  {
-//      ClaimableBalanceID balanceID;
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimClaimableBalanceOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ClaimClaimableBalanceOp
+ * {
+ *     ClaimableBalanceID balanceID;
+ * };
+ * </pre>
+ */
 public class ClaimClaimableBalanceOp implements XdrElement {
   public ClaimClaimableBalanceOp() {}
 

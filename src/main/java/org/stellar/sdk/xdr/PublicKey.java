@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union PublicKey switch (PublicKeyType type)
-//  {
-//  case PUBLIC_KEY_TYPE_ED25519:
-//      uint256 ed25519;
-//  };
-
-//  ===========================================================================
+/**
+ * PublicKey's original definition in the XDR file is:
+ *
+ * <pre>
+ * union PublicKey switch (PublicKeyType type)
+ * {
+ * case PUBLIC_KEY_TYPE_ED25519:
+ *     uint256 ed25519;
+ * };
+ * </pre>
+ */
 public class PublicKey implements XdrElement {
   public PublicKey() {}
 

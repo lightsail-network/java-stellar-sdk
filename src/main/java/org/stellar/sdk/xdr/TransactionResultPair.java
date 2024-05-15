@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionResultPair
-//  {
-//      Hash transactionHash;
-//      TransactionResult result; // result for the transaction
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionResultPair's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionResultPair
+ * {
+ *     Hash transactionHash;
+ *     TransactionResult result; // result for the transaction
+ * };
+ * </pre>
+ */
 public class TransactionResultPair implements XdrElement {
   public TransactionResultPair() {}
 

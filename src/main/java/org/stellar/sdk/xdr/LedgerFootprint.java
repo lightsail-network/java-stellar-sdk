@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerFootprint
-//  {
-//      LedgerKey readOnly<>;
-//      LedgerKey readWrite<>;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerFootprint's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerFootprint
+ * {
+ *     LedgerKey readOnly&lt;&gt;;
+ *     LedgerKey readWrite&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class LedgerFootprint implements XdrElement {
   public LedgerFootprint() {}
 

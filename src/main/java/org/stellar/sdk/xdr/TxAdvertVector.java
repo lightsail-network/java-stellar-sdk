@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef Hash TxAdvertVector<TX_ADVERT_VECTOR_MAX_SIZE>;
-
-//  ===========================================================================
+/**
+ * TxAdvertVector's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef Hash TxAdvertVector&lt;TX_ADVERT_VECTOR_MAX_SIZE&gt;;
+ * </pre>
+ */
 public class TxAdvertVector implements XdrElement {
   private Hash[] TxAdvertVector;
 

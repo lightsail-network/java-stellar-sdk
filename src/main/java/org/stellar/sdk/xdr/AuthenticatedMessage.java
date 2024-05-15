@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union AuthenticatedMessage switch (uint32 v)
-//  {
-//  case 0:
-//      struct
-//      {
-//          uint64 sequence;
-//          StellarMessage message;
-//          HmacSha256Mac mac;
-//      } v0;
-//  };
-
-//  ===========================================================================
+/**
+ * AuthenticatedMessage's original definition in the XDR file is:
+ *
+ * <pre>
+ * union AuthenticatedMessage switch (uint32 v)
+ * {
+ * case 0:
+ *     struct
+ *     {
+ *         uint64 sequence;
+ *         StellarMessage message;
+ *         HmacSha256Mac mac;
+ *     } v0;
+ * };
+ * </pre>
+ */
 public class AuthenticatedMessage implements XdrElement {
   public AuthenticatedMessage() {}
 
@@ -139,6 +141,18 @@ public class AuthenticatedMessage implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * AuthenticatedMessageV0's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         uint64 sequence;
+   *         StellarMessage message;
+   *         HmacSha256Mac mac;
+   *     }
+   * </pre>
+   */
   public static class AuthenticatedMessageV0 implements XdrElement {
     public AuthenticatedMessageV0() {}
 

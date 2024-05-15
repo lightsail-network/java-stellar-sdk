@@ -12,23 +12,25 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct PathPaymentStrictSendOp
-//  {
-//      Asset sendAsset;  // asset we pay with
-//      int64 sendAmount; // amount of sendAsset to send (excluding fees)
-//
-//      MuxedAccount destination; // recipient of the payment
-//      Asset destAsset;          // what they end up with
-//      int64 destMin;            // the minimum amount of dest asset to
-//                                // be received
-//                                // The operation will fail if it can't be met
-//
-//      Asset path<5>; // additional hops it must go through to get there
-//  };
-
-//  ===========================================================================
+/**
+ * PathPaymentStrictSendOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct PathPaymentStrictSendOp
+ * {
+ *     Asset sendAsset;  // asset we pay with
+ *     int64 sendAmount; // amount of sendAsset to send (excluding fees)
+ *
+ *     MuxedAccount destination; // recipient of the payment
+ *     Asset destAsset;          // what they end up with
+ *     int64 destMin;            // the minimum amount of dest asset to
+ *                               // be received
+ *                               // The operation will fail if it can't be met
+ *
+ *     Asset path&lt;5&gt;; // additional hops it must go through to get there
+ * };
+ * </pre>
+ */
 public class PathPaymentStrictSendOp implements XdrElement {
   public PathPaymentStrictSendOp() {}
 

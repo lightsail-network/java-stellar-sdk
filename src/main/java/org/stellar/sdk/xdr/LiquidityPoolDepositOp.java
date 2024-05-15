@@ -11,18 +11,20 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LiquidityPoolDepositOp
-//  {
-//      PoolID liquidityPoolID;
-//      int64 maxAmountA; // maximum amount of first asset to deposit
-//      int64 maxAmountB; // maximum amount of second asset to deposit
-//      Price minPrice;   // minimum depositA/depositB
-//      Price maxPrice;   // maximum depositA/depositB
-//  };
-
-//  ===========================================================================
+/**
+ * LiquidityPoolDepositOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LiquidityPoolDepositOp
+ * {
+ *     PoolID liquidityPoolID;
+ *     int64 maxAmountA; // maximum amount of first asset to deposit
+ *     int64 maxAmountB; // maximum amount of second asset to deposit
+ *     Price minPrice;   // minimum depositA/depositB
+ *     Price maxPrice;   // maximum depositA/depositB
+ * };
+ * </pre>
+ */
 public class LiquidityPoolDepositOp implements XdrElement {
   public LiquidityPoolDepositOp() {}
 

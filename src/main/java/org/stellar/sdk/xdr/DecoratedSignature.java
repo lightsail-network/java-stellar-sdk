@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct DecoratedSignature
-//  {
-//      SignatureHint hint;  // last 4 bytes of the public key, used as a hint
-//      Signature signature; // actual signature
-//  };
-
-//  ===========================================================================
+/**
+ * DecoratedSignature's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct DecoratedSignature
+ * {
+ *     SignatureHint hint;  // last 4 bytes of the public key, used as a hint
+ *     Signature signature; // actual signature
+ * };
+ * </pre>
+ */
 public class DecoratedSignature implements XdrElement {
   public DecoratedSignature() {}
 

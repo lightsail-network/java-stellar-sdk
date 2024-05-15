@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union InvokeHostFunctionResult switch (InvokeHostFunctionResultCode code)
-//  {
-//  case INVOKE_HOST_FUNCTION_SUCCESS:
-//      Hash success; // sha256(InvokeHostFunctionSuccessPreImage)
-//  case INVOKE_HOST_FUNCTION_MALFORMED:
-//  case INVOKE_HOST_FUNCTION_TRAPPED:
-//  case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
-//  case INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED:
-//  case INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * InvokeHostFunctionResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union InvokeHostFunctionResult switch (InvokeHostFunctionResultCode code)
+ * {
+ * case INVOKE_HOST_FUNCTION_SUCCESS:
+ *     Hash success; // sha256(InvokeHostFunctionSuccessPreImage)
+ * case INVOKE_HOST_FUNCTION_MALFORMED:
+ * case INVOKE_HOST_FUNCTION_TRAPPED:
+ * case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
+ * case INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED:
+ * case INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE:
+ *     void;
+ * };
+ * </pre>
+ */
 public class InvokeHostFunctionResult implements XdrElement {
   public InvokeHostFunctionResult() {}
 

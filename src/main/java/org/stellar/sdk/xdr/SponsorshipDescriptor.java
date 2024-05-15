@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef AccountID* SponsorshipDescriptor;
-
-//  ===========================================================================
+/**
+ * SponsorshipDescriptor's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef AccountID&#42; SponsorshipDescriptor;
+ * </pre>
+ */
 public class SponsorshipDescriptor implements XdrElement {
   private AccountID SponsorshipDescriptor;
 

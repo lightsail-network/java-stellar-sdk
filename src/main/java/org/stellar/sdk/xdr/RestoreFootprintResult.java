@@ -11,19 +11,21 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union RestoreFootprintResult switch (RestoreFootprintResultCode code)
-//  {
-//  case RESTORE_FOOTPRINT_SUCCESS:
-//      void;
-//  case RESTORE_FOOTPRINT_MALFORMED:
-//  case RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED:
-//  case RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * RestoreFootprintResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union RestoreFootprintResult switch (RestoreFootprintResultCode code)
+ * {
+ * case RESTORE_FOOTPRINT_SUCCESS:
+ *     void;
+ * case RESTORE_FOOTPRINT_MALFORMED:
+ * case RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED:
+ * case RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE:
+ *     void;
+ * };
+ * </pre>
+ */
 public class RestoreFootprintResult implements XdrElement {
   public RestoreFootprintResult() {}
 

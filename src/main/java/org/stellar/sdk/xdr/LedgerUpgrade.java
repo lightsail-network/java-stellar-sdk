@@ -11,30 +11,32 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union LedgerUpgrade switch (LedgerUpgradeType type)
-//  {
-//  case LEDGER_UPGRADE_VERSION:
-//      uint32 newLedgerVersion; // update ledgerVersion
-//  case LEDGER_UPGRADE_BASE_FEE:
-//      uint32 newBaseFee; // update baseFee
-//  case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
-//      uint32 newMaxTxSetSize; // update maxTxSetSize
-//  case LEDGER_UPGRADE_BASE_RESERVE:
-//      uint32 newBaseReserve; // update baseReserve
-//  case LEDGER_UPGRADE_FLAGS:
-//      uint32 newFlags; // update flags
-//  case LEDGER_UPGRADE_CONFIG:
-//      // Update arbitrary `ConfigSetting` entries identified by the key.
-//      ConfigUpgradeSetKey newConfig;
-//  case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
-//      // Update ConfigSettingContractExecutionLanesV0.ledgerMaxTxCount without
-//      // using `LEDGER_UPGRADE_CONFIG`.
-//      uint32 newMaxSorobanTxSetSize;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerUpgrade's original definition in the XDR file is:
+ *
+ * <pre>
+ * union LedgerUpgrade switch (LedgerUpgradeType type)
+ * {
+ * case LEDGER_UPGRADE_VERSION:
+ *     uint32 newLedgerVersion; // update ledgerVersion
+ * case LEDGER_UPGRADE_BASE_FEE:
+ *     uint32 newBaseFee; // update baseFee
+ * case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
+ *     uint32 newMaxTxSetSize; // update maxTxSetSize
+ * case LEDGER_UPGRADE_BASE_RESERVE:
+ *     uint32 newBaseReserve; // update baseReserve
+ * case LEDGER_UPGRADE_FLAGS:
+ *     uint32 newFlags; // update flags
+ * case LEDGER_UPGRADE_CONFIG:
+ *     // Update arbitrary `ConfigSetting` entries identified by the key.
+ *     ConfigUpgradeSetKey newConfig;
+ * case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+ *     // Update ConfigSettingContractExecutionLanesV0.ledgerMaxTxCount without
+ *     // using `LEDGER_UPGRADE_CONFIG`.
+ *     uint32 newMaxSorobanTxSetSize;
+ * };
+ * </pre>
+ */
 public class LedgerUpgrade implements XdrElement {
   public LedgerUpgrade() {}
 

@@ -11,19 +11,21 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union TransactionEnvelope switch (EnvelopeType type)
-//  {
-//  case ENVELOPE_TYPE_TX_V0:
-//      TransactionV0Envelope v0;
-//  case ENVELOPE_TYPE_TX:
-//      TransactionV1Envelope v1;
-//  case ENVELOPE_TYPE_TX_FEE_BUMP:
-//      FeeBumpTransactionEnvelope feeBump;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionEnvelope's original definition in the XDR file is:
+ *
+ * <pre>
+ * union TransactionEnvelope switch (EnvelopeType type)
+ * {
+ * case ENVELOPE_TYPE_TX_V0:
+ *     TransactionV0Envelope v0;
+ * case ENVELOPE_TYPE_TX:
+ *     TransactionV1Envelope v1;
+ * case ENVELOPE_TYPE_TX_FEE_BUMP:
+ *     FeeBumpTransactionEnvelope feeBump;
+ * };
+ * </pre>
+ */
 public class TransactionEnvelope implements XdrElement {
   public TransactionEnvelope() {}
 

@@ -11,25 +11,27 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCError switch (SCErrorType type)
-//  {
-//  case SCE_CONTRACT:
-//      uint32 contractCode;
-//  case SCE_WASM_VM:
-//  case SCE_CONTEXT:
-//  case SCE_STORAGE:
-//  case SCE_OBJECT:
-//  case SCE_CRYPTO:
-//  case SCE_EVENTS:
-//  case SCE_BUDGET:
-//  case SCE_VALUE:
-//  case SCE_AUTH:
-//      SCErrorCode code;
-//  };
-
-//  ===========================================================================
+/**
+ * SCError's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCError switch (SCErrorType type)
+ * {
+ * case SCE_CONTRACT:
+ *     uint32 contractCode;
+ * case SCE_WASM_VM:
+ * case SCE_CONTEXT:
+ * case SCE_STORAGE:
+ * case SCE_OBJECT:
+ * case SCE_CRYPTO:
+ * case SCE_EVENTS:
+ * case SCE_BUDGET:
+ * case SCE_VALUE:
+ * case SCE_AUTH:
+ *     SCErrorCode code;
+ * };
+ * </pre>
+ */
 public class SCError implements XdrElement {
   public SCError() {}
 

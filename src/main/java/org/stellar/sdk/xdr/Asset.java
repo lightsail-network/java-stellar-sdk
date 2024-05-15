@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union Asset switch (AssetType type)
-//  {
-//  case ASSET_TYPE_NATIVE: // Not credit
-//      void;
-//
-//  case ASSET_TYPE_CREDIT_ALPHANUM4:
-//      AlphaNum4 alphaNum4;
-//
-//  case ASSET_TYPE_CREDIT_ALPHANUM12:
-//      AlphaNum12 alphaNum12;
-//
-//      // add other asset types here in the future
-//  };
-
-//  ===========================================================================
+/**
+ * Asset's original definition in the XDR file is:
+ *
+ * <pre>
+ * union Asset switch (AssetType type)
+ * {
+ * case ASSET_TYPE_NATIVE: // Not credit
+ *     void;
+ *
+ * case ASSET_TYPE_CREDIT_ALPHANUM4:
+ *     AlphaNum4 alphaNum4;
+ *
+ * case ASSET_TYPE_CREDIT_ALPHANUM12:
+ *     AlphaNum12 alphaNum12;
+ *
+ *     // add other asset types here in the future
+ * };
+ * </pre>
+ */
 public class Asset implements XdrElement {
   public Asset() {}
 

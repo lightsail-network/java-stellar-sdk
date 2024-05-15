@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ContractCostParamEntry {
-//      // use `ext` to add more terms (e.g. higher order polynomials) in the future
-//      ExtensionPoint ext;
-//
-//      int64 constTerm;
-//      int64 linearTerm;
-//  };
-
-//  ===========================================================================
+/**
+ * ContractCostParamEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ContractCostParamEntry {
+ *     // use `ext` to add more terms (e.g. higher order polynomials) in the future
+ *     ExtensionPoint ext;
+ *
+ *     int64 constTerm;
+ *     int64 linearTerm;
+ * };
+ * </pre>
+ */
 public class ContractCostParamEntry implements XdrElement {
   public ContractCostParamEntry() {}
 

@@ -10,17 +10,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum InflationResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      INFLATION_SUCCESS = 0,
-//      // codes considered as "failure" for the operation
-//      INFLATION_NOT_TIME = -1
-//  };
-
-//  ===========================================================================
+/**
+ * InflationResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum InflationResultCode
+ * {
+ *     // codes considered as "success" for the operation
+ *     INFLATION_SUCCESS = 0,
+ *     // codes considered as "failure" for the operation
+ *     INFLATION_NOT_TIME = -1
+ * };
+ * </pre>
+ */
 public enum InflationResultCode implements XdrElement {
   INFLATION_SUCCESS(0),
   INFLATION_NOT_TIME(-1),

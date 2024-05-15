@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionResultMeta
-//  {
-//      TransactionResultPair result;
-//      LedgerEntryChanges feeProcessing;
-//      TransactionMeta txApplyProcessing;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionResultMeta's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionResultMeta
+ * {
+ *     TransactionResultPair result;
+ *     LedgerEntryChanges feeProcessing;
+ *     TransactionMeta txApplyProcessing;
+ * };
+ * </pre>
+ */
 public class TransactionResultMeta implements XdrElement {
   public TransactionResultMeta() {}
 

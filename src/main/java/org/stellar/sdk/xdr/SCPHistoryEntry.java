@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCPHistoryEntry switch (int v)
-//  {
-//  case 0:
-//      SCPHistoryEntryV0 v0;
-//  };
-
-//  ===========================================================================
+/**
+ * SCPHistoryEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCPHistoryEntry switch (int v)
+ * {
+ * case 0:
+ *     SCPHistoryEntryV0 v0;
+ * };
+ * </pre>
+ */
 public class SCPHistoryEntry implements XdrElement {
   public SCPHistoryEntry() {}
 

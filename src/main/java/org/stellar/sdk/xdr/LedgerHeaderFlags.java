@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum LedgerHeaderFlags
-//  {
-//      DISABLE_LIQUIDITY_POOL_TRADING_FLAG = 0x1,
-//      DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG = 0x2,
-//      DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG = 0x4
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerHeaderFlags's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum LedgerHeaderFlags
+ * {
+ *     DISABLE_LIQUIDITY_POOL_TRADING_FLAG = 0x1,
+ *     DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG = 0x2,
+ *     DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG = 0x4
+ * };
+ * </pre>
+ */
 public enum LedgerHeaderFlags implements XdrElement {
   DISABLE_LIQUIDITY_POOL_TRADING_FLAG(1),
   DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG(2),

@@ -12,16 +12,18 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCPNomination
-//  {
-//      Hash quorumSetHash; // D
-//      Value votes<>;      // X
-//      Value accepted<>;   // Y
-//  };
-
-//  ===========================================================================
+/**
+ * SCPNomination's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCPNomination
+ * {
+ *     Hash quorumSetHash; // D
+ *     Value votes&lt;&gt;;      // X
+ *     Value accepted&lt;&gt;;   // Y
+ * };
+ * </pre>
+ */
 public class SCPNomination implements XdrElement {
   public SCPNomination() {}
 

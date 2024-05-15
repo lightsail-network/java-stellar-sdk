@@ -10,14 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ClaimantType
-//  {
-//      CLAIMANT_TYPE_V0 = 0
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimantType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ClaimantType
+ * {
+ *     CLAIMANT_TYPE_V0 = 0
+ * };
+ * </pre>
+ */
 public enum ClaimantType implements XdrElement {
   CLAIMANT_TYPE_V0(0),
   ;

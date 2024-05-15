@@ -11,48 +11,50 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCPStatement
-//  {
-//      NodeID nodeID;    // v
-//      uint64 slotIndex; // i
-//
-//      union switch (SCPStatementType type)
-//      {
-//      case SCP_ST_PREPARE:
-//          struct
-//          {
-//              Hash quorumSetHash;       // D
-//              SCPBallot ballot;         // b
-//              SCPBallot* prepared;      // p
-//              SCPBallot* preparedPrime; // p'
-//              uint32 nC;                // c.n
-//              uint32 nH;                // h.n
-//          } prepare;
-//      case SCP_ST_CONFIRM:
-//          struct
-//          {
-//              SCPBallot ballot;   // b
-//              uint32 nPrepared;   // p.n
-//              uint32 nCommit;     // c.n
-//              uint32 nH;          // h.n
-//              Hash quorumSetHash; // D
-//          } confirm;
-//      case SCP_ST_EXTERNALIZE:
-//          struct
-//          {
-//              SCPBallot commit;         // c
-//              uint32 nH;                // h.n
-//              Hash commitQuorumSetHash; // D used before EXTERNALIZE
-//          } externalize;
-//      case SCP_ST_NOMINATE:
-//          SCPNomination nominate;
-//      }
-//      pledges;
-//  };
-
-//  ===========================================================================
+/**
+ * SCPStatement's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCPStatement
+ * {
+ *     NodeID nodeID;    // v
+ *     uint64 slotIndex; // i
+ *
+ *     union switch (SCPStatementType type)
+ *     {
+ *     case SCP_ST_PREPARE:
+ *         struct
+ *         {
+ *             Hash quorumSetHash;       // D
+ *             SCPBallot ballot;         // b
+ *             SCPBallot&#42; prepared;      // p
+ *             SCPBallot&#42; preparedPrime; // p'
+ *             uint32 nC;                // c.n
+ *             uint32 nH;                // h.n
+ *         } prepare;
+ *     case SCP_ST_CONFIRM:
+ *         struct
+ *         {
+ *             SCPBallot ballot;   // b
+ *             uint32 nPrepared;   // p.n
+ *             uint32 nCommit;     // c.n
+ *             uint32 nH;          // h.n
+ *             Hash quorumSetHash; // D
+ *         } confirm;
+ *     case SCP_ST_EXTERNALIZE:
+ *         struct
+ *         {
+ *             SCPBallot commit;         // c
+ *             uint32 nH;                // h.n
+ *             Hash commitQuorumSetHash; // D used before EXTERNALIZE
+ *         } externalize;
+ *     case SCP_ST_NOMINATE:
+ *         SCPNomination nominate;
+ *     }
+ *     pledges;
+ * };
+ * </pre>
+ */
 public class SCPStatement implements XdrElement {
   public SCPStatement() {}
 
@@ -175,6 +177,43 @@ public class SCPStatement implements XdrElement {
     }
   }
 
+  /**
+   * SCPStatementPledges's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (SCPStatementType type)
+   *     {
+   *     case SCP_ST_PREPARE:
+   *         struct
+   *         {
+   *             Hash quorumSetHash;       // D
+   *             SCPBallot ballot;         // b
+   *             SCPBallot&#42; prepared;      // p
+   *             SCPBallot&#42; preparedPrime; // p'
+   *             uint32 nC;                // c.n
+   *             uint32 nH;                // h.n
+   *         } prepare;
+   *     case SCP_ST_CONFIRM:
+   *         struct
+   *         {
+   *             SCPBallot ballot;   // b
+   *             uint32 nPrepared;   // p.n
+   *             uint32 nCommit;     // c.n
+   *             uint32 nH;          // h.n
+   *             Hash quorumSetHash; // D
+   *         } confirm;
+   *     case SCP_ST_EXTERNALIZE:
+   *         struct
+   *         {
+   *             SCPBallot commit;         // c
+   *             uint32 nH;                // h.n
+   *             Hash commitQuorumSetHash; // D used before EXTERNALIZE
+   *         } externalize;
+   *     case SCP_ST_NOMINATE:
+   *         SCPNomination nominate;
+   *     }
+   * </pre>
+   */
   public static class SCPStatementPledges implements XdrElement {
     public SCPStatementPledges() {}
 
@@ -361,6 +400,21 @@ public class SCPStatement implements XdrElement {
       return decode(xdrDataInputStream);
     }
 
+    /**
+     * SCPStatementPrepare's original definition in the XDR file is:
+     *
+     * <pre>
+     * struct
+     *         {
+     *             Hash quorumSetHash;       // D
+     *             SCPBallot ballot;         // b
+     *             SCPBallot&#42; prepared;      // p
+     *             SCPBallot&#42; preparedPrime; // p'
+     *             uint32 nC;                // c.n
+     *             uint32 nH;                // h.n
+     *         }
+     * </pre>
+     */
     public static class SCPStatementPrepare implements XdrElement {
       public SCPStatementPrepare() {}
 
@@ -562,6 +616,20 @@ public class SCPStatement implements XdrElement {
       }
     }
 
+    /**
+     * SCPStatementConfirm's original definition in the XDR file is:
+     *
+     * <pre>
+     * struct
+     *         {
+     *             SCPBallot ballot;   // b
+     *             uint32 nPrepared;   // p.n
+     *             uint32 nCommit;     // c.n
+     *             uint32 nH;          // h.n
+     *             Hash quorumSetHash; // D
+     *         }
+     * </pre>
+     */
     public static class SCPStatementConfirm implements XdrElement {
       public SCPStatementConfirm() {}
 
@@ -726,6 +794,18 @@ public class SCPStatement implements XdrElement {
       }
     }
 
+    /**
+     * SCPStatementExternalize's original definition in the XDR file is:
+     *
+     * <pre>
+     * struct
+     *         {
+     *             SCPBallot commit;         // c
+     *             uint32 nH;                // h.n
+     *             Hash commitQuorumSetHash; // D used before EXTERNALIZE
+     *         }
+     * </pre>
+     */
     public static class SCPStatementExternalize implements XdrElement {
       public SCPStatementExternalize() {}
 

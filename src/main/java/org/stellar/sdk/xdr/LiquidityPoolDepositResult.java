@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union LiquidityPoolDepositResult switch (LiquidityPoolDepositResultCode code)
-//  {
-//  case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
-//      void;
-//  case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
-//  case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
-//  case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
-//  case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
-//  case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
-//  case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
-//  case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * LiquidityPoolDepositResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union LiquidityPoolDepositResult switch (LiquidityPoolDepositResultCode code)
+ * {
+ * case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
+ *     void;
+ * case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
+ * case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
+ * case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
+ * case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
+ * case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
+ * case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
+ * case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
+ *     void;
+ * };
+ * </pre>
+ */
 public class LiquidityPoolDepositResult implements XdrElement {
   public LiquidityPoolDepositResult() {}
 

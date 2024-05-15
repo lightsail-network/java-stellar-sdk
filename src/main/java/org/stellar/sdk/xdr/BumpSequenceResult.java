@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union BumpSequenceResult switch (BumpSequenceResultCode code)
-//  {
-//  case BUMP_SEQUENCE_SUCCESS:
-//      void;
-//  case BUMP_SEQUENCE_BAD_SEQ:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * BumpSequenceResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union BumpSequenceResult switch (BumpSequenceResultCode code)
+ * {
+ * case BUMP_SEQUENCE_SUCCESS:
+ *     void;
+ * case BUMP_SEQUENCE_BAD_SEQ:
+ *     void;
+ * };
+ * </pre>
+ */
 public class BumpSequenceResult implements XdrElement {
   public BumpSequenceResult() {}
 

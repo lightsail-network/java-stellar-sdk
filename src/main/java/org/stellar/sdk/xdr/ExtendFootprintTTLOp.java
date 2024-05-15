@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ExtendFootprintTTLOp
-//  {
-//      ExtensionPoint ext;
-//      uint32 extendTo;
-//  };
-
-//  ===========================================================================
+/**
+ * ExtendFootprintTTLOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ExtendFootprintTTLOp
+ * {
+ *     ExtensionPoint ext;
+ *     uint32 extendTo;
+ * };
+ * </pre>
+ */
 public class ExtendFootprintTTLOp implements XdrElement {
   public ExtendFootprintTTLOp() {}
 

@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SetTrustLineFlagsResult switch (SetTrustLineFlagsResultCode code)
-//  {
-//  case SET_TRUST_LINE_FLAGS_SUCCESS:
-//      void;
-//  case SET_TRUST_LINE_FLAGS_MALFORMED:
-//  case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
-//  case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
-//  case SET_TRUST_LINE_FLAGS_INVALID_STATE:
-//  case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * SetTrustLineFlagsResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SetTrustLineFlagsResult switch (SetTrustLineFlagsResultCode code)
+ * {
+ * case SET_TRUST_LINE_FLAGS_SUCCESS:
+ *     void;
+ * case SET_TRUST_LINE_FLAGS_MALFORMED:
+ * case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+ * case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+ * case SET_TRUST_LINE_FLAGS_INVALID_STATE:
+ * case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
+ *     void;
+ * };
+ * </pre>
+ */
 public class SetTrustLineFlagsResult implements XdrElement {
   public SetTrustLineFlagsResult() {}
 

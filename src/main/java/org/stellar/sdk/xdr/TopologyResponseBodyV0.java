@@ -11,18 +11,20 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TopologyResponseBodyV0
-//  {
-//      PeerStatList inboundPeers;
-//      PeerStatList outboundPeers;
-//
-//      uint32 totalInboundPeerCount;
-//      uint32 totalOutboundPeerCount;
-//  };
-
-//  ===========================================================================
+/**
+ * TopologyResponseBodyV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TopologyResponseBodyV0
+ * {
+ *     PeerStatList inboundPeers;
+ *     PeerStatList outboundPeers;
+ *
+ *     uint32 totalInboundPeerCount;
+ *     uint32 totalOutboundPeerCount;
+ * };
+ * </pre>
+ */
 public class TopologyResponseBodyV0 implements XdrElement {
   public TopologyResponseBodyV0() {}
 

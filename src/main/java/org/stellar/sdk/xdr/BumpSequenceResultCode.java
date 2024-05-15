@@ -10,17 +10,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum BumpSequenceResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      BUMP_SEQUENCE_SUCCESS = 0,
-//      // codes considered as "failure" for the operation
-//      BUMP_SEQUENCE_BAD_SEQ = -1 // `bumpTo` is not within bounds
-//  };
-
-//  ===========================================================================
+/**
+ * BumpSequenceResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum BumpSequenceResultCode
+ * {
+ *     // codes considered as "success" for the operation
+ *     BUMP_SEQUENCE_SUCCESS = 0,
+ *     // codes considered as "failure" for the operation
+ *     BUMP_SEQUENCE_BAD_SEQ = -1 // `bumpTo` is not within bounds
+ * };
+ * </pre>
+ */
 public enum BumpSequenceResultCode implements XdrElement {
   BUMP_SEQUENCE_SUCCESS(0),
   BUMP_SEQUENCE_BAD_SEQ(-1),

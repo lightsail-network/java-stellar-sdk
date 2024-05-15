@@ -11,18 +11,20 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SurveyRequestMessage
-//  {
-//      NodeID surveyorPeerID;
-//      NodeID surveyedPeerID;
-//      uint32 ledgerNum;
-//      Curve25519Public encryptionKey;
-//      SurveyMessageCommandType commandType;
-//  };
-
-//  ===========================================================================
+/**
+ * SurveyRequestMessage's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SurveyRequestMessage
+ * {
+ *     NodeID surveyorPeerID;
+ *     NodeID surveyedPeerID;
+ *     uint32 ledgerNum;
+ *     Curve25519Public encryptionKey;
+ *     SurveyMessageCommandType commandType;
+ * };
+ * </pre>
+ */
 public class SurveyRequestMessage implements XdrElement {
   public SurveyRequestMessage() {}
 

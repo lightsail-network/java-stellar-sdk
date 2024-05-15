@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef uint64 TimePoint;
-
-//  ===========================================================================
+/**
+ * TimePoint's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef uint64 TimePoint;
+ * </pre>
+ */
 public class TimePoint implements XdrElement {
   private Uint64 TimePoint;
 

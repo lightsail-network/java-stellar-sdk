@@ -12,26 +12,28 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ContractCodeEntry {
-//      union switch (int v)
-//      {
-//          case 0:
-//              void;
-//          case 1:
-//              struct
-//              {
-//                  ExtensionPoint ext;
-//                  ContractCodeCostInputs costInputs;
-//              } v1;
-//      } ext;
-//
-//      Hash hash;
-//      opaque code<>;
-//  };
-
-//  ===========================================================================
+/**
+ * ContractCodeEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ContractCodeEntry {
+ *     union switch (int v)
+ *     {
+ *         case 0:
+ *             void;
+ *         case 1:
+ *             struct
+ *             {
+ *                 ExtensionPoint ext;
+ *                 ContractCodeCostInputs costInputs;
+ *             } v1;
+ *     } ext;
+ *
+ *     Hash hash;
+ *     opaque code&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class ContractCodeEntry implements XdrElement {
   public ContractCodeEntry() {}
 
@@ -158,6 +160,23 @@ public class ContractCodeEntry implements XdrElement {
     }
   }
 
+  /**
+   * ContractCodeEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *         case 0:
+   *             void;
+   *         case 1:
+   *             struct
+   *             {
+   *                 ExtensionPoint ext;
+   *                 ContractCodeCostInputs costInputs;
+   *             } v1;
+   *     }
+   * </pre>
+   */
   public static class ContractCodeEntryExt implements XdrElement {
     public ContractCodeEntryExt() {}
 
@@ -275,6 +294,17 @@ public class ContractCodeEntry implements XdrElement {
       return decode(xdrDataInputStream);
     }
 
+    /**
+     * ContractCodeEntryV1's original definition in the XDR file is:
+     *
+     * <pre>
+     * struct
+     *             {
+     *                 ExtensionPoint ext;
+     *                 ContractCodeCostInputs costInputs;
+     *             }
+     * </pre>
+     */
     public static class ContractCodeEntryV1 implements XdrElement {
       public ContractCodeEntryV1() {}
 
