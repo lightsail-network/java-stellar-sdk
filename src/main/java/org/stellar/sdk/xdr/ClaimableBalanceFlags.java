@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ClaimableBalanceFlags
-//  {
-//      // If set, the issuer account of the asset held by the claimable balance may
-//      // clawback the claimable balance
-//      CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG = 0x1
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimableBalanceFlags's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ClaimableBalanceFlags
+ * {
+ *     // If set, the issuer account of the asset held by the claimable balance may
+ *     // clawback the claimable balance
+ *     CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG = 0x1
+ * };
+ * </pre>
+ */
 public enum ClaimableBalanceFlags implements XdrElement {
   CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG(1),
   ;

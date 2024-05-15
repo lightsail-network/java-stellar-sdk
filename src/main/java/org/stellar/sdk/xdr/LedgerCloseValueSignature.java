@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerCloseValueSignature
-//  {
-//      NodeID nodeID;       // which node introduced the value
-//      Signature signature; // nodeID's signature
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerCloseValueSignature's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerCloseValueSignature
+ * {
+ *     NodeID nodeID;       // which node introduced the value
+ *     Signature signature; // nodeID&#39;s signature
+ * };
+ * </pre>
+ */
 public class LedgerCloseValueSignature implements XdrElement {
   public LedgerCloseValueSignature() {}
 

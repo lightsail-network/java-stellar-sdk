@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef hyper int64;
-
-//  ===========================================================================
+/**
+ * Int64's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef hyper int64;
+ * </pre>
+ */
 public class Int64 implements XdrElement {
   private Long int64;
 

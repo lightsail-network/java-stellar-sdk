@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef unsigned int uint32;
-
-//  ===========================================================================
+/**
+ * Uint32's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef unsigned int uint32;
+ * </pre>
+ */
 public class Uint32 implements XdrElement {
   private XdrUnsignedInteger uint32;
 

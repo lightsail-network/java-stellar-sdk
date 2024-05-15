@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SorobanAuthorizedInvocation
-//  {
-//      SorobanAuthorizedFunction function;
-//      SorobanAuthorizedInvocation subInvocations<>;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanAuthorizedInvocation's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SorobanAuthorizedInvocation
+ * {
+ *     SorobanAuthorizedFunction function;
+ *     SorobanAuthorizedInvocation subInvocations&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class SorobanAuthorizedInvocation implements XdrElement {
   public SorobanAuthorizedInvocation() {}
 

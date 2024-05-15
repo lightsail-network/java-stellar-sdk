@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct StoredDebugTransactionSet
-//  {
-//  	StoredTransactionSet txSet;
-//  	uint32 ledgerSeq;
-//  	StellarValue scpValue;
-//  };
-
-//  ===========================================================================
+/**
+ * StoredDebugTransactionSet's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct StoredDebugTransactionSet
+ * {
+ * 	StoredTransactionSet txSet;
+ * 	uint32 ledgerSeq;
+ * 	StellarValue scpValue;
+ * };
+ * </pre>
+ */
 public class StoredDebugTransactionSet implements XdrElement {
   public StoredDebugTransactionSet() {}
 

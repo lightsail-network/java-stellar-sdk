@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionSetV1
-//  {
-//      Hash previousLedgerHash;
-//      TransactionPhase phases<>;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionSetV1's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionSetV1
+ * {
+ *     Hash previousLedgerHash;
+ *     TransactionPhase phases&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class TransactionSetV1 implements XdrElement {
   public TransactionSetV1() {}
 

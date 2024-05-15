@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerCloseMetaExtV1
-//  {
-//      ExtensionPoint ext;
-//      int64 sorobanFeeWrite1KB;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerCloseMetaExtV1's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerCloseMetaExtV1
+ * {
+ *     ExtensionPoint ext;
+ *     int64 sorobanFeeWrite1KB;
+ * };
+ * </pre>
+ */
 public class LedgerCloseMetaExtV1 implements XdrElement {
   public LedgerCloseMetaExtV1() {}
 

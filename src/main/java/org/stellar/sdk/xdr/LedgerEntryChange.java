@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union LedgerEntryChange switch (LedgerEntryChangeType type)
-//  {
-//  case LEDGER_ENTRY_CREATED:
-//      LedgerEntry created;
-//  case LEDGER_ENTRY_UPDATED:
-//      LedgerEntry updated;
-//  case LEDGER_ENTRY_REMOVED:
-//      LedgerKey removed;
-//  case LEDGER_ENTRY_STATE:
-//      LedgerEntry state;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerEntryChange's original definition in the XDR file is:
+ *
+ * <pre>
+ * union LedgerEntryChange switch (LedgerEntryChangeType type)
+ * {
+ * case LEDGER_ENTRY_CREATED:
+ *     LedgerEntry created;
+ * case LEDGER_ENTRY_UPDATED:
+ *     LedgerEntry updated;
+ * case LEDGER_ENTRY_REMOVED:
+ *     LedgerKey removed;
+ * case LEDGER_ENTRY_STATE:
+ *     LedgerEntry state;
+ * };
+ * </pre>
+ */
 public class LedgerEntryChange implements XdrElement {
   public LedgerEntryChange() {}
 

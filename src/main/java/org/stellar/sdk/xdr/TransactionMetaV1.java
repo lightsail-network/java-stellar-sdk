@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionMetaV1
-//  {
-//      LedgerEntryChanges txChanges; // tx level changes if any
-//      OperationMeta operations<>;   // meta for each operation
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionMetaV1's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionMetaV1
+ * {
+ *     LedgerEntryChanges txChanges; // tx level changes if any
+ *     OperationMeta operations&lt;&gt;;   // meta for each operation
+ * };
+ * </pre>
+ */
 public class TransactionMetaV1 implements XdrElement {
   public TransactionMetaV1() {}
 

@@ -11,71 +11,73 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCVal switch (SCValType type)
-//  {
-//
-//  case SCV_BOOL:
-//      bool b;
-//  case SCV_VOID:
-//      void;
-//  case SCV_ERROR:
-//      SCError error;
-//
-//  case SCV_U32:
-//      uint32 u32;
-//  case SCV_I32:
-//      int32 i32;
-//
-//  case SCV_U64:
-//      uint64 u64;
-//  case SCV_I64:
-//      int64 i64;
-//  case SCV_TIMEPOINT:
-//      TimePoint timepoint;
-//  case SCV_DURATION:
-//      Duration duration;
-//
-//  case SCV_U128:
-//      UInt128Parts u128;
-//  case SCV_I128:
-//      Int128Parts i128;
-//
-//  case SCV_U256:
-//      UInt256Parts u256;
-//  case SCV_I256:
-//      Int256Parts i256;
-//
-//  case SCV_BYTES:
-//      SCBytes bytes;
-//  case SCV_STRING:
-//      SCString str;
-//  case SCV_SYMBOL:
-//      SCSymbol sym;
-//
-//  // Vec and Map are recursive so need to live
-//  // behind an option, due to xdrpp limitations.
-//  case SCV_VEC:
-//      SCVec *vec;
-//  case SCV_MAP:
-//      SCMap *map;
-//
-//  case SCV_ADDRESS:
-//      SCAddress address;
-//
-//  // Special SCVals reserved for system-constructed contract-data
-//  // ledger keys, not generally usable elsewhere.
-//  case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
-//      void;
-//  case SCV_LEDGER_KEY_NONCE:
-//      SCNonceKey nonce_key;
-//
-//  case SCV_CONTRACT_INSTANCE:
-//      SCContractInstance instance;
-//  };
-
-//  ===========================================================================
+/**
+ * SCVal's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCVal switch (SCValType type)
+ * {
+ *
+ * case SCV_BOOL:
+ *     bool b;
+ * case SCV_VOID:
+ *     void;
+ * case SCV_ERROR:
+ *     SCError error;
+ *
+ * case SCV_U32:
+ *     uint32 u32;
+ * case SCV_I32:
+ *     int32 i32;
+ *
+ * case SCV_U64:
+ *     uint64 u64;
+ * case SCV_I64:
+ *     int64 i64;
+ * case SCV_TIMEPOINT:
+ *     TimePoint timepoint;
+ * case SCV_DURATION:
+ *     Duration duration;
+ *
+ * case SCV_U128:
+ *     UInt128Parts u128;
+ * case SCV_I128:
+ *     Int128Parts i128;
+ *
+ * case SCV_U256:
+ *     UInt256Parts u256;
+ * case SCV_I256:
+ *     Int256Parts i256;
+ *
+ * case SCV_BYTES:
+ *     SCBytes bytes;
+ * case SCV_STRING:
+ *     SCString str;
+ * case SCV_SYMBOL:
+ *     SCSymbol sym;
+ *
+ * // Vec and Map are recursive so need to live
+ * // behind an option, due to xdrpp limitations.
+ * case SCV_VEC:
+ *     SCVec &#42;vec;
+ * case SCV_MAP:
+ *     SCMap &#42;map;
+ *
+ * case SCV_ADDRESS:
+ *     SCAddress address;
+ *
+ * // Special SCVals reserved for system-constructed contract-data
+ * // ledger keys, not generally usable elsewhere.
+ * case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
+ *     void;
+ * case SCV_LEDGER_KEY_NONCE:
+ *     SCNonceKey nonce_key;
+ *
+ * case SCV_CONTRACT_INSTANCE:
+ *     SCContractInstance instance;
+ * };
+ * </pre>
+ */
 public class SCVal implements XdrElement {
   public SCVal() {}
 

@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum PreconditionType
-//  {
-//      PRECOND_NONE = 0,
-//      PRECOND_TIME = 1,
-//      PRECOND_V2 = 2
-//  };
-
-//  ===========================================================================
+/**
+ * PreconditionType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum PreconditionType
+ * {
+ *     PRECOND_NONE = 0,
+ *     PRECOND_TIME = 1,
+ *     PRECOND_V2 = 2
+ * };
+ * </pre>
+ */
 public enum PreconditionType implements XdrElement {
   PRECOND_NONE(0),
   PRECOND_TIME(1),

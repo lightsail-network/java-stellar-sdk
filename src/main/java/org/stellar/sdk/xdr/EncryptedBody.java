@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque EncryptedBody<64000>;
-
-//  ===========================================================================
+/**
+ * EncryptedBody's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque EncryptedBody&lt;64000&gt;;
+ * </pre>
+ */
 public class EncryptedBody implements XdrElement {
   private byte[] EncryptedBody;
 

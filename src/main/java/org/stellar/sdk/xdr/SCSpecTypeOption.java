@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecTypeOption
-//  {
-//      SCSpecTypeDef valueType;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecTypeOption's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecTypeOption
+ * {
+ *     SCSpecTypeDef valueType;
+ * };
+ * </pre>
+ */
 public class SCSpecTypeOption implements XdrElement {
   public SCSpecTypeOption() {}
 

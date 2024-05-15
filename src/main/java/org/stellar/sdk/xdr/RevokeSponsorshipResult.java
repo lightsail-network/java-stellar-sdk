@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union RevokeSponsorshipResult switch (RevokeSponsorshipResultCode code)
-//  {
-//  case REVOKE_SPONSORSHIP_SUCCESS:
-//      void;
-//  case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
-//  case REVOKE_SPONSORSHIP_NOT_SPONSOR:
-//  case REVOKE_SPONSORSHIP_LOW_RESERVE:
-//  case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
-//  case REVOKE_SPONSORSHIP_MALFORMED:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * RevokeSponsorshipResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union RevokeSponsorshipResult switch (RevokeSponsorshipResultCode code)
+ * {
+ * case REVOKE_SPONSORSHIP_SUCCESS:
+ *     void;
+ * case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
+ * case REVOKE_SPONSORSHIP_NOT_SPONSOR:
+ * case REVOKE_SPONSORSHIP_LOW_RESERVE:
+ * case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
+ * case REVOKE_SPONSORSHIP_MALFORMED:
+ *     void;
+ * };
+ * </pre>
+ */
 public class RevokeSponsorshipResult implements XdrElement {
   public RevokeSponsorshipResult() {}
 

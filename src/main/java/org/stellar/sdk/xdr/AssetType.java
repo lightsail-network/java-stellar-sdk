@@ -10,17 +10,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum AssetType
-//  {
-//      ASSET_TYPE_NATIVE = 0,
-//      ASSET_TYPE_CREDIT_ALPHANUM4 = 1,
-//      ASSET_TYPE_CREDIT_ALPHANUM12 = 2,
-//      ASSET_TYPE_POOL_SHARE = 3
-//  };
-
-//  ===========================================================================
+/**
+ * AssetType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum AssetType
+ * {
+ *     ASSET_TYPE_NATIVE = 0,
+ *     ASSET_TYPE_CREDIT_ALPHANUM4 = 1,
+ *     ASSET_TYPE_CREDIT_ALPHANUM12 = 2,
+ *     ASSET_TYPE_POOL_SHARE = 3
+ * };
+ * </pre>
+ */
 public enum AssetType implements XdrElement {
   ASSET_TYPE_NATIVE(0),
   ASSET_TYPE_CREDIT_ALPHANUM4(1),

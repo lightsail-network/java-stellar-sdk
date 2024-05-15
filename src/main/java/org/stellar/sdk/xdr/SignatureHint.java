@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque SignatureHint[4];
-
-//  ===========================================================================
+/**
+ * SignatureHint's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque SignatureHint[4];
+ * </pre>
+ */
 public class SignatureHint implements XdrElement {
   private byte[] SignatureHint;
 

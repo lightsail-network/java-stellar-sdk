@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SurveyResponseBody switch (SurveyMessageResponseType type)
-//  {
-//  case SURVEY_TOPOLOGY_RESPONSE_V0:
-//      TopologyResponseBodyV0 topologyResponseBodyV0;
-//  case SURVEY_TOPOLOGY_RESPONSE_V1:
-//      TopologyResponseBodyV1 topologyResponseBodyV1;
-//  };
-
-//  ===========================================================================
+/**
+ * SurveyResponseBody's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SurveyResponseBody switch (SurveyMessageResponseType type)
+ * {
+ * case SURVEY_TOPOLOGY_RESPONSE_V0:
+ *     TopologyResponseBodyV0 topologyResponseBodyV0;
+ * case SURVEY_TOPOLOGY_RESPONSE_V1:
+ *     TopologyResponseBodyV1 topologyResponseBodyV1;
+ * };
+ * </pre>
+ */
 public class SurveyResponseBody implements XdrElement {
   public SurveyResponseBody() {}
 

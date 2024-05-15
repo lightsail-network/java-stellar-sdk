@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct CreateAccountOp
-//  {
-//      AccountID destination; // account to create
-//      int64 startingBalance; // amount they end up with
-//  };
-
-//  ===========================================================================
+/**
+ * CreateAccountOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct CreateAccountOp
+ * {
+ *     AccountID destination; // account to create
+ *     int64 startingBalance; // amount they end up with
+ * };
+ * </pre>
+ */
 public class CreateAccountOp implements XdrElement {
   public CreateAccountOp() {}
 

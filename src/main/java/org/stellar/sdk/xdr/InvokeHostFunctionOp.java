@@ -12,17 +12,19 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct InvokeHostFunctionOp
-//  {
-//      // Host function to invoke.
-//      HostFunction hostFunction;
-//      // Per-address authorizations for this host function.
-//      SorobanAuthorizationEntry auth<>;
-//  };
-
-//  ===========================================================================
+/**
+ * InvokeHostFunctionOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct InvokeHostFunctionOp
+ * {
+ *     // Host function to invoke.
+ *     HostFunction hostFunction;
+ *     // Per-address authorizations for this host function.
+ *     SorobanAuthorizationEntry auth&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class InvokeHostFunctionOp implements XdrElement {
   public InvokeHostFunctionOp() {}
 

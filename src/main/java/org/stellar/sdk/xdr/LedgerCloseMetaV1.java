@@ -12,40 +12,42 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerCloseMetaV1
-//  {
-//      LedgerCloseMetaExt ext;
-//
-//      LedgerHeaderHistoryEntry ledgerHeader;
-//
-//      GeneralizedTransactionSet txSet;
-//
-//      // NB: transactions are sorted in apply order here
-//      // fees for all transactions are processed first
-//      // followed by applying transactions
-//      TransactionResultMeta txProcessing<>;
-//
-//      // upgrades are applied last
-//      UpgradeEntryMeta upgradesProcessing<>;
-//
-//      // other misc information attached to the ledger close
-//      SCPHistoryEntry scpInfo<>;
-//
-//      // Size in bytes of BucketList, to support downstream
-//      // systems calculating storage fees correctly.
-//      uint64 totalByteSizeOfBucketList;
-//
-//      // Temp keys that are being evicted at this ledger.
-//      LedgerKey evictedTemporaryLedgerKeys<>;
-//
-//      // Archived restorable ledger entries that are being
-//      // evicted at this ledger.
-//      LedgerEntry evictedPersistentLedgerEntries<>;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerCloseMetaV1's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerCloseMetaV1
+ * {
+ *     LedgerCloseMetaExt ext;
+ *
+ *     LedgerHeaderHistoryEntry ledgerHeader;
+ *
+ *     GeneralizedTransactionSet txSet;
+ *
+ *     // NB: transactions are sorted in apply order here
+ *     // fees for all transactions are processed first
+ *     // followed by applying transactions
+ *     TransactionResultMeta txProcessing&lt;&gt;;
+ *
+ *     // upgrades are applied last
+ *     UpgradeEntryMeta upgradesProcessing&lt;&gt;;
+ *
+ *     // other misc information attached to the ledger close
+ *     SCPHistoryEntry scpInfo&lt;&gt;;
+ *
+ *     // Size in bytes of BucketList, to support downstream
+ *     // systems calculating storage fees correctly.
+ *     uint64 totalByteSizeOfBucketList;
+ *
+ *     // Temp keys that are being evicted at this ledger.
+ *     LedgerKey evictedTemporaryLedgerKeys&lt;&gt;;
+ *
+ *     // Archived restorable ledger entries that are being
+ *     // evicted at this ledger.
+ *     LedgerEntry evictedPersistentLedgerEntries&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class LedgerCloseMetaV1 implements XdrElement {
   public LedgerCloseMetaV1() {}
 

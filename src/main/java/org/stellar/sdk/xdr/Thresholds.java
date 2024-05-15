@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque Thresholds[4];
-
-//  ===========================================================================
+/**
+ * Thresholds's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque Thresholds[4];
+ * </pre>
+ */
 public class Thresholds implements XdrElement {
   private byte[] Thresholds;
 

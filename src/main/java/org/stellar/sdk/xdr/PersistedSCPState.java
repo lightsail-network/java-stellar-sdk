@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union PersistedSCPState switch (int v)
-//  {
-//  case 0:
-//  	PersistedSCPStateV0 v0;
-//  case 1:
-//  	PersistedSCPStateV1 v1;
-//  };
-
-//  ===========================================================================
+/**
+ * PersistedSCPState's original definition in the XDR file is:
+ *
+ * <pre>
+ * union PersistedSCPState switch (int v)
+ * {
+ * case 0:
+ * 	PersistedSCPStateV0 v0;
+ * case 1:
+ * 	PersistedSCPStateV1 v1;
+ * };
+ * </pre>
+ */
 public class PersistedSCPState implements XdrElement {
   public PersistedSCPState() {}
 

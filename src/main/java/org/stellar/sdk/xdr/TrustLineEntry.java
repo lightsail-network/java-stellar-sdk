@@ -11,42 +11,44 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TrustLineEntry
-//  {
-//      AccountID accountID;  // account this trustline belongs to
-//      TrustLineAsset asset; // type of asset (with issuer)
-//      int64 balance;        // how much of this asset the user has.
-//                            // Asset defines the unit for this;
-//
-//      int64 limit;  // balance cannot be above this
-//      uint32 flags; // see TrustLineFlags
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      case 1:
-//          struct
-//          {
-//              Liabilities liabilities;
-//
-//              union switch (int v)
-//              {
-//              case 0:
-//                  void;
-//              case 2:
-//                  TrustLineEntryExtensionV2 v2;
-//              }
-//              ext;
-//          } v1;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * TrustLineEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TrustLineEntry
+ * {
+ *     AccountID accountID;  // account this trustline belongs to
+ *     TrustLineAsset asset; // type of asset (with issuer)
+ *     int64 balance;        // how much of this asset the user has.
+ *                           // Asset defines the unit for this;
+ *
+ *     int64 limit;  // balance cannot be above this
+ *     uint32 flags; // see TrustLineFlags
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 1:
+ *         struct
+ *         {
+ *             Liabilities liabilities;
+ *
+ *             union switch (int v)
+ *             {
+ *             case 0:
+ *                 void;
+ *             case 2:
+ *                 TrustLineEntryExtensionV2 v2;
+ *             }
+ *             ext;
+ *         } v1;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class TrustLineEntry implements XdrElement {
   public TrustLineEntry() {}
 
@@ -229,6 +231,31 @@ public class TrustLineEntry implements XdrElement {
     }
   }
 
+  /**
+   * TrustLineEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 1:
+   *         struct
+   *         {
+   *             Liabilities liabilities;
+   *
+   *             union switch (int v)
+   *             {
+   *             case 0:
+   *                 void;
+   *             case 2:
+   *                 TrustLineEntryExtensionV2 v2;
+   *             }
+   *             ext;
+   *         } v1;
+   *     }
+   * </pre>
+   */
   public static class TrustLineEntryExt implements XdrElement {
     public TrustLineEntryExt() {}
 
@@ -345,6 +372,25 @@ public class TrustLineEntry implements XdrElement {
       return decode(xdrDataInputStream);
     }
 
+    /**
+     * TrustLineEntryV1's original definition in the XDR file is:
+     *
+     * <pre>
+     * struct
+     *         {
+     *             Liabilities liabilities;
+     *
+     *             union switch (int v)
+     *             {
+     *             case 0:
+     *                 void;
+     *             case 2:
+     *                 TrustLineEntryExtensionV2 v2;
+     *             }
+     *             ext;
+     *         }
+     * </pre>
+     */
     public static class TrustLineEntryV1 implements XdrElement {
       public TrustLineEntryV1() {}
 
@@ -447,6 +493,19 @@ public class TrustLineEntry implements XdrElement {
         }
       }
 
+      /**
+       * TrustLineEntryV1Ext's original definition in the XDR file is:
+       *
+       * <pre>
+       * union switch (int v)
+       *             {
+       *             case 0:
+       *                 void;
+       *             case 2:
+       *                 TrustLineEntryExtensionV2 v2;
+       *             }
+       * </pre>
+       */
       public static class TrustLineEntryV1Ext implements XdrElement {
         public TrustLineEntryV1Ext() {}
 

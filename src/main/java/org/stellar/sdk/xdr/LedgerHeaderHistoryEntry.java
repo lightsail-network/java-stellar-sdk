@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerHeaderHistoryEntry
-//  {
-//      Hash hash;
-//      LedgerHeader header;
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerHeaderHistoryEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerHeaderHistoryEntry
+ * {
+ *     Hash hash;
+ *     LedgerHeader header;
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class LedgerHeaderHistoryEntry implements XdrElement {
   public LedgerHeaderHistoryEntry() {}
 
@@ -151,6 +153,17 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     }
   }
 
+  /**
+   * LedgerHeaderHistoryEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class LedgerHeaderHistoryEntryExt implements XdrElement {
     public LedgerHeaderHistoryEntryExt() {}
 

@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union BeginSponsoringFutureReservesResult switch (
-//      BeginSponsoringFutureReservesResultCode code)
-//  {
-//  case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
-//      void;
-//  case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
-//  case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
-//  case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * BeginSponsoringFutureReservesResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union BeginSponsoringFutureReservesResult switch (
+ *     BeginSponsoringFutureReservesResultCode code)
+ * {
+ * case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
+ *     void;
+ * case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
+ * case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
+ * case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
+ *     void;
+ * };
+ * </pre>
+ */
 public class BeginSponsoringFutureReservesResult implements XdrElement {
   public BeginSponsoringFutureReservesResult() {}
 

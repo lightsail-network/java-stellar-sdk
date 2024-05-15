@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Error
-//  {
-//      ErrorCode code;
-//      string msg<100>;
-//  };
-
-//  ===========================================================================
+/**
+ * Error's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Error
+ * {
+ *     ErrorCode code;
+ *     string msg&lt;100&gt;;
+ * };
+ * </pre>
+ */
 public class Error implements XdrElement {
   public Error() {}
 

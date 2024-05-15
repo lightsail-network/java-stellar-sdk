@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCEnvMetaEntry switch (SCEnvMetaKind kind)
-//  {
-//  case SC_ENV_META_KIND_INTERFACE_VERSION:
-//      uint64 interfaceVersion;
-//  };
-
-//  ===========================================================================
+/**
+ * SCEnvMetaEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCEnvMetaEntry switch (SCEnvMetaKind kind)
+ * {
+ * case SC_ENV_META_KIND_INTERFACE_VERSION:
+ *     uint64 interfaceVersion;
+ * };
+ * </pre>
+ */
 public class SCEnvMetaEntry implements XdrElement {
   public SCEnvMetaEntry() {}
 

@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct BucketMetadata
-//  {
-//      // Indicates the protocol version used to create / merge this bucket.
-//      uint32 ledgerVersion;
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * BucketMetadata's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct BucketMetadata
+ * {
+ *     // Indicates the protocol version used to create / merge this bucket.
+ *     uint32 ledgerVersion;
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class BucketMetadata implements XdrElement {
   public BucketMetadata() {}
 
@@ -130,6 +132,17 @@ public class BucketMetadata implements XdrElement {
     }
   }
 
+  /**
+   * BucketMetadataExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class BucketMetadataExt implements XdrElement {
     public BucketMetadataExt() {}
 

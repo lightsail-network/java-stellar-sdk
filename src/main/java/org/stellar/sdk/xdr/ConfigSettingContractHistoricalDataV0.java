@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ConfigSettingContractHistoricalDataV0
-//  {
-//      int64 feeHistorical1KB; // Fee for storing 1KB in archives
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigSettingContractHistoricalDataV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ConfigSettingContractHistoricalDataV0
+ * {
+ *     int64 feeHistorical1KB; // Fee for storing 1KB in archives
+ * };
+ * </pre>
+ */
 public class ConfigSettingContractHistoricalDataV0 implements XdrElement {
   public ConfigSettingContractHistoricalDataV0() {}
 

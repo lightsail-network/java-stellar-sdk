@@ -11,25 +11,27 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SorobanTransactionData
-//  {
-//      ExtensionPoint ext;
-//      SorobanResources resources;
-//      // Amount of the transaction `fee` allocated to the Soroban resource fees.
-//      // The fraction of `resourceFee` corresponding to `resources` specified
-//      // above is *not* refundable (i.e. fees for instructions, ledger I/O), as
-//      // well as fees for the transaction size.
-//      // The remaining part of the fee is refundable and the charged value is
-//      // based on the actual consumption of refundable resources (events, ledger
-//      // rent bumps).
-//      // The `inclusionFee` used for prioritization of the transaction is defined
-//      // as `tx.fee - resourceFee`.
-//      int64 resourceFee;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanTransactionData's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SorobanTransactionData
+ * {
+ *     ExtensionPoint ext;
+ *     SorobanResources resources;
+ *     // Amount of the transaction `fee` allocated to the Soroban resource fees.
+ *     // The fraction of `resourceFee` corresponding to `resources` specified
+ *     // above is &#42;not&#42; refundable (i.e. fees for instructions, ledger I/O), as
+ *     // well as fees for the transaction size.
+ *     // The remaining part of the fee is refundable and the charged value is
+ *     // based on the actual consumption of refundable resources (events, ledger
+ *     // rent bumps).
+ *     // The `inclusionFee` used for prioritization of the transaction is defined
+ *     // as `tx.fee - resourceFee`.
+ *     int64 resourceFee;
+ * };
+ * </pre>
+ */
 public class SorobanTransactionData implements XdrElement {
   public SorobanTransactionData() {}
 

@@ -10,18 +10,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum MemoType
-//  {
-//      MEMO_NONE = 0,
-//      MEMO_TEXT = 1,
-//      MEMO_ID = 2,
-//      MEMO_HASH = 3,
-//      MEMO_RETURN = 4
-//  };
-
-//  ===========================================================================
+/**
+ * MemoType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum MemoType
+ * {
+ *     MEMO_NONE = 0,
+ *     MEMO_TEXT = 1,
+ *     MEMO_ID = 2,
+ *     MEMO_HASH = 3,
+ *     MEMO_RETURN = 4
+ * };
+ * </pre>
+ */
 public enum MemoType implements XdrElement {
   MEMO_NONE(0),
   MEMO_TEXT(1),

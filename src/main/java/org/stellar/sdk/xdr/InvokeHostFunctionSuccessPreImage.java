@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct InvokeHostFunctionSuccessPreImage
-//  {
-//      SCVal returnValue;
-//      ContractEvent events<>;
-//  };
-
-//  ===========================================================================
+/**
+ * InvokeHostFunctionSuccessPreImage's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct InvokeHostFunctionSuccessPreImage
+ * {
+ *     SCVal returnValue;
+ *     ContractEvent events&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class InvokeHostFunctionSuccessPreImage implements XdrElement {
   public InvokeHostFunctionSuccessPreImage() {}
 

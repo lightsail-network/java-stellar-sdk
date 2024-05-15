@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ContractExecutable switch (ContractExecutableType type)
-//  {
-//  case CONTRACT_EXECUTABLE_WASM:
-//      Hash wasm_hash;
-//  case CONTRACT_EXECUTABLE_STELLAR_ASSET:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * ContractExecutable's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ContractExecutable switch (ContractExecutableType type)
+ * {
+ * case CONTRACT_EXECUTABLE_WASM:
+ *     Hash wasm_hash;
+ * case CONTRACT_EXECUTABLE_STELLAR_ASSET:
+ *     void;
+ * };
+ * </pre>
+ */
 public class ContractExecutable implements XdrElement {
   public ContractExecutable() {}
 

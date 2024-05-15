@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque Signature<64>;
-
-//  ===========================================================================
+/**
+ * Signature's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque Signature&lt;64&gt;;
+ * </pre>
+ */
 public class Signature implements XdrElement {
   private byte[] Signature;
 

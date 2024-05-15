@@ -12,34 +12,36 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ClaimableBalanceEntry
-//  {
-//      // Unique identifier for this ClaimableBalanceEntry
-//      ClaimableBalanceID balanceID;
-//
-//      // List of claimants with associated predicate
-//      Claimant claimants<10>;
-//
-//      // Any asset including native
-//      Asset asset;
-//
-//      // Amount of asset
-//      int64 amount;
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      case 1:
-//          ClaimableBalanceEntryExtensionV1 v1;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimableBalanceEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ClaimableBalanceEntry
+ * {
+ *     // Unique identifier for this ClaimableBalanceEntry
+ *     ClaimableBalanceID balanceID;
+ *
+ *     // List of claimants with associated predicate
+ *     Claimant claimants&lt;10&gt;;
+ *
+ *     // Any asset including native
+ *     Asset asset;
+ *
+ *     // Amount of asset
+ *     int64 amount;
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 1:
+ *         ClaimableBalanceEntryExtensionV1 v1;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class ClaimableBalanceEntry implements XdrElement {
   public ClaimableBalanceEntry() {}
 
@@ -212,6 +214,19 @@ public class ClaimableBalanceEntry implements XdrElement {
     }
   }
 
+  /**
+   * ClaimableBalanceEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 1:
+   *         ClaimableBalanceEntryExtensionV1 v1;
+   *     }
+   * </pre>
+   */
   public static class ClaimableBalanceEntryExt implements XdrElement {
     public ClaimableBalanceEntryExt() {}
 

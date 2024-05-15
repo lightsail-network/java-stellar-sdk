@@ -10,14 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum PublicKeyType
-//  {
-//      PUBLIC_KEY_TYPE_ED25519 = KEY_TYPE_ED25519
-//  };
-
-//  ===========================================================================
+/**
+ * PublicKeyType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum PublicKeyType
+ * {
+ *     PUBLIC_KEY_TYPE_ED25519 = KEY_TYPE_ED25519
+ * };
+ * </pre>
+ */
 public enum PublicKeyType implements XdrElement {
   PUBLIC_KEY_TYPE_ED25519(0),
   ;

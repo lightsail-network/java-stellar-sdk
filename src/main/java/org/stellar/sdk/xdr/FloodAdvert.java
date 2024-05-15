@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct FloodAdvert
-//  {
-//      TxAdvertVector txHashes;
-//  };
-
-//  ===========================================================================
+/**
+ * FloodAdvert's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct FloodAdvert
+ * {
+ *     TxAdvertVector txHashes;
+ * };
+ * </pre>
+ */
 public class FloodAdvert implements XdrElement {
   public FloodAdvert() {}
 

@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct EvictionIterator {
-//      uint32 bucketListLevel;
-//      bool isCurrBucket;
-//      uint64 bucketFileOffset;
-//  };
-
-//  ===========================================================================
+/**
+ * EvictionIterator's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct EvictionIterator {
+ *     uint32 bucketListLevel;
+ *     bool isCurrBucket;
+ *     uint64 bucketFileOffset;
+ * };
+ * </pre>
+ */
 public class EvictionIterator implements XdrElement {
   public EvictionIterator() {}
 

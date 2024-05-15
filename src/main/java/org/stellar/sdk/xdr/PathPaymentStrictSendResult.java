@@ -12,34 +12,36 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union PathPaymentStrictSendResult switch (PathPaymentStrictSendResultCode code)
-//  {
-//  case PATH_PAYMENT_STRICT_SEND_SUCCESS:
-//      struct
-//      {
-//          ClaimAtom offers<>;
-//          SimplePaymentResult last;
-//      } success;
-//  case PATH_PAYMENT_STRICT_SEND_MALFORMED:
-//  case PATH_PAYMENT_STRICT_SEND_UNDERFUNDED:
-//  case PATH_PAYMENT_STRICT_SEND_SRC_NO_TRUST:
-//  case PATH_PAYMENT_STRICT_SEND_SRC_NOT_AUTHORIZED:
-//  case PATH_PAYMENT_STRICT_SEND_NO_DESTINATION:
-//  case PATH_PAYMENT_STRICT_SEND_NO_TRUST:
-//  case PATH_PAYMENT_STRICT_SEND_NOT_AUTHORIZED:
-//  case PATH_PAYMENT_STRICT_SEND_LINE_FULL:
-//      void;
-//  case PATH_PAYMENT_STRICT_SEND_NO_ISSUER:
-//      Asset noIssuer; // the asset that caused the error
-//  case PATH_PAYMENT_STRICT_SEND_TOO_FEW_OFFERS:
-//  case PATH_PAYMENT_STRICT_SEND_OFFER_CROSS_SELF:
-//  case PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * PathPaymentStrictSendResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union PathPaymentStrictSendResult switch (PathPaymentStrictSendResultCode code)
+ * {
+ * case PATH_PAYMENT_STRICT_SEND_SUCCESS:
+ *     struct
+ *     {
+ *         ClaimAtom offers&lt;&gt;;
+ *         SimplePaymentResult last;
+ *     } success;
+ * case PATH_PAYMENT_STRICT_SEND_MALFORMED:
+ * case PATH_PAYMENT_STRICT_SEND_UNDERFUNDED:
+ * case PATH_PAYMENT_STRICT_SEND_SRC_NO_TRUST:
+ * case PATH_PAYMENT_STRICT_SEND_SRC_NOT_AUTHORIZED:
+ * case PATH_PAYMENT_STRICT_SEND_NO_DESTINATION:
+ * case PATH_PAYMENT_STRICT_SEND_NO_TRUST:
+ * case PATH_PAYMENT_STRICT_SEND_NOT_AUTHORIZED:
+ * case PATH_PAYMENT_STRICT_SEND_LINE_FULL:
+ *     void;
+ * case PATH_PAYMENT_STRICT_SEND_NO_ISSUER:
+ *     Asset noIssuer; // the asset that caused the error
+ * case PATH_PAYMENT_STRICT_SEND_TOO_FEW_OFFERS:
+ * case PATH_PAYMENT_STRICT_SEND_OFFER_CROSS_SELF:
+ * case PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN:
+ *     void;
+ * };
+ * </pre>
+ */
 public class PathPaymentStrictSendResult implements XdrElement {
   public PathPaymentStrictSendResult() {}
 
@@ -207,6 +209,17 @@ public class PathPaymentStrictSendResult implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * PathPaymentStrictSendResultSuccess's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         ClaimAtom offers&lt;&gt;;
+   *         SimplePaymentResult last;
+   *     }
+   * </pre>
+   */
   public static class PathPaymentStrictSendResultSuccess implements XdrElement {
     public PathPaymentStrictSendResultSuccess() {}
 

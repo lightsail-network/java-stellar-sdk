@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct DiagnosticEvent
-//  {
-//      bool inSuccessfulContractCall;
-//      ContractEvent event;
-//  };
-
-//  ===========================================================================
+/**
+ * DiagnosticEvent's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct DiagnosticEvent
+ * {
+ *     bool inSuccessfulContractCall;
+ *     ContractEvent event;
+ * };
+ * </pre>
+ */
 public class DiagnosticEvent implements XdrElement {
   public DiagnosticEvent() {}
 

@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum TxSetComponentType
-//  {
-//    // txs with effective fee <= bid derived from a base fee (if any).
-//    // If base fee is not specified, no discount is applied.
-//    TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE = 0
-//  };
-
-//  ===========================================================================
+/**
+ * TxSetComponentType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum TxSetComponentType
+ * {
+ *   // txs with effective fee &lt;= bid derived from a base fee (if any).
+ *   // If base fee is not specified, no discount is applied.
+ *   TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE = 0
+ * };
+ * </pre>
+ */
 public enum TxSetComponentType implements XdrElement {
   TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE(0),
   ;

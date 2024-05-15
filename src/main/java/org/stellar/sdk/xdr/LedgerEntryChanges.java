@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef LedgerEntryChange LedgerEntryChanges<>;
-
-//  ===========================================================================
+/**
+ * LedgerEntryChanges's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef LedgerEntryChange LedgerEntryChanges&lt;&gt;;
+ * </pre>
+ */
 public class LedgerEntryChanges implements XdrElement {
   private LedgerEntryChange[] LedgerEntryChanges;
 

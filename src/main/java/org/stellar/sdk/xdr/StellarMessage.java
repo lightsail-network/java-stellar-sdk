@@ -12,60 +12,62 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union StellarMessage switch (MessageType type)
-//  {
-//  case ERROR_MSG:
-//      Error error;
-//  case HELLO:
-//      Hello hello;
-//  case AUTH:
-//      Auth auth;
-//  case DONT_HAVE:
-//      DontHave dontHave;
-//  case GET_PEERS:
-//      void;
-//  case PEERS:
-//      PeerAddress peers<100>;
-//
-//  case GET_TX_SET:
-//      uint256 txSetHash;
-//  case TX_SET:
-//      TransactionSet txSet;
-//  case GENERALIZED_TX_SET:
-//      GeneralizedTransactionSet generalizedTxSet;
-//
-//  case TRANSACTION:
-//      TransactionEnvelope transaction;
-//
-//  case SURVEY_REQUEST:
-//      SignedSurveyRequestMessage signedSurveyRequestMessage;
-//
-//  case SURVEY_RESPONSE:
-//      SignedSurveyResponseMessage signedSurveyResponseMessage;
-//
-//  // SCP
-//  case GET_SCP_QUORUMSET:
-//      uint256 qSetHash;
-//  case SCP_QUORUMSET:
-//      SCPQuorumSet qSet;
-//  case SCP_MESSAGE:
-//      SCPEnvelope envelope;
-//  case GET_SCP_STATE:
-//      uint32 getSCPLedgerSeq; // ledger seq requested ; if 0, requests the latest
-//  case SEND_MORE:
-//      SendMore sendMoreMessage;
-//  case SEND_MORE_EXTENDED:
-//      SendMoreExtended sendMoreExtendedMessage;
-//  // Pull mode
-//  case FLOOD_ADVERT:
-//       FloodAdvert floodAdvert;
-//  case FLOOD_DEMAND:
-//       FloodDemand floodDemand;
-//  };
-
-//  ===========================================================================
+/**
+ * StellarMessage's original definition in the XDR file is:
+ *
+ * <pre>
+ * union StellarMessage switch (MessageType type)
+ * {
+ * case ERROR_MSG:
+ *     Error error;
+ * case HELLO:
+ *     Hello hello;
+ * case AUTH:
+ *     Auth auth;
+ * case DONT_HAVE:
+ *     DontHave dontHave;
+ * case GET_PEERS:
+ *     void;
+ * case PEERS:
+ *     PeerAddress peers&lt;100&gt;;
+ *
+ * case GET_TX_SET:
+ *     uint256 txSetHash;
+ * case TX_SET:
+ *     TransactionSet txSet;
+ * case GENERALIZED_TX_SET:
+ *     GeneralizedTransactionSet generalizedTxSet;
+ *
+ * case TRANSACTION:
+ *     TransactionEnvelope transaction;
+ *
+ * case SURVEY_REQUEST:
+ *     SignedSurveyRequestMessage signedSurveyRequestMessage;
+ *
+ * case SURVEY_RESPONSE:
+ *     SignedSurveyResponseMessage signedSurveyResponseMessage;
+ *
+ * // SCP
+ * case GET_SCP_QUORUMSET:
+ *     uint256 qSetHash;
+ * case SCP_QUORUMSET:
+ *     SCPQuorumSet qSet;
+ * case SCP_MESSAGE:
+ *     SCPEnvelope envelope;
+ * case GET_SCP_STATE:
+ *     uint32 getSCPLedgerSeq; // ledger seq requested ; if 0, requests the latest
+ * case SEND_MORE:
+ *     SendMore sendMoreMessage;
+ * case SEND_MORE_EXTENDED:
+ *     SendMoreExtended sendMoreExtendedMessage;
+ * // Pull mode
+ * case FLOOD_ADVERT:
+ *      FloodAdvert floodAdvert;
+ * case FLOOD_DEMAND:
+ *      FloodDemand floodDemand;
+ * };
+ * </pre>
+ */
 public class StellarMessage implements XdrElement {
   public StellarMessage() {}
 

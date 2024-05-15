@@ -11,43 +11,45 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union HashIDPreimage switch (EnvelopeType type)
-//  {
-//  case ENVELOPE_TYPE_OP_ID:
-//      struct
-//      {
-//          AccountID sourceAccount;
-//          SequenceNumber seqNum;
-//          uint32 opNum;
-//      } operationID;
-//  case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
-//      struct
-//      {
-//          AccountID sourceAccount;
-//          SequenceNumber seqNum;
-//          uint32 opNum;
-//          PoolID liquidityPoolID;
-//          Asset asset;
-//      } revokeID;
-//  case ENVELOPE_TYPE_CONTRACT_ID:
-//      struct
-//      {
-//          Hash networkID;
-//          ContractIDPreimage contractIDPreimage;
-//      } contractID;
-//  case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
-//      struct
-//      {
-//          Hash networkID;
-//          int64 nonce;
-//          uint32 signatureExpirationLedger;
-//          SorobanAuthorizedInvocation invocation;
-//      } sorobanAuthorization;
-//  };
-
-//  ===========================================================================
+/**
+ * HashIDPreimage's original definition in the XDR file is:
+ *
+ * <pre>
+ * union HashIDPreimage switch (EnvelopeType type)
+ * {
+ * case ENVELOPE_TYPE_OP_ID:
+ *     struct
+ *     {
+ *         AccountID sourceAccount;
+ *         SequenceNumber seqNum;
+ *         uint32 opNum;
+ *     } operationID;
+ * case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
+ *     struct
+ *     {
+ *         AccountID sourceAccount;
+ *         SequenceNumber seqNum;
+ *         uint32 opNum;
+ *         PoolID liquidityPoolID;
+ *         Asset asset;
+ *     } revokeID;
+ * case ENVELOPE_TYPE_CONTRACT_ID:
+ *     struct
+ *     {
+ *         Hash networkID;
+ *         ContractIDPreimage contractIDPreimage;
+ *     } contractID;
+ * case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
+ *     struct
+ *     {
+ *         Hash networkID;
+ *         int64 nonce;
+ *         uint32 signatureExpirationLedger;
+ *         SorobanAuthorizedInvocation invocation;
+ *     } sorobanAuthorization;
+ * };
+ * </pre>
+ */
 public class HashIDPreimage implements XdrElement {
   public HashIDPreimage() {}
 
@@ -236,6 +238,18 @@ public class HashIDPreimage implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * HashIDPreimageOperationID's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         AccountID sourceAccount;
+   *         SequenceNumber seqNum;
+   *         uint32 opNum;
+   *     }
+   * </pre>
+   */
   public static class HashIDPreimageOperationID implements XdrElement {
     public HashIDPreimageOperationID() {}
 
@@ -360,6 +374,20 @@ public class HashIDPreimage implements XdrElement {
     }
   }
 
+  /**
+   * HashIDPreimageRevokeID's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         AccountID sourceAccount;
+   *         SequenceNumber seqNum;
+   *         uint32 opNum;
+   *         PoolID liquidityPoolID;
+   *         Asset asset;
+   *     }
+   * </pre>
+   */
   public static class HashIDPreimageRevokeID implements XdrElement {
     public HashIDPreimageRevokeID() {}
 
@@ -525,6 +553,17 @@ public class HashIDPreimage implements XdrElement {
     }
   }
 
+  /**
+   * HashIDPreimageContractID's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         Hash networkID;
+   *         ContractIDPreimage contractIDPreimage;
+   *     }
+   * </pre>
+   */
   public static class HashIDPreimageContractID implements XdrElement {
     public HashIDPreimageContractID() {}
 
@@ -629,6 +668,19 @@ public class HashIDPreimage implements XdrElement {
     }
   }
 
+  /**
+   * HashIDPreimageSorobanAuthorization's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         Hash networkID;
+   *         int64 nonce;
+   *         uint32 signatureExpirationLedger;
+   *         SorobanAuthorizedInvocation invocation;
+   *     }
+   * </pre>
+   */
   public static class HashIDPreimageSorobanAuthorization implements XdrElement {
     public HashIDPreimageSorobanAuthorization() {}
 

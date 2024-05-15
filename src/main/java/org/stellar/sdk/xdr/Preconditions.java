@@ -11,19 +11,21 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union Preconditions switch (PreconditionType type)
-//  {
-//  case PRECOND_NONE:
-//      void;
-//  case PRECOND_TIME:
-//      TimeBounds timeBounds;
-//  case PRECOND_V2:
-//      PreconditionsV2 v2;
-//  };
-
-//  ===========================================================================
+/**
+ * Preconditions's original definition in the XDR file is:
+ *
+ * <pre>
+ * union Preconditions switch (PreconditionType type)
+ * {
+ * case PRECOND_NONE:
+ *     void;
+ * case PRECOND_TIME:
+ *     TimeBounds timeBounds;
+ * case PRECOND_V2:
+ *     PreconditionsV2 v2;
+ * };
+ * </pre>
+ */
 public class Preconditions implements XdrElement {
   public Preconditions() {}
 

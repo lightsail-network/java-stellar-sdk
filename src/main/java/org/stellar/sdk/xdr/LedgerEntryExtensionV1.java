@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LedgerEntryExtensionV1
-//  {
-//      SponsorshipDescriptor sponsoringID;
-//
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerEntryExtensionV1's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LedgerEntryExtensionV1
+ * {
+ *     SponsorshipDescriptor sponsoringID;
+ *
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class LedgerEntryExtensionV1 implements XdrElement {
   public LedgerEntryExtensionV1() {}
 
@@ -129,6 +131,17 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     }
   }
 
+  /**
+   * LedgerEntryExtensionV1Ext's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class LedgerEntryExtensionV1Ext implements XdrElement {
     public LedgerEntryExtensionV1Ext() {}
 

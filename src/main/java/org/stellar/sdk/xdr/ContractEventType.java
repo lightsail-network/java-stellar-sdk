@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ContractEventType
-//  {
-//      SYSTEM = 0,
-//      CONTRACT = 1,
-//      DIAGNOSTIC = 2
-//  };
-
-//  ===========================================================================
+/**
+ * ContractEventType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ContractEventType
+ * {
+ *     SYSTEM = 0,
+ *     CONTRACT = 1,
+ *     DIAGNOSTIC = 2
+ * };
+ * </pre>
+ */
 public enum ContractEventType implements XdrElement {
   SYSTEM(0),
   CONTRACT(1),

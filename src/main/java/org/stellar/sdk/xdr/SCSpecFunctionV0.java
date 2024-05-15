@@ -12,17 +12,19 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecFunctionV0
-//  {
-//      string doc<SC_SPEC_DOC_LIMIT>;
-//      SCSymbol name;
-//      SCSpecFunctionInputV0 inputs<10>;
-//      SCSpecTypeDef outputs<1>;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecFunctionV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecFunctionV0
+ * {
+ *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
+ *     SCSymbol name;
+ *     SCSpecFunctionInputV0 inputs&lt;10&gt;;
+ *     SCSpecTypeDef outputs&lt;1&gt;;
+ * };
+ * </pre>
+ */
 public class SCSpecFunctionV0 implements XdrElement {
   public SCSpecFunctionV0() {}
 

@@ -11,13 +11,15 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ConfigUpgradeSet {
-//      ConfigSettingEntry updatedEntry<>;
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigUpgradeSet's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ConfigUpgradeSet {
+ *     ConfigSettingEntry updatedEntry&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class ConfigUpgradeSet implements XdrElement {
   public ConfigUpgradeSet() {}
 

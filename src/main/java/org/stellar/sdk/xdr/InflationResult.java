@@ -12,17 +12,19 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union InflationResult switch (InflationResultCode code)
-//  {
-//  case INFLATION_SUCCESS:
-//      InflationPayout payouts<>;
-//  case INFLATION_NOT_TIME:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * InflationResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union InflationResult switch (InflationResultCode code)
+ * {
+ * case INFLATION_SUCCESS:
+ *     InflationPayout payouts&lt;&gt;;
+ * case INFLATION_NOT_TIME:
+ *     void;
+ * };
+ * </pre>
+ */
 public class InflationResult implements XdrElement {
   public InflationResult() {}
 

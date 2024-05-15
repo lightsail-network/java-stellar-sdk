@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ManageDataResult switch (ManageDataResultCode code)
-//  {
-//  case MANAGE_DATA_SUCCESS:
-//      void;
-//  case MANAGE_DATA_NOT_SUPPORTED_YET:
-//  case MANAGE_DATA_NAME_NOT_FOUND:
-//  case MANAGE_DATA_LOW_RESERVE:
-//  case MANAGE_DATA_INVALID_NAME:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * ManageDataResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ManageDataResult switch (ManageDataResultCode code)
+ * {
+ * case MANAGE_DATA_SUCCESS:
+ *     void;
+ * case MANAGE_DATA_NOT_SUPPORTED_YET:
+ * case MANAGE_DATA_NAME_NOT_FOUND:
+ * case MANAGE_DATA_LOW_RESERVE:
+ * case MANAGE_DATA_INVALID_NAME:
+ *     void;
+ * };
+ * </pre>
+ */
 public class ManageDataResult implements XdrElement {
   public ManageDataResult() {}
 

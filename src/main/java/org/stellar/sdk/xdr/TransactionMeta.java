@@ -12,21 +12,23 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union TransactionMeta switch (int v)
-//  {
-//  case 0:
-//      OperationMeta operations<>;
-//  case 1:
-//      TransactionMetaV1 v1;
-//  case 2:
-//      TransactionMetaV2 v2;
-//  case 3:
-//      TransactionMetaV3 v3;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionMeta's original definition in the XDR file is:
+ *
+ * <pre>
+ * union TransactionMeta switch (int v)
+ * {
+ * case 0:
+ *     OperationMeta operations&lt;&gt;;
+ * case 1:
+ *     TransactionMetaV1 v1;
+ * case 2:
+ *     TransactionMetaV2 v2;
+ * case 3:
+ *     TransactionMetaV3 v3;
+ * };
+ * </pre>
+ */
 public class TransactionMeta implements XdrElement {
   public TransactionMeta() {}
 

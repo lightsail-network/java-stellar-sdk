@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum StellarValueType
-//  {
-//      STELLAR_VALUE_BASIC = 0,
-//      STELLAR_VALUE_SIGNED = 1
-//  };
-
-//  ===========================================================================
+/**
+ * StellarValueType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum StellarValueType
+ * {
+ *     STELLAR_VALUE_BASIC = 0,
+ *     STELLAR_VALUE_SIGNED = 1
+ * };
+ * </pre>
+ */
 public enum StellarValueType implements XdrElement {
   STELLAR_VALUE_BASIC(0),
   STELLAR_VALUE_SIGNED(1),

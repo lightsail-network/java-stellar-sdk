@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecTypeUDT
-//  {
-//      string name<60>;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecTypeUDT's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecTypeUDT
+ * {
+ *     string name&lt;60&gt;;
+ * };
+ * </pre>
+ */
 public class SCSpecTypeUDT implements XdrElement {
   public SCSpecTypeUDT() {}
 

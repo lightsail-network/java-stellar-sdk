@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct DontHave
-//  {
-//      MessageType type;
-//      uint256 reqHash;
-//  };
-
-//  ===========================================================================
+/**
+ * DontHave's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct DontHave
+ * {
+ *     MessageType type;
+ *     uint256 reqHash;
+ * };
+ * </pre>
+ */
 public class DontHave implements XdrElement {
   public DontHave() {}
 

@@ -10,19 +10,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum BucketEntryType
-//  {
-//      METAENTRY =
-//          -1, // At-and-after protocol 11: bucket metadata, should come first.
-//      LIVEENTRY = 0, // Before protocol 11: created-or-updated;
-//                     // At-and-after protocol 11: only updated.
-//      DEADENTRY = 1,
-//      INITENTRY = 2 // At-and-after protocol 11: only created.
-//  };
-
-//  ===========================================================================
+/**
+ * BucketEntryType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum BucketEntryType
+ * {
+ *     METAENTRY =
+ *         -1, // At-and-after protocol 11: bucket metadata, should come first.
+ *     LIVEENTRY = 0, // Before protocol 11: created-or-updated;
+ *                    // At-and-after protocol 11: only updated.
+ *     DEADENTRY = 1,
+ *     INITENTRY = 2 // At-and-after protocol 11: only created.
+ * };
+ * </pre>
+ */
 public enum BucketEntryType implements XdrElement {
   METAENTRY(-1),
   LIVEENTRY(0),

@@ -10,36 +10,38 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ManageSellOfferResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      MANAGE_SELL_OFFER_SUCCESS = 0,
-//
-//      // codes considered as "failure" for the operation
-//      MANAGE_SELL_OFFER_MALFORMED = -1, // generated offer would be invalid
-//      MANAGE_SELL_OFFER_SELL_NO_TRUST =
-//          -2,                              // no trust line for what we're selling
-//      MANAGE_SELL_OFFER_BUY_NO_TRUST = -3, // no trust line for what we're buying
-//      MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED = -4, // not authorized to sell
-//      MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED = -5,  // not authorized to buy
-//      MANAGE_SELL_OFFER_LINE_FULL = -6, // can't receive more of what it's buying
-//      MANAGE_SELL_OFFER_UNDERFUNDED = -7, // doesn't hold what it's trying to sell
-//      MANAGE_SELL_OFFER_CROSS_SELF =
-//          -8, // would cross an offer from the same user
-//      MANAGE_SELL_OFFER_SELL_NO_ISSUER = -9, // no issuer for what we're selling
-//      MANAGE_SELL_OFFER_BUY_NO_ISSUER = -10, // no issuer for what we're buying
-//
-//      // update errors
-//      MANAGE_SELL_OFFER_NOT_FOUND =
-//          -11, // offerID does not match an existing offer
-//
-//      MANAGE_SELL_OFFER_LOW_RESERVE =
-//          -12 // not enough funds to create a new Offer
-//  };
-
-//  ===========================================================================
+/**
+ * ManageSellOfferResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ManageSellOfferResultCode
+ * {
+ *     // codes considered as &quot;success&quot; for the operation
+ *     MANAGE_SELL_OFFER_SUCCESS = 0,
+ *
+ *     // codes considered as &quot;failure&quot; for the operation
+ *     MANAGE_SELL_OFFER_MALFORMED = -1, // generated offer would be invalid
+ *     MANAGE_SELL_OFFER_SELL_NO_TRUST =
+ *         -2,                              // no trust line for what we&#39;re selling
+ *     MANAGE_SELL_OFFER_BUY_NO_TRUST = -3, // no trust line for what we&#39;re buying
+ *     MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED = -4, // not authorized to sell
+ *     MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED = -5,  // not authorized to buy
+ *     MANAGE_SELL_OFFER_LINE_FULL = -6, // can&#39;t receive more of what it&#39;s buying
+ *     MANAGE_SELL_OFFER_UNDERFUNDED = -7, // doesn&#39;t hold what it&#39;s trying to sell
+ *     MANAGE_SELL_OFFER_CROSS_SELF =
+ *         -8, // would cross an offer from the same user
+ *     MANAGE_SELL_OFFER_SELL_NO_ISSUER = -9, // no issuer for what we&#39;re selling
+ *     MANAGE_SELL_OFFER_BUY_NO_ISSUER = -10, // no issuer for what we&#39;re buying
+ *
+ *     // update errors
+ *     MANAGE_SELL_OFFER_NOT_FOUND =
+ *         -11, // offerID does not match an existing offer
+ *
+ *     MANAGE_SELL_OFFER_LOW_RESERVE =
+ *         -12 // not enough funds to create a new Offer
+ * };
+ * </pre>
+ */
 public enum ManageSellOfferResultCode implements XdrElement {
   MANAGE_SELL_OFFER_SUCCESS(0),
   MANAGE_SELL_OFFER_MALFORMED(-1),

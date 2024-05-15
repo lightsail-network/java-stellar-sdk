@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SorobanAuthorizedFunctionType
-//  {
-//      SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN = 0,
-//      SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanAuthorizedFunctionType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SorobanAuthorizedFunctionType
+ * {
+ *     SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN = 0,
+ *     SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1
+ * };
+ * </pre>
+ */
 public enum SorobanAuthorizedFunctionType implements XdrElement {
   SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN(0),
   SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN(1),

@@ -12,42 +12,44 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct PreconditionsV2
-//  {
-//      TimeBounds* timeBounds;
-//
-//      // Transaction only valid for ledger numbers n such that
-//      // minLedger <= n < maxLedger (if maxLedger == 0, then
-//      // only minLedger is checked)
-//      LedgerBounds* ledgerBounds;
-//
-//      // If NULL, only valid when sourceAccount's sequence number
-//      // is seqNum - 1.  Otherwise, valid when sourceAccount's
-//      // sequence number n satisfies minSeqNum <= n < tx.seqNum.
-//      // Note that after execution the account's sequence number
-//      // is always raised to tx.seqNum, and a transaction is not
-//      // valid if tx.seqNum is too high to ensure replay protection.
-//      SequenceNumber* minSeqNum;
-//
-//      // For the transaction to be valid, the current ledger time must
-//      // be at least minSeqAge greater than sourceAccount's seqTime.
-//      Duration minSeqAge;
-//
-//      // For the transaction to be valid, the current ledger number
-//      // must be at least minSeqLedgerGap greater than sourceAccount's
-//      // seqLedger.
-//      uint32 minSeqLedgerGap;
-//
-//      // For the transaction to be valid, there must be a signature
-//      // corresponding to every Signer in this array, even if the
-//      // signature is not otherwise required by the sourceAccount or
-//      // operations.
-//      SignerKey extraSigners<2>;
-//  };
-
-//  ===========================================================================
+/**
+ * PreconditionsV2's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct PreconditionsV2
+ * {
+ *     TimeBounds&#42; timeBounds;
+ *
+ *     // Transaction only valid for ledger numbers n such that
+ *     // minLedger &lt;= n &lt; maxLedger (if maxLedger == 0, then
+ *     // only minLedger is checked)
+ *     LedgerBounds&#42; ledgerBounds;
+ *
+ *     // If NULL, only valid when sourceAccount&#39;s sequence number
+ *     // is seqNum - 1.  Otherwise, valid when sourceAccount&#39;s
+ *     // sequence number n satisfies minSeqNum &lt;= n &lt; tx.seqNum.
+ *     // Note that after execution the account&#39;s sequence number
+ *     // is always raised to tx.seqNum, and a transaction is not
+ *     // valid if tx.seqNum is too high to ensure replay protection.
+ *     SequenceNumber&#42; minSeqNum;
+ *
+ *     // For the transaction to be valid, the current ledger time must
+ *     // be at least minSeqAge greater than sourceAccount&#39;s seqTime.
+ *     Duration minSeqAge;
+ *
+ *     // For the transaction to be valid, the current ledger number
+ *     // must be at least minSeqLedgerGap greater than sourceAccount&#39;s
+ *     // seqLedger.
+ *     uint32 minSeqLedgerGap;
+ *
+ *     // For the transaction to be valid, there must be a signature
+ *     // corresponding to every Signer in this array, even if the
+ *     // signature is not otherwise required by the sourceAccount or
+ *     // operations.
+ *     SignerKey extraSigners&lt;2&gt;;
+ * };
+ * </pre>
+ */
 public class PreconditionsV2 implements XdrElement {
   public PreconditionsV2() {}
 

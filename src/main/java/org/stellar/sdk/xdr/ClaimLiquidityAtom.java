@@ -11,22 +11,24 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ClaimLiquidityAtom
-//  {
-//      PoolID liquidityPoolID;
-//
-//      // amount and asset taken from the pool
-//      Asset assetSold;
-//      int64 amountSold;
-//
-//      // amount and asset sent to the pool
-//      Asset assetBought;
-//      int64 amountBought;
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimLiquidityAtom's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ClaimLiquidityAtom
+ * {
+ *     PoolID liquidityPoolID;
+ *
+ *     // amount and asset taken from the pool
+ *     Asset assetSold;
+ *     int64 amountSold;
+ *
+ *     // amount and asset sent to the pool
+ *     Asset assetBought;
+ *     int64 amountBought;
+ * };
+ * </pre>
+ */
 public class ClaimLiquidityAtom implements XdrElement {
   public ClaimLiquidityAtom() {}
 

@@ -11,17 +11,19 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ConfigSettingContractEventsV0
-//  {
-//      // Maximum size of events that a contract call can emit.
-//      uint32 txMaxContractEventsSizeBytes;
-//      // Fee for generating 1KB of contract events.
-//      int64 feeContractEvents1KB;
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigSettingContractEventsV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ConfigSettingContractEventsV0
+ * {
+ *     // Maximum size of events that a contract call can emit.
+ *     uint32 txMaxContractEventsSizeBytes;
+ *     // Fee for generating 1KB of contract events.
+ *     int64 feeContractEvents1KB;
+ * };
+ * </pre>
+ */
 public class ConfigSettingContractEventsV0 implements XdrElement {
   public ConfigSettingContractEventsV0() {}
 

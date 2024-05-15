@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef Hash TxDemandVector<TX_DEMAND_VECTOR_MAX_SIZE>;
-
-//  ===========================================================================
+/**
+ * TxDemandVector's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef Hash TxDemandVector&lt;TX_DEMAND_VECTOR_MAX_SIZE&gt;;
+ * </pre>
+ */
 public class TxDemandVector implements XdrElement {
   private Hash[] TxDemandVector;
 

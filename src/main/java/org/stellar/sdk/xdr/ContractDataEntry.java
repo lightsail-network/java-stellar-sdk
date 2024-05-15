@@ -11,18 +11,20 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ContractDataEntry {
-//      ExtensionPoint ext;
-//
-//      SCAddress contract;
-//      SCVal key;
-//      ContractDataDurability durability;
-//      SCVal val;
-//  };
-
-//  ===========================================================================
+/**
+ * ContractDataEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ContractDataEntry {
+ *     ExtensionPoint ext;
+ *
+ *     SCAddress contract;
+ *     SCVal key;
+ *     ContractDataDurability durability;
+ *     SCVal val;
+ * };
+ * </pre>
+ */
 public class ContractDataEntry implements XdrElement {
   public ContractDataEntry() {}
 

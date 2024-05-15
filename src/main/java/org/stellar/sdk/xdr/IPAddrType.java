@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum IPAddrType
-//  {
-//      IPv4 = 0,
-//      IPv6 = 1
-//  };
-
-//  ===========================================================================
+/**
+ * IPAddrType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum IPAddrType
+ * {
+ *     IPv4 = 0,
+ *     IPv6 = 1
+ * };
+ * </pre>
+ */
 public enum IPAddrType implements XdrElement {
   IPv4(0),
   IPv6(1),

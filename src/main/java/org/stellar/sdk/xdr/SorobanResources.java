@@ -11,22 +11,24 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SorobanResources
-//  {
-//      // The ledger footprint of the transaction.
-//      LedgerFootprint footprint;
-//      // The maximum number of instructions this transaction can use
-//      uint32 instructions;
-//
-//      // The maximum number of bytes this transaction can read from ledger
-//      uint32 readBytes;
-//      // The maximum number of bytes this transaction can write to ledger
-//      uint32 writeBytes;
-//  };
-
-//  ===========================================================================
+/**
+ * SorobanResources's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SorobanResources
+ * {
+ *     // The ledger footprint of the transaction.
+ *     LedgerFootprint footprint;
+ *     // The maximum number of instructions this transaction can use
+ *     uint32 instructions;
+ *
+ *     // The maximum number of bytes this transaction can read from ledger
+ *     uint32 readBytes;
+ *     // The maximum number of bytes this transaction can write to ledger
+ *     uint32 writeBytes;
+ * };
+ * </pre>
+ */
 public class SorobanResources implements XdrElement {
   public SorobanResources() {}
 

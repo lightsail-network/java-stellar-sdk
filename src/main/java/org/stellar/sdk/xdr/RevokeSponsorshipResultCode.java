@@ -10,22 +10,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum RevokeSponsorshipResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      REVOKE_SPONSORSHIP_SUCCESS = 0,
-//
-//      // codes considered as "failure" for the operation
-//      REVOKE_SPONSORSHIP_DOES_NOT_EXIST = -1,
-//      REVOKE_SPONSORSHIP_NOT_SPONSOR = -2,
-//      REVOKE_SPONSORSHIP_LOW_RESERVE = -3,
-//      REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE = -4,
-//      REVOKE_SPONSORSHIP_MALFORMED = -5
-//  };
-
-//  ===========================================================================
+/**
+ * RevokeSponsorshipResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum RevokeSponsorshipResultCode
+ * {
+ *     // codes considered as &quot;success&quot; for the operation
+ *     REVOKE_SPONSORSHIP_SUCCESS = 0,
+ *
+ *     // codes considered as &quot;failure&quot; for the operation
+ *     REVOKE_SPONSORSHIP_DOES_NOT_EXIST = -1,
+ *     REVOKE_SPONSORSHIP_NOT_SPONSOR = -2,
+ *     REVOKE_SPONSORSHIP_LOW_RESERVE = -3,
+ *     REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE = -4,
+ *     REVOKE_SPONSORSHIP_MALFORMED = -5
+ * };
+ * </pre>
+ */
 public enum RevokeSponsorshipResultCode implements XdrElement {
   REVOKE_SPONSORSHIP_SUCCESS(0),
   REVOKE_SPONSORSHIP_DOES_NOT_EXIST(-1),

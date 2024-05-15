@@ -11,19 +11,21 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union Claimant switch (ClaimantType type)
-//  {
-//  case CLAIMANT_TYPE_V0:
-//      struct
-//      {
-//          AccountID destination;    // The account that can use this condition
-//          ClaimPredicate predicate; // Claimable if predicate is true
-//      } v0;
-//  };
-
-//  ===========================================================================
+/**
+ * Claimant's original definition in the XDR file is:
+ *
+ * <pre>
+ * union Claimant switch (ClaimantType type)
+ * {
+ * case CLAIMANT_TYPE_V0:
+ *     struct
+ *     {
+ *         AccountID destination;    // The account that can use this condition
+ *         ClaimPredicate predicate; // Claimable if predicate is true
+ *     } v0;
+ * };
+ * </pre>
+ */
 public class Claimant implements XdrElement {
   public Claimant() {}
 
@@ -136,6 +138,17 @@ public class Claimant implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * ClaimantV0's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         AccountID destination;    // The account that can use this condition
+   *         ClaimPredicate predicate; // Claimable if predicate is true
+   *     }
+   * </pre>
+   */
   public static class ClaimantV0 implements XdrElement {
     public ClaimantV0() {}
 

@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Curve25519Secret
-//  {
-//      opaque key[32];
-//  };
-
-//  ===========================================================================
+/**
+ * Curve25519Secret's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Curve25519Secret
+ * {
+ *     opaque key[32];
+ * };
+ * </pre>
+ */
 public class Curve25519Secret implements XdrElement {
   public Curve25519Secret() {}
 

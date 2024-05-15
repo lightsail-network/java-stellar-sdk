@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union LiquidityPoolParameters switch (LiquidityPoolType type)
-//  {
-//  case LIQUIDITY_POOL_CONSTANT_PRODUCT:
-//      LiquidityPoolConstantProductParameters constantProduct;
-//  };
-
-//  ===========================================================================
+/**
+ * LiquidityPoolParameters's original definition in the XDR file is:
+ *
+ * <pre>
+ * union LiquidityPoolParameters switch (LiquidityPoolType type)
+ * {
+ * case LIQUIDITY_POOL_CONSTANT_PRODUCT:
+ *     LiquidityPoolConstantProductParameters constantProduct;
+ * };
+ * </pre>
+ */
 public class LiquidityPoolParameters implements XdrElement {
   public LiquidityPoolParameters() {}
 

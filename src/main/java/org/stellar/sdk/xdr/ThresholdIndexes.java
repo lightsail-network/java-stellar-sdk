@@ -10,17 +10,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ThresholdIndexes
-//  {
-//      THRESHOLD_MASTER_WEIGHT = 0,
-//      THRESHOLD_LOW = 1,
-//      THRESHOLD_MED = 2,
-//      THRESHOLD_HIGH = 3
-//  };
-
-//  ===========================================================================
+/**
+ * ThresholdIndexes's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ThresholdIndexes
+ * {
+ *     THRESHOLD_MASTER_WEIGHT = 0,
+ *     THRESHOLD_LOW = 1,
+ *     THRESHOLD_MED = 2,
+ *     THRESHOLD_HIGH = 3
+ * };
+ * </pre>
+ */
 public enum ThresholdIndexes implements XdrElement {
   THRESHOLD_MASTER_WEIGHT(0),
   THRESHOLD_LOW(1),

@@ -10,20 +10,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum LedgerUpgradeType
-//  {
-//      LEDGER_UPGRADE_VERSION = 1,
-//      LEDGER_UPGRADE_BASE_FEE = 2,
-//      LEDGER_UPGRADE_MAX_TX_SET_SIZE = 3,
-//      LEDGER_UPGRADE_BASE_RESERVE = 4,
-//      LEDGER_UPGRADE_FLAGS = 5,
-//      LEDGER_UPGRADE_CONFIG = 6,
-//      LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE = 7
-//  };
-
-//  ===========================================================================
+/**
+ * LedgerUpgradeType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum LedgerUpgradeType
+ * {
+ *     LEDGER_UPGRADE_VERSION = 1,
+ *     LEDGER_UPGRADE_BASE_FEE = 2,
+ *     LEDGER_UPGRADE_MAX_TX_SET_SIZE = 3,
+ *     LEDGER_UPGRADE_BASE_RESERVE = 4,
+ *     LEDGER_UPGRADE_FLAGS = 5,
+ *     LEDGER_UPGRADE_CONFIG = 6,
+ *     LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE = 7
+ * };
+ * </pre>
+ */
 public enum LedgerUpgradeType implements XdrElement {
   LEDGER_UPGRADE_VERSION(1),
   LEDGER_UPGRADE_BASE_FEE(2),

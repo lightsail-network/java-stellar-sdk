@@ -12,41 +12,43 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ConfigSettingEntry switch (ConfigSettingID configSettingID)
-//  {
-//  case CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES:
-//      uint32 contractMaxSizeBytes;
-//  case CONFIG_SETTING_CONTRACT_COMPUTE_V0:
-//      ConfigSettingContractComputeV0 contractCompute;
-//  case CONFIG_SETTING_CONTRACT_LEDGER_COST_V0:
-//      ConfigSettingContractLedgerCostV0 contractLedgerCost;
-//  case CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0:
-//      ConfigSettingContractHistoricalDataV0 contractHistoricalData;
-//  case CONFIG_SETTING_CONTRACT_EVENTS_V0:
-//      ConfigSettingContractEventsV0 contractEvents;
-//  case CONFIG_SETTING_CONTRACT_BANDWIDTH_V0:
-//      ConfigSettingContractBandwidthV0 contractBandwidth;
-//  case CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS:
-//      ContractCostParams contractCostParamsCpuInsns;
-//  case CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES:
-//      ContractCostParams contractCostParamsMemBytes;
-//  case CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES:
-//      uint32 contractDataKeySizeBytes;
-//  case CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES:
-//      uint32 contractDataEntrySizeBytes;
-//  case CONFIG_SETTING_STATE_ARCHIVAL:
-//      StateArchivalSettings stateArchivalSettings;
-//  case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
-//      ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
-//  case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-//      uint64 bucketListSizeWindow<>;
-//  case CONFIG_SETTING_EVICTION_ITERATOR:
-//      EvictionIterator evictionIterator;
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigSettingEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ConfigSettingEntry switch (ConfigSettingID configSettingID)
+ * {
+ * case CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES:
+ *     uint32 contractMaxSizeBytes;
+ * case CONFIG_SETTING_CONTRACT_COMPUTE_V0:
+ *     ConfigSettingContractComputeV0 contractCompute;
+ * case CONFIG_SETTING_CONTRACT_LEDGER_COST_V0:
+ *     ConfigSettingContractLedgerCostV0 contractLedgerCost;
+ * case CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0:
+ *     ConfigSettingContractHistoricalDataV0 contractHistoricalData;
+ * case CONFIG_SETTING_CONTRACT_EVENTS_V0:
+ *     ConfigSettingContractEventsV0 contractEvents;
+ * case CONFIG_SETTING_CONTRACT_BANDWIDTH_V0:
+ *     ConfigSettingContractBandwidthV0 contractBandwidth;
+ * case CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS:
+ *     ContractCostParams contractCostParamsCpuInsns;
+ * case CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES:
+ *     ContractCostParams contractCostParamsMemBytes;
+ * case CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES:
+ *     uint32 contractDataKeySizeBytes;
+ * case CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES:
+ *     uint32 contractDataEntrySizeBytes;
+ * case CONFIG_SETTING_STATE_ARCHIVAL:
+ *     StateArchivalSettings stateArchivalSettings;
+ * case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
+ *     ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
+ * case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
+ *     uint64 bucketListSizeWindow&lt;&gt;;
+ * case CONFIG_SETTING_EVICTION_ITERATOR:
+ *     EvictionIterator evictionIterator;
+ * };
+ * </pre>
+ */
 public class ConfigSettingEntry implements XdrElement {
   public ConfigSettingEntry() {}
 

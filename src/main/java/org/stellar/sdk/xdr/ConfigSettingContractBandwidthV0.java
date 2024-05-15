@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ConfigSettingContractBandwidthV0
-//  {
-//      // Maximum sum of all transaction sizes in the ledger in bytes
-//      uint32 ledgerMaxTxsSizeBytes;
-//      // Maximum size in bytes for a transaction
-//      uint32 txMaxSizeBytes;
-//
-//      // Fee for 1 KB of transaction size
-//      int64 feeTxSize1KB;
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigSettingContractBandwidthV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ConfigSettingContractBandwidthV0
+ * {
+ *     // Maximum sum of all transaction sizes in the ledger in bytes
+ *     uint32 ledgerMaxTxsSizeBytes;
+ *     // Maximum size in bytes for a transaction
+ *     uint32 txMaxSizeBytes;
+ *
+ *     // Fee for 1 KB of transaction size
+ *     int64 feeTxSize1KB;
+ * };
+ * </pre>
+ */
 public class ConfigSettingContractBandwidthV0 implements XdrElement {
   public ConfigSettingContractBandwidthV0() {}
 

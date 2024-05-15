@@ -11,22 +11,24 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct AccountEntryExtensionV3
-//  {
-//      // We can use this to add more fields, or because it is first, to
-//      // change AccountEntryExtensionV3 into a union.
-//      ExtensionPoint ext;
-//
-//      // Ledger number at which `seqNum` took on its present value.
-//      uint32 seqLedger;
-//
-//      // Time at which `seqNum` took on its present value.
-//      TimePoint seqTime;
-//  };
-
-//  ===========================================================================
+/**
+ * AccountEntryExtensionV3's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct AccountEntryExtensionV3
+ * {
+ *     // We can use this to add more fields, or because it is first, to
+ *     // change AccountEntryExtensionV3 into a union.
+ *     ExtensionPoint ext;
+ *
+ *     // Ledger number at which `seqNum` took on its present value.
+ *     uint32 seqLedger;
+ *
+ *     // Time at which `seqNum` took on its present value.
+ *     TimePoint seqTime;
+ * };
+ * </pre>
+ */
 public class AccountEntryExtensionV3 implements XdrElement {
   public AccountEntryExtensionV3() {}
 

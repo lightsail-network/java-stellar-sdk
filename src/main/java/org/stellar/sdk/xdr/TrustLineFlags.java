@@ -10,21 +10,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum TrustLineFlags
-//  {
-//      // issuer has authorized account to perform transactions with its credit
-//      AUTHORIZED_FLAG = 1,
-//      // issuer has authorized account to maintain and reduce liabilities for its
-//      // credit
-//      AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG = 2,
-//      // issuer has specified that it may clawback its credit, and that claimable
-//      // balances created with its credit may also be clawed back
-//      TRUSTLINE_CLAWBACK_ENABLED_FLAG = 4
-//  };
-
-//  ===========================================================================
+/**
+ * TrustLineFlags's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum TrustLineFlags
+ * {
+ *     // issuer has authorized account to perform transactions with its credit
+ *     AUTHORIZED_FLAG = 1,
+ *     // issuer has authorized account to maintain and reduce liabilities for its
+ *     // credit
+ *     AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG = 2,
+ *     // issuer has specified that it may clawback its credit, and that claimable
+ *     // balances created with its credit may also be clawed back
+ *     TRUSTLINE_CLAWBACK_ENABLED_FLAG = 4
+ * };
+ * </pre>
+ */
 public enum TrustLineFlags implements XdrElement {
   AUTHORIZED_FLAG(1),
   AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG(2),

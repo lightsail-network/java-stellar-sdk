@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union MuxedAccount switch (CryptoKeyType type)
-//  {
-//  case KEY_TYPE_ED25519:
-//      uint256 ed25519;
-//  case KEY_TYPE_MUXED_ED25519:
-//      struct
-//      {
-//          uint64 id;
-//          uint256 ed25519;
-//      } med25519;
-//  };
-
-//  ===========================================================================
+/**
+ * MuxedAccount's original definition in the XDR file is:
+ *
+ * <pre>
+ * union MuxedAccount switch (CryptoKeyType type)
+ * {
+ * case KEY_TYPE_ED25519:
+ *     uint256 ed25519;
+ * case KEY_TYPE_MUXED_ED25519:
+ *     struct
+ *     {
+ *         uint64 id;
+ *         uint256 ed25519;
+ *     } med25519;
+ * };
+ * </pre>
+ */
 public class MuxedAccount implements XdrElement {
   public MuxedAccount() {}
 
@@ -163,6 +165,17 @@ public class MuxedAccount implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * MuxedAccountMed25519's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         uint64 id;
+   *         uint256 ed25519;
+   *     }
+   * </pre>
+   */
   public static class MuxedAccountMed25519 implements XdrElement {
     public MuxedAccountMed25519() {}
 

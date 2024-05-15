@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ConfigSettingContractComputeV0
-//  {
-//      // Maximum instructions per ledger
-//      int64 ledgerMaxInstructions;
-//      // Maximum instructions per transaction
-//      int64 txMaxInstructions;
-//      // Cost of 10000 instructions
-//      int64 feeRatePerInstructionsIncrement;
-//
-//      // Memory limit per transaction. Unlike instructions, there is no fee
-//      // for memory, just the limit.
-//      uint32 txMemoryLimit;
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigSettingContractComputeV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ConfigSettingContractComputeV0
+ * {
+ *     // Maximum instructions per ledger
+ *     int64 ledgerMaxInstructions;
+ *     // Maximum instructions per transaction
+ *     int64 txMaxInstructions;
+ *     // Cost of 10000 instructions
+ *     int64 feeRatePerInstructionsIncrement;
+ *
+ *     // Memory limit per transaction. Unlike instructions, there is no fee
+ *     // for memory, just the limit.
+ *     uint32 txMemoryLimit;
+ * };
+ * </pre>
+ */
 public class ConfigSettingContractComputeV0 implements XdrElement {
   public ConfigSettingContractComputeV0() {}
 

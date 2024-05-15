@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecTypeTuple
-//  {
-//      SCSpecTypeDef valueTypes<12>;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecTypeTuple's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecTypeTuple
+ * {
+ *     SCSpecTypeDef valueTypes&lt;12&gt;;
+ * };
+ * </pre>
+ */
 public class SCSpecTypeTuple implements XdrElement {
   public SCSpecTypeTuple() {}
 

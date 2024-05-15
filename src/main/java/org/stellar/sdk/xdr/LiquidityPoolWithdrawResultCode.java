@@ -10,25 +10,27 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum LiquidityPoolWithdrawResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      LIQUIDITY_POOL_WITHDRAW_SUCCESS = 0,
-//
-//      // codes considered as "failure" for the operation
-//      LIQUIDITY_POOL_WITHDRAW_MALFORMED = -1,    // bad input
-//      LIQUIDITY_POOL_WITHDRAW_NO_TRUST = -2,     // no trust line for one of the
-//                                                 // assets
-//      LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED = -3,  // not enough balance of the
-//                                                 // pool share
-//      LIQUIDITY_POOL_WITHDRAW_LINE_FULL = -4,    // would go above limit for one
-//                                                 // of the assets
-//      LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5 // didn't withdraw enough
-//  };
-
-//  ===========================================================================
+/**
+ * LiquidityPoolWithdrawResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum LiquidityPoolWithdrawResultCode
+ * {
+ *     // codes considered as &quot;success&quot; for the operation
+ *     LIQUIDITY_POOL_WITHDRAW_SUCCESS = 0,
+ *
+ *     // codes considered as &quot;failure&quot; for the operation
+ *     LIQUIDITY_POOL_WITHDRAW_MALFORMED = -1,    // bad input
+ *     LIQUIDITY_POOL_WITHDRAW_NO_TRUST = -2,     // no trust line for one of the
+ *                                                // assets
+ *     LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED = -3,  // not enough balance of the
+ *                                                // pool share
+ *     LIQUIDITY_POOL_WITHDRAW_LINE_FULL = -4,    // would go above limit for one
+ *                                                // of the assets
+ *     LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5 // didn&#39;t withdraw enough
+ * };
+ * </pre>
+ */
 public enum LiquidityPoolWithdrawResultCode implements XdrElement {
   LIQUIDITY_POOL_WITHDRAW_SUCCESS(0),
   LIQUIDITY_POOL_WITHDRAW_MALFORMED(-1),

@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum HostFunctionType
-//  {
-//      HOST_FUNCTION_TYPE_INVOKE_CONTRACT = 0,
-//      HOST_FUNCTION_TYPE_CREATE_CONTRACT = 1,
-//      HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2
-//  };
-
-//  ===========================================================================
+/**
+ * HostFunctionType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum HostFunctionType
+ * {
+ *     HOST_FUNCTION_TYPE_INVOKE_CONTRACT = 0,
+ *     HOST_FUNCTION_TYPE_CREATE_CONTRACT = 1,
+ *     HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2
+ * };
+ * </pre>
+ */
 public enum HostFunctionType implements XdrElement {
   HOST_FUNCTION_TYPE_INVOKE_CONTRACT(0),
   HOST_FUNCTION_TYPE_CREATE_CONTRACT(1),

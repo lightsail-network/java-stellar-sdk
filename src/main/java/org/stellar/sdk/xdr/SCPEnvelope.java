@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCPEnvelope
-//  {
-//      SCPStatement statement;
-//      Signature signature;
-//  };
-
-//  ===========================================================================
+/**
+ * SCPEnvelope's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCPEnvelope
+ * {
+ *     SCPStatement statement;
+ *     Signature signature;
+ * };
+ * </pre>
+ */
 public class SCPEnvelope implements XdrElement {
   public SCPEnvelope() {}
 

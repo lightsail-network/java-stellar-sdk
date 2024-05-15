@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct InvokeContractArgs {
-//      SCAddress contractAddress;
-//      SCSymbol functionName;
-//      SCVal args<>;
-//  };
-
-//  ===========================================================================
+/**
+ * InvokeContractArgs's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct InvokeContractArgs {
+ *     SCAddress contractAddress;
+ *     SCSymbol functionName;
+ *     SCVal args&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class InvokeContractArgs implements XdrElement {
   public InvokeContractArgs() {}
 

@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef SCMapEntry SCMap<>;
-
-//  ===========================================================================
+/**
+ * SCMap's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef SCMapEntry SCMap&lt;&gt;;
+ * </pre>
+ */
 public class SCMap implements XdrElement {
   private SCMapEntry[] SCMap;
 

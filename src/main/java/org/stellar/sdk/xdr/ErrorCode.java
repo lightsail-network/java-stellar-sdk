@@ -10,18 +10,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ErrorCode
-//  {
-//      ERR_MISC = 0, // Unspecific error
-//      ERR_DATA = 1, // Malformed data
-//      ERR_CONF = 2, // Misconfiguration error
-//      ERR_AUTH = 3, // Authentication failure
-//      ERR_LOAD = 4  // System overloaded
-//  };
-
-//  ===========================================================================
+/**
+ * ErrorCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ErrorCode
+ * {
+ *     ERR_MISC = 0, // Unspecific error
+ *     ERR_DATA = 1, // Malformed data
+ *     ERR_CONF = 2, // Misconfiguration error
+ *     ERR_AUTH = 3, // Authentication failure
+ *     ERR_LOAD = 4  // System overloaded
+ * };
+ * </pre>
+ */
 public enum ErrorCode implements XdrElement {
   ERR_MISC(0),
   ERR_DATA(1),

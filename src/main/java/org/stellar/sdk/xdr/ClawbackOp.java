@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ClawbackOp
-//  {
-//      Asset asset;
-//      MuxedAccount from;
-//      int64 amount;
-//  };
-
-//  ===========================================================================
+/**
+ * ClawbackOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ClawbackOp
+ * {
+ *     Asset asset;
+ *     MuxedAccount from;
+ *     int64 amount;
+ * };
+ * </pre>
+ */
 public class ClawbackOp implements XdrElement {
   public ClawbackOp() {}
 

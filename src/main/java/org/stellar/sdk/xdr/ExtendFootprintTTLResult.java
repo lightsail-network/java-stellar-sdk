@@ -11,19 +11,21 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ExtendFootprintTTLResult switch (ExtendFootprintTTLResultCode code)
-//  {
-//  case EXTEND_FOOTPRINT_TTL_SUCCESS:
-//      void;
-//  case EXTEND_FOOTPRINT_TTL_MALFORMED:
-//  case EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED:
-//  case EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * ExtendFootprintTTLResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ExtendFootprintTTLResult switch (ExtendFootprintTTLResultCode code)
+ * {
+ * case EXTEND_FOOTPRINT_TTL_SUCCESS:
+ *     void;
+ * case EXTEND_FOOTPRINT_TTL_MALFORMED:
+ * case EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED:
+ * case EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE:
+ *     void;
+ * };
+ * </pre>
+ */
 public class ExtendFootprintTTLResult implements XdrElement {
   public ExtendFootprintTTLResult() {}
 

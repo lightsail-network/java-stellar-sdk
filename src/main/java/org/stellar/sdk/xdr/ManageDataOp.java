@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ManageDataOp
-//  {
-//      string64 dataName;
-//      DataValue* dataValue; // set to null to clear
-//  };
-
-//  ===========================================================================
+/**
+ * ManageDataOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ManageDataOp
+ * {
+ *     string64 dataName;
+ *     DataValue&#42; dataValue; // set to null to clear
+ * };
+ * </pre>
+ */
 public class ManageDataOp implements XdrElement {
   public ManageDataOp() {}
 

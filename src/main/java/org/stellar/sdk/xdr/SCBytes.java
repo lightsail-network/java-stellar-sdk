@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque SCBytes<>;
-
-//  ===========================================================================
+/**
+ * SCBytes's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque SCBytes&lt;&gt;;
+ * </pre>
+ */
 public class SCBytes implements XdrElement {
   private byte[] SCBytes;
 

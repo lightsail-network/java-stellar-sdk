@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union CreateAccountResult switch (CreateAccountResultCode code)
-//  {
-//  case CREATE_ACCOUNT_SUCCESS:
-//      void;
-//  case CREATE_ACCOUNT_MALFORMED:
-//  case CREATE_ACCOUNT_UNDERFUNDED:
-//  case CREATE_ACCOUNT_LOW_RESERVE:
-//  case CREATE_ACCOUNT_ALREADY_EXIST:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * CreateAccountResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union CreateAccountResult switch (CreateAccountResultCode code)
+ * {
+ * case CREATE_ACCOUNT_SUCCESS:
+ *     void;
+ * case CREATE_ACCOUNT_MALFORMED:
+ * case CREATE_ACCOUNT_UNDERFUNDED:
+ * case CREATE_ACCOUNT_LOW_RESERVE:
+ * case CREATE_ACCOUNT_ALREADY_EXIST:
+ *     void;
+ * };
+ * </pre>
+ */
 public class CreateAccountResult implements XdrElement {
   public CreateAccountResult() {}
 

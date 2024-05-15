@@ -10,22 +10,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum CreateAccountResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      CREATE_ACCOUNT_SUCCESS = 0, // account was created
-//
-//      // codes considered as "failure" for the operation
-//      CREATE_ACCOUNT_MALFORMED = -1,   // invalid destination
-//      CREATE_ACCOUNT_UNDERFUNDED = -2, // not enough funds in source account
-//      CREATE_ACCOUNT_LOW_RESERVE =
-//          -3, // would create an account below the min reserve
-//      CREATE_ACCOUNT_ALREADY_EXIST = -4 // account already exists
-//  };
-
-//  ===========================================================================
+/**
+ * CreateAccountResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum CreateAccountResultCode
+ * {
+ *     // codes considered as &quot;success&quot; for the operation
+ *     CREATE_ACCOUNT_SUCCESS = 0, // account was created
+ *
+ *     // codes considered as &quot;failure&quot; for the operation
+ *     CREATE_ACCOUNT_MALFORMED = -1,   // invalid destination
+ *     CREATE_ACCOUNT_UNDERFUNDED = -2, // not enough funds in source account
+ *     CREATE_ACCOUNT_LOW_RESERVE =
+ *         -3, // would create an account below the min reserve
+ *     CREATE_ACCOUNT_ALREADY_EXIST = -4 // account already exists
+ * };
+ * </pre>
+ */
 public enum CreateAccountResultCode implements XdrElement {
   CREATE_ACCOUNT_SUCCESS(0),
   CREATE_ACCOUNT_MALFORMED(-1),

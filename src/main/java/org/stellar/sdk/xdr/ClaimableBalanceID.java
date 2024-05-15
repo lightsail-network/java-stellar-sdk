@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ClaimableBalanceID switch (ClaimableBalanceIDType type)
-//  {
-//  case CLAIMABLE_BALANCE_ID_TYPE_V0:
-//      Hash v0;
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimableBalanceID's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ClaimableBalanceID switch (ClaimableBalanceIDType type)
+ * {
+ * case CLAIMABLE_BALANCE_ID_TYPE_V0:
+ *     Hash v0;
+ * };
+ * </pre>
+ */
 public class ClaimableBalanceID implements XdrElement {
   public ClaimableBalanceID() {}
 

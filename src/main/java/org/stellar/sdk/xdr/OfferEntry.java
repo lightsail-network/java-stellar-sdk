@@ -11,34 +11,36 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct OfferEntry
-//  {
-//      AccountID sellerID;
-//      int64 offerID;
-//      Asset selling; // A
-//      Asset buying;  // B
-//      int64 amount;  // amount of A
-//
-//      /* price for this offer:
-//          price of A in terms of B
-//          price=AmountB/AmountA=priceNumerator/priceDenominator
-//          price is after fees
-//      */
-//      Price price;
-//      uint32 flags; // see OfferEntryFlags
-//
-//      // reserved for future use
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * OfferEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct OfferEntry
+ * {
+ *     AccountID sellerID;
+ *     int64 offerID;
+ *     Asset selling; // A
+ *     Asset buying;  // B
+ *     int64 amount;  // amount of A
+ *
+ *     /&#42; price for this offer:
+ *         price of A in terms of B
+ *         price=AmountB/AmountA=priceNumerator/priceDenominator
+ *         price is after fees
+ *     &#42;/
+ *     Price price;
+ *     uint32 flags; // see OfferEntryFlags
+ *
+ *     // reserved for future use
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class OfferEntry implements XdrElement {
   public OfferEntry() {}
 
@@ -269,6 +271,17 @@ public class OfferEntry implements XdrElement {
     }
   }
 
+  /**
+   * OfferEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class OfferEntryExt implements XdrElement {
     public OfferEntryExt() {}
 

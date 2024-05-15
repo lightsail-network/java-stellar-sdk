@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCPHistoryEntryV0
-//  {
-//      SCPQuorumSet quorumSets<>; // additional quorum sets used by ledgerMessages
-//      LedgerSCPMessages ledgerMessages;
-//  };
-
-//  ===========================================================================
+/**
+ * SCPHistoryEntryV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCPHistoryEntryV0
+ * {
+ *     SCPQuorumSet quorumSets&lt;&gt;; // additional quorum sets used by ledgerMessages
+ *     LedgerSCPMessages ledgerMessages;
+ * };
+ * </pre>
+ */
 public class SCPHistoryEntryV0 implements XdrElement {
   public SCPHistoryEntryV0() {}
 

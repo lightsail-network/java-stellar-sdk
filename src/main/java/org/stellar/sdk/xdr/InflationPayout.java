@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct InflationPayout // or use PaymentResultAtom to limit types?
-//  {
-//      AccountID destination;
-//      int64 amount;
-//  };
-
-//  ===========================================================================
+/**
+ * InflationPayout's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct InflationPayout // or use PaymentResultAtom to limit types?
+ * {
+ *     AccountID destination;
+ *     int64 amount;
+ * };
+ * </pre>
+ */
 public class InflationPayout implements XdrElement {
   public InflationPayout() {}
 

@@ -12,17 +12,19 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecUDTUnionV0
-//  {
-//      string doc<SC_SPEC_DOC_LIMIT>;
-//      string lib<80>;
-//      string name<60>;
-//      SCSpecUDTUnionCaseV0 cases<50>;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecUDTUnionV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecUDTUnionV0
+ * {
+ *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
+ *     string lib&lt;80&gt;;
+ *     string name&lt;60&gt;;
+ *     SCSpecUDTUnionCaseV0 cases&lt;50&gt;;
+ * };
+ * </pre>
+ */
 public class SCSpecUDTUnionV0 implements XdrElement {
   public SCSpecUDTUnionV0() {}
 

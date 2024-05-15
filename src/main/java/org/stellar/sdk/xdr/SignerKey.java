@@ -12,29 +12,31 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SignerKey switch (SignerKeyType type)
-//  {
-//  case SIGNER_KEY_TYPE_ED25519:
-//      uint256 ed25519;
-//  case SIGNER_KEY_TYPE_PRE_AUTH_TX:
-//      /* SHA-256 Hash of TransactionSignaturePayload structure */
-//      uint256 preAuthTx;
-//  case SIGNER_KEY_TYPE_HASH_X:
-//      /* Hash of random 256 bit preimage X */
-//      uint256 hashX;
-//  case SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD:
-//      struct
-//      {
-//          /* Public key that must sign the payload. */
-//          uint256 ed25519;
-//          /* Payload to be raw signed by ed25519. */
-//          opaque payload<64>;
-//      } ed25519SignedPayload;
-//  };
-
-//  ===========================================================================
+/**
+ * SignerKey's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SignerKey switch (SignerKeyType type)
+ * {
+ * case SIGNER_KEY_TYPE_ED25519:
+ *     uint256 ed25519;
+ * case SIGNER_KEY_TYPE_PRE_AUTH_TX:
+ *     /&#42; SHA-256 Hash of TransactionSignaturePayload structure &#42;/
+ *     uint256 preAuthTx;
+ * case SIGNER_KEY_TYPE_HASH_X:
+ *     /&#42; Hash of random 256 bit preimage X &#42;/
+ *     uint256 hashX;
+ * case SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD:
+ *     struct
+ *     {
+ *         /&#42; Public key that must sign the payload. &#42;/
+ *         uint256 ed25519;
+ *         /&#42; Payload to be raw signed by ed25519. &#42;/
+ *         opaque payload&lt;64&gt;;
+ *     } ed25519SignedPayload;
+ * };
+ * </pre>
+ */
 public class SignerKey implements XdrElement {
   public SignerKey() {}
 
@@ -221,6 +223,19 @@ public class SignerKey implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  /**
+   * SignerKeyEd25519SignedPayload's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         /&#42; Public key that must sign the payload. &#42;/
+   *         uint256 ed25519;
+   *         /&#42; Payload to be raw signed by ed25519. &#42;/
+   *         opaque payload&lt;64&gt;;
+   *     }
+   * </pre>
+   */
   public static class SignerKeyEd25519SignedPayload implements XdrElement {
     public SignerKeyEd25519SignedPayload() {}
 

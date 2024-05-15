@@ -12,25 +12,27 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionV0
-//  {
-//      uint256 sourceAccountEd25519;
-//      uint32 fee;
-//      SequenceNumber seqNum;
-//      TimeBounds* timeBounds;
-//      Memo memo;
-//      Operation operations<MAX_OPS_PER_TX>;
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionV0
+ * {
+ *     uint256 sourceAccountEd25519;
+ *     uint32 fee;
+ *     SequenceNumber seqNum;
+ *     TimeBounds&#42; timeBounds;
+ *     Memo memo;
+ *     Operation operations&lt;MAX_OPS_PER_TX&gt;;
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class TransactionV0 implements XdrElement {
   public TransactionV0() {}
 
@@ -256,6 +258,17 @@ public class TransactionV0 implements XdrElement {
     }
   }
 
+  /**
+   * TransactionV0Ext's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class TransactionV0Ext implements XdrElement {
     public TransactionV0Ext() {}
 

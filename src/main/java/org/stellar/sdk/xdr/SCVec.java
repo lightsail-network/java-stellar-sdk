@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef SCVal SCVec<>;
-
-//  ===========================================================================
+/**
+ * SCVec's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef SCVal SCVec&lt;&gt;;
+ * </pre>
+ */
 public class SCVec implements XdrElement {
   private SCVal[] SCVec;
 

@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct AuthCert
-//  {
-//      Curve25519Public pubkey;
-//      uint64 expiration;
-//      Signature sig;
-//  };
-
-//  ===========================================================================
+/**
+ * AuthCert's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct AuthCert
+ * {
+ *     Curve25519Public pubkey;
+ *     uint64 expiration;
+ *     Signature sig;
+ * };
+ * </pre>
+ */
 public class AuthCert implements XdrElement {
   public AuthCert() {}
 

@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Price
-//  {
-//      int32 n; // numerator
-//      int32 d; // denominator
-//  };
-
-//  ===========================================================================
+/**
+ * Price's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Price
+ * {
+ *     int32 n; // numerator
+ *     int32 d; // denominator
+ * };
+ * </pre>
+ */
 public class Price implements XdrElement {
   public Price() {}
 

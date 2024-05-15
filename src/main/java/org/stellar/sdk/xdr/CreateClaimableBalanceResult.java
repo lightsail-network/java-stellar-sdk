@@ -11,22 +11,24 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union CreateClaimableBalanceResult switch (
-//      CreateClaimableBalanceResultCode code)
-//  {
-//  case CREATE_CLAIMABLE_BALANCE_SUCCESS:
-//      ClaimableBalanceID balanceID;
-//  case CREATE_CLAIMABLE_BALANCE_MALFORMED:
-//  case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
-//  case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
-//  case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
-//  case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * CreateClaimableBalanceResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union CreateClaimableBalanceResult switch (
+ *     CreateClaimableBalanceResultCode code)
+ * {
+ * case CREATE_CLAIMABLE_BALANCE_SUCCESS:
+ *     ClaimableBalanceID balanceID;
+ * case CREATE_CLAIMABLE_BALANCE_MALFORMED:
+ * case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
+ * case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
+ * case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+ * case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
+ *     void;
+ * };
+ * </pre>
+ */
 public class CreateClaimableBalanceResult implements XdrElement {
   public CreateClaimableBalanceResult() {}
 

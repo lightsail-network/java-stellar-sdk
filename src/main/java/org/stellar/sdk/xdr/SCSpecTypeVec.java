@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecTypeVec
-//  {
-//      SCSpecTypeDef elementType;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecTypeVec's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecTypeVec
+ * {
+ *     SCSpecTypeDef elementType;
+ * };
+ * </pre>
+ */
 public class SCSpecTypeVec implements XdrElement {
   public SCSpecTypeVec() {}
 

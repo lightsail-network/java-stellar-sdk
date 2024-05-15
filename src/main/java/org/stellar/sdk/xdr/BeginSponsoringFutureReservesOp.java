@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct BeginSponsoringFutureReservesOp
-//  {
-//      AccountID sponsoredID;
-//  };
-
-//  ===========================================================================
+/**
+ * BeginSponsoringFutureReservesOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct BeginSponsoringFutureReservesOp
+ * {
+ *     AccountID sponsoredID;
+ * };
+ * </pre>
+ */
 public class BeginSponsoringFutureReservesOp implements XdrElement {
   public BeginSponsoringFutureReservesOp() {}
 

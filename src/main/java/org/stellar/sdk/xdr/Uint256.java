@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef opaque uint256[32];
-
-//  ===========================================================================
+/**
+ * Uint256's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef opaque uint256[32];
+ * </pre>
+ */
 public class Uint256 implements XdrElement {
   private byte[] uint256;
 

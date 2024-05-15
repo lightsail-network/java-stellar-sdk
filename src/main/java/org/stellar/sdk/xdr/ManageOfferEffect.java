@@ -10,16 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ManageOfferEffect
-//  {
-//      MANAGE_OFFER_CREATED = 0,
-//      MANAGE_OFFER_UPDATED = 1,
-//      MANAGE_OFFER_DELETED = 2
-//  };
-
-//  ===========================================================================
+/**
+ * ManageOfferEffect's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ManageOfferEffect
+ * {
+ *     MANAGE_OFFER_CREATED = 0,
+ *     MANAGE_OFFER_UPDATED = 1,
+ *     MANAGE_OFFER_DELETED = 2
+ * };
+ * </pre>
+ */
 public enum ManageOfferEffect implements XdrElement {
   MANAGE_OFFER_CREATED(0),
   MANAGE_OFFER_UPDATED(1),

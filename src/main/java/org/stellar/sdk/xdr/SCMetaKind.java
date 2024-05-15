@@ -10,14 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SCMetaKind
-//  {
-//      SC_META_V0 = 0
-//  };
-
-//  ===========================================================================
+/**
+ * SCMetaKind's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SCMetaKind
+ * {
+ *     SC_META_V0 = 0
+ * };
+ * </pre>
+ */
 public enum SCMetaKind implements XdrElement {
   SC_META_V0(0),
   ;

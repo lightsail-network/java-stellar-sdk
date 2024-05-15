@@ -10,19 +10,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ClaimPredicateType
-//  {
-//      CLAIM_PREDICATE_UNCONDITIONAL = 0,
-//      CLAIM_PREDICATE_AND = 1,
-//      CLAIM_PREDICATE_OR = 2,
-//      CLAIM_PREDICATE_NOT = 3,
-//      CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME = 4,
-//      CLAIM_PREDICATE_BEFORE_RELATIVE_TIME = 5
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimPredicateType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ClaimPredicateType
+ * {
+ *     CLAIM_PREDICATE_UNCONDITIONAL = 0,
+ *     CLAIM_PREDICATE_AND = 1,
+ *     CLAIM_PREDICATE_OR = 2,
+ *     CLAIM_PREDICATE_NOT = 3,
+ *     CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME = 4,
+ *     CLAIM_PREDICATE_BEFORE_RELATIVE_TIME = 5
+ * };
+ * </pre>
+ */
 public enum ClaimPredicateType implements XdrElement {
   CLAIM_PREDICATE_UNCONDITIONAL(0),
   CLAIM_PREDICATE_AND(1),

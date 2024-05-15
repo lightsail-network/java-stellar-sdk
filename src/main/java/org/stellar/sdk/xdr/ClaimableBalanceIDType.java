@@ -10,14 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ClaimableBalanceIDType
-//  {
-//      CLAIMABLE_BALANCE_ID_TYPE_V0 = 0
-//  };
-
-//  ===========================================================================
+/**
+ * ClaimableBalanceIDType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ClaimableBalanceIDType
+ * {
+ *     CLAIMABLE_BALANCE_ID_TYPE_V0 = 0
+ * };
+ * </pre>
+ */
 public enum ClaimableBalanceIDType implements XdrElement {
   CLAIMABLE_BALANCE_ID_TYPE_V0(0),
   ;

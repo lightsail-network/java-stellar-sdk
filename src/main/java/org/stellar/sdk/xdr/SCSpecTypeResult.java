@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecTypeResult
-//  {
-//      SCSpecTypeDef okType;
-//      SCSpecTypeDef errorType;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecTypeResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecTypeResult
+ * {
+ *     SCSpecTypeDef okType;
+ *     SCSpecTypeDef errorType;
+ * };
+ * </pre>
+ */
 public class SCSpecTypeResult implements XdrElement {
   public SCSpecTypeResult() {}
 

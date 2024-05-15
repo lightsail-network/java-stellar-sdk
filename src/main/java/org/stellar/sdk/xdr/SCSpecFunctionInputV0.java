@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecFunctionInputV0
-//  {
-//      string doc<SC_SPEC_DOC_LIMIT>;
-//      string name<30>;
-//      SCSpecTypeDef type;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecFunctionInputV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecFunctionInputV0
+ * {
+ *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
+ *     string name&lt;30&gt;;
+ *     SCSpecTypeDef type;
+ * };
+ * </pre>
+ */
 public class SCSpecFunctionInputV0 implements XdrElement {
   public SCSpecFunctionInputV0() {}
 

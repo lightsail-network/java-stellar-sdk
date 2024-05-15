@@ -10,20 +10,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum RestoreFootprintResultCode
-//  {
-//      // codes considered as "success" for the operation
-//      RESTORE_FOOTPRINT_SUCCESS = 0,
-//
-//      // codes considered as "failure" for the operation
-//      RESTORE_FOOTPRINT_MALFORMED = -1,
-//      RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED = -2,
-//      RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE = -3
-//  };
-
-//  ===========================================================================
+/**
+ * RestoreFootprintResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum RestoreFootprintResultCode
+ * {
+ *     // codes considered as &quot;success&quot; for the operation
+ *     RESTORE_FOOTPRINT_SUCCESS = 0,
+ *
+ *     // codes considered as &quot;failure&quot; for the operation
+ *     RESTORE_FOOTPRINT_MALFORMED = -1,
+ *     RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED = -2,
+ *     RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE = -3
+ * };
+ * </pre>
+ */
 public enum RestoreFootprintResultCode implements XdrElement {
   RESTORE_FOOTPRINT_SUCCESS(0),
   RESTORE_FOOTPRINT_MALFORMED(-1),

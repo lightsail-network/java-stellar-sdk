@@ -12,30 +12,32 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ContractEvent
-//  {
-//      // We can use this to add more fields, or because it
-//      // is first, to change ContractEvent into a union.
-//      ExtensionPoint ext;
-//
-//      Hash* contractID;
-//      ContractEventType type;
-//
-//      union switch (int v)
-//      {
-//      case 0:
-//          struct
-//          {
-//              SCVal topics<>;
-//              SCVal data;
-//          } v0;
-//      }
-//      body;
-//  };
-
-//  ===========================================================================
+/**
+ * ContractEvent's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ContractEvent
+ * {
+ *     // We can use this to add more fields, or because it
+ *     // is first, to change ContractEvent into a union.
+ *     ExtensionPoint ext;
+ *
+ *     Hash&#42; contractID;
+ *     ContractEventType type;
+ *
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         struct
+ *         {
+ *             SCVal topics&lt;&gt;;
+ *             SCVal data;
+ *         } v0;
+ *     }
+ *     body;
+ * };
+ * </pre>
+ */
 public class ContractEvent implements XdrElement {
   public ContractEvent() {}
 
@@ -186,6 +188,21 @@ public class ContractEvent implements XdrElement {
     }
   }
 
+  /**
+   * ContractEventBody's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         struct
+   *         {
+   *             SCVal topics&lt;&gt;;
+   *             SCVal data;
+   *         } v0;
+   *     }
+   * </pre>
+   */
   public static class ContractEventBody implements XdrElement {
     public ContractEventBody() {}
 
@@ -298,6 +315,17 @@ public class ContractEvent implements XdrElement {
       return decode(xdrDataInputStream);
     }
 
+    /**
+     * ContractEventV0's original definition in the XDR file is:
+     *
+     * <pre>
+     * struct
+     *         {
+     *             SCVal topics&lt;&gt;;
+     *             SCVal data;
+     *         }
+     * </pre>
+     */
     public static class ContractEventV0 implements XdrElement {
       public ContractEventV0() {}
 

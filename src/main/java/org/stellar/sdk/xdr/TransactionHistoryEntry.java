@@ -11,25 +11,27 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionHistoryEntry
-//  {
-//      uint32 ledgerSeq;
-//      TransactionSet txSet;
-//
-//      // when v != 0, txSet must be empty
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      case 1:
-//          GeneralizedTransactionSet generalizedTxSet;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionHistoryEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionHistoryEntry
+ * {
+ *     uint32 ledgerSeq;
+ *     TransactionSet txSet;
+ *
+ *     // when v != 0, txSet must be empty
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 1:
+ *         GeneralizedTransactionSet generalizedTxSet;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class TransactionHistoryEntry implements XdrElement {
   public TransactionHistoryEntry() {}
 
@@ -153,6 +155,19 @@ public class TransactionHistoryEntry implements XdrElement {
     }
   }
 
+  /**
+   * TransactionHistoryEntryExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 1:
+   *         GeneralizedTransactionSet generalizedTxSet;
+   *     }
+   * </pre>
+   */
   public static class TransactionHistoryEntryExt implements XdrElement {
     public TransactionHistoryEntryExt() {}
 

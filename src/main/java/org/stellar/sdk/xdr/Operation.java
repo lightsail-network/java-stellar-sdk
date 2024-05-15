@@ -11,76 +11,78 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct Operation
-//  {
-//      // sourceAccount is the account used to run the operation
-//      // if not set, the runtime defaults to "sourceAccount" specified at
-//      // the transaction level
-//      MuxedAccount* sourceAccount;
-//
-//      union switch (OperationType type)
-//      {
-//      case CREATE_ACCOUNT:
-//          CreateAccountOp createAccountOp;
-//      case PAYMENT:
-//          PaymentOp paymentOp;
-//      case PATH_PAYMENT_STRICT_RECEIVE:
-//          PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
-//      case MANAGE_SELL_OFFER:
-//          ManageSellOfferOp manageSellOfferOp;
-//      case CREATE_PASSIVE_SELL_OFFER:
-//          CreatePassiveSellOfferOp createPassiveSellOfferOp;
-//      case SET_OPTIONS:
-//          SetOptionsOp setOptionsOp;
-//      case CHANGE_TRUST:
-//          ChangeTrustOp changeTrustOp;
-//      case ALLOW_TRUST:
-//          AllowTrustOp allowTrustOp;
-//      case ACCOUNT_MERGE:
-//          MuxedAccount destination;
-//      case INFLATION:
-//          void;
-//      case MANAGE_DATA:
-//          ManageDataOp manageDataOp;
-//      case BUMP_SEQUENCE:
-//          BumpSequenceOp bumpSequenceOp;
-//      case MANAGE_BUY_OFFER:
-//          ManageBuyOfferOp manageBuyOfferOp;
-//      case PATH_PAYMENT_STRICT_SEND:
-//          PathPaymentStrictSendOp pathPaymentStrictSendOp;
-//      case CREATE_CLAIMABLE_BALANCE:
-//          CreateClaimableBalanceOp createClaimableBalanceOp;
-//      case CLAIM_CLAIMABLE_BALANCE:
-//          ClaimClaimableBalanceOp claimClaimableBalanceOp;
-//      case BEGIN_SPONSORING_FUTURE_RESERVES:
-//          BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
-//      case END_SPONSORING_FUTURE_RESERVES:
-//          void;
-//      case REVOKE_SPONSORSHIP:
-//          RevokeSponsorshipOp revokeSponsorshipOp;
-//      case CLAWBACK:
-//          ClawbackOp clawbackOp;
-//      case CLAWBACK_CLAIMABLE_BALANCE:
-//          ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
-//      case SET_TRUST_LINE_FLAGS:
-//          SetTrustLineFlagsOp setTrustLineFlagsOp;
-//      case LIQUIDITY_POOL_DEPOSIT:
-//          LiquidityPoolDepositOp liquidityPoolDepositOp;
-//      case LIQUIDITY_POOL_WITHDRAW:
-//          LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
-//      case INVOKE_HOST_FUNCTION:
-//          InvokeHostFunctionOp invokeHostFunctionOp;
-//      case EXTEND_FOOTPRINT_TTL:
-//          ExtendFootprintTTLOp extendFootprintTTLOp;
-//      case RESTORE_FOOTPRINT:
-//          RestoreFootprintOp restoreFootprintOp;
-//      }
-//      body;
-//  };
-
-//  ===========================================================================
+/**
+ * Operation's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct Operation
+ * {
+ *     // sourceAccount is the account used to run the operation
+ *     // if not set, the runtime defaults to &quot;sourceAccount&quot; specified at
+ *     // the transaction level
+ *     MuxedAccount&#42; sourceAccount;
+ *
+ *     union switch (OperationType type)
+ *     {
+ *     case CREATE_ACCOUNT:
+ *         CreateAccountOp createAccountOp;
+ *     case PAYMENT:
+ *         PaymentOp paymentOp;
+ *     case PATH_PAYMENT_STRICT_RECEIVE:
+ *         PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
+ *     case MANAGE_SELL_OFFER:
+ *         ManageSellOfferOp manageSellOfferOp;
+ *     case CREATE_PASSIVE_SELL_OFFER:
+ *         CreatePassiveSellOfferOp createPassiveSellOfferOp;
+ *     case SET_OPTIONS:
+ *         SetOptionsOp setOptionsOp;
+ *     case CHANGE_TRUST:
+ *         ChangeTrustOp changeTrustOp;
+ *     case ALLOW_TRUST:
+ *         AllowTrustOp allowTrustOp;
+ *     case ACCOUNT_MERGE:
+ *         MuxedAccount destination;
+ *     case INFLATION:
+ *         void;
+ *     case MANAGE_DATA:
+ *         ManageDataOp manageDataOp;
+ *     case BUMP_SEQUENCE:
+ *         BumpSequenceOp bumpSequenceOp;
+ *     case MANAGE_BUY_OFFER:
+ *         ManageBuyOfferOp manageBuyOfferOp;
+ *     case PATH_PAYMENT_STRICT_SEND:
+ *         PathPaymentStrictSendOp pathPaymentStrictSendOp;
+ *     case CREATE_CLAIMABLE_BALANCE:
+ *         CreateClaimableBalanceOp createClaimableBalanceOp;
+ *     case CLAIM_CLAIMABLE_BALANCE:
+ *         ClaimClaimableBalanceOp claimClaimableBalanceOp;
+ *     case BEGIN_SPONSORING_FUTURE_RESERVES:
+ *         BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
+ *     case END_SPONSORING_FUTURE_RESERVES:
+ *         void;
+ *     case REVOKE_SPONSORSHIP:
+ *         RevokeSponsorshipOp revokeSponsorshipOp;
+ *     case CLAWBACK:
+ *         ClawbackOp clawbackOp;
+ *     case CLAWBACK_CLAIMABLE_BALANCE:
+ *         ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
+ *     case SET_TRUST_LINE_FLAGS:
+ *         SetTrustLineFlagsOp setTrustLineFlagsOp;
+ *     case LIQUIDITY_POOL_DEPOSIT:
+ *         LiquidityPoolDepositOp liquidityPoolDepositOp;
+ *     case LIQUIDITY_POOL_WITHDRAW:
+ *         LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
+ *     case INVOKE_HOST_FUNCTION:
+ *         InvokeHostFunctionOp invokeHostFunctionOp;
+ *     case EXTEND_FOOTPRINT_TTL:
+ *         ExtendFootprintTTLOp extendFootprintTTLOp;
+ *     case RESTORE_FOOTPRINT:
+ *         RestoreFootprintOp restoreFootprintOp;
+ *     }
+ *     body;
+ * };
+ * </pre>
+ */
 public class Operation implements XdrElement {
   public Operation() {}
 
@@ -191,6 +193,69 @@ public class Operation implements XdrElement {
     }
   }
 
+  /**
+   * OperationBody's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (OperationType type)
+   *     {
+   *     case CREATE_ACCOUNT:
+   *         CreateAccountOp createAccountOp;
+   *     case PAYMENT:
+   *         PaymentOp paymentOp;
+   *     case PATH_PAYMENT_STRICT_RECEIVE:
+   *         PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
+   *     case MANAGE_SELL_OFFER:
+   *         ManageSellOfferOp manageSellOfferOp;
+   *     case CREATE_PASSIVE_SELL_OFFER:
+   *         CreatePassiveSellOfferOp createPassiveSellOfferOp;
+   *     case SET_OPTIONS:
+   *         SetOptionsOp setOptionsOp;
+   *     case CHANGE_TRUST:
+   *         ChangeTrustOp changeTrustOp;
+   *     case ALLOW_TRUST:
+   *         AllowTrustOp allowTrustOp;
+   *     case ACCOUNT_MERGE:
+   *         MuxedAccount destination;
+   *     case INFLATION:
+   *         void;
+   *     case MANAGE_DATA:
+   *         ManageDataOp manageDataOp;
+   *     case BUMP_SEQUENCE:
+   *         BumpSequenceOp bumpSequenceOp;
+   *     case MANAGE_BUY_OFFER:
+   *         ManageBuyOfferOp manageBuyOfferOp;
+   *     case PATH_PAYMENT_STRICT_SEND:
+   *         PathPaymentStrictSendOp pathPaymentStrictSendOp;
+   *     case CREATE_CLAIMABLE_BALANCE:
+   *         CreateClaimableBalanceOp createClaimableBalanceOp;
+   *     case CLAIM_CLAIMABLE_BALANCE:
+   *         ClaimClaimableBalanceOp claimClaimableBalanceOp;
+   *     case BEGIN_SPONSORING_FUTURE_RESERVES:
+   *         BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
+   *     case END_SPONSORING_FUTURE_RESERVES:
+   *         void;
+   *     case REVOKE_SPONSORSHIP:
+   *         RevokeSponsorshipOp revokeSponsorshipOp;
+   *     case CLAWBACK:
+   *         ClawbackOp clawbackOp;
+   *     case CLAWBACK_CLAIMABLE_BALANCE:
+   *         ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
+   *     case SET_TRUST_LINE_FLAGS:
+   *         SetTrustLineFlagsOp setTrustLineFlagsOp;
+   *     case LIQUIDITY_POOL_DEPOSIT:
+   *         LiquidityPoolDepositOp liquidityPoolDepositOp;
+   *     case LIQUIDITY_POOL_WITHDRAW:
+   *         LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
+   *     case INVOKE_HOST_FUNCTION:
+   *         InvokeHostFunctionOp invokeHostFunctionOp;
+   *     case EXTEND_FOOTPRINT_TTL:
+   *         ExtendFootprintTTLOp extendFootprintTTLOp;
+   *     case RESTORE_FOOTPRINT:
+   *         RestoreFootprintOp restoreFootprintOp;
+   *     }
+   * </pre>
+   */
   public static class OperationBody implements XdrElement {
     public OperationBody() {}
 

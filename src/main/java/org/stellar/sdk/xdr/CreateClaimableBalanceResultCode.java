@@ -10,19 +10,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum CreateClaimableBalanceResultCode
-//  {
-//      CREATE_CLAIMABLE_BALANCE_SUCCESS = 0,
-//      CREATE_CLAIMABLE_BALANCE_MALFORMED = -1,
-//      CREATE_CLAIMABLE_BALANCE_LOW_RESERVE = -2,
-//      CREATE_CLAIMABLE_BALANCE_NO_TRUST = -3,
-//      CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -4,
-//      CREATE_CLAIMABLE_BALANCE_UNDERFUNDED = -5
-//  };
-
-//  ===========================================================================
+/**
+ * CreateClaimableBalanceResultCode's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum CreateClaimableBalanceResultCode
+ * {
+ *     CREATE_CLAIMABLE_BALANCE_SUCCESS = 0,
+ *     CREATE_CLAIMABLE_BALANCE_MALFORMED = -1,
+ *     CREATE_CLAIMABLE_BALANCE_LOW_RESERVE = -2,
+ *     CREATE_CLAIMABLE_BALANCE_NO_TRUST = -3,
+ *     CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -4,
+ *     CREATE_CLAIMABLE_BALANCE_UNDERFUNDED = -5
+ * };
+ * </pre>
+ */
 public enum CreateClaimableBalanceResultCode implements XdrElement {
   CREATE_CLAIMABLE_BALANCE_SUCCESS(0),
   CREATE_CLAIMABLE_BALANCE_MALFORMED(-1),

@@ -12,16 +12,18 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCSpecUDTUnionCaseTupleV0
-//  {
-//      string doc<SC_SPEC_DOC_LIMIT>;
-//      string name<60>;
-//      SCSpecTypeDef type<12>;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecUDTUnionCaseTupleV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCSpecUDTUnionCaseTupleV0
+ * {
+ *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
+ *     string name&lt;60&gt;;
+ *     SCSpecTypeDef type&lt;12&gt;;
+ * };
+ * </pre>
+ */
 public class SCSpecUDTUnionCaseTupleV0 implements XdrElement {
   public SCSpecUDTUnionCaseTupleV0() {}
 

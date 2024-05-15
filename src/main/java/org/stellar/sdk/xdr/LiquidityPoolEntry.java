@@ -11,30 +11,32 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct LiquidityPoolEntry
-//  {
-//      PoolID liquidityPoolID;
-//
-//      union switch (LiquidityPoolType type)
-//      {
-//      case LIQUIDITY_POOL_CONSTANT_PRODUCT:
-//          struct
-//          {
-//              LiquidityPoolConstantProductParameters params;
-//
-//              int64 reserveA;        // amount of A in the pool
-//              int64 reserveB;        // amount of B in the pool
-//              int64 totalPoolShares; // total number of pool shares issued
-//              int64 poolSharesTrustLineCount; // number of trust lines for the
-//                                              // associated pool shares
-//          } constantProduct;
-//      }
-//      body;
-//  };
-
-//  ===========================================================================
+/**
+ * LiquidityPoolEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct LiquidityPoolEntry
+ * {
+ *     PoolID liquidityPoolID;
+ *
+ *     union switch (LiquidityPoolType type)
+ *     {
+ *     case LIQUIDITY_POOL_CONSTANT_PRODUCT:
+ *         struct
+ *         {
+ *             LiquidityPoolConstantProductParameters params;
+ *
+ *             int64 reserveA;        // amount of A in the pool
+ *             int64 reserveB;        // amount of B in the pool
+ *             int64 totalPoolShares; // total number of pool shares issued
+ *             int64 poolSharesTrustLineCount; // number of trust lines for the
+ *                                             // associated pool shares
+ *         } constantProduct;
+ *     }
+ *     body;
+ * };
+ * </pre>
+ */
 public class LiquidityPoolEntry implements XdrElement {
   public LiquidityPoolEntry() {}
 
@@ -137,6 +139,26 @@ public class LiquidityPoolEntry implements XdrElement {
     }
   }
 
+  /**
+   * LiquidityPoolEntryBody's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (LiquidityPoolType type)
+   *     {
+   *     case LIQUIDITY_POOL_CONSTANT_PRODUCT:
+   *         struct
+   *         {
+   *             LiquidityPoolConstantProductParameters params;
+   *
+   *             int64 reserveA;        // amount of A in the pool
+   *             int64 reserveB;        // amount of B in the pool
+   *             int64 totalPoolShares; // total number of pool shares issued
+   *             int64 poolSharesTrustLineCount; // number of trust lines for the
+   *                                             // associated pool shares
+   *         } constantProduct;
+   *     }
+   * </pre>
+   */
   public static class LiquidityPoolEntryBody implements XdrElement {
     public LiquidityPoolEntryBody() {}
 
@@ -253,6 +275,22 @@ public class LiquidityPoolEntry implements XdrElement {
       return decode(xdrDataInputStream);
     }
 
+    /**
+     * LiquidityPoolEntryConstantProduct's original definition in the XDR file is:
+     *
+     * <pre>
+     * struct
+     *         {
+     *             LiquidityPoolConstantProductParameters params;
+     *
+     *             int64 reserveA;        // amount of A in the pool
+     *             int64 reserveB;        // amount of B in the pool
+     *             int64 totalPoolShares; // total number of pool shares issued
+     *             int64 poolSharesTrustLineCount; // number of trust lines for the
+     *                                             // associated pool shares
+     *         }
+     * </pre>
+     */
     public static class LiquidityPoolEntryConstantProduct implements XdrElement {
       public LiquidityPoolEntryConstantProduct() {}
 

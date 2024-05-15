@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCMapEntry
-//  {
-//      SCVal key;
-//      SCVal val;
-//  };
-
-//  ===========================================================================
+/**
+ * SCMapEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCMapEntry
+ * {
+ *     SCVal key;
+ *     SCVal val;
+ * };
+ * </pre>
+ */
 public class SCMapEntry implements XdrElement {
   public SCMapEntry() {}
 

@@ -12,23 +12,25 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct PathPaymentStrictReceiveOp
-//  {
-//      Asset sendAsset; // asset we pay with
-//      int64 sendMax;   // the maximum amount of sendAsset to
-//                       // send (excluding fees).
-//                       // The operation will fail if can't be met
-//
-//      MuxedAccount destination; // recipient of the payment
-//      Asset destAsset;          // what they end up with
-//      int64 destAmount;         // amount they end up with
-//
-//      Asset path<5>; // additional hops it must go through to get there
-//  };
-
-//  ===========================================================================
+/**
+ * PathPaymentStrictReceiveOp's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct PathPaymentStrictReceiveOp
+ * {
+ *     Asset sendAsset; // asset we pay with
+ *     int64 sendMax;   // the maximum amount of sendAsset to
+ *                      // send (excluding fees).
+ *                      // The operation will fail if can&#39;t be met
+ *
+ *     MuxedAccount destination; // recipient of the payment
+ *     Asset destAsset;          // what they end up with
+ *     int64 destAmount;         // amount they end up with
+ *
+ *     Asset path&lt;5&gt;; // additional hops it must go through to get there
+ * };
+ * </pre>
+ */
 public class PathPaymentStrictReceiveOp implements XdrElement {
   public PathPaymentStrictReceiveOp() {}
 

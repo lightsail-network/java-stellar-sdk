@@ -12,16 +12,18 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCPQuorumSet
-//  {
-//      uint32 threshold;
-//      NodeID validators<>;
-//      SCPQuorumSet innerSets<>;
-//  };
-
-//  ===========================================================================
+/**
+ * SCPQuorumSet's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCPQuorumSet
+ * {
+ *     uint32 threshold;
+ *     NodeID validators&lt;&gt;;
+ *     SCPQuorumSet innerSets&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class SCPQuorumSet implements XdrElement {
   public SCPQuorumSet() {}
 

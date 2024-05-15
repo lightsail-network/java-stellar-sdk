@@ -11,46 +11,48 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SCSpecTypeDef switch (SCSpecType type)
-//  {
-//  case SC_SPEC_TYPE_VAL:
-//  case SC_SPEC_TYPE_BOOL:
-//  case SC_SPEC_TYPE_VOID:
-//  case SC_SPEC_TYPE_ERROR:
-//  case SC_SPEC_TYPE_U32:
-//  case SC_SPEC_TYPE_I32:
-//  case SC_SPEC_TYPE_U64:
-//  case SC_SPEC_TYPE_I64:
-//  case SC_SPEC_TYPE_TIMEPOINT:
-//  case SC_SPEC_TYPE_DURATION:
-//  case SC_SPEC_TYPE_U128:
-//  case SC_SPEC_TYPE_I128:
-//  case SC_SPEC_TYPE_U256:
-//  case SC_SPEC_TYPE_I256:
-//  case SC_SPEC_TYPE_BYTES:
-//  case SC_SPEC_TYPE_STRING:
-//  case SC_SPEC_TYPE_SYMBOL:
-//  case SC_SPEC_TYPE_ADDRESS:
-//      void;
-//  case SC_SPEC_TYPE_OPTION:
-//      SCSpecTypeOption option;
-//  case SC_SPEC_TYPE_RESULT:
-//      SCSpecTypeResult result;
-//  case SC_SPEC_TYPE_VEC:
-//      SCSpecTypeVec vec;
-//  case SC_SPEC_TYPE_MAP:
-//      SCSpecTypeMap map;
-//  case SC_SPEC_TYPE_TUPLE:
-//      SCSpecTypeTuple tuple;
-//  case SC_SPEC_TYPE_BYTES_N:
-//      SCSpecTypeBytesN bytesN;
-//  case SC_SPEC_TYPE_UDT:
-//      SCSpecTypeUDT udt;
-//  };
-
-//  ===========================================================================
+/**
+ * SCSpecTypeDef's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SCSpecTypeDef switch (SCSpecType type)
+ * {
+ * case SC_SPEC_TYPE_VAL:
+ * case SC_SPEC_TYPE_BOOL:
+ * case SC_SPEC_TYPE_VOID:
+ * case SC_SPEC_TYPE_ERROR:
+ * case SC_SPEC_TYPE_U32:
+ * case SC_SPEC_TYPE_I32:
+ * case SC_SPEC_TYPE_U64:
+ * case SC_SPEC_TYPE_I64:
+ * case SC_SPEC_TYPE_TIMEPOINT:
+ * case SC_SPEC_TYPE_DURATION:
+ * case SC_SPEC_TYPE_U128:
+ * case SC_SPEC_TYPE_I128:
+ * case SC_SPEC_TYPE_U256:
+ * case SC_SPEC_TYPE_I256:
+ * case SC_SPEC_TYPE_BYTES:
+ * case SC_SPEC_TYPE_STRING:
+ * case SC_SPEC_TYPE_SYMBOL:
+ * case SC_SPEC_TYPE_ADDRESS:
+ *     void;
+ * case SC_SPEC_TYPE_OPTION:
+ *     SCSpecTypeOption option;
+ * case SC_SPEC_TYPE_RESULT:
+ *     SCSpecTypeResult result;
+ * case SC_SPEC_TYPE_VEC:
+ *     SCSpecTypeVec vec;
+ * case SC_SPEC_TYPE_MAP:
+ *     SCSpecTypeMap map;
+ * case SC_SPEC_TYPE_TUPLE:
+ *     SCSpecTypeTuple tuple;
+ * case SC_SPEC_TYPE_BYTES_N:
+ *     SCSpecTypeBytesN bytesN;
+ * case SC_SPEC_TYPE_UDT:
+ *     SCSpecTypeUDT udt;
+ * };
+ * </pre>
+ */
 public class SCSpecTypeDef implements XdrElement {
   public SCSpecTypeDef() {}
 

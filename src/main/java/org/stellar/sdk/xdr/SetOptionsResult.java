@@ -11,26 +11,28 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union SetOptionsResult switch (SetOptionsResultCode code)
-//  {
-//  case SET_OPTIONS_SUCCESS:
-//      void;
-//  case SET_OPTIONS_LOW_RESERVE:
-//  case SET_OPTIONS_TOO_MANY_SIGNERS:
-//  case SET_OPTIONS_BAD_FLAGS:
-//  case SET_OPTIONS_INVALID_INFLATION:
-//  case SET_OPTIONS_CANT_CHANGE:
-//  case SET_OPTIONS_UNKNOWN_FLAG:
-//  case SET_OPTIONS_THRESHOLD_OUT_OF_RANGE:
-//  case SET_OPTIONS_BAD_SIGNER:
-//  case SET_OPTIONS_INVALID_HOME_DOMAIN:
-//  case SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * SetOptionsResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union SetOptionsResult switch (SetOptionsResultCode code)
+ * {
+ * case SET_OPTIONS_SUCCESS:
+ *     void;
+ * case SET_OPTIONS_LOW_RESERVE:
+ * case SET_OPTIONS_TOO_MANY_SIGNERS:
+ * case SET_OPTIONS_BAD_FLAGS:
+ * case SET_OPTIONS_INVALID_INFLATION:
+ * case SET_OPTIONS_CANT_CHANGE:
+ * case SET_OPTIONS_UNKNOWN_FLAG:
+ * case SET_OPTIONS_THRESHOLD_OUT_OF_RANGE:
+ * case SET_OPTIONS_BAD_SIGNER:
+ * case SET_OPTIONS_INVALID_HOME_DOMAIN:
+ * case SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
+ *     void;
+ * };
+ * </pre>
+ */
 public class SetOptionsResult implements XdrElement {
   public SetOptionsResult() {}
 

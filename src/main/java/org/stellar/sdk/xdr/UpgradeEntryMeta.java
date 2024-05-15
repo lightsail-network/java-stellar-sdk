@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct UpgradeEntryMeta
-//  {
-//      LedgerUpgrade upgrade;
-//      LedgerEntryChanges changes;
-//  };
-
-//  ===========================================================================
+/**
+ * UpgradeEntryMeta's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct UpgradeEntryMeta
+ * {
+ *     LedgerUpgrade upgrade;
+ *     LedgerEntryChanges changes;
+ * };
+ * </pre>
+ */
 public class UpgradeEntryMeta implements XdrElement {
   public UpgradeEntryMeta() {}
 

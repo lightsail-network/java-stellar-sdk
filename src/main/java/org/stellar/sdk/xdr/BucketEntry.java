@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union BucketEntry switch (BucketEntryType type)
-//  {
-//  case LIVEENTRY:
-//  case INITENTRY:
-//      LedgerEntry liveEntry;
-//
-//  case DEADENTRY:
-//      LedgerKey deadEntry;
-//  case METAENTRY:
-//      BucketMetadata metaEntry;
-//  };
-
-//  ===========================================================================
+/**
+ * BucketEntry's original definition in the XDR file is:
+ *
+ * <pre>
+ * union BucketEntry switch (BucketEntryType type)
+ * {
+ * case LIVEENTRY:
+ * case INITENTRY:
+ *     LedgerEntry liveEntry;
+ *
+ * case DEADENTRY:
+ *     LedgerKey deadEntry;
+ * case METAENTRY:
+ *     BucketMetadata metaEntry;
+ * };
+ * </pre>
+ */
 public class BucketEntry implements XdrElement {
   public BucketEntry() {}
 

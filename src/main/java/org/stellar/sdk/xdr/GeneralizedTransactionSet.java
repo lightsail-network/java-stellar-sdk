@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union GeneralizedTransactionSet switch (int v)
-//  {
-//  // We consider the legacy TransactionSet to be v0.
-//  case 1:
-//      TransactionSetV1 v1TxSet;
-//  };
-
-//  ===========================================================================
+/**
+ * GeneralizedTransactionSet's original definition in the XDR file is:
+ *
+ * <pre>
+ * union GeneralizedTransactionSet switch (int v)
+ * {
+ * // We consider the legacy TransactionSet to be v0.
+ * case 1:
+ *     TransactionSetV1 v1TxSet;
+ * };
+ * </pre>
+ */
 public class GeneralizedTransactionSet implements XdrElement {
   public GeneralizedTransactionSet() {}
 

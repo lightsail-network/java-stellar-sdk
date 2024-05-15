@@ -11,26 +11,28 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ChangeTrustAsset switch (AssetType type)
-//  {
-//  case ASSET_TYPE_NATIVE: // Not credit
-//      void;
-//
-//  case ASSET_TYPE_CREDIT_ALPHANUM4:
-//      AlphaNum4 alphaNum4;
-//
-//  case ASSET_TYPE_CREDIT_ALPHANUM12:
-//      AlphaNum12 alphaNum12;
-//
-//  case ASSET_TYPE_POOL_SHARE:
-//      LiquidityPoolParameters liquidityPool;
-//
-//      // add other asset types here in the future
-//  };
-
-//  ===========================================================================
+/**
+ * ChangeTrustAsset's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ChangeTrustAsset switch (AssetType type)
+ * {
+ * case ASSET_TYPE_NATIVE: // Not credit
+ *     void;
+ *
+ * case ASSET_TYPE_CREDIT_ALPHANUM4:
+ *     AlphaNum4 alphaNum4;
+ *
+ * case ASSET_TYPE_CREDIT_ALPHANUM12:
+ *     AlphaNum12 alphaNum12;
+ *
+ * case ASSET_TYPE_POOL_SHARE:
+ *     LiquidityPoolParameters liquidityPool;
+ *
+ *     // add other asset types here in the future
+ * };
+ * </pre>
+ */
 public class ChangeTrustAsset implements XdrElement {
   public ChangeTrustAsset() {}
 

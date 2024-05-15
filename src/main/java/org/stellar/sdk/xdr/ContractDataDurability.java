@@ -10,14 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum ContractDataDurability {
-//      TEMPORARY = 0,
-//      PERSISTENT = 1
-//  };
-
-//  ===========================================================================
+/**
+ * ContractDataDurability's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum ContractDataDurability {
+ *     TEMPORARY = 0,
+ *     PERSISTENT = 1
+ * };
+ * </pre>
+ */
 public enum ContractDataDurability implements XdrElement {
   TEMPORARY(0),
   PERSISTENT(1),

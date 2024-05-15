@@ -11,20 +11,22 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ClawbackResult switch (ClawbackResultCode code)
-//  {
-//  case CLAWBACK_SUCCESS:
-//      void;
-//  case CLAWBACK_MALFORMED:
-//  case CLAWBACK_NOT_CLAWBACK_ENABLED:
-//  case CLAWBACK_NO_TRUST:
-//  case CLAWBACK_UNDERFUNDED:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * ClawbackResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ClawbackResult switch (ClawbackResultCode code)
+ * {
+ * case CLAWBACK_SUCCESS:
+ *     void;
+ * case CLAWBACK_MALFORMED:
+ * case CLAWBACK_NOT_CLAWBACK_ENABLED:
+ * case CLAWBACK_NO_TRUST:
+ * case CLAWBACK_UNDERFUNDED:
+ *     void;
+ * };
+ * </pre>
+ */
 public class ClawbackResult implements XdrElement {
   public ClawbackResult() {}
 

@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union Memo switch (MemoType type)
-//  {
-//  case MEMO_NONE:
-//      void;
-//  case MEMO_TEXT:
-//      string text<28>;
-//  case MEMO_ID:
-//      uint64 id;
-//  case MEMO_HASH:
-//      Hash hash; // the hash of what to pull from the content server
-//  case MEMO_RETURN:
-//      Hash retHash; // the hash of the tx you are rejecting
-//  };
-
-//  ===========================================================================
+/**
+ * Memo's original definition in the XDR file is:
+ *
+ * <pre>
+ * union Memo switch (MemoType type)
+ * {
+ * case MEMO_NONE:
+ *     void;
+ * case MEMO_TEXT:
+ *     string text&lt;28&gt;;
+ * case MEMO_ID:
+ *     uint64 id;
+ * case MEMO_HASH:
+ *     Hash hash; // the hash of what to pull from the content server
+ * case MEMO_RETURN:
+ *     Hash retHash; // the hash of the tx you are rejecting
+ * };
+ * </pre>
+ */
 public class Memo implements XdrElement {
   public Memo() {}
 

@@ -11,23 +11,25 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ContractCodeCostInputs {
-//      ExtensionPoint ext;
-//      uint32 nInstructions;
-//      uint32 nFunctions;
-//      uint32 nGlobals;
-//      uint32 nTableEntries;
-//      uint32 nTypes;
-//      uint32 nDataSegments;
-//      uint32 nElemSegments;
-//      uint32 nImports;
-//      uint32 nExports;
-//      uint32 nDataSegmentBytes;
-//  };
-
-//  ===========================================================================
+/**
+ * ContractCodeCostInputs's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ContractCodeCostInputs {
+ *     ExtensionPoint ext;
+ *     uint32 nInstructions;
+ *     uint32 nFunctions;
+ *     uint32 nGlobals;
+ *     uint32 nTableEntries;
+ *     uint32 nTypes;
+ *     uint32 nDataSegments;
+ *     uint32 nElemSegments;
+ *     uint32 nImports;
+ *     uint32 nExports;
+ *     uint32 nDataSegmentBytes;
+ * };
+ * </pre>
+ */
 public class ContractCodeCostInputs implements XdrElement {
   public ContractCodeCostInputs() {}
 

@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct SCContractInstance {
-//      ContractExecutable executable;
-//      SCMap* storage;
-//  };
-
-//  ===========================================================================
+/**
+ * SCContractInstance's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct SCContractInstance {
+ *     ContractExecutable executable;
+ *     SCMap&#42; storage;
+ * };
+ * </pre>
+ */
 public class SCContractInstance implements XdrElement {
   public SCContractInstance() {}
 

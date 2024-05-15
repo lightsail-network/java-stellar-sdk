@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct HmacSha256Key
-//  {
-//      opaque key[32];
-//  };
-
-//  ===========================================================================
+/**
+ * HmacSha256Key's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct HmacSha256Key
+ * {
+ *     opaque key[32];
+ * };
+ * </pre>
+ */
 public class HmacSha256Key implements XdrElement {
   public HmacSha256Key() {}
 

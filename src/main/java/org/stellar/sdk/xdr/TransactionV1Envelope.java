@@ -12,17 +12,19 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TransactionV1Envelope
-//  {
-//      Transaction tx;
-//      /* Each decorated signature is a signature over the SHA256 hash of
-//       * a TransactionSignaturePayload */
-//      DecoratedSignature signatures<20>;
-//  };
-
-//  ===========================================================================
+/**
+ * TransactionV1Envelope's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TransactionV1Envelope
+ * {
+ *     Transaction tx;
+ *     /&#42; Each decorated signature is a signature over the SHA256 hash of
+ *      &#42; a TransactionSignaturePayload &#42;/
+ *     DecoratedSignature signatures&lt;20&gt;;
+ * };
+ * </pre>
+ */
 public class TransactionV1Envelope implements XdrElement {
   public TransactionV1Envelope() {}
 

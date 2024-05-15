@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct TrustLineEntryExtensionV2
-//  {
-//      int32 liquidityPoolUseCount;
-//
-//      union switch (int v)
-//      {
-//      case 0:
-//          void;
-//      }
-//      ext;
-//  };
-
-//  ===========================================================================
+/**
+ * TrustLineEntryExtensionV2's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct TrustLineEntryExtensionV2
+ * {
+ *     int32 liquidityPoolUseCount;
+ *
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     }
+ *     ext;
+ * };
+ * </pre>
+ */
 public class TrustLineEntryExtensionV2 implements XdrElement {
   public TrustLineEntryExtensionV2() {}
 
@@ -129,6 +131,17 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
     }
   }
 
+  /**
+   * TrustLineEntryExtensionV2Ext's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     }
+   * </pre>
+   */
   public static class TrustLineEntryExtensionV2Ext implements XdrElement {
     public TrustLineEntryExtensionV2Ext() {}
 

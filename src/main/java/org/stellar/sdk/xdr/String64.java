@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef string string64<64>;
-
-//  ===========================================================================
+/**
+ * String64's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef string string64&lt;64&gt;;
+ * </pre>
+ */
 public class String64 implements XdrElement {
   private XdrString string64;
 

@@ -12,16 +12,18 @@ import java.util.Arrays;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct PersistedSCPStateV0
-//  {
-//  	SCPEnvelope scpEnvelopes<>;
-//  	SCPQuorumSet quorumSets<>;
-//  	StoredTransactionSet txSets<>;
-//  };
-
-//  ===========================================================================
+/**
+ * PersistedSCPStateV0's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct PersistedSCPStateV0
+ * {
+ * 	SCPEnvelope scpEnvelopes&lt;&gt;;
+ * 	SCPQuorumSet quorumSets&lt;&gt;;
+ * 	StoredTransactionSet txSets&lt;&gt;;
+ * };
+ * </pre>
+ */
 public class PersistedSCPStateV0 implements XdrElement {
   public PersistedSCPStateV0() {}
 

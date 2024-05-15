@@ -11,24 +11,26 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  union ChangeTrustResult switch (ChangeTrustResultCode code)
-//  {
-//  case CHANGE_TRUST_SUCCESS:
-//      void;
-//  case CHANGE_TRUST_MALFORMED:
-//  case CHANGE_TRUST_NO_ISSUER:
-//  case CHANGE_TRUST_INVALID_LIMIT:
-//  case CHANGE_TRUST_LOW_RESERVE:
-//  case CHANGE_TRUST_SELF_NOT_ALLOWED:
-//  case CHANGE_TRUST_TRUST_LINE_MISSING:
-//  case CHANGE_TRUST_CANNOT_DELETE:
-//  case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
-//      void;
-//  };
-
-//  ===========================================================================
+/**
+ * ChangeTrustResult's original definition in the XDR file is:
+ *
+ * <pre>
+ * union ChangeTrustResult switch (ChangeTrustResultCode code)
+ * {
+ * case CHANGE_TRUST_SUCCESS:
+ *     void;
+ * case CHANGE_TRUST_MALFORMED:
+ * case CHANGE_TRUST_NO_ISSUER:
+ * case CHANGE_TRUST_INVALID_LIMIT:
+ * case CHANGE_TRUST_LOW_RESERVE:
+ * case CHANGE_TRUST_SELF_NOT_ALLOWED:
+ * case CHANGE_TRUST_TRUST_LINE_MISSING:
+ * case CHANGE_TRUST_CANNOT_DELETE:
+ * case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
+ *     void;
+ * };
+ * </pre>
+ */
 public class ChangeTrustResult implements XdrElement {
   public ChangeTrustResult() {}
 

@@ -10,15 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  enum SCAddressType
-//  {
-//      SC_ADDRESS_TYPE_ACCOUNT = 0,
-//      SC_ADDRESS_TYPE_CONTRACT = 1
-//  };
-
-//  ===========================================================================
+/**
+ * SCAddressType's original definition in the XDR file is:
+ *
+ * <pre>
+ * enum SCAddressType
+ * {
+ *     SC_ADDRESS_TYPE_ACCOUNT = 0,
+ *     SC_ADDRESS_TYPE_CONTRACT = 1
+ * };
+ * </pre>
+ */
 public enum SCAddressType implements XdrElement {
   SC_ADDRESS_TYPE_ACCOUNT(0),
   SC_ADDRESS_TYPE_CONTRACT(1),

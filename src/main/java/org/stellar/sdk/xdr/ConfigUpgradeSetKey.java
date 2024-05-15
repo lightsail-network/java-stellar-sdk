@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  struct ConfigUpgradeSetKey {
-//      Hash contractID;
-//      Hash contentHash;
-//  };
-
-//  ===========================================================================
+/**
+ * ConfigUpgradeSetKey's original definition in the XDR file is:
+ *
+ * <pre>
+ * struct ConfigUpgradeSetKey {
+ *     Hash contractID;
+ *     Hash contentHash;
+ * };
+ * </pre>
+ */
 public class ConfigUpgradeSetKey implements XdrElement {
   public ConfigUpgradeSetKey() {}
 

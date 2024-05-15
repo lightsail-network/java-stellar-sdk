@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Objects;
 import org.stellar.sdk.Base64Factory;
 
-// === xdr source ============================================================
-
-//  typedef uint64 Duration;
-
-//  ===========================================================================
+/**
+ * Duration's original definition in the XDR file is:
+ *
+ * <pre>
+ * typedef uint64 Duration;
+ * </pre>
+ */
 public class Duration implements XdrElement {
   private Uint64 Duration;
 
