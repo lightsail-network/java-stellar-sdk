@@ -18,7 +18,7 @@ import org.stellar.sdk.Base64Factory;
  * struct LedgerCloseValueSignature
  * {
  *     NodeID nodeID;       // which node introduced the value
- *     Signature signature; // nodeID&#39;s signature
+ *     Signature signature; // nodeID's signature
  * };
  * </pre>
  */

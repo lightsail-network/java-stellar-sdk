@@ -21,7 +21,7 @@ import org.stellar.sdk.Base64Factory;
  *     Asset sendAsset; // asset we pay with
  *     int64 sendMax;   // the maximum amount of sendAsset to
  *                      // send (excluding fees).
- *                      // The operation will fail if can&#39;t be met
+ *                      // The operation will fail if can't be met
  *
  *     MuxedAccount destination; // recipient of the payment
  *     Asset destAsset;          // what they end up with

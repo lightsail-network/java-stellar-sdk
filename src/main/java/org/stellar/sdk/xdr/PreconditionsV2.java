@@ -25,20 +25,20 @@ import org.stellar.sdk.Base64Factory;
  *     // only minLedger is checked)
  *     LedgerBounds&#42; ledgerBounds;
  *
- *     // If NULL, only valid when sourceAccount&#39;s sequence number
- *     // is seqNum - 1.  Otherwise, valid when sourceAccount&#39;s
+ *     // If NULL, only valid when sourceAccount's sequence number
+ *     // is seqNum - 1.  Otherwise, valid when sourceAccount's
  *     // sequence number n satisfies minSeqNum &lt;= n &lt; tx.seqNum.
- *     // Note that after execution the account&#39;s sequence number
+ *     // Note that after execution the account's sequence number
  *     // is always raised to tx.seqNum, and a transaction is not
  *     // valid if tx.seqNum is too high to ensure replay protection.
  *     SequenceNumber&#42; minSeqNum;
  *
  *     // For the transaction to be valid, the current ledger time must
- *     // be at least minSeqAge greater than sourceAccount&#39;s seqTime.
+ *     // be at least minSeqAge greater than sourceAccount's seqTime.
  *     Duration minSeqAge;
  *
  *     // For the transaction to be valid, the current ledger number
- *     // must be at least minSeqLedgerGap greater than sourceAccount&#39;s
+ *     // must be at least minSeqLedgerGap greater than sourceAccount's
  *     // seqLedger.
  *     uint32 minSeqLedgerGap;
  *

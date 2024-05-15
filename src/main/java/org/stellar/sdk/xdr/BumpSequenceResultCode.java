@@ -16,9 +16,9 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum BumpSequenceResultCode
  * {
- *     // codes considered as &quot;success&quot; for the operation
+ *     // codes considered as "success" for the operation
  *     BUMP_SEQUENCE_SUCCESS = 0,
- *     // codes considered as &quot;failure&quot; for the operation
+ *     // codes considered as "failure" for the operation
  *     BUMP_SEQUENCE_BAD_SEQ = -1 // `bumpTo` is not within bounds
  * };
  * </pre>

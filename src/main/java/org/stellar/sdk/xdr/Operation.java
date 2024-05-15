@@ -18,7 +18,7 @@ import org.stellar.sdk.Base64Factory;
  * struct Operation
  * {
  *     // sourceAccount is the account used to run the operation
- *     // if not set, the runtime defaults to &quot;sourceAccount&quot; specified at
+ *     // if not set, the runtime defaults to "sourceAccount" specified at
  *     // the transaction level
  *     MuxedAccount&#42; sourceAccount;
  *

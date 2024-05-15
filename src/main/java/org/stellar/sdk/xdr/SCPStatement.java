@@ -28,7 +28,7 @@ import org.stellar.sdk.Base64Factory;
  *             Hash quorumSetHash;       // D
  *             SCPBallot ballot;         // b
  *             SCPBallot&#42; prepared;      // p
- *             SCPBallot&#42; preparedPrime; // p&#39;
+ *             SCPBallot&#42; preparedPrime; // p'
  *             uint32 nC;                // c.n
  *             uint32 nH;                // h.n
  *         } prepare;
@@ -189,7 +189,7 @@ public class SCPStatement implements XdrElement {
    *             Hash quorumSetHash;       // D
    *             SCPBallot ballot;         // b
    *             SCPBallot&#42; prepared;      // p
-   *             SCPBallot&#42; preparedPrime; // p&#39;
+   *             SCPBallot&#42; preparedPrime; // p'
    *             uint32 nC;                // c.n
    *             uint32 nH;                // h.n
    *         } prepare;
@@ -409,7 +409,7 @@ public class SCPStatement implements XdrElement {
      *             Hash quorumSetHash;       // D
      *             SCPBallot ballot;         // b
      *             SCPBallot&#42; prepared;      // p
-     *             SCPBallot&#42; preparedPrime; // p&#39;
+     *             SCPBallot&#42; preparedPrime; // p'
      *             uint32 nC;                // c.n
      *             uint32 nH;                // h.n
      *         }

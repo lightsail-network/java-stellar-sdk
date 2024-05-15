@@ -16,9 +16,9 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum ChangeTrustResultCode
  * {
- *     // codes considered as &quot;success&quot; for the operation
+ *     // codes considered as "success" for the operation
  *     CHANGE_TRUST_SUCCESS = 0,
- *     // codes considered as &quot;failure&quot; for the operation
+ *     // codes considered as "failure" for the operation
  *     CHANGE_TRUST_MALFORMED = -1,     // bad input
  *     CHANGE_TRUST_NO_ISSUER = -2,     // could not find issuer
  *     CHANGE_TRUST_INVALID_LIMIT = -3, // cannot drop limit below balance

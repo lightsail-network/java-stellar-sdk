@@ -22,9 +22,9 @@ import org.stellar.sdk.Base64Factory;
  *     TimePoint closeTime; // network close time
  *
  *     // upgrades to apply to the previous ledger (usually empty)
- *     // this is a vector of encoded &#39;LedgerUpgrade&#39; so that nodes can drop
+ *     // this is a vector of encoded 'LedgerUpgrade' so that nodes can drop
  *     // unknown steps during consensus if needed.
- *     // see notes below on &#39;LedgerUpgrade&#39; for more detail
+ *     // see notes below on 'LedgerUpgrade' for more detail
  *     // max size is dictated by number of upgrade types (+ room for future)
  *     UpgradeType upgrades&lt;6&gt;;
  *

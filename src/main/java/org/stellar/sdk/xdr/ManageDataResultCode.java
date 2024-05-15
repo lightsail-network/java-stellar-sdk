@@ -16,13 +16,13 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum ManageDataResultCode
  * {
- *     // codes considered as &quot;success&quot; for the operation
+ *     // codes considered as "success" for the operation
  *     MANAGE_DATA_SUCCESS = 0,
- *     // codes considered as &quot;failure&quot; for the operation
+ *     // codes considered as "failure" for the operation
  *     MANAGE_DATA_NOT_SUPPORTED_YET =
- *         -1, // The network hasn&#39;t moved to this protocol change yet
+ *         -1, // The network hasn't moved to this protocol change yet
  *     MANAGE_DATA_NAME_NOT_FOUND =
- *         -2, // Trying to remove a Data Entry that isn&#39;t there
+ *         -2, // Trying to remove a Data Entry that isn't there
  *     MANAGE_DATA_LOW_RESERVE = -3, // not enough funds to create a new Data Entry
  *     MANAGE_DATA_INVALID_NAME = -4 // Name not a valid string
  * };

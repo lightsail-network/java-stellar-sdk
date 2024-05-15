@@ -33,7 +33,7 @@ import org.stellar.sdk.Base64Factory;
  *     SCV_DURATION = 8,
  *
  *     // 128 bits is naturally supported by Rust and we use it for Soroban
- *     // fixed-point arithmetic prices / balances / similar &quot;quantities&quot;. These
+ *     // fixed-point arithmetic prices / balances / similar "quantities". These
  *     // are represented in XDR as a pair of 2 u64s.
  *     SCV_U128 = 9,
  *     SCV_I128 = 10,
@@ -63,8 +63,8 @@ import org.stellar.sdk.Base64Factory;
  *     SCV_CONTRACT_INSTANCE = 19,
  *
  *     // SCV_LEDGER_KEY_CONTRACT_INSTANCE and SCV_LEDGER_KEY_NONCE are unique
- *     // symbolic SCVals used as the key for ledger entries for a contract&#39;s
- *     // instance and an address&#39; nonce, respectively.
+ *     // symbolic SCVals used as the key for ledger entries for a contract's
+ *     // instance and an address' nonce, respectively.
  *     SCV_LEDGER_KEY_CONTRACT_INSTANCE = 20,
  *     SCV_LEDGER_KEY_NONCE = 21
  * };

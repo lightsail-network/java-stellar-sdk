@@ -19,7 +19,7 @@ import org.stellar.sdk.Base64Factory;
  * struct LedgerCloseMetaV0
  * {
  *     LedgerHeaderHistoryEntry ledgerHeader;
- *     // NB: txSet is sorted in &quot;Hash order&quot;
+ *     // NB: txSet is sorted in "Hash order"
  *     TransactionSet txSet;
  *
  *     // NB: transactions are sorted in apply order here

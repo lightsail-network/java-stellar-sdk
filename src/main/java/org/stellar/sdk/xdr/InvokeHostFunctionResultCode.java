@@ -16,10 +16,10 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum InvokeHostFunctionResultCode
  * {
- *     // codes considered as &quot;success&quot; for the operation
+ *     // codes considered as "success" for the operation
  *     INVOKE_HOST_FUNCTION_SUCCESS = 0,
  *
- *     // codes considered as &quot;failure&quot; for the operation
+ *     // codes considered as "failure" for the operation
  *     INVOKE_HOST_FUNCTION_MALFORMED = -1,
  *     INVOKE_HOST_FUNCTION_TRAPPED = -2,
  *     INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED = -3,

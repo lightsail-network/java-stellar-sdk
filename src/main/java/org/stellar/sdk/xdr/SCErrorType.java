@@ -18,7 +18,7 @@ import org.stellar.sdk.Base64Factory;
  * {
  *     SCE_CONTRACT = 0,          // Contract-specific, user-defined codes.
  *     SCE_WASM_VM = 1,           // Errors while interpreting WASM bytecode.
- *     SCE_CONTEXT = 2,           // Errors in the contract&#39;s host context.
+ *     SCE_CONTEXT = 2,           // Errors in the contract's host context.
  *     SCE_STORAGE = 3,           // Errors accessing host storage.
  *     SCE_OBJECT = 4,            // Errors working with host objects.
  *     SCE_CRYPTO = 5,            // Errors in cryptographic operations.

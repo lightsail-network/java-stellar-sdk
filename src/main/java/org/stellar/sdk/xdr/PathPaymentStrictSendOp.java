@@ -25,7 +25,7 @@ import org.stellar.sdk.Base64Factory;
  *     Asset destAsset;          // what they end up with
  *     int64 destMin;            // the minimum amount of dest asset to
  *                               // be received
- *                               // The operation will fail if it can&#39;t be met
+ *                               // The operation will fail if it can't be met
  *
  *     Asset path&lt;5&gt;; // additional hops it must go through to get there
  * };

@@ -16,10 +16,10 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum ExtendFootprintTTLResultCode
  * {
- *     // codes considered as &quot;success&quot; for the operation
+ *     // codes considered as "success" for the operation
  *     EXTEND_FOOTPRINT_TTL_SUCCESS = 0,
  *
- *     // codes considered as &quot;failure&quot; for the operation
+ *     // codes considered as "failure" for the operation
  *     EXTEND_FOOTPRINT_TTL_MALFORMED = -1,
  *     EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED = -2,
  *     EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE = -3

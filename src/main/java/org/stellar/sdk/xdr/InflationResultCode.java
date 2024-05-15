@@ -16,9 +16,9 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum InflationResultCode
  * {
- *     // codes considered as &quot;success&quot; for the operation
+ *     // codes considered as "success" for the operation
  *     INFLATION_SUCCESS = 0,
- *     // codes considered as &quot;failure&quot; for the operation
+ *     // codes considered as "failure" for the operation
  *     INFLATION_NOT_TIME = -1
  * };
  * </pre>

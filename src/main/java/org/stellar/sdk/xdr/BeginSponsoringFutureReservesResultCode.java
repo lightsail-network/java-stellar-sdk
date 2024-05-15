@@ -16,10 +16,10 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum BeginSponsoringFutureReservesResultCode
  * {
- *     // codes considered as &quot;success&quot; for the operation
+ *     // codes considered as "success" for the operation
  *     BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS = 0,
  *
- *     // codes considered as &quot;failure&quot; for the operation
+ *     // codes considered as "failure" for the operation
  *     BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED = -1,
  *     BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED = -2,
  *     BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE = -3

@@ -24,8 +24,8 @@ import org.stellar.sdk.Base64Factory;
  *     SCEC_EXCEEDED_LIMIT = 5,    // Some arbitrary limit -- gas or otherwise -- was hit.
  *     SCEC_INVALID_ACTION = 6,    // Data was valid but action requested was not.
  *     SCEC_INTERNAL_ERROR = 7,    // The host detected an error in its own logic.
- *     SCEC_UNEXPECTED_TYPE = 8,   // Some type wasn&#39;t as expected.
- *     SCEC_UNEXPECTED_SIZE = 9    // Something&#39;s size wasn&#39;t as expected.
+ *     SCEC_UNEXPECTED_TYPE = 8,   // Some type wasn't as expected.
+ *     SCEC_UNEXPECTED_SIZE = 9    // Something's size wasn't as expected.
  * };
  * </pre>
  */

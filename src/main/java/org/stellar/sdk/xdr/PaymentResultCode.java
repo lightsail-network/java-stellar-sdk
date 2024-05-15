@@ -16,10 +16,10 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum PaymentResultCode
  * {
- *     // codes considered as &quot;success&quot; for the operation
+ *     // codes considered as "success" for the operation
  *     PAYMENT_SUCCESS = 0, // payment successfully completed
  *
- *     // codes considered as &quot;failure&quot; for the operation
+ *     // codes considered as "failure" for the operation
  *     PAYMENT_MALFORMED = -1,          // bad input
  *     PAYMENT_UNDERFUNDED = -2,        // not enough funds in source account
  *     PAYMENT_SRC_NO_TRUST = -3,       // no trust line on source account
