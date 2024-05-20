@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -53,152 +56,19 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecTypeDef implements XdrElement {
-  public SCSpecTypeDef() {}
-
-  SCSpecType type;
-
-  public SCSpecType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(SCSpecType value) {
-    this.type = value;
-  }
-
+  private SCSpecType discriminant;
   private SCSpecTypeOption option;
-
-  public SCSpecTypeOption getOption() {
-    return this.option;
-  }
-
-  public void setOption(SCSpecTypeOption value) {
-    this.option = value;
-  }
-
   private SCSpecTypeResult result;
-
-  public SCSpecTypeResult getResult() {
-    return this.result;
-  }
-
-  public void setResult(SCSpecTypeResult value) {
-    this.result = value;
-  }
-
   private SCSpecTypeVec vec;
-
-  public SCSpecTypeVec getVec() {
-    return this.vec;
-  }
-
-  public void setVec(SCSpecTypeVec value) {
-    this.vec = value;
-  }
-
   private SCSpecTypeMap map;
-
-  public SCSpecTypeMap getMap() {
-    return this.map;
-  }
-
-  public void setMap(SCSpecTypeMap value) {
-    this.map = value;
-  }
-
   private SCSpecTypeTuple tuple;
-
-  public SCSpecTypeTuple getTuple() {
-    return this.tuple;
-  }
-
-  public void setTuple(SCSpecTypeTuple value) {
-    this.tuple = value;
-  }
-
   private SCSpecTypeBytesN bytesN;
-
-  public SCSpecTypeBytesN getBytesN() {
-    return this.bytesN;
-  }
-
-  public void setBytesN(SCSpecTypeBytesN value) {
-    this.bytesN = value;
-  }
-
   private SCSpecTypeUDT udt;
-
-  public SCSpecTypeUDT getUdt() {
-    return this.udt;
-  }
-
-  public void setUdt(SCSpecTypeUDT value) {
-    this.udt = value;
-  }
-
-  public static final class Builder {
-    private SCSpecType discriminant;
-    private SCSpecTypeOption option;
-    private SCSpecTypeResult result;
-    private SCSpecTypeVec vec;
-    private SCSpecTypeMap map;
-    private SCSpecTypeTuple tuple;
-    private SCSpecTypeBytesN bytesN;
-    private SCSpecTypeUDT udt;
-
-    public Builder discriminant(SCSpecType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder option(SCSpecTypeOption option) {
-      this.option = option;
-      return this;
-    }
-
-    public Builder result(SCSpecTypeResult result) {
-      this.result = result;
-      return this;
-    }
-
-    public Builder vec(SCSpecTypeVec vec) {
-      this.vec = vec;
-      return this;
-    }
-
-    public Builder map(SCSpecTypeMap map) {
-      this.map = map;
-      return this;
-    }
-
-    public Builder tuple(SCSpecTypeTuple tuple) {
-      this.tuple = tuple;
-      return this;
-    }
-
-    public Builder bytesN(SCSpecTypeBytesN bytesN) {
-      this.bytesN = bytesN;
-      return this;
-    }
-
-    public Builder udt(SCSpecTypeUDT udt) {
-      this.udt = udt;
-      return this;
-    }
-
-    public SCSpecTypeDef build() {
-      SCSpecTypeDef val = new SCSpecTypeDef();
-      val.setDiscriminant(discriminant);
-      val.setOption(this.option);
-      val.setResult(this.result);
-      val.setVec(this.vec);
-      val.setMap(this.map);
-      val.setTuple(this.tuple);
-      val.setBytesN(this.bytesN);
-      val.setUdt(this.udt);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeDef encodedSCSpecTypeDef)
       throws IOException {
@@ -300,29 +170,6 @@ public class SCSpecTypeDef implements XdrElement {
         break;
     }
     return decodedSCSpecTypeDef;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.option, this.result, this.vec, this.map, this.tuple, this.bytesN, this.udt, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecTypeDef)) {
-      return false;
-    }
-
-    SCSpecTypeDef other = (SCSpecTypeDef) object;
-    return Objects.equals(this.option, other.option)
-        && Objects.equals(this.result, other.result)
-        && Objects.equals(this.vec, other.vec)
-        && Objects.equals(this.map, other.map)
-        && Objects.equals(this.tuple, other.tuple)
-        && Objects.equals(this.bytesN, other.bytesN)
-        && Objects.equals(this.udt, other.udt)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

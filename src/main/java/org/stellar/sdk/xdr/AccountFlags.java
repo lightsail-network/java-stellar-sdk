@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,16 +35,16 @@ public enum AccountFlags implements XdrElement {
   AUTH_REQUIRED_FLAG(1),
   AUTH_REVOCABLE_FLAG(2),
   AUTH_IMMUTABLE_FLAG(4),
-  AUTH_CLAWBACK_ENABLED_FLAG(8),
-  ;
-  private int mValue;
+  AUTH_CLAWBACK_ENABLED_FLAG(8);
+
+  private final int value;
 
   AccountFlags(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static AccountFlags decode(XdrDataInputStream stream) throws IOException {

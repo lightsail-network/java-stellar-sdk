@@ -29,11 +29,11 @@ public class SorobanDataBuilder {
   /** Creates a new builder with an empty {@link SorobanTransactionData}. */
   public SorobanDataBuilder() {
     data =
-        new SorobanTransactionData.Builder()
+        SorobanTransactionData.builder()
             .resources(
-                new SorobanResources.Builder()
+                SorobanResources.builder()
                     .footprint(
-                        new LedgerFootprint.Builder()
+                        LedgerFootprint.builder()
                             .readOnly(new LedgerKey[] {})
                             .readWrite(new LedgerKey[] {})
                             .build())
@@ -42,7 +42,7 @@ public class SorobanDataBuilder {
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .build())
             .resourceFee(new Int64(0L))
-            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .ext(ExtensionPoint.builder().discriminant(0).build())
             .build();
   }
 

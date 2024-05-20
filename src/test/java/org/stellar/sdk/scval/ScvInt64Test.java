@@ -13,7 +13,7 @@ public class ScvInt64Test {
     long value = 23453454L;
 
     SCVal expectedScVal =
-        new SCVal.Builder().discriminant(SCValType.SCV_I64).i64(new Int64(value)).build();
+        SCVal.builder().discriminant(SCValType.SCV_I64).i64(new Int64(value)).build();
 
     SCVal actualScVal = Scv.toInt64(value);
     assertEquals(expectedScVal, actualScVal);

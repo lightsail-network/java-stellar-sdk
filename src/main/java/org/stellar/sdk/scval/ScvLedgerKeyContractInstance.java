@@ -8,7 +8,7 @@ class ScvLedgerKeyContractInstance {
   private static final SCValType TYPE = SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE;
 
   static SCVal toSCVal() {
-    return new SCVal.Builder().discriminant(TYPE).build();
+    return SCVal.builder().discriminant(TYPE).build();
   }
 
   static void fromSCVal(SCVal scVal) {

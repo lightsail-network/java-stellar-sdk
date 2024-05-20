@@ -13,15 +13,15 @@ public class ScvContractInstanceTest {
   @Test
   public void testScvContractInstance() {
     SCContractInstance value =
-        new SCContractInstance.Builder()
+        SCContractInstance.builder()
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
 
     SCVal expectedScVal =
-        new SCVal.Builder().discriminant(SCValType.SCV_CONTRACT_INSTANCE).instance(value).build();
+        SCVal.builder().discriminant(SCValType.SCV_CONTRACT_INSTANCE).instance(value).build();
 
     SCVal actualScVal = Scv.toContractInstance(value);
     assertEquals(expectedScVal, actualScVal);

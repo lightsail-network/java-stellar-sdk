@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -26,33 +29,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class RestoreFootprintResult implements XdrElement {
-  public RestoreFootprintResult() {}
-
-  RestoreFootprintResultCode code;
-
-  public RestoreFootprintResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(RestoreFootprintResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private RestoreFootprintResultCode discriminant;
-
-    public Builder discriminant(RestoreFootprintResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public RestoreFootprintResult build() {
-      RestoreFootprintResult val = new RestoreFootprintResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private RestoreFootprintResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream, RestoreFootprintResult encodedRestoreFootprintResult)
@@ -87,21 +69,6 @@ public class RestoreFootprintResult implements XdrElement {
         break;
     }
     return decodedRestoreFootprintResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof RestoreFootprintResult)) {
-      return false;
-    }
-
-    RestoreFootprintResult other = (RestoreFootprintResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

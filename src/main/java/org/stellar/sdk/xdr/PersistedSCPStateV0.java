@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,38 +26,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class PersistedSCPStateV0 implements XdrElement {
-  public PersistedSCPStateV0() {}
-
   private SCPEnvelope[] scpEnvelopes;
-
-  public SCPEnvelope[] getScpEnvelopes() {
-    return this.scpEnvelopes;
-  }
-
-  public void setScpEnvelopes(SCPEnvelope[] value) {
-    this.scpEnvelopes = value;
-  }
-
   private SCPQuorumSet[] quorumSets;
-
-  public SCPQuorumSet[] getQuorumSets() {
-    return this.quorumSets;
-  }
-
-  public void setQuorumSets(SCPQuorumSet[] value) {
-    this.quorumSets = value;
-  }
-
   private StoredTransactionSet[] txSets;
-
-  public StoredTransactionSet[] getTxSets() {
-    return this.txSets;
-  }
-
-  public void setTxSets(StoredTransactionSet[] value) {
-    this.txSets = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, PersistedSCPStateV0 encodedPersistedSCPStateV0)
@@ -102,26 +80,6 @@ public class PersistedSCPStateV0 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        Arrays.hashCode(this.scpEnvelopes),
-        Arrays.hashCode(this.quorumSets),
-        Arrays.hashCode(this.txSets));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PersistedSCPStateV0)) {
-      return false;
-    }
-
-    PersistedSCPStateV0 other = (PersistedSCPStateV0) object;
-    return Arrays.equals(this.scpEnvelopes, other.scpEnvelopes)
-        && Arrays.equals(this.quorumSets, other.quorumSets)
-        && Arrays.equals(this.txSets, other.txSets);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -143,34 +101,5 @@ public class PersistedSCPStateV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCPEnvelope[] scpEnvelopes;
-    private SCPQuorumSet[] quorumSets;
-    private StoredTransactionSet[] txSets;
-
-    public Builder scpEnvelopes(SCPEnvelope[] scpEnvelopes) {
-      this.scpEnvelopes = scpEnvelopes;
-      return this;
-    }
-
-    public Builder quorumSets(SCPQuorumSet[] quorumSets) {
-      this.quorumSets = quorumSets;
-      return this;
-    }
-
-    public Builder txSets(StoredTransactionSet[] txSets) {
-      this.txSets = txSets;
-      return this;
-    }
-
-    public PersistedSCPStateV0 build() {
-      PersistedSCPStateV0 val = new PersistedSCPStateV0();
-      val.setScpEnvelopes(this.scpEnvelopes);
-      val.setQuorumSets(this.quorumSets);
-      val.setTxSets(this.txSets);
-      return val;
-    }
   }
 }

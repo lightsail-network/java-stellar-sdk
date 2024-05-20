@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,48 +28,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TopologyResponseBodyV0 implements XdrElement {
-  public TopologyResponseBodyV0() {}
-
   private PeerStatList inboundPeers;
-
-  public PeerStatList getInboundPeers() {
-    return this.inboundPeers;
-  }
-
-  public void setInboundPeers(PeerStatList value) {
-    this.inboundPeers = value;
-  }
-
   private PeerStatList outboundPeers;
-
-  public PeerStatList getOutboundPeers() {
-    return this.outboundPeers;
-  }
-
-  public void setOutboundPeers(PeerStatList value) {
-    this.outboundPeers = value;
-  }
-
   private Uint32 totalInboundPeerCount;
-
-  public Uint32 getTotalInboundPeerCount() {
-    return this.totalInboundPeerCount;
-  }
-
-  public void setTotalInboundPeerCount(Uint32 value) {
-    this.totalInboundPeerCount = value;
-  }
-
   private Uint32 totalOutboundPeerCount;
-
-  public Uint32 getTotalOutboundPeerCount() {
-    return this.totalOutboundPeerCount;
-  }
-
-  public void setTotalOutboundPeerCount(Uint32 value) {
-    this.totalOutboundPeerCount = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, TopologyResponseBodyV0 encodedTopologyResponseBodyV0)
@@ -91,28 +61,6 @@ public class TopologyResponseBodyV0 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.inboundPeers,
-        this.outboundPeers,
-        this.totalInboundPeerCount,
-        this.totalOutboundPeerCount);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TopologyResponseBodyV0)) {
-      return false;
-    }
-
-    TopologyResponseBodyV0 other = (TopologyResponseBodyV0) object;
-    return Objects.equals(this.inboundPeers, other.inboundPeers)
-        && Objects.equals(this.outboundPeers, other.outboundPeers)
-        && Objects.equals(this.totalInboundPeerCount, other.totalInboundPeerCount)
-        && Objects.equals(this.totalOutboundPeerCount, other.totalOutboundPeerCount);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -134,41 +82,5 @@ public class TopologyResponseBodyV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private PeerStatList inboundPeers;
-    private PeerStatList outboundPeers;
-    private Uint32 totalInboundPeerCount;
-    private Uint32 totalOutboundPeerCount;
-
-    public Builder inboundPeers(PeerStatList inboundPeers) {
-      this.inboundPeers = inboundPeers;
-      return this;
-    }
-
-    public Builder outboundPeers(PeerStatList outboundPeers) {
-      this.outboundPeers = outboundPeers;
-      return this;
-    }
-
-    public Builder totalInboundPeerCount(Uint32 totalInboundPeerCount) {
-      this.totalInboundPeerCount = totalInboundPeerCount;
-      return this;
-    }
-
-    public Builder totalOutboundPeerCount(Uint32 totalOutboundPeerCount) {
-      this.totalOutboundPeerCount = totalOutboundPeerCount;
-      return this;
-    }
-
-    public TopologyResponseBodyV0 build() {
-      TopologyResponseBodyV0 val = new TopologyResponseBodyV0();
-      val.setInboundPeers(this.inboundPeers);
-      val.setOutboundPeers(this.outboundPeers);
-      val.setTotalInboundPeerCount(this.totalInboundPeerCount);
-      val.setTotalOutboundPeerCount(this.totalOutboundPeerCount);
-      return val;
-    }
   }
 }

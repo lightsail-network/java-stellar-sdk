@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,16 +19,16 @@ import org.stellar.sdk.Base64Factory;
  * </pre>
  */
 public enum PublicKeyType implements XdrElement {
-  PUBLIC_KEY_TYPE_ED25519(0),
-  ;
-  private int mValue;
+  PUBLIC_KEY_TYPE_ED25519(0);
+
+  private final int value;
 
   PublicKeyType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static PublicKeyType decode(XdrDataInputStream stream) throws IOException {

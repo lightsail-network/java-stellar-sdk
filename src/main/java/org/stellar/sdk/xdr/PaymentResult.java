@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -32,33 +35,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class PaymentResult implements XdrElement {
-  public PaymentResult() {}
-
-  PaymentResultCode code;
-
-  public PaymentResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(PaymentResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private PaymentResultCode discriminant;
-
-    public Builder discriminant(PaymentResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public PaymentResult build() {
-      PaymentResult val = new PaymentResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private PaymentResultCode discriminant;
 
   public static void encode(XdrDataOutputStream stream, PaymentResult encodedPaymentResult)
       throws IOException {
@@ -104,21 +86,6 @@ public class PaymentResult implements XdrElement {
         break;
     }
     return decodedPaymentResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PaymentResult)) {
-      return false;
-    }
-
-    PaymentResult other = (PaymentResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

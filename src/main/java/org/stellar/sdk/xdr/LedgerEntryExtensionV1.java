@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,28 +31,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerEntryExtensionV1 implements XdrElement {
-  public LedgerEntryExtensionV1() {}
-
   private SponsorshipDescriptor sponsoringID;
-
-  public SponsorshipDescriptor getSponsoringID() {
-    return this.sponsoringID;
-  }
-
-  public void setSponsoringID(SponsorshipDescriptor value) {
-    this.sponsoringID = value;
-  }
-
   private LedgerEntryExtensionV1Ext ext;
-
-  public LedgerEntryExtensionV1Ext getExt() {
-    return this.ext;
-  }
-
-  public void setExt(LedgerEntryExtensionV1Ext value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, LedgerEntryExtensionV1 encodedLedgerEntryExtensionV1)
@@ -67,22 +55,6 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     decodedLedgerEntryExtensionV1.sponsoringID = SponsorshipDescriptor.decode(stream);
     decodedLedgerEntryExtensionV1.ext = LedgerEntryExtensionV1Ext.decode(stream);
     return decodedLedgerEntryExtensionV1;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.sponsoringID, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerEntryExtensionV1)) {
-      return false;
-    }
-
-    LedgerEntryExtensionV1 other = (LedgerEntryExtensionV1) object;
-    return Objects.equals(this.sponsoringID, other.sponsoringID)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -109,28 +81,6 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private SponsorshipDescriptor sponsoringID;
-    private LedgerEntryExtensionV1Ext ext;
-
-    public Builder sponsoringID(SponsorshipDescriptor sponsoringID) {
-      this.sponsoringID = sponsoringID;
-      return this;
-    }
-
-    public Builder ext(LedgerEntryExtensionV1Ext ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public LedgerEntryExtensionV1 build() {
-      LedgerEntryExtensionV1 val = new LedgerEntryExtensionV1();
-      val.setSponsoringID(this.sponsoringID);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * LedgerEntryExtensionV1Ext's original definition in the XDR file is:
    *
@@ -142,33 +92,12 @@ public class LedgerEntryExtensionV1 implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class LedgerEntryExtensionV1Ext implements XdrElement {
-    public LedgerEntryExtensionV1Ext() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public LedgerEntryExtensionV1Ext build() {
-        LedgerEntryExtensionV1Ext val = new LedgerEntryExtensionV1Ext();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream, LedgerEntryExtensionV1Ext encodedLedgerEntryExtensionV1Ext)
@@ -195,21 +124,6 @@ public class LedgerEntryExtensionV1 implements XdrElement {
           break;
       }
       return decodedLedgerEntryExtensionV1Ext;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof LedgerEntryExtensionV1Ext)) {
-        return false;
-      }
-
-      LedgerEntryExtensionV1Ext other = (LedgerEntryExtensionV1Ext) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

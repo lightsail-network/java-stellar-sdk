@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class DecoratedSignature implements XdrElement {
-  public DecoratedSignature() {}
-
   private SignatureHint hint;
-
-  public SignatureHint getHint() {
-    return this.hint;
-  }
-
-  public void setHint(SignatureHint value) {
-    this.hint = value;
-  }
-
   private Signature signature;
-
-  public Signature getSignature() {
-    return this.signature;
-  }
-
-  public void setSignature(Signature value) {
-    this.signature = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, DecoratedSignature encodedDecoratedSignature) throws IOException {
@@ -60,21 +48,6 @@ public class DecoratedSignature implements XdrElement {
     decodedDecoratedSignature.hint = SignatureHint.decode(stream);
     decodedDecoratedSignature.signature = Signature.decode(stream);
     return decodedDecoratedSignature;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.hint, this.signature);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof DecoratedSignature)) {
-      return false;
-    }
-
-    DecoratedSignature other = (DecoratedSignature) object;
-    return Objects.equals(this.hint, other.hint) && Objects.equals(this.signature, other.signature);
   }
 
   @Override
@@ -99,27 +72,5 @@ public class DecoratedSignature implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SignatureHint hint;
-    private Signature signature;
-
-    public Builder hint(SignatureHint hint) {
-      this.hint = hint;
-      return this;
-    }
-
-    public Builder signature(Signature signature) {
-      this.signature = signature;
-      return this;
-    }
-
-    public DecoratedSignature build() {
-      DecoratedSignature val = new DecoratedSignature();
-      val.setHint(this.hint);
-      val.setSignature(this.signature);
-      return val;
-    }
   }
 }

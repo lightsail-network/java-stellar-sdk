@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -68,358 +70,31 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class StellarMessage implements XdrElement {
-  public StellarMessage() {}
-
-  MessageType type;
-
-  public MessageType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(MessageType value) {
-    this.type = value;
-  }
-
+  private MessageType discriminant;
   private Error error;
-
-  public Error getError() {
-    return this.error;
-  }
-
-  public void setError(Error value) {
-    this.error = value;
-  }
-
   private Hello hello;
-
-  public Hello getHello() {
-    return this.hello;
-  }
-
-  public void setHello(Hello value) {
-    this.hello = value;
-  }
-
   private Auth auth;
-
-  public Auth getAuth() {
-    return this.auth;
-  }
-
-  public void setAuth(Auth value) {
-    this.auth = value;
-  }
-
   private DontHave dontHave;
-
-  public DontHave getDontHave() {
-    return this.dontHave;
-  }
-
-  public void setDontHave(DontHave value) {
-    this.dontHave = value;
-  }
-
   private PeerAddress[] peers;
-
-  public PeerAddress[] getPeers() {
-    return this.peers;
-  }
-
-  public void setPeers(PeerAddress[] value) {
-    this.peers = value;
-  }
-
   private Uint256 txSetHash;
-
-  public Uint256 getTxSetHash() {
-    return this.txSetHash;
-  }
-
-  public void setTxSetHash(Uint256 value) {
-    this.txSetHash = value;
-  }
-
   private TransactionSet txSet;
-
-  public TransactionSet getTxSet() {
-    return this.txSet;
-  }
-
-  public void setTxSet(TransactionSet value) {
-    this.txSet = value;
-  }
-
   private GeneralizedTransactionSet generalizedTxSet;
-
-  public GeneralizedTransactionSet getGeneralizedTxSet() {
-    return this.generalizedTxSet;
-  }
-
-  public void setGeneralizedTxSet(GeneralizedTransactionSet value) {
-    this.generalizedTxSet = value;
-  }
-
   private TransactionEnvelope transaction;
-
-  public TransactionEnvelope getTransaction() {
-    return this.transaction;
-  }
-
-  public void setTransaction(TransactionEnvelope value) {
-    this.transaction = value;
-  }
-
   private SignedSurveyRequestMessage signedSurveyRequestMessage;
-
-  public SignedSurveyRequestMessage getSignedSurveyRequestMessage() {
-    return this.signedSurveyRequestMessage;
-  }
-
-  public void setSignedSurveyRequestMessage(SignedSurveyRequestMessage value) {
-    this.signedSurveyRequestMessage = value;
-  }
-
   private SignedSurveyResponseMessage signedSurveyResponseMessage;
-
-  public SignedSurveyResponseMessage getSignedSurveyResponseMessage() {
-    return this.signedSurveyResponseMessage;
-  }
-
-  public void setSignedSurveyResponseMessage(SignedSurveyResponseMessage value) {
-    this.signedSurveyResponseMessage = value;
-  }
-
   private Uint256 qSetHash;
-
-  public Uint256 getQSetHash() {
-    return this.qSetHash;
-  }
-
-  public void setQSetHash(Uint256 value) {
-    this.qSetHash = value;
-  }
-
   private SCPQuorumSet qSet;
-
-  public SCPQuorumSet getQSet() {
-    return this.qSet;
-  }
-
-  public void setQSet(SCPQuorumSet value) {
-    this.qSet = value;
-  }
-
   private SCPEnvelope envelope;
-
-  public SCPEnvelope getEnvelope() {
-    return this.envelope;
-  }
-
-  public void setEnvelope(SCPEnvelope value) {
-    this.envelope = value;
-  }
-
   private Uint32 getSCPLedgerSeq;
-
-  public Uint32 getGetSCPLedgerSeq() {
-    return this.getSCPLedgerSeq;
-  }
-
-  public void setGetSCPLedgerSeq(Uint32 value) {
-    this.getSCPLedgerSeq = value;
-  }
-
   private SendMore sendMoreMessage;
-
-  public SendMore getSendMoreMessage() {
-    return this.sendMoreMessage;
-  }
-
-  public void setSendMoreMessage(SendMore value) {
-    this.sendMoreMessage = value;
-  }
-
   private SendMoreExtended sendMoreExtendedMessage;
-
-  public SendMoreExtended getSendMoreExtendedMessage() {
-    return this.sendMoreExtendedMessage;
-  }
-
-  public void setSendMoreExtendedMessage(SendMoreExtended value) {
-    this.sendMoreExtendedMessage = value;
-  }
-
   private FloodAdvert floodAdvert;
-
-  public FloodAdvert getFloodAdvert() {
-    return this.floodAdvert;
-  }
-
-  public void setFloodAdvert(FloodAdvert value) {
-    this.floodAdvert = value;
-  }
-
   private FloodDemand floodDemand;
-
-  public FloodDemand getFloodDemand() {
-    return this.floodDemand;
-  }
-
-  public void setFloodDemand(FloodDemand value) {
-    this.floodDemand = value;
-  }
-
-  public static final class Builder {
-    private MessageType discriminant;
-    private Error error;
-    private Hello hello;
-    private Auth auth;
-    private DontHave dontHave;
-    private PeerAddress[] peers;
-    private Uint256 txSetHash;
-    private TransactionSet txSet;
-    private GeneralizedTransactionSet generalizedTxSet;
-    private TransactionEnvelope transaction;
-    private SignedSurveyRequestMessage signedSurveyRequestMessage;
-    private SignedSurveyResponseMessage signedSurveyResponseMessage;
-    private Uint256 qSetHash;
-    private SCPQuorumSet qSet;
-    private SCPEnvelope envelope;
-    private Uint32 getSCPLedgerSeq;
-    private SendMore sendMoreMessage;
-    private SendMoreExtended sendMoreExtendedMessage;
-    private FloodAdvert floodAdvert;
-    private FloodDemand floodDemand;
-
-    public Builder discriminant(MessageType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder error(Error error) {
-      this.error = error;
-      return this;
-    }
-
-    public Builder hello(Hello hello) {
-      this.hello = hello;
-      return this;
-    }
-
-    public Builder auth(Auth auth) {
-      this.auth = auth;
-      return this;
-    }
-
-    public Builder dontHave(DontHave dontHave) {
-      this.dontHave = dontHave;
-      return this;
-    }
-
-    public Builder peers(PeerAddress[] peers) {
-      this.peers = peers;
-      return this;
-    }
-
-    public Builder txSetHash(Uint256 txSetHash) {
-      this.txSetHash = txSetHash;
-      return this;
-    }
-
-    public Builder txSet(TransactionSet txSet) {
-      this.txSet = txSet;
-      return this;
-    }
-
-    public Builder generalizedTxSet(GeneralizedTransactionSet generalizedTxSet) {
-      this.generalizedTxSet = generalizedTxSet;
-      return this;
-    }
-
-    public Builder transaction(TransactionEnvelope transaction) {
-      this.transaction = transaction;
-      return this;
-    }
-
-    public Builder signedSurveyRequestMessage(
-        SignedSurveyRequestMessage signedSurveyRequestMessage) {
-      this.signedSurveyRequestMessage = signedSurveyRequestMessage;
-      return this;
-    }
-
-    public Builder signedSurveyResponseMessage(
-        SignedSurveyResponseMessage signedSurveyResponseMessage) {
-      this.signedSurveyResponseMessage = signedSurveyResponseMessage;
-      return this;
-    }
-
-    public Builder qSetHash(Uint256 qSetHash) {
-      this.qSetHash = qSetHash;
-      return this;
-    }
-
-    public Builder qSet(SCPQuorumSet qSet) {
-      this.qSet = qSet;
-      return this;
-    }
-
-    public Builder envelope(SCPEnvelope envelope) {
-      this.envelope = envelope;
-      return this;
-    }
-
-    public Builder getSCPLedgerSeq(Uint32 getSCPLedgerSeq) {
-      this.getSCPLedgerSeq = getSCPLedgerSeq;
-      return this;
-    }
-
-    public Builder sendMoreMessage(SendMore sendMoreMessage) {
-      this.sendMoreMessage = sendMoreMessage;
-      return this;
-    }
-
-    public Builder sendMoreExtendedMessage(SendMoreExtended sendMoreExtendedMessage) {
-      this.sendMoreExtendedMessage = sendMoreExtendedMessage;
-      return this;
-    }
-
-    public Builder floodAdvert(FloodAdvert floodAdvert) {
-      this.floodAdvert = floodAdvert;
-      return this;
-    }
-
-    public Builder floodDemand(FloodDemand floodDemand) {
-      this.floodDemand = floodDemand;
-      return this;
-    }
-
-    public StellarMessage build() {
-      StellarMessage val = new StellarMessage();
-      val.setDiscriminant(discriminant);
-      val.setError(this.error);
-      val.setHello(this.hello);
-      val.setAuth(this.auth);
-      val.setDontHave(this.dontHave);
-      val.setPeers(this.peers);
-      val.setTxSetHash(this.txSetHash);
-      val.setTxSet(this.txSet);
-      val.setGeneralizedTxSet(this.generalizedTxSet);
-      val.setTransaction(this.transaction);
-      val.setSignedSurveyRequestMessage(this.signedSurveyRequestMessage);
-      val.setSignedSurveyResponseMessage(this.signedSurveyResponseMessage);
-      val.setQSetHash(this.qSetHash);
-      val.setQSet(this.qSet);
-      val.setEnvelope(this.envelope);
-      val.setGetSCPLedgerSeq(this.getSCPLedgerSeq);
-      val.setSendMoreMessage(this.sendMoreMessage);
-      val.setSendMoreExtendedMessage(this.sendMoreExtendedMessage);
-      val.setFloodAdvert(this.floodAdvert);
-      val.setFloodDemand(this.floodDemand);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, StellarMessage encodedStellarMessage)
       throws IOException {
@@ -570,60 +245,6 @@ public class StellarMessage implements XdrElement {
         break;
     }
     return decodedStellarMessage;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.error,
-        this.hello,
-        this.auth,
-        this.dontHave,
-        Arrays.hashCode(this.peers),
-        this.txSetHash,
-        this.txSet,
-        this.generalizedTxSet,
-        this.transaction,
-        this.signedSurveyRequestMessage,
-        this.signedSurveyResponseMessage,
-        this.qSetHash,
-        this.qSet,
-        this.envelope,
-        this.getSCPLedgerSeq,
-        this.sendMoreMessage,
-        this.sendMoreExtendedMessage,
-        this.floodAdvert,
-        this.floodDemand,
-        this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof StellarMessage)) {
-      return false;
-    }
-
-    StellarMessage other = (StellarMessage) object;
-    return Objects.equals(this.error, other.error)
-        && Objects.equals(this.hello, other.hello)
-        && Objects.equals(this.auth, other.auth)
-        && Objects.equals(this.dontHave, other.dontHave)
-        && Arrays.equals(this.peers, other.peers)
-        && Objects.equals(this.txSetHash, other.txSetHash)
-        && Objects.equals(this.txSet, other.txSet)
-        && Objects.equals(this.generalizedTxSet, other.generalizedTxSet)
-        && Objects.equals(this.transaction, other.transaction)
-        && Objects.equals(this.signedSurveyRequestMessage, other.signedSurveyRequestMessage)
-        && Objects.equals(this.signedSurveyResponseMessage, other.signedSurveyResponseMessage)
-        && Objects.equals(this.qSetHash, other.qSetHash)
-        && Objects.equals(this.qSet, other.qSet)
-        && Objects.equals(this.envelope, other.envelope)
-        && Objects.equals(this.getSCPLedgerSeq, other.getSCPLedgerSeq)
-        && Objects.equals(this.sendMoreMessage, other.sendMoreMessage)
-        && Objects.equals(this.sendMoreExtendedMessage, other.sendMoreExtendedMessage)
-        && Objects.equals(this.floodAdvert, other.floodAdvert)
-        && Objects.equals(this.floodDemand, other.floodDemand)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

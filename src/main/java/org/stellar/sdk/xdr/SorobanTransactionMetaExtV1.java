@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -50,48 +53,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanTransactionMetaExtV1 implements XdrElement {
-  public SorobanTransactionMetaExtV1() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private Int64 totalNonRefundableResourceFeeCharged;
-
-  public Int64 getTotalNonRefundableResourceFeeCharged() {
-    return this.totalNonRefundableResourceFeeCharged;
-  }
-
-  public void setTotalNonRefundableResourceFeeCharged(Int64 value) {
-    this.totalNonRefundableResourceFeeCharged = value;
-  }
-
   private Int64 totalRefundableResourceFeeCharged;
-
-  public Int64 getTotalRefundableResourceFeeCharged() {
-    return this.totalRefundableResourceFeeCharged;
-  }
-
-  public void setTotalRefundableResourceFeeCharged(Int64 value) {
-    this.totalRefundableResourceFeeCharged = value;
-  }
-
   private Int64 rentFeeCharged;
-
-  public Int64 getRentFeeCharged() {
-    return this.rentFeeCharged;
-  }
-
-  public void setRentFeeCharged(Int64 value) {
-    this.rentFeeCharged = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SorobanTransactionMetaExtV1 encodedSorobanTransactionMetaExtV1)
@@ -117,30 +87,6 @@ public class SorobanTransactionMetaExtV1 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ext,
-        this.totalNonRefundableResourceFeeCharged,
-        this.totalRefundableResourceFeeCharged,
-        this.rentFeeCharged);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanTransactionMetaExtV1)) {
-      return false;
-    }
-
-    SorobanTransactionMetaExtV1 other = (SorobanTransactionMetaExtV1) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(
-            this.totalNonRefundableResourceFeeCharged, other.totalNonRefundableResourceFeeCharged)
-        && Objects.equals(
-            this.totalRefundableResourceFeeCharged, other.totalRefundableResourceFeeCharged)
-        && Objects.equals(this.rentFeeCharged, other.rentFeeCharged);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -162,42 +108,5 @@ public class SorobanTransactionMetaExtV1 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private Int64 totalNonRefundableResourceFeeCharged;
-    private Int64 totalRefundableResourceFeeCharged;
-    private Int64 rentFeeCharged;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder totalNonRefundableResourceFeeCharged(
-        Int64 totalNonRefundableResourceFeeCharged) {
-      this.totalNonRefundableResourceFeeCharged = totalNonRefundableResourceFeeCharged;
-      return this;
-    }
-
-    public Builder totalRefundableResourceFeeCharged(Int64 totalRefundableResourceFeeCharged) {
-      this.totalRefundableResourceFeeCharged = totalRefundableResourceFeeCharged;
-      return this;
-    }
-
-    public Builder rentFeeCharged(Int64 rentFeeCharged) {
-      this.rentFeeCharged = rentFeeCharged;
-      return this;
-    }
-
-    public SorobanTransactionMetaExtV1 build() {
-      SorobanTransactionMetaExtV1 val = new SorobanTransactionMetaExtV1();
-      val.setExt(this.ext);
-      val.setTotalNonRefundableResourceFeeCharged(this.totalNonRefundableResourceFeeCharged);
-      val.setTotalRefundableResourceFeeCharged(this.totalRefundableResourceFeeCharged);
-      val.setRentFeeCharged(this.rentFeeCharged);
-      return val;
-    }
   }
 }

@@ -17,10 +17,9 @@ class ScvMap {
     SCMapEntry[] scMapEntries = new SCMapEntry[value.size()];
     int i = 0;
     for (Map.Entry<SCVal, SCVal> entry : value.entrySet()) {
-      scMapEntries[i++] =
-          new SCMapEntry.Builder().key(entry.getKey()).val(entry.getValue()).build();
+      scMapEntries[i++] = SCMapEntry.builder().key(entry.getKey()).val(entry.getValue()).build();
     }
-    return new SCVal.Builder().discriminant(TYPE).map(new SCMap(scMapEntries)).build();
+    return SCVal.builder().discriminant(TYPE).map(new SCMap(scMapEntries)).build();
   }
 
   static LinkedHashMap<SCVal, SCVal> fromSCVal(SCVal scVal) {

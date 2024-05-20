@@ -33,7 +33,7 @@ class ScvUint128 {
     System.arraycopy(bytes, copyStartIndex, paddedBytes, 16 - numBytesToCopy, numBytesToCopy);
 
     UInt128Parts uInt128Parts =
-        new UInt128Parts.Builder()
+        UInt128Parts.builder()
             .hi(
                 new Uint64(
                     new XdrUnsignedHyperInteger(
@@ -43,7 +43,7 @@ class ScvUint128 {
                     new XdrUnsignedHyperInteger(
                         new BigInteger(1, Arrays.copyOfRange(paddedBytes, 8, 16)))))
             .build();
-    return new SCVal.Builder().discriminant(TYPE).u128(uInt128Parts).build();
+    return SCVal.builder().discriminant(TYPE).u128(uInt128Parts).build();
   }
 
   static BigInteger fromSCVal(SCVal scVal) {

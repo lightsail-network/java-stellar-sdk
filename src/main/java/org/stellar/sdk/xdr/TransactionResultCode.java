@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,16 +59,16 @@ public enum TransactionResultCode implements XdrElement {
   txBAD_SPONSORSHIP(-14),
   txBAD_MIN_SEQ_AGE_OR_GAP(-15),
   txMALFORMED(-16),
-  txSOROBAN_INVALID(-17),
-  ;
-  private int mValue;
+  txSOROBAN_INVALID(-17);
+
+  private final int value;
 
   TransactionResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static TransactionResultCode decode(XdrDataInputStream stream) throws IOException {

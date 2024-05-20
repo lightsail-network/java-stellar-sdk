@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -46,108 +48,21 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AccountEntry implements XdrElement {
-  public AccountEntry() {}
-
   private AccountID accountID;
-
-  public AccountID getAccountID() {
-    return this.accountID;
-  }
-
-  public void setAccountID(AccountID value) {
-    this.accountID = value;
-  }
-
   private Int64 balance;
-
-  public Int64 getBalance() {
-    return this.balance;
-  }
-
-  public void setBalance(Int64 value) {
-    this.balance = value;
-  }
-
   private SequenceNumber seqNum;
-
-  public SequenceNumber getSeqNum() {
-    return this.seqNum;
-  }
-
-  public void setSeqNum(SequenceNumber value) {
-    this.seqNum = value;
-  }
-
   private Uint32 numSubEntries;
-
-  public Uint32 getNumSubEntries() {
-    return this.numSubEntries;
-  }
-
-  public void setNumSubEntries(Uint32 value) {
-    this.numSubEntries = value;
-  }
-
   private AccountID inflationDest;
-
-  public AccountID getInflationDest() {
-    return this.inflationDest;
-  }
-
-  public void setInflationDest(AccountID value) {
-    this.inflationDest = value;
-  }
-
   private Uint32 flags;
-
-  public Uint32 getFlags() {
-    return this.flags;
-  }
-
-  public void setFlags(Uint32 value) {
-    this.flags = value;
-  }
-
   private String32 homeDomain;
-
-  public String32 getHomeDomain() {
-    return this.homeDomain;
-  }
-
-  public void setHomeDomain(String32 value) {
-    this.homeDomain = value;
-  }
-
   private Thresholds thresholds;
-
-  public Thresholds getThresholds() {
-    return this.thresholds;
-  }
-
-  public void setThresholds(Thresholds value) {
-    this.thresholds = value;
-  }
-
   private Signer[] signers;
-
-  public Signer[] getSigners() {
-    return this.signers;
-  }
-
-  public void setSigners(Signer[] value) {
-    this.signers = value;
-  }
-
   private AccountEntryExt ext;
-
-  public AccountEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(AccountEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, AccountEntry encodedAccountEntry)
       throws IOException {
@@ -199,40 +114,6 @@ public class AccountEntry implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.accountID,
-        this.balance,
-        this.seqNum,
-        this.numSubEntries,
-        this.inflationDest,
-        this.flags,
-        this.homeDomain,
-        this.thresholds,
-        Arrays.hashCode(this.signers),
-        this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AccountEntry)) {
-      return false;
-    }
-
-    AccountEntry other = (AccountEntry) object;
-    return Objects.equals(this.accountID, other.accountID)
-        && Objects.equals(this.balance, other.balance)
-        && Objects.equals(this.seqNum, other.seqNum)
-        && Objects.equals(this.numSubEntries, other.numSubEntries)
-        && Objects.equals(this.inflationDest, other.inflationDest)
-        && Objects.equals(this.flags, other.flags)
-        && Objects.equals(this.homeDomain, other.homeDomain)
-        && Objects.equals(this.thresholds, other.thresholds)
-        && Arrays.equals(this.signers, other.signers)
-        && Objects.equals(this.ext, other.ext);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -256,84 +137,6 @@ public class AccountEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private AccountID accountID;
-    private Int64 balance;
-    private SequenceNumber seqNum;
-    private Uint32 numSubEntries;
-    private AccountID inflationDest;
-    private Uint32 flags;
-    private String32 homeDomain;
-    private Thresholds thresholds;
-    private Signer[] signers;
-    private AccountEntryExt ext;
-
-    public Builder accountID(AccountID accountID) {
-      this.accountID = accountID;
-      return this;
-    }
-
-    public Builder balance(Int64 balance) {
-      this.balance = balance;
-      return this;
-    }
-
-    public Builder seqNum(SequenceNumber seqNum) {
-      this.seqNum = seqNum;
-      return this;
-    }
-
-    public Builder numSubEntries(Uint32 numSubEntries) {
-      this.numSubEntries = numSubEntries;
-      return this;
-    }
-
-    public Builder inflationDest(AccountID inflationDest) {
-      this.inflationDest = inflationDest;
-      return this;
-    }
-
-    public Builder flags(Uint32 flags) {
-      this.flags = flags;
-      return this;
-    }
-
-    public Builder homeDomain(String32 homeDomain) {
-      this.homeDomain = homeDomain;
-      return this;
-    }
-
-    public Builder thresholds(Thresholds thresholds) {
-      this.thresholds = thresholds;
-      return this;
-    }
-
-    public Builder signers(Signer[] signers) {
-      this.signers = signers;
-      return this;
-    }
-
-    public Builder ext(AccountEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public AccountEntry build() {
-      AccountEntry val = new AccountEntry();
-      val.setAccountID(this.accountID);
-      val.setBalance(this.balance);
-      val.setSeqNum(this.seqNum);
-      val.setNumSubEntries(this.numSubEntries);
-      val.setInflationDest(this.inflationDest);
-      val.setFlags(this.flags);
-      val.setHomeDomain(this.homeDomain);
-      val.setThresholds(this.thresholds);
-      val.setSigners(this.signers);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * AccountEntryExt's original definition in the XDR file is:
    *
@@ -347,50 +150,13 @@ public class AccountEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class AccountEntryExt implements XdrElement {
-    public AccountEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private AccountEntryExtensionV1 v1;
-
-    public AccountEntryExtensionV1 getV1() {
-      return this.v1;
-    }
-
-    public void setV1(AccountEntryExtensionV1 value) {
-      this.v1 = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private AccountEntryExtensionV1 v1;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v1(AccountEntryExtensionV1 v1) {
-        this.v1 = v1;
-        return this;
-      }
-
-      public AccountEntryExt build() {
-        AccountEntryExt val = new AccountEntryExt();
-        val.setDiscriminant(discriminant);
-        val.setV1(this.v1);
-        return val;
-      }
-    }
 
     public static void encode(XdrDataOutputStream stream, AccountEntryExt encodedAccountEntryExt)
         throws IOException {
@@ -422,21 +188,6 @@ public class AccountEntry implements XdrElement {
           break;
       }
       return decodedAccountEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v1, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof AccountEntryExt)) {
-        return false;
-      }
-
-      AccountEntryExt other = (AccountEntryExt) object;
-      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override

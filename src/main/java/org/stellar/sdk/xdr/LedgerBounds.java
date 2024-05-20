@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerBounds implements XdrElement {
-  public LedgerBounds() {}
-
   private Uint32 minLedger;
-
-  public Uint32 getMinLedger() {
-    return this.minLedger;
-  }
-
-  public void setMinLedger(Uint32 value) {
-    this.minLedger = value;
-  }
-
   private Uint32 maxLedger;
-
-  public Uint32 getMaxLedger() {
-    return this.maxLedger;
-  }
-
-  public void setMaxLedger(Uint32 value) {
-    this.maxLedger = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerBounds encodedLedgerBounds)
       throws IOException {
@@ -60,22 +48,6 @@ public class LedgerBounds implements XdrElement {
     decodedLedgerBounds.minLedger = Uint32.decode(stream);
     decodedLedgerBounds.maxLedger = Uint32.decode(stream);
     return decodedLedgerBounds;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.minLedger, this.maxLedger);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerBounds)) {
-      return false;
-    }
-
-    LedgerBounds other = (LedgerBounds) object;
-    return Objects.equals(this.minLedger, other.minLedger)
-        && Objects.equals(this.maxLedger, other.maxLedger);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class LedgerBounds implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 minLedger;
-    private Uint32 maxLedger;
-
-    public Builder minLedger(Uint32 minLedger) {
-      this.minLedger = minLedger;
-      return this;
-    }
-
-    public Builder maxLedger(Uint32 maxLedger) {
-      this.maxLedger = maxLedger;
-      return this;
-    }
-
-    public LedgerBounds build() {
-      LedgerBounds val = new LedgerBounds();
-      val.setMinLedger(this.minLedger);
-      val.setMaxLedger(this.maxLedger);
-      return val;
-    }
   }
 }

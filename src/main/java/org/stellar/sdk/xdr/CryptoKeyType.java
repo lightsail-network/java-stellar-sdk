@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,16 +29,16 @@ public enum CryptoKeyType implements XdrElement {
   KEY_TYPE_PRE_AUTH_TX(1),
   KEY_TYPE_HASH_X(2),
   KEY_TYPE_ED25519_SIGNED_PAYLOAD(3),
-  KEY_TYPE_MUXED_ED25519(256),
-  ;
-  private int mValue;
+  KEY_TYPE_MUXED_ED25519(256);
+
+  private final int value;
 
   CryptoKeyType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static CryptoKeyType decode(XdrDataInputStream stream) throws IOException {

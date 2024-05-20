@@ -9,7 +9,7 @@ class ScvInt32 {
   private static final SCValType TYPE = SCValType.SCV_I32;
 
   static SCVal toSCVal(int value) {
-    return new SCVal.Builder().discriminant(TYPE).i32(new Int32(value)).build();
+    return SCVal.builder().discriminant(TYPE).i32(new Int32(value)).build();
   }
 
   static int fromSCVal(SCVal scVal) {

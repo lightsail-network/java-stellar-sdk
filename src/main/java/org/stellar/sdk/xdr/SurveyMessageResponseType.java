@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,16 +21,16 @@ import org.stellar.sdk.Base64Factory;
  */
 public enum SurveyMessageResponseType implements XdrElement {
   SURVEY_TOPOLOGY_RESPONSE_V0(0),
-  SURVEY_TOPOLOGY_RESPONSE_V1(1),
-  ;
-  private int mValue;
+  SURVEY_TOPOLOGY_RESPONSE_V1(1);
+
+  private final int value;
 
   SurveyMessageResponseType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SurveyMessageResponseType decode(XdrDataInputStream stream) throws IOException {

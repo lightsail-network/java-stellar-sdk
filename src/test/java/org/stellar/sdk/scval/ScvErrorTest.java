@@ -14,10 +14,9 @@ public class ScvErrorTest {
   public void testScvError() {
     SCErrorType errorType = SCErrorType.SCE_CONTEXT;
     SCErrorCode errorCode = SCErrorCode.SCEC_UNEXPECTED_TYPE;
-    SCError scError = new SCError.Builder().code(errorCode).discriminant(errorType).build();
+    SCError scError = SCError.builder().code(errorCode).discriminant(errorType).build();
 
-    SCVal expectedScVal =
-        new SCVal.Builder().discriminant(SCValType.SCV_ERROR).error(scError).build();
+    SCVal expectedScVal = SCVal.builder().discriminant(SCValType.SCV_ERROR).error(scError).build();
 
     SCVal actualScVal = Scv.toError(scError);
     assertEquals(expectedScVal, actualScVal);

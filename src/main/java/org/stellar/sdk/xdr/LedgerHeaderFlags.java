@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,16 +23,16 @@ import org.stellar.sdk.Base64Factory;
 public enum LedgerHeaderFlags implements XdrElement {
   DISABLE_LIQUIDITY_POOL_TRADING_FLAG(1),
   DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG(2),
-  DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG(4),
-  ;
-  private int mValue;
+  DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG(4);
+
+  private final int value;
 
   LedgerHeaderFlags(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static LedgerHeaderFlags decode(XdrDataInputStream stream) throws IOException {

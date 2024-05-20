@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef SCVal SCVec&lt;&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SCVec implements XdrElement {
   private SCVal[] SCVec;
-
-  public SCVec() {}
-
-  public SCVec(SCVal[] SCVec) {
-    this.SCVec = SCVec;
-  }
-
-  public SCVal[] getSCVec() {
-    return this.SCVec;
-  }
-
-  public void setSCVec(SCVal[] value) {
-    this.SCVec = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCVec encodedSCVec) throws IOException {
     int SCVecsize = encodedSCVec.getSCVec().length;
@@ -55,21 +46,6 @@ public class SCVec implements XdrElement {
       decodedSCVec.SCVec[i] = SCVal.decode(stream);
     }
     return decodedSCVec;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.SCVec);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCVec)) {
-      return false;
-    }
-
-    SCVec other = (SCVec) object;
-    return Arrays.equals(this.SCVec, other.SCVec);
   }
 
   @Override

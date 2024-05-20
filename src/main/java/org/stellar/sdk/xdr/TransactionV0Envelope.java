@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,28 +27,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionV0Envelope implements XdrElement {
-  public TransactionV0Envelope() {}
-
   private TransactionV0 tx;
-
-  public TransactionV0 getTx() {
-    return this.tx;
-  }
-
-  public void setTx(TransactionV0 value) {
-    this.tx = value;
-  }
-
   private DecoratedSignature[] signatures;
-
-  public DecoratedSignature[] getSignatures() {
-    return this.signatures;
-  }
-
-  public void setSignatures(DecoratedSignature[] value) {
-    this.signatures = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, TransactionV0Envelope encodedTransactionV0Envelope)
@@ -75,21 +62,6 @@ public class TransactionV0Envelope implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.tx, Arrays.hashCode(this.signatures));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionV0Envelope)) {
-      return false;
-    }
-
-    TransactionV0Envelope other = (TransactionV0Envelope) object;
-    return Objects.equals(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -111,27 +83,5 @@ public class TransactionV0Envelope implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private TransactionV0 tx;
-    private DecoratedSignature[] signatures;
-
-    public Builder tx(TransactionV0 tx) {
-      this.tx = tx;
-      return this;
-    }
-
-    public Builder signatures(DecoratedSignature[] signatures) {
-      this.signatures = signatures;
-      return this;
-    }
-
-    public TransactionV0Envelope build() {
-      TransactionV0Envelope val = new TransactionV0Envelope();
-      val.setTx(this.tx);
-      val.setSignatures(this.signatures);
-      return val;
-    }
   }
 }

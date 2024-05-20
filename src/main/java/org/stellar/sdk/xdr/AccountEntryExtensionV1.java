@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,28 +33,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AccountEntryExtensionV1 implements XdrElement {
-  public AccountEntryExtensionV1() {}
-
   private Liabilities liabilities;
-
-  public Liabilities getLiabilities() {
-    return this.liabilities;
-  }
-
-  public void setLiabilities(Liabilities value) {
-    this.liabilities = value;
-  }
-
   private AccountEntryExtensionV1Ext ext;
-
-  public AccountEntryExtensionV1Ext getExt() {
-    return this.ext;
-  }
-
-  public void setExt(AccountEntryExtensionV1Ext value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, AccountEntryExtensionV1 encodedAccountEntryExtensionV1)
@@ -69,22 +57,6 @@ public class AccountEntryExtensionV1 implements XdrElement {
     decodedAccountEntryExtensionV1.liabilities = Liabilities.decode(stream);
     decodedAccountEntryExtensionV1.ext = AccountEntryExtensionV1Ext.decode(stream);
     return decodedAccountEntryExtensionV1;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.liabilities, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AccountEntryExtensionV1)) {
-      return false;
-    }
-
-    AccountEntryExtensionV1 other = (AccountEntryExtensionV1) object;
-    return Objects.equals(this.liabilities, other.liabilities)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -111,28 +83,6 @@ public class AccountEntryExtensionV1 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Liabilities liabilities;
-    private AccountEntryExtensionV1Ext ext;
-
-    public Builder liabilities(Liabilities liabilities) {
-      this.liabilities = liabilities;
-      return this;
-    }
-
-    public Builder ext(AccountEntryExtensionV1Ext ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public AccountEntryExtensionV1 build() {
-      AccountEntryExtensionV1 val = new AccountEntryExtensionV1();
-      val.setLiabilities(this.liabilities);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * AccountEntryExtensionV1Ext's original definition in the XDR file is:
    *
@@ -146,50 +96,13 @@ public class AccountEntryExtensionV1 implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class AccountEntryExtensionV1Ext implements XdrElement {
-    public AccountEntryExtensionV1Ext() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private AccountEntryExtensionV2 v2;
-
-    public AccountEntryExtensionV2 getV2() {
-      return this.v2;
-    }
-
-    public void setV2(AccountEntryExtensionV2 value) {
-      this.v2 = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private AccountEntryExtensionV2 v2;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v2(AccountEntryExtensionV2 v2) {
-        this.v2 = v2;
-        return this;
-      }
-
-      public AccountEntryExtensionV1Ext build() {
-        AccountEntryExtensionV1Ext val = new AccountEntryExtensionV1Ext();
-        val.setDiscriminant(discriminant);
-        val.setV2(this.v2);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream, AccountEntryExtensionV1Ext encodedAccountEntryExtensionV1Ext)
@@ -223,21 +136,6 @@ public class AccountEntryExtensionV1 implements XdrElement {
           break;
       }
       return decodedAccountEntryExtensionV1Ext;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v2, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof AccountEntryExtensionV1Ext)) {
-        return false;
-      }
-
-      AccountEntryExtensionV1Ext other = (AccountEntryExtensionV1Ext) object;
-      return Objects.equals(this.v2, other.v2) && Objects.equals(this.v, other.v);
     }
 
     @Override

@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,16 +24,16 @@ import org.stellar.sdk.Base64Factory;
  */
 public enum EndSponsoringFutureReservesResultCode implements XdrElement {
   END_SPONSORING_FUTURE_RESERVES_SUCCESS(0),
-  END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED(-1),
-  ;
-  private int mValue;
+  END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED(-1);
+
+  private final int value;
 
   EndSponsoringFutureReservesResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static EndSponsoringFutureReservesResultCode decode(XdrDataInputStream stream)

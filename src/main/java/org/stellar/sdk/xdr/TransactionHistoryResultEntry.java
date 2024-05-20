@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,38 +33,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionHistoryResultEntry implements XdrElement {
-  public TransactionHistoryResultEntry() {}
-
   private Uint32 ledgerSeq;
-
-  public Uint32 getLedgerSeq() {
-    return this.ledgerSeq;
-  }
-
-  public void setLedgerSeq(Uint32 value) {
-    this.ledgerSeq = value;
-  }
-
   private TransactionResultSet txResultSet;
-
-  public TransactionResultSet getTxResultSet() {
-    return this.txResultSet;
-  }
-
-  public void setTxResultSet(TransactionResultSet value) {
-    this.txResultSet = value;
-  }
-
   private TransactionHistoryResultEntryExt ext;
-
-  public TransactionHistoryResultEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(TransactionHistoryResultEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -83,23 +62,6 @@ public class TransactionHistoryResultEntry implements XdrElement {
     decodedTransactionHistoryResultEntry.txResultSet = TransactionResultSet.decode(stream);
     decodedTransactionHistoryResultEntry.ext = TransactionHistoryResultEntryExt.decode(stream);
     return decodedTransactionHistoryResultEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ledgerSeq, this.txResultSet, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionHistoryResultEntry)) {
-      return false;
-    }
-
-    TransactionHistoryResultEntry other = (TransactionHistoryResultEntry) object;
-    return Objects.equals(this.ledgerSeq, other.ledgerSeq)
-        && Objects.equals(this.txResultSet, other.txResultSet)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -126,35 +88,6 @@ public class TransactionHistoryResultEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Uint32 ledgerSeq;
-    private TransactionResultSet txResultSet;
-    private TransactionHistoryResultEntryExt ext;
-
-    public Builder ledgerSeq(Uint32 ledgerSeq) {
-      this.ledgerSeq = ledgerSeq;
-      return this;
-    }
-
-    public Builder txResultSet(TransactionResultSet txResultSet) {
-      this.txResultSet = txResultSet;
-      return this;
-    }
-
-    public Builder ext(TransactionHistoryResultEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public TransactionHistoryResultEntry build() {
-      TransactionHistoryResultEntry val = new TransactionHistoryResultEntry();
-      val.setLedgerSeq(this.ledgerSeq);
-      val.setTxResultSet(this.txResultSet);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * TransactionHistoryResultEntryExt's original definition in the XDR file is:
    *
@@ -166,33 +99,12 @@ public class TransactionHistoryResultEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class TransactionHistoryResultEntryExt implements XdrElement {
-    public TransactionHistoryResultEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public TransactionHistoryResultEntryExt build() {
-        TransactionHistoryResultEntryExt val = new TransactionHistoryResultEntryExt();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -222,21 +134,6 @@ public class TransactionHistoryResultEntry implements XdrElement {
           break;
       }
       return decodedTransactionHistoryResultEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof TransactionHistoryResultEntryExt)) {
-        return false;
-      }
-
-      TransactionHistoryResultEntryExt other = (TransactionHistoryResultEntryExt) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

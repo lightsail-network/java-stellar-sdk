@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,84 +29,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class HostFunction implements XdrElement {
-  public HostFunction() {}
-
-  HostFunctionType type;
-
-  public HostFunctionType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(HostFunctionType value) {
-    this.type = value;
-  }
-
+  private HostFunctionType discriminant;
   private InvokeContractArgs invokeContract;
-
-  public InvokeContractArgs getInvokeContract() {
-    return this.invokeContract;
-  }
-
-  public void setInvokeContract(InvokeContractArgs value) {
-    this.invokeContract = value;
-  }
-
   private CreateContractArgs createContract;
-
-  public CreateContractArgs getCreateContract() {
-    return this.createContract;
-  }
-
-  public void setCreateContract(CreateContractArgs value) {
-    this.createContract = value;
-  }
-
   private byte[] wasm;
-
-  public byte[] getWasm() {
-    return this.wasm;
-  }
-
-  public void setWasm(byte[] value) {
-    this.wasm = value;
-  }
-
-  public static final class Builder {
-    private HostFunctionType discriminant;
-    private InvokeContractArgs invokeContract;
-    private CreateContractArgs createContract;
-    private byte[] wasm;
-
-    public Builder discriminant(HostFunctionType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder invokeContract(InvokeContractArgs invokeContract) {
-      this.invokeContract = invokeContract;
-      return this;
-    }
-
-    public Builder createContract(CreateContractArgs createContract) {
-      this.createContract = createContract;
-      return this;
-    }
-
-    public Builder wasm(byte[] wasm) {
-      this.wasm = wasm;
-      return this;
-    }
-
-    public HostFunction build() {
-      HostFunction val = new HostFunction();
-      val.setDiscriminant(discriminant);
-      val.setInvokeContract(this.invokeContract);
-      val.setCreateContract(this.createContract);
-      val.setWasm(this.wasm);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, HostFunction encodedHostFunction)
       throws IOException {
@@ -148,25 +81,6 @@ public class HostFunction implements XdrElement {
         break;
     }
     return decodedHostFunction;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.invokeContract, this.createContract, Arrays.hashCode(this.wasm), this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof HostFunction)) {
-      return false;
-    }
-
-    HostFunction other = (HostFunction) object;
-    return Objects.equals(this.invokeContract, other.invokeContract)
-        && Objects.equals(this.createContract, other.createContract)
-        && Arrays.equals(this.wasm, other.wasm)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

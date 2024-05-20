@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -36,98 +39,20 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SetOptionsOp implements XdrElement {
-  public SetOptionsOp() {}
-
   private AccountID inflationDest;
-
-  public AccountID getInflationDest() {
-    return this.inflationDest;
-  }
-
-  public void setInflationDest(AccountID value) {
-    this.inflationDest = value;
-  }
-
   private Uint32 clearFlags;
-
-  public Uint32 getClearFlags() {
-    return this.clearFlags;
-  }
-
-  public void setClearFlags(Uint32 value) {
-    this.clearFlags = value;
-  }
-
   private Uint32 setFlags;
-
-  public Uint32 getSetFlags() {
-    return this.setFlags;
-  }
-
-  public void setSetFlags(Uint32 value) {
-    this.setFlags = value;
-  }
-
   private Uint32 masterWeight;
-
-  public Uint32 getMasterWeight() {
-    return this.masterWeight;
-  }
-
-  public void setMasterWeight(Uint32 value) {
-    this.masterWeight = value;
-  }
-
   private Uint32 lowThreshold;
-
-  public Uint32 getLowThreshold() {
-    return this.lowThreshold;
-  }
-
-  public void setLowThreshold(Uint32 value) {
-    this.lowThreshold = value;
-  }
-
   private Uint32 medThreshold;
-
-  public Uint32 getMedThreshold() {
-    return this.medThreshold;
-  }
-
-  public void setMedThreshold(Uint32 value) {
-    this.medThreshold = value;
-  }
-
   private Uint32 highThreshold;
-
-  public Uint32 getHighThreshold() {
-    return this.highThreshold;
-  }
-
-  public void setHighThreshold(Uint32 value) {
-    this.highThreshold = value;
-  }
-
   private String32 homeDomain;
-
-  public String32 getHomeDomain() {
-    return this.homeDomain;
-  }
-
-  public void setHomeDomain(String32 value) {
-    this.homeDomain = value;
-  }
-
   private Signer signer;
-
-  public Signer getSigner() {
-    return this.signer;
-  }
-
-  public void setSigner(Signer value) {
-    this.signer = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SetOptionsOp encodedSetOptionsOp)
       throws IOException {
@@ -233,38 +158,6 @@ public class SetOptionsOp implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.inflationDest,
-        this.clearFlags,
-        this.setFlags,
-        this.masterWeight,
-        this.lowThreshold,
-        this.medThreshold,
-        this.highThreshold,
-        this.homeDomain,
-        this.signer);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SetOptionsOp)) {
-      return false;
-    }
-
-    SetOptionsOp other = (SetOptionsOp) object;
-    return Objects.equals(this.inflationDest, other.inflationDest)
-        && Objects.equals(this.clearFlags, other.clearFlags)
-        && Objects.equals(this.setFlags, other.setFlags)
-        && Objects.equals(this.masterWeight, other.masterWeight)
-        && Objects.equals(this.lowThreshold, other.lowThreshold)
-        && Objects.equals(this.medThreshold, other.medThreshold)
-        && Objects.equals(this.highThreshold, other.highThreshold)
-        && Objects.equals(this.homeDomain, other.homeDomain)
-        && Objects.equals(this.signer, other.signer);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -286,76 +179,5 @@ public class SetOptionsOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private AccountID inflationDest;
-    private Uint32 clearFlags;
-    private Uint32 setFlags;
-    private Uint32 masterWeight;
-    private Uint32 lowThreshold;
-    private Uint32 medThreshold;
-    private Uint32 highThreshold;
-    private String32 homeDomain;
-    private Signer signer;
-
-    public Builder inflationDest(AccountID inflationDest) {
-      this.inflationDest = inflationDest;
-      return this;
-    }
-
-    public Builder clearFlags(Uint32 clearFlags) {
-      this.clearFlags = clearFlags;
-      return this;
-    }
-
-    public Builder setFlags(Uint32 setFlags) {
-      this.setFlags = setFlags;
-      return this;
-    }
-
-    public Builder masterWeight(Uint32 masterWeight) {
-      this.masterWeight = masterWeight;
-      return this;
-    }
-
-    public Builder lowThreshold(Uint32 lowThreshold) {
-      this.lowThreshold = lowThreshold;
-      return this;
-    }
-
-    public Builder medThreshold(Uint32 medThreshold) {
-      this.medThreshold = medThreshold;
-      return this;
-    }
-
-    public Builder highThreshold(Uint32 highThreshold) {
-      this.highThreshold = highThreshold;
-      return this;
-    }
-
-    public Builder homeDomain(String32 homeDomain) {
-      this.homeDomain = homeDomain;
-      return this;
-    }
-
-    public Builder signer(Signer signer) {
-      this.signer = signer;
-      return this;
-    }
-
-    public SetOptionsOp build() {
-      SetOptionsOp val = new SetOptionsOp();
-      val.setInflationDest(this.inflationDest);
-      val.setClearFlags(this.clearFlags);
-      val.setSetFlags(this.setFlags);
-      val.setMasterWeight(this.masterWeight);
-      val.setLowThreshold(this.lowThreshold);
-      val.setMedThreshold(this.medThreshold);
-      val.setHighThreshold(this.highThreshold);
-      val.setHomeDomain(this.homeDomain);
-      val.setSigner(this.signer);
-      return val;
-    }
   }
 }

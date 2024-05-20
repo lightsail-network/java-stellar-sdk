@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef string SCSymbol&lt;SCSYMBOL_LIMIT&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SCSymbol implements XdrElement {
   private XdrString SCSymbol;
-
-  public SCSymbol() {}
-
-  public SCSymbol(XdrString SCSymbol) {
-    this.SCSymbol = SCSymbol;
-  }
-
-  public XdrString getSCSymbol() {
-    return this.SCSymbol;
-  }
-
-  public void setSCSymbol(XdrString value) {
-    this.SCSymbol = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSymbol encodedSCSymbol)
       throws IOException {
@@ -48,21 +39,6 @@ public class SCSymbol implements XdrElement {
     SCSymbol decodedSCSymbol = new SCSymbol();
     decodedSCSymbol.SCSymbol = XdrString.decode(stream, SCSYMBOL_LIMIT);
     return decodedSCSymbol;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.SCSymbol);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSymbol)) {
-      return false;
-    }
-
-    SCSymbol other = (SCSymbol) object;
-    return Objects.equals(this.SCSymbol, other.SCSymbol);
   }
 
   @Override

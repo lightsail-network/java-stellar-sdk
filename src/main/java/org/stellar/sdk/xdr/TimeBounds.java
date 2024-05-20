@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TimeBounds implements XdrElement {
-  public TimeBounds() {}
-
   private TimePoint minTime;
-
-  public TimePoint getMinTime() {
-    return this.minTime;
-  }
-
-  public void setMinTime(TimePoint value) {
-    this.minTime = value;
-  }
-
   private TimePoint maxTime;
-
-  public TimePoint getMaxTime() {
-    return this.maxTime;
-  }
-
-  public void setMaxTime(TimePoint value) {
-    this.maxTime = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TimeBounds encodedTimeBounds)
       throws IOException {
@@ -60,22 +48,6 @@ public class TimeBounds implements XdrElement {
     decodedTimeBounds.minTime = TimePoint.decode(stream);
     decodedTimeBounds.maxTime = TimePoint.decode(stream);
     return decodedTimeBounds;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.minTime, this.maxTime);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TimeBounds)) {
-      return false;
-    }
-
-    TimeBounds other = (TimeBounds) object;
-    return Objects.equals(this.minTime, other.minTime)
-        && Objects.equals(this.maxTime, other.maxTime);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class TimeBounds implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private TimePoint minTime;
-    private TimePoint maxTime;
-
-    public Builder minTime(TimePoint minTime) {
-      this.minTime = minTime;
-      return this;
-    }
-
-    public Builder maxTime(TimePoint maxTime) {
-      this.maxTime = maxTime;
-      return this;
-    }
-
-    public TimeBounds build() {
-      TimeBounds val = new TimeBounds();
-      val.setMinTime(this.minTime);
-      val.setMaxTime(this.maxTime);
-      return val;
-    }
   }
 }

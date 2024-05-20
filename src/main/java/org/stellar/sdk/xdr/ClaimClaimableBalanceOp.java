@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClaimClaimableBalanceOp implements XdrElement {
-  public ClaimClaimableBalanceOp() {}
-
   private ClaimableBalanceID balanceID;
-
-  public ClaimableBalanceID getBalanceID() {
-    return this.balanceID;
-  }
-
-  public void setBalanceID(ClaimableBalanceID value) {
-    this.balanceID = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ClaimClaimableBalanceOp encodedClaimClaimableBalanceOp)
@@ -48,21 +45,6 @@ public class ClaimClaimableBalanceOp implements XdrElement {
     ClaimClaimableBalanceOp decodedClaimClaimableBalanceOp = new ClaimClaimableBalanceOp();
     decodedClaimClaimableBalanceOp.balanceID = ClaimableBalanceID.decode(stream);
     return decodedClaimClaimableBalanceOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.balanceID);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClaimClaimableBalanceOp)) {
-      return false;
-    }
-
-    ClaimClaimableBalanceOp other = (ClaimClaimableBalanceOp) object;
-    return Objects.equals(this.balanceID, other.balanceID);
   }
 
   @Override
@@ -87,20 +69,5 @@ public class ClaimClaimableBalanceOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ClaimableBalanceID balanceID;
-
-    public Builder balanceID(ClaimableBalanceID balanceID) {
-      this.balanceID = balanceID;
-      return this;
-    }
-
-    public ClaimClaimableBalanceOp build() {
-      ClaimClaimableBalanceOp val = new ClaimClaimableBalanceOp();
-      val.setBalanceID(this.balanceID);
-      return val;
-    }
   }
 }

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,50 +31,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class InvokeHostFunctionResult implements XdrElement {
-  public InvokeHostFunctionResult() {}
-
-  InvokeHostFunctionResultCode code;
-
-  public InvokeHostFunctionResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(InvokeHostFunctionResultCode value) {
-    this.code = value;
-  }
-
+  private InvokeHostFunctionResultCode discriminant;
   private Hash success;
-
-  public Hash getSuccess() {
-    return this.success;
-  }
-
-  public void setSuccess(Hash value) {
-    this.success = value;
-  }
-
-  public static final class Builder {
-    private InvokeHostFunctionResultCode discriminant;
-    private Hash success;
-
-    public Builder discriminant(InvokeHostFunctionResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder success(Hash success) {
-      this.success = success;
-      return this;
-    }
-
-    public InvokeHostFunctionResult build() {
-      InvokeHostFunctionResult val = new InvokeHostFunctionResult();
-      val.setDiscriminant(discriminant);
-      val.setSuccess(this.success);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, InvokeHostFunctionResult encodedInvokeHostFunctionResult)
@@ -112,21 +78,6 @@ public class InvokeHostFunctionResult implements XdrElement {
         break;
     }
     return decodedInvokeHostFunctionResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.success, this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof InvokeHostFunctionResult)) {
-      return false;
-    }
-
-    InvokeHostFunctionResult other = (InvokeHostFunctionResult) object;
-    return Objects.equals(this.success, other.success) && Objects.equals(this.code, other.code);
   }
 
   @Override

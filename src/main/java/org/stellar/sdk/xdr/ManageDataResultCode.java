@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,16 +31,16 @@ public enum ManageDataResultCode implements XdrElement {
   MANAGE_DATA_NOT_SUPPORTED_YET(-1),
   MANAGE_DATA_NAME_NOT_FOUND(-2),
   MANAGE_DATA_LOW_RESERVE(-3),
-  MANAGE_DATA_INVALID_NAME(-4),
-  ;
-  private int mValue;
+  MANAGE_DATA_INVALID_NAME(-4);
+
+  private final int value;
 
   ManageDataResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ManageDataResultCode decode(XdrDataInputStream stream) throws IOException {

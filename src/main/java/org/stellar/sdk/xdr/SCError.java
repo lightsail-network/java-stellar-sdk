@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -32,67 +35,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCError implements XdrElement {
-  public SCError() {}
-
-  SCErrorType type;
-
-  public SCErrorType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(SCErrorType value) {
-    this.type = value;
-  }
-
+  private SCErrorType discriminant;
   private Uint32 contractCode;
-
-  public Uint32 getContractCode() {
-    return this.contractCode;
-  }
-
-  public void setContractCode(Uint32 value) {
-    this.contractCode = value;
-  }
-
   private SCErrorCode code;
-
-  public SCErrorCode getCode() {
-    return this.code;
-  }
-
-  public void setCode(SCErrorCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private SCErrorType discriminant;
-    private Uint32 contractCode;
-    private SCErrorCode code;
-
-    public Builder discriminant(SCErrorType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder contractCode(Uint32 contractCode) {
-      this.contractCode = contractCode;
-      return this;
-    }
-
-    public Builder code(SCErrorCode code) {
-      this.code = code;
-      return this;
-    }
-
-    public SCError build() {
-      SCError val = new SCError();
-      val.setDiscriminant(discriminant);
-      val.setContractCode(this.contractCode);
-      val.setCode(this.code);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SCError encodedSCError) throws IOException {
     // Xdrgen::AST::Identifier
@@ -141,23 +91,6 @@ public class SCError implements XdrElement {
         break;
     }
     return decodedSCError;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.contractCode, this.code, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCError)) {
-      return false;
-    }
-
-    SCError other = (SCError) object;
-    return Objects.equals(this.contractCode, other.contractCode)
-        && Objects.equals(this.code, other.code)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

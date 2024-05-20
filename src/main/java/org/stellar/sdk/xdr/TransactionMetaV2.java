@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -26,38 +28,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionMetaV2 implements XdrElement {
-  public TransactionMetaV2() {}
-
   private LedgerEntryChanges txChangesBefore;
-
-  public LedgerEntryChanges getTxChangesBefore() {
-    return this.txChangesBefore;
-  }
-
-  public void setTxChangesBefore(LedgerEntryChanges value) {
-    this.txChangesBefore = value;
-  }
-
   private OperationMeta[] operations;
-
-  public OperationMeta[] getOperations() {
-    return this.operations;
-  }
-
-  public void setOperations(OperationMeta[] value) {
-    this.operations = value;
-  }
-
   private LedgerEntryChanges txChangesAfter;
-
-  public LedgerEntryChanges getTxChangesAfter() {
-    return this.txChangesAfter;
-  }
-
-  public void setTxChangesAfter(LedgerEntryChanges value) {
-    this.txChangesAfter = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TransactionMetaV2 encodedTransactionMetaV2)
       throws IOException {
@@ -87,24 +65,6 @@ public class TransactionMetaV2 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.txChangesBefore, Arrays.hashCode(this.operations), this.txChangesAfter);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionMetaV2)) {
-      return false;
-    }
-
-    TransactionMetaV2 other = (TransactionMetaV2) object;
-    return Objects.equals(this.txChangesBefore, other.txChangesBefore)
-        && Arrays.equals(this.operations, other.operations)
-        && Objects.equals(this.txChangesAfter, other.txChangesAfter);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -126,34 +86,5 @@ public class TransactionMetaV2 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerEntryChanges txChangesBefore;
-    private OperationMeta[] operations;
-    private LedgerEntryChanges txChangesAfter;
-
-    public Builder txChangesBefore(LedgerEntryChanges txChangesBefore) {
-      this.txChangesBefore = txChangesBefore;
-      return this;
-    }
-
-    public Builder operations(OperationMeta[] operations) {
-      this.operations = operations;
-      return this;
-    }
-
-    public Builder txChangesAfter(LedgerEntryChanges txChangesAfter) {
-      this.txChangesAfter = txChangesAfter;
-      return this;
-    }
-
-    public TransactionMetaV2 build() {
-      TransactionMetaV2 val = new TransactionMetaV2();
-      val.setTxChangesBefore(this.txChangesBefore);
-      val.setOperations(this.operations);
-      val.setTxChangesAfter(this.txChangesAfter);
-      return val;
-    }
   }
 }

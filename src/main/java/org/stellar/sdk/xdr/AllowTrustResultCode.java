@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,16 +35,16 @@ public enum AllowTrustResultCode implements XdrElement {
   ALLOW_TRUST_TRUST_NOT_REQUIRED(-3),
   ALLOW_TRUST_CANT_REVOKE(-4),
   ALLOW_TRUST_SELF_NOT_ALLOWED(-5),
-  ALLOW_TRUST_LOW_RESERVE(-6),
-  ;
-  private int mValue;
+  ALLOW_TRUST_LOW_RESERVE(-6);
+
+  private final int value;
 
   AllowTrustResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static AllowTrustResultCode decode(XdrDataInputStream stream) throws IOException {

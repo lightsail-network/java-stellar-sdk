@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerCloseValueSignature implements XdrElement {
-  public LedgerCloseValueSignature() {}
-
   private NodeID nodeID;
-
-  public NodeID getNodeID() {
-    return this.nodeID;
-  }
-
-  public void setNodeID(NodeID value) {
-    this.nodeID = value;
-  }
-
   private Signature signature;
-
-  public Signature getSignature() {
-    return this.signature;
-  }
-
-  public void setSignature(Signature value) {
-    this.signature = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, LedgerCloseValueSignature encodedLedgerCloseValueSignature)
@@ -61,22 +49,6 @@ public class LedgerCloseValueSignature implements XdrElement {
     decodedLedgerCloseValueSignature.nodeID = NodeID.decode(stream);
     decodedLedgerCloseValueSignature.signature = Signature.decode(stream);
     return decodedLedgerCloseValueSignature;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.nodeID, this.signature);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerCloseValueSignature)) {
-      return false;
-    }
-
-    LedgerCloseValueSignature other = (LedgerCloseValueSignature) object;
-    return Objects.equals(this.nodeID, other.nodeID)
-        && Objects.equals(this.signature, other.signature);
   }
 
   @Override
@@ -101,27 +73,5 @@ public class LedgerCloseValueSignature implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private NodeID nodeID;
-    private Signature signature;
-
-    public Builder nodeID(NodeID nodeID) {
-      this.nodeID = nodeID;
-      return this;
-    }
-
-    public Builder signature(Signature signature) {
-      this.signature = signature;
-      return this;
-    }
-
-    public LedgerCloseValueSignature build() {
-      LedgerCloseValueSignature val = new LedgerCloseValueSignature();
-      val.setNodeID(this.nodeID);
-      val.setSignature(this.signature);
-      return val;
-    }
   }
 }

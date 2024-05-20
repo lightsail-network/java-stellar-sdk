@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,16 +28,16 @@ public enum ExtendFootprintTTLResultCode implements XdrElement {
   EXTEND_FOOTPRINT_TTL_SUCCESS(0),
   EXTEND_FOOTPRINT_TTL_MALFORMED(-1),
   EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED(-2),
-  EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE(-3),
-  ;
-  private int mValue;
+  EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE(-3);
+
+  private final int value;
 
   ExtendFootprintTTLResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ExtendFootprintTTLResultCode decode(XdrDataInputStream stream) throws IOException {

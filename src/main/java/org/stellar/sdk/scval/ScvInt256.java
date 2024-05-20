@@ -40,7 +40,7 @@ class ScvInt256 {
     }
 
     Int256Parts int256Parts =
-        new Int256Parts.Builder()
+        Int256Parts.builder()
             .hi_hi(new Int64(Longs.fromByteArray(Arrays.copyOfRange(paddedBytes, 0, 8))))
             .hi_lo(
                 new Uint64(
@@ -55,7 +55,7 @@ class ScvInt256 {
                     new XdrUnsignedHyperInteger(
                         new BigInteger(1, Arrays.copyOfRange(paddedBytes, 24, 32)))))
             .build();
-    return new SCVal.Builder().discriminant(TYPE).i256(int256Parts).build();
+    return SCVal.builder().discriminant(TYPE).i256(int256Parts).build();
   }
 
   static BigInteger fromSCVal(SCVal scVal) {

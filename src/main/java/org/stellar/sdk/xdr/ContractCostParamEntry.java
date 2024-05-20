@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,38 +27,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ContractCostParamEntry implements XdrElement {
-  public ContractCostParamEntry() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private Int64 constTerm;
-
-  public Int64 getConstTerm() {
-    return this.constTerm;
-  }
-
-  public void setConstTerm(Int64 value) {
-    this.constTerm = value;
-  }
-
   private Int64 linearTerm;
-
-  public Int64 getLinearTerm() {
-    return this.linearTerm;
-  }
-
-  public void setLinearTerm(Int64 value) {
-    this.linearTerm = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ContractCostParamEntry encodedContractCostParamEntry)
@@ -75,23 +54,6 @@ public class ContractCostParamEntry implements XdrElement {
     decodedContractCostParamEntry.constTerm = Int64.decode(stream);
     decodedContractCostParamEntry.linearTerm = Int64.decode(stream);
     return decodedContractCostParamEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ext, this.constTerm, this.linearTerm);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ContractCostParamEntry)) {
-      return false;
-    }
-
-    ContractCostParamEntry other = (ContractCostParamEntry) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.constTerm, other.constTerm)
-        && Objects.equals(this.linearTerm, other.linearTerm);
   }
 
   @Override
@@ -116,34 +78,5 @@ public class ContractCostParamEntry implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private Int64 constTerm;
-    private Int64 linearTerm;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder constTerm(Int64 constTerm) {
-      this.constTerm = constTerm;
-      return this;
-    }
-
-    public Builder linearTerm(Int64 linearTerm) {
-      this.linearTerm = linearTerm;
-      return this;
-    }
-
-    public ContractCostParamEntry build() {
-      ContractCostParamEntry val = new ContractCostParamEntry();
-      val.setExt(this.ext);
-      val.setConstTerm(this.constTerm);
-      val.setLinearTerm(this.linearTerm);
-      return val;
-    }
   }
 }

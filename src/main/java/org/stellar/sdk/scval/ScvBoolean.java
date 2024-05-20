@@ -8,7 +8,7 @@ class ScvBoolean {
   private static final SCValType TYPE = SCValType.SCV_BOOL;
 
   static SCVal toSCVal(Boolean value) {
-    return new SCVal.Builder().discriminant(TYPE).b(value).build();
+    return SCVal.builder().discriminant(TYPE).b(value).build();
   }
 
   static boolean fromSCVal(SCVal scVal) {

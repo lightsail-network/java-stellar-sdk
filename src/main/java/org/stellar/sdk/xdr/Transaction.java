@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -46,78 +48,18 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Transaction implements XdrElement {
-  public Transaction() {}
-
   private MuxedAccount sourceAccount;
-
-  public MuxedAccount getSourceAccount() {
-    return this.sourceAccount;
-  }
-
-  public void setSourceAccount(MuxedAccount value) {
-    this.sourceAccount = value;
-  }
-
   private Uint32 fee;
-
-  public Uint32 getFee() {
-    return this.fee;
-  }
-
-  public void setFee(Uint32 value) {
-    this.fee = value;
-  }
-
   private SequenceNumber seqNum;
-
-  public SequenceNumber getSeqNum() {
-    return this.seqNum;
-  }
-
-  public void setSeqNum(SequenceNumber value) {
-    this.seqNum = value;
-  }
-
   private Preconditions cond;
-
-  public Preconditions getCond() {
-    return this.cond;
-  }
-
-  public void setCond(Preconditions value) {
-    this.cond = value;
-  }
-
   private Memo memo;
-
-  public Memo getMemo() {
-    return this.memo;
-  }
-
-  public void setMemo(Memo value) {
-    this.memo = value;
-  }
-
   private Operation[] operations;
-
-  public Operation[] getOperations() {
-    return this.operations;
-  }
-
-  public void setOperations(Operation[] value) {
-    this.operations = value;
-  }
-
   private TransactionExt ext;
-
-  public TransactionExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(TransactionExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Transaction encodedTransaction)
       throws IOException {
@@ -155,34 +97,6 @@ public class Transaction implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.sourceAccount,
-        this.fee,
-        this.seqNum,
-        this.cond,
-        this.memo,
-        Arrays.hashCode(this.operations),
-        this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Transaction)) {
-      return false;
-    }
-
-    Transaction other = (Transaction) object;
-    return Objects.equals(this.sourceAccount, other.sourceAccount)
-        && Objects.equals(this.fee, other.fee)
-        && Objects.equals(this.seqNum, other.seqNum)
-        && Objects.equals(this.cond, other.cond)
-        && Objects.equals(this.memo, other.memo)
-        && Arrays.equals(this.operations, other.operations)
-        && Objects.equals(this.ext, other.ext);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -206,63 +120,6 @@ public class Transaction implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private MuxedAccount sourceAccount;
-    private Uint32 fee;
-    private SequenceNumber seqNum;
-    private Preconditions cond;
-    private Memo memo;
-    private Operation[] operations;
-    private TransactionExt ext;
-
-    public Builder sourceAccount(MuxedAccount sourceAccount) {
-      this.sourceAccount = sourceAccount;
-      return this;
-    }
-
-    public Builder fee(Uint32 fee) {
-      this.fee = fee;
-      return this;
-    }
-
-    public Builder seqNum(SequenceNumber seqNum) {
-      this.seqNum = seqNum;
-      return this;
-    }
-
-    public Builder cond(Preconditions cond) {
-      this.cond = cond;
-      return this;
-    }
-
-    public Builder memo(Memo memo) {
-      this.memo = memo;
-      return this;
-    }
-
-    public Builder operations(Operation[] operations) {
-      this.operations = operations;
-      return this;
-    }
-
-    public Builder ext(TransactionExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Transaction build() {
-      Transaction val = new Transaction();
-      val.setSourceAccount(this.sourceAccount);
-      val.setFee(this.fee);
-      val.setSeqNum(this.seqNum);
-      val.setCond(this.cond);
-      val.setMemo(this.memo);
-      val.setOperations(this.operations);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * TransactionExt's original definition in the XDR file is:
    *
@@ -276,50 +133,13 @@ public class Transaction implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class TransactionExt implements XdrElement {
-    public TransactionExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private SorobanTransactionData sorobanData;
-
-    public SorobanTransactionData getSorobanData() {
-      return this.sorobanData;
-    }
-
-    public void setSorobanData(SorobanTransactionData value) {
-      this.sorobanData = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private SorobanTransactionData sorobanData;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder sorobanData(SorobanTransactionData sorobanData) {
-        this.sorobanData = sorobanData;
-        return this;
-      }
-
-      public TransactionExt build() {
-        TransactionExt val = new TransactionExt();
-        val.setDiscriminant(discriminant);
-        val.setSorobanData(this.sorobanData);
-        return val;
-      }
-    }
 
     public static void encode(XdrDataOutputStream stream, TransactionExt encodedTransactionExt)
         throws IOException {
@@ -351,21 +171,6 @@ public class Transaction implements XdrElement {
           break;
       }
       return decodedTransactionExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.sorobanData, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof TransactionExt)) {
-        return false;
-      }
-
-      TransactionExt other = (TransactionExt) object;
-      return Objects.equals(this.sorobanData, other.sorobanData) && Objects.equals(this.v, other.v);
     }
 
     @Override

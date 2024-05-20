@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,67 +27,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCAddress implements XdrElement {
-  public SCAddress() {}
-
-  SCAddressType type;
-
-  public SCAddressType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(SCAddressType value) {
-    this.type = value;
-  }
-
+  private SCAddressType discriminant;
   private AccountID accountId;
-
-  public AccountID getAccountId() {
-    return this.accountId;
-  }
-
-  public void setAccountId(AccountID value) {
-    this.accountId = value;
-  }
-
   private Hash contractId;
-
-  public Hash getContractId() {
-    return this.contractId;
-  }
-
-  public void setContractId(Hash value) {
-    this.contractId = value;
-  }
-
-  public static final class Builder {
-    private SCAddressType discriminant;
-    private AccountID accountId;
-    private Hash contractId;
-
-    public Builder discriminant(SCAddressType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder accountId(AccountID accountId) {
-      this.accountId = accountId;
-      return this;
-    }
-
-    public Builder contractId(Hash contractId) {
-      this.contractId = contractId;
-      return this;
-    }
-
-    public SCAddress build() {
-      SCAddress val = new SCAddress();
-      val.setDiscriminant(discriminant);
-      val.setAccountId(this.accountId);
-      val.setContractId(this.contractId);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SCAddress encodedSCAddress)
       throws IOException {
@@ -118,23 +68,6 @@ public class SCAddress implements XdrElement {
         break;
     }
     return decodedSCAddress;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.accountId, this.contractId, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCAddress)) {
-      return false;
-    }
-
-    SCAddress other = (SCAddress) object;
-    return Objects.equals(this.accountId, other.accountId)
-        && Objects.equals(this.contractId, other.contractId)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

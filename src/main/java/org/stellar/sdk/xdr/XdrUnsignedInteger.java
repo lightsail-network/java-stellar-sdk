@@ -3,7 +3,7 @@ package org.stellar.sdk.xdr;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -12,10 +12,11 @@ import org.stellar.sdk.Base64Factory;
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc4506#section-4.2">XDR: External Data
  *     Representation Standard</a>
  */
+@Value
 public class XdrUnsignedInteger implements XdrElement {
   public static final long MAX_VALUE = (1L << 32) - 1;
   public static final long MIN_VALUE = 0;
-  private final Long number;
+  Long number;
 
   public XdrUnsignedInteger(Long number) {
     if (number < MIN_VALUE || number > MAX_VALUE) {
@@ -30,10 +31,6 @@ public class XdrUnsignedInteger implements XdrElement {
           "number must be greater than or equal to 0 if you want to construct it from Integer");
     }
     this.number = number.longValue();
-  }
-
-  public Long getNumber() {
-    return number;
   }
 
   public static XdrUnsignedInteger decode(XdrDataInputStream stream) throws IOException {
@@ -69,24 +66,5 @@ public class XdrUnsignedInteger implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.number);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof XdrUnsignedInteger)) {
-      return false;
-    }
-
-    XdrUnsignedInteger other = (XdrUnsignedInteger) object;
-    return Objects.equals(this.number, other.number);
-  }
-
-  public String toString() {
-    return "XdrUnsignedInteger(number=" + this.getNumber() + ")";
   }
 }

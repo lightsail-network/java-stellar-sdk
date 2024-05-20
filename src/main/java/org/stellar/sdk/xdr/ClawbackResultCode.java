@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,16 +30,16 @@ public enum ClawbackResultCode implements XdrElement {
   CLAWBACK_MALFORMED(-1),
   CLAWBACK_NOT_CLAWBACK_ENABLED(-2),
   CLAWBACK_NO_TRUST(-3),
-  CLAWBACK_UNDERFUNDED(-4),
-  ;
-  private int mValue;
+  CLAWBACK_UNDERFUNDED(-4);
+
+  private final int value;
 
   ClawbackResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ClawbackResultCode decode(XdrDataInputStream stream) throws IOException {

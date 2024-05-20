@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef int64 SequenceNumber;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SequenceNumber implements XdrElement {
   private Int64 SequenceNumber;
-
-  public SequenceNumber() {}
-
-  public SequenceNumber(Int64 SequenceNumber) {
-    this.SequenceNumber = SequenceNumber;
-  }
-
-  public Int64 getSequenceNumber() {
-    return this.SequenceNumber;
-  }
-
-  public void setSequenceNumber(Int64 value) {
-    this.SequenceNumber = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SequenceNumber encodedSequenceNumber)
       throws IOException {
@@ -48,21 +39,6 @@ public class SequenceNumber implements XdrElement {
     SequenceNumber decodedSequenceNumber = new SequenceNumber();
     decodedSequenceNumber.SequenceNumber = Int64.decode(stream);
     return decodedSequenceNumber;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.SequenceNumber);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SequenceNumber)) {
-      return false;
-    }
-
-    SequenceNumber other = (SequenceNumber) object;
-    return Objects.equals(this.SequenceNumber, other.SequenceNumber);
   }
 
   @Override

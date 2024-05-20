@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCPEnvelope implements XdrElement {
-  public SCPEnvelope() {}
-
   private SCPStatement statement;
-
-  public SCPStatement getStatement() {
-    return this.statement;
-  }
-
-  public void setStatement(SCPStatement value) {
-    this.statement = value;
-  }
-
   private Signature signature;
-
-  public Signature getSignature() {
-    return this.signature;
-  }
-
-  public void setSignature(Signature value) {
-    this.signature = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCPEnvelope encodedSCPEnvelope)
       throws IOException {
@@ -60,22 +48,6 @@ public class SCPEnvelope implements XdrElement {
     decodedSCPEnvelope.statement = SCPStatement.decode(stream);
     decodedSCPEnvelope.signature = Signature.decode(stream);
     return decodedSCPEnvelope;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.statement, this.signature);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCPEnvelope)) {
-      return false;
-    }
-
-    SCPEnvelope other = (SCPEnvelope) object;
-    return Objects.equals(this.statement, other.statement)
-        && Objects.equals(this.signature, other.signature);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class SCPEnvelope implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCPStatement statement;
-    private Signature signature;
-
-    public Builder statement(SCPStatement statement) {
-      this.statement = statement;
-      return this;
-    }
-
-    public Builder signature(Signature signature) {
-      this.signature = signature;
-      return this;
-    }
-
-    public SCPEnvelope build() {
-      SCPEnvelope val = new SCPEnvelope();
-      val.setStatement(this.statement);
-      val.setSignature(this.signature);
-      return val;
-    }
   }
 }

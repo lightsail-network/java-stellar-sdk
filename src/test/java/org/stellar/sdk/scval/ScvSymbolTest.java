@@ -14,7 +14,7 @@ public class ScvSymbolTest {
     String value = "hello";
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_SYMBOL)
             .sym(new SCSymbol(new XdrString(value)))
             .build();

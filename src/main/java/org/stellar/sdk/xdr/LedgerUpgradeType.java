@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,16 +31,16 @@ public enum LedgerUpgradeType implements XdrElement {
   LEDGER_UPGRADE_BASE_RESERVE(4),
   LEDGER_UPGRADE_FLAGS(5),
   LEDGER_UPGRADE_CONFIG(6),
-  LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE(7),
-  ;
-  private int mValue;
+  LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE(7);
+
+  private final int value;
 
   LedgerUpgradeType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static LedgerUpgradeType decode(XdrDataInputStream stream) throws IOException {

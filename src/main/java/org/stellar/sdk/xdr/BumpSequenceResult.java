@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,33 +27,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class BumpSequenceResult implements XdrElement {
-  public BumpSequenceResult() {}
-
-  BumpSequenceResultCode code;
-
-  public BumpSequenceResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(BumpSequenceResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private BumpSequenceResultCode discriminant;
-
-    public Builder discriminant(BumpSequenceResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public BumpSequenceResult build() {
-      BumpSequenceResult val = new BumpSequenceResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private BumpSequenceResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream, BumpSequenceResult encodedBumpSequenceResult) throws IOException {
@@ -80,21 +62,6 @@ public class BumpSequenceResult implements XdrElement {
         break;
     }
     return decodedBumpSequenceResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BumpSequenceResult)) {
-      return false;
-    }
-
-    BumpSequenceResult other = (BumpSequenceResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

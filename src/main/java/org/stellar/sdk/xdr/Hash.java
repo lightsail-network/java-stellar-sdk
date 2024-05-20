@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque Hash[32];
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Hash implements XdrElement {
   private byte[] Hash;
-
-  public Hash() {}
-
-  public Hash(byte[] Hash) {
-    this.Hash = Hash;
-  }
-
-  public byte[] getHash() {
-    return this.Hash;
-  }
-
-  public void setHash(byte[] value) {
-    this.Hash = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Hash encodedHash) throws IOException {
     int Hashsize = encodedHash.Hash.length;
@@ -50,21 +41,6 @@ public class Hash implements XdrElement {
     decodedHash.Hash = new byte[Hashsize];
     stream.read(decodedHash.Hash, 0, Hashsize);
     return decodedHash;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.Hash);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Hash)) {
-      return false;
-    }
-
-    Hash other = (Hash) object;
-    return Arrays.equals(this.Hash, other.Hash);
   }
 
   @Override

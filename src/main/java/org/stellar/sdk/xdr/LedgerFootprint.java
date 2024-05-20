@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerFootprint implements XdrElement {
-  public LedgerFootprint() {}
-
   private LedgerKey[] readOnly;
-
-  public LedgerKey[] getReadOnly() {
-    return this.readOnly;
-  }
-
-  public void setReadOnly(LedgerKey[] value) {
-    this.readOnly = value;
-  }
-
   private LedgerKey[] readWrite;
-
-  public LedgerKey[] getReadWrite() {
-    return this.readWrite;
-  }
-
-  public void setReadWrite(LedgerKey[] value) {
-    this.readWrite = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerFootprint encodedLedgerFootprint)
       throws IOException {
@@ -80,22 +67,6 @@ public class LedgerFootprint implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(Arrays.hashCode(this.readOnly), Arrays.hashCode(this.readWrite));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerFootprint)) {
-      return false;
-    }
-
-    LedgerFootprint other = (LedgerFootprint) object;
-    return Arrays.equals(this.readOnly, other.readOnly)
-        && Arrays.equals(this.readWrite, other.readWrite);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -117,27 +88,5 @@ public class LedgerFootprint implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerKey[] readOnly;
-    private LedgerKey[] readWrite;
-
-    public Builder readOnly(LedgerKey[] readOnly) {
-      this.readOnly = readOnly;
-      return this;
-    }
-
-    public Builder readWrite(LedgerKey[] readWrite) {
-      this.readWrite = readWrite;
-      return this;
-    }
-
-    public LedgerFootprint build() {
-      LedgerFootprint val = new LedgerFootprint();
-      val.setReadOnly(this.readOnly);
-      val.setReadWrite(this.readWrite);
-      return val;
-    }
   }
 }

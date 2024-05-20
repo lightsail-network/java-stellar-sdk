@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,50 +27,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class InflationResult implements XdrElement {
-  public InflationResult() {}
-
-  InflationResultCode code;
-
-  public InflationResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(InflationResultCode value) {
-    this.code = value;
-  }
-
+  private InflationResultCode discriminant;
   private InflationPayout[] payouts;
-
-  public InflationPayout[] getPayouts() {
-    return this.payouts;
-  }
-
-  public void setPayouts(InflationPayout[] value) {
-    this.payouts = value;
-  }
-
-  public static final class Builder {
-    private InflationResultCode discriminant;
-    private InflationPayout[] payouts;
-
-    public Builder discriminant(InflationResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder payouts(InflationPayout[] payouts) {
-      this.payouts = payouts;
-      return this;
-    }
-
-    public InflationResult build() {
-      InflationResult val = new InflationResult();
-      val.setDiscriminant(discriminant);
-      val.setPayouts(this.payouts);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, InflationResult encodedInflationResult)
       throws IOException {
@@ -108,21 +73,6 @@ public class InflationResult implements XdrElement {
         break;
     }
     return decodedInflationResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(Arrays.hashCode(this.payouts), this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof InflationResult)) {
-      return false;
-    }
-
-    InflationResult other = (InflationResult) object;
-    return Arrays.equals(this.payouts, other.payouts) && Objects.equals(this.code, other.code);
   }
 
   @Override

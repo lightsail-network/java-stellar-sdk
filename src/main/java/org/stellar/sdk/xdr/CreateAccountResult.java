@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,33 +30,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class CreateAccountResult implements XdrElement {
-  public CreateAccountResult() {}
-
-  CreateAccountResultCode code;
-
-  public CreateAccountResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(CreateAccountResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private CreateAccountResultCode discriminant;
-
-    public Builder discriminant(CreateAccountResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public CreateAccountResult build() {
-      CreateAccountResult val = new CreateAccountResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private CreateAccountResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream, CreateAccountResult encodedCreateAccountResult)
@@ -90,21 +72,6 @@ public class CreateAccountResult implements XdrElement {
         break;
     }
     return decodedCreateAccountResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof CreateAccountResult)) {
-      return false;
-    }
-
-    CreateAccountResult other = (CreateAccountResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

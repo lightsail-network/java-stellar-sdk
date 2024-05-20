@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -29,50 +32,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class CreateClaimableBalanceResult implements XdrElement {
-  public CreateClaimableBalanceResult() {}
-
-  CreateClaimableBalanceResultCode code;
-
-  public CreateClaimableBalanceResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(CreateClaimableBalanceResultCode value) {
-    this.code = value;
-  }
-
+  private CreateClaimableBalanceResultCode discriminant;
   private ClaimableBalanceID balanceID;
-
-  public ClaimableBalanceID getBalanceID() {
-    return this.balanceID;
-  }
-
-  public void setBalanceID(ClaimableBalanceID value) {
-    this.balanceID = value;
-  }
-
-  public static final class Builder {
-    private CreateClaimableBalanceResultCode discriminant;
-    private ClaimableBalanceID balanceID;
-
-    public Builder discriminant(CreateClaimableBalanceResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder balanceID(ClaimableBalanceID balanceID) {
-      this.balanceID = balanceID;
-      return this;
-    }
-
-    public CreateClaimableBalanceResult build() {
-      CreateClaimableBalanceResult val = new CreateClaimableBalanceResult();
-      val.setDiscriminant(discriminant);
-      val.setBalanceID(this.balanceID);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, CreateClaimableBalanceResult encodedCreateClaimableBalanceResult)
@@ -114,21 +80,6 @@ public class CreateClaimableBalanceResult implements XdrElement {
         break;
     }
     return decodedCreateClaimableBalanceResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.balanceID, this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof CreateClaimableBalanceResult)) {
-      return false;
-    }
-
-    CreateClaimableBalanceResult other = (CreateClaimableBalanceResult) object;
-    return Objects.equals(this.balanceID, other.balanceID) && Objects.equals(this.code, other.code);
   }
 
   @Override

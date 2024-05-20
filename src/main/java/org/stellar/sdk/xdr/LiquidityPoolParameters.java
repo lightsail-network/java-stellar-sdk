@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,50 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LiquidityPoolParameters implements XdrElement {
-  public LiquidityPoolParameters() {}
-
-  LiquidityPoolType type;
-
-  public LiquidityPoolType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(LiquidityPoolType value) {
-    this.type = value;
-  }
-
+  private LiquidityPoolType discriminant;
   private LiquidityPoolConstantProductParameters constantProduct;
-
-  public LiquidityPoolConstantProductParameters getConstantProduct() {
-    return this.constantProduct;
-  }
-
-  public void setConstantProduct(LiquidityPoolConstantProductParameters value) {
-    this.constantProduct = value;
-  }
-
-  public static final class Builder {
-    private LiquidityPoolType discriminant;
-    private LiquidityPoolConstantProductParameters constantProduct;
-
-    public Builder discriminant(LiquidityPoolType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder constantProduct(LiquidityPoolConstantProductParameters constantProduct) {
-      this.constantProduct = constantProduct;
-      return this;
-    }
-
-    public LiquidityPoolParameters build() {
-      LiquidityPoolParameters val = new LiquidityPoolParameters();
-      val.setDiscriminant(discriminant);
-      val.setConstantProduct(this.constantProduct);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, LiquidityPoolParameters encodedLiquidityPoolParameters)
@@ -96,22 +62,6 @@ public class LiquidityPoolParameters implements XdrElement {
         break;
     }
     return decodedLiquidityPoolParameters;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.constantProduct, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LiquidityPoolParameters)) {
-      return false;
-    }
-
-    LiquidityPoolParameters other = (LiquidityPoolParameters) object;
-    return Objects.equals(this.constantProduct, other.constantProduct)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

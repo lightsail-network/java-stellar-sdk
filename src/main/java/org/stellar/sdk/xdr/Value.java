@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque Value&lt;&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Value implements XdrElement {
   private byte[] Value;
-
-  public Value() {}
-
-  public Value(byte[] Value) {
-    this.Value = Value;
-  }
-
-  public byte[] getValue() {
-    return this.Value;
-  }
-
-  public void setValue(byte[] value) {
-    this.Value = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Value encodedValue) throws IOException {
     int Valuesize = encodedValue.Value.length;
@@ -51,21 +42,6 @@ public class Value implements XdrElement {
     decodedValue.Value = new byte[Valuesize];
     stream.read(decodedValue.Value, 0, Valuesize);
     return decodedValue;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.Value);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Value)) {
-      return false;
-    }
-
-    Value other = (Value) object;
-    return Arrays.equals(this.Value, other.Value);
   }
 
   @Override

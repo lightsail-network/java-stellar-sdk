@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -69,16 +67,16 @@ public enum MessageType implements XdrElement {
   SEND_MORE(16),
   SEND_MORE_EXTENDED(20),
   FLOOD_ADVERT(18),
-  FLOOD_DEMAND(19),
-  ;
-  private int mValue;
+  FLOOD_DEMAND(19);
+
+  private final int value;
 
   MessageType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static MessageType decode(XdrDataInputStream stream) throws IOException {

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -56,38 +59,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerEntry implements XdrElement {
-  public LedgerEntry() {}
-
   private Uint32 lastModifiedLedgerSeq;
-
-  public Uint32 getLastModifiedLedgerSeq() {
-    return this.lastModifiedLedgerSeq;
-  }
-
-  public void setLastModifiedLedgerSeq(Uint32 value) {
-    this.lastModifiedLedgerSeq = value;
-  }
-
   private LedgerEntryData data;
-
-  public LedgerEntryData getData() {
-    return this.data;
-  }
-
-  public void setData(LedgerEntryData value) {
-    this.data = value;
-  }
-
   private LedgerEntryExt ext;
-
-  public LedgerEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(LedgerEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerEntry encodedLedgerEntry)
       throws IOException {
@@ -106,23 +85,6 @@ public class LedgerEntry implements XdrElement {
     decodedLedgerEntry.data = LedgerEntryData.decode(stream);
     decodedLedgerEntry.ext = LedgerEntryExt.decode(stream);
     return decodedLedgerEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.lastModifiedLedgerSeq, this.data, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerEntry)) {
-      return false;
-    }
-
-    LedgerEntry other = (LedgerEntry) object;
-    return Objects.equals(this.lastModifiedLedgerSeq, other.lastModifiedLedgerSeq)
-        && Objects.equals(this.data, other.data)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -147,35 +109,6 @@ public class LedgerEntry implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 lastModifiedLedgerSeq;
-    private LedgerEntryData data;
-    private LedgerEntryExt ext;
-
-    public Builder lastModifiedLedgerSeq(Uint32 lastModifiedLedgerSeq) {
-      this.lastModifiedLedgerSeq = lastModifiedLedgerSeq;
-      return this;
-    }
-
-    public Builder data(LedgerEntryData data) {
-      this.data = data;
-      return this;
-    }
-
-    public Builder ext(LedgerEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public LedgerEntry build() {
-      LedgerEntry val = new LedgerEntry();
-      val.setLastModifiedLedgerSeq(this.lastModifiedLedgerSeq);
-      val.setData(this.data);
-      val.setExt(this.ext);
-      return val;
-    }
   }
 
   /**
@@ -207,203 +140,22 @@ public class LedgerEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class LedgerEntryData implements XdrElement {
-    public LedgerEntryData() {}
-
-    LedgerEntryType type;
-
-    public LedgerEntryType getDiscriminant() {
-      return this.type;
-    }
-
-    public void setDiscriminant(LedgerEntryType value) {
-      this.type = value;
-    }
-
+    private LedgerEntryType discriminant;
     private AccountEntry account;
-
-    public AccountEntry getAccount() {
-      return this.account;
-    }
-
-    public void setAccount(AccountEntry value) {
-      this.account = value;
-    }
-
     private TrustLineEntry trustLine;
-
-    public TrustLineEntry getTrustLine() {
-      return this.trustLine;
-    }
-
-    public void setTrustLine(TrustLineEntry value) {
-      this.trustLine = value;
-    }
-
     private OfferEntry offer;
-
-    public OfferEntry getOffer() {
-      return this.offer;
-    }
-
-    public void setOffer(OfferEntry value) {
-      this.offer = value;
-    }
-
     private DataEntry data;
-
-    public DataEntry getData() {
-      return this.data;
-    }
-
-    public void setData(DataEntry value) {
-      this.data = value;
-    }
-
     private ClaimableBalanceEntry claimableBalance;
-
-    public ClaimableBalanceEntry getClaimableBalance() {
-      return this.claimableBalance;
-    }
-
-    public void setClaimableBalance(ClaimableBalanceEntry value) {
-      this.claimableBalance = value;
-    }
-
     private LiquidityPoolEntry liquidityPool;
-
-    public LiquidityPoolEntry getLiquidityPool() {
-      return this.liquidityPool;
-    }
-
-    public void setLiquidityPool(LiquidityPoolEntry value) {
-      this.liquidityPool = value;
-    }
-
     private ContractDataEntry contractData;
-
-    public ContractDataEntry getContractData() {
-      return this.contractData;
-    }
-
-    public void setContractData(ContractDataEntry value) {
-      this.contractData = value;
-    }
-
     private ContractCodeEntry contractCode;
-
-    public ContractCodeEntry getContractCode() {
-      return this.contractCode;
-    }
-
-    public void setContractCode(ContractCodeEntry value) {
-      this.contractCode = value;
-    }
-
     private ConfigSettingEntry configSetting;
-
-    public ConfigSettingEntry getConfigSetting() {
-      return this.configSetting;
-    }
-
-    public void setConfigSetting(ConfigSettingEntry value) {
-      this.configSetting = value;
-    }
-
     private TTLEntry ttl;
-
-    public TTLEntry getTtl() {
-      return this.ttl;
-    }
-
-    public void setTtl(TTLEntry value) {
-      this.ttl = value;
-    }
-
-    public static final class Builder {
-      private LedgerEntryType discriminant;
-      private AccountEntry account;
-      private TrustLineEntry trustLine;
-      private OfferEntry offer;
-      private DataEntry data;
-      private ClaimableBalanceEntry claimableBalance;
-      private LiquidityPoolEntry liquidityPool;
-      private ContractDataEntry contractData;
-      private ContractCodeEntry contractCode;
-      private ConfigSettingEntry configSetting;
-      private TTLEntry ttl;
-
-      public Builder discriminant(LedgerEntryType discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder account(AccountEntry account) {
-        this.account = account;
-        return this;
-      }
-
-      public Builder trustLine(TrustLineEntry trustLine) {
-        this.trustLine = trustLine;
-        return this;
-      }
-
-      public Builder offer(OfferEntry offer) {
-        this.offer = offer;
-        return this;
-      }
-
-      public Builder data(DataEntry data) {
-        this.data = data;
-        return this;
-      }
-
-      public Builder claimableBalance(ClaimableBalanceEntry claimableBalance) {
-        this.claimableBalance = claimableBalance;
-        return this;
-      }
-
-      public Builder liquidityPool(LiquidityPoolEntry liquidityPool) {
-        this.liquidityPool = liquidityPool;
-        return this;
-      }
-
-      public Builder contractData(ContractDataEntry contractData) {
-        this.contractData = contractData;
-        return this;
-      }
-
-      public Builder contractCode(ContractCodeEntry contractCode) {
-        this.contractCode = contractCode;
-        return this;
-      }
-
-      public Builder configSetting(ConfigSettingEntry configSetting) {
-        this.configSetting = configSetting;
-        return this;
-      }
-
-      public Builder ttl(TTLEntry ttl) {
-        this.ttl = ttl;
-        return this;
-      }
-
-      public LedgerEntryData build() {
-        LedgerEntryData val = new LedgerEntryData();
-        val.setDiscriminant(discriminant);
-        val.setAccount(this.account);
-        val.setTrustLine(this.trustLine);
-        val.setOffer(this.offer);
-        val.setData(this.data);
-        val.setClaimableBalance(this.claimableBalance);
-        val.setLiquidityPool(this.liquidityPool);
-        val.setContractData(this.contractData);
-        val.setContractCode(this.contractCode);
-        val.setConfigSetting(this.configSetting);
-        val.setTtl(this.ttl);
-        return val;
-      }
-    }
 
     public static void encode(XdrDataOutputStream stream, LedgerEntryData encodedLedgerEntryData)
         throws IOException {
@@ -488,42 +240,6 @@ public class LedgerEntry implements XdrElement {
     }
 
     @Override
-    public int hashCode() {
-      return Objects.hash(
-          this.account,
-          this.trustLine,
-          this.offer,
-          this.data,
-          this.claimableBalance,
-          this.liquidityPool,
-          this.contractData,
-          this.contractCode,
-          this.configSetting,
-          this.ttl,
-          this.type);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof LedgerEntryData)) {
-        return false;
-      }
-
-      LedgerEntryData other = (LedgerEntryData) object;
-      return Objects.equals(this.account, other.account)
-          && Objects.equals(this.trustLine, other.trustLine)
-          && Objects.equals(this.offer, other.offer)
-          && Objects.equals(this.data, other.data)
-          && Objects.equals(this.claimableBalance, other.claimableBalance)
-          && Objects.equals(this.liquidityPool, other.liquidityPool)
-          && Objects.equals(this.contractData, other.contractData)
-          && Objects.equals(this.contractCode, other.contractCode)
-          && Objects.equals(this.configSetting, other.configSetting)
-          && Objects.equals(this.ttl, other.ttl)
-          && Objects.equals(this.type, other.type);
-    }
-
-    @Override
     public String toXdrBase64() throws IOException {
       return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
@@ -561,50 +277,13 @@ public class LedgerEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class LedgerEntryExt implements XdrElement {
-    public LedgerEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private LedgerEntryExtensionV1 v1;
-
-    public LedgerEntryExtensionV1 getV1() {
-      return this.v1;
-    }
-
-    public void setV1(LedgerEntryExtensionV1 value) {
-      this.v1 = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private LedgerEntryExtensionV1 v1;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v1(LedgerEntryExtensionV1 v1) {
-        this.v1 = v1;
-        return this;
-      }
-
-      public LedgerEntryExt build() {
-        LedgerEntryExt val = new LedgerEntryExt();
-        val.setDiscriminant(discriminant);
-        val.setV1(this.v1);
-        return val;
-      }
-    }
 
     public static void encode(XdrDataOutputStream stream, LedgerEntryExt encodedLedgerEntryExt)
         throws IOException {
@@ -636,21 +315,6 @@ public class LedgerEntry implements XdrElement {
           break;
       }
       return decodedLedgerEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v1, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof LedgerEntryExt)) {
-        return false;
-      }
-
-      LedgerEntryExt other = (LedgerEntryExt) object;
-      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override

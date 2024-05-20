@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef PeerStats PeerStatList&lt;25&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PeerStatList implements XdrElement {
   private PeerStats[] PeerStatList;
-
-  public PeerStatList() {}
-
-  public PeerStatList(PeerStats[] PeerStatList) {
-    this.PeerStatList = PeerStatList;
-  }
-
-  public PeerStats[] getPeerStatList() {
-    return this.PeerStatList;
-  }
-
-  public void setPeerStatList(PeerStats[] value) {
-    this.PeerStatList = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, PeerStatList encodedPeerStatList)
       throws IOException {
@@ -56,21 +47,6 @@ public class PeerStatList implements XdrElement {
       decodedPeerStatList.PeerStatList[i] = PeerStats.decode(stream);
     }
     return decodedPeerStatList;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.PeerStatList);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PeerStatList)) {
-      return false;
-    }
-
-    PeerStatList other = (PeerStatList) object;
-    return Arrays.equals(this.PeerStatList, other.PeerStatList);
   }
 
   @Override

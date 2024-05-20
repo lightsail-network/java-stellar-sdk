@@ -100,14 +100,11 @@ public class SorobanServer implements Closeable {
   public TransactionBuilderAccount getAccount(String accountId)
       throws IOException, AccountNotFoundException, SorobanRpcErrorResponse {
     LedgerKey.LedgerKeyAccount ledgerKeyAccount =
-        new LedgerKey.LedgerKeyAccount.Builder()
+        LedgerKey.LedgerKeyAccount.builder()
             .accountID(KeyPair.fromAccountId(accountId).getXdrAccountId())
             .build();
     LedgerKey ledgerKey =
-        new LedgerKey.Builder()
-            .account(ledgerKeyAccount)
-            .discriminant(LedgerEntryType.ACCOUNT)
-            .build();
+        LedgerKey.builder().account(ledgerKeyAccount).discriminant(LedgerEntryType.ACCOUNT).build();
     GetLedgerEntriesResponse getLedgerEntriesResponse =
         this.getLedgerEntries(Collections.singleton(ledgerKey));
     List<GetLedgerEntriesResponse.LedgerEntryResult> entries =
@@ -174,13 +171,13 @@ public class SorobanServer implements Closeable {
 
     Address address = new Address(contractId);
     LedgerKey.LedgerKeyContractData ledgerKeyContractData =
-        new LedgerKey.LedgerKeyContractData.Builder()
+        LedgerKey.LedgerKeyContractData.builder()
             .contract(address.toSCAddress())
             .key(key)
             .durability(contractDataDurability)
             .build();
     LedgerKey ledgerKey =
-        new LedgerKey.Builder()
+        LedgerKey.builder()
             .discriminant(LedgerEntryType.CONTRACT_DATA)
             .contractData(ledgerKeyContractData)
             .build();

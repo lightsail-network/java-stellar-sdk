@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,28 +31,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
-  public ClaimableBalanceEntryExtensionV1() {}
-
   private ClaimableBalanceEntryExtensionV1Ext ext;
-
-  public ClaimableBalanceEntryExtensionV1Ext getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ClaimableBalanceEntryExtensionV1Ext value) {
-    this.ext = value;
-  }
-
   private Uint32 flags;
-
-  public Uint32 getFlags() {
-    return this.flags;
-  }
-
-  public void setFlags(Uint32 value) {
-    this.flags = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -71,21 +59,6 @@ public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
         ClaimableBalanceEntryExtensionV1Ext.decode(stream);
     decodedClaimableBalanceEntryExtensionV1.flags = Uint32.decode(stream);
     return decodedClaimableBalanceEntryExtensionV1;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ext, this.flags);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClaimableBalanceEntryExtensionV1)) {
-      return false;
-    }
-
-    ClaimableBalanceEntryExtensionV1 other = (ClaimableBalanceEntryExtensionV1) object;
-    return Objects.equals(this.ext, other.ext) && Objects.equals(this.flags, other.flags);
   }
 
   @Override
@@ -112,28 +85,6 @@ public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private ClaimableBalanceEntryExtensionV1Ext ext;
-    private Uint32 flags;
-
-    public Builder ext(ClaimableBalanceEntryExtensionV1Ext ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder flags(Uint32 flags) {
-      this.flags = flags;
-      return this;
-    }
-
-    public ClaimableBalanceEntryExtensionV1 build() {
-      ClaimableBalanceEntryExtensionV1 val = new ClaimableBalanceEntryExtensionV1();
-      val.setExt(this.ext);
-      val.setFlags(this.flags);
-      return val;
-    }
-  }
-
   /**
    * ClaimableBalanceEntryExtensionV1Ext's original definition in the XDR file is:
    *
@@ -145,33 +96,12 @@ public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class ClaimableBalanceEntryExtensionV1Ext implements XdrElement {
-    public ClaimableBalanceEntryExtensionV1Ext() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public ClaimableBalanceEntryExtensionV1Ext build() {
-        ClaimableBalanceEntryExtensionV1Ext val = new ClaimableBalanceEntryExtensionV1Ext();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -201,21 +131,6 @@ public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
           break;
       }
       return decodedClaimableBalanceEntryExtensionV1Ext;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof ClaimableBalanceEntryExtensionV1Ext)) {
-        return false;
-      }
-
-      ClaimableBalanceEntryExtensionV1Ext other = (ClaimableBalanceEntryExtensionV1Ext) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

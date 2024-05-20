@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -26,84 +29,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionEnvelope implements XdrElement {
-  public TransactionEnvelope() {}
-
-  EnvelopeType type;
-
-  public EnvelopeType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(EnvelopeType value) {
-    this.type = value;
-  }
-
+  private EnvelopeType discriminant;
   private TransactionV0Envelope v0;
-
-  public TransactionV0Envelope getV0() {
-    return this.v0;
-  }
-
-  public void setV0(TransactionV0Envelope value) {
-    this.v0 = value;
-  }
-
   private TransactionV1Envelope v1;
-
-  public TransactionV1Envelope getV1() {
-    return this.v1;
-  }
-
-  public void setV1(TransactionV1Envelope value) {
-    this.v1 = value;
-  }
-
   private FeeBumpTransactionEnvelope feeBump;
-
-  public FeeBumpTransactionEnvelope getFeeBump() {
-    return this.feeBump;
-  }
-
-  public void setFeeBump(FeeBumpTransactionEnvelope value) {
-    this.feeBump = value;
-  }
-
-  public static final class Builder {
-    private EnvelopeType discriminant;
-    private TransactionV0Envelope v0;
-    private TransactionV1Envelope v1;
-    private FeeBumpTransactionEnvelope feeBump;
-
-    public Builder discriminant(EnvelopeType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v0(TransactionV0Envelope v0) {
-      this.v0 = v0;
-      return this;
-    }
-
-    public Builder v1(TransactionV1Envelope v1) {
-      this.v1 = v1;
-      return this;
-    }
-
-    public Builder feeBump(FeeBumpTransactionEnvelope feeBump) {
-      this.feeBump = feeBump;
-      return this;
-    }
-
-    public TransactionEnvelope build() {
-      TransactionEnvelope val = new TransactionEnvelope();
-      val.setDiscriminant(discriminant);
-      val.setV0(this.v0);
-      val.setV1(this.v1);
-      val.setFeeBump(this.feeBump);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, TransactionEnvelope encodedTransactionEnvelope)
@@ -144,24 +78,6 @@ public class TransactionEnvelope implements XdrElement {
         break;
     }
     return decodedTransactionEnvelope;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v0, this.v1, this.feeBump, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionEnvelope)) {
-      return false;
-    }
-
-    TransactionEnvelope other = (TransactionEnvelope) object;
-    return Objects.equals(this.v0, other.v0)
-        && Objects.equals(this.v1, other.v1)
-        && Objects.equals(this.feeBump, other.feeBump)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

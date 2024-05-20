@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -35,58 +37,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerCloseMetaV0 implements XdrElement {
-  public LedgerCloseMetaV0() {}
-
   private LedgerHeaderHistoryEntry ledgerHeader;
-
-  public LedgerHeaderHistoryEntry getLedgerHeader() {
-    return this.ledgerHeader;
-  }
-
-  public void setLedgerHeader(LedgerHeaderHistoryEntry value) {
-    this.ledgerHeader = value;
-  }
-
   private TransactionSet txSet;
-
-  public TransactionSet getTxSet() {
-    return this.txSet;
-  }
-
-  public void setTxSet(TransactionSet value) {
-    this.txSet = value;
-  }
-
   private TransactionResultMeta[] txProcessing;
-
-  public TransactionResultMeta[] getTxProcessing() {
-    return this.txProcessing;
-  }
-
-  public void setTxProcessing(TransactionResultMeta[] value) {
-    this.txProcessing = value;
-  }
-
   private UpgradeEntryMeta[] upgradesProcessing;
-
-  public UpgradeEntryMeta[] getUpgradesProcessing() {
-    return this.upgradesProcessing;
-  }
-
-  public void setUpgradesProcessing(UpgradeEntryMeta[] value) {
-    this.upgradesProcessing = value;
-  }
-
   private SCPHistoryEntry[] scpInfo;
-
-  public SCPHistoryEntry[] getScpInfo() {
-    return this.scpInfo;
-  }
-
-  public void setScpInfo(SCPHistoryEntry[] value) {
-    this.scpInfo = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerCloseMetaV0 encodedLedgerCloseMetaV0)
       throws IOException {
@@ -136,30 +96,6 @@ public class LedgerCloseMetaV0 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ledgerHeader,
-        this.txSet,
-        Arrays.hashCode(this.txProcessing),
-        Arrays.hashCode(this.upgradesProcessing),
-        Arrays.hashCode(this.scpInfo));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerCloseMetaV0)) {
-      return false;
-    }
-
-    LedgerCloseMetaV0 other = (LedgerCloseMetaV0) object;
-    return Objects.equals(this.ledgerHeader, other.ledgerHeader)
-        && Objects.equals(this.txSet, other.txSet)
-        && Arrays.equals(this.txProcessing, other.txProcessing)
-        && Arrays.equals(this.upgradesProcessing, other.upgradesProcessing)
-        && Arrays.equals(this.scpInfo, other.scpInfo);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -181,48 +117,5 @@ public class LedgerCloseMetaV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerHeaderHistoryEntry ledgerHeader;
-    private TransactionSet txSet;
-    private TransactionResultMeta[] txProcessing;
-    private UpgradeEntryMeta[] upgradesProcessing;
-    private SCPHistoryEntry[] scpInfo;
-
-    public Builder ledgerHeader(LedgerHeaderHistoryEntry ledgerHeader) {
-      this.ledgerHeader = ledgerHeader;
-      return this;
-    }
-
-    public Builder txSet(TransactionSet txSet) {
-      this.txSet = txSet;
-      return this;
-    }
-
-    public Builder txProcessing(TransactionResultMeta[] txProcessing) {
-      this.txProcessing = txProcessing;
-      return this;
-    }
-
-    public Builder upgradesProcessing(UpgradeEntryMeta[] upgradesProcessing) {
-      this.upgradesProcessing = upgradesProcessing;
-      return this;
-    }
-
-    public Builder scpInfo(SCPHistoryEntry[] scpInfo) {
-      this.scpInfo = scpInfo;
-      return this;
-    }
-
-    public LedgerCloseMetaV0 build() {
-      LedgerCloseMetaV0 val = new LedgerCloseMetaV0();
-      val.setLedgerHeader(this.ledgerHeader);
-      val.setTxSet(this.txSet);
-      val.setTxProcessing(this.txProcessing);
-      val.setUpgradesProcessing(this.upgradesProcessing);
-      val.setScpInfo(this.scpInfo);
-      return val;
-    }
   }
 }

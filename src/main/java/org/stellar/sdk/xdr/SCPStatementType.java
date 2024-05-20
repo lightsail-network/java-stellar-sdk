@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,16 +25,16 @@ public enum SCPStatementType implements XdrElement {
   SCP_ST_PREPARE(0),
   SCP_ST_CONFIRM(1),
   SCP_ST_EXTERNALIZE(2),
-  SCP_ST_NOMINATE(3),
-  ;
-  private int mValue;
+  SCP_ST_NOMINATE(3);
+
+  private final int value;
 
   SCPStatementType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SCPStatementType decode(XdrDataInputStream stream) throws IOException {

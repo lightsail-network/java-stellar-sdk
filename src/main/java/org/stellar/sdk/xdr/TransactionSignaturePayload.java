@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,28 +33,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionSignaturePayload implements XdrElement {
-  public TransactionSignaturePayload() {}
-
   private Hash networkId;
-
-  public Hash getNetworkId() {
-    return this.networkId;
-  }
-
-  public void setNetworkId(Hash value) {
-    this.networkId = value;
-  }
-
   private TransactionSignaturePayloadTaggedTransaction taggedTransaction;
-
-  public TransactionSignaturePayloadTaggedTransaction getTaggedTransaction() {
-    return this.taggedTransaction;
-  }
-
-  public void setTaggedTransaction(TransactionSignaturePayloadTaggedTransaction value) {
-    this.taggedTransaction = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, TransactionSignaturePayload encodedTransactionSignaturePayload)
@@ -72,22 +60,6 @@ public class TransactionSignaturePayload implements XdrElement {
     decodedTransactionSignaturePayload.taggedTransaction =
         TransactionSignaturePayloadTaggedTransaction.decode(stream);
     return decodedTransactionSignaturePayload;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.networkId, this.taggedTransaction);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionSignaturePayload)) {
-      return false;
-    }
-
-    TransactionSignaturePayload other = (TransactionSignaturePayload) object;
-    return Objects.equals(this.networkId, other.networkId)
-        && Objects.equals(this.taggedTransaction, other.taggedTransaction);
   }
 
   @Override
@@ -114,29 +86,6 @@ public class TransactionSignaturePayload implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Hash networkId;
-    private TransactionSignaturePayloadTaggedTransaction taggedTransaction;
-
-    public Builder networkId(Hash networkId) {
-      this.networkId = networkId;
-      return this;
-    }
-
-    public Builder taggedTransaction(
-        TransactionSignaturePayloadTaggedTransaction taggedTransaction) {
-      this.taggedTransaction = taggedTransaction;
-      return this;
-    }
-
-    public TransactionSignaturePayload build() {
-      TransactionSignaturePayload val = new TransactionSignaturePayload();
-      val.setNetworkId(this.networkId);
-      val.setTaggedTransaction(this.taggedTransaction);
-      return val;
-    }
-  }
-
   /**
    * TransactionSignaturePayloadTaggedTransaction's original definition in the XDR file is:
    *
@@ -151,68 +100,14 @@ public class TransactionSignaturePayload implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class TransactionSignaturePayloadTaggedTransaction implements XdrElement {
-    public TransactionSignaturePayloadTaggedTransaction() {}
-
-    EnvelopeType type;
-
-    public EnvelopeType getDiscriminant() {
-      return this.type;
-    }
-
-    public void setDiscriminant(EnvelopeType value) {
-      this.type = value;
-    }
-
+    private EnvelopeType discriminant;
     private Transaction tx;
-
-    public Transaction getTx() {
-      return this.tx;
-    }
-
-    public void setTx(Transaction value) {
-      this.tx = value;
-    }
-
     private FeeBumpTransaction feeBump;
-
-    public FeeBumpTransaction getFeeBump() {
-      return this.feeBump;
-    }
-
-    public void setFeeBump(FeeBumpTransaction value) {
-      this.feeBump = value;
-    }
-
-    public static final class Builder {
-      private EnvelopeType discriminant;
-      private Transaction tx;
-      private FeeBumpTransaction feeBump;
-
-      public Builder discriminant(EnvelopeType discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder tx(Transaction tx) {
-        this.tx = tx;
-        return this;
-      }
-
-      public Builder feeBump(FeeBumpTransaction feeBump) {
-        this.feeBump = feeBump;
-        return this;
-      }
-
-      public TransactionSignaturePayloadTaggedTransaction build() {
-        TransactionSignaturePayloadTaggedTransaction val =
-            new TransactionSignaturePayloadTaggedTransaction();
-        val.setDiscriminant(discriminant);
-        val.setTx(this.tx);
-        val.setFeeBump(this.feeBump);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -255,24 +150,6 @@ public class TransactionSignaturePayload implements XdrElement {
           break;
       }
       return decodedTransactionSignaturePayloadTaggedTransaction;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.tx, this.feeBump, this.type);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof TransactionSignaturePayloadTaggedTransaction)) {
-        return false;
-      }
-
-      TransactionSignaturePayloadTaggedTransaction other =
-          (TransactionSignaturePayloadTaggedTransaction) object;
-      return Objects.equals(this.tx, other.tx)
-          && Objects.equals(this.feeBump, other.feeBump)
-          && Objects.equals(this.type, other.type);
     }
 
     @Override

@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,16 +21,16 @@ import org.stellar.sdk.Base64Factory;
  */
 public enum IPAddrType implements XdrElement {
   IPv4(0),
-  IPv6(1),
-  ;
-  private int mValue;
+  IPv6(1);
+
+  private final int value;
 
   IPAddrType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static IPAddrType decode(XdrDataInputStream stream) throws IOException {

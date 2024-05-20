@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -38,48 +40,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ContractEvent implements XdrElement {
-  public ContractEvent() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private Hash contractID;
-
-  public Hash getContractID() {
-    return this.contractID;
-  }
-
-  public void setContractID(Hash value) {
-    this.contractID = value;
-  }
-
   private ContractEventType type;
-
-  public ContractEventType getType() {
-    return this.type;
-  }
-
-  public void setType(ContractEventType value) {
-    this.type = value;
-  }
-
   private ContractEventBody body;
-
-  public ContractEventBody getBody() {
-    return this.body;
-  }
-
-  public void setBody(ContractEventBody value) {
-    this.body = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, ContractEvent encodedContractEvent)
       throws IOException {
@@ -111,24 +80,6 @@ public class ContractEvent implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.ext, this.contractID, this.type, this.body);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ContractEvent)) {
-      return false;
-    }
-
-    ContractEvent other = (ContractEvent) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.contractID, other.contractID)
-        && Objects.equals(this.type, other.type)
-        && Objects.equals(this.body, other.body);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -152,42 +103,6 @@ public class ContractEvent implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private Hash contractID;
-    private ContractEventType type;
-    private ContractEventBody body;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder contractID(Hash contractID) {
-      this.contractID = contractID;
-      return this;
-    }
-
-    public Builder type(ContractEventType type) {
-      this.type = type;
-      return this;
-    }
-
-    public Builder body(ContractEventBody body) {
-      this.body = body;
-      return this;
-    }
-
-    public ContractEvent build() {
-      ContractEvent val = new ContractEvent();
-      val.setExt(this.ext);
-      val.setContractID(this.contractID);
-      val.setType(this.type);
-      val.setBody(this.body);
-      return val;
-    }
-  }
-
   /**
    * ContractEventBody's original definition in the XDR file is:
    *
@@ -203,50 +118,13 @@ public class ContractEvent implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class ContractEventBody implements XdrElement {
-    public ContractEventBody() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private ContractEventV0 v0;
-
-    public ContractEventV0 getV0() {
-      return this.v0;
-    }
-
-    public void setV0(ContractEventV0 value) {
-      this.v0 = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private ContractEventV0 v0;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v0(ContractEventV0 v0) {
-        this.v0 = v0;
-        return this;
-      }
-
-      public ContractEventBody build() {
-        ContractEventBody val = new ContractEventBody();
-        val.setDiscriminant(discriminant);
-        val.setV0(this.v0);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream, ContractEventBody encodedContractEventBody) throws IOException {
@@ -274,21 +152,6 @@ public class ContractEvent implements XdrElement {
           break;
       }
       return decodedContractEventBody;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v0, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof ContractEventBody)) {
-        return false;
-      }
-
-      ContractEventBody other = (ContractEventBody) object;
-      return Objects.equals(this.v0, other.v0) && Objects.equals(this.v, other.v);
     }
 
     @Override
@@ -326,28 +189,13 @@ public class ContractEvent implements XdrElement {
      *         }
      * </pre>
      */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder(toBuilder = true)
     public static class ContractEventV0 implements XdrElement {
-      public ContractEventV0() {}
-
       private SCVal[] topics;
-
-      public SCVal[] getTopics() {
-        return this.topics;
-      }
-
-      public void setTopics(SCVal[] value) {
-        this.topics = value;
-      }
-
       private SCVal data;
-
-      public SCVal getData() {
-        return this.data;
-      }
-
-      public void setData(SCVal value) {
-        this.data = value;
-      }
 
       public static void encode(XdrDataOutputStream stream, ContractEventV0 encodedContractEventV0)
           throws IOException {
@@ -375,21 +223,6 @@ public class ContractEvent implements XdrElement {
       }
 
       @Override
-      public int hashCode() {
-        return Objects.hash(Arrays.hashCode(this.topics), this.data);
-      }
-
-      @Override
-      public boolean equals(Object object) {
-        if (!(object instanceof ContractEventV0)) {
-          return false;
-        }
-
-        ContractEventV0 other = (ContractEventV0) object;
-        return Arrays.equals(this.topics, other.topics) && Objects.equals(this.data, other.data);
-      }
-
-      @Override
       public String toXdrBase64() throws IOException {
         return Base64Factory.getInstance().encodeToString(toXdrByteArray());
       }
@@ -411,28 +244,6 @@ public class ContractEvent implements XdrElement {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         return decode(xdrDataInputStream);
-      }
-
-      public static final class Builder {
-        private SCVal[] topics;
-        private SCVal data;
-
-        public Builder topics(SCVal[] topics) {
-          this.topics = topics;
-          return this;
-        }
-
-        public Builder data(SCVal data) {
-          this.data = data;
-          return this;
-        }
-
-        public ContractEventV0 build() {
-          ContractEventV0 val = new ContractEventV0();
-          val.setTopics(this.topics);
-          val.setData(this.data);
-          return val;
-        }
       }
     }
   }

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ConfigSettingContractHistoricalDataV0 implements XdrElement {
-  public ConfigSettingContractHistoricalDataV0() {}
-
   private Int64 feeHistorical1KB;
-
-  public Int64 getFeeHistorical1KB() {
-    return this.feeHistorical1KB;
-  }
-
-  public void setFeeHistorical1KB(Int64 value) {
-    this.feeHistorical1KB = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -51,21 +48,6 @@ public class ConfigSettingContractHistoricalDataV0 implements XdrElement {
         new ConfigSettingContractHistoricalDataV0();
     decodedConfigSettingContractHistoricalDataV0.feeHistorical1KB = Int64.decode(stream);
     return decodedConfigSettingContractHistoricalDataV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.feeHistorical1KB);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ConfigSettingContractHistoricalDataV0)) {
-      return false;
-    }
-
-    ConfigSettingContractHistoricalDataV0 other = (ConfigSettingContractHistoricalDataV0) object;
-    return Objects.equals(this.feeHistorical1KB, other.feeHistorical1KB);
   }
 
   @Override
@@ -91,20 +73,5 @@ public class ConfigSettingContractHistoricalDataV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Int64 feeHistorical1KB;
-
-    public Builder feeHistorical1KB(Int64 feeHistorical1KB) {
-      this.feeHistorical1KB = feeHistorical1KB;
-      return this;
-    }
-
-    public ConfigSettingContractHistoricalDataV0 build() {
-      ConfigSettingContractHistoricalDataV0 val = new ConfigSettingContractHistoricalDataV0();
-      val.setFeeHistorical1KB(this.feeHistorical1KB);
-      return val;
-    }
   }
 }

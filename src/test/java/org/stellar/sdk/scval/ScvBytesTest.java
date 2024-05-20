@@ -13,7 +13,7 @@ public class ScvBytesTest {
     byte[] data = new byte[] {0x01, 0x02, 0x03};
 
     SCVal expectedScVal =
-        new SCVal.Builder().discriminant(SCValType.SCV_BYTES).bytes(new SCBytes(data)).build();
+        SCVal.builder().discriminant(SCValType.SCV_BYTES).bytes(new SCBytes(data)).build();
 
     SCVal actualScVal = Scv.toBytes(data);
     assertEquals(expectedScVal, actualScVal);

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionResultPair implements XdrElement {
-  public TransactionResultPair() {}
-
   private Hash transactionHash;
-
-  public Hash getTransactionHash() {
-    return this.transactionHash;
-  }
-
-  public void setTransactionHash(Hash value) {
-    this.transactionHash = value;
-  }
-
   private TransactionResult result;
-
-  public TransactionResult getResult() {
-    return this.result;
-  }
-
-  public void setResult(TransactionResult value) {
-    this.result = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, TransactionResultPair encodedTransactionResultPair)
@@ -61,22 +49,6 @@ public class TransactionResultPair implements XdrElement {
     decodedTransactionResultPair.transactionHash = Hash.decode(stream);
     decodedTransactionResultPair.result = TransactionResult.decode(stream);
     return decodedTransactionResultPair;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.transactionHash, this.result);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionResultPair)) {
-      return false;
-    }
-
-    TransactionResultPair other = (TransactionResultPair) object;
-    return Objects.equals(this.transactionHash, other.transactionHash)
-        && Objects.equals(this.result, other.result);
   }
 
   @Override
@@ -101,27 +73,5 @@ public class TransactionResultPair implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Hash transactionHash;
-    private TransactionResult result;
-
-    public Builder transactionHash(Hash transactionHash) {
-      this.transactionHash = transactionHash;
-      return this;
-    }
-
-    public Builder result(TransactionResult result) {
-      this.result = result;
-      return this;
-    }
-
-    public TransactionResultPair build() {
-      TransactionResultPair val = new TransactionResultPair();
-      val.setTransactionHash(this.transactionHash);
-      val.setResult(this.result);
-      return val;
-    }
   }
 }

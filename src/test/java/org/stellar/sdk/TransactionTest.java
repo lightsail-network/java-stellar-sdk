@@ -204,10 +204,10 @@ public class TransactionTest {
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     LedgerKey ledgerKey =
-        new LedgerKey.Builder()
+        LedgerKey.builder()
             .discriminant(LedgerEntryType.ACCOUNT)
             .account(
-                new LedgerKey.LedgerKeyAccount.Builder()
+                LedgerKey.LedgerKeyAccount.builder()
                     .accountID(
                         KeyPair.fromAccountId(
                                 "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -215,11 +215,11 @@ public class TransactionTest {
                     .build())
             .build();
     SorobanTransactionData sorobanData =
-        new SorobanTransactionData.Builder()
+        SorobanTransactionData.builder()
             .resources(
-                new SorobanResources.Builder()
+                SorobanResources.builder()
                     .footprint(
-                        new LedgerFootprint.Builder()
+                        LedgerFootprint.builder()
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
@@ -228,16 +228,16 @@ public class TransactionTest {
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .ext(ExtensionPoint.builder().discriminant(0).build())
             .build();
 
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(
                                 new Address(
                                         "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -246,12 +246,12 @@ public class TransactionTest {
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -321,10 +321,10 @@ public class TransactionTest {
         new SorobanDataBuilder()
             .setReadOnly(
                 Collections.singletonList(
-                    new LedgerKey.Builder()
+                    LedgerKey.builder()
                         .discriminant(LedgerEntryType.CONTRACT_DATA)
                         .contractData(
-                            new LedgerKey.LedgerKeyContractData.Builder()
+                            LedgerKey.LedgerKeyContractData.builder()
                                 .contract(new Address(contractId).toSCAddress())
                                 .key(Scv.toLedgerKeyContractInstance())
                                 .durability(ContractDataDurability.PERSISTENT)
@@ -359,10 +359,10 @@ public class TransactionTest {
         new SorobanDataBuilder()
             .setReadOnly(
                 Collections.singletonList(
-                    new LedgerKey.Builder()
+                    LedgerKey.builder()
                         .discriminant(LedgerEntryType.CONTRACT_DATA)
                         .contractData(
-                            new LedgerKey.LedgerKeyContractData.Builder()
+                            LedgerKey.LedgerKeyContractData.builder()
                                 .contract(new Address(contractId).toSCAddress())
                                 .key(Scv.toLedgerKeyContractInstance())
                                 .durability(ContractDataDurability.PERSISTENT)

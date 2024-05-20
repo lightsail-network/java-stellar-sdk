@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,16 +32,16 @@ public enum InvokeHostFunctionResultCode implements XdrElement {
   INVOKE_HOST_FUNCTION_TRAPPED(-2),
   INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED(-3),
   INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED(-4),
-  INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE(-5),
-  ;
-  private int mValue;
+  INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE(-5);
+
+  private final int value;
 
   InvokeHostFunctionResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static InvokeHostFunctionResultCode decode(XdrDataInputStream stream) throws IOException {

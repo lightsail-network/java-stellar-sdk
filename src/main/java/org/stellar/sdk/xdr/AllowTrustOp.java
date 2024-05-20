@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,38 +28,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AllowTrustOp implements XdrElement {
-  public AllowTrustOp() {}
-
   private AccountID trustor;
-
-  public AccountID getTrustor() {
-    return this.trustor;
-  }
-
-  public void setTrustor(AccountID value) {
-    this.trustor = value;
-  }
-
   private AssetCode asset;
-
-  public AssetCode getAsset() {
-    return this.asset;
-  }
-
-  public void setAsset(AssetCode value) {
-    this.asset = value;
-  }
-
   private Uint32 authorize;
-
-  public Uint32 getAuthorize() {
-    return this.authorize;
-  }
-
-  public void setAuthorize(Uint32 value) {
-    this.authorize = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, AllowTrustOp encodedAllowTrustOp)
       throws IOException {
@@ -75,23 +54,6 @@ public class AllowTrustOp implements XdrElement {
     decodedAllowTrustOp.asset = AssetCode.decode(stream);
     decodedAllowTrustOp.authorize = Uint32.decode(stream);
     return decodedAllowTrustOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.trustor, this.asset, this.authorize);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AllowTrustOp)) {
-      return false;
-    }
-
-    AllowTrustOp other = (AllowTrustOp) object;
-    return Objects.equals(this.trustor, other.trustor)
-        && Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.authorize, other.authorize);
   }
 
   @Override
@@ -116,34 +78,5 @@ public class AllowTrustOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private AccountID trustor;
-    private AssetCode asset;
-    private Uint32 authorize;
-
-    public Builder trustor(AccountID trustor) {
-      this.trustor = trustor;
-      return this;
-    }
-
-    public Builder asset(AssetCode asset) {
-      this.asset = asset;
-      return this;
-    }
-
-    public Builder authorize(Uint32 authorize) {
-      this.authorize = authorize;
-      return this;
-    }
-
-    public AllowTrustOp build() {
-      AllowTrustOp val = new AllowTrustOp();
-      val.setTrustor(this.trustor);
-      val.setAsset(this.asset);
-      val.setAuthorize(this.authorize);
-      return val;
-    }
   }
 }

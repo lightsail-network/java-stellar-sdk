@@ -125,13 +125,13 @@ public class Transaction extends AbstractTransaction {
     AccountID sourceAccount =
         StrKey.muxedAccountToAccountId(AccountConverter.disableMuxed().encode(getSourceAccount()));
     HashIDPreimage.HashIDPreimageOperationID operationID =
-        new HashIDPreimage.HashIDPreimageOperationID.Builder()
+        HashIDPreimage.HashIDPreimageOperationID.builder()
             .opNum(opIndex)
             .seqNum(sequenceNumber)
             .sourceAccount(sourceAccount)
             .build();
     HashIDPreimage hashIDPreimage =
-        new HashIDPreimage.Builder()
+        HashIDPreimage.builder()
             .discriminant(EnvelopeType.ENVELOPE_TYPE_OP_ID)
             .operationID(operationID)
             .build();

@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,28 +27,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class InvokeHostFunctionOp implements XdrElement {
-  public InvokeHostFunctionOp() {}
-
   private HostFunction hostFunction;
-
-  public HostFunction getHostFunction() {
-    return this.hostFunction;
-  }
-
-  public void setHostFunction(HostFunction value) {
-    this.hostFunction = value;
-  }
-
   private SorobanAuthorizationEntry[] auth;
-
-  public SorobanAuthorizationEntry[] getAuth() {
-    return this.auth;
-  }
-
-  public void setAuth(SorobanAuthorizationEntry[] value) {
-    this.auth = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, InvokeHostFunctionOp encodedInvokeHostFunctionOp)
@@ -75,22 +62,6 @@ public class InvokeHostFunctionOp implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.hostFunction, Arrays.hashCode(this.auth));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof InvokeHostFunctionOp)) {
-      return false;
-    }
-
-    InvokeHostFunctionOp other = (InvokeHostFunctionOp) object;
-    return Objects.equals(this.hostFunction, other.hostFunction)
-        && Arrays.equals(this.auth, other.auth);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -112,27 +83,5 @@ public class InvokeHostFunctionOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private HostFunction hostFunction;
-    private SorobanAuthorizationEntry[] auth;
-
-    public Builder hostFunction(HostFunction hostFunction) {
-      this.hostFunction = hostFunction;
-      return this;
-    }
-
-    public Builder auth(SorobanAuthorizationEntry[] auth) {
-      this.auth = auth;
-      return this;
-    }
-
-    public InvokeHostFunctionOp build() {
-      InvokeHostFunctionOp val = new InvokeHostFunctionOp();
-      val.setHostFunction(this.hostFunction);
-      val.setAuth(this.auth);
-      return val;
-    }
   }
 }

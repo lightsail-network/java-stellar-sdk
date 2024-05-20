@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCMetaV0 implements XdrElement {
-  public SCMetaV0() {}
-
   private XdrString key;
-
-  public XdrString getKey() {
-    return this.key;
-  }
-
-  public void setKey(XdrString value) {
-    this.key = value;
-  }
-
   private XdrString val;
-
-  public XdrString getVal() {
-    return this.val;
-  }
-
-  public void setVal(XdrString value) {
-    this.val = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCMetaV0 encodedSCMetaV0)
       throws IOException {
@@ -60,21 +48,6 @@ public class SCMetaV0 implements XdrElement {
     decodedSCMetaV0.key = XdrString.decode(stream, Integer.MAX_VALUE);
     decodedSCMetaV0.val = XdrString.decode(stream, Integer.MAX_VALUE);
     return decodedSCMetaV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.key, this.val);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCMetaV0)) {
-      return false;
-    }
-
-    SCMetaV0 other = (SCMetaV0) object;
-    return Objects.equals(this.key, other.key) && Objects.equals(this.val, other.val);
   }
 
   @Override
@@ -99,27 +72,5 @@ public class SCMetaV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private XdrString key;
-    private XdrString val;
-
-    public Builder key(XdrString key) {
-      this.key = key;
-      return this;
-    }
-
-    public Builder val(XdrString val) {
-      this.val = val;
-      return this;
-    }
-
-    public SCMetaV0 build() {
-      SCMetaV0 val = new SCMetaV0();
-      val.setKey(this.key);
-      val.setVal(this.val);
-      return val;
-    }
   }
 }

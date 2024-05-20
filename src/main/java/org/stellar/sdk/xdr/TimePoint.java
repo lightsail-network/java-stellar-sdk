@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef uint64 TimePoint;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TimePoint implements XdrElement {
   private Uint64 TimePoint;
-
-  public TimePoint() {}
-
-  public TimePoint(Uint64 TimePoint) {
-    this.TimePoint = TimePoint;
-  }
-
-  public Uint64 getTimePoint() {
-    return this.TimePoint;
-  }
-
-  public void setTimePoint(Uint64 value) {
-    this.TimePoint = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TimePoint encodedTimePoint)
       throws IOException {
@@ -48,21 +39,6 @@ public class TimePoint implements XdrElement {
     TimePoint decodedTimePoint = new TimePoint();
     decodedTimePoint.TimePoint = Uint64.decode(stream);
     return decodedTimePoint;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.TimePoint);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TimePoint)) {
-      return false;
-    }
-
-    TimePoint other = (TimePoint) object;
-    return Objects.equals(this.TimePoint, other.TimePoint);
   }
 
   @Override

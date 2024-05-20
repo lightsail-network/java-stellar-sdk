@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -50,68 +52,17 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class PreconditionsV2 implements XdrElement {
-  public PreconditionsV2() {}
-
   private TimeBounds timeBounds;
-
-  public TimeBounds getTimeBounds() {
-    return this.timeBounds;
-  }
-
-  public void setTimeBounds(TimeBounds value) {
-    this.timeBounds = value;
-  }
-
   private LedgerBounds ledgerBounds;
-
-  public LedgerBounds getLedgerBounds() {
-    return this.ledgerBounds;
-  }
-
-  public void setLedgerBounds(LedgerBounds value) {
-    this.ledgerBounds = value;
-  }
-
   private SequenceNumber minSeqNum;
-
-  public SequenceNumber getMinSeqNum() {
-    return this.minSeqNum;
-  }
-
-  public void setMinSeqNum(SequenceNumber value) {
-    this.minSeqNum = value;
-  }
-
   private Duration minSeqAge;
-
-  public Duration getMinSeqAge() {
-    return this.minSeqAge;
-  }
-
-  public void setMinSeqAge(Duration value) {
-    this.minSeqAge = value;
-  }
-
   private Uint32 minSeqLedgerGap;
-
-  public Uint32 getMinSeqLedgerGap() {
-    return this.minSeqLedgerGap;
-  }
-
-  public void setMinSeqLedgerGap(Uint32 value) {
-    this.minSeqLedgerGap = value;
-  }
-
   private SignerKey[] extraSigners;
-
-  public SignerKey[] getExtraSigners() {
-    return this.extraSigners;
-  }
-
-  public void setExtraSigners(SignerKey[] value) {
-    this.extraSigners = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, PreconditionsV2 encodedPreconditionsV2)
       throws IOException {
@@ -171,32 +122,6 @@ public class PreconditionsV2 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.timeBounds,
-        this.ledgerBounds,
-        this.minSeqNum,
-        this.minSeqAge,
-        this.minSeqLedgerGap,
-        Arrays.hashCode(this.extraSigners));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PreconditionsV2)) {
-      return false;
-    }
-
-    PreconditionsV2 other = (PreconditionsV2) object;
-    return Objects.equals(this.timeBounds, other.timeBounds)
-        && Objects.equals(this.ledgerBounds, other.ledgerBounds)
-        && Objects.equals(this.minSeqNum, other.minSeqNum)
-        && Objects.equals(this.minSeqAge, other.minSeqAge)
-        && Objects.equals(this.minSeqLedgerGap, other.minSeqLedgerGap)
-        && Arrays.equals(this.extraSigners, other.extraSigners);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -218,55 +143,5 @@ public class PreconditionsV2 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private TimeBounds timeBounds;
-    private LedgerBounds ledgerBounds;
-    private SequenceNumber minSeqNum;
-    private Duration minSeqAge;
-    private Uint32 minSeqLedgerGap;
-    private SignerKey[] extraSigners;
-
-    public Builder timeBounds(TimeBounds timeBounds) {
-      this.timeBounds = timeBounds;
-      return this;
-    }
-
-    public Builder ledgerBounds(LedgerBounds ledgerBounds) {
-      this.ledgerBounds = ledgerBounds;
-      return this;
-    }
-
-    public Builder minSeqNum(SequenceNumber minSeqNum) {
-      this.minSeqNum = minSeqNum;
-      return this;
-    }
-
-    public Builder minSeqAge(Duration minSeqAge) {
-      this.minSeqAge = minSeqAge;
-      return this;
-    }
-
-    public Builder minSeqLedgerGap(Uint32 minSeqLedgerGap) {
-      this.minSeqLedgerGap = minSeqLedgerGap;
-      return this;
-    }
-
-    public Builder extraSigners(SignerKey[] extraSigners) {
-      this.extraSigners = extraSigners;
-      return this;
-    }
-
-    public PreconditionsV2 build() {
-      PreconditionsV2 val = new PreconditionsV2();
-      val.setTimeBounds(this.timeBounds);
-      val.setLedgerBounds(this.ledgerBounds);
-      val.setMinSeqNum(this.minSeqNum);
-      val.setMinSeqAge(this.minSeqAge);
-      val.setMinSeqLedgerGap(this.minSeqLedgerGap);
-      val.setExtraSigners(this.extraSigners);
-      return val;
-    }
   }
 }

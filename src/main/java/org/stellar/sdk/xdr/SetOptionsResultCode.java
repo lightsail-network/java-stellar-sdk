@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,16 +42,16 @@ public enum SetOptionsResultCode implements XdrElement {
   SET_OPTIONS_THRESHOLD_OUT_OF_RANGE(-7),
   SET_OPTIONS_BAD_SIGNER(-8),
   SET_OPTIONS_INVALID_HOME_DOMAIN(-9),
-  SET_OPTIONS_AUTH_REVOCABLE_REQUIRED(-10),
-  ;
-  private int mValue;
+  SET_OPTIONS_AUTH_REVOCABLE_REQUIRED(-10);
+
+  private final int value;
 
   SetOptionsResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SetOptionsResultCode decode(XdrDataInputStream stream) throws IOException {

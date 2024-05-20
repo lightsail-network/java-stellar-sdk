@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecTypeOption implements XdrElement {
-  public SCSpecTypeOption() {}
-
   private SCSpecTypeDef valueType;
-
-  public SCSpecTypeDef getValueType() {
-    return this.valueType;
-  }
-
-  public void setValueType(SCSpecTypeDef value) {
-    this.valueType = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeOption encodedSCSpecTypeOption)
       throws IOException {
@@ -47,21 +44,6 @@ public class SCSpecTypeOption implements XdrElement {
     SCSpecTypeOption decodedSCSpecTypeOption = new SCSpecTypeOption();
     decodedSCSpecTypeOption.valueType = SCSpecTypeDef.decode(stream);
     return decodedSCSpecTypeOption;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.valueType);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecTypeOption)) {
-      return false;
-    }
-
-    SCSpecTypeOption other = (SCSpecTypeOption) object;
-    return Objects.equals(this.valueType, other.valueType);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class SCSpecTypeOption implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCSpecTypeDef valueType;
-
-    public Builder valueType(SCSpecTypeDef valueType) {
-      this.valueType = valueType;
-      return this;
-    }
-
-    public SCSpecTypeOption build() {
-      SCSpecTypeOption val = new SCSpecTypeOption();
-      val.setValueType(this.valueType);
-      return val;
-    }
   }
 }

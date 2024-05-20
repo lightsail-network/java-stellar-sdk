@@ -70,7 +70,7 @@ public class InvokeHostFunctionOperation extends Operation {
   public static InvokeHostFunctionOperationBuilder<?, ?> uploadContractWasmOperationBuilder(
       byte[] wasm) {
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM)
             .wasm(wasm)
             .build();
@@ -119,24 +119,24 @@ public class InvokeHostFunctionOperation extends Operation {
     }
 
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(address.toSCAddress())
                             .salt(new Uint256(salt))
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_WASM)
                     .wasm_hash(new Hash(wasmId))
                     .build())
             .build();
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -154,19 +154,19 @@ public class InvokeHostFunctionOperation extends Operation {
   public static InvokeHostFunctionOperationBuilder<?, ?> createStellarAssetContractOperationBuilder(
       Asset asset) {
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
                     .fromAsset(asset.toXdr())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -193,23 +193,23 @@ public class InvokeHostFunctionOperation extends Operation {
     }
 
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(address.toSCAddress())
                             .salt(new Uint256(salt))
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -250,14 +250,14 @@ public class InvokeHostFunctionOperation extends Operation {
     }
 
     InvokeContractArgs invokeContractArgs =
-        new InvokeContractArgs.Builder()
+        InvokeContractArgs.builder()
             .contractAddress(address.toSCAddress())
             .functionName(functionNameSCSymbol)
             .args(invokeContractParams.toArray(new SCVal[0]))
             .build();
 
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
             .invokeContract(invokeContractArgs)
             .build();

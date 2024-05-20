@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,67 +31,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class RevokeSponsorshipOp implements XdrElement {
-  public RevokeSponsorshipOp() {}
-
-  RevokeSponsorshipType type;
-
-  public RevokeSponsorshipType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(RevokeSponsorshipType value) {
-    this.type = value;
-  }
-
+  private RevokeSponsorshipType discriminant;
   private LedgerKey ledgerKey;
-
-  public LedgerKey getLedgerKey() {
-    return this.ledgerKey;
-  }
-
-  public void setLedgerKey(LedgerKey value) {
-    this.ledgerKey = value;
-  }
-
   private RevokeSponsorshipOpSigner signer;
-
-  public RevokeSponsorshipOpSigner getSigner() {
-    return this.signer;
-  }
-
-  public void setSigner(RevokeSponsorshipOpSigner value) {
-    this.signer = value;
-  }
-
-  public static final class Builder {
-    private RevokeSponsorshipType discriminant;
-    private LedgerKey ledgerKey;
-    private RevokeSponsorshipOpSigner signer;
-
-    public Builder discriminant(RevokeSponsorshipType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder ledgerKey(LedgerKey ledgerKey) {
-      this.ledgerKey = ledgerKey;
-      return this;
-    }
-
-    public Builder signer(RevokeSponsorshipOpSigner signer) {
-      this.signer = signer;
-      return this;
-    }
-
-    public RevokeSponsorshipOp build() {
-      RevokeSponsorshipOp val = new RevokeSponsorshipOp();
-      val.setDiscriminant(discriminant);
-      val.setLedgerKey(this.ledgerKey);
-      val.setSigner(this.signer);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, RevokeSponsorshipOp encodedRevokeSponsorshipOp)
@@ -126,23 +76,6 @@ public class RevokeSponsorshipOp implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.ledgerKey, this.signer, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof RevokeSponsorshipOp)) {
-      return false;
-    }
-
-    RevokeSponsorshipOp other = (RevokeSponsorshipOp) object;
-    return Objects.equals(this.ledgerKey, other.ledgerKey)
-        && Objects.equals(this.signer, other.signer)
-        && Objects.equals(this.type, other.type);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -177,28 +110,13 @@ public class RevokeSponsorshipOp implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class RevokeSponsorshipOpSigner implements XdrElement {
-    public RevokeSponsorshipOpSigner() {}
-
     private AccountID accountID;
-
-    public AccountID getAccountID() {
-      return this.accountID;
-    }
-
-    public void setAccountID(AccountID value) {
-      this.accountID = value;
-    }
-
     private SignerKey signerKey;
-
-    public SignerKey getSignerKey() {
-      return this.signerKey;
-    }
-
-    public void setSignerKey(SignerKey value) {
-      this.signerKey = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream, RevokeSponsorshipOpSigner encodedRevokeSponsorshipOpSigner)
@@ -216,22 +134,6 @@ public class RevokeSponsorshipOp implements XdrElement {
       decodedRevokeSponsorshipOpSigner.accountID = AccountID.decode(stream);
       decodedRevokeSponsorshipOpSigner.signerKey = SignerKey.decode(stream);
       return decodedRevokeSponsorshipOpSigner;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.accountID, this.signerKey);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof RevokeSponsorshipOpSigner)) {
-        return false;
-      }
-
-      RevokeSponsorshipOpSigner other = (RevokeSponsorshipOpSigner) object;
-      return Objects.equals(this.accountID, other.accountID)
-          && Objects.equals(this.signerKey, other.signerKey);
     }
 
     @Override
@@ -256,28 +158,6 @@ public class RevokeSponsorshipOp implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
-    }
-
-    public static final class Builder {
-      private AccountID accountID;
-      private SignerKey signerKey;
-
-      public Builder accountID(AccountID accountID) {
-        this.accountID = accountID;
-        return this;
-      }
-
-      public Builder signerKey(SignerKey signerKey) {
-        this.signerKey = signerKey;
-        return this;
-      }
-
-      public RevokeSponsorshipOpSigner build() {
-        RevokeSponsorshipOpSigner val = new RevokeSponsorshipOpSigner();
-        val.setAccountID(this.accountID);
-        val.setSignerKey(this.signerKey);
-        return val;
-      }
     }
   }
 }

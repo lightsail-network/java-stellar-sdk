@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,16 +25,16 @@ public enum AssetType implements XdrElement {
   ASSET_TYPE_NATIVE(0),
   ASSET_TYPE_CREDIT_ALPHANUM4(1),
   ASSET_TYPE_CREDIT_ALPHANUM12(2),
-  ASSET_TYPE_POOL_SHARE(3),
-  ;
-  private int mValue;
+  ASSET_TYPE_POOL_SHARE(3);
+
+  private final int value;
 
   AssetType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static AssetType decode(XdrDataInputStream stream) throws IOException {

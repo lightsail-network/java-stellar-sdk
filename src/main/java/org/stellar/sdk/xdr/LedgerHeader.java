@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -57,158 +59,26 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerHeader implements XdrElement {
-  public LedgerHeader() {}
-
   private Uint32 ledgerVersion;
-
-  public Uint32 getLedgerVersion() {
-    return this.ledgerVersion;
-  }
-
-  public void setLedgerVersion(Uint32 value) {
-    this.ledgerVersion = value;
-  }
-
   private Hash previousLedgerHash;
-
-  public Hash getPreviousLedgerHash() {
-    return this.previousLedgerHash;
-  }
-
-  public void setPreviousLedgerHash(Hash value) {
-    this.previousLedgerHash = value;
-  }
-
   private StellarValue scpValue;
-
-  public StellarValue getScpValue() {
-    return this.scpValue;
-  }
-
-  public void setScpValue(StellarValue value) {
-    this.scpValue = value;
-  }
-
   private Hash txSetResultHash;
-
-  public Hash getTxSetResultHash() {
-    return this.txSetResultHash;
-  }
-
-  public void setTxSetResultHash(Hash value) {
-    this.txSetResultHash = value;
-  }
-
   private Hash bucketListHash;
-
-  public Hash getBucketListHash() {
-    return this.bucketListHash;
-  }
-
-  public void setBucketListHash(Hash value) {
-    this.bucketListHash = value;
-  }
-
   private Uint32 ledgerSeq;
-
-  public Uint32 getLedgerSeq() {
-    return this.ledgerSeq;
-  }
-
-  public void setLedgerSeq(Uint32 value) {
-    this.ledgerSeq = value;
-  }
-
   private Int64 totalCoins;
-
-  public Int64 getTotalCoins() {
-    return this.totalCoins;
-  }
-
-  public void setTotalCoins(Int64 value) {
-    this.totalCoins = value;
-  }
-
   private Int64 feePool;
-
-  public Int64 getFeePool() {
-    return this.feePool;
-  }
-
-  public void setFeePool(Int64 value) {
-    this.feePool = value;
-  }
-
   private Uint32 inflationSeq;
-
-  public Uint32 getInflationSeq() {
-    return this.inflationSeq;
-  }
-
-  public void setInflationSeq(Uint32 value) {
-    this.inflationSeq = value;
-  }
-
   private Uint64 idPool;
-
-  public Uint64 getIdPool() {
-    return this.idPool;
-  }
-
-  public void setIdPool(Uint64 value) {
-    this.idPool = value;
-  }
-
   private Uint32 baseFee;
-
-  public Uint32 getBaseFee() {
-    return this.baseFee;
-  }
-
-  public void setBaseFee(Uint32 value) {
-    this.baseFee = value;
-  }
-
   private Uint32 baseReserve;
-
-  public Uint32 getBaseReserve() {
-    return this.baseReserve;
-  }
-
-  public void setBaseReserve(Uint32 value) {
-    this.baseReserve = value;
-  }
-
   private Uint32 maxTxSetSize;
-
-  public Uint32 getMaxTxSetSize() {
-    return this.maxTxSetSize;
-  }
-
-  public void setMaxTxSetSize(Uint32 value) {
-    this.maxTxSetSize = value;
-  }
-
   private Hash[] skipList;
-
-  public Hash[] getSkipList() {
-    return this.skipList;
-  }
-
-  public void setSkipList(Hash[] value) {
-    this.skipList = value;
-  }
-
   private LedgerHeaderExt ext;
-
-  public LedgerHeaderExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(LedgerHeaderExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerHeader encodedLedgerHeader)
       throws IOException {
@@ -261,50 +131,6 @@ public class LedgerHeader implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ledgerVersion,
-        this.previousLedgerHash,
-        this.scpValue,
-        this.txSetResultHash,
-        this.bucketListHash,
-        this.ledgerSeq,
-        this.totalCoins,
-        this.feePool,
-        this.inflationSeq,
-        this.idPool,
-        this.baseFee,
-        this.baseReserve,
-        this.maxTxSetSize,
-        Arrays.hashCode(this.skipList),
-        this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerHeader)) {
-      return false;
-    }
-
-    LedgerHeader other = (LedgerHeader) object;
-    return Objects.equals(this.ledgerVersion, other.ledgerVersion)
-        && Objects.equals(this.previousLedgerHash, other.previousLedgerHash)
-        && Objects.equals(this.scpValue, other.scpValue)
-        && Objects.equals(this.txSetResultHash, other.txSetResultHash)
-        && Objects.equals(this.bucketListHash, other.bucketListHash)
-        && Objects.equals(this.ledgerSeq, other.ledgerSeq)
-        && Objects.equals(this.totalCoins, other.totalCoins)
-        && Objects.equals(this.feePool, other.feePool)
-        && Objects.equals(this.inflationSeq, other.inflationSeq)
-        && Objects.equals(this.idPool, other.idPool)
-        && Objects.equals(this.baseFee, other.baseFee)
-        && Objects.equals(this.baseReserve, other.baseReserve)
-        && Objects.equals(this.maxTxSetSize, other.maxTxSetSize)
-        && Arrays.equals(this.skipList, other.skipList)
-        && Objects.equals(this.ext, other.ext);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -328,119 +154,6 @@ public class LedgerHeader implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Uint32 ledgerVersion;
-    private Hash previousLedgerHash;
-    private StellarValue scpValue;
-    private Hash txSetResultHash;
-    private Hash bucketListHash;
-    private Uint32 ledgerSeq;
-    private Int64 totalCoins;
-    private Int64 feePool;
-    private Uint32 inflationSeq;
-    private Uint64 idPool;
-    private Uint32 baseFee;
-    private Uint32 baseReserve;
-    private Uint32 maxTxSetSize;
-    private Hash[] skipList;
-    private LedgerHeaderExt ext;
-
-    public Builder ledgerVersion(Uint32 ledgerVersion) {
-      this.ledgerVersion = ledgerVersion;
-      return this;
-    }
-
-    public Builder previousLedgerHash(Hash previousLedgerHash) {
-      this.previousLedgerHash = previousLedgerHash;
-      return this;
-    }
-
-    public Builder scpValue(StellarValue scpValue) {
-      this.scpValue = scpValue;
-      return this;
-    }
-
-    public Builder txSetResultHash(Hash txSetResultHash) {
-      this.txSetResultHash = txSetResultHash;
-      return this;
-    }
-
-    public Builder bucketListHash(Hash bucketListHash) {
-      this.bucketListHash = bucketListHash;
-      return this;
-    }
-
-    public Builder ledgerSeq(Uint32 ledgerSeq) {
-      this.ledgerSeq = ledgerSeq;
-      return this;
-    }
-
-    public Builder totalCoins(Int64 totalCoins) {
-      this.totalCoins = totalCoins;
-      return this;
-    }
-
-    public Builder feePool(Int64 feePool) {
-      this.feePool = feePool;
-      return this;
-    }
-
-    public Builder inflationSeq(Uint32 inflationSeq) {
-      this.inflationSeq = inflationSeq;
-      return this;
-    }
-
-    public Builder idPool(Uint64 idPool) {
-      this.idPool = idPool;
-      return this;
-    }
-
-    public Builder baseFee(Uint32 baseFee) {
-      this.baseFee = baseFee;
-      return this;
-    }
-
-    public Builder baseReserve(Uint32 baseReserve) {
-      this.baseReserve = baseReserve;
-      return this;
-    }
-
-    public Builder maxTxSetSize(Uint32 maxTxSetSize) {
-      this.maxTxSetSize = maxTxSetSize;
-      return this;
-    }
-
-    public Builder skipList(Hash[] skipList) {
-      this.skipList = skipList;
-      return this;
-    }
-
-    public Builder ext(LedgerHeaderExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public LedgerHeader build() {
-      LedgerHeader val = new LedgerHeader();
-      val.setLedgerVersion(this.ledgerVersion);
-      val.setPreviousLedgerHash(this.previousLedgerHash);
-      val.setScpValue(this.scpValue);
-      val.setTxSetResultHash(this.txSetResultHash);
-      val.setBucketListHash(this.bucketListHash);
-      val.setLedgerSeq(this.ledgerSeq);
-      val.setTotalCoins(this.totalCoins);
-      val.setFeePool(this.feePool);
-      val.setInflationSeq(this.inflationSeq);
-      val.setIdPool(this.idPool);
-      val.setBaseFee(this.baseFee);
-      val.setBaseReserve(this.baseReserve);
-      val.setMaxTxSetSize(this.maxTxSetSize);
-      val.setSkipList(this.skipList);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * LedgerHeaderExt's original definition in the XDR file is:
    *
@@ -454,50 +167,13 @@ public class LedgerHeader implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class LedgerHeaderExt implements XdrElement {
-    public LedgerHeaderExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private LedgerHeaderExtensionV1 v1;
-
-    public LedgerHeaderExtensionV1 getV1() {
-      return this.v1;
-    }
-
-    public void setV1(LedgerHeaderExtensionV1 value) {
-      this.v1 = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private LedgerHeaderExtensionV1 v1;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v1(LedgerHeaderExtensionV1 v1) {
-        this.v1 = v1;
-        return this;
-      }
-
-      public LedgerHeaderExt build() {
-        LedgerHeaderExt val = new LedgerHeaderExt();
-        val.setDiscriminant(discriminant);
-        val.setV1(this.v1);
-        return val;
-      }
-    }
 
     public static void encode(XdrDataOutputStream stream, LedgerHeaderExt encodedLedgerHeaderExt)
         throws IOException {
@@ -529,21 +205,6 @@ public class LedgerHeader implements XdrElement {
           break;
       }
       return decodedLedgerHeaderExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v1, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof LedgerHeaderExt)) {
-        return false;
-      }
-
-      LedgerHeaderExt other = (LedgerHeaderExt) object;
-      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override

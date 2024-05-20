@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,50 +27,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanCredentials implements XdrElement {
-  public SorobanCredentials() {}
-
-  SorobanCredentialsType type;
-
-  public SorobanCredentialsType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(SorobanCredentialsType value) {
-    this.type = value;
-  }
-
+  private SorobanCredentialsType discriminant;
   private SorobanAddressCredentials address;
-
-  public SorobanAddressCredentials getAddress() {
-    return this.address;
-  }
-
-  public void setAddress(SorobanAddressCredentials value) {
-    this.address = value;
-  }
-
-  public static final class Builder {
-    private SorobanCredentialsType discriminant;
-    private SorobanAddressCredentials address;
-
-    public Builder discriminant(SorobanCredentialsType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder address(SorobanAddressCredentials address) {
-      this.address = address;
-      return this;
-    }
-
-    public SorobanCredentials build() {
-      SorobanCredentials val = new SorobanCredentials();
-      val.setDiscriminant(discriminant);
-      val.setAddress(this.address);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SorobanCredentials encodedSorobanCredentials) throws IOException {
@@ -99,21 +65,6 @@ public class SorobanCredentials implements XdrElement {
         break;
     }
     return decodedSorobanCredentials;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.address, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanCredentials)) {
-      return false;
-    }
-
-    SorobanCredentials other = (SorobanCredentials) object;
-    return Objects.equals(this.address, other.address) && Objects.equals(this.type, other.type);
   }
 
   @Override

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecTypeMap implements XdrElement {
-  public SCSpecTypeMap() {}
-
   private SCSpecTypeDef keyType;
-
-  public SCSpecTypeDef getKeyType() {
-    return this.keyType;
-  }
-
-  public void setKeyType(SCSpecTypeDef value) {
-    this.keyType = value;
-  }
-
   private SCSpecTypeDef valueType;
-
-  public SCSpecTypeDef getValueType() {
-    return this.valueType;
-  }
-
-  public void setValueType(SCSpecTypeDef value) {
-    this.valueType = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeMap encodedSCSpecTypeMap)
       throws IOException {
@@ -60,22 +48,6 @@ public class SCSpecTypeMap implements XdrElement {
     decodedSCSpecTypeMap.keyType = SCSpecTypeDef.decode(stream);
     decodedSCSpecTypeMap.valueType = SCSpecTypeDef.decode(stream);
     return decodedSCSpecTypeMap;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.keyType, this.valueType);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecTypeMap)) {
-      return false;
-    }
-
-    SCSpecTypeMap other = (SCSpecTypeMap) object;
-    return Objects.equals(this.keyType, other.keyType)
-        && Objects.equals(this.valueType, other.valueType);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class SCSpecTypeMap implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCSpecTypeDef keyType;
-    private SCSpecTypeDef valueType;
-
-    public Builder keyType(SCSpecTypeDef keyType) {
-      this.keyType = keyType;
-      return this;
-    }
-
-    public Builder valueType(SCSpecTypeDef valueType) {
-      this.valueType = valueType;
-      return this;
-    }
-
-    public SCSpecTypeMap build() {
-      SCSpecTypeMap val = new SCSpecTypeMap();
-      val.setKeyType(this.keyType);
-      val.setValueType(this.valueType);
-      return val;
-    }
   }
 }

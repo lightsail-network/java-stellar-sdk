@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -29,101 +31,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionMeta implements XdrElement {
-  public TransactionMeta() {}
-
-  Integer v;
-
-  public Integer getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Integer value) {
-    this.v = value;
-  }
-
+  private Integer discriminant;
   private OperationMeta[] operations;
-
-  public OperationMeta[] getOperations() {
-    return this.operations;
-  }
-
-  public void setOperations(OperationMeta[] value) {
-    this.operations = value;
-  }
-
   private TransactionMetaV1 v1;
-
-  public TransactionMetaV1 getV1() {
-    return this.v1;
-  }
-
-  public void setV1(TransactionMetaV1 value) {
-    this.v1 = value;
-  }
-
   private TransactionMetaV2 v2;
-
-  public TransactionMetaV2 getV2() {
-    return this.v2;
-  }
-
-  public void setV2(TransactionMetaV2 value) {
-    this.v2 = value;
-  }
-
   private TransactionMetaV3 v3;
-
-  public TransactionMetaV3 getV3() {
-    return this.v3;
-  }
-
-  public void setV3(TransactionMetaV3 value) {
-    this.v3 = value;
-  }
-
-  public static final class Builder {
-    private Integer discriminant;
-    private OperationMeta[] operations;
-    private TransactionMetaV1 v1;
-    private TransactionMetaV2 v2;
-    private TransactionMetaV3 v3;
-
-    public Builder discriminant(Integer discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder operations(OperationMeta[] operations) {
-      this.operations = operations;
-      return this;
-    }
-
-    public Builder v1(TransactionMetaV1 v1) {
-      this.v1 = v1;
-      return this;
-    }
-
-    public Builder v2(TransactionMetaV2 v2) {
-      this.v2 = v2;
-      return this;
-    }
-
-    public Builder v3(TransactionMetaV3 v3) {
-      this.v3 = v3;
-      return this;
-    }
-
-    public TransactionMeta build() {
-      TransactionMeta val = new TransactionMeta();
-      val.setDiscriminant(discriminant);
-      val.setOperations(this.operations);
-      val.setV1(this.v1);
-      val.setV2(this.v2);
-      val.setV3(this.v3);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, TransactionMeta encodedTransactionMeta)
       throws IOException {
@@ -177,25 +94,6 @@ public class TransactionMeta implements XdrElement {
         break;
     }
     return decodedTransactionMeta;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(Arrays.hashCode(this.operations), this.v1, this.v2, this.v3, this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionMeta)) {
-      return false;
-    }
-
-    TransactionMeta other = (TransactionMeta) object;
-    return Arrays.equals(this.operations, other.operations)
-        && Objects.equals(this.v1, other.v1)
-        && Objects.equals(this.v2, other.v2)
-        && Objects.equals(this.v3, other.v3)
-        && Objects.equals(this.v, other.v);
   }
 
   @Override

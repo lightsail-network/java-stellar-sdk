@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -20,18 +23,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCNonceKey implements XdrElement {
-  public SCNonceKey() {}
-
   private Int64 nonce;
-
-  public Int64 getNonce() {
-    return this.nonce;
-  }
-
-  public void setNonce(Int64 value) {
-    this.nonce = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCNonceKey encodedSCNonceKey)
       throws IOException {
@@ -46,21 +43,6 @@ public class SCNonceKey implements XdrElement {
     SCNonceKey decodedSCNonceKey = new SCNonceKey();
     decodedSCNonceKey.nonce = Int64.decode(stream);
     return decodedSCNonceKey;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.nonce);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCNonceKey)) {
-      return false;
-    }
-
-    SCNonceKey other = (SCNonceKey) object;
-    return Objects.equals(this.nonce, other.nonce);
   }
 
   @Override
@@ -85,20 +67,5 @@ public class SCNonceKey implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Int64 nonce;
-
-    public Builder nonce(Int64 nonce) {
-      this.nonce = nonce;
-      return this;
-    }
-
-    public SCNonceKey build() {
-      SCNonceKey val = new SCNonceKey();
-      val.setNonce(this.nonce);
-      return val;
-    }
   }
 }

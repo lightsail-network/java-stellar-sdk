@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque Signature&lt;64&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Signature implements XdrElement {
   private byte[] Signature;
-
-  public Signature() {}
-
-  public Signature(byte[] Signature) {
-    this.Signature = Signature;
-  }
-
-  public byte[] getSignature() {
-    return this.Signature;
-  }
-
-  public void setSignature(byte[] value) {
-    this.Signature = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Signature encodedSignature)
       throws IOException {
@@ -52,21 +43,6 @@ public class Signature implements XdrElement {
     decodedSignature.Signature = new byte[Signaturesize];
     stream.read(decodedSignature.Signature, 0, Signaturesize);
     return decodedSignature;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.Signature);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Signature)) {
-      return false;
-    }
-
-    Signature other = (Signature) object;
-    return Arrays.equals(this.Signature, other.Signature);
   }
 
   @Override

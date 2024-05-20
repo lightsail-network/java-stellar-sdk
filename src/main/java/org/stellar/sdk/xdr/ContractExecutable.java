@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,50 +27,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ContractExecutable implements XdrElement {
-  public ContractExecutable() {}
-
-  ContractExecutableType type;
-
-  public ContractExecutableType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(ContractExecutableType value) {
-    this.type = value;
-  }
-
+  private ContractExecutableType discriminant;
   private Hash wasm_hash;
-
-  public Hash getWasm_hash() {
-    return this.wasm_hash;
-  }
-
-  public void setWasm_hash(Hash value) {
-    this.wasm_hash = value;
-  }
-
-  public static final class Builder {
-    private ContractExecutableType discriminant;
-    private Hash wasm_hash;
-
-    public Builder discriminant(ContractExecutableType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder wasm_hash(Hash wasm_hash) {
-      this.wasm_hash = wasm_hash;
-      return this;
-    }
-
-    public ContractExecutable build() {
-      ContractExecutable val = new ContractExecutable();
-      val.setDiscriminant(discriminant);
-      val.setWasm_hash(this.wasm_hash);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ContractExecutable encodedContractExecutable) throws IOException {
@@ -99,21 +65,6 @@ public class ContractExecutable implements XdrElement {
         break;
     }
     return decodedContractExecutable;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.wasm_hash, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ContractExecutable)) {
-      return false;
-    }
-
-    ContractExecutable other = (ContractExecutable) object;
-    return Objects.equals(this.wasm_hash, other.wasm_hash) && Objects.equals(this.type, other.type);
   }
 
   @Override

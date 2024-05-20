@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,33 +31,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SetTrustLineFlagsResult implements XdrElement {
-  public SetTrustLineFlagsResult() {}
-
-  SetTrustLineFlagsResultCode code;
-
-  public SetTrustLineFlagsResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(SetTrustLineFlagsResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private SetTrustLineFlagsResultCode discriminant;
-
-    public Builder discriminant(SetTrustLineFlagsResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public SetTrustLineFlagsResult build() {
-      SetTrustLineFlagsResult val = new SetTrustLineFlagsResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private SetTrustLineFlagsResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream, SetTrustLineFlagsResult encodedSetTrustLineFlagsResult)
@@ -93,21 +75,6 @@ public class SetTrustLineFlagsResult implements XdrElement {
         break;
     }
     return decodedSetTrustLineFlagsResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SetTrustLineFlagsResult)) {
-      return false;
-    }
-
-    SetTrustLineFlagsResult other = (SetTrustLineFlagsResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

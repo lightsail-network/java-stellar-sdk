@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,38 +26,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCPQuorumSet implements XdrElement {
-  public SCPQuorumSet() {}
-
   private Uint32 threshold;
-
-  public Uint32 getThreshold() {
-    return this.threshold;
-  }
-
-  public void setThreshold(Uint32 value) {
-    this.threshold = value;
-  }
-
   private NodeID[] validators;
-
-  public NodeID[] getValidators() {
-    return this.validators;
-  }
-
-  public void setValidators(NodeID[] value) {
-    this.validators = value;
-  }
-
   private SCPQuorumSet[] innerSets;
-
-  public SCPQuorumSet[] getInnerSets() {
-    return this.innerSets;
-  }
-
-  public void setInnerSets(SCPQuorumSet[] value) {
-    this.innerSets = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCPQuorumSet encodedSCPQuorumSet)
       throws IOException {
@@ -93,24 +71,6 @@ public class SCPQuorumSet implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.threshold, Arrays.hashCode(this.validators), Arrays.hashCode(this.innerSets));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCPQuorumSet)) {
-      return false;
-    }
-
-    SCPQuorumSet other = (SCPQuorumSet) object;
-    return Objects.equals(this.threshold, other.threshold)
-        && Arrays.equals(this.validators, other.validators)
-        && Arrays.equals(this.innerSets, other.innerSets);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -132,34 +92,5 @@ public class SCPQuorumSet implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 threshold;
-    private NodeID[] validators;
-    private SCPQuorumSet[] innerSets;
-
-    public Builder threshold(Uint32 threshold) {
-      this.threshold = threshold;
-      return this;
-    }
-
-    public Builder validators(NodeID[] validators) {
-      this.validators = validators;
-      return this;
-    }
-
-    public Builder innerSets(SCPQuorumSet[] innerSets) {
-      this.innerSets = innerSets;
-      return this;
-    }
-
-    public SCPQuorumSet build() {
-      SCPQuorumSet val = new SCPQuorumSet();
-      val.setThreshold(this.threshold);
-      val.setValidators(this.validators);
-      val.setInnerSets(this.innerSets);
-      return val;
-    }
   }
 }

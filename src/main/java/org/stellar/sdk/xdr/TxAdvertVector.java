@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef Hash TxAdvertVector&lt;TX_ADVERT_VECTOR_MAX_SIZE&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TxAdvertVector implements XdrElement {
   private Hash[] TxAdvertVector;
-
-  public TxAdvertVector() {}
-
-  public TxAdvertVector(Hash[] TxAdvertVector) {
-    this.TxAdvertVector = TxAdvertVector;
-  }
-
-  public Hash[] getTxAdvertVector() {
-    return this.TxAdvertVector;
-  }
-
-  public void setTxAdvertVector(Hash[] value) {
-    this.TxAdvertVector = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TxAdvertVector encodedTxAdvertVector)
       throws IOException {
@@ -56,21 +47,6 @@ public class TxAdvertVector implements XdrElement {
       decodedTxAdvertVector.TxAdvertVector[i] = Hash.decode(stream);
     }
     return decodedTxAdvertVector;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.TxAdvertVector);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TxAdvertVector)) {
-      return false;
-    }
-
-    TxAdvertVector other = (TxAdvertVector) object;
-    return Arrays.equals(this.TxAdvertVector, other.TxAdvertVector);
   }
 
   @Override

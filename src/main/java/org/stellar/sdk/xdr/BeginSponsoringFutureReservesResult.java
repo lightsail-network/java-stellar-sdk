@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,33 +30,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class BeginSponsoringFutureReservesResult implements XdrElement {
-  public BeginSponsoringFutureReservesResult() {}
-
-  BeginSponsoringFutureReservesResultCode code;
-
-  public BeginSponsoringFutureReservesResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(BeginSponsoringFutureReservesResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private BeginSponsoringFutureReservesResultCode discriminant;
-
-    public Builder discriminant(BeginSponsoringFutureReservesResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public BeginSponsoringFutureReservesResult build() {
-      BeginSponsoringFutureReservesResult val = new BeginSponsoringFutureReservesResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private BeginSponsoringFutureReservesResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -92,21 +74,6 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
         break;
     }
     return decodedBeginSponsoringFutureReservesResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BeginSponsoringFutureReservesResult)) {
-      return false;
-    }
-
-    BeginSponsoringFutureReservesResult other = (BeginSponsoringFutureReservesResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

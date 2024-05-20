@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class RestoreFootprintOp implements XdrElement {
-  public RestoreFootprintOp() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, RestoreFootprintOp encodedRestoreFootprintOp) throws IOException {
@@ -47,21 +44,6 @@ public class RestoreFootprintOp implements XdrElement {
     RestoreFootprintOp decodedRestoreFootprintOp = new RestoreFootprintOp();
     decodedRestoreFootprintOp.ext = ExtensionPoint.decode(stream);
     return decodedRestoreFootprintOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof RestoreFootprintOp)) {
-      return false;
-    }
-
-    RestoreFootprintOp other = (RestoreFootprintOp) object;
-    return Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class RestoreFootprintOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public RestoreFootprintOp build() {
-      RestoreFootprintOp val = new RestoreFootprintOp();
-      val.setExt(this.ext);
-      return val;
-    }
   }
 }

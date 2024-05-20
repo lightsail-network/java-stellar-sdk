@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,38 +26,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AuthCert implements XdrElement {
-  public AuthCert() {}
-
   private Curve25519Public pubkey;
-
-  public Curve25519Public getPubkey() {
-    return this.pubkey;
-  }
-
-  public void setPubkey(Curve25519Public value) {
-    this.pubkey = value;
-  }
-
   private Uint64 expiration;
-
-  public Uint64 getExpiration() {
-    return this.expiration;
-  }
-
-  public void setExpiration(Uint64 value) {
-    this.expiration = value;
-  }
-
   private Signature sig;
-
-  public Signature getSig() {
-    return this.sig;
-  }
-
-  public void setSig(Signature value) {
-    this.sig = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, AuthCert encodedAuthCert)
       throws IOException {
@@ -73,23 +52,6 @@ public class AuthCert implements XdrElement {
     decodedAuthCert.expiration = Uint64.decode(stream);
     decodedAuthCert.sig = Signature.decode(stream);
     return decodedAuthCert;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.pubkey, this.expiration, this.sig);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AuthCert)) {
-      return false;
-    }
-
-    AuthCert other = (AuthCert) object;
-    return Objects.equals(this.pubkey, other.pubkey)
-        && Objects.equals(this.expiration, other.expiration)
-        && Objects.equals(this.sig, other.sig);
   }
 
   @Override
@@ -114,34 +76,5 @@ public class AuthCert implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Curve25519Public pubkey;
-    private Uint64 expiration;
-    private Signature sig;
-
-    public Builder pubkey(Curve25519Public pubkey) {
-      this.pubkey = pubkey;
-      return this;
-    }
-
-    public Builder expiration(Uint64 expiration) {
-      this.expiration = expiration;
-      return this;
-    }
-
-    public Builder sig(Signature sig) {
-      this.sig = sig;
-      return this;
-    }
-
-    public AuthCert build() {
-      AuthCert val = new AuthCert();
-      val.setPubkey(this.pubkey);
-      val.setExpiration(this.expiration);
-      val.setSig(this.sig);
-      return val;
-    }
   }
 }

@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -92,16 +90,16 @@ public enum SCValType implements XdrElement {
   SCV_ADDRESS(18),
   SCV_CONTRACT_INSTANCE(19),
   SCV_LEDGER_KEY_CONTRACT_INSTANCE(20),
-  SCV_LEDGER_KEY_NONCE(21),
-  ;
-  private int mValue;
+  SCV_LEDGER_KEY_NONCE(21);
+
+  private final int value;
 
   SCValType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SCValType decode(XdrDataInputStream stream) throws IOException {

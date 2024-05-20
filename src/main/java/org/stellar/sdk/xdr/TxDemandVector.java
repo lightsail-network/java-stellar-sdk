@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef Hash TxDemandVector&lt;TX_DEMAND_VECTOR_MAX_SIZE&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TxDemandVector implements XdrElement {
   private Hash[] TxDemandVector;
-
-  public TxDemandVector() {}
-
-  public TxDemandVector(Hash[] TxDemandVector) {
-    this.TxDemandVector = TxDemandVector;
-  }
-
-  public Hash[] getTxDemandVector() {
-    return this.TxDemandVector;
-  }
-
-  public void setTxDemandVector(Hash[] value) {
-    this.TxDemandVector = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TxDemandVector encodedTxDemandVector)
       throws IOException {
@@ -56,21 +47,6 @@ public class TxDemandVector implements XdrElement {
       decodedTxDemandVector.TxDemandVector[i] = Hash.decode(stream);
     }
     return decodedTxDemandVector;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.TxDemandVector);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TxDemandVector)) {
-      return false;
-    }
-
-    TxDemandVector other = (TxDemandVector) object;
-    return Arrays.equals(this.TxDemandVector, other.TxDemandVector);
   }
 
   @Override

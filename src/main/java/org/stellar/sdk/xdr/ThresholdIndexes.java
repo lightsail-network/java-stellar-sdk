@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,16 +25,16 @@ public enum ThresholdIndexes implements XdrElement {
   THRESHOLD_MASTER_WEIGHT(0),
   THRESHOLD_LOW(1),
   THRESHOLD_MED(2),
-  THRESHOLD_HIGH(3),
-  ;
-  private int mValue;
+  THRESHOLD_HIGH(3);
+
+  private final int value;
 
   ThresholdIndexes(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ThresholdIndexes decode(XdrDataInputStream stream) throws IOException {

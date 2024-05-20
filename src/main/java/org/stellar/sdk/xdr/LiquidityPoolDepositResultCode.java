@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,16 +40,16 @@ public enum LiquidityPoolDepositResultCode implements XdrElement {
   LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED(-4),
   LIQUIDITY_POOL_DEPOSIT_LINE_FULL(-5),
   LIQUIDITY_POOL_DEPOSIT_BAD_PRICE(-6),
-  LIQUIDITY_POOL_DEPOSIT_POOL_FULL(-7),
-  ;
-  private int mValue;
+  LIQUIDITY_POOL_DEPOSIT_POOL_FULL(-7);
+
+  private final int value;
 
   LiquidityPoolDepositResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static LiquidityPoolDepositResultCode decode(XdrDataInputStream stream)

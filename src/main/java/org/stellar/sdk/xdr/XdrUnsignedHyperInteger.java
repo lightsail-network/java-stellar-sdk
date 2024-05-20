@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Objects;
+import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -13,10 +13,11 @@ import org.stellar.sdk.Base64Factory;
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc4506#section-4.5">XDR: External Data
  *     Representation Standard</a>
  */
+@Value
 public class XdrUnsignedHyperInteger implements XdrElement {
   public static final BigInteger MAX_VALUE = new BigInteger("18446744073709551615");
   public static final BigInteger MIN_VALUE = BigInteger.ZERO;
-  private final BigInteger number;
+  BigInteger number;
 
   public XdrUnsignedHyperInteger(BigInteger number) {
     if (number.compareTo(MIN_VALUE) < 0 || number.compareTo(MAX_VALUE) > 0) {
@@ -55,10 +56,6 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     return paddedBytes;
   }
 
-  public BigInteger getNumber() {
-    return number;
-  }
-
   @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
@@ -81,24 +78,5 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.number);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof XdrUnsignedHyperInteger)) {
-      return false;
-    }
-
-    XdrUnsignedHyperInteger other = (XdrUnsignedHyperInteger) object;
-    return Objects.equals(this.number, other.number);
-  }
-
-  public String toString() {
-    return "XdrUnsignedInteger(number=" + this.getNumber() + ")";
   }
 }

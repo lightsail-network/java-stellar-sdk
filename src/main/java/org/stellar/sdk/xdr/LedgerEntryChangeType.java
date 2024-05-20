@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,16 +25,16 @@ public enum LedgerEntryChangeType implements XdrElement {
   LEDGER_ENTRY_CREATED(0),
   LEDGER_ENTRY_UPDATED(1),
   LEDGER_ENTRY_REMOVED(2),
-  LEDGER_ENTRY_STATE(3),
-  ;
-  private int mValue;
+  LEDGER_ENTRY_STATE(3);
+
+  private final int value;
 
   LedgerEntryChangeType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static LedgerEntryChangeType decode(XdrDataInputStream stream) throws IOException {

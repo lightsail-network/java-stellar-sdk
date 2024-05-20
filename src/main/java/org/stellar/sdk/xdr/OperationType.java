@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -73,16 +71,16 @@ public enum OperationType implements XdrElement {
   LIQUIDITY_POOL_WITHDRAW(23),
   INVOKE_HOST_FUNCTION(24),
   EXTEND_FOOTPRINT_TTL(25),
-  RESTORE_FOOTPRINT(26),
-  ;
-  private int mValue;
+  RESTORE_FOOTPRINT(26);
+
+  private final int value;
 
   OperationType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static OperationType decode(XdrDataInputStream stream) throws IOException {

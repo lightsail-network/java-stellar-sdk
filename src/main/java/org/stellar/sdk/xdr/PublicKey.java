@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,50 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class PublicKey implements XdrElement {
-  public PublicKey() {}
-
-  PublicKeyType type;
-
-  public PublicKeyType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(PublicKeyType value) {
-    this.type = value;
-  }
-
+  private PublicKeyType discriminant;
   private Uint256 ed25519;
-
-  public Uint256 getEd25519() {
-    return this.ed25519;
-  }
-
-  public void setEd25519(Uint256 value) {
-    this.ed25519 = value;
-  }
-
-  public static final class Builder {
-    private PublicKeyType discriminant;
-    private Uint256 ed25519;
-
-    public Builder discriminant(PublicKeyType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder ed25519(Uint256 ed25519) {
-      this.ed25519 = ed25519;
-      return this;
-    }
-
-    public PublicKey build() {
-      PublicKey val = new PublicKey();
-      val.setDiscriminant(discriminant);
-      val.setEd25519(this.ed25519);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, PublicKey encodedPublicKey)
       throws IOException {
@@ -93,21 +59,6 @@ public class PublicKey implements XdrElement {
         break;
     }
     return decodedPublicKey;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ed25519, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PublicKey)) {
-      return false;
-    }
-
-    PublicKey other = (PublicKey) object;
-    return Objects.equals(this.ed25519, other.ed25519) && Objects.equals(this.type, other.type);
   }
 
   @Override

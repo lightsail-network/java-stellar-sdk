@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -41,88 +44,19 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class OfferEntry implements XdrElement {
-  public OfferEntry() {}
-
   private AccountID sellerID;
-
-  public AccountID getSellerID() {
-    return this.sellerID;
-  }
-
-  public void setSellerID(AccountID value) {
-    this.sellerID = value;
-  }
-
   private Int64 offerID;
-
-  public Int64 getOfferID() {
-    return this.offerID;
-  }
-
-  public void setOfferID(Int64 value) {
-    this.offerID = value;
-  }
-
   private Asset selling;
-
-  public Asset getSelling() {
-    return this.selling;
-  }
-
-  public void setSelling(Asset value) {
-    this.selling = value;
-  }
-
   private Asset buying;
-
-  public Asset getBuying() {
-    return this.buying;
-  }
-
-  public void setBuying(Asset value) {
-    this.buying = value;
-  }
-
   private Int64 amount;
-
-  public Int64 getAmount() {
-    return this.amount;
-  }
-
-  public void setAmount(Int64 value) {
-    this.amount = value;
-  }
-
   private Price price;
-
-  public Price getPrice() {
-    return this.price;
-  }
-
-  public void setPrice(Price value) {
-    this.price = value;
-  }
-
   private Uint32 flags;
-
-  public Uint32 getFlags() {
-    return this.flags;
-  }
-
-  public void setFlags(Uint32 value) {
-    this.flags = value;
-  }
-
   private OfferEntryExt ext;
-
-  public OfferEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(OfferEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, OfferEntry encodedOfferEntry)
       throws IOException {
@@ -154,36 +88,6 @@ public class OfferEntry implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.sellerID,
-        this.offerID,
-        this.selling,
-        this.buying,
-        this.amount,
-        this.price,
-        this.flags,
-        this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof OfferEntry)) {
-      return false;
-    }
-
-    OfferEntry other = (OfferEntry) object;
-    return Objects.equals(this.sellerID, other.sellerID)
-        && Objects.equals(this.offerID, other.offerID)
-        && Objects.equals(this.selling, other.selling)
-        && Objects.equals(this.buying, other.buying)
-        && Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.price, other.price)
-        && Objects.equals(this.flags, other.flags)
-        && Objects.equals(this.ext, other.ext);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -207,70 +111,6 @@ public class OfferEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private AccountID sellerID;
-    private Int64 offerID;
-    private Asset selling;
-    private Asset buying;
-    private Int64 amount;
-    private Price price;
-    private Uint32 flags;
-    private OfferEntryExt ext;
-
-    public Builder sellerID(AccountID sellerID) {
-      this.sellerID = sellerID;
-      return this;
-    }
-
-    public Builder offerID(Int64 offerID) {
-      this.offerID = offerID;
-      return this;
-    }
-
-    public Builder selling(Asset selling) {
-      this.selling = selling;
-      return this;
-    }
-
-    public Builder buying(Asset buying) {
-      this.buying = buying;
-      return this;
-    }
-
-    public Builder amount(Int64 amount) {
-      this.amount = amount;
-      return this;
-    }
-
-    public Builder price(Price price) {
-      this.price = price;
-      return this;
-    }
-
-    public Builder flags(Uint32 flags) {
-      this.flags = flags;
-      return this;
-    }
-
-    public Builder ext(OfferEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public OfferEntry build() {
-      OfferEntry val = new OfferEntry();
-      val.setSellerID(this.sellerID);
-      val.setOfferID(this.offerID);
-      val.setSelling(this.selling);
-      val.setBuying(this.buying);
-      val.setAmount(this.amount);
-      val.setPrice(this.price);
-      val.setFlags(this.flags);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * OfferEntryExt's original definition in the XDR file is:
    *
@@ -282,33 +122,12 @@ public class OfferEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class OfferEntryExt implements XdrElement {
-    public OfferEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public OfferEntryExt build() {
-        OfferEntryExt val = new OfferEntryExt();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(XdrDataOutputStream stream, OfferEntryExt encodedOfferEntryExt)
         throws IOException {
@@ -334,21 +153,6 @@ public class OfferEntry implements XdrElement {
           break;
       }
       return decodedOfferEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof OfferEntryExt)) {
-        return false;
-      }
-
-      OfferEntryExt other = (OfferEntryExt) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

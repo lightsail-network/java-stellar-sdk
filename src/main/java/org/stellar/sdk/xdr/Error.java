@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Error implements XdrElement {
-  public Error() {}
-
   private ErrorCode code;
-
-  public ErrorCode getCode() {
-    return this.code;
-  }
-
-  public void setCode(ErrorCode value) {
-    this.code = value;
-  }
-
   private XdrString msg;
-
-  public XdrString getMsg() {
-    return this.msg;
-  }
-
-  public void setMsg(XdrString value) {
-    this.msg = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Error encodedError) throws IOException {
     ErrorCode.encode(stream, encodedError.code);
@@ -59,21 +47,6 @@ public class Error implements XdrElement {
     decodedError.code = ErrorCode.decode(stream);
     decodedError.msg = XdrString.decode(stream, 100);
     return decodedError;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code, this.msg);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Error)) {
-      return false;
-    }
-
-    Error other = (Error) object;
-    return Objects.equals(this.code, other.code) && Objects.equals(this.msg, other.msg);
   }
 
   @Override
@@ -98,27 +71,5 @@ public class Error implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ErrorCode code;
-    private XdrString msg;
-
-    public Builder code(ErrorCode code) {
-      this.code = code;
-      return this;
-    }
-
-    public Builder msg(XdrString msg) {
-      this.msg = msg;
-      return this;
-    }
-
-    public Error build() {
-      Error val = new Error();
-      val.setCode(this.code);
-      val.setMsg(this.msg);
-      return val;
-    }
   }
 }

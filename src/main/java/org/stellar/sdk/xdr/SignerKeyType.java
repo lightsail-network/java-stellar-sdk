@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,16 +25,16 @@ public enum SignerKeyType implements XdrElement {
   SIGNER_KEY_TYPE_ED25519(0),
   SIGNER_KEY_TYPE_PRE_AUTH_TX(1),
   SIGNER_KEY_TYPE_HASH_X(2),
-  SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD(3),
-  ;
-  private int mValue;
+  SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD(3);
+
+  private final int value;
 
   SignerKeyType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SignerKeyType decode(XdrDataInputStream stream) throws IOException {

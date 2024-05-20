@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,84 +31,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class BucketEntry implements XdrElement {
-  public BucketEntry() {}
-
-  BucketEntryType type;
-
-  public BucketEntryType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(BucketEntryType value) {
-    this.type = value;
-  }
-
+  private BucketEntryType discriminant;
   private LedgerEntry liveEntry;
-
-  public LedgerEntry getLiveEntry() {
-    return this.liveEntry;
-  }
-
-  public void setLiveEntry(LedgerEntry value) {
-    this.liveEntry = value;
-  }
-
   private LedgerKey deadEntry;
-
-  public LedgerKey getDeadEntry() {
-    return this.deadEntry;
-  }
-
-  public void setDeadEntry(LedgerKey value) {
-    this.deadEntry = value;
-  }
-
   private BucketMetadata metaEntry;
-
-  public BucketMetadata getMetaEntry() {
-    return this.metaEntry;
-  }
-
-  public void setMetaEntry(BucketMetadata value) {
-    this.metaEntry = value;
-  }
-
-  public static final class Builder {
-    private BucketEntryType discriminant;
-    private LedgerEntry liveEntry;
-    private LedgerKey deadEntry;
-    private BucketMetadata metaEntry;
-
-    public Builder discriminant(BucketEntryType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder liveEntry(LedgerEntry liveEntry) {
-      this.liveEntry = liveEntry;
-      return this;
-    }
-
-    public Builder deadEntry(LedgerKey deadEntry) {
-      this.deadEntry = deadEntry;
-      return this;
-    }
-
-    public Builder metaEntry(BucketMetadata metaEntry) {
-      this.metaEntry = metaEntry;
-      return this;
-    }
-
-    public BucketEntry build() {
-      BucketEntry val = new BucketEntry();
-      val.setDiscriminant(discriminant);
-      val.setLiveEntry(this.liveEntry);
-      val.setDeadEntry(this.deadEntry);
-      val.setMetaEntry(this.metaEntry);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, BucketEntry encodedBucketEntry)
       throws IOException {
@@ -147,24 +81,6 @@ public class BucketEntry implements XdrElement {
         break;
     }
     return decodedBucketEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.liveEntry, this.deadEntry, this.metaEntry, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BucketEntry)) {
-      return false;
-    }
-
-    BucketEntry other = (BucketEntry) object;
-    return Objects.equals(this.liveEntry, other.liveEntry)
-        && Objects.equals(this.deadEntry, other.deadEntry)
-        && Objects.equals(this.metaEntry, other.metaEntry)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

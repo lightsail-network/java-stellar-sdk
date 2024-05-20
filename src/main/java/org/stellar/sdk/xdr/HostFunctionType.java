@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,16 +23,16 @@ import org.stellar.sdk.Base64Factory;
 public enum HostFunctionType implements XdrElement {
   HOST_FUNCTION_TYPE_INVOKE_CONTRACT(0),
   HOST_FUNCTION_TYPE_CREATE_CONTRACT(1),
-  HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM(2),
-  ;
-  private int mValue;
+  HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM(2);
+
+  private final int value;
 
   HostFunctionType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static HostFunctionType decode(XdrDataInputStream stream) throws IOException {

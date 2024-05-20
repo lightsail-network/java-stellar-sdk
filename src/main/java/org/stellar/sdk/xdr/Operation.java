@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -83,28 +86,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Operation implements XdrElement {
-  public Operation() {}
-
   private MuxedAccount sourceAccount;
-
-  public MuxedAccount getSourceAccount() {
-    return this.sourceAccount;
-  }
-
-  public void setSourceAccount(MuxedAccount value) {
-    this.sourceAccount = value;
-  }
-
   private OperationBody body;
-
-  public OperationBody getBody() {
-    return this.body;
-  }
-
-  public void setBody(OperationBody value) {
-    this.body = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Operation encodedOperation)
       throws IOException {
@@ -132,22 +120,6 @@ public class Operation implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.sourceAccount, this.body);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Operation)) {
-      return false;
-    }
-
-    Operation other = (Operation) object;
-    return Objects.equals(this.sourceAccount, other.sourceAccount)
-        && Objects.equals(this.body, other.body);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -169,28 +141,6 @@ public class Operation implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private MuxedAccount sourceAccount;
-    private OperationBody body;
-
-    public Builder sourceAccount(MuxedAccount sourceAccount) {
-      this.sourceAccount = sourceAccount;
-      return this;
-    }
-
-    public Builder body(OperationBody body) {
-      this.body = body;
-      return this;
-    }
-
-    public Operation build() {
-      Operation val = new Operation();
-      val.setSourceAccount(this.sourceAccount);
-      val.setBody(this.body);
-      return val;
-    }
   }
 
   /**
@@ -256,461 +206,37 @@ public class Operation implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class OperationBody implements XdrElement {
-    public OperationBody() {}
-
-    OperationType type;
-
-    public OperationType getDiscriminant() {
-      return this.type;
-    }
-
-    public void setDiscriminant(OperationType value) {
-      this.type = value;
-    }
-
+    private OperationType discriminant;
     private CreateAccountOp createAccountOp;
-
-    public CreateAccountOp getCreateAccountOp() {
-      return this.createAccountOp;
-    }
-
-    public void setCreateAccountOp(CreateAccountOp value) {
-      this.createAccountOp = value;
-    }
-
     private PaymentOp paymentOp;
-
-    public PaymentOp getPaymentOp() {
-      return this.paymentOp;
-    }
-
-    public void setPaymentOp(PaymentOp value) {
-      this.paymentOp = value;
-    }
-
     private PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
-
-    public PathPaymentStrictReceiveOp getPathPaymentStrictReceiveOp() {
-      return this.pathPaymentStrictReceiveOp;
-    }
-
-    public void setPathPaymentStrictReceiveOp(PathPaymentStrictReceiveOp value) {
-      this.pathPaymentStrictReceiveOp = value;
-    }
-
     private ManageSellOfferOp manageSellOfferOp;
-
-    public ManageSellOfferOp getManageSellOfferOp() {
-      return this.manageSellOfferOp;
-    }
-
-    public void setManageSellOfferOp(ManageSellOfferOp value) {
-      this.manageSellOfferOp = value;
-    }
-
     private CreatePassiveSellOfferOp createPassiveSellOfferOp;
-
-    public CreatePassiveSellOfferOp getCreatePassiveSellOfferOp() {
-      return this.createPassiveSellOfferOp;
-    }
-
-    public void setCreatePassiveSellOfferOp(CreatePassiveSellOfferOp value) {
-      this.createPassiveSellOfferOp = value;
-    }
-
     private SetOptionsOp setOptionsOp;
-
-    public SetOptionsOp getSetOptionsOp() {
-      return this.setOptionsOp;
-    }
-
-    public void setSetOptionsOp(SetOptionsOp value) {
-      this.setOptionsOp = value;
-    }
-
     private ChangeTrustOp changeTrustOp;
-
-    public ChangeTrustOp getChangeTrustOp() {
-      return this.changeTrustOp;
-    }
-
-    public void setChangeTrustOp(ChangeTrustOp value) {
-      this.changeTrustOp = value;
-    }
-
     private AllowTrustOp allowTrustOp;
-
-    public AllowTrustOp getAllowTrustOp() {
-      return this.allowTrustOp;
-    }
-
-    public void setAllowTrustOp(AllowTrustOp value) {
-      this.allowTrustOp = value;
-    }
-
     private MuxedAccount destination;
-
-    public MuxedAccount getDestination() {
-      return this.destination;
-    }
-
-    public void setDestination(MuxedAccount value) {
-      this.destination = value;
-    }
-
     private ManageDataOp manageDataOp;
-
-    public ManageDataOp getManageDataOp() {
-      return this.manageDataOp;
-    }
-
-    public void setManageDataOp(ManageDataOp value) {
-      this.manageDataOp = value;
-    }
-
     private BumpSequenceOp bumpSequenceOp;
-
-    public BumpSequenceOp getBumpSequenceOp() {
-      return this.bumpSequenceOp;
-    }
-
-    public void setBumpSequenceOp(BumpSequenceOp value) {
-      this.bumpSequenceOp = value;
-    }
-
     private ManageBuyOfferOp manageBuyOfferOp;
-
-    public ManageBuyOfferOp getManageBuyOfferOp() {
-      return this.manageBuyOfferOp;
-    }
-
-    public void setManageBuyOfferOp(ManageBuyOfferOp value) {
-      this.manageBuyOfferOp = value;
-    }
-
     private PathPaymentStrictSendOp pathPaymentStrictSendOp;
-
-    public PathPaymentStrictSendOp getPathPaymentStrictSendOp() {
-      return this.pathPaymentStrictSendOp;
-    }
-
-    public void setPathPaymentStrictSendOp(PathPaymentStrictSendOp value) {
-      this.pathPaymentStrictSendOp = value;
-    }
-
     private CreateClaimableBalanceOp createClaimableBalanceOp;
-
-    public CreateClaimableBalanceOp getCreateClaimableBalanceOp() {
-      return this.createClaimableBalanceOp;
-    }
-
-    public void setCreateClaimableBalanceOp(CreateClaimableBalanceOp value) {
-      this.createClaimableBalanceOp = value;
-    }
-
     private ClaimClaimableBalanceOp claimClaimableBalanceOp;
-
-    public ClaimClaimableBalanceOp getClaimClaimableBalanceOp() {
-      return this.claimClaimableBalanceOp;
-    }
-
-    public void setClaimClaimableBalanceOp(ClaimClaimableBalanceOp value) {
-      this.claimClaimableBalanceOp = value;
-    }
-
     private BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
-
-    public BeginSponsoringFutureReservesOp getBeginSponsoringFutureReservesOp() {
-      return this.beginSponsoringFutureReservesOp;
-    }
-
-    public void setBeginSponsoringFutureReservesOp(BeginSponsoringFutureReservesOp value) {
-      this.beginSponsoringFutureReservesOp = value;
-    }
-
     private RevokeSponsorshipOp revokeSponsorshipOp;
-
-    public RevokeSponsorshipOp getRevokeSponsorshipOp() {
-      return this.revokeSponsorshipOp;
-    }
-
-    public void setRevokeSponsorshipOp(RevokeSponsorshipOp value) {
-      this.revokeSponsorshipOp = value;
-    }
-
     private ClawbackOp clawbackOp;
-
-    public ClawbackOp getClawbackOp() {
-      return this.clawbackOp;
-    }
-
-    public void setClawbackOp(ClawbackOp value) {
-      this.clawbackOp = value;
-    }
-
     private ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
-
-    public ClawbackClaimableBalanceOp getClawbackClaimableBalanceOp() {
-      return this.clawbackClaimableBalanceOp;
-    }
-
-    public void setClawbackClaimableBalanceOp(ClawbackClaimableBalanceOp value) {
-      this.clawbackClaimableBalanceOp = value;
-    }
-
     private SetTrustLineFlagsOp setTrustLineFlagsOp;
-
-    public SetTrustLineFlagsOp getSetTrustLineFlagsOp() {
-      return this.setTrustLineFlagsOp;
-    }
-
-    public void setSetTrustLineFlagsOp(SetTrustLineFlagsOp value) {
-      this.setTrustLineFlagsOp = value;
-    }
-
     private LiquidityPoolDepositOp liquidityPoolDepositOp;
-
-    public LiquidityPoolDepositOp getLiquidityPoolDepositOp() {
-      return this.liquidityPoolDepositOp;
-    }
-
-    public void setLiquidityPoolDepositOp(LiquidityPoolDepositOp value) {
-      this.liquidityPoolDepositOp = value;
-    }
-
     private LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
-
-    public LiquidityPoolWithdrawOp getLiquidityPoolWithdrawOp() {
-      return this.liquidityPoolWithdrawOp;
-    }
-
-    public void setLiquidityPoolWithdrawOp(LiquidityPoolWithdrawOp value) {
-      this.liquidityPoolWithdrawOp = value;
-    }
-
     private InvokeHostFunctionOp invokeHostFunctionOp;
-
-    public InvokeHostFunctionOp getInvokeHostFunctionOp() {
-      return this.invokeHostFunctionOp;
-    }
-
-    public void setInvokeHostFunctionOp(InvokeHostFunctionOp value) {
-      this.invokeHostFunctionOp = value;
-    }
-
     private ExtendFootprintTTLOp extendFootprintTTLOp;
-
-    public ExtendFootprintTTLOp getExtendFootprintTTLOp() {
-      return this.extendFootprintTTLOp;
-    }
-
-    public void setExtendFootprintTTLOp(ExtendFootprintTTLOp value) {
-      this.extendFootprintTTLOp = value;
-    }
-
     private RestoreFootprintOp restoreFootprintOp;
-
-    public RestoreFootprintOp getRestoreFootprintOp() {
-      return this.restoreFootprintOp;
-    }
-
-    public void setRestoreFootprintOp(RestoreFootprintOp value) {
-      this.restoreFootprintOp = value;
-    }
-
-    public static final class Builder {
-      private OperationType discriminant;
-      private CreateAccountOp createAccountOp;
-      private PaymentOp paymentOp;
-      private PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
-      private ManageSellOfferOp manageSellOfferOp;
-      private CreatePassiveSellOfferOp createPassiveSellOfferOp;
-      private SetOptionsOp setOptionsOp;
-      private ChangeTrustOp changeTrustOp;
-      private AllowTrustOp allowTrustOp;
-      private MuxedAccount destination;
-      private ManageDataOp manageDataOp;
-      private BumpSequenceOp bumpSequenceOp;
-      private ManageBuyOfferOp manageBuyOfferOp;
-      private PathPaymentStrictSendOp pathPaymentStrictSendOp;
-      private CreateClaimableBalanceOp createClaimableBalanceOp;
-      private ClaimClaimableBalanceOp claimClaimableBalanceOp;
-      private BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
-      private RevokeSponsorshipOp revokeSponsorshipOp;
-      private ClawbackOp clawbackOp;
-      private ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
-      private SetTrustLineFlagsOp setTrustLineFlagsOp;
-      private LiquidityPoolDepositOp liquidityPoolDepositOp;
-      private LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
-      private InvokeHostFunctionOp invokeHostFunctionOp;
-      private ExtendFootprintTTLOp extendFootprintTTLOp;
-      private RestoreFootprintOp restoreFootprintOp;
-
-      public Builder discriminant(OperationType discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder createAccountOp(CreateAccountOp createAccountOp) {
-        this.createAccountOp = createAccountOp;
-        return this;
-      }
-
-      public Builder paymentOp(PaymentOp paymentOp) {
-        this.paymentOp = paymentOp;
-        return this;
-      }
-
-      public Builder pathPaymentStrictReceiveOp(
-          PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp) {
-        this.pathPaymentStrictReceiveOp = pathPaymentStrictReceiveOp;
-        return this;
-      }
-
-      public Builder manageSellOfferOp(ManageSellOfferOp manageSellOfferOp) {
-        this.manageSellOfferOp = manageSellOfferOp;
-        return this;
-      }
-
-      public Builder createPassiveSellOfferOp(CreatePassiveSellOfferOp createPassiveSellOfferOp) {
-        this.createPassiveSellOfferOp = createPassiveSellOfferOp;
-        return this;
-      }
-
-      public Builder setOptionsOp(SetOptionsOp setOptionsOp) {
-        this.setOptionsOp = setOptionsOp;
-        return this;
-      }
-
-      public Builder changeTrustOp(ChangeTrustOp changeTrustOp) {
-        this.changeTrustOp = changeTrustOp;
-        return this;
-      }
-
-      public Builder allowTrustOp(AllowTrustOp allowTrustOp) {
-        this.allowTrustOp = allowTrustOp;
-        return this;
-      }
-
-      public Builder destination(MuxedAccount destination) {
-        this.destination = destination;
-        return this;
-      }
-
-      public Builder manageDataOp(ManageDataOp manageDataOp) {
-        this.manageDataOp = manageDataOp;
-        return this;
-      }
-
-      public Builder bumpSequenceOp(BumpSequenceOp bumpSequenceOp) {
-        this.bumpSequenceOp = bumpSequenceOp;
-        return this;
-      }
-
-      public Builder manageBuyOfferOp(ManageBuyOfferOp manageBuyOfferOp) {
-        this.manageBuyOfferOp = manageBuyOfferOp;
-        return this;
-      }
-
-      public Builder pathPaymentStrictSendOp(PathPaymentStrictSendOp pathPaymentStrictSendOp) {
-        this.pathPaymentStrictSendOp = pathPaymentStrictSendOp;
-        return this;
-      }
-
-      public Builder createClaimableBalanceOp(CreateClaimableBalanceOp createClaimableBalanceOp) {
-        this.createClaimableBalanceOp = createClaimableBalanceOp;
-        return this;
-      }
-
-      public Builder claimClaimableBalanceOp(ClaimClaimableBalanceOp claimClaimableBalanceOp) {
-        this.claimClaimableBalanceOp = claimClaimableBalanceOp;
-        return this;
-      }
-
-      public Builder beginSponsoringFutureReservesOp(
-          BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp) {
-        this.beginSponsoringFutureReservesOp = beginSponsoringFutureReservesOp;
-        return this;
-      }
-
-      public Builder revokeSponsorshipOp(RevokeSponsorshipOp revokeSponsorshipOp) {
-        this.revokeSponsorshipOp = revokeSponsorshipOp;
-        return this;
-      }
-
-      public Builder clawbackOp(ClawbackOp clawbackOp) {
-        this.clawbackOp = clawbackOp;
-        return this;
-      }
-
-      public Builder clawbackClaimableBalanceOp(
-          ClawbackClaimableBalanceOp clawbackClaimableBalanceOp) {
-        this.clawbackClaimableBalanceOp = clawbackClaimableBalanceOp;
-        return this;
-      }
-
-      public Builder setTrustLineFlagsOp(SetTrustLineFlagsOp setTrustLineFlagsOp) {
-        this.setTrustLineFlagsOp = setTrustLineFlagsOp;
-        return this;
-      }
-
-      public Builder liquidityPoolDepositOp(LiquidityPoolDepositOp liquidityPoolDepositOp) {
-        this.liquidityPoolDepositOp = liquidityPoolDepositOp;
-        return this;
-      }
-
-      public Builder liquidityPoolWithdrawOp(LiquidityPoolWithdrawOp liquidityPoolWithdrawOp) {
-        this.liquidityPoolWithdrawOp = liquidityPoolWithdrawOp;
-        return this;
-      }
-
-      public Builder invokeHostFunctionOp(InvokeHostFunctionOp invokeHostFunctionOp) {
-        this.invokeHostFunctionOp = invokeHostFunctionOp;
-        return this;
-      }
-
-      public Builder extendFootprintTTLOp(ExtendFootprintTTLOp extendFootprintTTLOp) {
-        this.extendFootprintTTLOp = extendFootprintTTLOp;
-        return this;
-      }
-
-      public Builder restoreFootprintOp(RestoreFootprintOp restoreFootprintOp) {
-        this.restoreFootprintOp = restoreFootprintOp;
-        return this;
-      }
-
-      public OperationBody build() {
-        OperationBody val = new OperationBody();
-        val.setDiscriminant(discriminant);
-        val.setCreateAccountOp(this.createAccountOp);
-        val.setPaymentOp(this.paymentOp);
-        val.setPathPaymentStrictReceiveOp(this.pathPaymentStrictReceiveOp);
-        val.setManageSellOfferOp(this.manageSellOfferOp);
-        val.setCreatePassiveSellOfferOp(this.createPassiveSellOfferOp);
-        val.setSetOptionsOp(this.setOptionsOp);
-        val.setChangeTrustOp(this.changeTrustOp);
-        val.setAllowTrustOp(this.allowTrustOp);
-        val.setDestination(this.destination);
-        val.setManageDataOp(this.manageDataOp);
-        val.setBumpSequenceOp(this.bumpSequenceOp);
-        val.setManageBuyOfferOp(this.manageBuyOfferOp);
-        val.setPathPaymentStrictSendOp(this.pathPaymentStrictSendOp);
-        val.setCreateClaimableBalanceOp(this.createClaimableBalanceOp);
-        val.setClaimClaimableBalanceOp(this.claimClaimableBalanceOp);
-        val.setBeginSponsoringFutureReservesOp(this.beginSponsoringFutureReservesOp);
-        val.setRevokeSponsorshipOp(this.revokeSponsorshipOp);
-        val.setClawbackOp(this.clawbackOp);
-        val.setClawbackClaimableBalanceOp(this.clawbackClaimableBalanceOp);
-        val.setSetTrustLineFlagsOp(this.setTrustLineFlagsOp);
-        val.setLiquidityPoolDepositOp(this.liquidityPoolDepositOp);
-        val.setLiquidityPoolWithdrawOp(this.liquidityPoolWithdrawOp);
-        val.setInvokeHostFunctionOp(this.invokeHostFunctionOp);
-        val.setExtendFootprintTTLOp(this.extendFootprintTTLOp);
-        val.setRestoreFootprintOp(this.restoreFootprintOp);
-        return val;
-      }
-    }
 
     public static void encode(XdrDataOutputStream stream, OperationBody encodedOperationBody)
         throws IOException {
@@ -896,73 +422,6 @@ public class Operation implements XdrElement {
           break;
       }
       return decodedOperationBody;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(
-          this.createAccountOp,
-          this.paymentOp,
-          this.pathPaymentStrictReceiveOp,
-          this.manageSellOfferOp,
-          this.createPassiveSellOfferOp,
-          this.setOptionsOp,
-          this.changeTrustOp,
-          this.allowTrustOp,
-          this.destination,
-          this.manageDataOp,
-          this.bumpSequenceOp,
-          this.manageBuyOfferOp,
-          this.pathPaymentStrictSendOp,
-          this.createClaimableBalanceOp,
-          this.claimClaimableBalanceOp,
-          this.beginSponsoringFutureReservesOp,
-          this.revokeSponsorshipOp,
-          this.clawbackOp,
-          this.clawbackClaimableBalanceOp,
-          this.setTrustLineFlagsOp,
-          this.liquidityPoolDepositOp,
-          this.liquidityPoolWithdrawOp,
-          this.invokeHostFunctionOp,
-          this.extendFootprintTTLOp,
-          this.restoreFootprintOp,
-          this.type);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof OperationBody)) {
-        return false;
-      }
-
-      OperationBody other = (OperationBody) object;
-      return Objects.equals(this.createAccountOp, other.createAccountOp)
-          && Objects.equals(this.paymentOp, other.paymentOp)
-          && Objects.equals(this.pathPaymentStrictReceiveOp, other.pathPaymentStrictReceiveOp)
-          && Objects.equals(this.manageSellOfferOp, other.manageSellOfferOp)
-          && Objects.equals(this.createPassiveSellOfferOp, other.createPassiveSellOfferOp)
-          && Objects.equals(this.setOptionsOp, other.setOptionsOp)
-          && Objects.equals(this.changeTrustOp, other.changeTrustOp)
-          && Objects.equals(this.allowTrustOp, other.allowTrustOp)
-          && Objects.equals(this.destination, other.destination)
-          && Objects.equals(this.manageDataOp, other.manageDataOp)
-          && Objects.equals(this.bumpSequenceOp, other.bumpSequenceOp)
-          && Objects.equals(this.manageBuyOfferOp, other.manageBuyOfferOp)
-          && Objects.equals(this.pathPaymentStrictSendOp, other.pathPaymentStrictSendOp)
-          && Objects.equals(this.createClaimableBalanceOp, other.createClaimableBalanceOp)
-          && Objects.equals(this.claimClaimableBalanceOp, other.claimClaimableBalanceOp)
-          && Objects.equals(
-              this.beginSponsoringFutureReservesOp, other.beginSponsoringFutureReservesOp)
-          && Objects.equals(this.revokeSponsorshipOp, other.revokeSponsorshipOp)
-          && Objects.equals(this.clawbackOp, other.clawbackOp)
-          && Objects.equals(this.clawbackClaimableBalanceOp, other.clawbackClaimableBalanceOp)
-          && Objects.equals(this.setTrustLineFlagsOp, other.setTrustLineFlagsOp)
-          && Objects.equals(this.liquidityPoolDepositOp, other.liquidityPoolDepositOp)
-          && Objects.equals(this.liquidityPoolWithdrawOp, other.liquidityPoolWithdrawOp)
-          && Objects.equals(this.invokeHostFunctionOp, other.invokeHostFunctionOp)
-          && Objects.equals(this.extendFootprintTTLOp, other.extendFootprintTTLOp)
-          && Objects.equals(this.restoreFootprintOp, other.restoreFootprintOp)
-          && Objects.equals(this.type, other.type);
     }
 
     @Override

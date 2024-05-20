@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -37,152 +40,19 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerUpgrade implements XdrElement {
-  public LedgerUpgrade() {}
-
-  LedgerUpgradeType type;
-
-  public LedgerUpgradeType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(LedgerUpgradeType value) {
-    this.type = value;
-  }
-
+  private LedgerUpgradeType discriminant;
   private Uint32 newLedgerVersion;
-
-  public Uint32 getNewLedgerVersion() {
-    return this.newLedgerVersion;
-  }
-
-  public void setNewLedgerVersion(Uint32 value) {
-    this.newLedgerVersion = value;
-  }
-
   private Uint32 newBaseFee;
-
-  public Uint32 getNewBaseFee() {
-    return this.newBaseFee;
-  }
-
-  public void setNewBaseFee(Uint32 value) {
-    this.newBaseFee = value;
-  }
-
   private Uint32 newMaxTxSetSize;
-
-  public Uint32 getNewMaxTxSetSize() {
-    return this.newMaxTxSetSize;
-  }
-
-  public void setNewMaxTxSetSize(Uint32 value) {
-    this.newMaxTxSetSize = value;
-  }
-
   private Uint32 newBaseReserve;
-
-  public Uint32 getNewBaseReserve() {
-    return this.newBaseReserve;
-  }
-
-  public void setNewBaseReserve(Uint32 value) {
-    this.newBaseReserve = value;
-  }
-
   private Uint32 newFlags;
-
-  public Uint32 getNewFlags() {
-    return this.newFlags;
-  }
-
-  public void setNewFlags(Uint32 value) {
-    this.newFlags = value;
-  }
-
   private ConfigUpgradeSetKey newConfig;
-
-  public ConfigUpgradeSetKey getNewConfig() {
-    return this.newConfig;
-  }
-
-  public void setNewConfig(ConfigUpgradeSetKey value) {
-    this.newConfig = value;
-  }
-
   private Uint32 newMaxSorobanTxSetSize;
-
-  public Uint32 getNewMaxSorobanTxSetSize() {
-    return this.newMaxSorobanTxSetSize;
-  }
-
-  public void setNewMaxSorobanTxSetSize(Uint32 value) {
-    this.newMaxSorobanTxSetSize = value;
-  }
-
-  public static final class Builder {
-    private LedgerUpgradeType discriminant;
-    private Uint32 newLedgerVersion;
-    private Uint32 newBaseFee;
-    private Uint32 newMaxTxSetSize;
-    private Uint32 newBaseReserve;
-    private Uint32 newFlags;
-    private ConfigUpgradeSetKey newConfig;
-    private Uint32 newMaxSorobanTxSetSize;
-
-    public Builder discriminant(LedgerUpgradeType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder newLedgerVersion(Uint32 newLedgerVersion) {
-      this.newLedgerVersion = newLedgerVersion;
-      return this;
-    }
-
-    public Builder newBaseFee(Uint32 newBaseFee) {
-      this.newBaseFee = newBaseFee;
-      return this;
-    }
-
-    public Builder newMaxTxSetSize(Uint32 newMaxTxSetSize) {
-      this.newMaxTxSetSize = newMaxTxSetSize;
-      return this;
-    }
-
-    public Builder newBaseReserve(Uint32 newBaseReserve) {
-      this.newBaseReserve = newBaseReserve;
-      return this;
-    }
-
-    public Builder newFlags(Uint32 newFlags) {
-      this.newFlags = newFlags;
-      return this;
-    }
-
-    public Builder newConfig(ConfigUpgradeSetKey newConfig) {
-      this.newConfig = newConfig;
-      return this;
-    }
-
-    public Builder newMaxSorobanTxSetSize(Uint32 newMaxSorobanTxSetSize) {
-      this.newMaxSorobanTxSetSize = newMaxSorobanTxSetSize;
-      return this;
-    }
-
-    public LedgerUpgrade build() {
-      LedgerUpgrade val = new LedgerUpgrade();
-      val.setDiscriminant(discriminant);
-      val.setNewLedgerVersion(this.newLedgerVersion);
-      val.setNewBaseFee(this.newBaseFee);
-      val.setNewMaxTxSetSize(this.newMaxTxSetSize);
-      val.setNewBaseReserve(this.newBaseReserve);
-      val.setNewFlags(this.newFlags);
-      val.setNewConfig(this.newConfig);
-      val.setNewMaxSorobanTxSetSize(this.newMaxSorobanTxSetSize);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerUpgrade encodedLedgerUpgrade)
       throws IOException {
@@ -246,36 +116,6 @@ public class LedgerUpgrade implements XdrElement {
         break;
     }
     return decodedLedgerUpgrade;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.newLedgerVersion,
-        this.newBaseFee,
-        this.newMaxTxSetSize,
-        this.newBaseReserve,
-        this.newFlags,
-        this.newConfig,
-        this.newMaxSorobanTxSetSize,
-        this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerUpgrade)) {
-      return false;
-    }
-
-    LedgerUpgrade other = (LedgerUpgrade) object;
-    return Objects.equals(this.newLedgerVersion, other.newLedgerVersion)
-        && Objects.equals(this.newBaseFee, other.newBaseFee)
-        && Objects.equals(this.newMaxTxSetSize, other.newMaxTxSetSize)
-        && Objects.equals(this.newBaseReserve, other.newBaseReserve)
-        && Objects.equals(this.newFlags, other.newFlags)
-        && Objects.equals(this.newConfig, other.newConfig)
-        && Objects.equals(this.newMaxSorobanTxSetSize, other.newMaxSorobanTxSetSize)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

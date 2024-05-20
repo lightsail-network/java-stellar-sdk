@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,48 +28,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SetTrustLineFlagsOp implements XdrElement {
-  public SetTrustLineFlagsOp() {}
-
   private AccountID trustor;
-
-  public AccountID getTrustor() {
-    return this.trustor;
-  }
-
-  public void setTrustor(AccountID value) {
-    this.trustor = value;
-  }
-
   private Asset asset;
-
-  public Asset getAsset() {
-    return this.asset;
-  }
-
-  public void setAsset(Asset value) {
-    this.asset = value;
-  }
-
   private Uint32 clearFlags;
-
-  public Uint32 getClearFlags() {
-    return this.clearFlags;
-  }
-
-  public void setClearFlags(Uint32 value) {
-    this.clearFlags = value;
-  }
-
   private Uint32 setFlags;
-
-  public Uint32 getSetFlags() {
-    return this.setFlags;
-  }
-
-  public void setSetFlags(Uint32 value) {
-    this.setFlags = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SetTrustLineFlagsOp encodedSetTrustLineFlagsOp)
@@ -91,24 +61,6 @@ public class SetTrustLineFlagsOp implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.trustor, this.asset, this.clearFlags, this.setFlags);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SetTrustLineFlagsOp)) {
-      return false;
-    }
-
-    SetTrustLineFlagsOp other = (SetTrustLineFlagsOp) object;
-    return Objects.equals(this.trustor, other.trustor)
-        && Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.clearFlags, other.clearFlags)
-        && Objects.equals(this.setFlags, other.setFlags);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -130,41 +82,5 @@ public class SetTrustLineFlagsOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private AccountID trustor;
-    private Asset asset;
-    private Uint32 clearFlags;
-    private Uint32 setFlags;
-
-    public Builder trustor(AccountID trustor) {
-      this.trustor = trustor;
-      return this;
-    }
-
-    public Builder asset(Asset asset) {
-      this.asset = asset;
-      return this;
-    }
-
-    public Builder clearFlags(Uint32 clearFlags) {
-      this.clearFlags = clearFlags;
-      return this;
-    }
-
-    public Builder setFlags(Uint32 setFlags) {
-      this.setFlags = setFlags;
-      return this;
-    }
-
-    public SetTrustLineFlagsOp build() {
-      SetTrustLineFlagsOp val = new SetTrustLineFlagsOp();
-      val.setTrustor(this.trustor);
-      val.setAsset(this.asset);
-      val.setClearFlags(this.clearFlags);
-      val.setSetFlags(this.setFlags);
-      return val;
-    }
   }
 }

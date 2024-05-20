@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,16 +40,16 @@ public enum PaymentResultCode implements XdrElement {
   PAYMENT_NO_TRUST(-6),
   PAYMENT_NOT_AUTHORIZED(-7),
   PAYMENT_LINE_FULL(-8),
-  PAYMENT_NO_ISSUER(-9),
-  ;
-  private int mValue;
+  PAYMENT_NO_ISSUER(-9);
+
+  private final int value;
 
   PaymentResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static PaymentResultCode decode(XdrDataInputStream stream) throws IOException {

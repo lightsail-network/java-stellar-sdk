@@ -36,10 +36,10 @@ public class AuthTest {
     Network network = Network.TESTNET;
 
     SorobanCredentials credentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(signer.getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(0L)))
@@ -47,13 +47,13 @@ public class AuthTest {
                     .build())
             .build();
     SorobanAuthorizedInvocation invocation =
-        new SorobanAuthorizedInvocation.Builder()
+        SorobanAuthorizedInvocation.builder()
             .function(
-                new SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
                     .contractFn(
-                        new InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(new Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").getSym())
                             .args(new SCVal[0])
@@ -62,7 +62,7 @@ public class AuthTest {
             .subInvocations(new SorobanAuthorizedInvocation[0])
             .build();
     SorobanAuthorizationEntry entry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(credentials)
             .rootInvocation(invocation)
             .build();
@@ -71,10 +71,10 @@ public class AuthTest {
         Auth.authorizeEntry(entry.toXdrBase64(), signer, validUntilLedgerSeq, network);
 
     HashIDPreimage preimage =
-        new HashIDPreimage.Builder()
+        HashIDPreimage.builder()
             .discriminant(EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION)
             .sorobanAuthorization(
-                new HashIDPreimage.HashIDPreimageSorobanAuthorization.Builder()
+                HashIDPreimage.HashIDPreimageSorobanAuthorization.builder()
                     .networkID(new Hash(network.getNetworkId()))
                     .nonce(new Int64(123456789L))
                     .invocation(invocation)
@@ -84,10 +84,10 @@ public class AuthTest {
             .build();
     byte[] signature = signer.sign(Util.hash(preimage.toXdrByteArray()));
     SorobanCredentials expectedCredentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(signer.getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(
@@ -108,7 +108,7 @@ public class AuthTest {
             .build();
 
     SorobanAuthorizationEntry expectedEntry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(expectedCredentials)
             .rootInvocation(invocation)
             .build();
@@ -125,10 +125,10 @@ public class AuthTest {
     Network network = Network.TESTNET;
 
     SorobanCredentials credentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(signer.getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(0L)))
@@ -136,13 +136,13 @@ public class AuthTest {
                     .build())
             .build();
     SorobanAuthorizedInvocation invocation =
-        new SorobanAuthorizedInvocation.Builder()
+        SorobanAuthorizedInvocation.builder()
             .function(
-                new SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
                     .contractFn(
-                        new InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(new Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").getSym())
                             .args(new SCVal[0])
@@ -151,7 +151,7 @@ public class AuthTest {
             .subInvocations(new SorobanAuthorizedInvocation[0])
             .build();
     SorobanAuthorizationEntry entry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(credentials)
             .rootInvocation(invocation)
             .build();
@@ -160,10 +160,10 @@ public class AuthTest {
         Auth.authorizeEntry(entry, signer, validUntilLedgerSeq, network);
 
     HashIDPreimage preimage =
-        new HashIDPreimage.Builder()
+        HashIDPreimage.builder()
             .discriminant(EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION)
             .sorobanAuthorization(
-                new HashIDPreimage.HashIDPreimageSorobanAuthorization.Builder()
+                HashIDPreimage.HashIDPreimageSorobanAuthorization.builder()
                     .networkID(new Hash(network.getNetworkId()))
                     .nonce(new Int64(123456789L))
                     .invocation(invocation)
@@ -173,10 +173,10 @@ public class AuthTest {
             .build();
     byte[] signature = signer.sign(Util.hash(preimage.toXdrByteArray()));
     SorobanCredentials expectedCredentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(signer.getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(
@@ -197,7 +197,7 @@ public class AuthTest {
             .build();
 
     SorobanAuthorizationEntry expectedEntry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(expectedCredentials)
             .rootInvocation(invocation)
             .build();
@@ -225,10 +225,10 @@ public class AuthTest {
     Network network = Network.TESTNET;
 
     SorobanCredentials credentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(signer.getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(0L)))
@@ -236,13 +236,13 @@ public class AuthTest {
                     .build())
             .build();
     SorobanAuthorizedInvocation invocation =
-        new SorobanAuthorizedInvocation.Builder()
+        SorobanAuthorizedInvocation.builder()
             .function(
-                new SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
                     .contractFn(
-                        new InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(new Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").getSym())
                             .args(new SCVal[0])
@@ -251,7 +251,7 @@ public class AuthTest {
             .subInvocations(new SorobanAuthorizedInvocation[0])
             .build();
     SorobanAuthorizationEntry entry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(credentials)
             .rootInvocation(invocation)
             .build();
@@ -260,10 +260,10 @@ public class AuthTest {
         Auth.authorizeEntry(entry.toXdrBase64(), entrySigner, validUntilLedgerSeq, network);
 
     HashIDPreimage preimage =
-        new HashIDPreimage.Builder()
+        HashIDPreimage.builder()
             .discriminant(EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION)
             .sorobanAuthorization(
-                new HashIDPreimage.HashIDPreimageSorobanAuthorization.Builder()
+                HashIDPreimage.HashIDPreimageSorobanAuthorization.builder()
                     .networkID(new Hash(network.getNetworkId()))
                     .nonce(new Int64(123456789L))
                     .invocation(invocation)
@@ -273,10 +273,10 @@ public class AuthTest {
             .build();
     byte[] signature = signer.sign(Util.hash(preimage.toXdrByteArray()));
     SorobanCredentials expectedCredentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(signer.getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(
@@ -297,7 +297,7 @@ public class AuthTest {
             .build();
 
     SorobanAuthorizationEntry expectedEntry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(expectedCredentials)
             .rootInvocation(invocation)
             .build();
@@ -325,10 +325,10 @@ public class AuthTest {
     Network network = Network.TESTNET;
 
     SorobanCredentials credentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(signer.getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(0L)))
@@ -336,13 +336,13 @@ public class AuthTest {
                     .build())
             .build();
     SorobanAuthorizedInvocation invocation =
-        new SorobanAuthorizedInvocation.Builder()
+        SorobanAuthorizedInvocation.builder()
             .function(
-                new SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
                     .contractFn(
-                        new InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(new Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").getSym())
                             .args(new SCVal[0])
@@ -351,7 +351,7 @@ public class AuthTest {
             .subInvocations(new SorobanAuthorizedInvocation[0])
             .build();
     SorobanAuthorizationEntry entry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(credentials)
             .rootInvocation(invocation)
             .build();
@@ -360,10 +360,10 @@ public class AuthTest {
         Auth.authorizeEntry(entry, entrySigner, validUntilLedgerSeq, network);
 
     HashIDPreimage preimage =
-        new HashIDPreimage.Builder()
+        HashIDPreimage.builder()
             .discriminant(EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION)
             .sorobanAuthorization(
-                new HashIDPreimage.HashIDPreimageSorobanAuthorization.Builder()
+                HashIDPreimage.HashIDPreimageSorobanAuthorization.builder()
                     .networkID(new Hash(network.getNetworkId()))
                     .nonce(new Int64(123456789L))
                     .invocation(invocation)
@@ -373,10 +373,10 @@ public class AuthTest {
             .build();
     byte[] signature = signer.sign(Util.hash(preimage.toXdrByteArray()));
     SorobanCredentials expectedCredentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(signer.getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(
@@ -397,7 +397,7 @@ public class AuthTest {
             .build();
 
     SorobanAuthorizationEntry expectedEntry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(expectedCredentials)
             .rootInvocation(invocation)
             .build();
@@ -414,17 +414,17 @@ public class AuthTest {
     Network network = Network.TESTNET;
 
     SorobanCredentials credentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)
             .build();
     SorobanAuthorizedInvocation invocation =
-        new SorobanAuthorizedInvocation.Builder()
+        SorobanAuthorizedInvocation.builder()
             .function(
-                new SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
                     .contractFn(
-                        new InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(new Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").getSym())
                             .args(new SCVal[0])
@@ -433,7 +433,7 @@ public class AuthTest {
             .subInvocations(new SorobanAuthorizedInvocation[0])
             .build();
     SorobanAuthorizationEntry entry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(credentials)
             .rootInvocation(invocation)
             .build();
@@ -453,10 +453,10 @@ public class AuthTest {
     Network network = Network.TESTNET;
 
     SorobanCredentials credentials =
-        new SorobanCredentials.Builder()
+        SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                new SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(new Address(KeyPair.random().getAccountId()).toSCAddress())
                     .nonce(new Int64(123456789L))
                     .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(0L)))
@@ -464,13 +464,13 @@ public class AuthTest {
                     .build())
             .build();
     SorobanAuthorizedInvocation invocation =
-        new SorobanAuthorizedInvocation.Builder()
+        SorobanAuthorizedInvocation.builder()
             .function(
-                new SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
                     .contractFn(
-                        new InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(new Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").getSym())
                             .args(new SCVal[0])
@@ -479,7 +479,7 @@ public class AuthTest {
             .subInvocations(new SorobanAuthorizedInvocation[0])
             .build();
     SorobanAuthorizationEntry entry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(credentials)
             .rootInvocation(invocation)
             .build();
@@ -501,13 +501,13 @@ public class AuthTest {
     Network network = Network.TESTNET;
 
     SorobanAuthorizedInvocation invocation =
-        new SorobanAuthorizedInvocation.Builder()
+        SorobanAuthorizedInvocation.builder()
             .function(
-                new SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
                     .contractFn(
-                        new InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(new Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").getSym())
                             .args(new SCVal[0])
@@ -562,13 +562,13 @@ public class AuthTest {
     Network network = Network.TESTNET;
 
     SorobanAuthorizedInvocation invocation =
-        new SorobanAuthorizedInvocation.Builder()
+        SorobanAuthorizedInvocation.builder()
             .function(
-                new SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
                     .contractFn(
-                        new InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(new Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").getSym())
                             .args(new SCVal[0])

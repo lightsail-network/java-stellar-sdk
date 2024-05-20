@@ -10,7 +10,7 @@ class ScvString {
   private static final SCValType TYPE = SCValType.SCV_STRING;
 
   static SCVal toSCVal(byte[] value) {
-    return new SCVal.Builder().discriminant(TYPE).str(new SCString(new XdrString(value))).build();
+    return SCVal.builder().discriminant(TYPE).str(new SCString(new XdrString(value))).build();
   }
 
   static byte[] fromSCVal(SCVal scVal) {

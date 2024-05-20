@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,28 +31,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TrustLineEntryExtensionV2 implements XdrElement {
-  public TrustLineEntryExtensionV2() {}
-
   private Int32 liquidityPoolUseCount;
-
-  public Int32 getLiquidityPoolUseCount() {
-    return this.liquidityPoolUseCount;
-  }
-
-  public void setLiquidityPoolUseCount(Int32 value) {
-    this.liquidityPoolUseCount = value;
-  }
-
   private TrustLineEntryExtensionV2Ext ext;
-
-  public TrustLineEntryExtensionV2Ext getExt() {
-    return this.ext;
-  }
-
-  public void setExt(TrustLineEntryExtensionV2Ext value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, TrustLineEntryExtensionV2 encodedTrustLineEntryExtensionV2)
@@ -67,22 +55,6 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
     decodedTrustLineEntryExtensionV2.liquidityPoolUseCount = Int32.decode(stream);
     decodedTrustLineEntryExtensionV2.ext = TrustLineEntryExtensionV2Ext.decode(stream);
     return decodedTrustLineEntryExtensionV2;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.liquidityPoolUseCount, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TrustLineEntryExtensionV2)) {
-      return false;
-    }
-
-    TrustLineEntryExtensionV2 other = (TrustLineEntryExtensionV2) object;
-    return Objects.equals(this.liquidityPoolUseCount, other.liquidityPoolUseCount)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -109,28 +81,6 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Int32 liquidityPoolUseCount;
-    private TrustLineEntryExtensionV2Ext ext;
-
-    public Builder liquidityPoolUseCount(Int32 liquidityPoolUseCount) {
-      this.liquidityPoolUseCount = liquidityPoolUseCount;
-      return this;
-    }
-
-    public Builder ext(TrustLineEntryExtensionV2Ext ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public TrustLineEntryExtensionV2 build() {
-      TrustLineEntryExtensionV2 val = new TrustLineEntryExtensionV2();
-      val.setLiquidityPoolUseCount(this.liquidityPoolUseCount);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * TrustLineEntryExtensionV2Ext's original definition in the XDR file is:
    *
@@ -142,33 +92,12 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class TrustLineEntryExtensionV2Ext implements XdrElement {
-    public TrustLineEntryExtensionV2Ext() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public TrustLineEntryExtensionV2Ext build() {
-        TrustLineEntryExtensionV2Ext val = new TrustLineEntryExtensionV2Ext();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -198,21 +127,6 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
           break;
       }
       return decodedTrustLineEntryExtensionV2Ext;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof TrustLineEntryExtensionV2Ext)) {
-        return false;
-      }
-
-      TrustLineEntryExtensionV2Ext other = (TrustLineEntryExtensionV2Ext) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

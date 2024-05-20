@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef string string32&lt;32&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class String32 implements XdrElement {
   private XdrString string32;
-
-  public String32() {}
-
-  public String32(XdrString string32) {
-    this.string32 = string32;
-  }
-
-  public XdrString getString32() {
-    return this.string32;
-  }
-
-  public void setString32(XdrString value) {
-    this.string32 = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, String32 encodedString32)
       throws IOException {
@@ -48,21 +39,6 @@ public class String32 implements XdrElement {
     String32 decodedString32 = new String32();
     decodedString32.string32 = XdrString.decode(stream, 32);
     return decodedString32;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.string32);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof String32)) {
-      return false;
-    }
-
-    String32 other = (String32) object;
-    return Objects.equals(this.string32, other.string32);
   }
 
   @Override

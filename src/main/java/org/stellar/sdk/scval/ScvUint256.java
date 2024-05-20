@@ -33,7 +33,7 @@ class ScvUint256 {
     System.arraycopy(bytes, copyStartIndex, paddedBytes, 32 - numBytesToCopy, numBytesToCopy);
 
     UInt256Parts uInt256Parts =
-        new UInt256Parts.Builder()
+        UInt256Parts.builder()
             .hi_hi(
                 new Uint64(
                     new XdrUnsignedHyperInteger(
@@ -51,7 +51,7 @@ class ScvUint256 {
                     new XdrUnsignedHyperInteger(
                         new BigInteger(1, Arrays.copyOfRange(paddedBytes, 24, 32)))))
             .build();
-    return new SCVal.Builder().discriminant(TYPE).u256(uInt256Parts).build();
+    return SCVal.builder().discriminant(TYPE).u256(uInt256Parts).build();
   }
 
   static BigInteger fromSCVal(SCVal scVal) {

@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,58 +32,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionMetaV3 implements XdrElement {
-  public TransactionMetaV3() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private LedgerEntryChanges txChangesBefore;
-
-  public LedgerEntryChanges getTxChangesBefore() {
-    return this.txChangesBefore;
-  }
-
-  public void setTxChangesBefore(LedgerEntryChanges value) {
-    this.txChangesBefore = value;
-  }
-
   private OperationMeta[] operations;
-
-  public OperationMeta[] getOperations() {
-    return this.operations;
-  }
-
-  public void setOperations(OperationMeta[] value) {
-    this.operations = value;
-  }
-
   private LedgerEntryChanges txChangesAfter;
-
-  public LedgerEntryChanges getTxChangesAfter() {
-    return this.txChangesAfter;
-  }
-
-  public void setTxChangesAfter(LedgerEntryChanges value) {
-    this.txChangesAfter = value;
-  }
-
   private SorobanTransactionMeta sorobanMeta;
-
-  public SorobanTransactionMeta getSorobanMeta() {
-    return this.sorobanMeta;
-  }
-
-  public void setSorobanMeta(SorobanTransactionMeta value) {
-    this.sorobanMeta = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TransactionMetaV3 encodedTransactionMetaV3)
       throws IOException {
@@ -123,30 +83,6 @@ public class TransactionMetaV3 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ext,
-        this.txChangesBefore,
-        Arrays.hashCode(this.operations),
-        this.txChangesAfter,
-        this.sorobanMeta);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionMetaV3)) {
-      return false;
-    }
-
-    TransactionMetaV3 other = (TransactionMetaV3) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.txChangesBefore, other.txChangesBefore)
-        && Arrays.equals(this.operations, other.operations)
-        && Objects.equals(this.txChangesAfter, other.txChangesAfter)
-        && Objects.equals(this.sorobanMeta, other.sorobanMeta);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -168,48 +104,5 @@ public class TransactionMetaV3 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private LedgerEntryChanges txChangesBefore;
-    private OperationMeta[] operations;
-    private LedgerEntryChanges txChangesAfter;
-    private SorobanTransactionMeta sorobanMeta;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder txChangesBefore(LedgerEntryChanges txChangesBefore) {
-      this.txChangesBefore = txChangesBefore;
-      return this;
-    }
-
-    public Builder operations(OperationMeta[] operations) {
-      this.operations = operations;
-      return this;
-    }
-
-    public Builder txChangesAfter(LedgerEntryChanges txChangesAfter) {
-      this.txChangesAfter = txChangesAfter;
-      return this;
-    }
-
-    public Builder sorobanMeta(SorobanTransactionMeta sorobanMeta) {
-      this.sorobanMeta = sorobanMeta;
-      return this;
-    }
-
-    public TransactionMetaV3 build() {
-      TransactionMetaV3 val = new TransactionMetaV3();
-      val.setExt(this.ext);
-      val.setTxChangesBefore(this.txChangesBefore);
-      val.setOperations(this.operations);
-      val.setTxChangesAfter(this.txChangesAfter);
-      val.setSorobanMeta(this.sorobanMeta);
-      return val;
-    }
   }
 }

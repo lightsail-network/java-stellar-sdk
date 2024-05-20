@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,67 +27,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class StoredTransactionSet implements XdrElement {
-  public StoredTransactionSet() {}
-
-  Integer v;
-
-  public Integer getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Integer value) {
-    this.v = value;
-  }
-
+  private Integer discriminant;
   private TransactionSet txSet;
-
-  public TransactionSet getTxSet() {
-    return this.txSet;
-  }
-
-  public void setTxSet(TransactionSet value) {
-    this.txSet = value;
-  }
-
   private GeneralizedTransactionSet generalizedTxSet;
-
-  public GeneralizedTransactionSet getGeneralizedTxSet() {
-    return this.generalizedTxSet;
-  }
-
-  public void setGeneralizedTxSet(GeneralizedTransactionSet value) {
-    this.generalizedTxSet = value;
-  }
-
-  public static final class Builder {
-    private Integer discriminant;
-    private TransactionSet txSet;
-    private GeneralizedTransactionSet generalizedTxSet;
-
-    public Builder discriminant(Integer discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder txSet(TransactionSet txSet) {
-      this.txSet = txSet;
-      return this;
-    }
-
-    public Builder generalizedTxSet(GeneralizedTransactionSet generalizedTxSet) {
-      this.generalizedTxSet = generalizedTxSet;
-      return this;
-    }
-
-    public StoredTransactionSet build() {
-      StoredTransactionSet val = new StoredTransactionSet();
-      val.setDiscriminant(discriminant);
-      val.setTxSet(this.txSet);
-      val.setGeneralizedTxSet(this.generalizedTxSet);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, StoredTransactionSet encodedStoredTransactionSet)
@@ -119,23 +69,6 @@ public class StoredTransactionSet implements XdrElement {
         break;
     }
     return decodedStoredTransactionSet;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.txSet, this.generalizedTxSet, this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof StoredTransactionSet)) {
-      return false;
-    }
-
-    StoredTransactionSet other = (StoredTransactionSet) object;
-    return Objects.equals(this.txSet, other.txSet)
-        && Objects.equals(this.generalizedTxSet, other.generalizedTxSet)
-        && Objects.equals(this.v, other.v);
   }
 
   @Override

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,50 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCEnvMetaEntry implements XdrElement {
-  public SCEnvMetaEntry() {}
-
-  SCEnvMetaKind kind;
-
-  public SCEnvMetaKind getDiscriminant() {
-    return this.kind;
-  }
-
-  public void setDiscriminant(SCEnvMetaKind value) {
-    this.kind = value;
-  }
-
+  private SCEnvMetaKind discriminant;
   private Uint64 interfaceVersion;
-
-  public Uint64 getInterfaceVersion() {
-    return this.interfaceVersion;
-  }
-
-  public void setInterfaceVersion(Uint64 value) {
-    this.interfaceVersion = value;
-  }
-
-  public static final class Builder {
-    private SCEnvMetaKind discriminant;
-    private Uint64 interfaceVersion;
-
-    public Builder discriminant(SCEnvMetaKind discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder interfaceVersion(Uint64 interfaceVersion) {
-      this.interfaceVersion = interfaceVersion;
-      return this;
-    }
-
-    public SCEnvMetaEntry build() {
-      SCEnvMetaEntry val = new SCEnvMetaEntry();
-      val.setDiscriminant(discriminant);
-      val.setInterfaceVersion(this.interfaceVersion);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SCEnvMetaEntry encodedSCEnvMetaEntry)
       throws IOException {
@@ -93,22 +59,6 @@ public class SCEnvMetaEntry implements XdrElement {
         break;
     }
     return decodedSCEnvMetaEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.interfaceVersion, this.kind);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCEnvMetaEntry)) {
-      return false;
-    }
-
-    SCEnvMetaEntry other = (SCEnvMetaEntry) object;
-    return Objects.equals(this.interfaceVersion, other.interfaceVersion)
-        && Objects.equals(this.kind, other.kind);
   }
 
   @Override

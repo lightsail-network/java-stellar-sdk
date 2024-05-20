@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class HmacSha256Mac implements XdrElement {
-  public HmacSha256Mac() {}
-
   private byte[] mac;
-
-  public byte[] getMac() {
-    return this.mac;
-  }
-
-  public void setMac(byte[] value) {
-    this.mac = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, HmacSha256Mac encodedHmacSha256Mac)
       throws IOException {
@@ -50,21 +47,6 @@ public class HmacSha256Mac implements XdrElement {
     decodedHmacSha256Mac.mac = new byte[macsize];
     stream.read(decodedHmacSha256Mac.mac, 0, macsize);
     return decodedHmacSha256Mac;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.mac);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof HmacSha256Mac)) {
-      return false;
-    }
-
-    HmacSha256Mac other = (HmacSha256Mac) object;
-    return Arrays.equals(this.mac, other.mac);
   }
 
   @Override
@@ -89,20 +71,5 @@ public class HmacSha256Mac implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private byte[] mac;
-
-    public Builder mac(byte[] mac) {
-      this.mac = mac;
-      return this;
-    }
-
-    public HmacSha256Mac build() {
-      HmacSha256Mac val = new HmacSha256Mac();
-      val.setMac(this.mac);
-      return val;
-    }
   }
 }

@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -37,101 +39,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SignerKey implements XdrElement {
-  public SignerKey() {}
-
-  SignerKeyType type;
-
-  public SignerKeyType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(SignerKeyType value) {
-    this.type = value;
-  }
-
+  private SignerKeyType discriminant;
   private Uint256 ed25519;
-
-  public Uint256 getEd25519() {
-    return this.ed25519;
-  }
-
-  public void setEd25519(Uint256 value) {
-    this.ed25519 = value;
-  }
-
   private Uint256 preAuthTx;
-
-  public Uint256 getPreAuthTx() {
-    return this.preAuthTx;
-  }
-
-  public void setPreAuthTx(Uint256 value) {
-    this.preAuthTx = value;
-  }
-
   private Uint256 hashX;
-
-  public Uint256 getHashX() {
-    return this.hashX;
-  }
-
-  public void setHashX(Uint256 value) {
-    this.hashX = value;
-  }
-
   private SignerKeyEd25519SignedPayload ed25519SignedPayload;
-
-  public SignerKeyEd25519SignedPayload getEd25519SignedPayload() {
-    return this.ed25519SignedPayload;
-  }
-
-  public void setEd25519SignedPayload(SignerKeyEd25519SignedPayload value) {
-    this.ed25519SignedPayload = value;
-  }
-
-  public static final class Builder {
-    private SignerKeyType discriminant;
-    private Uint256 ed25519;
-    private Uint256 preAuthTx;
-    private Uint256 hashX;
-    private SignerKeyEd25519SignedPayload ed25519SignedPayload;
-
-    public Builder discriminant(SignerKeyType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder ed25519(Uint256 ed25519) {
-      this.ed25519 = ed25519;
-      return this;
-    }
-
-    public Builder preAuthTx(Uint256 preAuthTx) {
-      this.preAuthTx = preAuthTx;
-      return this;
-    }
-
-    public Builder hashX(Uint256 hashX) {
-      this.hashX = hashX;
-      return this;
-    }
-
-    public Builder ed25519SignedPayload(SignerKeyEd25519SignedPayload ed25519SignedPayload) {
-      this.ed25519SignedPayload = ed25519SignedPayload;
-      return this;
-    }
-
-    public SignerKey build() {
-      SignerKey val = new SignerKey();
-      val.setDiscriminant(discriminant);
-      val.setEd25519(this.ed25519);
-      val.setPreAuthTx(this.preAuthTx);
-      val.setHashX(this.hashX);
-      val.setEd25519SignedPayload(this.ed25519SignedPayload);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SignerKey encodedSignerKey)
       throws IOException {
@@ -180,26 +97,6 @@ public class SignerKey implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ed25519, this.preAuthTx, this.hashX, this.ed25519SignedPayload, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SignerKey)) {
-      return false;
-    }
-
-    SignerKey other = (SignerKey) object;
-    return Objects.equals(this.ed25519, other.ed25519)
-        && Objects.equals(this.preAuthTx, other.preAuthTx)
-        && Objects.equals(this.hashX, other.hashX)
-        && Objects.equals(this.ed25519SignedPayload, other.ed25519SignedPayload)
-        && Objects.equals(this.type, other.type);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -236,28 +133,13 @@ public class SignerKey implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class SignerKeyEd25519SignedPayload implements XdrElement {
-    public SignerKeyEd25519SignedPayload() {}
-
     private Uint256 ed25519;
-
-    public Uint256 getEd25519() {
-      return this.ed25519;
-    }
-
-    public void setEd25519(Uint256 value) {
-      this.ed25519 = value;
-    }
-
     private byte[] payload;
-
-    public byte[] getPayload() {
-      return this.payload;
-    }
-
-    public void setPayload(byte[] value) {
-      this.payload = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -285,22 +167,6 @@ public class SignerKey implements XdrElement {
     }
 
     @Override
-    public int hashCode() {
-      return Objects.hash(this.ed25519, Arrays.hashCode(this.payload));
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof SignerKeyEd25519SignedPayload)) {
-        return false;
-      }
-
-      SignerKeyEd25519SignedPayload other = (SignerKeyEd25519SignedPayload) object;
-      return Objects.equals(this.ed25519, other.ed25519)
-          && Arrays.equals(this.payload, other.payload);
-    }
-
-    @Override
     public String toXdrBase64() throws IOException {
       return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
@@ -322,28 +188,6 @@ public class SignerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
-    }
-
-    public static final class Builder {
-      private Uint256 ed25519;
-      private byte[] payload;
-
-      public Builder ed25519(Uint256 ed25519) {
-        this.ed25519 = ed25519;
-        return this;
-      }
-
-      public Builder payload(byte[] payload) {
-        this.payload = payload;
-        return this;
-      }
-
-      public SignerKeyEd25519SignedPayload build() {
-        SignerKeyEd25519SignedPayload val = new SignerKeyEd25519SignedPayload();
-        val.setEd25519(this.ed25519);
-        val.setPayload(this.payload);
-        return val;
-      }
     }
   }
 }

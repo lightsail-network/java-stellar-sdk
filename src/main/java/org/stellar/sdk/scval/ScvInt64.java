@@ -9,7 +9,7 @@ class ScvInt64 {
   private static final SCValType TYPE = SCValType.SCV_I64;
 
   static SCVal toSCVal(long value) {
-    return new SCVal.Builder().discriminant(TYPE).i64(new Int64(value)).build();
+    return SCVal.builder().discriminant(TYPE).i64(new Int64(value)).build();
   }
 
   static long fromSCVal(SCVal scVal) {

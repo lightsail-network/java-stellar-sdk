@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerSCPMessages implements XdrElement {
-  public LedgerSCPMessages() {}
-
   private Uint32 ledgerSeq;
-
-  public Uint32 getLedgerSeq() {
-    return this.ledgerSeq;
-  }
-
-  public void setLedgerSeq(Uint32 value) {
-    this.ledgerSeq = value;
-  }
-
   private SCPEnvelope[] messages;
-
-  public SCPEnvelope[] getMessages() {
-    return this.messages;
-  }
-
-  public void setMessages(SCPEnvelope[] value) {
-    this.messages = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerSCPMessages encodedLedgerSCPMessages)
       throws IOException {
@@ -72,22 +59,6 @@ public class LedgerSCPMessages implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.ledgerSeq, Arrays.hashCode(this.messages));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerSCPMessages)) {
-      return false;
-    }
-
-    LedgerSCPMessages other = (LedgerSCPMessages) object;
-    return Objects.equals(this.ledgerSeq, other.ledgerSeq)
-        && Arrays.equals(this.messages, other.messages);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -109,27 +80,5 @@ public class LedgerSCPMessages implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 ledgerSeq;
-    private SCPEnvelope[] messages;
-
-    public Builder ledgerSeq(Uint32 ledgerSeq) {
-      this.ledgerSeq = ledgerSeq;
-      return this;
-    }
-
-    public Builder messages(SCPEnvelope[] messages) {
-      this.messages = messages;
-      return this;
-    }
-
-    public LedgerSCPMessages build() {
-      LedgerSCPMessages val = new LedgerSCPMessages();
-      val.setLedgerSeq(this.ledgerSeq);
-      val.setMessages(this.messages);
-      return val;
-    }
   }
 }

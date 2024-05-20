@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -34,38 +36,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ContractCodeEntry implements XdrElement {
-  public ContractCodeEntry() {}
-
   private ContractCodeEntryExt ext;
-
-  public ContractCodeEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ContractCodeEntryExt value) {
-    this.ext = value;
-  }
-
   private Hash hash;
-
-  public Hash getHash() {
-    return this.hash;
-  }
-
-  public void setHash(Hash value) {
-    this.hash = value;
-  }
-
   private byte[] code;
-
-  public byte[] getCode() {
-    return this.code;
-  }
-
-  public void setCode(byte[] value) {
-    this.code = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, ContractCodeEntry encodedContractCodeEntry)
       throws IOException {
@@ -88,23 +66,6 @@ public class ContractCodeEntry implements XdrElement {
     decodedContractCodeEntry.code = new byte[codesize];
     stream.read(decodedContractCodeEntry.code, 0, codesize);
     return decodedContractCodeEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ext, this.hash, Arrays.hashCode(this.code));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ContractCodeEntry)) {
-      return false;
-    }
-
-    ContractCodeEntry other = (ContractCodeEntry) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.hash, other.hash)
-        && Arrays.equals(this.code, other.code);
   }
 
   @Override
@@ -131,35 +92,6 @@ public class ContractCodeEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private ContractCodeEntryExt ext;
-    private Hash hash;
-    private byte[] code;
-
-    public Builder ext(ContractCodeEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder hash(Hash hash) {
-      this.hash = hash;
-      return this;
-    }
-
-    public Builder code(byte[] code) {
-      this.code = code;
-      return this;
-    }
-
-    public ContractCodeEntry build() {
-      ContractCodeEntry val = new ContractCodeEntry();
-      val.setExt(this.ext);
-      val.setHash(this.hash);
-      val.setCode(this.code);
-      return val;
-    }
-  }
-
   /**
    * ContractCodeEntryExt's original definition in the XDR file is:
    *
@@ -177,50 +109,13 @@ public class ContractCodeEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class ContractCodeEntryExt implements XdrElement {
-    public ContractCodeEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private ContractCodeEntryV1 v1;
-
-    public ContractCodeEntryV1 getV1() {
-      return this.v1;
-    }
-
-    public void setV1(ContractCodeEntryV1 value) {
-      this.v1 = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private ContractCodeEntryV1 v1;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v1(ContractCodeEntryV1 v1) {
-        this.v1 = v1;
-        return this;
-      }
-
-      public ContractCodeEntryExt build() {
-        ContractCodeEntryExt val = new ContractCodeEntryExt();
-        val.setDiscriminant(discriminant);
-        val.setV1(this.v1);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream, ContractCodeEntryExt encodedContractCodeEntryExt)
@@ -253,21 +148,6 @@ public class ContractCodeEntry implements XdrElement {
           break;
       }
       return decodedContractCodeEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v1, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof ContractCodeEntryExt)) {
-        return false;
-      }
-
-      ContractCodeEntryExt other = (ContractCodeEntryExt) object;
-      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override
@@ -305,28 +185,13 @@ public class ContractCodeEntry implements XdrElement {
      *             }
      * </pre>
      */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder(toBuilder = true)
     public static class ContractCodeEntryV1 implements XdrElement {
-      public ContractCodeEntryV1() {}
-
       private ExtensionPoint ext;
-
-      public ExtensionPoint getExt() {
-        return this.ext;
-      }
-
-      public void setExt(ExtensionPoint value) {
-        this.ext = value;
-      }
-
       private ContractCodeCostInputs costInputs;
-
-      public ContractCodeCostInputs getCostInputs() {
-        return this.costInputs;
-      }
-
-      public void setCostInputs(ContractCodeCostInputs value) {
-        this.costInputs = value;
-      }
 
       public static void encode(
           XdrDataOutputStream stream, ContractCodeEntryV1 encodedContractCodeEntryV1)
@@ -344,22 +209,6 @@ public class ContractCodeEntry implements XdrElement {
         decodedContractCodeEntryV1.ext = ExtensionPoint.decode(stream);
         decodedContractCodeEntryV1.costInputs = ContractCodeCostInputs.decode(stream);
         return decodedContractCodeEntryV1;
-      }
-
-      @Override
-      public int hashCode() {
-        return Objects.hash(this.ext, this.costInputs);
-      }
-
-      @Override
-      public boolean equals(Object object) {
-        if (!(object instanceof ContractCodeEntryV1)) {
-          return false;
-        }
-
-        ContractCodeEntryV1 other = (ContractCodeEntryV1) object;
-        return Objects.equals(this.ext, other.ext)
-            && Objects.equals(this.costInputs, other.costInputs);
       }
 
       @Override
@@ -384,28 +233,6 @@ public class ContractCodeEntry implements XdrElement {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         return decode(xdrDataInputStream);
-      }
-
-      public static final class Builder {
-        private ExtensionPoint ext;
-        private ContractCodeCostInputs costInputs;
-
-        public Builder ext(ExtensionPoint ext) {
-          this.ext = ext;
-          return this;
-        }
-
-        public Builder costInputs(ContractCodeCostInputs costInputs) {
-          this.costInputs = costInputs;
-          return this;
-        }
-
-        public ContractCodeEntryV1 build() {
-          ContractCodeEntryV1 val = new ContractCodeEntryV1();
-          val.setExt(this.ext);
-          val.setCostInputs(this.costInputs);
-          return val;
-        }
       }
     }
   }

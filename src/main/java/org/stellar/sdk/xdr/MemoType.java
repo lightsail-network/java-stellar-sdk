@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,16 +27,16 @@ public enum MemoType implements XdrElement {
   MEMO_TEXT(1),
   MEMO_ID(2),
   MEMO_HASH(3),
-  MEMO_RETURN(4),
-  ;
-  private int mValue;
+  MEMO_RETURN(4);
+
+  private final int value;
 
   MemoType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static MemoType decode(XdrDataInputStream stream) throws IOException {

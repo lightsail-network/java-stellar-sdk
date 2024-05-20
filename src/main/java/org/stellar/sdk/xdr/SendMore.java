@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SendMore implements XdrElement {
-  public SendMore() {}
-
   private Uint32 numMessages;
-
-  public Uint32 getNumMessages() {
-    return this.numMessages;
-  }
-
-  public void setNumMessages(Uint32 value) {
-    this.numMessages = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SendMore encodedSendMore)
       throws IOException {
@@ -47,21 +44,6 @@ public class SendMore implements XdrElement {
     SendMore decodedSendMore = new SendMore();
     decodedSendMore.numMessages = Uint32.decode(stream);
     return decodedSendMore;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.numMessages);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SendMore)) {
-      return false;
-    }
-
-    SendMore other = (SendMore) object;
-    return Objects.equals(this.numMessages, other.numMessages);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class SendMore implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 numMessages;
-
-    public Builder numMessages(Uint32 numMessages) {
-      this.numMessages = numMessages;
-      return this;
-    }
-
-    public SendMore build() {
-      SendMore val = new SendMore();
-      val.setNumMessages(this.numMessages);
-      return val;
-    }
   }
 }

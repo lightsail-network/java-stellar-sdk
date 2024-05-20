@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,38 +33,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerHeaderHistoryEntry implements XdrElement {
-  public LedgerHeaderHistoryEntry() {}
-
   private Hash hash;
-
-  public Hash getHash() {
-    return this.hash;
-  }
-
-  public void setHash(Hash value) {
-    this.hash = value;
-  }
-
   private LedgerHeader header;
-
-  public LedgerHeader getHeader() {
-    return this.header;
-  }
-
-  public void setHeader(LedgerHeader value) {
-    this.header = value;
-  }
-
   private LedgerHeaderHistoryEntryExt ext;
-
-  public LedgerHeaderHistoryEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(LedgerHeaderHistoryEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, LedgerHeaderHistoryEntry encodedLedgerHeaderHistoryEntry)
@@ -81,23 +60,6 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     decodedLedgerHeaderHistoryEntry.header = LedgerHeader.decode(stream);
     decodedLedgerHeaderHistoryEntry.ext = LedgerHeaderHistoryEntryExt.decode(stream);
     return decodedLedgerHeaderHistoryEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.hash, this.header, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerHeaderHistoryEntry)) {
-      return false;
-    }
-
-    LedgerHeaderHistoryEntry other = (LedgerHeaderHistoryEntry) object;
-    return Objects.equals(this.hash, other.hash)
-        && Objects.equals(this.header, other.header)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -124,35 +86,6 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Hash hash;
-    private LedgerHeader header;
-    private LedgerHeaderHistoryEntryExt ext;
-
-    public Builder hash(Hash hash) {
-      this.hash = hash;
-      return this;
-    }
-
-    public Builder header(LedgerHeader header) {
-      this.header = header;
-      return this;
-    }
-
-    public Builder ext(LedgerHeaderHistoryEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public LedgerHeaderHistoryEntry build() {
-      LedgerHeaderHistoryEntry val = new LedgerHeaderHistoryEntry();
-      val.setHash(this.hash);
-      val.setHeader(this.header);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * LedgerHeaderHistoryEntryExt's original definition in the XDR file is:
    *
@@ -164,33 +97,12 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class LedgerHeaderHistoryEntryExt implements XdrElement {
-    public LedgerHeaderHistoryEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public LedgerHeaderHistoryEntryExt build() {
-        LedgerHeaderHistoryEntryExt val = new LedgerHeaderHistoryEntryExt();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream, LedgerHeaderHistoryEntryExt encodedLedgerHeaderHistoryEntryExt)
@@ -218,21 +130,6 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
           break;
       }
       return decodedLedgerHeaderHistoryEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof LedgerHeaderHistoryEntryExt)) {
-        return false;
-      }
-
-      LedgerHeaderHistoryEntryExt other = (LedgerHeaderHistoryEntryExt) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

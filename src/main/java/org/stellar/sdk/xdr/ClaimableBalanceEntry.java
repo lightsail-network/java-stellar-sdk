@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -42,58 +44,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClaimableBalanceEntry implements XdrElement {
-  public ClaimableBalanceEntry() {}
-
   private ClaimableBalanceID balanceID;
-
-  public ClaimableBalanceID getBalanceID() {
-    return this.balanceID;
-  }
-
-  public void setBalanceID(ClaimableBalanceID value) {
-    this.balanceID = value;
-  }
-
   private Claimant[] claimants;
-
-  public Claimant[] getClaimants() {
-    return this.claimants;
-  }
-
-  public void setClaimants(Claimant[] value) {
-    this.claimants = value;
-  }
-
   private Asset asset;
-
-  public Asset getAsset() {
-    return this.asset;
-  }
-
-  public void setAsset(Asset value) {
-    this.asset = value;
-  }
-
   private Int64 amount;
-
-  public Int64 getAmount() {
-    return this.amount;
-  }
-
-  public void setAmount(Int64 value) {
-    this.amount = value;
-  }
-
   private ClaimableBalanceEntryExt ext;
-
-  public ClaimableBalanceEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ClaimableBalanceEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ClaimableBalanceEntry encodedClaimableBalanceEntry)
@@ -128,26 +88,6 @@ public class ClaimableBalanceEntry implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.balanceID, Arrays.hashCode(this.claimants), this.asset, this.amount, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClaimableBalanceEntry)) {
-      return false;
-    }
-
-    ClaimableBalanceEntry other = (ClaimableBalanceEntry) object;
-    return Objects.equals(this.balanceID, other.balanceID)
-        && Arrays.equals(this.claimants, other.claimants)
-        && Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.ext, other.ext);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -171,49 +111,6 @@ public class ClaimableBalanceEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private ClaimableBalanceID balanceID;
-    private Claimant[] claimants;
-    private Asset asset;
-    private Int64 amount;
-    private ClaimableBalanceEntryExt ext;
-
-    public Builder balanceID(ClaimableBalanceID balanceID) {
-      this.balanceID = balanceID;
-      return this;
-    }
-
-    public Builder claimants(Claimant[] claimants) {
-      this.claimants = claimants;
-      return this;
-    }
-
-    public Builder asset(Asset asset) {
-      this.asset = asset;
-      return this;
-    }
-
-    public Builder amount(Int64 amount) {
-      this.amount = amount;
-      return this;
-    }
-
-    public Builder ext(ClaimableBalanceEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public ClaimableBalanceEntry build() {
-      ClaimableBalanceEntry val = new ClaimableBalanceEntry();
-      val.setBalanceID(this.balanceID);
-      val.setClaimants(this.claimants);
-      val.setAsset(this.asset);
-      val.setAmount(this.amount);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * ClaimableBalanceEntryExt's original definition in the XDR file is:
    *
@@ -227,50 +124,13 @@ public class ClaimableBalanceEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class ClaimableBalanceEntryExt implements XdrElement {
-    public ClaimableBalanceEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private ClaimableBalanceEntryExtensionV1 v1;
-
-    public ClaimableBalanceEntryExtensionV1 getV1() {
-      return this.v1;
-    }
-
-    public void setV1(ClaimableBalanceEntryExtensionV1 value) {
-      this.v1 = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private ClaimableBalanceEntryExtensionV1 v1;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v1(ClaimableBalanceEntryExtensionV1 v1) {
-        this.v1 = v1;
-        return this;
-      }
-
-      public ClaimableBalanceEntryExt build() {
-        ClaimableBalanceEntryExt val = new ClaimableBalanceEntryExt();
-        val.setDiscriminant(discriminant);
-        val.setV1(this.v1);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream, ClaimableBalanceEntryExt encodedClaimableBalanceEntryExt)
@@ -303,21 +163,6 @@ public class ClaimableBalanceEntry implements XdrElement {
           break;
       }
       return decodedClaimableBalanceEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v1, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof ClaimableBalanceEntryExt)) {
-        return false;
-      }
-
-      ClaimableBalanceEntryExt other = (ClaimableBalanceEntryExt) object;
-      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override

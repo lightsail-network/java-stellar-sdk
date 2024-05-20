@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque SignatureHint[4];
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignatureHint implements XdrElement {
   private byte[] SignatureHint;
-
-  public SignatureHint() {}
-
-  public SignatureHint(byte[] SignatureHint) {
-    this.SignatureHint = SignatureHint;
-  }
-
-  public byte[] getSignatureHint() {
-    return this.SignatureHint;
-  }
-
-  public void setSignatureHint(byte[] value) {
-    this.SignatureHint = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SignatureHint encodedSignatureHint)
       throws IOException {
@@ -51,21 +42,6 @@ public class SignatureHint implements XdrElement {
     decodedSignatureHint.SignatureHint = new byte[SignatureHintsize];
     stream.read(decodedSignatureHint.SignatureHint, 0, SignatureHintsize);
     return decodedSignatureHint;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.SignatureHint);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SignatureHint)) {
-      return false;
-    }
-
-    SignatureHint other = (SignatureHint) object;
-    return Arrays.equals(this.SignatureHint, other.SignatureHint);
   }
 
   @Override

@@ -10,9 +10,9 @@ class ScvLedgerKeyNonce {
   private static final SCValType TYPE = SCValType.SCV_LEDGER_KEY_NONCE;
 
   static SCVal toSCVal(long value) {
-    return new SCVal.Builder()
+    return SCVal.builder()
         .discriminant(TYPE)
-        .nonce_key(new SCNonceKey.Builder().nonce(new Int64(value)).build())
+        .nonce_key(SCNonceKey.builder().nonce(new Int64(value)).build())
         .build();
   }
 

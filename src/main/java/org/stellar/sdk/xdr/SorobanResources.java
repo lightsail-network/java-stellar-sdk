@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -29,48 +32,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanResources implements XdrElement {
-  public SorobanResources() {}
-
   private LedgerFootprint footprint;
-
-  public LedgerFootprint getFootprint() {
-    return this.footprint;
-  }
-
-  public void setFootprint(LedgerFootprint value) {
-    this.footprint = value;
-  }
-
   private Uint32 instructions;
-
-  public Uint32 getInstructions() {
-    return this.instructions;
-  }
-
-  public void setInstructions(Uint32 value) {
-    this.instructions = value;
-  }
-
   private Uint32 readBytes;
-
-  public Uint32 getReadBytes() {
-    return this.readBytes;
-  }
-
-  public void setReadBytes(Uint32 value) {
-    this.readBytes = value;
-  }
-
   private Uint32 writeBytes;
-
-  public Uint32 getWriteBytes() {
-    return this.writeBytes;
-  }
-
-  public void setWriteBytes(Uint32 value) {
-    this.writeBytes = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SorobanResources encodedSorobanResources)
       throws IOException {
@@ -91,24 +61,6 @@ public class SorobanResources implements XdrElement {
     decodedSorobanResources.readBytes = Uint32.decode(stream);
     decodedSorobanResources.writeBytes = Uint32.decode(stream);
     return decodedSorobanResources;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.footprint, this.instructions, this.readBytes, this.writeBytes);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanResources)) {
-      return false;
-    }
-
-    SorobanResources other = (SorobanResources) object;
-    return Objects.equals(this.footprint, other.footprint)
-        && Objects.equals(this.instructions, other.instructions)
-        && Objects.equals(this.readBytes, other.readBytes)
-        && Objects.equals(this.writeBytes, other.writeBytes);
   }
 
   @Override
@@ -133,41 +85,5 @@ public class SorobanResources implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerFootprint footprint;
-    private Uint32 instructions;
-    private Uint32 readBytes;
-    private Uint32 writeBytes;
-
-    public Builder footprint(LedgerFootprint footprint) {
-      this.footprint = footprint;
-      return this;
-    }
-
-    public Builder instructions(Uint32 instructions) {
-      this.instructions = instructions;
-      return this;
-    }
-
-    public Builder readBytes(Uint32 readBytes) {
-      this.readBytes = readBytes;
-      return this;
-    }
-
-    public Builder writeBytes(Uint32 writeBytes) {
-      this.writeBytes = writeBytes;
-      return this;
-    }
-
-    public SorobanResources build() {
-      SorobanResources val = new SorobanResources();
-      val.setFootprint(this.footprint);
-      val.setInstructions(this.instructions);
-      val.setReadBytes(this.readBytes);
-      val.setWriteBytes(this.writeBytes);
-      return val;
-    }
   }
 }

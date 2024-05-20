@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,38 +26,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class CreateClaimableBalanceOp implements XdrElement {
-  public CreateClaimableBalanceOp() {}
-
   private Asset asset;
-
-  public Asset getAsset() {
-    return this.asset;
-  }
-
-  public void setAsset(Asset value) {
-    this.asset = value;
-  }
-
   private Int64 amount;
-
-  public Int64 getAmount() {
-    return this.amount;
-  }
-
-  public void setAmount(Int64 value) {
-    this.amount = value;
-  }
-
   private Claimant[] claimants;
-
-  public Claimant[] getClaimants() {
-    return this.claimants;
-  }
-
-  public void setClaimants(Claimant[] value) {
-    this.claimants = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, CreateClaimableBalanceOp encodedCreateClaimableBalanceOp)
@@ -86,23 +64,6 @@ public class CreateClaimableBalanceOp implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.asset, this.amount, Arrays.hashCode(this.claimants));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof CreateClaimableBalanceOp)) {
-      return false;
-    }
-
-    CreateClaimableBalanceOp other = (CreateClaimableBalanceOp) object;
-    return Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.amount, other.amount)
-        && Arrays.equals(this.claimants, other.claimants);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -124,34 +85,5 @@ public class CreateClaimableBalanceOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Asset asset;
-    private Int64 amount;
-    private Claimant[] claimants;
-
-    public Builder asset(Asset asset) {
-      this.asset = asset;
-      return this;
-    }
-
-    public Builder amount(Int64 amount) {
-      this.amount = amount;
-      return this;
-    }
-
-    public Builder claimants(Claimant[] claimants) {
-      this.claimants = claimants;
-      return this;
-    }
-
-    public CreateClaimableBalanceOp build() {
-      CreateClaimableBalanceOp val = new CreateClaimableBalanceOp();
-      val.setAsset(this.asset);
-      val.setAmount(this.amount);
-      val.setClaimants(this.claimants);
-      return val;
-    }
   }
 }

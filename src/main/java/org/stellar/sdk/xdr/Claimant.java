@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -26,50 +29,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Claimant implements XdrElement {
-  public Claimant() {}
-
-  ClaimantType type;
-
-  public ClaimantType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(ClaimantType value) {
-    this.type = value;
-  }
-
+  private ClaimantType discriminant;
   private ClaimantV0 v0;
-
-  public ClaimantV0 getV0() {
-    return this.v0;
-  }
-
-  public void setV0(ClaimantV0 value) {
-    this.v0 = value;
-  }
-
-  public static final class Builder {
-    private ClaimantType discriminant;
-    private ClaimantV0 v0;
-
-    public Builder discriminant(ClaimantType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v0(ClaimantV0 v0) {
-      this.v0 = v0;
-      return this;
-    }
-
-    public Claimant build() {
-      Claimant val = new Claimant();
-      val.setDiscriminant(discriminant);
-      val.setV0(this.v0);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, Claimant encodedClaimant)
       throws IOException {
@@ -97,21 +63,6 @@ public class Claimant implements XdrElement {
         break;
     }
     return decodedClaimant;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v0, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Claimant)) {
-      return false;
-    }
-
-    Claimant other = (Claimant) object;
-    return Objects.equals(this.v0, other.v0) && Objects.equals(this.type, other.type);
   }
 
   @Override
@@ -149,28 +100,13 @@ public class Claimant implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class ClaimantV0 implements XdrElement {
-    public ClaimantV0() {}
-
     private AccountID destination;
-
-    public AccountID getDestination() {
-      return this.destination;
-    }
-
-    public void setDestination(AccountID value) {
-      this.destination = value;
-    }
-
     private ClaimPredicate predicate;
-
-    public ClaimPredicate getPredicate() {
-      return this.predicate;
-    }
-
-    public void setPredicate(ClaimPredicate value) {
-      this.predicate = value;
-    }
 
     public static void encode(XdrDataOutputStream stream, ClaimantV0 encodedClaimantV0)
         throws IOException {
@@ -187,22 +123,6 @@ public class Claimant implements XdrElement {
       decodedClaimantV0.destination = AccountID.decode(stream);
       decodedClaimantV0.predicate = ClaimPredicate.decode(stream);
       return decodedClaimantV0;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.destination, this.predicate);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof ClaimantV0)) {
-        return false;
-      }
-
-      ClaimantV0 other = (ClaimantV0) object;
-      return Objects.equals(this.destination, other.destination)
-          && Objects.equals(this.predicate, other.predicate);
     }
 
     @Override
@@ -227,28 +147,6 @@ public class Claimant implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
-    }
-
-    public static final class Builder {
-      private AccountID destination;
-      private ClaimPredicate predicate;
-
-      public Builder destination(AccountID destination) {
-        this.destination = destination;
-        return this;
-      }
-
-      public Builder predicate(ClaimPredicate predicate) {
-        this.predicate = predicate;
-        return this;
-      }
-
-      public ClaimantV0 build() {
-        ClaimantV0 val = new ClaimantV0();
-        val.setDestination(this.destination);
-        val.setPredicate(this.predicate);
-        return val;
-      }
     }
   }
 }

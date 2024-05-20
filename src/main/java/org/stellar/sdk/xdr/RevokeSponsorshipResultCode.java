@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,16 +32,16 @@ public enum RevokeSponsorshipResultCode implements XdrElement {
   REVOKE_SPONSORSHIP_NOT_SPONSOR(-2),
   REVOKE_SPONSORSHIP_LOW_RESERVE(-3),
   REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE(-4),
-  REVOKE_SPONSORSHIP_MALFORMED(-5),
-  ;
-  private int mValue;
+  REVOKE_SPONSORSHIP_MALFORMED(-5);
+
+  private final int value;
 
   RevokeSponsorshipResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static RevokeSponsorshipResultCode decode(XdrDataInputStream stream) throws IOException {

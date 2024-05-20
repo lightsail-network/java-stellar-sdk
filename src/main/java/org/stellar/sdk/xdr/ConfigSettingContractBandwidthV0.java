@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,38 +30,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ConfigSettingContractBandwidthV0 implements XdrElement {
-  public ConfigSettingContractBandwidthV0() {}
-
   private Uint32 ledgerMaxTxsSizeBytes;
-
-  public Uint32 getLedgerMaxTxsSizeBytes() {
-    return this.ledgerMaxTxsSizeBytes;
-  }
-
-  public void setLedgerMaxTxsSizeBytes(Uint32 value) {
-    this.ledgerMaxTxsSizeBytes = value;
-  }
-
   private Uint32 txMaxSizeBytes;
-
-  public Uint32 getTxMaxSizeBytes() {
-    return this.txMaxSizeBytes;
-  }
-
-  public void setTxMaxSizeBytes(Uint32 value) {
-    this.txMaxSizeBytes = value;
-  }
-
   private Int64 feeTxSize1KB;
-
-  public Int64 getFeeTxSize1KB() {
-    return this.feeTxSize1KB;
-  }
-
-  public void setFeeTxSize1KB(Int64 value) {
-    this.feeTxSize1KB = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -84,23 +63,6 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.ledgerMaxTxsSizeBytes, this.txMaxSizeBytes, this.feeTxSize1KB);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ConfigSettingContractBandwidthV0)) {
-      return false;
-    }
-
-    ConfigSettingContractBandwidthV0 other = (ConfigSettingContractBandwidthV0) object;
-    return Objects.equals(this.ledgerMaxTxsSizeBytes, other.ledgerMaxTxsSizeBytes)
-        && Objects.equals(this.txMaxSizeBytes, other.txMaxSizeBytes)
-        && Objects.equals(this.feeTxSize1KB, other.feeTxSize1KB);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -122,34 +84,5 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 ledgerMaxTxsSizeBytes;
-    private Uint32 txMaxSizeBytes;
-    private Int64 feeTxSize1KB;
-
-    public Builder ledgerMaxTxsSizeBytes(Uint32 ledgerMaxTxsSizeBytes) {
-      this.ledgerMaxTxsSizeBytes = ledgerMaxTxsSizeBytes;
-      return this;
-    }
-
-    public Builder txMaxSizeBytes(Uint32 txMaxSizeBytes) {
-      this.txMaxSizeBytes = txMaxSizeBytes;
-      return this;
-    }
-
-    public Builder feeTxSize1KB(Int64 feeTxSize1KB) {
-      this.feeTxSize1KB = feeTxSize1KB;
-      return this;
-    }
-
-    public ConfigSettingContractBandwidthV0 build() {
-      ConfigSettingContractBandwidthV0 val = new ConfigSettingContractBandwidthV0();
-      val.setLedgerMaxTxsSizeBytes(this.ledgerMaxTxsSizeBytes);
-      val.setTxMaxSizeBytes(this.txMaxSizeBytes);
-      val.setFeeTxSize1KB(this.feeTxSize1KB);
-      return val;
-    }
   }
 }

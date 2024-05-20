@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionSetV1 implements XdrElement {
-  public TransactionSetV1() {}
-
   private Hash previousLedgerHash;
-
-  public Hash getPreviousLedgerHash() {
-    return this.previousLedgerHash;
-  }
-
-  public void setPreviousLedgerHash(Hash value) {
-    this.previousLedgerHash = value;
-  }
-
   private TransactionPhase[] phases;
-
-  public TransactionPhase[] getPhases() {
-    return this.phases;
-  }
-
-  public void setPhases(TransactionPhase[] value) {
-    this.phases = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TransactionSetV1 encodedTransactionSetV1)
       throws IOException {
@@ -72,22 +59,6 @@ public class TransactionSetV1 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.previousLedgerHash, Arrays.hashCode(this.phases));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionSetV1)) {
-      return false;
-    }
-
-    TransactionSetV1 other = (TransactionSetV1) object;
-    return Objects.equals(this.previousLedgerHash, other.previousLedgerHash)
-        && Arrays.equals(this.phases, other.phases);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -109,27 +80,5 @@ public class TransactionSetV1 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Hash previousLedgerHash;
-    private TransactionPhase[] phases;
-
-    public Builder previousLedgerHash(Hash previousLedgerHash) {
-      this.previousLedgerHash = previousLedgerHash;
-      return this;
-    }
-
-    public Builder phases(TransactionPhase[] phases) {
-      this.phases = phases;
-      return this;
-    }
-
-    public TransactionSetV1 build() {
-      TransactionSetV1 val = new TransactionSetV1();
-      val.setPreviousLedgerHash(this.previousLedgerHash);
-      val.setPhases(this.phases);
-      return val;
-    }
   }
 }

@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,16 +35,16 @@ public enum LiquidityPoolWithdrawResultCode implements XdrElement {
   LIQUIDITY_POOL_WITHDRAW_NO_TRUST(-2),
   LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED(-3),
   LIQUIDITY_POOL_WITHDRAW_LINE_FULL(-4),
-  LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM(-5),
-  ;
-  private int mValue;
+  LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM(-5);
+
+  private final int value;
 
   LiquidityPoolWithdrawResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static LiquidityPoolWithdrawResultCode decode(XdrDataInputStream stream)

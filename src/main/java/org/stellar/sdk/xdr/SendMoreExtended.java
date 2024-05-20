@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SendMoreExtended implements XdrElement {
-  public SendMoreExtended() {}
-
   private Uint32 numMessages;
-
-  public Uint32 getNumMessages() {
-    return this.numMessages;
-  }
-
-  public void setNumMessages(Uint32 value) {
-    this.numMessages = value;
-  }
-
   private Uint32 numBytes;
-
-  public Uint32 getNumBytes() {
-    return this.numBytes;
-  }
-
-  public void setNumBytes(Uint32 value) {
-    this.numBytes = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SendMoreExtended encodedSendMoreExtended)
       throws IOException {
@@ -60,22 +48,6 @@ public class SendMoreExtended implements XdrElement {
     decodedSendMoreExtended.numMessages = Uint32.decode(stream);
     decodedSendMoreExtended.numBytes = Uint32.decode(stream);
     return decodedSendMoreExtended;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.numMessages, this.numBytes);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SendMoreExtended)) {
-      return false;
-    }
-
-    SendMoreExtended other = (SendMoreExtended) object;
-    return Objects.equals(this.numMessages, other.numMessages)
-        && Objects.equals(this.numBytes, other.numBytes);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class SendMoreExtended implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 numMessages;
-    private Uint32 numBytes;
-
-    public Builder numMessages(Uint32 numMessages) {
-      this.numMessages = numMessages;
-      return this;
-    }
-
-    public Builder numBytes(Uint32 numBytes) {
-      this.numBytes = numBytes;
-      return this;
-    }
-
-    public SendMoreExtended build() {
-      SendMoreExtended val = new SendMoreExtended();
-      val.setNumMessages(this.numMessages);
-      val.setNumBytes(this.numBytes);
-      return val;
-    }
   }
 }

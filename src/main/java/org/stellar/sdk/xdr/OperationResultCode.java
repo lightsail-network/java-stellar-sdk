@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,16 +32,16 @@ public enum OperationResultCode implements XdrElement {
   opNOT_SUPPORTED(-3),
   opTOO_MANY_SUBENTRIES(-4),
   opEXCEEDED_WORK_LIMIT(-5),
-  opTOO_MANY_SPONSORING(-6),
-  ;
-  private int mValue;
+  opTOO_MANY_SPONSORING(-6);
+
+  private final int value;
 
   OperationResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static OperationResultCode decode(XdrDataInputStream stream) throws IOException {

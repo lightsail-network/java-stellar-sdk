@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -34,48 +37,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class FeeBumpTransaction implements XdrElement {
-  public FeeBumpTransaction() {}
-
   private MuxedAccount feeSource;
-
-  public MuxedAccount getFeeSource() {
-    return this.feeSource;
-  }
-
-  public void setFeeSource(MuxedAccount value) {
-    this.feeSource = value;
-  }
-
   private Int64 fee;
-
-  public Int64 getFee() {
-    return this.fee;
-  }
-
-  public void setFee(Int64 value) {
-    this.fee = value;
-  }
-
   private FeeBumpTransactionInnerTx innerTx;
-
-  public FeeBumpTransactionInnerTx getInnerTx() {
-    return this.innerTx;
-  }
-
-  public void setInnerTx(FeeBumpTransactionInnerTx value) {
-    this.innerTx = value;
-  }
-
   private FeeBumpTransactionExt ext;
-
-  public FeeBumpTransactionExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(FeeBumpTransactionExt value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, FeeBumpTransaction encodedFeeBumpTransaction) throws IOException {
@@ -96,24 +66,6 @@ public class FeeBumpTransaction implements XdrElement {
     decodedFeeBumpTransaction.innerTx = FeeBumpTransactionInnerTx.decode(stream);
     decodedFeeBumpTransaction.ext = FeeBumpTransactionExt.decode(stream);
     return decodedFeeBumpTransaction;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.feeSource, this.fee, this.innerTx, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof FeeBumpTransaction)) {
-      return false;
-    }
-
-    FeeBumpTransaction other = (FeeBumpTransaction) object;
-    return Objects.equals(this.feeSource, other.feeSource)
-        && Objects.equals(this.fee, other.fee)
-        && Objects.equals(this.innerTx, other.innerTx)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -140,42 +92,6 @@ public class FeeBumpTransaction implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private MuxedAccount feeSource;
-    private Int64 fee;
-    private FeeBumpTransactionInnerTx innerTx;
-    private FeeBumpTransactionExt ext;
-
-    public Builder feeSource(MuxedAccount feeSource) {
-      this.feeSource = feeSource;
-      return this;
-    }
-
-    public Builder fee(Int64 fee) {
-      this.fee = fee;
-      return this;
-    }
-
-    public Builder innerTx(FeeBumpTransactionInnerTx innerTx) {
-      this.innerTx = innerTx;
-      return this;
-    }
-
-    public Builder ext(FeeBumpTransactionExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public FeeBumpTransaction build() {
-      FeeBumpTransaction val = new FeeBumpTransaction();
-      val.setFeeSource(this.feeSource);
-      val.setFee(this.fee);
-      val.setInnerTx(this.innerTx);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * FeeBumpTransactionInnerTx's original definition in the XDR file is:
    *
@@ -187,50 +103,13 @@ public class FeeBumpTransaction implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class FeeBumpTransactionInnerTx implements XdrElement {
-    public FeeBumpTransactionInnerTx() {}
-
-    EnvelopeType type;
-
-    public EnvelopeType getDiscriminant() {
-      return this.type;
-    }
-
-    public void setDiscriminant(EnvelopeType value) {
-      this.type = value;
-    }
-
+    private EnvelopeType discriminant;
     private TransactionV1Envelope v1;
-
-    public TransactionV1Envelope getV1() {
-      return this.v1;
-    }
-
-    public void setV1(TransactionV1Envelope value) {
-      this.v1 = value;
-    }
-
-    public static final class Builder {
-      private EnvelopeType discriminant;
-      private TransactionV1Envelope v1;
-
-      public Builder discriminant(EnvelopeType discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v1(TransactionV1Envelope v1) {
-        this.v1 = v1;
-        return this;
-      }
-
-      public FeeBumpTransactionInnerTx build() {
-        FeeBumpTransactionInnerTx val = new FeeBumpTransactionInnerTx();
-        val.setDiscriminant(discriminant);
-        val.setV1(this.v1);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream, FeeBumpTransactionInnerTx encodedFeeBumpTransactionInnerTx)
@@ -259,21 +138,6 @@ public class FeeBumpTransaction implements XdrElement {
           break;
       }
       return decodedFeeBumpTransactionInnerTx;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v1, this.type);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof FeeBumpTransactionInnerTx)) {
-        return false;
-      }
-
-      FeeBumpTransactionInnerTx other = (FeeBumpTransactionInnerTx) object;
-      return Objects.equals(this.v1, other.v1) && Objects.equals(this.type, other.type);
     }
 
     @Override
@@ -312,33 +176,12 @@ public class FeeBumpTransaction implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class FeeBumpTransactionExt implements XdrElement {
-    public FeeBumpTransactionExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public FeeBumpTransactionExt build() {
-        FeeBumpTransactionExt val = new FeeBumpTransactionExt();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream, FeeBumpTransactionExt encodedFeeBumpTransactionExt)
@@ -365,21 +208,6 @@ public class FeeBumpTransaction implements XdrElement {
           break;
       }
       return decodedFeeBumpTransactionExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof FeeBumpTransactionExt)) {
-        return false;
-      }
-
-      FeeBumpTransactionExt other = (FeeBumpTransactionExt) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

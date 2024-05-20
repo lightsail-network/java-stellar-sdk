@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionResultSet implements XdrElement {
-  public TransactionResultSet() {}
-
   private TransactionResultPair[] results;
-
-  public TransactionResultPair[] getResults() {
-    return this.results;
-  }
-
-  public void setResults(TransactionResultPair[] value) {
-    this.results = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, TransactionResultSet encodedTransactionResultSet)
@@ -59,21 +56,6 @@ public class TransactionResultSet implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.results);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionResultSet)) {
-      return false;
-    }
-
-    TransactionResultSet other = (TransactionResultSet) object;
-    return Arrays.equals(this.results, other.results);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -95,20 +77,5 @@ public class TransactionResultSet implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private TransactionResultPair[] results;
-
-    public Builder results(TransactionResultPair[] results) {
-      this.results = results;
-      return this;
-    }
-
-    public TransactionResultSet build() {
-      TransactionResultSet val = new TransactionResultSet();
-      val.setResults(this.results);
-      return val;
-    }
   }
 }

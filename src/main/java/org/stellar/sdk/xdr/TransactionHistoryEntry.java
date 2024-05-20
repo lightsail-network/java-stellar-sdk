@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -32,38 +35,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionHistoryEntry implements XdrElement {
-  public TransactionHistoryEntry() {}
-
   private Uint32 ledgerSeq;
-
-  public Uint32 getLedgerSeq() {
-    return this.ledgerSeq;
-  }
-
-  public void setLedgerSeq(Uint32 value) {
-    this.ledgerSeq = value;
-  }
-
   private TransactionSet txSet;
-
-  public TransactionSet getTxSet() {
-    return this.txSet;
-  }
-
-  public void setTxSet(TransactionSet value) {
-    this.txSet = value;
-  }
-
   private TransactionHistoryEntryExt ext;
-
-  public TransactionHistoryEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(TransactionHistoryEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, TransactionHistoryEntry encodedTransactionHistoryEntry)
@@ -83,23 +62,6 @@ public class TransactionHistoryEntry implements XdrElement {
     decodedTransactionHistoryEntry.txSet = TransactionSet.decode(stream);
     decodedTransactionHistoryEntry.ext = TransactionHistoryEntryExt.decode(stream);
     return decodedTransactionHistoryEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ledgerSeq, this.txSet, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionHistoryEntry)) {
-      return false;
-    }
-
-    TransactionHistoryEntry other = (TransactionHistoryEntry) object;
-    return Objects.equals(this.ledgerSeq, other.ledgerSeq)
-        && Objects.equals(this.txSet, other.txSet)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -126,35 +88,6 @@ public class TransactionHistoryEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Uint32 ledgerSeq;
-    private TransactionSet txSet;
-    private TransactionHistoryEntryExt ext;
-
-    public Builder ledgerSeq(Uint32 ledgerSeq) {
-      this.ledgerSeq = ledgerSeq;
-      return this;
-    }
-
-    public Builder txSet(TransactionSet txSet) {
-      this.txSet = txSet;
-      return this;
-    }
-
-    public Builder ext(TransactionHistoryEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public TransactionHistoryEntry build() {
-      TransactionHistoryEntry val = new TransactionHistoryEntry();
-      val.setLedgerSeq(this.ledgerSeq);
-      val.setTxSet(this.txSet);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * TransactionHistoryEntryExt's original definition in the XDR file is:
    *
@@ -168,50 +101,13 @@ public class TransactionHistoryEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class TransactionHistoryEntryExt implements XdrElement {
-    public TransactionHistoryEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private GeneralizedTransactionSet generalizedTxSet;
-
-    public GeneralizedTransactionSet getGeneralizedTxSet() {
-      return this.generalizedTxSet;
-    }
-
-    public void setGeneralizedTxSet(GeneralizedTransactionSet value) {
-      this.generalizedTxSet = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private GeneralizedTransactionSet generalizedTxSet;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder generalizedTxSet(GeneralizedTransactionSet generalizedTxSet) {
-        this.generalizedTxSet = generalizedTxSet;
-        return this;
-      }
-
-      public TransactionHistoryEntryExt build() {
-        TransactionHistoryEntryExt val = new TransactionHistoryEntryExt();
-        val.setDiscriminant(discriminant);
-        val.setGeneralizedTxSet(this.generalizedTxSet);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream, TransactionHistoryEntryExt encodedTransactionHistoryEntryExt)
@@ -247,22 +143,6 @@ public class TransactionHistoryEntry implements XdrElement {
           break;
       }
       return decodedTransactionHistoryEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.generalizedTxSet, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof TransactionHistoryEntryExt)) {
-        return false;
-      }
-
-      TransactionHistoryEntryExt other = (TransactionHistoryEntryExt) object;
-      return Objects.equals(this.generalizedTxSet, other.generalizedTxSet)
-          && Objects.equals(this.v, other.v);
     }
 
     @Override

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -26,67 +29,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Preconditions implements XdrElement {
-  public Preconditions() {}
-
-  PreconditionType type;
-
-  public PreconditionType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(PreconditionType value) {
-    this.type = value;
-  }
-
+  private PreconditionType discriminant;
   private TimeBounds timeBounds;
-
-  public TimeBounds getTimeBounds() {
-    return this.timeBounds;
-  }
-
-  public void setTimeBounds(TimeBounds value) {
-    this.timeBounds = value;
-  }
-
   private PreconditionsV2 v2;
-
-  public PreconditionsV2 getV2() {
-    return this.v2;
-  }
-
-  public void setV2(PreconditionsV2 value) {
-    this.v2 = value;
-  }
-
-  public static final class Builder {
-    private PreconditionType discriminant;
-    private TimeBounds timeBounds;
-    private PreconditionsV2 v2;
-
-    public Builder discriminant(PreconditionType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder timeBounds(TimeBounds timeBounds) {
-      this.timeBounds = timeBounds;
-      return this;
-    }
-
-    public Builder v2(PreconditionsV2 v2) {
-      this.v2 = v2;
-      return this;
-    }
-
-    public Preconditions build() {
-      Preconditions val = new Preconditions();
-      val.setDiscriminant(discriminant);
-      val.setTimeBounds(this.timeBounds);
-      val.setV2(this.v2);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, Preconditions encodedPreconditions)
       throws IOException {
@@ -124,23 +74,6 @@ public class Preconditions implements XdrElement {
         break;
     }
     return decodedPreconditions;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.timeBounds, this.v2, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Preconditions)) {
-      return false;
-    }
-
-    Preconditions other = (Preconditions) object;
-    return Objects.equals(this.timeBounds, other.timeBounds)
-        && Objects.equals(this.v2, other.v2)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

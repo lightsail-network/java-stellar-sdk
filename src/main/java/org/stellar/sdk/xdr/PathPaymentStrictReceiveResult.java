@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -43,67 +45,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class PathPaymentStrictReceiveResult implements XdrElement {
-  public PathPaymentStrictReceiveResult() {}
-
-  PathPaymentStrictReceiveResultCode code;
-
-  public PathPaymentStrictReceiveResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(PathPaymentStrictReceiveResultCode value) {
-    this.code = value;
-  }
-
+  private PathPaymentStrictReceiveResultCode discriminant;
   private PathPaymentStrictReceiveResultSuccess success;
-
-  public PathPaymentStrictReceiveResultSuccess getSuccess() {
-    return this.success;
-  }
-
-  public void setSuccess(PathPaymentStrictReceiveResultSuccess value) {
-    this.success = value;
-  }
-
   private Asset noIssuer;
-
-  public Asset getNoIssuer() {
-    return this.noIssuer;
-  }
-
-  public void setNoIssuer(Asset value) {
-    this.noIssuer = value;
-  }
-
-  public static final class Builder {
-    private PathPaymentStrictReceiveResultCode discriminant;
-    private PathPaymentStrictReceiveResultSuccess success;
-    private Asset noIssuer;
-
-    public Builder discriminant(PathPaymentStrictReceiveResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder success(PathPaymentStrictReceiveResultSuccess success) {
-      this.success = success;
-      return this;
-    }
-
-    public Builder noIssuer(Asset noIssuer) {
-      this.noIssuer = noIssuer;
-      return this;
-    }
-
-    public PathPaymentStrictReceiveResult build() {
-      PathPaymentStrictReceiveResult val = new PathPaymentStrictReceiveResult();
-      val.setDiscriminant(discriminant);
-      val.setSuccess(this.success);
-      val.setNoIssuer(this.noIssuer);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -173,23 +122,6 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.success, this.noIssuer, this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PathPaymentStrictReceiveResult)) {
-      return false;
-    }
-
-    PathPaymentStrictReceiveResult other = (PathPaymentStrictReceiveResult) object;
-    return Objects.equals(this.success, other.success)
-        && Objects.equals(this.noIssuer, other.noIssuer)
-        && Objects.equals(this.code, other.code);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -224,28 +156,13 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class PathPaymentStrictReceiveResultSuccess implements XdrElement {
-    public PathPaymentStrictReceiveResultSuccess() {}
-
     private ClaimAtom[] offers;
-
-    public ClaimAtom[] getOffers() {
-      return this.offers;
-    }
-
-    public void setOffers(ClaimAtom[] value) {
-      this.offers = value;
-    }
-
     private SimplePaymentResult last;
-
-    public SimplePaymentResult getLast() {
-      return this.last;
-    }
-
-    public void setLast(SimplePaymentResult value) {
-      this.last = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -277,21 +194,6 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
     }
 
     @Override
-    public int hashCode() {
-      return Objects.hash(Arrays.hashCode(this.offers), this.last);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof PathPaymentStrictReceiveResultSuccess)) {
-        return false;
-      }
-
-      PathPaymentStrictReceiveResultSuccess other = (PathPaymentStrictReceiveResultSuccess) object;
-      return Arrays.equals(this.offers, other.offers) && Objects.equals(this.last, other.last);
-    }
-
-    @Override
     public String toXdrBase64() throws IOException {
       return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
@@ -315,28 +217,6 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
-    }
-
-    public static final class Builder {
-      private ClaimAtom[] offers;
-      private SimplePaymentResult last;
-
-      public Builder offers(ClaimAtom[] offers) {
-        this.offers = offers;
-        return this;
-      }
-
-      public Builder last(SimplePaymentResult last) {
-        this.last = last;
-        return this;
-      }
-
-      public PathPaymentStrictReceiveResultSuccess build() {
-        PathPaymentStrictReceiveResultSuccess val = new PathPaymentStrictReceiveResultSuccess();
-        val.setOffers(this.offers);
-        val.setLast(this.last);
-        return val;
-      }
     }
   }
 }

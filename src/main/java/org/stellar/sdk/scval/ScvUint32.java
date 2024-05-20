@@ -20,7 +20,7 @@ class ScvUint32 {
               MIN_VALUE, MAX_VALUE, value));
     }
 
-    return new SCVal.Builder()
+    return SCVal.builder()
         .discriminant(TYPE)
         .u32(new Uint32(new XdrUnsignedInteger(value)))
         .build();

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,33 +28,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class EndSponsoringFutureReservesResult implements XdrElement {
-  public EndSponsoringFutureReservesResult() {}
-
-  EndSponsoringFutureReservesResultCode code;
-
-  public EndSponsoringFutureReservesResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(EndSponsoringFutureReservesResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private EndSponsoringFutureReservesResultCode discriminant;
-
-    public Builder discriminant(EndSponsoringFutureReservesResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public EndSponsoringFutureReservesResult build() {
-      EndSponsoringFutureReservesResult val = new EndSponsoringFutureReservesResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private EndSponsoringFutureReservesResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -86,21 +68,6 @@ public class EndSponsoringFutureReservesResult implements XdrElement {
         break;
     }
     return decodedEndSponsoringFutureReservesResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof EndSponsoringFutureReservesResult)) {
-      return false;
-    }
-
-    EndSponsoringFutureReservesResult other = (EndSponsoringFutureReservesResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

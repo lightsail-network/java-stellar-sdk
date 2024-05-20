@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,58 +28,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SurveyResponseMessage implements XdrElement {
-  public SurveyResponseMessage() {}
-
   private NodeID surveyorPeerID;
-
-  public NodeID getSurveyorPeerID() {
-    return this.surveyorPeerID;
-  }
-
-  public void setSurveyorPeerID(NodeID value) {
-    this.surveyorPeerID = value;
-  }
-
   private NodeID surveyedPeerID;
-
-  public NodeID getSurveyedPeerID() {
-    return this.surveyedPeerID;
-  }
-
-  public void setSurveyedPeerID(NodeID value) {
-    this.surveyedPeerID = value;
-  }
-
   private Uint32 ledgerNum;
-
-  public Uint32 getLedgerNum() {
-    return this.ledgerNum;
-  }
-
-  public void setLedgerNum(Uint32 value) {
-    this.ledgerNum = value;
-  }
-
   private SurveyMessageCommandType commandType;
-
-  public SurveyMessageCommandType getCommandType() {
-    return this.commandType;
-  }
-
-  public void setCommandType(SurveyMessageCommandType value) {
-    this.commandType = value;
-  }
-
   private EncryptedBody encryptedBody;
-
-  public EncryptedBody getEncryptedBody() {
-    return this.encryptedBody;
-  }
-
-  public void setEncryptedBody(EncryptedBody value) {
-    this.encryptedBody = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SurveyResponseMessage encodedSurveyResponseMessage)
@@ -103,30 +64,6 @@ public class SurveyResponseMessage implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.surveyorPeerID,
-        this.surveyedPeerID,
-        this.ledgerNum,
-        this.commandType,
-        this.encryptedBody);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SurveyResponseMessage)) {
-      return false;
-    }
-
-    SurveyResponseMessage other = (SurveyResponseMessage) object;
-    return Objects.equals(this.surveyorPeerID, other.surveyorPeerID)
-        && Objects.equals(this.surveyedPeerID, other.surveyedPeerID)
-        && Objects.equals(this.ledgerNum, other.ledgerNum)
-        && Objects.equals(this.commandType, other.commandType)
-        && Objects.equals(this.encryptedBody, other.encryptedBody);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -148,48 +85,5 @@ public class SurveyResponseMessage implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private NodeID surveyorPeerID;
-    private NodeID surveyedPeerID;
-    private Uint32 ledgerNum;
-    private SurveyMessageCommandType commandType;
-    private EncryptedBody encryptedBody;
-
-    public Builder surveyorPeerID(NodeID surveyorPeerID) {
-      this.surveyorPeerID = surveyorPeerID;
-      return this;
-    }
-
-    public Builder surveyedPeerID(NodeID surveyedPeerID) {
-      this.surveyedPeerID = surveyedPeerID;
-      return this;
-    }
-
-    public Builder ledgerNum(Uint32 ledgerNum) {
-      this.ledgerNum = ledgerNum;
-      return this;
-    }
-
-    public Builder commandType(SurveyMessageCommandType commandType) {
-      this.commandType = commandType;
-      return this;
-    }
-
-    public Builder encryptedBody(EncryptedBody encryptedBody) {
-      this.encryptedBody = encryptedBody;
-      return this;
-    }
-
-    public SurveyResponseMessage build() {
-      SurveyResponseMessage val = new SurveyResponseMessage();
-      val.setSurveyorPeerID(this.surveyorPeerID);
-      val.setSurveyedPeerID(this.surveyedPeerID);
-      val.setLedgerNum(this.ledgerNum);
-      val.setCommandType(this.commandType);
-      val.setEncryptedBody(this.encryptedBody);
-      return val;
-    }
   }
 }

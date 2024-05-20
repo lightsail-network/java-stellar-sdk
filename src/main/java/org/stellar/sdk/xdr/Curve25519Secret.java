@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Curve25519Secret implements XdrElement {
-  public Curve25519Secret() {}
-
   private byte[] key;
-
-  public byte[] getKey() {
-    return this.key;
-  }
-
-  public void setKey(byte[] value) {
-    this.key = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Curve25519Secret encodedCurve25519Secret)
       throws IOException {
@@ -50,21 +47,6 @@ public class Curve25519Secret implements XdrElement {
     decodedCurve25519Secret.key = new byte[keysize];
     stream.read(decodedCurve25519Secret.key, 0, keysize);
     return decodedCurve25519Secret;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.key);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Curve25519Secret)) {
-      return false;
-    }
-
-    Curve25519Secret other = (Curve25519Secret) object;
-    return Arrays.equals(this.key, other.key);
   }
 
   @Override
@@ -89,20 +71,5 @@ public class Curve25519Secret implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private byte[] key;
-
-    public Builder key(byte[] key) {
-      this.key = key;
-      return this;
-    }
-
-    public Curve25519Secret build() {
-      Curve25519Secret val = new Curve25519Secret();
-      val.setKey(this.key);
-      return val;
-    }
   }
 }

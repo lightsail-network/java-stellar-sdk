@@ -20,10 +20,10 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class SorobanDataBuilderTest {
   LedgerKey readOnly =
-      new LedgerKey.Builder()
+      LedgerKey.builder()
           .discriminant(LedgerEntryType.ACCOUNT)
           .account(
-              new LedgerKey.LedgerKeyAccount.Builder()
+              LedgerKey.LedgerKeyAccount.builder()
                   .accountID(
                       KeyPair.fromAccountId(
                               "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -31,10 +31,10 @@ public class SorobanDataBuilderTest {
                   .build())
           .build();
   LedgerKey readWrite =
-      new LedgerKey.Builder()
+      LedgerKey.builder()
           .discriminant(LedgerEntryType.ACCOUNT)
           .account(
-              new LedgerKey.LedgerKeyAccount.Builder()
+              LedgerKey.LedgerKeyAccount.builder()
                   .accountID(
                       KeyPair.fromAccountId(
                               "GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX")
@@ -43,11 +43,11 @@ public class SorobanDataBuilderTest {
           .build();
 
   SorobanTransactionData emptySorobanData =
-      new SorobanTransactionData.Builder()
+      SorobanTransactionData.builder()
           .resources(
-              new SorobanResources.Builder()
+              SorobanResources.builder()
                   .footprint(
-                      new LedgerFootprint.Builder()
+                      LedgerFootprint.builder()
                           .readOnly(new LedgerKey[] {})
                           .readWrite(new LedgerKey[] {})
                           .build())
@@ -56,15 +56,15 @@ public class SorobanDataBuilderTest {
                   .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .build())
           .resourceFee(new Int64(0L))
-          .ext(new ExtensionPoint.Builder().discriminant(0).build())
+          .ext(ExtensionPoint.builder().discriminant(0).build())
           .build();
 
   SorobanTransactionData presetSorobanData =
-      new SorobanTransactionData.Builder()
+      SorobanTransactionData.builder()
           .resources(
-              new SorobanResources.Builder()
+              SorobanResources.builder()
                   .footprint(
-                      new LedgerFootprint.Builder()
+                      LedgerFootprint.builder()
                           .readOnly(new LedgerKey[] {readOnly})
                           .readWrite(new LedgerKey[] {readWrite})
                           .build())
@@ -73,7 +73,7 @@ public class SorobanDataBuilderTest {
                   .writeBytes(new Uint32(new XdrUnsignedInteger(3)))
                   .build())
           .resourceFee(new Int64(5L))
-          .ext(new ExtensionPoint.Builder().discriminant(0).build())
+          .ext(ExtensionPoint.builder().discriminant(0).build())
           .build();
 
   @Test

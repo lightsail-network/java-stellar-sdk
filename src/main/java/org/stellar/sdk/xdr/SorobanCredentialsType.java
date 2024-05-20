@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,16 +21,16 @@ import org.stellar.sdk.Base64Factory;
  */
 public enum SorobanCredentialsType implements XdrElement {
   SOROBAN_CREDENTIALS_SOURCE_ACCOUNT(0),
-  SOROBAN_CREDENTIALS_ADDRESS(1),
-  ;
-  private int mValue;
+  SOROBAN_CREDENTIALS_ADDRESS(1);
+
+  private final int value;
 
   SorobanCredentialsType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SorobanCredentialsType decode(XdrDataInputStream stream) throws IOException {

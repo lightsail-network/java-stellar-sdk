@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,33 +31,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LiquidityPoolWithdrawResult implements XdrElement {
-  public LiquidityPoolWithdrawResult() {}
-
-  LiquidityPoolWithdrawResultCode code;
-
-  public LiquidityPoolWithdrawResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(LiquidityPoolWithdrawResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private LiquidityPoolWithdrawResultCode discriminant;
-
-    public Builder discriminant(LiquidityPoolWithdrawResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public LiquidityPoolWithdrawResult build() {
-      LiquidityPoolWithdrawResult val = new LiquidityPoolWithdrawResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private LiquidityPoolWithdrawResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream, LiquidityPoolWithdrawResult encodedLiquidityPoolWithdrawResult)
@@ -94,21 +76,6 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
         break;
     }
     return decodedLiquidityPoolWithdrawResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LiquidityPoolWithdrawResult)) {
-      return false;
-    }
-
-    LiquidityPoolWithdrawResult other = (LiquidityPoolWithdrawResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

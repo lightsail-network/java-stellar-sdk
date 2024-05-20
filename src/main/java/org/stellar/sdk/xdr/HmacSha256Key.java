@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class HmacSha256Key implements XdrElement {
-  public HmacSha256Key() {}
-
   private byte[] key;
-
-  public byte[] getKey() {
-    return this.key;
-  }
-
-  public void setKey(byte[] value) {
-    this.key = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, HmacSha256Key encodedHmacSha256Key)
       throws IOException {
@@ -50,21 +47,6 @@ public class HmacSha256Key implements XdrElement {
     decodedHmacSha256Key.key = new byte[keysize];
     stream.read(decodedHmacSha256Key.key, 0, keysize);
     return decodedHmacSha256Key;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.key);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof HmacSha256Key)) {
-      return false;
-    }
-
-    HmacSha256Key other = (HmacSha256Key) object;
-    return Arrays.equals(this.key, other.key);
   }
 
   @Override
@@ -89,20 +71,5 @@ public class HmacSha256Key implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private byte[] key;
-
-    public Builder key(byte[] key) {
-      this.key = key;
-      return this;
-    }
-
-    public HmacSha256Key build() {
-      HmacSha256Key val = new HmacSha256Key();
-      val.setKey(this.key);
-      return val;
-    }
   }
 }

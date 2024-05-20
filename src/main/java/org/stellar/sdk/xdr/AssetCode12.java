@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque AssetCode12[12];
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssetCode12 implements XdrElement {
   private byte[] AssetCode12;
-
-  public AssetCode12() {}
-
-  public AssetCode12(byte[] AssetCode12) {
-    this.AssetCode12 = AssetCode12;
-  }
-
-  public byte[] getAssetCode12() {
-    return this.AssetCode12;
-  }
-
-  public void setAssetCode12(byte[] value) {
-    this.AssetCode12 = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, AssetCode12 encodedAssetCode12)
       throws IOException {
@@ -51,21 +42,6 @@ public class AssetCode12 implements XdrElement {
     decodedAssetCode12.AssetCode12 = new byte[AssetCode12size];
     stream.read(decodedAssetCode12.AssetCode12, 0, AssetCode12size);
     return decodedAssetCode12;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.AssetCode12);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AssetCode12)) {
-      return false;
-    }
-
-    AssetCode12 other = (AssetCode12) object;
-    return Arrays.equals(this.AssetCode12, other.AssetCode12);
   }
 
   @Override

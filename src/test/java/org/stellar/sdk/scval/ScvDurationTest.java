@@ -16,7 +16,7 @@ public class ScvDurationTest {
     BigInteger value = XdrUnsignedHyperInteger.MAX_VALUE;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_DURATION)
             .duration(new Duration(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();
@@ -31,7 +31,7 @@ public class ScvDurationTest {
     BigInteger value = XdrUnsignedHyperInteger.MIN_VALUE;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_DURATION)
             .duration(new Duration(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();

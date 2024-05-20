@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque EncryptedBody&lt;64000&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EncryptedBody implements XdrElement {
   private byte[] EncryptedBody;
-
-  public EncryptedBody() {}
-
-  public EncryptedBody(byte[] EncryptedBody) {
-    this.EncryptedBody = EncryptedBody;
-  }
-
-  public byte[] getEncryptedBody() {
-    return this.EncryptedBody;
-  }
-
-  public void setEncryptedBody(byte[] value) {
-    this.EncryptedBody = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, EncryptedBody encodedEncryptedBody)
       throws IOException {
@@ -52,21 +43,6 @@ public class EncryptedBody implements XdrElement {
     decodedEncryptedBody.EncryptedBody = new byte[EncryptedBodysize];
     stream.read(decodedEncryptedBody.EncryptedBody, 0, EncryptedBodysize);
     return decodedEncryptedBody;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.EncryptedBody);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof EncryptedBody)) {
-      return false;
-    }
-
-    EncryptedBody other = (EncryptedBody) object;
-    return Arrays.equals(this.EncryptedBody, other.EncryptedBody);
   }
 
   @Override

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -32,38 +35,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanTransactionData implements XdrElement {
-  public SorobanTransactionData() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private SorobanResources resources;
-
-  public SorobanResources getResources() {
-    return this.resources;
-  }
-
-  public void setResources(SorobanResources value) {
-    this.resources = value;
-  }
-
   private Int64 resourceFee;
-
-  public Int64 getResourceFee() {
-    return this.resourceFee;
-  }
-
-  public void setResourceFee(Int64 value) {
-    this.resourceFee = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SorobanTransactionData encodedSorobanTransactionData)
@@ -83,23 +62,6 @@ public class SorobanTransactionData implements XdrElement {
     decodedSorobanTransactionData.resources = SorobanResources.decode(stream);
     decodedSorobanTransactionData.resourceFee = Int64.decode(stream);
     return decodedSorobanTransactionData;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ext, this.resources, this.resourceFee);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanTransactionData)) {
-      return false;
-    }
-
-    SorobanTransactionData other = (SorobanTransactionData) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.resources, other.resources)
-        && Objects.equals(this.resourceFee, other.resourceFee);
   }
 
   @Override
@@ -124,34 +86,5 @@ public class SorobanTransactionData implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private SorobanResources resources;
-    private Int64 resourceFee;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder resources(SorobanResources resources) {
-      this.resources = resources;
-      return this;
-    }
-
-    public Builder resourceFee(Int64 resourceFee) {
-      this.resourceFee = resourceFee;
-      return this;
-    }
-
-    public SorobanTransactionData build() {
-      SorobanTransactionData val = new SorobanTransactionData();
-      val.setExt(this.ext);
-      val.setResources(this.resources);
-      val.setResourceFee(this.resourceFee);
-      return val;
-    }
   }
 }

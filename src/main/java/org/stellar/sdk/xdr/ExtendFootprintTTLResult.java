@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -26,33 +29,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ExtendFootprintTTLResult implements XdrElement {
-  public ExtendFootprintTTLResult() {}
-
-  ExtendFootprintTTLResultCode code;
-
-  public ExtendFootprintTTLResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(ExtendFootprintTTLResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private ExtendFootprintTTLResultCode discriminant;
-
-    public Builder discriminant(ExtendFootprintTTLResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public ExtendFootprintTTLResult build() {
-      ExtendFootprintTTLResult val = new ExtendFootprintTTLResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private ExtendFootprintTTLResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream, ExtendFootprintTTLResult encodedExtendFootprintTTLResult)
@@ -87,21 +69,6 @@ public class ExtendFootprintTTLResult implements XdrElement {
         break;
     }
     return decodedExtendFootprintTTLResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ExtendFootprintTTLResult)) {
-      return false;
-    }
-
-    ExtendFootprintTTLResult other = (ExtendFootprintTTLResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

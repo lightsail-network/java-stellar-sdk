@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Price implements XdrElement {
-  public Price() {}
-
   private Int32 n;
-
-  public Int32 getN() {
-    return this.n;
-  }
-
-  public void setN(Int32 value) {
-    this.n = value;
-  }
-
   private Int32 d;
-
-  public Int32 getD() {
-    return this.d;
-  }
-
-  public void setD(Int32 value) {
-    this.d = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Price encodedPrice) throws IOException {
     Int32.encode(stream, encodedPrice.n);
@@ -59,21 +47,6 @@ public class Price implements XdrElement {
     decodedPrice.n = Int32.decode(stream);
     decodedPrice.d = Int32.decode(stream);
     return decodedPrice;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.n, this.d);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Price)) {
-      return false;
-    }
-
-    Price other = (Price) object;
-    return Objects.equals(this.n, other.n) && Objects.equals(this.d, other.d);
   }
 
   @Override
@@ -98,27 +71,5 @@ public class Price implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Int32 n;
-    private Int32 d;
-
-    public Builder n(Int32 n) {
-      this.n = n;
-      return this;
-    }
-
-    public Builder d(Int32 d) {
-      this.d = d;
-      return this;
-    }
-
-    public Price build() {
-      Price val = new Price();
-      val.setN(this.n);
-      val.setD(this.d);
-      return val;
-    }
   }
 }

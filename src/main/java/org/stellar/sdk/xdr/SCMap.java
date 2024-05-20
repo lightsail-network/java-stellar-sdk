@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef SCMapEntry SCMap&lt;&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SCMap implements XdrElement {
   private SCMapEntry[] SCMap;
-
-  public SCMap() {}
-
-  public SCMap(SCMapEntry[] SCMap) {
-    this.SCMap = SCMap;
-  }
-
-  public SCMapEntry[] getSCMap() {
-    return this.SCMap;
-  }
-
-  public void setSCMap(SCMapEntry[] value) {
-    this.SCMap = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCMap encodedSCMap) throws IOException {
     int SCMapsize = encodedSCMap.getSCMap().length;
@@ -55,21 +46,6 @@ public class SCMap implements XdrElement {
       decodedSCMap.SCMap[i] = SCMapEntry.decode(stream);
     }
     return decodedSCMap;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.SCMap);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCMap)) {
-      return false;
-    }
-
-    SCMap other = (SCMap) object;
-    return Arrays.equals(this.SCMap, other.SCMap);
   }
 
   @Override

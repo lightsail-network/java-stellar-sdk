@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,16 +29,16 @@ public enum ClaimPredicateType implements XdrElement {
   CLAIM_PREDICATE_OR(2),
   CLAIM_PREDICATE_NOT(3),
   CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME(4),
-  CLAIM_PREDICATE_BEFORE_RELATIVE_TIME(5),
-  ;
-  private int mValue;
+  CLAIM_PREDICATE_BEFORE_RELATIVE_TIME(5);
+
+  private final int value;
 
   ClaimPredicateType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ClaimPredicateType decode(XdrDataInputStream stream) throws IOException {

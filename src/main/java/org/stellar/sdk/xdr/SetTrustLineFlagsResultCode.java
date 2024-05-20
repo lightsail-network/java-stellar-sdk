@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,16 +33,16 @@ public enum SetTrustLineFlagsResultCode implements XdrElement {
   SET_TRUST_LINE_FLAGS_NO_TRUST_LINE(-2),
   SET_TRUST_LINE_FLAGS_CANT_REVOKE(-3),
   SET_TRUST_LINE_FLAGS_INVALID_STATE(-4),
-  SET_TRUST_LINE_FLAGS_LOW_RESERVE(-5),
-  ;
-  private int mValue;
+  SET_TRUST_LINE_FLAGS_LOW_RESERVE(-5);
+
+  private final int value;
 
   SetTrustLineFlagsResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SetTrustLineFlagsResultCode decode(XdrDataInputStream stream) throws IOException {

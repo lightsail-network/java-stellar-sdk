@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,67 +27,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class PersistedSCPState implements XdrElement {
-  public PersistedSCPState() {}
-
-  Integer v;
-
-  public Integer getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Integer value) {
-    this.v = value;
-  }
-
+  private Integer discriminant;
   private PersistedSCPStateV0 v0;
-
-  public PersistedSCPStateV0 getV0() {
-    return this.v0;
-  }
-
-  public void setV0(PersistedSCPStateV0 value) {
-    this.v0 = value;
-  }
-
   private PersistedSCPStateV1 v1;
-
-  public PersistedSCPStateV1 getV1() {
-    return this.v1;
-  }
-
-  public void setV1(PersistedSCPStateV1 value) {
-    this.v1 = value;
-  }
-
-  public static final class Builder {
-    private Integer discriminant;
-    private PersistedSCPStateV0 v0;
-    private PersistedSCPStateV1 v1;
-
-    public Builder discriminant(Integer discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v0(PersistedSCPStateV0 v0) {
-      this.v0 = v0;
-      return this;
-    }
-
-    public Builder v1(PersistedSCPStateV1 v1) {
-      this.v1 = v1;
-      return this;
-    }
-
-    public PersistedSCPState build() {
-      PersistedSCPState val = new PersistedSCPState();
-      val.setDiscriminant(discriminant);
-      val.setV0(this.v0);
-      val.setV1(this.v1);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, PersistedSCPState encodedPersistedSCPState)
       throws IOException {
@@ -118,23 +68,6 @@ public class PersistedSCPState implements XdrElement {
         break;
     }
     return decodedPersistedSCPState;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v0, this.v1, this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PersistedSCPState)) {
-      return false;
-    }
-
-    PersistedSCPState other = (PersistedSCPState) object;
-    return Objects.equals(this.v0, other.v0)
-        && Objects.equals(this.v1, other.v1)
-        && Objects.equals(this.v, other.v);
   }
 
   @Override

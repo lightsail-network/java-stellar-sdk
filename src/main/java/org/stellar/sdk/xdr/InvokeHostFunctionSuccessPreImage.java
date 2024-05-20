@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class InvokeHostFunctionSuccessPreImage implements XdrElement {
-  public InvokeHostFunctionSuccessPreImage() {}
-
   private SCVal returnValue;
-
-  public SCVal getReturnValue() {
-    return this.returnValue;
-  }
-
-  public void setReturnValue(SCVal value) {
-    this.returnValue = value;
-  }
-
   private ContractEvent[] events;
-
-  public ContractEvent[] getEvents() {
-    return this.events;
-  }
-
-  public void setEvents(ContractEvent[] value) {
-    this.events = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -76,22 +63,6 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.returnValue, Arrays.hashCode(this.events));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof InvokeHostFunctionSuccessPreImage)) {
-      return false;
-    }
-
-    InvokeHostFunctionSuccessPreImage other = (InvokeHostFunctionSuccessPreImage) object;
-    return Objects.equals(this.returnValue, other.returnValue)
-        && Arrays.equals(this.events, other.events);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -113,27 +84,5 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCVal returnValue;
-    private ContractEvent[] events;
-
-    public Builder returnValue(SCVal returnValue) {
-      this.returnValue = returnValue;
-      return this;
-    }
-
-    public Builder events(ContractEvent[] events) {
-      this.events = events;
-      return this;
-    }
-
-    public InvokeHostFunctionSuccessPreImage build() {
-      InvokeHostFunctionSuccessPreImage val = new InvokeHostFunctionSuccessPreImage();
-      val.setReturnValue(this.returnValue);
-      val.setEvents(this.events);
-      return val;
-    }
   }
 }

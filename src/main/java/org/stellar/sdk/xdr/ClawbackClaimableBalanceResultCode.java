@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,16 +28,16 @@ public enum ClawbackClaimableBalanceResultCode implements XdrElement {
   CLAWBACK_CLAIMABLE_BALANCE_SUCCESS(0),
   CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST(-1),
   CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER(-2),
-  CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED(-3),
-  ;
-  private int mValue;
+  CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED(-3);
+
+  private final int value;
 
   ClawbackClaimableBalanceResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ClawbackClaimableBalanceResultCode decode(XdrDataInputStream stream)

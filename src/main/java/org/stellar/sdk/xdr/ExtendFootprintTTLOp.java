@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ExtendFootprintTTLOp implements XdrElement {
-  public ExtendFootprintTTLOp() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private Uint32 extendTo;
-
-  public Uint32 getExtendTo() {
-    return this.extendTo;
-  }
-
-  public void setExtendTo(Uint32 value) {
-    this.extendTo = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ExtendFootprintTTLOp encodedExtendFootprintTTLOp)
@@ -61,21 +49,6 @@ public class ExtendFootprintTTLOp implements XdrElement {
     decodedExtendFootprintTTLOp.ext = ExtensionPoint.decode(stream);
     decodedExtendFootprintTTLOp.extendTo = Uint32.decode(stream);
     return decodedExtendFootprintTTLOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ext, this.extendTo);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ExtendFootprintTTLOp)) {
-      return false;
-    }
-
-    ExtendFootprintTTLOp other = (ExtendFootprintTTLOp) object;
-    return Objects.equals(this.ext, other.ext) && Objects.equals(this.extendTo, other.extendTo);
   }
 
   @Override
@@ -100,27 +73,5 @@ public class ExtendFootprintTTLOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private Uint32 extendTo;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder extendTo(Uint32 extendTo) {
-      this.extendTo = extendTo;
-      return this;
-    }
-
-    public ExtendFootprintTTLOp build() {
-      ExtendFootprintTTLOp val = new ExtendFootprintTTLOp();
-      val.setExt(this.ext);
-      val.setExtendTo(this.extendTo);
-      return val;
-    }
   }
 }

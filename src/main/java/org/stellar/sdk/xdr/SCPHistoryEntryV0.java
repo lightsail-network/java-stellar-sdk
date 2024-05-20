@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCPHistoryEntryV0 implements XdrElement {
-  public SCPHistoryEntryV0() {}
-
   private SCPQuorumSet[] quorumSets;
-
-  public SCPQuorumSet[] getQuorumSets() {
-    return this.quorumSets;
-  }
-
-  public void setQuorumSets(SCPQuorumSet[] value) {
-    this.quorumSets = value;
-  }
-
   private LedgerSCPMessages ledgerMessages;
-
-  public LedgerSCPMessages getLedgerMessages() {
-    return this.ledgerMessages;
-  }
-
-  public void setLedgerMessages(LedgerSCPMessages value) {
-    this.ledgerMessages = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCPHistoryEntryV0 encodedSCPHistoryEntryV0)
       throws IOException {
@@ -72,22 +59,6 @@ public class SCPHistoryEntryV0 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(Arrays.hashCode(this.quorumSets), this.ledgerMessages);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCPHistoryEntryV0)) {
-      return false;
-    }
-
-    SCPHistoryEntryV0 other = (SCPHistoryEntryV0) object;
-    return Arrays.equals(this.quorumSets, other.quorumSets)
-        && Objects.equals(this.ledgerMessages, other.ledgerMessages);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -109,27 +80,5 @@ public class SCPHistoryEntryV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCPQuorumSet[] quorumSets;
-    private LedgerSCPMessages ledgerMessages;
-
-    public Builder quorumSets(SCPQuorumSet[] quorumSets) {
-      this.quorumSets = quorumSets;
-      return this;
-    }
-
-    public Builder ledgerMessages(LedgerSCPMessages ledgerMessages) {
-      this.ledgerMessages = ledgerMessages;
-      return this;
-    }
-
-    public SCPHistoryEntryV0 build() {
-      SCPHistoryEntryV0 val = new SCPHistoryEntryV0();
-      val.setQuorumSets(this.quorumSets);
-      val.setLedgerMessages(this.ledgerMessages);
-      return val;
-    }
   }
 }
