@@ -162,10 +162,10 @@ private fun testSDK(): String {
         val source: KeyPair =
             KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS")
 
-        val ledgerKey = LedgerKey.Builder()
+        val ledgerKey = LedgerKey.builder()
             .discriminant(LedgerEntryType.ACCOUNT)
             .account(
-                LedgerKeyAccount.Builder()
+                LedgerKeyAccount.builder()
                     .accountID(
                         KeyPair.fromAccountId(
                             "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
@@ -175,11 +175,11 @@ private fun testSDK(): String {
                     .build()
             )
             .build()
-        val sorobanData = SorobanTransactionData.Builder()
+        val sorobanData = SorobanTransactionData.builder()
             .resources(
-                SorobanResources.Builder()
+                SorobanResources.builder()
                     .footprint(
-                        LedgerFootprint.Builder()
+                        LedgerFootprint.builder()
                             .readOnly(arrayOf(ledgerKey))
                             .readWrite(arrayOf())
                             .build()
@@ -190,16 +190,16 @@ private fun testSDK(): String {
                     .build()
             )
             .resourceFee(Int64(100L))
-            .ext(ExtensionPoint.Builder().discriminant(0).build())
+            .ext(ExtensionPoint.builder().discriminant(0).build())
             .build()
         val sorobanDataString = sorobanData.toXdrBase64()
 
-        val createContractArgs = CreateContractArgs.Builder()
+        val createContractArgs = CreateContractArgs.builder()
             .contractIDPreimage(
-                ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimageFromAddress.builder()
                             .address(
                                 Address(
                                     "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO"
@@ -212,12 +212,12 @@ private fun testSDK(): String {
                     .build()
             )
             .executable(
-                ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build()
             )
             .build()
-        val hostFunction = HostFunction.Builder()
+        val hostFunction = HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build()
@@ -245,10 +245,10 @@ private fun testSDK(): String {
         val validUntilLedgerSeq = 654656L
         val network = Network.TESTNET
 
-        val credentials = SorobanCredentials.Builder()
+        val credentials = SorobanCredentials.builder()
             .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
             .address(
-                SorobanAddressCredentials.Builder()
+                SorobanAddressCredentials.builder()
                     .address(Address(signer.accountId).toSCAddress())
                     .nonce(Int64(123456789L))
                     .signatureExpirationLedger(Uint32(XdrUnsignedInteger(0L)))
@@ -256,14 +256,14 @@ private fun testSDK(): String {
                     .build()
             )
             .build()
-        val invocation = SorobanAuthorizedInvocation.Builder()
+        val invocation = SorobanAuthorizedInvocation.builder()
             .function(
-                SorobanAuthorizedFunction.Builder()
+                SorobanAuthorizedFunction.builder()
                     .discriminant(
                         SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN
                     )
                     .contractFn(
-                        InvokeContractArgs.Builder()
+                        InvokeContractArgs.builder()
                             .contractAddress(Address(contractId).toSCAddress())
                             .functionName(Scv.toSymbol("increment").sym)
                             .args(arrayOfNulls(0))
@@ -273,7 +273,7 @@ private fun testSDK(): String {
             )
             .subInvocations(arrayOfNulls(0))
             .build()
-        val entry = SorobanAuthorizationEntry.Builder()
+        val entry = SorobanAuthorizationEntry.builder()
             .credentials(credentials)
             .rootInvocation(invocation)
             .build()
