@@ -38,9 +38,9 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
       InvokeHostFunctionSuccessPreImage encodedInvokeHostFunctionSuccessPreImage)
       throws IOException {
     SCVal.encode(stream, encodedInvokeHostFunctionSuccessPreImage.returnValue);
-    int eventssize = encodedInvokeHostFunctionSuccessPreImage.getEvents().length;
-    stream.writeInt(eventssize);
-    for (int i = 0; i < eventssize; i++) {
+    int eventsSize = encodedInvokeHostFunctionSuccessPreImage.getEvents().length;
+    stream.writeInt(eventsSize);
+    for (int i = 0; i < eventsSize; i++) {
       ContractEvent.encode(stream, encodedInvokeHostFunctionSuccessPreImage.events[i]);
     }
   }
@@ -54,9 +54,9 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
     InvokeHostFunctionSuccessPreImage decodedInvokeHostFunctionSuccessPreImage =
         new InvokeHostFunctionSuccessPreImage();
     decodedInvokeHostFunctionSuccessPreImage.returnValue = SCVal.decode(stream);
-    int eventssize = stream.readInt();
-    decodedInvokeHostFunctionSuccessPreImage.events = new ContractEvent[eventssize];
-    for (int i = 0; i < eventssize; i++) {
+    int eventsSize = stream.readInt();
+    decodedInvokeHostFunctionSuccessPreImage.events = new ContractEvent[eventsSize];
+    for (int i = 0; i < eventsSize; i++) {
       decodedInvokeHostFunctionSuccessPreImage.events[i] = ContractEvent.decode(stream);
     }
     return decodedInvokeHostFunctionSuccessPreImage;

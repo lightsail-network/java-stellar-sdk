@@ -60,9 +60,9 @@ public class TransactionV0 implements XdrElement {
       stream.writeInt(0);
     }
     Memo.encode(stream, encodedTransactionV0.memo);
-    int operationssize = encodedTransactionV0.getOperations().length;
-    stream.writeInt(operationssize);
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = encodedTransactionV0.getOperations().length;
+    stream.writeInt(operationsSize);
+    for (int i = 0; i < operationsSize; i++) {
       Operation.encode(stream, encodedTransactionV0.operations[i]);
     }
     TransactionV0Ext.encode(stream, encodedTransactionV0.ext);
@@ -82,9 +82,9 @@ public class TransactionV0 implements XdrElement {
       decodedTransactionV0.timeBounds = TimeBounds.decode(stream);
     }
     decodedTransactionV0.memo = Memo.decode(stream);
-    int operationssize = stream.readInt();
-    decodedTransactionV0.operations = new Operation[operationssize];
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = stream.readInt();
+    decodedTransactionV0.operations = new Operation[operationsSize];
+    for (int i = 0; i < operationsSize; i++) {
       decodedTransactionV0.operations[i] = Operation.decode(stream);
     }
     decodedTransactionV0.ext = TransactionV0Ext.decode(stream);

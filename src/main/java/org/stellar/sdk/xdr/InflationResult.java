@@ -42,9 +42,9 @@ public class InflationResult implements XdrElement {
     stream.writeInt(encodedInflationResult.getDiscriminant().getValue());
     switch (encodedInflationResult.getDiscriminant()) {
       case INFLATION_SUCCESS:
-        int payoutssize = encodedInflationResult.getPayouts().length;
-        stream.writeInt(payoutssize);
-        for (int i = 0; i < payoutssize; i++) {
+        int payoutsSize = encodedInflationResult.getPayouts().length;
+        stream.writeInt(payoutsSize);
+        for (int i = 0; i < payoutsSize; i++) {
           InflationPayout.encode(stream, encodedInflationResult.payouts[i]);
         }
         break;
@@ -63,9 +63,9 @@ public class InflationResult implements XdrElement {
     decodedInflationResult.setDiscriminant(discriminant);
     switch (decodedInflationResult.getDiscriminant()) {
       case INFLATION_SUCCESS:
-        int payoutssize = stream.readInt();
-        decodedInflationResult.payouts = new InflationPayout[payoutssize];
-        for (int i = 0; i < payoutssize; i++) {
+        int payoutsSize = stream.readInt();
+        decodedInflationResult.payouts = new InflationPayout[payoutsSize];
+        for (int i = 0; i < payoutsSize; i++) {
           decodedInflationResult.payouts[i] = InflationPayout.decode(stream);
         }
         break;

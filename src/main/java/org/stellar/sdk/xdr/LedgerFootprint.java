@@ -35,14 +35,14 @@ public class LedgerFootprint implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, LedgerFootprint encodedLedgerFootprint)
       throws IOException {
-    int readOnlysize = encodedLedgerFootprint.getReadOnly().length;
-    stream.writeInt(readOnlysize);
-    for (int i = 0; i < readOnlysize; i++) {
+    int readOnlySize = encodedLedgerFootprint.getReadOnly().length;
+    stream.writeInt(readOnlySize);
+    for (int i = 0; i < readOnlySize; i++) {
       LedgerKey.encode(stream, encodedLedgerFootprint.readOnly[i]);
     }
-    int readWritesize = encodedLedgerFootprint.getReadWrite().length;
-    stream.writeInt(readWritesize);
-    for (int i = 0; i < readWritesize; i++) {
+    int readWriteSize = encodedLedgerFootprint.getReadWrite().length;
+    stream.writeInt(readWriteSize);
+    for (int i = 0; i < readWriteSize; i++) {
       LedgerKey.encode(stream, encodedLedgerFootprint.readWrite[i]);
     }
   }
@@ -53,14 +53,14 @@ public class LedgerFootprint implements XdrElement {
 
   public static LedgerFootprint decode(XdrDataInputStream stream) throws IOException {
     LedgerFootprint decodedLedgerFootprint = new LedgerFootprint();
-    int readOnlysize = stream.readInt();
-    decodedLedgerFootprint.readOnly = new LedgerKey[readOnlysize];
-    for (int i = 0; i < readOnlysize; i++) {
+    int readOnlySize = stream.readInt();
+    decodedLedgerFootprint.readOnly = new LedgerKey[readOnlySize];
+    for (int i = 0; i < readOnlySize; i++) {
       decodedLedgerFootprint.readOnly[i] = LedgerKey.decode(stream);
     }
-    int readWritesize = stream.readInt();
-    decodedLedgerFootprint.readWrite = new LedgerKey[readWritesize];
-    for (int i = 0; i < readWritesize; i++) {
+    int readWriteSize = stream.readInt();
+    decodedLedgerFootprint.readWrite = new LedgerKey[readWriteSize];
+    for (int i = 0; i < readWriteSize; i++) {
       decodedLedgerFootprint.readWrite[i] = LedgerKey.decode(stream);
     }
     return decodedLedgerFootprint;

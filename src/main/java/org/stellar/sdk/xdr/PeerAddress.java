@@ -114,12 +114,12 @@ public class PeerAddress implements XdrElement {
       stream.writeInt(encodedPeerAddressIp.getDiscriminant().getValue());
       switch (encodedPeerAddressIp.getDiscriminant()) {
         case IPv4:
-          int ipv4size = encodedPeerAddressIp.ipv4.length;
-          stream.write(encodedPeerAddressIp.getIpv4(), 0, ipv4size);
+          int ipv4Size = encodedPeerAddressIp.ipv4.length;
+          stream.write(encodedPeerAddressIp.getIpv4(), 0, ipv4Size);
           break;
         case IPv6:
-          int ipv6size = encodedPeerAddressIp.ipv6.length;
-          stream.write(encodedPeerAddressIp.getIpv6(), 0, ipv6size);
+          int ipv6Size = encodedPeerAddressIp.ipv6.length;
+          stream.write(encodedPeerAddressIp.getIpv6(), 0, ipv6Size);
           break;
       }
     }
@@ -134,14 +134,14 @@ public class PeerAddress implements XdrElement {
       decodedPeerAddressIp.setDiscriminant(discriminant);
       switch (decodedPeerAddressIp.getDiscriminant()) {
         case IPv4:
-          int ipv4size = 4;
-          decodedPeerAddressIp.ipv4 = new byte[ipv4size];
-          stream.read(decodedPeerAddressIp.ipv4, 0, ipv4size);
+          int ipv4Size = 4;
+          decodedPeerAddressIp.ipv4 = new byte[ipv4Size];
+          stream.read(decodedPeerAddressIp.ipv4, 0, ipv4Size);
           break;
         case IPv6:
-          int ipv6size = 16;
-          decodedPeerAddressIp.ipv6 = new byte[ipv6size];
-          stream.read(decodedPeerAddressIp.ipv6, 0, ipv6size);
+          int ipv6Size = 16;
+          decodedPeerAddressIp.ipv6 = new byte[ipv6Size];
+          stream.read(decodedPeerAddressIp.ipv6, 0, ipv6Size);
           break;
       }
       return decodedPeerAddressIp;

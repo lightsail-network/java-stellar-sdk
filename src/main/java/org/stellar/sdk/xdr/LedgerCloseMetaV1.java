@@ -70,32 +70,32 @@ public class LedgerCloseMetaV1 implements XdrElement {
     LedgerCloseMetaExt.encode(stream, encodedLedgerCloseMetaV1.ext);
     LedgerHeaderHistoryEntry.encode(stream, encodedLedgerCloseMetaV1.ledgerHeader);
     GeneralizedTransactionSet.encode(stream, encodedLedgerCloseMetaV1.txSet);
-    int txProcessingsize = encodedLedgerCloseMetaV1.getTxProcessing().length;
-    stream.writeInt(txProcessingsize);
-    for (int i = 0; i < txProcessingsize; i++) {
+    int txProcessingSize = encodedLedgerCloseMetaV1.getTxProcessing().length;
+    stream.writeInt(txProcessingSize);
+    for (int i = 0; i < txProcessingSize; i++) {
       TransactionResultMeta.encode(stream, encodedLedgerCloseMetaV1.txProcessing[i]);
     }
-    int upgradesProcessingsize = encodedLedgerCloseMetaV1.getUpgradesProcessing().length;
-    stream.writeInt(upgradesProcessingsize);
-    for (int i = 0; i < upgradesProcessingsize; i++) {
+    int upgradesProcessingSize = encodedLedgerCloseMetaV1.getUpgradesProcessing().length;
+    stream.writeInt(upgradesProcessingSize);
+    for (int i = 0; i < upgradesProcessingSize; i++) {
       UpgradeEntryMeta.encode(stream, encodedLedgerCloseMetaV1.upgradesProcessing[i]);
     }
-    int scpInfosize = encodedLedgerCloseMetaV1.getScpInfo().length;
-    stream.writeInt(scpInfosize);
-    for (int i = 0; i < scpInfosize; i++) {
+    int scpInfoSize = encodedLedgerCloseMetaV1.getScpInfo().length;
+    stream.writeInt(scpInfoSize);
+    for (int i = 0; i < scpInfoSize; i++) {
       SCPHistoryEntry.encode(stream, encodedLedgerCloseMetaV1.scpInfo[i]);
     }
     Uint64.encode(stream, encodedLedgerCloseMetaV1.totalByteSizeOfBucketList);
-    int evictedTemporaryLedgerKeyssize =
+    int evictedTemporaryLedgerKeysSize =
         encodedLedgerCloseMetaV1.getEvictedTemporaryLedgerKeys().length;
-    stream.writeInt(evictedTemporaryLedgerKeyssize);
-    for (int i = 0; i < evictedTemporaryLedgerKeyssize; i++) {
+    stream.writeInt(evictedTemporaryLedgerKeysSize);
+    for (int i = 0; i < evictedTemporaryLedgerKeysSize; i++) {
       LedgerKey.encode(stream, encodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys[i]);
     }
-    int evictedPersistentLedgerEntriessize =
+    int evictedPersistentLedgerEntriesSize =
         encodedLedgerCloseMetaV1.getEvictedPersistentLedgerEntries().length;
-    stream.writeInt(evictedPersistentLedgerEntriessize);
-    for (int i = 0; i < evictedPersistentLedgerEntriessize; i++) {
+    stream.writeInt(evictedPersistentLedgerEntriesSize);
+    for (int i = 0; i < evictedPersistentLedgerEntriesSize; i++) {
       LedgerEntry.encode(stream, encodedLedgerCloseMetaV1.evictedPersistentLedgerEntries[i]);
     }
   }
@@ -109,32 +109,32 @@ public class LedgerCloseMetaV1 implements XdrElement {
     decodedLedgerCloseMetaV1.ext = LedgerCloseMetaExt.decode(stream);
     decodedLedgerCloseMetaV1.ledgerHeader = LedgerHeaderHistoryEntry.decode(stream);
     decodedLedgerCloseMetaV1.txSet = GeneralizedTransactionSet.decode(stream);
-    int txProcessingsize = stream.readInt();
-    decodedLedgerCloseMetaV1.txProcessing = new TransactionResultMeta[txProcessingsize];
-    for (int i = 0; i < txProcessingsize; i++) {
+    int txProcessingSize = stream.readInt();
+    decodedLedgerCloseMetaV1.txProcessing = new TransactionResultMeta[txProcessingSize];
+    for (int i = 0; i < txProcessingSize; i++) {
       decodedLedgerCloseMetaV1.txProcessing[i] = TransactionResultMeta.decode(stream);
     }
-    int upgradesProcessingsize = stream.readInt();
-    decodedLedgerCloseMetaV1.upgradesProcessing = new UpgradeEntryMeta[upgradesProcessingsize];
-    for (int i = 0; i < upgradesProcessingsize; i++) {
+    int upgradesProcessingSize = stream.readInt();
+    decodedLedgerCloseMetaV1.upgradesProcessing = new UpgradeEntryMeta[upgradesProcessingSize];
+    for (int i = 0; i < upgradesProcessingSize; i++) {
       decodedLedgerCloseMetaV1.upgradesProcessing[i] = UpgradeEntryMeta.decode(stream);
     }
-    int scpInfosize = stream.readInt();
-    decodedLedgerCloseMetaV1.scpInfo = new SCPHistoryEntry[scpInfosize];
-    for (int i = 0; i < scpInfosize; i++) {
+    int scpInfoSize = stream.readInt();
+    decodedLedgerCloseMetaV1.scpInfo = new SCPHistoryEntry[scpInfoSize];
+    for (int i = 0; i < scpInfoSize; i++) {
       decodedLedgerCloseMetaV1.scpInfo[i] = SCPHistoryEntry.decode(stream);
     }
     decodedLedgerCloseMetaV1.totalByteSizeOfBucketList = Uint64.decode(stream);
-    int evictedTemporaryLedgerKeyssize = stream.readInt();
+    int evictedTemporaryLedgerKeysSize = stream.readInt();
     decodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys =
-        new LedgerKey[evictedTemporaryLedgerKeyssize];
-    for (int i = 0; i < evictedTemporaryLedgerKeyssize; i++) {
+        new LedgerKey[evictedTemporaryLedgerKeysSize];
+    for (int i = 0; i < evictedTemporaryLedgerKeysSize; i++) {
       decodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys[i] = LedgerKey.decode(stream);
     }
-    int evictedPersistentLedgerEntriessize = stream.readInt();
+    int evictedPersistentLedgerEntriesSize = stream.readInt();
     decodedLedgerCloseMetaV1.evictedPersistentLedgerEntries =
-        new LedgerEntry[evictedPersistentLedgerEntriessize];
-    for (int i = 0; i < evictedPersistentLedgerEntriessize; i++) {
+        new LedgerEntry[evictedPersistentLedgerEntriesSize];
+    for (int i = 0; i < evictedPersistentLedgerEntriesSize; i++) {
       decodedLedgerCloseMetaV1.evictedPersistentLedgerEntries[i] = LedgerEntry.decode(stream);
     }
     return decodedLedgerCloseMetaV1;

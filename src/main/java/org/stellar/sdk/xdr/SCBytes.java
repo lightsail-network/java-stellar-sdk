@@ -27,9 +27,9 @@ public class SCBytes implements XdrElement {
   private byte[] SCBytes;
 
   public static void encode(XdrDataOutputStream stream, SCBytes encodedSCBytes) throws IOException {
-    int SCBytessize = encodedSCBytes.SCBytes.length;
-    stream.writeInt(SCBytessize);
-    stream.write(encodedSCBytes.getSCBytes(), 0, SCBytessize);
+    int SCBytesSize = encodedSCBytes.SCBytes.length;
+    stream.writeInt(SCBytesSize);
+    stream.write(encodedSCBytes.getSCBytes(), 0, SCBytesSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -38,9 +38,9 @@ public class SCBytes implements XdrElement {
 
   public static SCBytes decode(XdrDataInputStream stream) throws IOException {
     SCBytes decodedSCBytes = new SCBytes();
-    int SCBytessize = stream.readInt();
-    decodedSCBytes.SCBytes = new byte[SCBytessize];
-    stream.read(decodedSCBytes.SCBytes, 0, SCBytessize);
+    int SCBytesSize = stream.readInt();
+    decodedSCBytes.SCBytes = new byte[SCBytesSize];
+    stream.read(decodedSCBytes.SCBytes, 0, SCBytesSize);
     return decodedSCBytes;
   }
 

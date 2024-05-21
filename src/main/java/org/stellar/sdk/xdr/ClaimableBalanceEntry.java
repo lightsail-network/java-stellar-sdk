@@ -59,9 +59,9 @@ public class ClaimableBalanceEntry implements XdrElement {
       XdrDataOutputStream stream, ClaimableBalanceEntry encodedClaimableBalanceEntry)
       throws IOException {
     ClaimableBalanceID.encode(stream, encodedClaimableBalanceEntry.balanceID);
-    int claimantssize = encodedClaimableBalanceEntry.getClaimants().length;
-    stream.writeInt(claimantssize);
-    for (int i = 0; i < claimantssize; i++) {
+    int claimantsSize = encodedClaimableBalanceEntry.getClaimants().length;
+    stream.writeInt(claimantsSize);
+    for (int i = 0; i < claimantsSize; i++) {
       Claimant.encode(stream, encodedClaimableBalanceEntry.claimants[i]);
     }
     Asset.encode(stream, encodedClaimableBalanceEntry.asset);
@@ -76,9 +76,9 @@ public class ClaimableBalanceEntry implements XdrElement {
   public static ClaimableBalanceEntry decode(XdrDataInputStream stream) throws IOException {
     ClaimableBalanceEntry decodedClaimableBalanceEntry = new ClaimableBalanceEntry();
     decodedClaimableBalanceEntry.balanceID = ClaimableBalanceID.decode(stream);
-    int claimantssize = stream.readInt();
-    decodedClaimableBalanceEntry.claimants = new Claimant[claimantssize];
-    for (int i = 0; i < claimantssize; i++) {
+    int claimantsSize = stream.readInt();
+    decodedClaimableBalanceEntry.claimants = new Claimant[claimantsSize];
+    for (int i = 0; i < claimantsSize; i++) {
       decodedClaimableBalanceEntry.claimants[i] = Claimant.decode(stream);
     }
     decodedClaimableBalanceEntry.asset = Asset.decode(stream);

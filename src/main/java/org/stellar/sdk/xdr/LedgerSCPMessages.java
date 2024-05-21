@@ -36,9 +36,9 @@ public class LedgerSCPMessages implements XdrElement {
   public static void encode(XdrDataOutputStream stream, LedgerSCPMessages encodedLedgerSCPMessages)
       throws IOException {
     Uint32.encode(stream, encodedLedgerSCPMessages.ledgerSeq);
-    int messagessize = encodedLedgerSCPMessages.getMessages().length;
-    stream.writeInt(messagessize);
-    for (int i = 0; i < messagessize; i++) {
+    int messagesSize = encodedLedgerSCPMessages.getMessages().length;
+    stream.writeInt(messagesSize);
+    for (int i = 0; i < messagesSize; i++) {
       SCPEnvelope.encode(stream, encodedLedgerSCPMessages.messages[i]);
     }
   }
@@ -50,9 +50,9 @@ public class LedgerSCPMessages implements XdrElement {
   public static LedgerSCPMessages decode(XdrDataInputStream stream) throws IOException {
     LedgerSCPMessages decodedLedgerSCPMessages = new LedgerSCPMessages();
     decodedLedgerSCPMessages.ledgerSeq = Uint32.decode(stream);
-    int messagessize = stream.readInt();
-    decodedLedgerSCPMessages.messages = new SCPEnvelope[messagessize];
-    for (int i = 0; i < messagessize; i++) {
+    int messagesSize = stream.readInt();
+    decodedLedgerSCPMessages.messages = new SCPEnvelope[messagesSize];
+    for (int i = 0; i < messagesSize; i++) {
       decodedLedgerSCPMessages.messages[i] = SCPEnvelope.decode(stream);
     }
     return decodedLedgerSCPMessages;

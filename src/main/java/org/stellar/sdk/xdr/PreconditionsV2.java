@@ -86,9 +86,9 @@ public class PreconditionsV2 implements XdrElement {
     }
     Duration.encode(stream, encodedPreconditionsV2.minSeqAge);
     Uint32.encode(stream, encodedPreconditionsV2.minSeqLedgerGap);
-    int extraSignerssize = encodedPreconditionsV2.getExtraSigners().length;
-    stream.writeInt(extraSignerssize);
-    for (int i = 0; i < extraSignerssize; i++) {
+    int extraSignersSize = encodedPreconditionsV2.getExtraSigners().length;
+    stream.writeInt(extraSignersSize);
+    for (int i = 0; i < extraSignersSize; i++) {
       SignerKey.encode(stream, encodedPreconditionsV2.extraSigners[i]);
     }
   }
@@ -113,9 +113,9 @@ public class PreconditionsV2 implements XdrElement {
     }
     decodedPreconditionsV2.minSeqAge = Duration.decode(stream);
     decodedPreconditionsV2.minSeqLedgerGap = Uint32.decode(stream);
-    int extraSignerssize = stream.readInt();
-    decodedPreconditionsV2.extraSigners = new SignerKey[extraSignerssize];
-    for (int i = 0; i < extraSignerssize; i++) {
+    int extraSignersSize = stream.readInt();
+    decodedPreconditionsV2.extraSigners = new SignerKey[extraSignersSize];
+    for (int i = 0; i < extraSignersSize; i++) {
       decodedPreconditionsV2.extraSigners[i] = SignerKey.decode(stream);
     }
     return decodedPreconditionsV2;

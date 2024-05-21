@@ -56,9 +56,9 @@ public class StellarValue implements XdrElement {
       throws IOException {
     Hash.encode(stream, encodedStellarValue.txSetHash);
     TimePoint.encode(stream, encodedStellarValue.closeTime);
-    int upgradessize = encodedStellarValue.getUpgrades().length;
-    stream.writeInt(upgradessize);
-    for (int i = 0; i < upgradessize; i++) {
+    int upgradesSize = encodedStellarValue.getUpgrades().length;
+    stream.writeInt(upgradesSize);
+    for (int i = 0; i < upgradesSize; i++) {
       UpgradeType.encode(stream, encodedStellarValue.upgrades[i]);
     }
     StellarValueExt.encode(stream, encodedStellarValue.ext);
@@ -72,9 +72,9 @@ public class StellarValue implements XdrElement {
     StellarValue decodedStellarValue = new StellarValue();
     decodedStellarValue.txSetHash = Hash.decode(stream);
     decodedStellarValue.closeTime = TimePoint.decode(stream);
-    int upgradessize = stream.readInt();
-    decodedStellarValue.upgrades = new UpgradeType[upgradessize];
-    for (int i = 0; i < upgradessize; i++) {
+    int upgradesSize = stream.readInt();
+    decodedStellarValue.upgrades = new UpgradeType[upgradesSize];
+    for (int i = 0; i < upgradesSize; i++) {
       decodedStellarValue.upgrades[i] = UpgradeType.decode(stream);
     }
     decodedStellarValue.ext = StellarValueExt.decode(stream);

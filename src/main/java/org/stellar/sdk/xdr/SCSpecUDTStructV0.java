@@ -42,9 +42,9 @@ public class SCSpecUDTStructV0 implements XdrElement {
     encodedSCSpecUDTStructV0.doc.encode(stream);
     encodedSCSpecUDTStructV0.lib.encode(stream);
     encodedSCSpecUDTStructV0.name.encode(stream);
-    int fieldssize = encodedSCSpecUDTStructV0.getFields().length;
-    stream.writeInt(fieldssize);
-    for (int i = 0; i < fieldssize; i++) {
+    int fieldsSize = encodedSCSpecUDTStructV0.getFields().length;
+    stream.writeInt(fieldsSize);
+    for (int i = 0; i < fieldsSize; i++) {
       SCSpecUDTStructFieldV0.encode(stream, encodedSCSpecUDTStructV0.fields[i]);
     }
   }
@@ -58,9 +58,9 @@ public class SCSpecUDTStructV0 implements XdrElement {
     decodedSCSpecUDTStructV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTStructV0.lib = XdrString.decode(stream, 80);
     decodedSCSpecUDTStructV0.name = XdrString.decode(stream, 60);
-    int fieldssize = stream.readInt();
-    decodedSCSpecUDTStructV0.fields = new SCSpecUDTStructFieldV0[fieldssize];
-    for (int i = 0; i < fieldssize; i++) {
+    int fieldsSize = stream.readInt();
+    decodedSCSpecUDTStructV0.fields = new SCSpecUDTStructFieldV0[fieldsSize];
+    for (int i = 0; i < fieldsSize; i++) {
       decodedSCSpecUDTStructV0.fields[i] = SCSpecUDTStructFieldV0.decode(stream);
     }
     return decodedSCSpecUDTStructV0;

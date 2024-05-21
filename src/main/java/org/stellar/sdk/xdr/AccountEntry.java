@@ -79,9 +79,9 @@ public class AccountEntry implements XdrElement {
     Uint32.encode(stream, encodedAccountEntry.flags);
     String32.encode(stream, encodedAccountEntry.homeDomain);
     Thresholds.encode(stream, encodedAccountEntry.thresholds);
-    int signerssize = encodedAccountEntry.getSigners().length;
-    stream.writeInt(signerssize);
-    for (int i = 0; i < signerssize; i++) {
+    int signersSize = encodedAccountEntry.getSigners().length;
+    stream.writeInt(signersSize);
+    for (int i = 0; i < signersSize; i++) {
       Signer.encode(stream, encodedAccountEntry.signers[i]);
     }
     AccountEntryExt.encode(stream, encodedAccountEntry.ext);
@@ -104,9 +104,9 @@ public class AccountEntry implements XdrElement {
     decodedAccountEntry.flags = Uint32.decode(stream);
     decodedAccountEntry.homeDomain = String32.decode(stream);
     decodedAccountEntry.thresholds = Thresholds.decode(stream);
-    int signerssize = stream.readInt();
-    decodedAccountEntry.signers = new Signer[signerssize];
-    for (int i = 0; i < signerssize; i++) {
+    int signersSize = stream.readInt();
+    decodedAccountEntry.signers = new Signer[signersSize];
+    for (int i = 0; i < signersSize; i++) {
       decodedAccountEntry.signers[i] = Signer.decode(stream);
     }
     decodedAccountEntry.ext = AccountEntryExt.decode(stream);

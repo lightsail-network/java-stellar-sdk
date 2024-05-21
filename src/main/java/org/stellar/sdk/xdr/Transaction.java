@@ -68,9 +68,9 @@ public class Transaction implements XdrElement {
     SequenceNumber.encode(stream, encodedTransaction.seqNum);
     Preconditions.encode(stream, encodedTransaction.cond);
     Memo.encode(stream, encodedTransaction.memo);
-    int operationssize = encodedTransaction.getOperations().length;
-    stream.writeInt(operationssize);
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = encodedTransaction.getOperations().length;
+    stream.writeInt(operationsSize);
+    for (int i = 0; i < operationsSize; i++) {
       Operation.encode(stream, encodedTransaction.operations[i]);
     }
     TransactionExt.encode(stream, encodedTransaction.ext);
@@ -87,9 +87,9 @@ public class Transaction implements XdrElement {
     decodedTransaction.seqNum = SequenceNumber.decode(stream);
     decodedTransaction.cond = Preconditions.decode(stream);
     decodedTransaction.memo = Memo.decode(stream);
-    int operationssize = stream.readInt();
-    decodedTransaction.operations = new Operation[operationssize];
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = stream.readInt();
+    decodedTransaction.operations = new Operation[operationsSize];
+    for (int i = 0; i < operationsSize; i++) {
       decodedTransaction.operations[i] = Operation.decode(stream);
     }
     decodedTransaction.ext = TransactionExt.decode(stream);

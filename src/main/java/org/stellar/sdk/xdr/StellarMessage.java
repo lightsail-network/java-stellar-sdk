@@ -117,9 +117,9 @@ public class StellarMessage implements XdrElement {
       case GET_PEERS:
         break;
       case PEERS:
-        int peerssize = encodedStellarMessage.getPeers().length;
-        stream.writeInt(peerssize);
-        for (int i = 0; i < peerssize; i++) {
+        int peersSize = encodedStellarMessage.getPeers().length;
+        stream.writeInt(peersSize);
+        for (int i = 0; i < peersSize; i++) {
           PeerAddress.encode(stream, encodedStellarMessage.peers[i]);
         }
         break;
@@ -193,9 +193,9 @@ public class StellarMessage implements XdrElement {
       case GET_PEERS:
         break;
       case PEERS:
-        int peerssize = stream.readInt();
-        decodedStellarMessage.peers = new PeerAddress[peerssize];
-        for (int i = 0; i < peerssize; i++) {
+        int peersSize = stream.readInt();
+        decodedStellarMessage.peers = new PeerAddress[peersSize];
+        for (int i = 0; i < peersSize; i++) {
           decodedStellarMessage.peers[i] = PeerAddress.decode(stream);
         }
         break;

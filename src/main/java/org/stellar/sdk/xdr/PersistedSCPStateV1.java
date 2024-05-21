@@ -37,14 +37,14 @@ public class PersistedSCPStateV1 implements XdrElement {
   public static void encode(
       XdrDataOutputStream stream, PersistedSCPStateV1 encodedPersistedSCPStateV1)
       throws IOException {
-    int scpEnvelopessize = encodedPersistedSCPStateV1.getScpEnvelopes().length;
-    stream.writeInt(scpEnvelopessize);
-    for (int i = 0; i < scpEnvelopessize; i++) {
+    int scpEnvelopesSize = encodedPersistedSCPStateV1.getScpEnvelopes().length;
+    stream.writeInt(scpEnvelopesSize);
+    for (int i = 0; i < scpEnvelopesSize; i++) {
       SCPEnvelope.encode(stream, encodedPersistedSCPStateV1.scpEnvelopes[i]);
     }
-    int quorumSetssize = encodedPersistedSCPStateV1.getQuorumSets().length;
-    stream.writeInt(quorumSetssize);
-    for (int i = 0; i < quorumSetssize; i++) {
+    int quorumSetsSize = encodedPersistedSCPStateV1.getQuorumSets().length;
+    stream.writeInt(quorumSetsSize);
+    for (int i = 0; i < quorumSetsSize; i++) {
       SCPQuorumSet.encode(stream, encodedPersistedSCPStateV1.quorumSets[i]);
     }
   }
@@ -55,14 +55,14 @@ public class PersistedSCPStateV1 implements XdrElement {
 
   public static PersistedSCPStateV1 decode(XdrDataInputStream stream) throws IOException {
     PersistedSCPStateV1 decodedPersistedSCPStateV1 = new PersistedSCPStateV1();
-    int scpEnvelopessize = stream.readInt();
-    decodedPersistedSCPStateV1.scpEnvelopes = new SCPEnvelope[scpEnvelopessize];
-    for (int i = 0; i < scpEnvelopessize; i++) {
+    int scpEnvelopesSize = stream.readInt();
+    decodedPersistedSCPStateV1.scpEnvelopes = new SCPEnvelope[scpEnvelopesSize];
+    for (int i = 0; i < scpEnvelopesSize; i++) {
       decodedPersistedSCPStateV1.scpEnvelopes[i] = SCPEnvelope.decode(stream);
     }
-    int quorumSetssize = stream.readInt();
-    decodedPersistedSCPStateV1.quorumSets = new SCPQuorumSet[quorumSetssize];
-    for (int i = 0; i < quorumSetssize; i++) {
+    int quorumSetsSize = stream.readInt();
+    decodedPersistedSCPStateV1.quorumSets = new SCPQuorumSet[quorumSetsSize];
+    for (int i = 0; i < quorumSetsSize; i++) {
       decodedPersistedSCPStateV1.quorumSets[i] = SCPQuorumSet.decode(stream);
     }
     return decodedPersistedSCPStateV1;

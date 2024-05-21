@@ -49,9 +49,9 @@ public class TransactionMeta implements XdrElement {
     stream.writeInt(encodedTransactionMeta.getDiscriminant().intValue());
     switch (encodedTransactionMeta.getDiscriminant()) {
       case 0:
-        int operationssize = encodedTransactionMeta.getOperations().length;
-        stream.writeInt(operationssize);
-        for (int i = 0; i < operationssize; i++) {
+        int operationsSize = encodedTransactionMeta.getOperations().length;
+        stream.writeInt(operationsSize);
+        for (int i = 0; i < operationsSize; i++) {
           OperationMeta.encode(stream, encodedTransactionMeta.operations[i]);
         }
         break;
@@ -77,9 +77,9 @@ public class TransactionMeta implements XdrElement {
     decodedTransactionMeta.setDiscriminant(discriminant);
     switch (decodedTransactionMeta.getDiscriminant()) {
       case 0:
-        int operationssize = stream.readInt();
-        decodedTransactionMeta.operations = new OperationMeta[operationssize];
-        for (int i = 0; i < operationssize; i++) {
+        int operationsSize = stream.readInt();
+        decodedTransactionMeta.operations = new OperationMeta[operationsSize];
+        for (int i = 0; i < operationsSize; i++) {
           decodedTransactionMeta.operations[i] = OperationMeta.decode(stream);
         }
         break;

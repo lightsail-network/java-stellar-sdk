@@ -120,9 +120,9 @@ public class TxSetComponent implements XdrElement {
       } else {
         stream.writeInt(0);
       }
-      int txssize = encodedTxSetComponentTxsMaybeDiscountedFee.getTxs().length;
-      stream.writeInt(txssize);
-      for (int i = 0; i < txssize; i++) {
+      int txsSize = encodedTxSetComponentTxsMaybeDiscountedFee.getTxs().length;
+      stream.writeInt(txsSize);
+      for (int i = 0; i < txsSize; i++) {
         TransactionEnvelope.encode(stream, encodedTxSetComponentTxsMaybeDiscountedFee.txs[i]);
       }
     }
@@ -139,9 +139,9 @@ public class TxSetComponent implements XdrElement {
       if (baseFeePresent != 0) {
         decodedTxSetComponentTxsMaybeDiscountedFee.baseFee = Int64.decode(stream);
       }
-      int txssize = stream.readInt();
-      decodedTxSetComponentTxsMaybeDiscountedFee.txs = new TransactionEnvelope[txssize];
-      for (int i = 0; i < txssize; i++) {
+      int txsSize = stream.readInt();
+      decodedTxSetComponentTxsMaybeDiscountedFee.txs = new TransactionEnvelope[txsSize];
+      for (int i = 0; i < txsSize; i++) {
         decodedTxSetComponentTxsMaybeDiscountedFee.txs[i] = TransactionEnvelope.decode(stream);
       }
       return decodedTxSetComponentTxsMaybeDiscountedFee;

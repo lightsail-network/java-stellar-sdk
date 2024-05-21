@@ -119,9 +119,9 @@ public class ConfigSettingEntry implements XdrElement {
             stream, encodedConfigSettingEntry.contractExecutionLanes);
         break;
       case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-        int bucketListSizeWindowsize = encodedConfigSettingEntry.getBucketListSizeWindow().length;
-        stream.writeInt(bucketListSizeWindowsize);
-        for (int i = 0; i < bucketListSizeWindowsize; i++) {
+        int bucketListSizeWindowSize = encodedConfigSettingEntry.getBucketListSizeWindow().length;
+        stream.writeInt(bucketListSizeWindowSize);
+        for (int i = 0; i < bucketListSizeWindowSize; i++) {
           Uint64.encode(stream, encodedConfigSettingEntry.bucketListSizeWindow[i]);
         }
         break;
@@ -181,9 +181,9 @@ public class ConfigSettingEntry implements XdrElement {
             ConfigSettingContractExecutionLanesV0.decode(stream);
         break;
       case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-        int bucketListSizeWindowsize = stream.readInt();
-        decodedConfigSettingEntry.bucketListSizeWindow = new Uint64[bucketListSizeWindowsize];
-        for (int i = 0; i < bucketListSizeWindowsize; i++) {
+        int bucketListSizeWindowSize = stream.readInt();
+        decodedConfigSettingEntry.bucketListSizeWindow = new Uint64[bucketListSizeWindowSize];
+        for (int i = 0; i < bucketListSizeWindowSize; i++) {
           decodedConfigSettingEntry.bucketListSizeWindow[i] = Uint64.decode(stream);
         }
         break;

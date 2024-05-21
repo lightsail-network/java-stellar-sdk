@@ -46,9 +46,9 @@ public class ManageOfferSuccessResult implements XdrElement {
   public static void encode(
       XdrDataOutputStream stream, ManageOfferSuccessResult encodedManageOfferSuccessResult)
       throws IOException {
-    int offersClaimedsize = encodedManageOfferSuccessResult.getOffersClaimed().length;
-    stream.writeInt(offersClaimedsize);
-    for (int i = 0; i < offersClaimedsize; i++) {
+    int offersClaimedSize = encodedManageOfferSuccessResult.getOffersClaimed().length;
+    stream.writeInt(offersClaimedSize);
+    for (int i = 0; i < offersClaimedSize; i++) {
       ClaimAtom.encode(stream, encodedManageOfferSuccessResult.offersClaimed[i]);
     }
     ManageOfferSuccessResultOffer.encode(stream, encodedManageOfferSuccessResult.offer);
@@ -60,9 +60,9 @@ public class ManageOfferSuccessResult implements XdrElement {
 
   public static ManageOfferSuccessResult decode(XdrDataInputStream stream) throws IOException {
     ManageOfferSuccessResult decodedManageOfferSuccessResult = new ManageOfferSuccessResult();
-    int offersClaimedsize = stream.readInt();
-    decodedManageOfferSuccessResult.offersClaimed = new ClaimAtom[offersClaimedsize];
-    for (int i = 0; i < offersClaimedsize; i++) {
+    int offersClaimedSize = stream.readInt();
+    decodedManageOfferSuccessResult.offersClaimed = new ClaimAtom[offersClaimedSize];
+    for (int i = 0; i < offersClaimedSize; i++) {
       decodedManageOfferSuccessResult.offersClaimed[i] = ClaimAtom.decode(stream);
     }
     decodedManageOfferSuccessResult.offer = ManageOfferSuccessResultOffer.decode(stream);

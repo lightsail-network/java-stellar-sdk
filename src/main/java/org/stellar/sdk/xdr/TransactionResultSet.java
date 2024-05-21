@@ -34,9 +34,9 @@ public class TransactionResultSet implements XdrElement {
   public static void encode(
       XdrDataOutputStream stream, TransactionResultSet encodedTransactionResultSet)
       throws IOException {
-    int resultssize = encodedTransactionResultSet.getResults().length;
-    stream.writeInt(resultssize);
-    for (int i = 0; i < resultssize; i++) {
+    int resultsSize = encodedTransactionResultSet.getResults().length;
+    stream.writeInt(resultsSize);
+    for (int i = 0; i < resultsSize; i++) {
       TransactionResultPair.encode(stream, encodedTransactionResultSet.results[i]);
     }
   }
@@ -47,9 +47,9 @@ public class TransactionResultSet implements XdrElement {
 
   public static TransactionResultSet decode(XdrDataInputStream stream) throws IOException {
     TransactionResultSet decodedTransactionResultSet = new TransactionResultSet();
-    int resultssize = stream.readInt();
-    decodedTransactionResultSet.results = new TransactionResultPair[resultssize];
-    for (int i = 0; i < resultssize; i++) {
+    int resultsSize = stream.readInt();
+    decodedTransactionResultSet.results = new TransactionResultPair[resultsSize];
+    for (int i = 0; i < resultsSize; i++) {
       decodedTransactionResultSet.results[i] = TransactionResultPair.decode(stream);
     }
     return decodedTransactionResultSet;

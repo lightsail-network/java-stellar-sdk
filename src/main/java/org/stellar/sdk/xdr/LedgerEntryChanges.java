@@ -28,9 +28,9 @@ public class LedgerEntryChanges implements XdrElement {
 
   public static void encode(
       XdrDataOutputStream stream, LedgerEntryChanges encodedLedgerEntryChanges) throws IOException {
-    int LedgerEntryChangessize = encodedLedgerEntryChanges.getLedgerEntryChanges().length;
-    stream.writeInt(LedgerEntryChangessize);
-    for (int i = 0; i < LedgerEntryChangessize; i++) {
+    int LedgerEntryChangesSize = encodedLedgerEntryChanges.getLedgerEntryChanges().length;
+    stream.writeInt(LedgerEntryChangesSize);
+    for (int i = 0; i < LedgerEntryChangesSize; i++) {
       LedgerEntryChange.encode(stream, encodedLedgerEntryChanges.LedgerEntryChanges[i]);
     }
   }
@@ -41,9 +41,9 @@ public class LedgerEntryChanges implements XdrElement {
 
   public static LedgerEntryChanges decode(XdrDataInputStream stream) throws IOException {
     LedgerEntryChanges decodedLedgerEntryChanges = new LedgerEntryChanges();
-    int LedgerEntryChangessize = stream.readInt();
-    decodedLedgerEntryChanges.LedgerEntryChanges = new LedgerEntryChange[LedgerEntryChangessize];
-    for (int i = 0; i < LedgerEntryChangessize; i++) {
+    int LedgerEntryChangesSize = stream.readInt();
+    decodedLedgerEntryChanges.LedgerEntryChanges = new LedgerEntryChange[LedgerEntryChangesSize];
+    for (int i = 0; i < LedgerEntryChangesSize; i++) {
       decodedLedgerEntryChanges.LedgerEntryChanges[i] = LedgerEntryChange.decode(stream);
     }
     return decodedLedgerEntryChanges;

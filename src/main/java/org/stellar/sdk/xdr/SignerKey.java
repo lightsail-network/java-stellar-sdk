@@ -146,9 +146,9 @@ public class SignerKey implements XdrElement {
         SignerKeyEd25519SignedPayload encodedSignerKeyEd25519SignedPayload)
         throws IOException {
       Uint256.encode(stream, encodedSignerKeyEd25519SignedPayload.ed25519);
-      int payloadsize = encodedSignerKeyEd25519SignedPayload.payload.length;
-      stream.writeInt(payloadsize);
-      stream.write(encodedSignerKeyEd25519SignedPayload.getPayload(), 0, payloadsize);
+      int payloadSize = encodedSignerKeyEd25519SignedPayload.payload.length;
+      stream.writeInt(payloadSize);
+      stream.write(encodedSignerKeyEd25519SignedPayload.getPayload(), 0, payloadSize);
     }
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -160,9 +160,9 @@ public class SignerKey implements XdrElement {
       SignerKeyEd25519SignedPayload decodedSignerKeyEd25519SignedPayload =
           new SignerKeyEd25519SignedPayload();
       decodedSignerKeyEd25519SignedPayload.ed25519 = Uint256.decode(stream);
-      int payloadsize = stream.readInt();
-      decodedSignerKeyEd25519SignedPayload.payload = new byte[payloadsize];
-      stream.read(decodedSignerKeyEd25519SignedPayload.payload, 0, payloadsize);
+      int payloadSize = stream.readInt();
+      decodedSignerKeyEd25519SignedPayload.payload = new byte[payloadSize];
+      stream.read(decodedSignerKeyEd25519SignedPayload.payload, 0, payloadSize);
       return decodedSignerKeyEd25519SignedPayload;
     }
 

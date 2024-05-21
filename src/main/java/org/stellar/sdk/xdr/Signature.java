@@ -28,9 +28,9 @@ public class Signature implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, Signature encodedSignature)
       throws IOException {
-    int Signaturesize = encodedSignature.Signature.length;
-    stream.writeInt(Signaturesize);
-    stream.write(encodedSignature.getSignature(), 0, Signaturesize);
+    int SignatureSize = encodedSignature.Signature.length;
+    stream.writeInt(SignatureSize);
+    stream.write(encodedSignature.getSignature(), 0, SignatureSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -39,9 +39,9 @@ public class Signature implements XdrElement {
 
   public static Signature decode(XdrDataInputStream stream) throws IOException {
     Signature decodedSignature = new Signature();
-    int Signaturesize = stream.readInt();
-    decodedSignature.Signature = new byte[Signaturesize];
-    stream.read(decodedSignature.Signature, 0, Signaturesize);
+    int SignatureSize = stream.readInt();
+    decodedSignature.Signature = new byte[SignatureSize];
+    stream.read(decodedSignature.Signature, 0, SignatureSize);
     return decodedSignature;
   }
 

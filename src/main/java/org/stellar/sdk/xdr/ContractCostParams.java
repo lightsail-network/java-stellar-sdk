@@ -28,9 +28,9 @@ public class ContractCostParams implements XdrElement {
 
   public static void encode(
       XdrDataOutputStream stream, ContractCostParams encodedContractCostParams) throws IOException {
-    int ContractCostParamssize = encodedContractCostParams.getContractCostParams().length;
-    stream.writeInt(ContractCostParamssize);
-    for (int i = 0; i < ContractCostParamssize; i++) {
+    int ContractCostParamsSize = encodedContractCostParams.getContractCostParams().length;
+    stream.writeInt(ContractCostParamsSize);
+    for (int i = 0; i < ContractCostParamsSize; i++) {
       ContractCostParamEntry.encode(stream, encodedContractCostParams.ContractCostParams[i]);
     }
   }
@@ -41,10 +41,10 @@ public class ContractCostParams implements XdrElement {
 
   public static ContractCostParams decode(XdrDataInputStream stream) throws IOException {
     ContractCostParams decodedContractCostParams = new ContractCostParams();
-    int ContractCostParamssize = stream.readInt();
+    int ContractCostParamsSize = stream.readInt();
     decodedContractCostParams.ContractCostParams =
-        new ContractCostParamEntry[ContractCostParamssize];
-    for (int i = 0; i < ContractCostParamssize; i++) {
+        new ContractCostParamEntry[ContractCostParamsSize];
+    for (int i = 0; i < ContractCostParamsSize; i++) {
       decodedContractCostParams.ContractCostParams[i] = ContractCostParamEntry.decode(stream);
     }
     return decodedContractCostParams;

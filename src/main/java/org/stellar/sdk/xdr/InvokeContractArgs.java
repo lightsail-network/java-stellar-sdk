@@ -38,9 +38,9 @@ public class InvokeContractArgs implements XdrElement {
       XdrDataOutputStream stream, InvokeContractArgs encodedInvokeContractArgs) throws IOException {
     SCAddress.encode(stream, encodedInvokeContractArgs.contractAddress);
     SCSymbol.encode(stream, encodedInvokeContractArgs.functionName);
-    int argssize = encodedInvokeContractArgs.getArgs().length;
-    stream.writeInt(argssize);
-    for (int i = 0; i < argssize; i++) {
+    int argsSize = encodedInvokeContractArgs.getArgs().length;
+    stream.writeInt(argsSize);
+    for (int i = 0; i < argsSize; i++) {
       SCVal.encode(stream, encodedInvokeContractArgs.args[i]);
     }
   }
@@ -53,9 +53,9 @@ public class InvokeContractArgs implements XdrElement {
     InvokeContractArgs decodedInvokeContractArgs = new InvokeContractArgs();
     decodedInvokeContractArgs.contractAddress = SCAddress.decode(stream);
     decodedInvokeContractArgs.functionName = SCSymbol.decode(stream);
-    int argssize = stream.readInt();
-    decodedInvokeContractArgs.args = new SCVal[argssize];
-    for (int i = 0; i < argssize; i++) {
+    int argsSize = stream.readInt();
+    decodedInvokeContractArgs.args = new SCVal[argsSize];
+    for (int i = 0; i < argsSize; i++) {
       decodedInvokeContractArgs.args[i] = SCVal.decode(stream);
     }
     return decodedInvokeContractArgs;

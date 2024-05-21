@@ -28,9 +28,9 @@ public class UpgradeType implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, UpgradeType encodedUpgradeType)
       throws IOException {
-    int UpgradeTypesize = encodedUpgradeType.UpgradeType.length;
-    stream.writeInt(UpgradeTypesize);
-    stream.write(encodedUpgradeType.getUpgradeType(), 0, UpgradeTypesize);
+    int UpgradeTypeSize = encodedUpgradeType.UpgradeType.length;
+    stream.writeInt(UpgradeTypeSize);
+    stream.write(encodedUpgradeType.getUpgradeType(), 0, UpgradeTypeSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -39,9 +39,9 @@ public class UpgradeType implements XdrElement {
 
   public static UpgradeType decode(XdrDataInputStream stream) throws IOException {
     UpgradeType decodedUpgradeType = new UpgradeType();
-    int UpgradeTypesize = stream.readInt();
-    decodedUpgradeType.UpgradeType = new byte[UpgradeTypesize];
-    stream.read(decodedUpgradeType.UpgradeType, 0, UpgradeTypesize);
+    int UpgradeTypeSize = stream.readInt();
+    decodedUpgradeType.UpgradeType = new byte[UpgradeTypeSize];
+    stream.read(decodedUpgradeType.UpgradeType, 0, UpgradeTypeSize);
     return decodedUpgradeType;
   }
 

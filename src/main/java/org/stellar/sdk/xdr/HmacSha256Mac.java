@@ -33,8 +33,8 @@ public class HmacSha256Mac implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, HmacSha256Mac encodedHmacSha256Mac)
       throws IOException {
-    int macsize = encodedHmacSha256Mac.mac.length;
-    stream.write(encodedHmacSha256Mac.getMac(), 0, macsize);
+    int macSize = encodedHmacSha256Mac.mac.length;
+    stream.write(encodedHmacSha256Mac.getMac(), 0, macSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -43,9 +43,9 @@ public class HmacSha256Mac implements XdrElement {
 
   public static HmacSha256Mac decode(XdrDataInputStream stream) throws IOException {
     HmacSha256Mac decodedHmacSha256Mac = new HmacSha256Mac();
-    int macsize = 32;
-    decodedHmacSha256Mac.mac = new byte[macsize];
-    stream.read(decodedHmacSha256Mac.mac, 0, macsize);
+    int macSize = 32;
+    decodedHmacSha256Mac.mac = new byte[macSize];
+    stream.read(decodedHmacSha256Mac.mac, 0, macSize);
     return decodedHmacSha256Mac;
   }
 

@@ -40,9 +40,9 @@ public class CreateClaimableBalanceOp implements XdrElement {
       throws IOException {
     Asset.encode(stream, encodedCreateClaimableBalanceOp.asset);
     Int64.encode(stream, encodedCreateClaimableBalanceOp.amount);
-    int claimantssize = encodedCreateClaimableBalanceOp.getClaimants().length;
-    stream.writeInt(claimantssize);
-    for (int i = 0; i < claimantssize; i++) {
+    int claimantsSize = encodedCreateClaimableBalanceOp.getClaimants().length;
+    stream.writeInt(claimantsSize);
+    for (int i = 0; i < claimantsSize; i++) {
       Claimant.encode(stream, encodedCreateClaimableBalanceOp.claimants[i]);
     }
   }
@@ -55,9 +55,9 @@ public class CreateClaimableBalanceOp implements XdrElement {
     CreateClaimableBalanceOp decodedCreateClaimableBalanceOp = new CreateClaimableBalanceOp();
     decodedCreateClaimableBalanceOp.asset = Asset.decode(stream);
     decodedCreateClaimableBalanceOp.amount = Int64.decode(stream);
-    int claimantssize = stream.readInt();
-    decodedCreateClaimableBalanceOp.claimants = new Claimant[claimantssize];
-    for (int i = 0; i < claimantssize; i++) {
+    int claimantsSize = stream.readInt();
+    decodedCreateClaimableBalanceOp.claimants = new Claimant[claimantsSize];
+    for (int i = 0; i < claimantsSize; i++) {
       decodedCreateClaimableBalanceOp.claimants[i] = Claimant.decode(stream);
     }
     return decodedCreateClaimableBalanceOp;

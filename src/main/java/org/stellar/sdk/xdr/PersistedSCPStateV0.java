@@ -38,19 +38,19 @@ public class PersistedSCPStateV0 implements XdrElement {
   public static void encode(
       XdrDataOutputStream stream, PersistedSCPStateV0 encodedPersistedSCPStateV0)
       throws IOException {
-    int scpEnvelopessize = encodedPersistedSCPStateV0.getScpEnvelopes().length;
-    stream.writeInt(scpEnvelopessize);
-    for (int i = 0; i < scpEnvelopessize; i++) {
+    int scpEnvelopesSize = encodedPersistedSCPStateV0.getScpEnvelopes().length;
+    stream.writeInt(scpEnvelopesSize);
+    for (int i = 0; i < scpEnvelopesSize; i++) {
       SCPEnvelope.encode(stream, encodedPersistedSCPStateV0.scpEnvelopes[i]);
     }
-    int quorumSetssize = encodedPersistedSCPStateV0.getQuorumSets().length;
-    stream.writeInt(quorumSetssize);
-    for (int i = 0; i < quorumSetssize; i++) {
+    int quorumSetsSize = encodedPersistedSCPStateV0.getQuorumSets().length;
+    stream.writeInt(quorumSetsSize);
+    for (int i = 0; i < quorumSetsSize; i++) {
       SCPQuorumSet.encode(stream, encodedPersistedSCPStateV0.quorumSets[i]);
     }
-    int txSetssize = encodedPersistedSCPStateV0.getTxSets().length;
-    stream.writeInt(txSetssize);
-    for (int i = 0; i < txSetssize; i++) {
+    int txSetsSize = encodedPersistedSCPStateV0.getTxSets().length;
+    stream.writeInt(txSetsSize);
+    for (int i = 0; i < txSetsSize; i++) {
       StoredTransactionSet.encode(stream, encodedPersistedSCPStateV0.txSets[i]);
     }
   }
@@ -61,19 +61,19 @@ public class PersistedSCPStateV0 implements XdrElement {
 
   public static PersistedSCPStateV0 decode(XdrDataInputStream stream) throws IOException {
     PersistedSCPStateV0 decodedPersistedSCPStateV0 = new PersistedSCPStateV0();
-    int scpEnvelopessize = stream.readInt();
-    decodedPersistedSCPStateV0.scpEnvelopes = new SCPEnvelope[scpEnvelopessize];
-    for (int i = 0; i < scpEnvelopessize; i++) {
+    int scpEnvelopesSize = stream.readInt();
+    decodedPersistedSCPStateV0.scpEnvelopes = new SCPEnvelope[scpEnvelopesSize];
+    for (int i = 0; i < scpEnvelopesSize; i++) {
       decodedPersistedSCPStateV0.scpEnvelopes[i] = SCPEnvelope.decode(stream);
     }
-    int quorumSetssize = stream.readInt();
-    decodedPersistedSCPStateV0.quorumSets = new SCPQuorumSet[quorumSetssize];
-    for (int i = 0; i < quorumSetssize; i++) {
+    int quorumSetsSize = stream.readInt();
+    decodedPersistedSCPStateV0.quorumSets = new SCPQuorumSet[quorumSetsSize];
+    for (int i = 0; i < quorumSetsSize; i++) {
       decodedPersistedSCPStateV0.quorumSets[i] = SCPQuorumSet.decode(stream);
     }
-    int txSetssize = stream.readInt();
-    decodedPersistedSCPStateV0.txSets = new StoredTransactionSet[txSetssize];
-    for (int i = 0; i < txSetssize; i++) {
+    int txSetsSize = stream.readInt();
+    decodedPersistedSCPStateV0.txSets = new StoredTransactionSet[txSetsSize];
+    for (int i = 0; i < txSetsSize; i++) {
       decodedPersistedSCPStateV0.txSets[i] = StoredTransactionSet.decode(stream);
     }
     return decodedPersistedSCPStateV0;

@@ -40,9 +40,9 @@ public class TransactionMetaV2 implements XdrElement {
   public static void encode(XdrDataOutputStream stream, TransactionMetaV2 encodedTransactionMetaV2)
       throws IOException {
     LedgerEntryChanges.encode(stream, encodedTransactionMetaV2.txChangesBefore);
-    int operationssize = encodedTransactionMetaV2.getOperations().length;
-    stream.writeInt(operationssize);
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = encodedTransactionMetaV2.getOperations().length;
+    stream.writeInt(operationsSize);
+    for (int i = 0; i < operationsSize; i++) {
       OperationMeta.encode(stream, encodedTransactionMetaV2.operations[i]);
     }
     LedgerEntryChanges.encode(stream, encodedTransactionMetaV2.txChangesAfter);
@@ -55,9 +55,9 @@ public class TransactionMetaV2 implements XdrElement {
   public static TransactionMetaV2 decode(XdrDataInputStream stream) throws IOException {
     TransactionMetaV2 decodedTransactionMetaV2 = new TransactionMetaV2();
     decodedTransactionMetaV2.txChangesBefore = LedgerEntryChanges.decode(stream);
-    int operationssize = stream.readInt();
-    decodedTransactionMetaV2.operations = new OperationMeta[operationssize];
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = stream.readInt();
+    decodedTransactionMetaV2.operations = new OperationMeta[operationsSize];
+    for (int i = 0; i < operationsSize; i++) {
       decodedTransactionMetaV2.operations[i] = OperationMeta.decode(stream);
     }
     decodedTransactionMetaV2.txChangesAfter = LedgerEntryChanges.decode(stream);

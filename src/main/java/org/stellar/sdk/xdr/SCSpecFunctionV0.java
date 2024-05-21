@@ -41,14 +41,14 @@ public class SCSpecFunctionV0 implements XdrElement {
       throws IOException {
     encodedSCSpecFunctionV0.doc.encode(stream);
     SCSymbol.encode(stream, encodedSCSpecFunctionV0.name);
-    int inputssize = encodedSCSpecFunctionV0.getInputs().length;
-    stream.writeInt(inputssize);
-    for (int i = 0; i < inputssize; i++) {
+    int inputsSize = encodedSCSpecFunctionV0.getInputs().length;
+    stream.writeInt(inputsSize);
+    for (int i = 0; i < inputsSize; i++) {
       SCSpecFunctionInputV0.encode(stream, encodedSCSpecFunctionV0.inputs[i]);
     }
-    int outputssize = encodedSCSpecFunctionV0.getOutputs().length;
-    stream.writeInt(outputssize);
-    for (int i = 0; i < outputssize; i++) {
+    int outputsSize = encodedSCSpecFunctionV0.getOutputs().length;
+    stream.writeInt(outputsSize);
+    for (int i = 0; i < outputsSize; i++) {
       SCSpecTypeDef.encode(stream, encodedSCSpecFunctionV0.outputs[i]);
     }
   }
@@ -61,14 +61,14 @@ public class SCSpecFunctionV0 implements XdrElement {
     SCSpecFunctionV0 decodedSCSpecFunctionV0 = new SCSpecFunctionV0();
     decodedSCSpecFunctionV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecFunctionV0.name = SCSymbol.decode(stream);
-    int inputssize = stream.readInt();
-    decodedSCSpecFunctionV0.inputs = new SCSpecFunctionInputV0[inputssize];
-    for (int i = 0; i < inputssize; i++) {
+    int inputsSize = stream.readInt();
+    decodedSCSpecFunctionV0.inputs = new SCSpecFunctionInputV0[inputsSize];
+    for (int i = 0; i < inputsSize; i++) {
       decodedSCSpecFunctionV0.inputs[i] = SCSpecFunctionInputV0.decode(stream);
     }
-    int outputssize = stream.readInt();
-    decodedSCSpecFunctionV0.outputs = new SCSpecTypeDef[outputssize];
-    for (int i = 0; i < outputssize; i++) {
+    int outputsSize = stream.readInt();
+    decodedSCSpecFunctionV0.outputs = new SCSpecTypeDef[outputsSize];
+    for (int i = 0; i < outputsSize; i++) {
       decodedSCSpecFunctionV0.outputs[i] = SCSpecTypeDef.decode(stream);
     }
     return decodedSCSpecFunctionV0;

@@ -52,9 +52,9 @@ public class HostFunction implements XdrElement {
         CreateContractArgs.encode(stream, encodedHostFunction.createContract);
         break;
       case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
-        int wasmsize = encodedHostFunction.wasm.length;
-        stream.writeInt(wasmsize);
-        stream.write(encodedHostFunction.getWasm(), 0, wasmsize);
+        int wasmSize = encodedHostFunction.wasm.length;
+        stream.writeInt(wasmSize);
+        stream.write(encodedHostFunction.getWasm(), 0, wasmSize);
         break;
     }
   }
@@ -75,9 +75,9 @@ public class HostFunction implements XdrElement {
         decodedHostFunction.createContract = CreateContractArgs.decode(stream);
         break;
       case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
-        int wasmsize = stream.readInt();
-        decodedHostFunction.wasm = new byte[wasmsize];
-        stream.read(decodedHostFunction.wasm, 0, wasmsize);
+        int wasmSize = stream.readInt();
+        decodedHostFunction.wasm = new byte[wasmSize];
+        stream.read(decodedHostFunction.wasm, 0, wasmSize);
         break;
     }
     return decodedHostFunction;

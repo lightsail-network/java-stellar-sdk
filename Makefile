@@ -13,7 +13,7 @@ xdr/Stellar-internal.x \
 xdr/Stellar-contract-config-setting.x
 
 # xdrgen commit to use, see https://github.com/stellar/xdrgen
-XDRGEN_COMMIT=a00b45c3a5ba5b461cf5bcdd2237c180c8ea471f
+XDRGEN_COMMIT=2b54ab7be0ffad7ec7329d6f9bdf79a56b527996
 # stellar-xdr commit to use, see https://github.com/stellar/stellar-xdr
 XDRNEXT_COMMIT=1a04392432dacc0092caaeae22a600ea1af3c6a5
 

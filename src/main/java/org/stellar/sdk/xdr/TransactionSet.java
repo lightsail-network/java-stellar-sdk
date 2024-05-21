@@ -36,9 +36,9 @@ public class TransactionSet implements XdrElement {
   public static void encode(XdrDataOutputStream stream, TransactionSet encodedTransactionSet)
       throws IOException {
     Hash.encode(stream, encodedTransactionSet.previousLedgerHash);
-    int txssize = encodedTransactionSet.getTxs().length;
-    stream.writeInt(txssize);
-    for (int i = 0; i < txssize; i++) {
+    int txsSize = encodedTransactionSet.getTxs().length;
+    stream.writeInt(txsSize);
+    for (int i = 0; i < txsSize; i++) {
       TransactionEnvelope.encode(stream, encodedTransactionSet.txs[i]);
     }
   }
@@ -50,9 +50,9 @@ public class TransactionSet implements XdrElement {
   public static TransactionSet decode(XdrDataInputStream stream) throws IOException {
     TransactionSet decodedTransactionSet = new TransactionSet();
     decodedTransactionSet.previousLedgerHash = Hash.decode(stream);
-    int txssize = stream.readInt();
-    decodedTransactionSet.txs = new TransactionEnvelope[txssize];
-    for (int i = 0; i < txssize; i++) {
+    int txsSize = stream.readInt();
+    decodedTransactionSet.txs = new TransactionEnvelope[txsSize];
+    for (int i = 0; i < txsSize; i++) {
       decodedTransactionSet.txs[i] = TransactionEnvelope.decode(stream);
     }
     return decodedTransactionSet;

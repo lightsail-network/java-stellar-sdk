@@ -42,9 +42,9 @@ public class SCSpecUDTEnumV0 implements XdrElement {
     encodedSCSpecUDTEnumV0.doc.encode(stream);
     encodedSCSpecUDTEnumV0.lib.encode(stream);
     encodedSCSpecUDTEnumV0.name.encode(stream);
-    int casessize = encodedSCSpecUDTEnumV0.getCases().length;
-    stream.writeInt(casessize);
-    for (int i = 0; i < casessize; i++) {
+    int casesSize = encodedSCSpecUDTEnumV0.getCases().length;
+    stream.writeInt(casesSize);
+    for (int i = 0; i < casesSize; i++) {
       SCSpecUDTEnumCaseV0.encode(stream, encodedSCSpecUDTEnumV0.cases[i]);
     }
   }
@@ -58,9 +58,9 @@ public class SCSpecUDTEnumV0 implements XdrElement {
     decodedSCSpecUDTEnumV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTEnumV0.lib = XdrString.decode(stream, 80);
     decodedSCSpecUDTEnumV0.name = XdrString.decode(stream, 60);
-    int casessize = stream.readInt();
-    decodedSCSpecUDTEnumV0.cases = new SCSpecUDTEnumCaseV0[casessize];
-    for (int i = 0; i < casessize; i++) {
+    int casesSize = stream.readInt();
+    decodedSCSpecUDTEnumV0.cases = new SCSpecUDTEnumCaseV0[casesSize];
+    for (int i = 0; i < casesSize; i++) {
       decodedSCSpecUDTEnumV0.cases[i] = SCSpecUDTEnumCaseV0.decode(stream);
     }
     return decodedSCSpecUDTEnumV0;

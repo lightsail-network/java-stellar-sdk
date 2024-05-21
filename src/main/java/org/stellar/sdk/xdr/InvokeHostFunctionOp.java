@@ -39,9 +39,9 @@ public class InvokeHostFunctionOp implements XdrElement {
       XdrDataOutputStream stream, InvokeHostFunctionOp encodedInvokeHostFunctionOp)
       throws IOException {
     HostFunction.encode(stream, encodedInvokeHostFunctionOp.hostFunction);
-    int authsize = encodedInvokeHostFunctionOp.getAuth().length;
-    stream.writeInt(authsize);
-    for (int i = 0; i < authsize; i++) {
+    int authSize = encodedInvokeHostFunctionOp.getAuth().length;
+    stream.writeInt(authSize);
+    for (int i = 0; i < authSize; i++) {
       SorobanAuthorizationEntry.encode(stream, encodedInvokeHostFunctionOp.auth[i]);
     }
   }
@@ -53,9 +53,9 @@ public class InvokeHostFunctionOp implements XdrElement {
   public static InvokeHostFunctionOp decode(XdrDataInputStream stream) throws IOException {
     InvokeHostFunctionOp decodedInvokeHostFunctionOp = new InvokeHostFunctionOp();
     decodedInvokeHostFunctionOp.hostFunction = HostFunction.decode(stream);
-    int authsize = stream.readInt();
-    decodedInvokeHostFunctionOp.auth = new SorobanAuthorizationEntry[authsize];
-    for (int i = 0; i < authsize; i++) {
+    int authSize = stream.readInt();
+    decodedInvokeHostFunctionOp.auth = new SorobanAuthorizationEntry[authSize];
+    for (int i = 0; i < authSize; i++) {
       decodedInvokeHostFunctionOp.auth[i] = SorobanAuthorizationEntry.decode(stream);
     }
     return decodedInvokeHostFunctionOp;

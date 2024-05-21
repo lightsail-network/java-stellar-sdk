@@ -40,9 +40,9 @@ public class SCSpecUDTUnionCaseTupleV0 implements XdrElement {
       throws IOException {
     encodedSCSpecUDTUnionCaseTupleV0.doc.encode(stream);
     encodedSCSpecUDTUnionCaseTupleV0.name.encode(stream);
-    int typesize = encodedSCSpecUDTUnionCaseTupleV0.getType().length;
-    stream.writeInt(typesize);
-    for (int i = 0; i < typesize; i++) {
+    int typeSize = encodedSCSpecUDTUnionCaseTupleV0.getType().length;
+    stream.writeInt(typeSize);
+    for (int i = 0; i < typeSize; i++) {
       SCSpecTypeDef.encode(stream, encodedSCSpecUDTUnionCaseTupleV0.type[i]);
     }
   }
@@ -55,9 +55,9 @@ public class SCSpecUDTUnionCaseTupleV0 implements XdrElement {
     SCSpecUDTUnionCaseTupleV0 decodedSCSpecUDTUnionCaseTupleV0 = new SCSpecUDTUnionCaseTupleV0();
     decodedSCSpecUDTUnionCaseTupleV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTUnionCaseTupleV0.name = XdrString.decode(stream, 60);
-    int typesize = stream.readInt();
-    decodedSCSpecUDTUnionCaseTupleV0.type = new SCSpecTypeDef[typesize];
-    for (int i = 0; i < typesize; i++) {
+    int typeSize = stream.readInt();
+    decodedSCSpecUDTUnionCaseTupleV0.type = new SCSpecTypeDef[typeSize];
+    for (int i = 0; i < typeSize; i++) {
       decodedSCSpecUDTUnionCaseTupleV0.type[i] = SCSpecTypeDef.decode(stream);
     }
     return decodedSCSpecUDTUnionCaseTupleV0;

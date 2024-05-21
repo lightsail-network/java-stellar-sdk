@@ -47,15 +47,15 @@ public class SorobanTransactionMeta implements XdrElement {
       XdrDataOutputStream stream, SorobanTransactionMeta encodedSorobanTransactionMeta)
       throws IOException {
     SorobanTransactionMetaExt.encode(stream, encodedSorobanTransactionMeta.ext);
-    int eventssize = encodedSorobanTransactionMeta.getEvents().length;
-    stream.writeInt(eventssize);
-    for (int i = 0; i < eventssize; i++) {
+    int eventsSize = encodedSorobanTransactionMeta.getEvents().length;
+    stream.writeInt(eventsSize);
+    for (int i = 0; i < eventsSize; i++) {
       ContractEvent.encode(stream, encodedSorobanTransactionMeta.events[i]);
     }
     SCVal.encode(stream, encodedSorobanTransactionMeta.returnValue);
-    int diagnosticEventssize = encodedSorobanTransactionMeta.getDiagnosticEvents().length;
-    stream.writeInt(diagnosticEventssize);
-    for (int i = 0; i < diagnosticEventssize; i++) {
+    int diagnosticEventsSize = encodedSorobanTransactionMeta.getDiagnosticEvents().length;
+    stream.writeInt(diagnosticEventsSize);
+    for (int i = 0; i < diagnosticEventsSize; i++) {
       DiagnosticEvent.encode(stream, encodedSorobanTransactionMeta.diagnosticEvents[i]);
     }
   }
@@ -67,15 +67,15 @@ public class SorobanTransactionMeta implements XdrElement {
   public static SorobanTransactionMeta decode(XdrDataInputStream stream) throws IOException {
     SorobanTransactionMeta decodedSorobanTransactionMeta = new SorobanTransactionMeta();
     decodedSorobanTransactionMeta.ext = SorobanTransactionMetaExt.decode(stream);
-    int eventssize = stream.readInt();
-    decodedSorobanTransactionMeta.events = new ContractEvent[eventssize];
-    for (int i = 0; i < eventssize; i++) {
+    int eventsSize = stream.readInt();
+    decodedSorobanTransactionMeta.events = new ContractEvent[eventsSize];
+    for (int i = 0; i < eventsSize; i++) {
       decodedSorobanTransactionMeta.events[i] = ContractEvent.decode(stream);
     }
     decodedSorobanTransactionMeta.returnValue = SCVal.decode(stream);
-    int diagnosticEventssize = stream.readInt();
-    decodedSorobanTransactionMeta.diagnosticEvents = new DiagnosticEvent[diagnosticEventssize];
-    for (int i = 0; i < diagnosticEventssize; i++) {
+    int diagnosticEventsSize = stream.readInt();
+    decodedSorobanTransactionMeta.diagnosticEvents = new DiagnosticEvent[diagnosticEventsSize];
+    for (int i = 0; i < diagnosticEventsSize; i++) {
       decodedSorobanTransactionMeta.diagnosticEvents[i] = DiagnosticEvent.decode(stream);
     }
     return decodedSorobanTransactionMeta;

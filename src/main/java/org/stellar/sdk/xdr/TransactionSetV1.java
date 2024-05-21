@@ -36,9 +36,9 @@ public class TransactionSetV1 implements XdrElement {
   public static void encode(XdrDataOutputStream stream, TransactionSetV1 encodedTransactionSetV1)
       throws IOException {
     Hash.encode(stream, encodedTransactionSetV1.previousLedgerHash);
-    int phasessize = encodedTransactionSetV1.getPhases().length;
-    stream.writeInt(phasessize);
-    for (int i = 0; i < phasessize; i++) {
+    int phasesSize = encodedTransactionSetV1.getPhases().length;
+    stream.writeInt(phasesSize);
+    for (int i = 0; i < phasesSize; i++) {
       TransactionPhase.encode(stream, encodedTransactionSetV1.phases[i]);
     }
   }
@@ -50,9 +50,9 @@ public class TransactionSetV1 implements XdrElement {
   public static TransactionSetV1 decode(XdrDataInputStream stream) throws IOException {
     TransactionSetV1 decodedTransactionSetV1 = new TransactionSetV1();
     decodedTransactionSetV1.previousLedgerHash = Hash.decode(stream);
-    int phasessize = stream.readInt();
-    decodedTransactionSetV1.phases = new TransactionPhase[phasessize];
-    for (int i = 0; i < phasessize; i++) {
+    int phasesSize = stream.readInt();
+    decodedTransactionSetV1.phases = new TransactionPhase[phasesSize];
+    for (int i = 0; i < phasesSize; i++) {
       decodedTransactionSetV1.phases[i] = TransactionPhase.decode(stream);
     }
     return decodedTransactionSetV1;

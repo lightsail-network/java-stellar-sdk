@@ -40,9 +40,9 @@ public class TransactionPhase implements XdrElement {
     stream.writeInt(encodedTransactionPhase.getDiscriminant().intValue());
     switch (encodedTransactionPhase.getDiscriminant()) {
       case 0:
-        int v0Componentssize = encodedTransactionPhase.getV0Components().length;
-        stream.writeInt(v0Componentssize);
-        for (int i = 0; i < v0Componentssize; i++) {
+        int v0ComponentsSize = encodedTransactionPhase.getV0Components().length;
+        stream.writeInt(v0ComponentsSize);
+        for (int i = 0; i < v0ComponentsSize; i++) {
           TxSetComponent.encode(stream, encodedTransactionPhase.v0Components[i]);
         }
         break;
@@ -59,9 +59,9 @@ public class TransactionPhase implements XdrElement {
     decodedTransactionPhase.setDiscriminant(discriminant);
     switch (decodedTransactionPhase.getDiscriminant()) {
       case 0:
-        int v0Componentssize = stream.readInt();
-        decodedTransactionPhase.v0Components = new TxSetComponent[v0Componentssize];
-        for (int i = 0; i < v0Componentssize; i++) {
+        int v0ComponentsSize = stream.readInt();
+        decodedTransactionPhase.v0Components = new TxSetComponent[v0ComponentsSize];
+        for (int i = 0; i < v0ComponentsSize; i++) {
           decodedTransactionPhase.v0Components[i] = TxSetComponent.decode(stream);
         }
         break;

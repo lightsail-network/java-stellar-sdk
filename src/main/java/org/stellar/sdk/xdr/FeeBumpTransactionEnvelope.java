@@ -39,9 +39,9 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
       XdrDataOutputStream stream, FeeBumpTransactionEnvelope encodedFeeBumpTransactionEnvelope)
       throws IOException {
     FeeBumpTransaction.encode(stream, encodedFeeBumpTransactionEnvelope.tx);
-    int signaturessize = encodedFeeBumpTransactionEnvelope.getSignatures().length;
-    stream.writeInt(signaturessize);
-    for (int i = 0; i < signaturessize; i++) {
+    int signaturesSize = encodedFeeBumpTransactionEnvelope.getSignatures().length;
+    stream.writeInt(signaturesSize);
+    for (int i = 0; i < signaturesSize; i++) {
       DecoratedSignature.encode(stream, encodedFeeBumpTransactionEnvelope.signatures[i]);
     }
   }
@@ -53,9 +53,9 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
   public static FeeBumpTransactionEnvelope decode(XdrDataInputStream stream) throws IOException {
     FeeBumpTransactionEnvelope decodedFeeBumpTransactionEnvelope = new FeeBumpTransactionEnvelope();
     decodedFeeBumpTransactionEnvelope.tx = FeeBumpTransaction.decode(stream);
-    int signaturessize = stream.readInt();
-    decodedFeeBumpTransactionEnvelope.signatures = new DecoratedSignature[signaturessize];
-    for (int i = 0; i < signaturessize; i++) {
+    int signaturesSize = stream.readInt();
+    decodedFeeBumpTransactionEnvelope.signatures = new DecoratedSignature[signaturesSize];
+    for (int i = 0; i < signaturesSize; i++) {
       decodedFeeBumpTransactionEnvelope.signatures[i] = DecoratedSignature.decode(stream);
     }
     return decodedFeeBumpTransactionEnvelope;

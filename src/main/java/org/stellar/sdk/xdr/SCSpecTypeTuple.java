@@ -33,9 +33,9 @@ public class SCSpecTypeTuple implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeTuple encodedSCSpecTypeTuple)
       throws IOException {
-    int valueTypessize = encodedSCSpecTypeTuple.getValueTypes().length;
-    stream.writeInt(valueTypessize);
-    for (int i = 0; i < valueTypessize; i++) {
+    int valueTypesSize = encodedSCSpecTypeTuple.getValueTypes().length;
+    stream.writeInt(valueTypesSize);
+    for (int i = 0; i < valueTypesSize; i++) {
       SCSpecTypeDef.encode(stream, encodedSCSpecTypeTuple.valueTypes[i]);
     }
   }
@@ -46,9 +46,9 @@ public class SCSpecTypeTuple implements XdrElement {
 
   public static SCSpecTypeTuple decode(XdrDataInputStream stream) throws IOException {
     SCSpecTypeTuple decodedSCSpecTypeTuple = new SCSpecTypeTuple();
-    int valueTypessize = stream.readInt();
-    decodedSCSpecTypeTuple.valueTypes = new SCSpecTypeDef[valueTypessize];
-    for (int i = 0; i < valueTypessize; i++) {
+    int valueTypesSize = stream.readInt();
+    decodedSCSpecTypeTuple.valueTypes = new SCSpecTypeDef[valueTypesSize];
+    for (int i = 0; i < valueTypesSize; i++) {
       decodedSCSpecTypeTuple.valueTypes[i] = SCSpecTypeDef.decode(stream);
     }
     return decodedSCSpecTypeTuple;

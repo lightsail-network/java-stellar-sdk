@@ -28,9 +28,9 @@ public class PeerStatList implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, PeerStatList encodedPeerStatList)
       throws IOException {
-    int PeerStatListsize = encodedPeerStatList.getPeerStatList().length;
-    stream.writeInt(PeerStatListsize);
-    for (int i = 0; i < PeerStatListsize; i++) {
+    int PeerStatListSize = encodedPeerStatList.getPeerStatList().length;
+    stream.writeInt(PeerStatListSize);
+    for (int i = 0; i < PeerStatListSize; i++) {
       PeerStats.encode(stream, encodedPeerStatList.PeerStatList[i]);
     }
   }
@@ -41,9 +41,9 @@ public class PeerStatList implements XdrElement {
 
   public static PeerStatList decode(XdrDataInputStream stream) throws IOException {
     PeerStatList decodedPeerStatList = new PeerStatList();
-    int PeerStatListsize = stream.readInt();
-    decodedPeerStatList.PeerStatList = new PeerStats[PeerStatListsize];
-    for (int i = 0; i < PeerStatListsize; i++) {
+    int PeerStatListSize = stream.readInt();
+    decodedPeerStatList.PeerStatList = new PeerStats[PeerStatListSize];
+    for (int i = 0; i < PeerStatListSize; i++) {
       decodedPeerStatList.PeerStatList[i] = PeerStats.decode(stream);
     }
     return decodedPeerStatList;

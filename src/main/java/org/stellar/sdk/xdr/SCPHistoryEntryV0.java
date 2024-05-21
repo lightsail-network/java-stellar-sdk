@@ -35,9 +35,9 @@ public class SCPHistoryEntryV0 implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, SCPHistoryEntryV0 encodedSCPHistoryEntryV0)
       throws IOException {
-    int quorumSetssize = encodedSCPHistoryEntryV0.getQuorumSets().length;
-    stream.writeInt(quorumSetssize);
-    for (int i = 0; i < quorumSetssize; i++) {
+    int quorumSetsSize = encodedSCPHistoryEntryV0.getQuorumSets().length;
+    stream.writeInt(quorumSetsSize);
+    for (int i = 0; i < quorumSetsSize; i++) {
       SCPQuorumSet.encode(stream, encodedSCPHistoryEntryV0.quorumSets[i]);
     }
     LedgerSCPMessages.encode(stream, encodedSCPHistoryEntryV0.ledgerMessages);
@@ -49,9 +49,9 @@ public class SCPHistoryEntryV0 implements XdrElement {
 
   public static SCPHistoryEntryV0 decode(XdrDataInputStream stream) throws IOException {
     SCPHistoryEntryV0 decodedSCPHistoryEntryV0 = new SCPHistoryEntryV0();
-    int quorumSetssize = stream.readInt();
-    decodedSCPHistoryEntryV0.quorumSets = new SCPQuorumSet[quorumSetssize];
-    for (int i = 0; i < quorumSetssize; i++) {
+    int quorumSetsSize = stream.readInt();
+    decodedSCPHistoryEntryV0.quorumSets = new SCPQuorumSet[quorumSetsSize];
+    for (int i = 0; i < quorumSetsSize; i++) {
       decodedSCPHistoryEntryV0.quorumSets[i] = SCPQuorumSet.decode(stream);
     }
     decodedSCPHistoryEntryV0.ledgerMessages = LedgerSCPMessages.decode(stream);

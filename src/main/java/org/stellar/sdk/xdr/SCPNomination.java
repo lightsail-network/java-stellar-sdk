@@ -38,14 +38,14 @@ public class SCPNomination implements XdrElement {
   public static void encode(XdrDataOutputStream stream, SCPNomination encodedSCPNomination)
       throws IOException {
     Hash.encode(stream, encodedSCPNomination.quorumSetHash);
-    int votessize = encodedSCPNomination.getVotes().length;
-    stream.writeInt(votessize);
-    for (int i = 0; i < votessize; i++) {
+    int votesSize = encodedSCPNomination.getVotes().length;
+    stream.writeInt(votesSize);
+    for (int i = 0; i < votesSize; i++) {
       Value.encode(stream, encodedSCPNomination.votes[i]);
     }
-    int acceptedsize = encodedSCPNomination.getAccepted().length;
-    stream.writeInt(acceptedsize);
-    for (int i = 0; i < acceptedsize; i++) {
+    int acceptedSize = encodedSCPNomination.getAccepted().length;
+    stream.writeInt(acceptedSize);
+    for (int i = 0; i < acceptedSize; i++) {
       Value.encode(stream, encodedSCPNomination.accepted[i]);
     }
   }
@@ -57,14 +57,14 @@ public class SCPNomination implements XdrElement {
   public static SCPNomination decode(XdrDataInputStream stream) throws IOException {
     SCPNomination decodedSCPNomination = new SCPNomination();
     decodedSCPNomination.quorumSetHash = Hash.decode(stream);
-    int votessize = stream.readInt();
-    decodedSCPNomination.votes = new Value[votessize];
-    for (int i = 0; i < votessize; i++) {
+    int votesSize = stream.readInt();
+    decodedSCPNomination.votes = new Value[votesSize];
+    for (int i = 0; i < votesSize; i++) {
       decodedSCPNomination.votes[i] = Value.decode(stream);
     }
-    int acceptedsize = stream.readInt();
-    decodedSCPNomination.accepted = new Value[acceptedsize];
-    for (int i = 0; i < acceptedsize; i++) {
+    int acceptedSize = stream.readInt();
+    decodedSCPNomination.accepted = new Value[acceptedSize];
+    for (int i = 0; i < acceptedSize; i++) {
       decodedSCPNomination.accepted[i] = Value.decode(stream);
     }
     return decodedSCPNomination;

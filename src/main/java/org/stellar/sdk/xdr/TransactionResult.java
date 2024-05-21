@@ -166,9 +166,9 @@ public class TransactionResult implements XdrElement {
           break;
         case txSUCCESS:
         case txFAILED:
-          int resultssize = encodedTransactionResultResult.getResults().length;
-          stream.writeInt(resultssize);
-          for (int i = 0; i < resultssize; i++) {
+          int resultsSize = encodedTransactionResultResult.getResults().length;
+          stream.writeInt(resultsSize);
+          for (int i = 0; i < resultsSize; i++) {
             OperationResult.encode(stream, encodedTransactionResultResult.results[i]);
           }
           break;
@@ -207,9 +207,9 @@ public class TransactionResult implements XdrElement {
           break;
         case txSUCCESS:
         case txFAILED:
-          int resultssize = stream.readInt();
-          decodedTransactionResultResult.results = new OperationResult[resultssize];
-          for (int i = 0; i < resultssize; i++) {
+          int resultsSize = stream.readInt();
+          decodedTransactionResultResult.results = new OperationResult[resultsSize];
+          for (int i = 0; i < resultsSize; i++) {
             decodedTransactionResultResult.results[i] = OperationResult.decode(stream);
           }
           break;

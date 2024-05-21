@@ -33,8 +33,8 @@ public class Curve25519Secret implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, Curve25519Secret encodedCurve25519Secret)
       throws IOException {
-    int keysize = encodedCurve25519Secret.key.length;
-    stream.write(encodedCurve25519Secret.getKey(), 0, keysize);
+    int keySize = encodedCurve25519Secret.key.length;
+    stream.write(encodedCurve25519Secret.getKey(), 0, keySize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -43,9 +43,9 @@ public class Curve25519Secret implements XdrElement {
 
   public static Curve25519Secret decode(XdrDataInputStream stream) throws IOException {
     Curve25519Secret decodedCurve25519Secret = new Curve25519Secret();
-    int keysize = 32;
-    decodedCurve25519Secret.key = new byte[keysize];
-    stream.read(decodedCurve25519Secret.key, 0, keysize);
+    int keySize = 32;
+    decodedCurve25519Secret.key = new byte[keySize];
+    stream.read(decodedCurve25519Secret.key, 0, keySize);
     return decodedCurve25519Secret;
   }
 

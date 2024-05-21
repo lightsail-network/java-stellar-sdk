@@ -27,9 +27,9 @@ public class SCMap implements XdrElement {
   private SCMapEntry[] SCMap;
 
   public static void encode(XdrDataOutputStream stream, SCMap encodedSCMap) throws IOException {
-    int SCMapsize = encodedSCMap.getSCMap().length;
-    stream.writeInt(SCMapsize);
-    for (int i = 0; i < SCMapsize; i++) {
+    int SCMapSize = encodedSCMap.getSCMap().length;
+    stream.writeInt(SCMapSize);
+    for (int i = 0; i < SCMapSize; i++) {
       SCMapEntry.encode(stream, encodedSCMap.SCMap[i]);
     }
   }
@@ -40,9 +40,9 @@ public class SCMap implements XdrElement {
 
   public static SCMap decode(XdrDataInputStream stream) throws IOException {
     SCMap decodedSCMap = new SCMap();
-    int SCMapsize = stream.readInt();
-    decodedSCMap.SCMap = new SCMapEntry[SCMapsize];
-    for (int i = 0; i < SCMapsize; i++) {
+    int SCMapSize = stream.readInt();
+    decodedSCMap.SCMap = new SCMapEntry[SCMapSize];
+    for (int i = 0; i < SCMapSize; i++) {
       decodedSCMap.SCMap[i] = SCMapEntry.decode(stream);
     }
     return decodedSCMap;

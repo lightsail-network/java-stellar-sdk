@@ -32,9 +32,9 @@ public class ConfigUpgradeSet implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, ConfigUpgradeSet encodedConfigUpgradeSet)
       throws IOException {
-    int updatedEntrysize = encodedConfigUpgradeSet.getUpdatedEntry().length;
-    stream.writeInt(updatedEntrysize);
-    for (int i = 0; i < updatedEntrysize; i++) {
+    int updatedEntrySize = encodedConfigUpgradeSet.getUpdatedEntry().length;
+    stream.writeInt(updatedEntrySize);
+    for (int i = 0; i < updatedEntrySize; i++) {
       ConfigSettingEntry.encode(stream, encodedConfigUpgradeSet.updatedEntry[i]);
     }
   }
@@ -45,9 +45,9 @@ public class ConfigUpgradeSet implements XdrElement {
 
   public static ConfigUpgradeSet decode(XdrDataInputStream stream) throws IOException {
     ConfigUpgradeSet decodedConfigUpgradeSet = new ConfigUpgradeSet();
-    int updatedEntrysize = stream.readInt();
-    decodedConfigUpgradeSet.updatedEntry = new ConfigSettingEntry[updatedEntrysize];
-    for (int i = 0; i < updatedEntrysize; i++) {
+    int updatedEntrySize = stream.readInt();
+    decodedConfigUpgradeSet.updatedEntry = new ConfigSettingEntry[updatedEntrySize];
+    for (int i = 0; i < updatedEntrySize; i++) {
       decodedConfigUpgradeSet.updatedEntry[i] = ConfigSettingEntry.decode(stream);
     }
     return decodedConfigUpgradeSet;

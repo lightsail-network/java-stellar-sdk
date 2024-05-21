@@ -27,9 +27,9 @@ public class SCVec implements XdrElement {
   private SCVal[] SCVec;
 
   public static void encode(XdrDataOutputStream stream, SCVec encodedSCVec) throws IOException {
-    int SCVecsize = encodedSCVec.getSCVec().length;
-    stream.writeInt(SCVecsize);
-    for (int i = 0; i < SCVecsize; i++) {
+    int SCVecSize = encodedSCVec.getSCVec().length;
+    stream.writeInt(SCVecSize);
+    for (int i = 0; i < SCVecSize; i++) {
       SCVal.encode(stream, encodedSCVec.SCVec[i]);
     }
   }
@@ -40,9 +40,9 @@ public class SCVec implements XdrElement {
 
   public static SCVec decode(XdrDataInputStream stream) throws IOException {
     SCVec decodedSCVec = new SCVec();
-    int SCVecsize = stream.readInt();
-    decodedSCVec.SCVec = new SCVal[SCVecsize];
-    for (int i = 0; i < SCVecsize; i++) {
+    int SCVecSize = stream.readInt();
+    decodedSCVec.SCVec = new SCVal[SCVecSize];
+    for (int i = 0; i < SCVecSize; i++) {
       decodedSCVec.SCVec[i] = SCVal.decode(stream);
     }
     return decodedSCVec;

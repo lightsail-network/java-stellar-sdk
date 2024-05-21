@@ -28,9 +28,9 @@ public class DataValue implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, DataValue encodedDataValue)
       throws IOException {
-    int DataValuesize = encodedDataValue.DataValue.length;
-    stream.writeInt(DataValuesize);
-    stream.write(encodedDataValue.getDataValue(), 0, DataValuesize);
+    int DataValueSize = encodedDataValue.DataValue.length;
+    stream.writeInt(DataValueSize);
+    stream.write(encodedDataValue.getDataValue(), 0, DataValueSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -39,9 +39,9 @@ public class DataValue implements XdrElement {
 
   public static DataValue decode(XdrDataInputStream stream) throws IOException {
     DataValue decodedDataValue = new DataValue();
-    int DataValuesize = stream.readInt();
-    decodedDataValue.DataValue = new byte[DataValuesize];
-    stream.read(decodedDataValue.DataValue, 0, DataValuesize);
+    int DataValueSize = stream.readInt();
+    decodedDataValue.DataValue = new byte[DataValueSize];
+    stream.read(decodedDataValue.DataValue, 0, DataValueSize);
     return decodedDataValue;
   }
 

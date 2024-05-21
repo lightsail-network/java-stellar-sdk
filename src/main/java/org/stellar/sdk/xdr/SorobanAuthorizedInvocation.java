@@ -37,9 +37,9 @@ public class SorobanAuthorizedInvocation implements XdrElement {
       XdrDataOutputStream stream, SorobanAuthorizedInvocation encodedSorobanAuthorizedInvocation)
       throws IOException {
     SorobanAuthorizedFunction.encode(stream, encodedSorobanAuthorizedInvocation.function);
-    int subInvocationssize = encodedSorobanAuthorizedInvocation.getSubInvocations().length;
-    stream.writeInt(subInvocationssize);
-    for (int i = 0; i < subInvocationssize; i++) {
+    int subInvocationsSize = encodedSorobanAuthorizedInvocation.getSubInvocations().length;
+    stream.writeInt(subInvocationsSize);
+    for (int i = 0; i < subInvocationsSize; i++) {
       SorobanAuthorizedInvocation.encode(
           stream, encodedSorobanAuthorizedInvocation.subInvocations[i]);
     }
@@ -53,10 +53,10 @@ public class SorobanAuthorizedInvocation implements XdrElement {
     SorobanAuthorizedInvocation decodedSorobanAuthorizedInvocation =
         new SorobanAuthorizedInvocation();
     decodedSorobanAuthorizedInvocation.function = SorobanAuthorizedFunction.decode(stream);
-    int subInvocationssize = stream.readInt();
+    int subInvocationsSize = stream.readInt();
     decodedSorobanAuthorizedInvocation.subInvocations =
-        new SorobanAuthorizedInvocation[subInvocationssize];
-    for (int i = 0; i < subInvocationssize; i++) {
+        new SorobanAuthorizedInvocation[subInvocationsSize];
+    for (int i = 0; i < subInvocationsSize; i++) {
       decodedSorobanAuthorizedInvocation.subInvocations[i] =
           SorobanAuthorizedInvocation.decode(stream);
     }

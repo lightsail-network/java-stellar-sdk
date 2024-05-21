@@ -95,8 +95,8 @@ public class LedgerHeader implements XdrElement {
     Uint32.encode(stream, encodedLedgerHeader.baseFee);
     Uint32.encode(stream, encodedLedgerHeader.baseReserve);
     Uint32.encode(stream, encodedLedgerHeader.maxTxSetSize);
-    int skipListsize = encodedLedgerHeader.getSkipList().length;
-    for (int i = 0; i < skipListsize; i++) {
+    int skipListSize = encodedLedgerHeader.getSkipList().length;
+    for (int i = 0; i < skipListSize; i++) {
       Hash.encode(stream, encodedLedgerHeader.skipList[i]);
     }
     LedgerHeaderExt.encode(stream, encodedLedgerHeader.ext);
@@ -121,9 +121,9 @@ public class LedgerHeader implements XdrElement {
     decodedLedgerHeader.baseFee = Uint32.decode(stream);
     decodedLedgerHeader.baseReserve = Uint32.decode(stream);
     decodedLedgerHeader.maxTxSetSize = Uint32.decode(stream);
-    int skipListsize = 4;
-    decodedLedgerHeader.skipList = new Hash[skipListsize];
-    for (int i = 0; i < skipListsize; i++) {
+    int skipListSize = 4;
+    decodedLedgerHeader.skipList = new Hash[skipListSize];
+    for (int i = 0; i < skipListSize; i++) {
       decodedLedgerHeader.skipList[i] = Hash.decode(stream);
     }
     decodedLedgerHeader.ext = LedgerHeaderExt.decode(stream);

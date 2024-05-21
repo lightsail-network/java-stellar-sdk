@@ -28,8 +28,8 @@ public class AssetCode12 implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, AssetCode12 encodedAssetCode12)
       throws IOException {
-    int AssetCode12size = encodedAssetCode12.AssetCode12.length;
-    stream.write(encodedAssetCode12.getAssetCode12(), 0, AssetCode12size);
+    int AssetCode12Size = encodedAssetCode12.AssetCode12.length;
+    stream.write(encodedAssetCode12.getAssetCode12(), 0, AssetCode12Size);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -38,9 +38,9 @@ public class AssetCode12 implements XdrElement {
 
   public static AssetCode12 decode(XdrDataInputStream stream) throws IOException {
     AssetCode12 decodedAssetCode12 = new AssetCode12();
-    int AssetCode12size = 12;
-    decodedAssetCode12.AssetCode12 = new byte[AssetCode12size];
-    stream.read(decodedAssetCode12.AssetCode12, 0, AssetCode12size);
+    int AssetCode12Size = 12;
+    decodedAssetCode12.AssetCode12 = new byte[AssetCode12Size];
+    stream.read(decodedAssetCode12.AssetCode12, 0, AssetCode12Size);
     return decodedAssetCode12;
   }
 

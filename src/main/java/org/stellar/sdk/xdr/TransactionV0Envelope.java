@@ -39,9 +39,9 @@ public class TransactionV0Envelope implements XdrElement {
       XdrDataOutputStream stream, TransactionV0Envelope encodedTransactionV0Envelope)
       throws IOException {
     TransactionV0.encode(stream, encodedTransactionV0Envelope.tx);
-    int signaturessize = encodedTransactionV0Envelope.getSignatures().length;
-    stream.writeInt(signaturessize);
-    for (int i = 0; i < signaturessize; i++) {
+    int signaturesSize = encodedTransactionV0Envelope.getSignatures().length;
+    stream.writeInt(signaturesSize);
+    for (int i = 0; i < signaturesSize; i++) {
       DecoratedSignature.encode(stream, encodedTransactionV0Envelope.signatures[i]);
     }
   }
@@ -53,9 +53,9 @@ public class TransactionV0Envelope implements XdrElement {
   public static TransactionV0Envelope decode(XdrDataInputStream stream) throws IOException {
     TransactionV0Envelope decodedTransactionV0Envelope = new TransactionV0Envelope();
     decodedTransactionV0Envelope.tx = TransactionV0.decode(stream);
-    int signaturessize = stream.readInt();
-    decodedTransactionV0Envelope.signatures = new DecoratedSignature[signaturessize];
-    for (int i = 0; i < signaturessize; i++) {
+    int signaturesSize = stream.readInt();
+    decodedTransactionV0Envelope.signatures = new DecoratedSignature[signaturesSize];
+    for (int i = 0; i < signaturesSize; i++) {
       decodedTransactionV0Envelope.signatures[i] = DecoratedSignature.decode(stream);
     }
     return decodedTransactionV0Envelope;

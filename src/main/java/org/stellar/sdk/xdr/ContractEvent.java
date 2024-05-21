@@ -199,9 +199,9 @@ public class ContractEvent implements XdrElement {
 
       public static void encode(XdrDataOutputStream stream, ContractEventV0 encodedContractEventV0)
           throws IOException {
-        int topicssize = encodedContractEventV0.getTopics().length;
-        stream.writeInt(topicssize);
-        for (int i = 0; i < topicssize; i++) {
+        int topicsSize = encodedContractEventV0.getTopics().length;
+        stream.writeInt(topicsSize);
+        for (int i = 0; i < topicsSize; i++) {
           SCVal.encode(stream, encodedContractEventV0.topics[i]);
         }
         SCVal.encode(stream, encodedContractEventV0.data);
@@ -213,9 +213,9 @@ public class ContractEvent implements XdrElement {
 
       public static ContractEventV0 decode(XdrDataInputStream stream) throws IOException {
         ContractEventV0 decodedContractEventV0 = new ContractEventV0();
-        int topicssize = stream.readInt();
-        decodedContractEventV0.topics = new SCVal[topicssize];
-        for (int i = 0; i < topicssize; i++) {
+        int topicsSize = stream.readInt();
+        decodedContractEventV0.topics = new SCVal[topicsSize];
+        for (int i = 0; i < topicsSize; i++) {
           decodedContractEventV0.topics[i] = SCVal.decode(stream);
         }
         decodedContractEventV0.data = SCVal.decode(stream);

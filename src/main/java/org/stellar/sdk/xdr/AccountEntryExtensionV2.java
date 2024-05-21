@@ -50,9 +50,9 @@ public class AccountEntryExtensionV2 implements XdrElement {
       throws IOException {
     Uint32.encode(stream, encodedAccountEntryExtensionV2.numSponsored);
     Uint32.encode(stream, encodedAccountEntryExtensionV2.numSponsoring);
-    int signerSponsoringIDssize = encodedAccountEntryExtensionV2.getSignerSponsoringIDs().length;
-    stream.writeInt(signerSponsoringIDssize);
-    for (int i = 0; i < signerSponsoringIDssize; i++) {
+    int signerSponsoringIDsSize = encodedAccountEntryExtensionV2.getSignerSponsoringIDs().length;
+    stream.writeInt(signerSponsoringIDsSize);
+    for (int i = 0; i < signerSponsoringIDsSize; i++) {
       SponsorshipDescriptor.encode(stream, encodedAccountEntryExtensionV2.signerSponsoringIDs[i]);
     }
     AccountEntryExtensionV2Ext.encode(stream, encodedAccountEntryExtensionV2.ext);
@@ -66,10 +66,10 @@ public class AccountEntryExtensionV2 implements XdrElement {
     AccountEntryExtensionV2 decodedAccountEntryExtensionV2 = new AccountEntryExtensionV2();
     decodedAccountEntryExtensionV2.numSponsored = Uint32.decode(stream);
     decodedAccountEntryExtensionV2.numSponsoring = Uint32.decode(stream);
-    int signerSponsoringIDssize = stream.readInt();
+    int signerSponsoringIDsSize = stream.readInt();
     decodedAccountEntryExtensionV2.signerSponsoringIDs =
-        new SponsorshipDescriptor[signerSponsoringIDssize];
-    for (int i = 0; i < signerSponsoringIDssize; i++) {
+        new SponsorshipDescriptor[signerSponsoringIDsSize];
+    for (int i = 0; i < signerSponsoringIDsSize; i++) {
       decodedAccountEntryExtensionV2.signerSponsoringIDs[i] = SponsorshipDescriptor.decode(stream);
     }
     decodedAccountEntryExtensionV2.ext = AccountEntryExtensionV2Ext.decode(stream);

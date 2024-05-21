@@ -168,9 +168,9 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
         XdrDataOutputStream stream,
         PathPaymentStrictReceiveResultSuccess encodedPathPaymentStrictReceiveResultSuccess)
         throws IOException {
-      int offerssize = encodedPathPaymentStrictReceiveResultSuccess.getOffers().length;
-      stream.writeInt(offerssize);
-      for (int i = 0; i < offerssize; i++) {
+      int offersSize = encodedPathPaymentStrictReceiveResultSuccess.getOffers().length;
+      stream.writeInt(offersSize);
+      for (int i = 0; i < offersSize; i++) {
         ClaimAtom.encode(stream, encodedPathPaymentStrictReceiveResultSuccess.offers[i]);
       }
       SimplePaymentResult.encode(stream, encodedPathPaymentStrictReceiveResultSuccess.last);
@@ -184,9 +184,9 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
         throws IOException {
       PathPaymentStrictReceiveResultSuccess decodedPathPaymentStrictReceiveResultSuccess =
           new PathPaymentStrictReceiveResultSuccess();
-      int offerssize = stream.readInt();
-      decodedPathPaymentStrictReceiveResultSuccess.offers = new ClaimAtom[offerssize];
-      for (int i = 0; i < offerssize; i++) {
+      int offersSize = stream.readInt();
+      decodedPathPaymentStrictReceiveResultSuccess.offers = new ClaimAtom[offersSize];
+      for (int i = 0; i < offersSize; i++) {
         decodedPathPaymentStrictReceiveResultSuccess.offers[i] = ClaimAtom.decode(stream);
       }
       decodedPathPaymentStrictReceiveResultSuccess.last = SimplePaymentResult.decode(stream);

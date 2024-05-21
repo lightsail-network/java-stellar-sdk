@@ -57,16 +57,16 @@ public class ClaimPredicate implements XdrElement {
       case CLAIM_PREDICATE_UNCONDITIONAL:
         break;
       case CLAIM_PREDICATE_AND:
-        int andPredicatessize = encodedClaimPredicate.getAndPredicates().length;
-        stream.writeInt(andPredicatessize);
-        for (int i = 0; i < andPredicatessize; i++) {
+        int andPredicatesSize = encodedClaimPredicate.getAndPredicates().length;
+        stream.writeInt(andPredicatesSize);
+        for (int i = 0; i < andPredicatesSize; i++) {
           ClaimPredicate.encode(stream, encodedClaimPredicate.andPredicates[i]);
         }
         break;
       case CLAIM_PREDICATE_OR:
-        int orPredicatessize = encodedClaimPredicate.getOrPredicates().length;
-        stream.writeInt(orPredicatessize);
-        for (int i = 0; i < orPredicatessize; i++) {
+        int orPredicatesSize = encodedClaimPredicate.getOrPredicates().length;
+        stream.writeInt(orPredicatesSize);
+        for (int i = 0; i < orPredicatesSize; i++) {
           ClaimPredicate.encode(stream, encodedClaimPredicate.orPredicates[i]);
         }
         break;
@@ -99,16 +99,16 @@ public class ClaimPredicate implements XdrElement {
       case CLAIM_PREDICATE_UNCONDITIONAL:
         break;
       case CLAIM_PREDICATE_AND:
-        int andPredicatessize = stream.readInt();
-        decodedClaimPredicate.andPredicates = new ClaimPredicate[andPredicatessize];
-        for (int i = 0; i < andPredicatessize; i++) {
+        int andPredicatesSize = stream.readInt();
+        decodedClaimPredicate.andPredicates = new ClaimPredicate[andPredicatesSize];
+        for (int i = 0; i < andPredicatesSize; i++) {
           decodedClaimPredicate.andPredicates[i] = ClaimPredicate.decode(stream);
         }
         break;
       case CLAIM_PREDICATE_OR:
-        int orPredicatessize = stream.readInt();
-        decodedClaimPredicate.orPredicates = new ClaimPredicate[orPredicatessize];
-        for (int i = 0; i < orPredicatessize; i++) {
+        int orPredicatesSize = stream.readInt();
+        decodedClaimPredicate.orPredicates = new ClaimPredicate[orPredicatesSize];
+        for (int i = 0; i < orPredicatesSize; i++) {
           decodedClaimPredicate.orPredicates[i] = ClaimPredicate.decode(stream);
         }
         break;

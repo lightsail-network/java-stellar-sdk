@@ -49,9 +49,9 @@ public class ContractCodeEntry implements XdrElement {
       throws IOException {
     ContractCodeEntryExt.encode(stream, encodedContractCodeEntry.ext);
     Hash.encode(stream, encodedContractCodeEntry.hash);
-    int codesize = encodedContractCodeEntry.code.length;
-    stream.writeInt(codesize);
-    stream.write(encodedContractCodeEntry.getCode(), 0, codesize);
+    int codeSize = encodedContractCodeEntry.code.length;
+    stream.writeInt(codeSize);
+    stream.write(encodedContractCodeEntry.getCode(), 0, codeSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -62,9 +62,9 @@ public class ContractCodeEntry implements XdrElement {
     ContractCodeEntry decodedContractCodeEntry = new ContractCodeEntry();
     decodedContractCodeEntry.ext = ContractCodeEntryExt.decode(stream);
     decodedContractCodeEntry.hash = Hash.decode(stream);
-    int codesize = stream.readInt();
-    decodedContractCodeEntry.code = new byte[codesize];
-    stream.read(decodedContractCodeEntry.code, 0, codesize);
+    int codeSize = stream.readInt();
+    decodedContractCodeEntry.code = new byte[codeSize];
+    stream.read(decodedContractCodeEntry.code, 0, codeSize);
     return decodedContractCodeEntry;
   }
 

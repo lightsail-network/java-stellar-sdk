@@ -28,8 +28,8 @@ public class SignatureHint implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, SignatureHint encodedSignatureHint)
       throws IOException {
-    int SignatureHintsize = encodedSignatureHint.SignatureHint.length;
-    stream.write(encodedSignatureHint.getSignatureHint(), 0, SignatureHintsize);
+    int SignatureHintSize = encodedSignatureHint.SignatureHint.length;
+    stream.write(encodedSignatureHint.getSignatureHint(), 0, SignatureHintSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -38,9 +38,9 @@ public class SignatureHint implements XdrElement {
 
   public static SignatureHint decode(XdrDataInputStream stream) throws IOException {
     SignatureHint decodedSignatureHint = new SignatureHint();
-    int SignatureHintsize = 4;
-    decodedSignatureHint.SignatureHint = new byte[SignatureHintsize];
-    stream.read(decodedSignatureHint.SignatureHint, 0, SignatureHintsize);
+    int SignatureHintSize = 4;
+    decodedSignatureHint.SignatureHint = new byte[SignatureHintSize];
+    stream.read(decodedSignatureHint.SignatureHint, 0, SignatureHintSize);
     return decodedSignatureHint;
   }
 

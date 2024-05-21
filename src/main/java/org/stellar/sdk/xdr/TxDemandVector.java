@@ -28,9 +28,9 @@ public class TxDemandVector implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, TxDemandVector encodedTxDemandVector)
       throws IOException {
-    int TxDemandVectorsize = encodedTxDemandVector.getTxDemandVector().length;
-    stream.writeInt(TxDemandVectorsize);
-    for (int i = 0; i < TxDemandVectorsize; i++) {
+    int TxDemandVectorSize = encodedTxDemandVector.getTxDemandVector().length;
+    stream.writeInt(TxDemandVectorSize);
+    for (int i = 0; i < TxDemandVectorSize; i++) {
       Hash.encode(stream, encodedTxDemandVector.TxDemandVector[i]);
     }
   }
@@ -41,9 +41,9 @@ public class TxDemandVector implements XdrElement {
 
   public static TxDemandVector decode(XdrDataInputStream stream) throws IOException {
     TxDemandVector decodedTxDemandVector = new TxDemandVector();
-    int TxDemandVectorsize = stream.readInt();
-    decodedTxDemandVector.TxDemandVector = new Hash[TxDemandVectorsize];
-    for (int i = 0; i < TxDemandVectorsize; i++) {
+    int TxDemandVectorSize = stream.readInt();
+    decodedTxDemandVector.TxDemandVector = new Hash[TxDemandVectorSize];
+    for (int i = 0; i < TxDemandVectorSize; i++) {
       decodedTxDemandVector.TxDemandVector[i] = Hash.decode(stream);
     }
     return decodedTxDemandVector;

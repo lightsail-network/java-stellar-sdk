@@ -28,9 +28,9 @@ public class EncryptedBody implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, EncryptedBody encodedEncryptedBody)
       throws IOException {
-    int EncryptedBodysize = encodedEncryptedBody.EncryptedBody.length;
-    stream.writeInt(EncryptedBodysize);
-    stream.write(encodedEncryptedBody.getEncryptedBody(), 0, EncryptedBodysize);
+    int EncryptedBodySize = encodedEncryptedBody.EncryptedBody.length;
+    stream.writeInt(EncryptedBodySize);
+    stream.write(encodedEncryptedBody.getEncryptedBody(), 0, EncryptedBodySize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -39,9 +39,9 @@ public class EncryptedBody implements XdrElement {
 
   public static EncryptedBody decode(XdrDataInputStream stream) throws IOException {
     EncryptedBody decodedEncryptedBody = new EncryptedBody();
-    int EncryptedBodysize = stream.readInt();
-    decodedEncryptedBody.EncryptedBody = new byte[EncryptedBodysize];
-    stream.read(decodedEncryptedBody.EncryptedBody, 0, EncryptedBodysize);
+    int EncryptedBodySize = stream.readInt();
+    decodedEncryptedBody.EncryptedBody = new byte[EncryptedBodySize];
+    stream.read(decodedEncryptedBody.EncryptedBody, 0, EncryptedBodySize);
     return decodedEncryptedBody;
   }
 

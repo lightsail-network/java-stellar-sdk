@@ -47,9 +47,9 @@ public class TransactionMetaV3 implements XdrElement {
       throws IOException {
     ExtensionPoint.encode(stream, encodedTransactionMetaV3.ext);
     LedgerEntryChanges.encode(stream, encodedTransactionMetaV3.txChangesBefore);
-    int operationssize = encodedTransactionMetaV3.getOperations().length;
-    stream.writeInt(operationssize);
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = encodedTransactionMetaV3.getOperations().length;
+    stream.writeInt(operationsSize);
+    for (int i = 0; i < operationsSize; i++) {
       OperationMeta.encode(stream, encodedTransactionMetaV3.operations[i]);
     }
     LedgerEntryChanges.encode(stream, encodedTransactionMetaV3.txChangesAfter);
@@ -69,9 +69,9 @@ public class TransactionMetaV3 implements XdrElement {
     TransactionMetaV3 decodedTransactionMetaV3 = new TransactionMetaV3();
     decodedTransactionMetaV3.ext = ExtensionPoint.decode(stream);
     decodedTransactionMetaV3.txChangesBefore = LedgerEntryChanges.decode(stream);
-    int operationssize = stream.readInt();
-    decodedTransactionMetaV3.operations = new OperationMeta[operationssize];
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = stream.readInt();
+    decodedTransactionMetaV3.operations = new OperationMeta[operationsSize];
+    for (int i = 0; i < operationsSize; i++) {
       decodedTransactionMetaV3.operations[i] = OperationMeta.decode(stream);
     }
     decodedTransactionMetaV3.txChangesAfter = LedgerEntryChanges.decode(stream);

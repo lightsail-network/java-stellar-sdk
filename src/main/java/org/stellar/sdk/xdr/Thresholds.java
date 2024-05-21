@@ -28,8 +28,8 @@ public class Thresholds implements XdrElement {
 
   public static void encode(XdrDataOutputStream stream, Thresholds encodedThresholds)
       throws IOException {
-    int Thresholdssize = encodedThresholds.Thresholds.length;
-    stream.write(encodedThresholds.getThresholds(), 0, Thresholdssize);
+    int ThresholdsSize = encodedThresholds.Thresholds.length;
+    stream.write(encodedThresholds.getThresholds(), 0, ThresholdsSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -38,9 +38,9 @@ public class Thresholds implements XdrElement {
 
   public static Thresholds decode(XdrDataInputStream stream) throws IOException {
     Thresholds decodedThresholds = new Thresholds();
-    int Thresholdssize = 4;
-    decodedThresholds.Thresholds = new byte[Thresholdssize];
-    stream.read(decodedThresholds.Thresholds, 0, Thresholdssize);
+    int ThresholdsSize = 4;
+    decodedThresholds.Thresholds = new byte[ThresholdsSize];
+    stream.read(decodedThresholds.Thresholds, 0, ThresholdsSize);
     return decodedThresholds;
   }
 

@@ -160,9 +160,9 @@ public class InnerTransactionResult implements XdrElement {
       switch (encodedInnerTransactionResultResult.getDiscriminant()) {
         case txSUCCESS:
         case txFAILED:
-          int resultssize = encodedInnerTransactionResultResult.getResults().length;
-          stream.writeInt(resultssize);
-          for (int i = 0; i < resultssize; i++) {
+          int resultsSize = encodedInnerTransactionResultResult.getResults().length;
+          stream.writeInt(resultsSize);
+          for (int i = 0; i < resultsSize; i++) {
             OperationResult.encode(stream, encodedInnerTransactionResultResult.results[i]);
           }
           break;
@@ -198,9 +198,9 @@ public class InnerTransactionResult implements XdrElement {
       switch (decodedInnerTransactionResultResult.getDiscriminant()) {
         case txSUCCESS:
         case txFAILED:
-          int resultssize = stream.readInt();
-          decodedInnerTransactionResultResult.results = new OperationResult[resultssize];
-          for (int i = 0; i < resultssize; i++) {
+          int resultsSize = stream.readInt();
+          decodedInnerTransactionResultResult.results = new OperationResult[resultsSize];
+          for (int i = 0; i < resultsSize; i++) {
             decodedInnerTransactionResultResult.results[i] = OperationResult.decode(stream);
           }
           break;

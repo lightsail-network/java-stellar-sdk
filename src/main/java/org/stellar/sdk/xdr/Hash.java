@@ -27,8 +27,8 @@ public class Hash implements XdrElement {
   private byte[] Hash;
 
   public static void encode(XdrDataOutputStream stream, Hash encodedHash) throws IOException {
-    int Hashsize = encodedHash.Hash.length;
-    stream.write(encodedHash.getHash(), 0, Hashsize);
+    int HashSize = encodedHash.Hash.length;
+    stream.write(encodedHash.getHash(), 0, HashSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -37,9 +37,9 @@ public class Hash implements XdrElement {
 
   public static Hash decode(XdrDataInputStream stream) throws IOException {
     Hash decodedHash = new Hash();
-    int Hashsize = 32;
-    decodedHash.Hash = new byte[Hashsize];
-    stream.read(decodedHash.Hash, 0, Hashsize);
+    int HashSize = 32;
+    decodedHash.Hash = new byte[HashSize];
+    stream.read(decodedHash.Hash, 0, HashSize);
     return decodedHash;
   }
 

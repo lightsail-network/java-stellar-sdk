@@ -53,9 +53,9 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
     MuxedAccount.encode(stream, encodedPathPaymentStrictReceiveOp.destination);
     Asset.encode(stream, encodedPathPaymentStrictReceiveOp.destAsset);
     Int64.encode(stream, encodedPathPaymentStrictReceiveOp.destAmount);
-    int pathsize = encodedPathPaymentStrictReceiveOp.getPath().length;
-    stream.writeInt(pathsize);
-    for (int i = 0; i < pathsize; i++) {
+    int pathSize = encodedPathPaymentStrictReceiveOp.getPath().length;
+    stream.writeInt(pathSize);
+    for (int i = 0; i < pathSize; i++) {
       Asset.encode(stream, encodedPathPaymentStrictReceiveOp.path[i]);
     }
   }
@@ -71,9 +71,9 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
     decodedPathPaymentStrictReceiveOp.destination = MuxedAccount.decode(stream);
     decodedPathPaymentStrictReceiveOp.destAsset = Asset.decode(stream);
     decodedPathPaymentStrictReceiveOp.destAmount = Int64.decode(stream);
-    int pathsize = stream.readInt();
-    decodedPathPaymentStrictReceiveOp.path = new Asset[pathsize];
-    for (int i = 0; i < pathsize; i++) {
+    int pathSize = stream.readInt();
+    decodedPathPaymentStrictReceiveOp.path = new Asset[pathSize];
+    for (int i = 0; i < pathSize; i++) {
       decodedPathPaymentStrictReceiveOp.path[i] = Asset.decode(stream);
     }
     return decodedPathPaymentStrictReceiveOp;

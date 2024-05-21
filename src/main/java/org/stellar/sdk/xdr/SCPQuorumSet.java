@@ -38,14 +38,14 @@ public class SCPQuorumSet implements XdrElement {
   public static void encode(XdrDataOutputStream stream, SCPQuorumSet encodedSCPQuorumSet)
       throws IOException {
     Uint32.encode(stream, encodedSCPQuorumSet.threshold);
-    int validatorssize = encodedSCPQuorumSet.getValidators().length;
-    stream.writeInt(validatorssize);
-    for (int i = 0; i < validatorssize; i++) {
+    int validatorsSize = encodedSCPQuorumSet.getValidators().length;
+    stream.writeInt(validatorsSize);
+    for (int i = 0; i < validatorsSize; i++) {
       NodeID.encode(stream, encodedSCPQuorumSet.validators[i]);
     }
-    int innerSetssize = encodedSCPQuorumSet.getInnerSets().length;
-    stream.writeInt(innerSetssize);
-    for (int i = 0; i < innerSetssize; i++) {
+    int innerSetsSize = encodedSCPQuorumSet.getInnerSets().length;
+    stream.writeInt(innerSetsSize);
+    for (int i = 0; i < innerSetsSize; i++) {
       SCPQuorumSet.encode(stream, encodedSCPQuorumSet.innerSets[i]);
     }
   }
@@ -57,14 +57,14 @@ public class SCPQuorumSet implements XdrElement {
   public static SCPQuorumSet decode(XdrDataInputStream stream) throws IOException {
     SCPQuorumSet decodedSCPQuorumSet = new SCPQuorumSet();
     decodedSCPQuorumSet.threshold = Uint32.decode(stream);
-    int validatorssize = stream.readInt();
-    decodedSCPQuorumSet.validators = new NodeID[validatorssize];
-    for (int i = 0; i < validatorssize; i++) {
+    int validatorsSize = stream.readInt();
+    decodedSCPQuorumSet.validators = new NodeID[validatorsSize];
+    for (int i = 0; i < validatorsSize; i++) {
       decodedSCPQuorumSet.validators[i] = NodeID.decode(stream);
     }
-    int innerSetssize = stream.readInt();
-    decodedSCPQuorumSet.innerSets = new SCPQuorumSet[innerSetssize];
-    for (int i = 0; i < innerSetssize; i++) {
+    int innerSetsSize = stream.readInt();
+    decodedSCPQuorumSet.innerSets = new SCPQuorumSet[innerSetsSize];
+    for (int i = 0; i < innerSetsSize; i++) {
       decodedSCPQuorumSet.innerSets[i] = SCPQuorumSet.decode(stream);
     }
     return decodedSCPQuorumSet;

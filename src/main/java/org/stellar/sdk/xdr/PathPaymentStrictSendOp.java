@@ -53,9 +53,9 @@ public class PathPaymentStrictSendOp implements XdrElement {
     MuxedAccount.encode(stream, encodedPathPaymentStrictSendOp.destination);
     Asset.encode(stream, encodedPathPaymentStrictSendOp.destAsset);
     Int64.encode(stream, encodedPathPaymentStrictSendOp.destMin);
-    int pathsize = encodedPathPaymentStrictSendOp.getPath().length;
-    stream.writeInt(pathsize);
-    for (int i = 0; i < pathsize; i++) {
+    int pathSize = encodedPathPaymentStrictSendOp.getPath().length;
+    stream.writeInt(pathSize);
+    for (int i = 0; i < pathSize; i++) {
       Asset.encode(stream, encodedPathPaymentStrictSendOp.path[i]);
     }
   }
@@ -71,9 +71,9 @@ public class PathPaymentStrictSendOp implements XdrElement {
     decodedPathPaymentStrictSendOp.destination = MuxedAccount.decode(stream);
     decodedPathPaymentStrictSendOp.destAsset = Asset.decode(stream);
     decodedPathPaymentStrictSendOp.destMin = Int64.decode(stream);
-    int pathsize = stream.readInt();
-    decodedPathPaymentStrictSendOp.path = new Asset[pathsize];
-    for (int i = 0; i < pathsize; i++) {
+    int pathSize = stream.readInt();
+    decodedPathPaymentStrictSendOp.path = new Asset[pathSize];
+    for (int i = 0; i < pathSize; i++) {
       decodedPathPaymentStrictSendOp.path[i] = Asset.decode(stream);
     }
     return decodedPathPaymentStrictSendOp;
