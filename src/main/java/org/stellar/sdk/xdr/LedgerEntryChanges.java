@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,28 +20,17 @@ import org.stellar.sdk.Base64Factory;
  * typedef LedgerEntryChange LedgerEntryChanges&lt;&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LedgerEntryChanges implements XdrElement {
   private LedgerEntryChange[] LedgerEntryChanges;
 
-  public LedgerEntryChanges() {}
-
-  public LedgerEntryChanges(LedgerEntryChange[] LedgerEntryChanges) {
-    this.LedgerEntryChanges = LedgerEntryChanges;
-  }
-
-  public LedgerEntryChange[] getLedgerEntryChanges() {
-    return this.LedgerEntryChanges;
-  }
-
-  public void setLedgerEntryChanges(LedgerEntryChange[] value) {
-    this.LedgerEntryChanges = value;
-  }
-
   public static void encode(
       XdrDataOutputStream stream, LedgerEntryChanges encodedLedgerEntryChanges) throws IOException {
-    int LedgerEntryChangessize = encodedLedgerEntryChanges.getLedgerEntryChanges().length;
-    stream.writeInt(LedgerEntryChangessize);
-    for (int i = 0; i < LedgerEntryChangessize; i++) {
+    int LedgerEntryChangesSize = encodedLedgerEntryChanges.getLedgerEntryChanges().length;
+    stream.writeInt(LedgerEntryChangesSize);
+    for (int i = 0; i < LedgerEntryChangesSize; i++) {
       LedgerEntryChange.encode(stream, encodedLedgerEntryChanges.LedgerEntryChanges[i]);
     }
   }
@@ -50,27 +41,12 @@ public class LedgerEntryChanges implements XdrElement {
 
   public static LedgerEntryChanges decode(XdrDataInputStream stream) throws IOException {
     LedgerEntryChanges decodedLedgerEntryChanges = new LedgerEntryChanges();
-    int LedgerEntryChangessize = stream.readInt();
-    decodedLedgerEntryChanges.LedgerEntryChanges = new LedgerEntryChange[LedgerEntryChangessize];
-    for (int i = 0; i < LedgerEntryChangessize; i++) {
+    int LedgerEntryChangesSize = stream.readInt();
+    decodedLedgerEntryChanges.LedgerEntryChanges = new LedgerEntryChange[LedgerEntryChangesSize];
+    for (int i = 0; i < LedgerEntryChangesSize; i++) {
       decodedLedgerEntryChanges.LedgerEntryChanges[i] = LedgerEntryChange.decode(stream);
     }
     return decodedLedgerEntryChanges;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.LedgerEntryChanges);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerEntryChanges)) {
-      return false;
-    }
-
-    LedgerEntryChanges other = (LedgerEntryChanges) object;
-    return Arrays.equals(this.LedgerEntryChanges, other.LedgerEntryChanges);
   }
 
   @Override

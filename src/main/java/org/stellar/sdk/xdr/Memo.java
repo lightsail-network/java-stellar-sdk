@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,101 +33,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Memo implements XdrElement {
-  public Memo() {}
-
-  MemoType type;
-
-  public MemoType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(MemoType value) {
-    this.type = value;
-  }
-
+  private MemoType discriminant;
   private XdrString text;
-
-  public XdrString getText() {
-    return this.text;
-  }
-
-  public void setText(XdrString value) {
-    this.text = value;
-  }
-
   private Uint64 id;
-
-  public Uint64 getId() {
-    return this.id;
-  }
-
-  public void setId(Uint64 value) {
-    this.id = value;
-  }
-
   private Hash hash;
-
-  public Hash getHash() {
-    return this.hash;
-  }
-
-  public void setHash(Hash value) {
-    this.hash = value;
-  }
-
   private Hash retHash;
-
-  public Hash getRetHash() {
-    return this.retHash;
-  }
-
-  public void setRetHash(Hash value) {
-    this.retHash = value;
-  }
-
-  public static final class Builder {
-    private MemoType discriminant;
-    private XdrString text;
-    private Uint64 id;
-    private Hash hash;
-    private Hash retHash;
-
-    public Builder discriminant(MemoType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder text(XdrString text) {
-      this.text = text;
-      return this;
-    }
-
-    public Builder id(Uint64 id) {
-      this.id = id;
-      return this;
-    }
-
-    public Builder hash(Hash hash) {
-      this.hash = hash;
-      return this;
-    }
-
-    public Builder retHash(Hash retHash) {
-      this.retHash = retHash;
-      return this;
-    }
-
-    public Memo build() {
-      Memo val = new Memo();
-      val.setDiscriminant(discriminant);
-      val.setText(this.text);
-      val.setId(this.id);
-      val.setHash(this.hash);
-      val.setRetHash(this.retHash);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, Memo encodedMemo) throws IOException {
     // Xdrgen::AST::Identifier
@@ -173,25 +91,6 @@ public class Memo implements XdrElement {
         break;
     }
     return decodedMemo;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.text, this.id, this.hash, this.retHash, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Memo)) {
-      return false;
-    }
-
-    Memo other = (Memo) object;
-    return Objects.equals(this.text, other.text)
-        && Objects.equals(this.id, other.id)
-        && Objects.equals(this.hash, other.hash)
-        && Objects.equals(this.retHash, other.retHash)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

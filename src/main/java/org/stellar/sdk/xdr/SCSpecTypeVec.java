@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecTypeVec implements XdrElement {
-  public SCSpecTypeVec() {}
-
   private SCSpecTypeDef elementType;
-
-  public SCSpecTypeDef getElementType() {
-    return this.elementType;
-  }
-
-  public void setElementType(SCSpecTypeDef value) {
-    this.elementType = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeVec encodedSCSpecTypeVec)
       throws IOException {
@@ -47,21 +44,6 @@ public class SCSpecTypeVec implements XdrElement {
     SCSpecTypeVec decodedSCSpecTypeVec = new SCSpecTypeVec();
     decodedSCSpecTypeVec.elementType = SCSpecTypeDef.decode(stream);
     return decodedSCSpecTypeVec;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.elementType);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecTypeVec)) {
-      return false;
-    }
-
-    SCSpecTypeVec other = (SCSpecTypeVec) object;
-    return Objects.equals(this.elementType, other.elementType);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class SCSpecTypeVec implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCSpecTypeDef elementType;
-
-    public Builder elementType(SCSpecTypeDef elementType) {
-      this.elementType = elementType;
-      return this;
-    }
-
-    public SCSpecTypeVec build() {
-      SCSpecTypeVec val = new SCSpecTypeVec();
-      val.setElementType(this.elementType);
-      return val;
-    }
   }
 }

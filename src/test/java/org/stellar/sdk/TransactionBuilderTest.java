@@ -60,7 +60,7 @@ public class TransactionBuilderTest {
         transaction.toEnvelopeXdrBase64());
 
     org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
-        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder().discriminant(0).build();
+        org.stellar.sdk.xdr.Transaction.TransactionExt.builder().discriminant(0).build();
     assertEquals(expectedExt, transaction.toEnvelopeXdr().getV1().getTx().getExt());
 
     // Convert transaction to binary XDR and back again to make sure correctly xdr de/serialized.
@@ -343,7 +343,7 @@ public class TransactionBuilderTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     KeyPair newAccount =
         KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
-    PreconditionsV2.Builder preconditionsV2 = new PreconditionsV2.Builder();
+    PreconditionsV2.PreconditionsV2Builder preconditionsV2 = PreconditionsV2.builder();
 
     SequenceNumber seqNum = new SequenceNumber();
     seqNum.setSequenceNumber(new Int64(5L));
@@ -468,10 +468,10 @@ public class TransactionBuilderTest {
     byte[] payload = Util.hexToBytes(encodedString);
 
     SignerKey signerKey =
-        new SignerKey.Builder()
+        SignerKey.builder()
             .discriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD)
             .ed25519SignedPayload(
-                new SignerKey.SignerKeyEd25519SignedPayload.Builder()
+                SignerKey.SignerKeyEd25519SignedPayload.builder()
                     .payload(payload)
                     .ed25519(new Uint256(StrKey.decodeEd25519PublicKey(accountStrKey)))
                     .build())
@@ -531,9 +531,9 @@ public class TransactionBuilderTest {
                       new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                   .extraSigners(
                       Arrays.asList(
-                          new SignerKey.Builder().build(),
-                          new SignerKey.Builder().build(),
-                          new SignerKey.Builder().build()))
+                          SignerKey.builder().build(),
+                          SignerKey.builder().build(),
+                          SignerKey.builder().build()))
                   .minSeqLedgerGap(5)
                   .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -889,10 +889,10 @@ public class TransactionBuilderTest {
     BumpSequenceOperation operation0 = new BumpSequenceOperation.Builder(1L).build();
     BumpSequenceOperation operation1 = new BumpSequenceOperation.Builder(2L).build();
     LedgerKey ledgerKey =
-        new LedgerKey.Builder()
+        LedgerKey.builder()
             .discriminant(LedgerEntryType.ACCOUNT)
             .account(
-                new LedgerKey.LedgerKeyAccount.Builder()
+                LedgerKey.LedgerKeyAccount.builder()
                     .accountID(
                         KeyPair.fromAccountId(
                                 "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -900,11 +900,11 @@ public class TransactionBuilderTest {
                     .build())
             .build();
     SorobanTransactionData sorobanData =
-        new SorobanTransactionData.Builder()
+        SorobanTransactionData.builder()
             .resources(
-                new SorobanResources.Builder()
+                SorobanResources.builder()
                     .footprint(
-                        new LedgerFootprint.Builder()
+                        LedgerFootprint.builder()
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
@@ -913,7 +913,7 @@ public class TransactionBuilderTest {
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .ext(ExtensionPoint.builder().discriminant(0).build())
             .build();
 
     Transaction transaction =
@@ -941,10 +941,10 @@ public class TransactionBuilderTest {
         KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
     LedgerKey ledgerKey =
-        new LedgerKey.Builder()
+        LedgerKey.builder()
             .discriminant(LedgerEntryType.ACCOUNT)
             .account(
-                new LedgerKey.LedgerKeyAccount.Builder()
+                LedgerKey.LedgerKeyAccount.builder()
                     .accountID(
                         KeyPair.fromAccountId(
                                 "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -952,11 +952,11 @@ public class TransactionBuilderTest {
                     .build())
             .build();
     SorobanTransactionData sorobanData =
-        new SorobanTransactionData.Builder()
+        SorobanTransactionData.builder()
             .resources(
-                new SorobanResources.Builder()
+                SorobanResources.builder()
                     .footprint(
-                        new LedgerFootprint.Builder()
+                        LedgerFootprint.builder()
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
@@ -965,7 +965,7 @@ public class TransactionBuilderTest {
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .ext(ExtensionPoint.builder().discriminant(0).build())
             .build();
 
     long sequenceNumber = 2908908335136768L;
@@ -981,7 +981,7 @@ public class TransactionBuilderTest {
 
     assertEquals(sorobanData, transaction.getSorobanData());
     org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
-        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder()
+        org.stellar.sdk.xdr.Transaction.TransactionExt.builder()
             .discriminant(1)
             .sorobanData(sorobanData)
             .build();
@@ -996,10 +996,10 @@ public class TransactionBuilderTest {
         KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
     LedgerKey ledgerKey =
-        new LedgerKey.Builder()
+        LedgerKey.builder()
             .discriminant(LedgerEntryType.ACCOUNT)
             .account(
-                new LedgerKey.LedgerKeyAccount.Builder()
+                LedgerKey.LedgerKeyAccount.builder()
                     .accountID(
                         KeyPair.fromAccountId(
                                 "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -1007,11 +1007,11 @@ public class TransactionBuilderTest {
                     .build())
             .build();
     SorobanTransactionData sorobanData =
-        new SorobanTransactionData.Builder()
+        SorobanTransactionData.builder()
             .resources(
-                new SorobanResources.Builder()
+                SorobanResources.builder()
                     .footprint(
-                        new LedgerFootprint.Builder()
+                        LedgerFootprint.builder()
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
@@ -1020,17 +1020,17 @@ public class TransactionBuilderTest {
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .ext(ExtensionPoint.builder().discriminant(0).build())
             .build();
     String sorobanDataString = sorobanData.toXdrBase64();
 
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(
                                 new Address(
                                         "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -1039,12 +1039,12 @@ public class TransactionBuilderTest {
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -1063,7 +1063,7 @@ public class TransactionBuilderTest {
 
     assertEquals(sorobanData, transaction.getSorobanData());
     org.stellar.sdk.xdr.Transaction.TransactionExt expectedExt =
-        new org.stellar.sdk.xdr.Transaction.TransactionExt.Builder()
+        org.stellar.sdk.xdr.Transaction.TransactionExt.builder()
             .discriminant(1)
             .sorobanData(sorobanData)
             .build();
@@ -1072,7 +1072,7 @@ public class TransactionBuilderTest {
 
   private static org.stellar.sdk.xdr.TimeBounds buildTimeBounds(
       BigInteger minTime, BigInteger maxTime) {
-    return new org.stellar.sdk.xdr.TimeBounds.Builder()
+    return org.stellar.sdk.xdr.TimeBounds.builder()
         .minTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(minTime))))
         .maxTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(maxTime))))
         .build();

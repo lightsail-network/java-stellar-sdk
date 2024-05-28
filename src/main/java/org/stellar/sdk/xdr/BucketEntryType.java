@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,16 +27,16 @@ public enum BucketEntryType implements XdrElement {
   METAENTRY(-1),
   LIVEENTRY(0),
   DEADENTRY(1),
-  INITENTRY(2),
-  ;
-  private int mValue;
+  INITENTRY(2);
+
+  private final int value;
 
   BucketEntryType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static BucketEntryType decode(XdrDataInputStream stream) throws IOException {

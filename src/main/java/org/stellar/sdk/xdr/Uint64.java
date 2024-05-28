@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef unsigned hyper uint64;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Uint64 implements XdrElement {
   private XdrUnsignedHyperInteger uint64;
-
-  public Uint64() {}
-
-  public Uint64(XdrUnsignedHyperInteger uint64) {
-    this.uint64 = uint64;
-  }
-
-  public XdrUnsignedHyperInteger getUint64() {
-    return this.uint64;
-  }
-
-  public void setUint64(XdrUnsignedHyperInteger value) {
-    this.uint64 = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Uint64 encodedUint64) throws IOException {
     encodedUint64.uint64.encode(stream);
@@ -47,21 +38,6 @@ public class Uint64 implements XdrElement {
     Uint64 decodedUint64 = new Uint64();
     decodedUint64.uint64 = XdrUnsignedHyperInteger.decode(stream);
     return decodedUint64;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.uint64);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Uint64)) {
-      return false;
-    }
-
-    Uint64 other = (Uint64) object;
-    return Objects.equals(this.uint64, other.uint64);
   }
 
   @Override

@@ -32,7 +32,7 @@ public class RestoreFootprintOperation extends Operation {
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     RestoreFootprintOp op = new RestoreFootprintOp();
-    op.setExt(new ExtensionPoint.Builder().discriminant(0).build());
+    op.setExt(ExtensionPoint.builder().discriminant(0).build());
 
     org.stellar.sdk.xdr.Operation.OperationBody body =
         new org.stellar.sdk.xdr.Operation.OperationBody();

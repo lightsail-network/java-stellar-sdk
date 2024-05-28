@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecTypeResult implements XdrElement {
-  public SCSpecTypeResult() {}
-
   private SCSpecTypeDef okType;
-
-  public SCSpecTypeDef getOkType() {
-    return this.okType;
-  }
-
-  public void setOkType(SCSpecTypeDef value) {
-    this.okType = value;
-  }
-
   private SCSpecTypeDef errorType;
-
-  public SCSpecTypeDef getErrorType() {
-    return this.errorType;
-  }
-
-  public void setErrorType(SCSpecTypeDef value) {
-    this.errorType = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeResult encodedSCSpecTypeResult)
       throws IOException {
@@ -60,22 +48,6 @@ public class SCSpecTypeResult implements XdrElement {
     decodedSCSpecTypeResult.okType = SCSpecTypeDef.decode(stream);
     decodedSCSpecTypeResult.errorType = SCSpecTypeDef.decode(stream);
     return decodedSCSpecTypeResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.okType, this.errorType);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecTypeResult)) {
-      return false;
-    }
-
-    SCSpecTypeResult other = (SCSpecTypeResult) object;
-    return Objects.equals(this.okType, other.okType)
-        && Objects.equals(this.errorType, other.errorType);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class SCSpecTypeResult implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCSpecTypeDef okType;
-    private SCSpecTypeDef errorType;
-
-    public Builder okType(SCSpecTypeDef okType) {
-      this.okType = okType;
-      return this;
-    }
-
-    public Builder errorType(SCSpecTypeDef errorType) {
-      this.errorType = errorType;
-      return this;
-    }
-
-    public SCSpecTypeResult build() {
-      SCSpecTypeResult val = new SCSpecTypeResult();
-      val.setOkType(this.okType);
-      val.setErrorType(this.errorType);
-      return val;
-    }
   }
 }

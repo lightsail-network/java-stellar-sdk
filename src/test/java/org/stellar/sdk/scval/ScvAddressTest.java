@@ -14,10 +14,7 @@ public class ScvAddressTest {
     Address address = new Address(publicKey);
 
     SCVal expectedScVal =
-        new SCVal.Builder()
-            .discriminant(SCValType.SCV_ADDRESS)
-            .address(address.toSCAddress())
-            .build();
+        SCVal.builder().discriminant(SCValType.SCV_ADDRESS).address(address.toSCAddress()).build();
 
     SCVal actualScVal = Scv.toAddress(address);
     assertEquals(expectedScVal, actualScVal);
@@ -30,10 +27,7 @@ public class ScvAddressTest {
     Address address = new Address(publicKey);
 
     SCVal expectedScVal =
-        new SCVal.Builder()
-            .discriminant(SCValType.SCV_ADDRESS)
-            .address(address.toSCAddress())
-            .build();
+        SCVal.builder().discriminant(SCValType.SCV_ADDRESS).address(address.toSCAddress()).build();
 
     SCVal actualScVal = Scv.toAddress(publicKey);
     assertEquals(expectedScVal, actualScVal);

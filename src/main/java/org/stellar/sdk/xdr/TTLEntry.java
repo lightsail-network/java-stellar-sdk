@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TTLEntry implements XdrElement {
-  public TTLEntry() {}
-
   private Hash keyHash;
-
-  public Hash getKeyHash() {
-    return this.keyHash;
-  }
-
-  public void setKeyHash(Hash value) {
-    this.keyHash = value;
-  }
-
   private Uint32 liveUntilLedgerSeq;
-
-  public Uint32 getLiveUntilLedgerSeq() {
-    return this.liveUntilLedgerSeq;
-  }
-
-  public void setLiveUntilLedgerSeq(Uint32 value) {
-    this.liveUntilLedgerSeq = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TTLEntry encodedTTLEntry)
       throws IOException {
@@ -60,22 +48,6 @@ public class TTLEntry implements XdrElement {
     decodedTTLEntry.keyHash = Hash.decode(stream);
     decodedTTLEntry.liveUntilLedgerSeq = Uint32.decode(stream);
     return decodedTTLEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.keyHash, this.liveUntilLedgerSeq);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TTLEntry)) {
-      return false;
-    }
-
-    TTLEntry other = (TTLEntry) object;
-    return Objects.equals(this.keyHash, other.keyHash)
-        && Objects.equals(this.liveUntilLedgerSeq, other.liveUntilLedgerSeq);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class TTLEntry implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Hash keyHash;
-    private Uint32 liveUntilLedgerSeq;
-
-    public Builder keyHash(Hash keyHash) {
-      this.keyHash = keyHash;
-      return this;
-    }
-
-    public Builder liveUntilLedgerSeq(Uint32 liveUntilLedgerSeq) {
-      this.liveUntilLedgerSeq = liveUntilLedgerSeq;
-      return this;
-    }
-
-    public TTLEntry build() {
-      TTLEntry val = new TTLEntry();
-      val.setKeyHash(this.keyHash);
-      val.setLiveUntilLedgerSeq(this.liveUntilLedgerSeq);
-      return val;
-    }
   }
 }

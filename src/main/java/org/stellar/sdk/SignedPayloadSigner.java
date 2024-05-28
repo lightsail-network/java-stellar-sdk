@@ -56,7 +56,7 @@ public class SignedPayloadSigner {
   public SignedPayloadSigner(byte[] signerED25519PublicKey, byte[] payload) {
     this(
         new AccountID(
-            new PublicKey.Builder()
+            PublicKey.builder()
                 .discriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519)
                 .ed25519(new Uint256(signerED25519PublicKey))
                 .build()),

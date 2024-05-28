@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef AccountID&#42; SponsorshipDescriptor;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SponsorshipDescriptor implements XdrElement {
   private AccountID SponsorshipDescriptor;
-
-  public SponsorshipDescriptor() {}
-
-  public SponsorshipDescriptor(AccountID SponsorshipDescriptor) {
-    this.SponsorshipDescriptor = SponsorshipDescriptor;
-  }
-
-  public AccountID getSponsorshipDescriptor() {
-    return this.SponsorshipDescriptor;
-  }
-
-  public void setSponsorshipDescriptor(AccountID value) {
-    this.SponsorshipDescriptor = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SponsorshipDescriptor encodedSponsorshipDescriptor)
@@ -57,21 +48,6 @@ public class SponsorshipDescriptor implements XdrElement {
       decodedSponsorshipDescriptor.SponsorshipDescriptor = AccountID.decode(stream);
     }
     return decodedSponsorshipDescriptor;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.SponsorshipDescriptor);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SponsorshipDescriptor)) {
-      return false;
-    }
-
-    SponsorshipDescriptor other = (SponsorshipDescriptor) object;
-    return Objects.equals(this.SponsorshipDescriptor, other.SponsorshipDescriptor);
   }
 
   @Override

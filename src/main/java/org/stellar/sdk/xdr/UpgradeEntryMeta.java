@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class UpgradeEntryMeta implements XdrElement {
-  public UpgradeEntryMeta() {}
-
   private LedgerUpgrade upgrade;
-
-  public LedgerUpgrade getUpgrade() {
-    return this.upgrade;
-  }
-
-  public void setUpgrade(LedgerUpgrade value) {
-    this.upgrade = value;
-  }
-
   private LedgerEntryChanges changes;
-
-  public LedgerEntryChanges getChanges() {
-    return this.changes;
-  }
-
-  public void setChanges(LedgerEntryChanges value) {
-    this.changes = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, UpgradeEntryMeta encodedUpgradeEntryMeta)
       throws IOException {
@@ -60,22 +48,6 @@ public class UpgradeEntryMeta implements XdrElement {
     decodedUpgradeEntryMeta.upgrade = LedgerUpgrade.decode(stream);
     decodedUpgradeEntryMeta.changes = LedgerEntryChanges.decode(stream);
     return decodedUpgradeEntryMeta;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.upgrade, this.changes);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof UpgradeEntryMeta)) {
-      return false;
-    }
-
-    UpgradeEntryMeta other = (UpgradeEntryMeta) object;
-    return Objects.equals(this.upgrade, other.upgrade)
-        && Objects.equals(this.changes, other.changes);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class UpgradeEntryMeta implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerUpgrade upgrade;
-    private LedgerEntryChanges changes;
-
-    public Builder upgrade(LedgerUpgrade upgrade) {
-      this.upgrade = upgrade;
-      return this;
-    }
-
-    public Builder changes(LedgerEntryChanges changes) {
-      this.changes = changes;
-      return this;
-    }
-
-    public UpgradeEntryMeta build() {
-      UpgradeEntryMeta val = new UpgradeEntryMeta();
-      val.setUpgrade(this.upgrade);
-      val.setChanges(this.changes);
-      return val;
-    }
   }
 }

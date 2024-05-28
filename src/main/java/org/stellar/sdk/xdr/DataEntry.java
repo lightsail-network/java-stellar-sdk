@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -31,48 +34,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class DataEntry implements XdrElement {
-  public DataEntry() {}
-
   private AccountID accountID;
-
-  public AccountID getAccountID() {
-    return this.accountID;
-  }
-
-  public void setAccountID(AccountID value) {
-    this.accountID = value;
-  }
-
   private String64 dataName;
-
-  public String64 getDataName() {
-    return this.dataName;
-  }
-
-  public void setDataName(String64 value) {
-    this.dataName = value;
-  }
-
   private DataValue dataValue;
-
-  public DataValue getDataValue() {
-    return this.dataValue;
-  }
-
-  public void setDataValue(DataValue value) {
-    this.dataValue = value;
-  }
-
   private DataEntryExt ext;
-
-  public DataEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(DataEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, DataEntry encodedDataEntry)
       throws IOException {
@@ -93,24 +63,6 @@ public class DataEntry implements XdrElement {
     decodedDataEntry.dataValue = DataValue.decode(stream);
     decodedDataEntry.ext = DataEntryExt.decode(stream);
     return decodedDataEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.accountID, this.dataName, this.dataValue, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof DataEntry)) {
-      return false;
-    }
-
-    DataEntry other = (DataEntry) object;
-    return Objects.equals(this.accountID, other.accountID)
-        && Objects.equals(this.dataName, other.dataName)
-        && Objects.equals(this.dataValue, other.dataValue)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -137,42 +89,6 @@ public class DataEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private AccountID accountID;
-    private String64 dataName;
-    private DataValue dataValue;
-    private DataEntryExt ext;
-
-    public Builder accountID(AccountID accountID) {
-      this.accountID = accountID;
-      return this;
-    }
-
-    public Builder dataName(String64 dataName) {
-      this.dataName = dataName;
-      return this;
-    }
-
-    public Builder dataValue(DataValue dataValue) {
-      this.dataValue = dataValue;
-      return this;
-    }
-
-    public Builder ext(DataEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public DataEntry build() {
-      DataEntry val = new DataEntry();
-      val.setAccountID(this.accountID);
-      val.setDataName(this.dataName);
-      val.setDataValue(this.dataValue);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * DataEntryExt's original definition in the XDR file is:
    *
@@ -184,33 +100,12 @@ public class DataEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class DataEntryExt implements XdrElement {
-    public DataEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public DataEntryExt build() {
-        DataEntryExt val = new DataEntryExt();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(XdrDataOutputStream stream, DataEntryExt encodedDataEntryExt)
         throws IOException {
@@ -236,21 +131,6 @@ public class DataEntry implements XdrElement {
           break;
       }
       return decodedDataEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof DataEntryExt)) {
-        return false;
-      }
-
-      DataEntryExt other = (DataEntryExt) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

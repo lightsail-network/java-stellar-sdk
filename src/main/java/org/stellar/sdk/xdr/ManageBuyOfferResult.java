@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -35,50 +38,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ManageBuyOfferResult implements XdrElement {
-  public ManageBuyOfferResult() {}
-
-  ManageBuyOfferResultCode code;
-
-  public ManageBuyOfferResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(ManageBuyOfferResultCode value) {
-    this.code = value;
-  }
-
+  private ManageBuyOfferResultCode discriminant;
   private ManageOfferSuccessResult success;
-
-  public ManageOfferSuccessResult getSuccess() {
-    return this.success;
-  }
-
-  public void setSuccess(ManageOfferSuccessResult value) {
-    this.success = value;
-  }
-
-  public static final class Builder {
-    private ManageBuyOfferResultCode discriminant;
-    private ManageOfferSuccessResult success;
-
-    public Builder discriminant(ManageBuyOfferResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder success(ManageOfferSuccessResult success) {
-      this.success = success;
-      return this;
-    }
-
-    public ManageBuyOfferResult build() {
-      ManageBuyOfferResult val = new ManageBuyOfferResult();
-      val.setDiscriminant(discriminant);
-      val.setSuccess(this.success);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ManageBuyOfferResult encodedManageBuyOfferResult)
@@ -133,21 +99,6 @@ public class ManageBuyOfferResult implements XdrElement {
         break;
     }
     return decodedManageBuyOfferResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.success, this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ManageBuyOfferResult)) {
-      return false;
-    }
-
-    ManageBuyOfferResult other = (ManageBuyOfferResult) object;
-    return Objects.equals(this.success, other.success) && Objects.equals(this.code, other.code);
   }
 
   @Override

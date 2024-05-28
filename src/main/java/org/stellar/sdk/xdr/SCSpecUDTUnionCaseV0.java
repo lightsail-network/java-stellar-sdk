@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,67 +27,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecUDTUnionCaseV0 implements XdrElement {
-  public SCSpecUDTUnionCaseV0() {}
-
-  SCSpecUDTUnionCaseV0Kind kind;
-
-  public SCSpecUDTUnionCaseV0Kind getDiscriminant() {
-    return this.kind;
-  }
-
-  public void setDiscriminant(SCSpecUDTUnionCaseV0Kind value) {
-    this.kind = value;
-  }
-
+  private SCSpecUDTUnionCaseV0Kind discriminant;
   private SCSpecUDTUnionCaseVoidV0 voidCase;
-
-  public SCSpecUDTUnionCaseVoidV0 getVoidCase() {
-    return this.voidCase;
-  }
-
-  public void setVoidCase(SCSpecUDTUnionCaseVoidV0 value) {
-    this.voidCase = value;
-  }
-
   private SCSpecUDTUnionCaseTupleV0 tupleCase;
-
-  public SCSpecUDTUnionCaseTupleV0 getTupleCase() {
-    return this.tupleCase;
-  }
-
-  public void setTupleCase(SCSpecUDTUnionCaseTupleV0 value) {
-    this.tupleCase = value;
-  }
-
-  public static final class Builder {
-    private SCSpecUDTUnionCaseV0Kind discriminant;
-    private SCSpecUDTUnionCaseVoidV0 voidCase;
-    private SCSpecUDTUnionCaseTupleV0 tupleCase;
-
-    public Builder discriminant(SCSpecUDTUnionCaseV0Kind discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder voidCase(SCSpecUDTUnionCaseVoidV0 voidCase) {
-      this.voidCase = voidCase;
-      return this;
-    }
-
-    public Builder tupleCase(SCSpecUDTUnionCaseTupleV0 tupleCase) {
-      this.tupleCase = tupleCase;
-      return this;
-    }
-
-    public SCSpecUDTUnionCaseV0 build() {
-      SCSpecUDTUnionCaseV0 val = new SCSpecUDTUnionCaseV0();
-      val.setDiscriminant(discriminant);
-      val.setVoidCase(this.voidCase);
-      val.setTupleCase(this.tupleCase);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SCSpecUDTUnionCaseV0 encodedSCSpecUDTUnionCaseV0)
@@ -119,23 +69,6 @@ public class SCSpecUDTUnionCaseV0 implements XdrElement {
         break;
     }
     return decodedSCSpecUDTUnionCaseV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.voidCase, this.tupleCase, this.kind);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecUDTUnionCaseV0)) {
-      return false;
-    }
-
-    SCSpecUDTUnionCaseV0 other = (SCSpecUDTUnionCaseV0) object;
-    return Objects.equals(this.voidCase, other.voidCase)
-        && Objects.equals(this.tupleCase, other.tupleCase)
-        && Objects.equals(this.kind, other.kind);
   }
 
   @Override

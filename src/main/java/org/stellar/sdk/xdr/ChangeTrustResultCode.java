@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,16 +41,16 @@ public enum ChangeTrustResultCode implements XdrElement {
   CHANGE_TRUST_SELF_NOT_ALLOWED(-5),
   CHANGE_TRUST_TRUST_LINE_MISSING(-6),
   CHANGE_TRUST_CANNOT_DELETE(-7),
-  CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES(-8),
-  ;
-  private int mValue;
+  CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES(-8);
+
+  private final int value;
 
   ChangeTrustResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ChangeTrustResultCode decode(XdrDataInputStream stream) throws IOException {

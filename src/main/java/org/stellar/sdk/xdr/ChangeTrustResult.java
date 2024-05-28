@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -31,33 +34,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ChangeTrustResult implements XdrElement {
-  public ChangeTrustResult() {}
-
-  ChangeTrustResultCode code;
-
-  public ChangeTrustResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(ChangeTrustResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private ChangeTrustResultCode discriminant;
-
-    public Builder discriminant(ChangeTrustResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public ChangeTrustResult build() {
-      ChangeTrustResult val = new ChangeTrustResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private ChangeTrustResultCode discriminant;
 
   public static void encode(XdrDataOutputStream stream, ChangeTrustResult encodedChangeTrustResult)
       throws IOException {
@@ -101,21 +83,6 @@ public class ChangeTrustResult implements XdrElement {
         break;
     }
     return decodedChangeTrustResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ChangeTrustResult)) {
-      return false;
-    }
-
-    ChangeTrustResult other = (ChangeTrustResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

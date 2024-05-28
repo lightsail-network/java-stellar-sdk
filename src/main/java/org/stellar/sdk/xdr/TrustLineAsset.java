@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -33,84 +36,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TrustLineAsset implements XdrElement {
-  public TrustLineAsset() {}
-
-  AssetType type;
-
-  public AssetType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(AssetType value) {
-    this.type = value;
-  }
-
+  private AssetType discriminant;
   private AlphaNum4 alphaNum4;
-
-  public AlphaNum4 getAlphaNum4() {
-    return this.alphaNum4;
-  }
-
-  public void setAlphaNum4(AlphaNum4 value) {
-    this.alphaNum4 = value;
-  }
-
   private AlphaNum12 alphaNum12;
-
-  public AlphaNum12 getAlphaNum12() {
-    return this.alphaNum12;
-  }
-
-  public void setAlphaNum12(AlphaNum12 value) {
-    this.alphaNum12 = value;
-  }
-
   private PoolID liquidityPoolID;
-
-  public PoolID getLiquidityPoolID() {
-    return this.liquidityPoolID;
-  }
-
-  public void setLiquidityPoolID(PoolID value) {
-    this.liquidityPoolID = value;
-  }
-
-  public static final class Builder {
-    private AssetType discriminant;
-    private AlphaNum4 alphaNum4;
-    private AlphaNum12 alphaNum12;
-    private PoolID liquidityPoolID;
-
-    public Builder discriminant(AssetType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder alphaNum4(AlphaNum4 alphaNum4) {
-      this.alphaNum4 = alphaNum4;
-      return this;
-    }
-
-    public Builder alphaNum12(AlphaNum12 alphaNum12) {
-      this.alphaNum12 = alphaNum12;
-      return this;
-    }
-
-    public Builder liquidityPoolID(PoolID liquidityPoolID) {
-      this.liquidityPoolID = liquidityPoolID;
-      return this;
-    }
-
-    public TrustLineAsset build() {
-      TrustLineAsset val = new TrustLineAsset();
-      val.setDiscriminant(discriminant);
-      val.setAlphaNum4(this.alphaNum4);
-      val.setAlphaNum12(this.alphaNum12);
-      val.setLiquidityPoolID(this.liquidityPoolID);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, TrustLineAsset encodedTrustLineAsset)
       throws IOException {
@@ -154,24 +88,6 @@ public class TrustLineAsset implements XdrElement {
         break;
     }
     return decodedTrustLineAsset;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.alphaNum4, this.alphaNum12, this.liquidityPoolID, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TrustLineAsset)) {
-      return false;
-    }
-
-    TrustLineAsset other = (TrustLineAsset) object;
-    return Objects.equals(this.alphaNum4, other.alphaNum4)
-        && Objects.equals(this.alphaNum12, other.alphaNum12)
-        && Objects.equals(this.liquidityPoolID, other.liquidityPoolID)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -37,158 +40,26 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class PeerStats implements XdrElement {
-  public PeerStats() {}
-
   private NodeID id;
-
-  public NodeID getId() {
-    return this.id;
-  }
-
-  public void setId(NodeID value) {
-    this.id = value;
-  }
-
   private XdrString versionStr;
-
-  public XdrString getVersionStr() {
-    return this.versionStr;
-  }
-
-  public void setVersionStr(XdrString value) {
-    this.versionStr = value;
-  }
-
   private Uint64 messagesRead;
-
-  public Uint64 getMessagesRead() {
-    return this.messagesRead;
-  }
-
-  public void setMessagesRead(Uint64 value) {
-    this.messagesRead = value;
-  }
-
   private Uint64 messagesWritten;
-
-  public Uint64 getMessagesWritten() {
-    return this.messagesWritten;
-  }
-
-  public void setMessagesWritten(Uint64 value) {
-    this.messagesWritten = value;
-  }
-
   private Uint64 bytesRead;
-
-  public Uint64 getBytesRead() {
-    return this.bytesRead;
-  }
-
-  public void setBytesRead(Uint64 value) {
-    this.bytesRead = value;
-  }
-
   private Uint64 bytesWritten;
-
-  public Uint64 getBytesWritten() {
-    return this.bytesWritten;
-  }
-
-  public void setBytesWritten(Uint64 value) {
-    this.bytesWritten = value;
-  }
-
   private Uint64 secondsConnected;
-
-  public Uint64 getSecondsConnected() {
-    return this.secondsConnected;
-  }
-
-  public void setSecondsConnected(Uint64 value) {
-    this.secondsConnected = value;
-  }
-
   private Uint64 uniqueFloodBytesRecv;
-
-  public Uint64 getUniqueFloodBytesRecv() {
-    return this.uniqueFloodBytesRecv;
-  }
-
-  public void setUniqueFloodBytesRecv(Uint64 value) {
-    this.uniqueFloodBytesRecv = value;
-  }
-
   private Uint64 duplicateFloodBytesRecv;
-
-  public Uint64 getDuplicateFloodBytesRecv() {
-    return this.duplicateFloodBytesRecv;
-  }
-
-  public void setDuplicateFloodBytesRecv(Uint64 value) {
-    this.duplicateFloodBytesRecv = value;
-  }
-
   private Uint64 uniqueFetchBytesRecv;
-
-  public Uint64 getUniqueFetchBytesRecv() {
-    return this.uniqueFetchBytesRecv;
-  }
-
-  public void setUniqueFetchBytesRecv(Uint64 value) {
-    this.uniqueFetchBytesRecv = value;
-  }
-
   private Uint64 duplicateFetchBytesRecv;
-
-  public Uint64 getDuplicateFetchBytesRecv() {
-    return this.duplicateFetchBytesRecv;
-  }
-
-  public void setDuplicateFetchBytesRecv(Uint64 value) {
-    this.duplicateFetchBytesRecv = value;
-  }
-
   private Uint64 uniqueFloodMessageRecv;
-
-  public Uint64 getUniqueFloodMessageRecv() {
-    return this.uniqueFloodMessageRecv;
-  }
-
-  public void setUniqueFloodMessageRecv(Uint64 value) {
-    this.uniqueFloodMessageRecv = value;
-  }
-
   private Uint64 duplicateFloodMessageRecv;
-
-  public Uint64 getDuplicateFloodMessageRecv() {
-    return this.duplicateFloodMessageRecv;
-  }
-
-  public void setDuplicateFloodMessageRecv(Uint64 value) {
-    this.duplicateFloodMessageRecv = value;
-  }
-
   private Uint64 uniqueFetchMessageRecv;
-
-  public Uint64 getUniqueFetchMessageRecv() {
-    return this.uniqueFetchMessageRecv;
-  }
-
-  public void setUniqueFetchMessageRecv(Uint64 value) {
-    this.uniqueFetchMessageRecv = value;
-  }
-
   private Uint64 duplicateFetchMessageRecv;
-
-  public Uint64 getDuplicateFetchMessageRecv() {
-    return this.duplicateFetchMessageRecv;
-  }
-
-  public void setDuplicateFetchMessageRecv(Uint64 value) {
-    this.duplicateFetchMessageRecv = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, PeerStats encodedPeerStats)
       throws IOException {
@@ -234,50 +105,6 @@ public class PeerStats implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.id,
-        this.versionStr,
-        this.messagesRead,
-        this.messagesWritten,
-        this.bytesRead,
-        this.bytesWritten,
-        this.secondsConnected,
-        this.uniqueFloodBytesRecv,
-        this.duplicateFloodBytesRecv,
-        this.uniqueFetchBytesRecv,
-        this.duplicateFetchBytesRecv,
-        this.uniqueFloodMessageRecv,
-        this.duplicateFloodMessageRecv,
-        this.uniqueFetchMessageRecv,
-        this.duplicateFetchMessageRecv);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PeerStats)) {
-      return false;
-    }
-
-    PeerStats other = (PeerStats) object;
-    return Objects.equals(this.id, other.id)
-        && Objects.equals(this.versionStr, other.versionStr)
-        && Objects.equals(this.messagesRead, other.messagesRead)
-        && Objects.equals(this.messagesWritten, other.messagesWritten)
-        && Objects.equals(this.bytesRead, other.bytesRead)
-        && Objects.equals(this.bytesWritten, other.bytesWritten)
-        && Objects.equals(this.secondsConnected, other.secondsConnected)
-        && Objects.equals(this.uniqueFloodBytesRecv, other.uniqueFloodBytesRecv)
-        && Objects.equals(this.duplicateFloodBytesRecv, other.duplicateFloodBytesRecv)
-        && Objects.equals(this.uniqueFetchBytesRecv, other.uniqueFetchBytesRecv)
-        && Objects.equals(this.duplicateFetchBytesRecv, other.duplicateFetchBytesRecv)
-        && Objects.equals(this.uniqueFloodMessageRecv, other.uniqueFloodMessageRecv)
-        && Objects.equals(this.duplicateFloodMessageRecv, other.duplicateFloodMessageRecv)
-        && Objects.equals(this.uniqueFetchMessageRecv, other.uniqueFetchMessageRecv)
-        && Objects.equals(this.duplicateFetchMessageRecv, other.duplicateFetchMessageRecv);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -299,118 +126,5 @@ public class PeerStats implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private NodeID id;
-    private XdrString versionStr;
-    private Uint64 messagesRead;
-    private Uint64 messagesWritten;
-    private Uint64 bytesRead;
-    private Uint64 bytesWritten;
-    private Uint64 secondsConnected;
-    private Uint64 uniqueFloodBytesRecv;
-    private Uint64 duplicateFloodBytesRecv;
-    private Uint64 uniqueFetchBytesRecv;
-    private Uint64 duplicateFetchBytesRecv;
-    private Uint64 uniqueFloodMessageRecv;
-    private Uint64 duplicateFloodMessageRecv;
-    private Uint64 uniqueFetchMessageRecv;
-    private Uint64 duplicateFetchMessageRecv;
-
-    public Builder id(NodeID id) {
-      this.id = id;
-      return this;
-    }
-
-    public Builder versionStr(XdrString versionStr) {
-      this.versionStr = versionStr;
-      return this;
-    }
-
-    public Builder messagesRead(Uint64 messagesRead) {
-      this.messagesRead = messagesRead;
-      return this;
-    }
-
-    public Builder messagesWritten(Uint64 messagesWritten) {
-      this.messagesWritten = messagesWritten;
-      return this;
-    }
-
-    public Builder bytesRead(Uint64 bytesRead) {
-      this.bytesRead = bytesRead;
-      return this;
-    }
-
-    public Builder bytesWritten(Uint64 bytesWritten) {
-      this.bytesWritten = bytesWritten;
-      return this;
-    }
-
-    public Builder secondsConnected(Uint64 secondsConnected) {
-      this.secondsConnected = secondsConnected;
-      return this;
-    }
-
-    public Builder uniqueFloodBytesRecv(Uint64 uniqueFloodBytesRecv) {
-      this.uniqueFloodBytesRecv = uniqueFloodBytesRecv;
-      return this;
-    }
-
-    public Builder duplicateFloodBytesRecv(Uint64 duplicateFloodBytesRecv) {
-      this.duplicateFloodBytesRecv = duplicateFloodBytesRecv;
-      return this;
-    }
-
-    public Builder uniqueFetchBytesRecv(Uint64 uniqueFetchBytesRecv) {
-      this.uniqueFetchBytesRecv = uniqueFetchBytesRecv;
-      return this;
-    }
-
-    public Builder duplicateFetchBytesRecv(Uint64 duplicateFetchBytesRecv) {
-      this.duplicateFetchBytesRecv = duplicateFetchBytesRecv;
-      return this;
-    }
-
-    public Builder uniqueFloodMessageRecv(Uint64 uniqueFloodMessageRecv) {
-      this.uniqueFloodMessageRecv = uniqueFloodMessageRecv;
-      return this;
-    }
-
-    public Builder duplicateFloodMessageRecv(Uint64 duplicateFloodMessageRecv) {
-      this.duplicateFloodMessageRecv = duplicateFloodMessageRecv;
-      return this;
-    }
-
-    public Builder uniqueFetchMessageRecv(Uint64 uniqueFetchMessageRecv) {
-      this.uniqueFetchMessageRecv = uniqueFetchMessageRecv;
-      return this;
-    }
-
-    public Builder duplicateFetchMessageRecv(Uint64 duplicateFetchMessageRecv) {
-      this.duplicateFetchMessageRecv = duplicateFetchMessageRecv;
-      return this;
-    }
-
-    public PeerStats build() {
-      PeerStats val = new PeerStats();
-      val.setId(this.id);
-      val.setVersionStr(this.versionStr);
-      val.setMessagesRead(this.messagesRead);
-      val.setMessagesWritten(this.messagesWritten);
-      val.setBytesRead(this.bytesRead);
-      val.setBytesWritten(this.bytesWritten);
-      val.setSecondsConnected(this.secondsConnected);
-      val.setUniqueFloodBytesRecv(this.uniqueFloodBytesRecv);
-      val.setDuplicateFloodBytesRecv(this.duplicateFloodBytesRecv);
-      val.setUniqueFetchBytesRecv(this.uniqueFetchBytesRecv);
-      val.setDuplicateFetchBytesRecv(this.duplicateFetchBytesRecv);
-      val.setUniqueFloodMessageRecv(this.uniqueFloodMessageRecv);
-      val.setDuplicateFloodMessageRecv(this.duplicateFloodMessageRecv);
-      val.setUniqueFetchMessageRecv(this.uniqueFetchMessageRecv);
-      val.setDuplicateFetchMessageRecv(this.duplicateFetchMessageRecv);
-      return val;
-    }
   }
 }

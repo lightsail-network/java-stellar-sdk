@@ -10,7 +10,7 @@ public class ScvLedgerKeyContractInstanceTest {
   @Test
   public void testScvLedgerKeyContractInstance() {
     SCVal expectedScVal =
-        new SCVal.Builder().discriminant(SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE).build();
+        SCVal.builder().discriminant(SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE).build();
 
     SCVal actualScVal = Scv.toLedgerKeyContractInstance();
     assertEquals(expectedScVal, actualScVal);

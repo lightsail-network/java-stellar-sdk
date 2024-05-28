@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,16 +31,16 @@ public enum CreateAccountResultCode implements XdrElement {
   CREATE_ACCOUNT_MALFORMED(-1),
   CREATE_ACCOUNT_UNDERFUNDED(-2),
   CREATE_ACCOUNT_LOW_RESERVE(-3),
-  CREATE_ACCOUNT_ALREADY_EXIST(-4),
-  ;
-  private int mValue;
+  CREATE_ACCOUNT_ALREADY_EXIST(-4);
+
+  private final int value;
 
   CreateAccountResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static CreateAccountResultCode decode(XdrDataInputStream stream) throws IOException {

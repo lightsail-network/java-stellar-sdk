@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,28 +24,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Int128Parts implements XdrElement {
-  public Int128Parts() {}
-
   private Int64 hi;
-
-  public Int64 getHi() {
-    return this.hi;
-  }
-
-  public void setHi(Int64 value) {
-    this.hi = value;
-  }
-
   private Uint64 lo;
-
-  public Uint64 getLo() {
-    return this.lo;
-  }
-
-  public void setLo(Uint64 value) {
-    this.lo = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Int128Parts encodedInt128Parts)
       throws IOException {
@@ -59,21 +47,6 @@ public class Int128Parts implements XdrElement {
     decodedInt128Parts.hi = Int64.decode(stream);
     decodedInt128Parts.lo = Uint64.decode(stream);
     return decodedInt128Parts;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.hi, this.lo);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Int128Parts)) {
-      return false;
-    }
-
-    Int128Parts other = (Int128Parts) object;
-    return Objects.equals(this.hi, other.hi) && Objects.equals(this.lo, other.lo);
   }
 
   @Override
@@ -98,27 +71,5 @@ public class Int128Parts implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Int64 hi;
-    private Uint64 lo;
-
-    public Builder hi(Int64 hi) {
-      this.hi = hi;
-      return this;
-    }
-
-    public Builder lo(Uint64 lo) {
-      this.lo = lo;
-      return this;
-    }
-
-    public Int128Parts build() {
-      Int128Parts val = new Int128Parts();
-      val.setHi(this.hi);
-      val.setLo(this.lo);
-      return val;
-    }
   }
 }

@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -40,56 +42,23 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class StellarValue implements XdrElement {
-  public StellarValue() {}
-
   private Hash txSetHash;
-
-  public Hash getTxSetHash() {
-    return this.txSetHash;
-  }
-
-  public void setTxSetHash(Hash value) {
-    this.txSetHash = value;
-  }
-
   private TimePoint closeTime;
-
-  public TimePoint getCloseTime() {
-    return this.closeTime;
-  }
-
-  public void setCloseTime(TimePoint value) {
-    this.closeTime = value;
-  }
-
   private UpgradeType[] upgrades;
-
-  public UpgradeType[] getUpgrades() {
-    return this.upgrades;
-  }
-
-  public void setUpgrades(UpgradeType[] value) {
-    this.upgrades = value;
-  }
-
   private StellarValueExt ext;
-
-  public StellarValueExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(StellarValueExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, StellarValue encodedStellarValue)
       throws IOException {
     Hash.encode(stream, encodedStellarValue.txSetHash);
     TimePoint.encode(stream, encodedStellarValue.closeTime);
-    int upgradessize = encodedStellarValue.getUpgrades().length;
-    stream.writeInt(upgradessize);
-    for (int i = 0; i < upgradessize; i++) {
+    int upgradesSize = encodedStellarValue.getUpgrades().length;
+    stream.writeInt(upgradesSize);
+    for (int i = 0; i < upgradesSize; i++) {
       UpgradeType.encode(stream, encodedStellarValue.upgrades[i]);
     }
     StellarValueExt.encode(stream, encodedStellarValue.ext);
@@ -103,31 +72,13 @@ public class StellarValue implements XdrElement {
     StellarValue decodedStellarValue = new StellarValue();
     decodedStellarValue.txSetHash = Hash.decode(stream);
     decodedStellarValue.closeTime = TimePoint.decode(stream);
-    int upgradessize = stream.readInt();
-    decodedStellarValue.upgrades = new UpgradeType[upgradessize];
-    for (int i = 0; i < upgradessize; i++) {
+    int upgradesSize = stream.readInt();
+    decodedStellarValue.upgrades = new UpgradeType[upgradesSize];
+    for (int i = 0; i < upgradesSize; i++) {
       decodedStellarValue.upgrades[i] = UpgradeType.decode(stream);
     }
     decodedStellarValue.ext = StellarValueExt.decode(stream);
     return decodedStellarValue;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.txSetHash, this.closeTime, Arrays.hashCode(this.upgrades), this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof StellarValue)) {
-      return false;
-    }
-
-    StellarValue other = (StellarValue) object;
-    return Objects.equals(this.txSetHash, other.txSetHash)
-        && Objects.equals(this.closeTime, other.closeTime)
-        && Arrays.equals(this.upgrades, other.upgrades)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -154,42 +105,6 @@ public class StellarValue implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Hash txSetHash;
-    private TimePoint closeTime;
-    private UpgradeType[] upgrades;
-    private StellarValueExt ext;
-
-    public Builder txSetHash(Hash txSetHash) {
-      this.txSetHash = txSetHash;
-      return this;
-    }
-
-    public Builder closeTime(TimePoint closeTime) {
-      this.closeTime = closeTime;
-      return this;
-    }
-
-    public Builder upgrades(UpgradeType[] upgrades) {
-      this.upgrades = upgrades;
-      return this;
-    }
-
-    public Builder ext(StellarValueExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public StellarValue build() {
-      StellarValue val = new StellarValue();
-      val.setTxSetHash(this.txSetHash);
-      val.setCloseTime(this.closeTime);
-      val.setUpgrades(this.upgrades);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * StellarValueExt's original definition in the XDR file is:
    *
@@ -203,50 +118,13 @@ public class StellarValue implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class StellarValueExt implements XdrElement {
-    public StellarValueExt() {}
-
-    StellarValueType v;
-
-    public StellarValueType getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(StellarValueType value) {
-      this.v = value;
-    }
-
+    private StellarValueType discriminant;
     private LedgerCloseValueSignature lcValueSignature;
-
-    public LedgerCloseValueSignature getLcValueSignature() {
-      return this.lcValueSignature;
-    }
-
-    public void setLcValueSignature(LedgerCloseValueSignature value) {
-      this.lcValueSignature = value;
-    }
-
-    public static final class Builder {
-      private StellarValueType discriminant;
-      private LedgerCloseValueSignature lcValueSignature;
-
-      public Builder discriminant(StellarValueType discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder lcValueSignature(LedgerCloseValueSignature lcValueSignature) {
-        this.lcValueSignature = lcValueSignature;
-        return this;
-      }
-
-      public StellarValueExt build() {
-        StellarValueExt val = new StellarValueExt();
-        val.setDiscriminant(discriminant);
-        val.setLcValueSignature(this.lcValueSignature);
-        return val;
-      }
-    }
 
     public static void encode(XdrDataOutputStream stream, StellarValueExt encodedStellarValueExt)
         throws IOException {
@@ -278,22 +156,6 @@ public class StellarValue implements XdrElement {
           break;
       }
       return decodedStellarValueExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.lcValueSignature, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof StellarValueExt)) {
-        return false;
-      }
-
-      StellarValueExt other = (StellarValueExt) object;
-      return Objects.equals(this.lcValueSignature, other.lcValueSignature)
-          && Objects.equals(this.v, other.v);
     }
 
     @Override

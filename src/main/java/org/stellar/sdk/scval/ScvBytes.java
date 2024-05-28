@@ -9,7 +9,7 @@ class ScvBytes {
   private static final SCValType TYPE = SCValType.SCV_BYTES;
 
   static SCVal toSCVal(byte[] value) {
-    return new SCVal.Builder().discriminant(TYPE).bytes(new SCBytes(value)).build();
+    return SCVal.builder().discriminant(TYPE).bytes(new SCBytes(value)).build();
   }
 
   static byte[] fromSCVal(SCVal scVal) {

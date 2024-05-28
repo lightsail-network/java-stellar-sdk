@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,47 +26,23 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecUDTUnionCaseTupleV0 implements XdrElement {
-  public SCSpecUDTUnionCaseTupleV0() {}
-
   private XdrString doc;
-
-  public XdrString getDoc() {
-    return this.doc;
-  }
-
-  public void setDoc(XdrString value) {
-    this.doc = value;
-  }
-
   private XdrString name;
-
-  public XdrString getName() {
-    return this.name;
-  }
-
-  public void setName(XdrString value) {
-    this.name = value;
-  }
-
   private SCSpecTypeDef[] type;
-
-  public SCSpecTypeDef[] getType() {
-    return this.type;
-  }
-
-  public void setType(SCSpecTypeDef[] value) {
-    this.type = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SCSpecUDTUnionCaseTupleV0 encodedSCSpecUDTUnionCaseTupleV0)
       throws IOException {
     encodedSCSpecUDTUnionCaseTupleV0.doc.encode(stream);
     encodedSCSpecUDTUnionCaseTupleV0.name.encode(stream);
-    int typesize = encodedSCSpecUDTUnionCaseTupleV0.getType().length;
-    stream.writeInt(typesize);
-    for (int i = 0; i < typesize; i++) {
+    int typeSize = encodedSCSpecUDTUnionCaseTupleV0.getType().length;
+    stream.writeInt(typeSize);
+    for (int i = 0; i < typeSize; i++) {
       SCSpecTypeDef.encode(stream, encodedSCSpecUDTUnionCaseTupleV0.type[i]);
     }
   }
@@ -77,29 +55,12 @@ public class SCSpecUDTUnionCaseTupleV0 implements XdrElement {
     SCSpecUDTUnionCaseTupleV0 decodedSCSpecUDTUnionCaseTupleV0 = new SCSpecUDTUnionCaseTupleV0();
     decodedSCSpecUDTUnionCaseTupleV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTUnionCaseTupleV0.name = XdrString.decode(stream, 60);
-    int typesize = stream.readInt();
-    decodedSCSpecUDTUnionCaseTupleV0.type = new SCSpecTypeDef[typesize];
-    for (int i = 0; i < typesize; i++) {
+    int typeSize = stream.readInt();
+    decodedSCSpecUDTUnionCaseTupleV0.type = new SCSpecTypeDef[typeSize];
+    for (int i = 0; i < typeSize; i++) {
       decodedSCSpecUDTUnionCaseTupleV0.type[i] = SCSpecTypeDef.decode(stream);
     }
     return decodedSCSpecUDTUnionCaseTupleV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.doc, this.name, Arrays.hashCode(this.type));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecUDTUnionCaseTupleV0)) {
-      return false;
-    }
-
-    SCSpecUDTUnionCaseTupleV0 other = (SCSpecUDTUnionCaseTupleV0) object;
-    return Objects.equals(this.doc, other.doc)
-        && Objects.equals(this.name, other.name)
-        && Arrays.equals(this.type, other.type);
   }
 
   @Override
@@ -124,34 +85,5 @@ public class SCSpecUDTUnionCaseTupleV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private XdrString doc;
-    private XdrString name;
-    private SCSpecTypeDef[] type;
-
-    public Builder doc(XdrString doc) {
-      this.doc = doc;
-      return this;
-    }
-
-    public Builder name(XdrString name) {
-      this.name = name;
-      return this;
-    }
-
-    public Builder type(SCSpecTypeDef[] type) {
-      this.type = type;
-      return this;
-    }
-
-    public SCSpecUDTUnionCaseTupleV0 build() {
-      SCSpecUDTUnionCaseTupleV0 val = new SCSpecUDTUnionCaseTupleV0();
-      val.setDoc(this.doc);
-      val.setName(this.name);
-      val.setType(this.type);
-      return val;
-    }
   }
 }

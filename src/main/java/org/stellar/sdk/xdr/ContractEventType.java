@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,16 +23,16 @@ import org.stellar.sdk.Base64Factory;
 public enum ContractEventType implements XdrElement {
   SYSTEM(0),
   CONTRACT(1),
-  DIAGNOSTIC(2),
-  ;
-  private int mValue;
+  DIAGNOSTIC(2);
+
+  private final int value;
 
   ContractEventType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ContractEventType decode(XdrDataInputStream stream) throws IOException {

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,118 +33,22 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ContractCodeCostInputs implements XdrElement {
-  public ContractCodeCostInputs() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private Uint32 nInstructions;
-
-  public Uint32 getNInstructions() {
-    return this.nInstructions;
-  }
-
-  public void setNInstructions(Uint32 value) {
-    this.nInstructions = value;
-  }
-
   private Uint32 nFunctions;
-
-  public Uint32 getNFunctions() {
-    return this.nFunctions;
-  }
-
-  public void setNFunctions(Uint32 value) {
-    this.nFunctions = value;
-  }
-
   private Uint32 nGlobals;
-
-  public Uint32 getNGlobals() {
-    return this.nGlobals;
-  }
-
-  public void setNGlobals(Uint32 value) {
-    this.nGlobals = value;
-  }
-
   private Uint32 nTableEntries;
-
-  public Uint32 getNTableEntries() {
-    return this.nTableEntries;
-  }
-
-  public void setNTableEntries(Uint32 value) {
-    this.nTableEntries = value;
-  }
-
   private Uint32 nTypes;
-
-  public Uint32 getNTypes() {
-    return this.nTypes;
-  }
-
-  public void setNTypes(Uint32 value) {
-    this.nTypes = value;
-  }
-
   private Uint32 nDataSegments;
-
-  public Uint32 getNDataSegments() {
-    return this.nDataSegments;
-  }
-
-  public void setNDataSegments(Uint32 value) {
-    this.nDataSegments = value;
-  }
-
   private Uint32 nElemSegments;
-
-  public Uint32 getNElemSegments() {
-    return this.nElemSegments;
-  }
-
-  public void setNElemSegments(Uint32 value) {
-    this.nElemSegments = value;
-  }
-
   private Uint32 nImports;
-
-  public Uint32 getNImports() {
-    return this.nImports;
-  }
-
-  public void setNImports(Uint32 value) {
-    this.nImports = value;
-  }
-
   private Uint32 nExports;
-
-  public Uint32 getNExports() {
-    return this.nExports;
-  }
-
-  public void setNExports(Uint32 value) {
-    this.nExports = value;
-  }
-
   private Uint32 nDataSegmentBytes;
-
-  public Uint32 getNDataSegmentBytes() {
-    return this.nDataSegmentBytes;
-  }
-
-  public void setNDataSegmentBytes(Uint32 value) {
-    this.nDataSegmentBytes = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ContractCodeCostInputs encodedContractCodeCostInputs)
@@ -180,42 +87,6 @@ public class ContractCodeCostInputs implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ext,
-        this.nInstructions,
-        this.nFunctions,
-        this.nGlobals,
-        this.nTableEntries,
-        this.nTypes,
-        this.nDataSegments,
-        this.nElemSegments,
-        this.nImports,
-        this.nExports,
-        this.nDataSegmentBytes);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ContractCodeCostInputs)) {
-      return false;
-    }
-
-    ContractCodeCostInputs other = (ContractCodeCostInputs) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.nInstructions, other.nInstructions)
-        && Objects.equals(this.nFunctions, other.nFunctions)
-        && Objects.equals(this.nGlobals, other.nGlobals)
-        && Objects.equals(this.nTableEntries, other.nTableEntries)
-        && Objects.equals(this.nTypes, other.nTypes)
-        && Objects.equals(this.nDataSegments, other.nDataSegments)
-        && Objects.equals(this.nElemSegments, other.nElemSegments)
-        && Objects.equals(this.nImports, other.nImports)
-        && Objects.equals(this.nExports, other.nExports)
-        && Objects.equals(this.nDataSegmentBytes, other.nDataSegmentBytes);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -237,90 +108,5 @@ public class ContractCodeCostInputs implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private Uint32 nInstructions;
-    private Uint32 nFunctions;
-    private Uint32 nGlobals;
-    private Uint32 nTableEntries;
-    private Uint32 nTypes;
-    private Uint32 nDataSegments;
-    private Uint32 nElemSegments;
-    private Uint32 nImports;
-    private Uint32 nExports;
-    private Uint32 nDataSegmentBytes;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder nInstructions(Uint32 nInstructions) {
-      this.nInstructions = nInstructions;
-      return this;
-    }
-
-    public Builder nFunctions(Uint32 nFunctions) {
-      this.nFunctions = nFunctions;
-      return this;
-    }
-
-    public Builder nGlobals(Uint32 nGlobals) {
-      this.nGlobals = nGlobals;
-      return this;
-    }
-
-    public Builder nTableEntries(Uint32 nTableEntries) {
-      this.nTableEntries = nTableEntries;
-      return this;
-    }
-
-    public Builder nTypes(Uint32 nTypes) {
-      this.nTypes = nTypes;
-      return this;
-    }
-
-    public Builder nDataSegments(Uint32 nDataSegments) {
-      this.nDataSegments = nDataSegments;
-      return this;
-    }
-
-    public Builder nElemSegments(Uint32 nElemSegments) {
-      this.nElemSegments = nElemSegments;
-      return this;
-    }
-
-    public Builder nImports(Uint32 nImports) {
-      this.nImports = nImports;
-      return this;
-    }
-
-    public Builder nExports(Uint32 nExports) {
-      this.nExports = nExports;
-      return this;
-    }
-
-    public Builder nDataSegmentBytes(Uint32 nDataSegmentBytes) {
-      this.nDataSegmentBytes = nDataSegmentBytes;
-      return this;
-    }
-
-    public ContractCodeCostInputs build() {
-      ContractCodeCostInputs val = new ContractCodeCostInputs();
-      val.setExt(this.ext);
-      val.setNInstructions(this.nInstructions);
-      val.setNFunctions(this.nFunctions);
-      val.setNGlobals(this.nGlobals);
-      val.setNTableEntries(this.nTableEntries);
-      val.setNTypes(this.nTypes);
-      val.setNDataSegments(this.nDataSegments);
-      val.setNElemSegments(this.nElemSegments);
-      val.setNImports(this.nImports);
-      val.setNExports(this.nExports);
-      val.setNDataSegmentBytes(this.nDataSegmentBytes);
-      return val;
-    }
   }
 }

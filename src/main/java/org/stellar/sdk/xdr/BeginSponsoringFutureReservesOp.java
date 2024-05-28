@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class BeginSponsoringFutureReservesOp implements XdrElement {
-  public BeginSponsoringFutureReservesOp() {}
-
   private AccountID sponsoredID;
-
-  public AccountID getSponsoredID() {
-    return this.sponsoredID;
-  }
-
-  public void setSponsoredID(AccountID value) {
-    this.sponsoredID = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -51,21 +48,6 @@ public class BeginSponsoringFutureReservesOp implements XdrElement {
         new BeginSponsoringFutureReservesOp();
     decodedBeginSponsoringFutureReservesOp.sponsoredID = AccountID.decode(stream);
     return decodedBeginSponsoringFutureReservesOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.sponsoredID);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BeginSponsoringFutureReservesOp)) {
-      return false;
-    }
-
-    BeginSponsoringFutureReservesOp other = (BeginSponsoringFutureReservesOp) object;
-    return Objects.equals(this.sponsoredID, other.sponsoredID);
   }
 
   @Override
@@ -90,20 +72,5 @@ public class BeginSponsoringFutureReservesOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private AccountID sponsoredID;
-
-    public Builder sponsoredID(AccountID sponsoredID) {
-      this.sponsoredID = sponsoredID;
-      return this;
-    }
-
-    public BeginSponsoringFutureReservesOp build() {
-      BeginSponsoringFutureReservesOp val = new BeginSponsoringFutureReservesOp();
-      val.setSponsoredID(this.sponsoredID);
-      return val;
-    }
   }
 }

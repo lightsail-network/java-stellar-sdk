@@ -199,7 +199,7 @@ public abstract class AbstractTransaction {
     try {
       Hash networkIdHash = new Hash(network.getNetworkId());
       TransactionSignaturePayload payload =
-          new TransactionSignaturePayload.Builder()
+          TransactionSignaturePayload.builder()
               .networkId(networkIdHash)
               .taggedTransaction(taggedTransaction)
               .build();

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecUDTUnionCaseVoidV0 implements XdrElement {
-  public SCSpecUDTUnionCaseVoidV0() {}
-
   private XdrString doc;
-
-  public XdrString getDoc() {
-    return this.doc;
-  }
-
-  public void setDoc(XdrString value) {
-    this.doc = value;
-  }
-
   private XdrString name;
-
-  public XdrString getName() {
-    return this.name;
-  }
-
-  public void setName(XdrString value) {
-    this.name = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SCSpecUDTUnionCaseVoidV0 encodedSCSpecUDTUnionCaseVoidV0)
@@ -61,21 +49,6 @@ public class SCSpecUDTUnionCaseVoidV0 implements XdrElement {
     decodedSCSpecUDTUnionCaseVoidV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTUnionCaseVoidV0.name = XdrString.decode(stream, 60);
     return decodedSCSpecUDTUnionCaseVoidV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.doc, this.name);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecUDTUnionCaseVoidV0)) {
-      return false;
-    }
-
-    SCSpecUDTUnionCaseVoidV0 other = (SCSpecUDTUnionCaseVoidV0) object;
-    return Objects.equals(this.doc, other.doc) && Objects.equals(this.name, other.name);
   }
 
   @Override
@@ -100,27 +73,5 @@ public class SCSpecUDTUnionCaseVoidV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private XdrString doc;
-    private XdrString name;
-
-    public Builder doc(XdrString doc) {
-      this.doc = doc;
-      return this;
-    }
-
-    public Builder name(XdrString name) {
-      this.name = name;
-      return this;
-    }
-
-    public SCSpecUDTUnionCaseVoidV0 build() {
-      SCSpecUDTUnionCaseVoidV0 val = new SCSpecUDTUnionCaseVoidV0();
-      val.setDoc(this.doc);
-      val.setName(this.name);
-      return val;
-    }
   }
 }

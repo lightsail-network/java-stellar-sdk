@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,16 +21,16 @@ import org.stellar.sdk.Base64Factory;
  * </pre>
  */
 public enum TxSetComponentType implements XdrElement {
-  TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE(0),
-  ;
-  private int mValue;
+  TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE(0);
+
+  private final int value;
 
   TxSetComponentType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static TxSetComponentType decode(XdrDataInputStream stream) throws IOException {

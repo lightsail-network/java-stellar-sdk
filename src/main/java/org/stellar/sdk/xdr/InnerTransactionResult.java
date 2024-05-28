@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -57,38 +59,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class InnerTransactionResult implements XdrElement {
-  public InnerTransactionResult() {}
-
   private Int64 feeCharged;
-
-  public Int64 getFeeCharged() {
-    return this.feeCharged;
-  }
-
-  public void setFeeCharged(Int64 value) {
-    this.feeCharged = value;
-  }
-
   private InnerTransactionResultResult result;
-
-  public InnerTransactionResultResult getResult() {
-    return this.result;
-  }
-
-  public void setResult(InnerTransactionResultResult value) {
-    this.result = value;
-  }
-
   private InnerTransactionResultExt ext;
-
-  public InnerTransactionResultExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(InnerTransactionResultExt value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, InnerTransactionResult encodedInnerTransactionResult)
@@ -108,23 +86,6 @@ public class InnerTransactionResult implements XdrElement {
     decodedInnerTransactionResult.result = InnerTransactionResultResult.decode(stream);
     decodedInnerTransactionResult.ext = InnerTransactionResultExt.decode(stream);
     return decodedInnerTransactionResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.feeCharged, this.result, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof InnerTransactionResult)) {
-      return false;
-    }
-
-    InnerTransactionResult other = (InnerTransactionResult) object;
-    return Objects.equals(this.feeCharged, other.feeCharged)
-        && Objects.equals(this.result, other.result)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -149,35 +110,6 @@ public class InnerTransactionResult implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Int64 feeCharged;
-    private InnerTransactionResultResult result;
-    private InnerTransactionResultExt ext;
-
-    public Builder feeCharged(Int64 feeCharged) {
-      this.feeCharged = feeCharged;
-      return this;
-    }
-
-    public Builder result(InnerTransactionResultResult result) {
-      this.result = result;
-      return this;
-    }
-
-    public Builder ext(InnerTransactionResultExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public InnerTransactionResult build() {
-      InnerTransactionResult val = new InnerTransactionResult();
-      val.setFeeCharged(this.feeCharged);
-      val.setResult(this.result);
-      val.setExt(this.ext);
-      return val;
-    }
   }
 
   /**
@@ -210,50 +142,13 @@ public class InnerTransactionResult implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class InnerTransactionResultResult implements XdrElement {
-    public InnerTransactionResultResult() {}
-
-    TransactionResultCode code;
-
-    public TransactionResultCode getDiscriminant() {
-      return this.code;
-    }
-
-    public void setDiscriminant(TransactionResultCode value) {
-      this.code = value;
-    }
-
+    private TransactionResultCode discriminant;
     private OperationResult[] results;
-
-    public OperationResult[] getResults() {
-      return this.results;
-    }
-
-    public void setResults(OperationResult[] value) {
-      this.results = value;
-    }
-
-    public static final class Builder {
-      private TransactionResultCode discriminant;
-      private OperationResult[] results;
-
-      public Builder discriminant(TransactionResultCode discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder results(OperationResult[] results) {
-        this.results = results;
-        return this;
-      }
-
-      public InnerTransactionResultResult build() {
-        InnerTransactionResultResult val = new InnerTransactionResultResult();
-        val.setDiscriminant(discriminant);
-        val.setResults(this.results);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -265,9 +160,9 @@ public class InnerTransactionResult implements XdrElement {
       switch (encodedInnerTransactionResultResult.getDiscriminant()) {
         case txSUCCESS:
         case txFAILED:
-          int resultssize = encodedInnerTransactionResultResult.getResults().length;
-          stream.writeInt(resultssize);
-          for (int i = 0; i < resultssize; i++) {
+          int resultsSize = encodedInnerTransactionResultResult.getResults().length;
+          stream.writeInt(resultsSize);
+          for (int i = 0; i < resultsSize; i++) {
             OperationResult.encode(stream, encodedInnerTransactionResultResult.results[i]);
           }
           break;
@@ -303,9 +198,9 @@ public class InnerTransactionResult implements XdrElement {
       switch (decodedInnerTransactionResultResult.getDiscriminant()) {
         case txSUCCESS:
         case txFAILED:
-          int resultssize = stream.readInt();
-          decodedInnerTransactionResultResult.results = new OperationResult[resultssize];
-          for (int i = 0; i < resultssize; i++) {
+          int resultsSize = stream.readInt();
+          decodedInnerTransactionResultResult.results = new OperationResult[resultsSize];
+          for (int i = 0; i < resultsSize; i++) {
             decodedInnerTransactionResultResult.results[i] = OperationResult.decode(stream);
           }
           break;
@@ -327,21 +222,6 @@ public class InnerTransactionResult implements XdrElement {
           break;
       }
       return decodedInnerTransactionResultResult;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(Arrays.hashCode(this.results), this.code);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof InnerTransactionResultResult)) {
-        return false;
-      }
-
-      InnerTransactionResultResult other = (InnerTransactionResultResult) object;
-      return Arrays.equals(this.results, other.results) && Objects.equals(this.code, other.code);
     }
 
     @Override
@@ -380,33 +260,12 @@ public class InnerTransactionResult implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class InnerTransactionResultExt implements XdrElement {
-    public InnerTransactionResultExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public InnerTransactionResultExt build() {
-        InnerTransactionResultExt val = new InnerTransactionResultExt();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream, InnerTransactionResultExt encodedInnerTransactionResultExt)
@@ -433,21 +292,6 @@ public class InnerTransactionResult implements XdrElement {
           break;
       }
       return decodedInnerTransactionResultExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof InnerTransactionResultExt)) {
-        return false;
-      }
-
-      InnerTransactionResultExt other = (InnerTransactionResultExt) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

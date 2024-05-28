@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,67 +33,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Asset implements XdrElement {
-  public Asset() {}
-
-  AssetType type;
-
-  public AssetType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(AssetType value) {
-    this.type = value;
-  }
-
+  private AssetType discriminant;
   private AlphaNum4 alphaNum4;
-
-  public AlphaNum4 getAlphaNum4() {
-    return this.alphaNum4;
-  }
-
-  public void setAlphaNum4(AlphaNum4 value) {
-    this.alphaNum4 = value;
-  }
-
   private AlphaNum12 alphaNum12;
-
-  public AlphaNum12 getAlphaNum12() {
-    return this.alphaNum12;
-  }
-
-  public void setAlphaNum12(AlphaNum12 value) {
-    this.alphaNum12 = value;
-  }
-
-  public static final class Builder {
-    private AssetType discriminant;
-    private AlphaNum4 alphaNum4;
-    private AlphaNum12 alphaNum12;
-
-    public Builder discriminant(AssetType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder alphaNum4(AlphaNum4 alphaNum4) {
-      this.alphaNum4 = alphaNum4;
-      return this;
-    }
-
-    public Builder alphaNum12(AlphaNum12 alphaNum12) {
-      this.alphaNum12 = alphaNum12;
-      return this;
-    }
-
-    public Asset build() {
-      Asset val = new Asset();
-      val.setDiscriminant(discriminant);
-      val.setAlphaNum4(this.alphaNum4);
-      val.setAlphaNum12(this.alphaNum12);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, Asset encodedAsset) throws IOException {
     // Xdrgen::AST::Identifier
@@ -127,23 +77,6 @@ public class Asset implements XdrElement {
         break;
     }
     return decodedAsset;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.alphaNum4, this.alphaNum12, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Asset)) {
-      return false;
-    }
-
-    Asset other = (Asset) object;
-    return Objects.equals(this.alphaNum4, other.alphaNum4)
-        && Objects.equals(this.alphaNum12, other.alphaNum12)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

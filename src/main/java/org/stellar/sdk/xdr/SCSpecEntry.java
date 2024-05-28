@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,118 +33,17 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecEntry implements XdrElement {
-  public SCSpecEntry() {}
-
-  SCSpecEntryKind kind;
-
-  public SCSpecEntryKind getDiscriminant() {
-    return this.kind;
-  }
-
-  public void setDiscriminant(SCSpecEntryKind value) {
-    this.kind = value;
-  }
-
+  private SCSpecEntryKind discriminant;
   private SCSpecFunctionV0 functionV0;
-
-  public SCSpecFunctionV0 getFunctionV0() {
-    return this.functionV0;
-  }
-
-  public void setFunctionV0(SCSpecFunctionV0 value) {
-    this.functionV0 = value;
-  }
-
   private SCSpecUDTStructV0 udtStructV0;
-
-  public SCSpecUDTStructV0 getUdtStructV0() {
-    return this.udtStructV0;
-  }
-
-  public void setUdtStructV0(SCSpecUDTStructV0 value) {
-    this.udtStructV0 = value;
-  }
-
   private SCSpecUDTUnionV0 udtUnionV0;
-
-  public SCSpecUDTUnionV0 getUdtUnionV0() {
-    return this.udtUnionV0;
-  }
-
-  public void setUdtUnionV0(SCSpecUDTUnionV0 value) {
-    this.udtUnionV0 = value;
-  }
-
   private SCSpecUDTEnumV0 udtEnumV0;
-
-  public SCSpecUDTEnumV0 getUdtEnumV0() {
-    return this.udtEnumV0;
-  }
-
-  public void setUdtEnumV0(SCSpecUDTEnumV0 value) {
-    this.udtEnumV0 = value;
-  }
-
   private SCSpecUDTErrorEnumV0 udtErrorEnumV0;
-
-  public SCSpecUDTErrorEnumV0 getUdtErrorEnumV0() {
-    return this.udtErrorEnumV0;
-  }
-
-  public void setUdtErrorEnumV0(SCSpecUDTErrorEnumV0 value) {
-    this.udtErrorEnumV0 = value;
-  }
-
-  public static final class Builder {
-    private SCSpecEntryKind discriminant;
-    private SCSpecFunctionV0 functionV0;
-    private SCSpecUDTStructV0 udtStructV0;
-    private SCSpecUDTUnionV0 udtUnionV0;
-    private SCSpecUDTEnumV0 udtEnumV0;
-    private SCSpecUDTErrorEnumV0 udtErrorEnumV0;
-
-    public Builder discriminant(SCSpecEntryKind discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder functionV0(SCSpecFunctionV0 functionV0) {
-      this.functionV0 = functionV0;
-      return this;
-    }
-
-    public Builder udtStructV0(SCSpecUDTStructV0 udtStructV0) {
-      this.udtStructV0 = udtStructV0;
-      return this;
-    }
-
-    public Builder udtUnionV0(SCSpecUDTUnionV0 udtUnionV0) {
-      this.udtUnionV0 = udtUnionV0;
-      return this;
-    }
-
-    public Builder udtEnumV0(SCSpecUDTEnumV0 udtEnumV0) {
-      this.udtEnumV0 = udtEnumV0;
-      return this;
-    }
-
-    public Builder udtErrorEnumV0(SCSpecUDTErrorEnumV0 udtErrorEnumV0) {
-      this.udtErrorEnumV0 = udtErrorEnumV0;
-      return this;
-    }
-
-    public SCSpecEntry build() {
-      SCSpecEntry val = new SCSpecEntry();
-      val.setDiscriminant(discriminant);
-      val.setFunctionV0(this.functionV0);
-      val.setUdtStructV0(this.udtStructV0);
-      val.setUdtUnionV0(this.udtUnionV0);
-      val.setUdtEnumV0(this.udtEnumV0);
-      val.setUdtErrorEnumV0(this.udtErrorEnumV0);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecEntry encodedSCSpecEntry)
       throws IOException {
@@ -193,32 +95,6 @@ public class SCSpecEntry implements XdrElement {
         break;
     }
     return decodedSCSpecEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.functionV0,
-        this.udtStructV0,
-        this.udtUnionV0,
-        this.udtEnumV0,
-        this.udtErrorEnumV0,
-        this.kind);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecEntry)) {
-      return false;
-    }
-
-    SCSpecEntry other = (SCSpecEntry) object;
-    return Objects.equals(this.functionV0, other.functionV0)
-        && Objects.equals(this.udtStructV0, other.udtStructV0)
-        && Objects.equals(this.udtUnionV0, other.udtUnionV0)
-        && Objects.equals(this.udtEnumV0, other.udtEnumV0)
-        && Objects.equals(this.udtErrorEnumV0, other.udtErrorEnumV0)
-        && Objects.equals(this.kind, other.kind);
   }
 
   @Override

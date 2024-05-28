@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -86,50 +89,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class OperationResult implements XdrElement {
-  public OperationResult() {}
-
-  OperationResultCode code;
-
-  public OperationResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(OperationResultCode value) {
-    this.code = value;
-  }
-
+  private OperationResultCode discriminant;
   private OperationResultTr tr;
-
-  public OperationResultTr getTr() {
-    return this.tr;
-  }
-
-  public void setTr(OperationResultTr value) {
-    this.tr = value;
-  }
-
-  public static final class Builder {
-    private OperationResultCode discriminant;
-    private OperationResultTr tr;
-
-    public Builder discriminant(OperationResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder tr(OperationResultTr tr) {
-      this.tr = tr;
-      return this;
-    }
-
-    public OperationResult build() {
-      OperationResult val = new OperationResult();
-      val.setDiscriminant(discriminant);
-      val.setTr(this.tr);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, OperationResult encodedOperationResult)
       throws IOException {
@@ -171,21 +137,6 @@ public class OperationResult implements XdrElement {
         break;
     }
     return decodedOperationResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.tr, this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof OperationResult)) {
-      return false;
-    }
-
-    OperationResult other = (OperationResult) object;
-    return Objects.equals(this.tr, other.tr) && Objects.equals(this.code, other.code);
   }
 
   @Override
@@ -275,502 +226,39 @@ public class OperationResult implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class OperationResultTr implements XdrElement {
-    public OperationResultTr() {}
-
-    OperationType type;
-
-    public OperationType getDiscriminant() {
-      return this.type;
-    }
-
-    public void setDiscriminant(OperationType value) {
-      this.type = value;
-    }
-
+    private OperationType discriminant;
     private CreateAccountResult createAccountResult;
-
-    public CreateAccountResult getCreateAccountResult() {
-      return this.createAccountResult;
-    }
-
-    public void setCreateAccountResult(CreateAccountResult value) {
-      this.createAccountResult = value;
-    }
-
     private PaymentResult paymentResult;
-
-    public PaymentResult getPaymentResult() {
-      return this.paymentResult;
-    }
-
-    public void setPaymentResult(PaymentResult value) {
-      this.paymentResult = value;
-    }
-
     private PathPaymentStrictReceiveResult pathPaymentStrictReceiveResult;
-
-    public PathPaymentStrictReceiveResult getPathPaymentStrictReceiveResult() {
-      return this.pathPaymentStrictReceiveResult;
-    }
-
-    public void setPathPaymentStrictReceiveResult(PathPaymentStrictReceiveResult value) {
-      this.pathPaymentStrictReceiveResult = value;
-    }
-
     private ManageSellOfferResult manageSellOfferResult;
-
-    public ManageSellOfferResult getManageSellOfferResult() {
-      return this.manageSellOfferResult;
-    }
-
-    public void setManageSellOfferResult(ManageSellOfferResult value) {
-      this.manageSellOfferResult = value;
-    }
-
     private ManageSellOfferResult createPassiveSellOfferResult;
-
-    public ManageSellOfferResult getCreatePassiveSellOfferResult() {
-      return this.createPassiveSellOfferResult;
-    }
-
-    public void setCreatePassiveSellOfferResult(ManageSellOfferResult value) {
-      this.createPassiveSellOfferResult = value;
-    }
-
     private SetOptionsResult setOptionsResult;
-
-    public SetOptionsResult getSetOptionsResult() {
-      return this.setOptionsResult;
-    }
-
-    public void setSetOptionsResult(SetOptionsResult value) {
-      this.setOptionsResult = value;
-    }
-
     private ChangeTrustResult changeTrustResult;
-
-    public ChangeTrustResult getChangeTrustResult() {
-      return this.changeTrustResult;
-    }
-
-    public void setChangeTrustResult(ChangeTrustResult value) {
-      this.changeTrustResult = value;
-    }
-
     private AllowTrustResult allowTrustResult;
-
-    public AllowTrustResult getAllowTrustResult() {
-      return this.allowTrustResult;
-    }
-
-    public void setAllowTrustResult(AllowTrustResult value) {
-      this.allowTrustResult = value;
-    }
-
     private AccountMergeResult accountMergeResult;
-
-    public AccountMergeResult getAccountMergeResult() {
-      return this.accountMergeResult;
-    }
-
-    public void setAccountMergeResult(AccountMergeResult value) {
-      this.accountMergeResult = value;
-    }
-
     private InflationResult inflationResult;
-
-    public InflationResult getInflationResult() {
-      return this.inflationResult;
-    }
-
-    public void setInflationResult(InflationResult value) {
-      this.inflationResult = value;
-    }
-
     private ManageDataResult manageDataResult;
-
-    public ManageDataResult getManageDataResult() {
-      return this.manageDataResult;
-    }
-
-    public void setManageDataResult(ManageDataResult value) {
-      this.manageDataResult = value;
-    }
-
     private BumpSequenceResult bumpSeqResult;
-
-    public BumpSequenceResult getBumpSeqResult() {
-      return this.bumpSeqResult;
-    }
-
-    public void setBumpSeqResult(BumpSequenceResult value) {
-      this.bumpSeqResult = value;
-    }
-
     private ManageBuyOfferResult manageBuyOfferResult;
-
-    public ManageBuyOfferResult getManageBuyOfferResult() {
-      return this.manageBuyOfferResult;
-    }
-
-    public void setManageBuyOfferResult(ManageBuyOfferResult value) {
-      this.manageBuyOfferResult = value;
-    }
-
     private PathPaymentStrictSendResult pathPaymentStrictSendResult;
-
-    public PathPaymentStrictSendResult getPathPaymentStrictSendResult() {
-      return this.pathPaymentStrictSendResult;
-    }
-
-    public void setPathPaymentStrictSendResult(PathPaymentStrictSendResult value) {
-      this.pathPaymentStrictSendResult = value;
-    }
-
     private CreateClaimableBalanceResult createClaimableBalanceResult;
-
-    public CreateClaimableBalanceResult getCreateClaimableBalanceResult() {
-      return this.createClaimableBalanceResult;
-    }
-
-    public void setCreateClaimableBalanceResult(CreateClaimableBalanceResult value) {
-      this.createClaimableBalanceResult = value;
-    }
-
     private ClaimClaimableBalanceResult claimClaimableBalanceResult;
-
-    public ClaimClaimableBalanceResult getClaimClaimableBalanceResult() {
-      return this.claimClaimableBalanceResult;
-    }
-
-    public void setClaimClaimableBalanceResult(ClaimClaimableBalanceResult value) {
-      this.claimClaimableBalanceResult = value;
-    }
-
     private BeginSponsoringFutureReservesResult beginSponsoringFutureReservesResult;
-
-    public BeginSponsoringFutureReservesResult getBeginSponsoringFutureReservesResult() {
-      return this.beginSponsoringFutureReservesResult;
-    }
-
-    public void setBeginSponsoringFutureReservesResult(BeginSponsoringFutureReservesResult value) {
-      this.beginSponsoringFutureReservesResult = value;
-    }
-
     private EndSponsoringFutureReservesResult endSponsoringFutureReservesResult;
-
-    public EndSponsoringFutureReservesResult getEndSponsoringFutureReservesResult() {
-      return this.endSponsoringFutureReservesResult;
-    }
-
-    public void setEndSponsoringFutureReservesResult(EndSponsoringFutureReservesResult value) {
-      this.endSponsoringFutureReservesResult = value;
-    }
-
     private RevokeSponsorshipResult revokeSponsorshipResult;
-
-    public RevokeSponsorshipResult getRevokeSponsorshipResult() {
-      return this.revokeSponsorshipResult;
-    }
-
-    public void setRevokeSponsorshipResult(RevokeSponsorshipResult value) {
-      this.revokeSponsorshipResult = value;
-    }
-
     private ClawbackResult clawbackResult;
-
-    public ClawbackResult getClawbackResult() {
-      return this.clawbackResult;
-    }
-
-    public void setClawbackResult(ClawbackResult value) {
-      this.clawbackResult = value;
-    }
-
     private ClawbackClaimableBalanceResult clawbackClaimableBalanceResult;
-
-    public ClawbackClaimableBalanceResult getClawbackClaimableBalanceResult() {
-      return this.clawbackClaimableBalanceResult;
-    }
-
-    public void setClawbackClaimableBalanceResult(ClawbackClaimableBalanceResult value) {
-      this.clawbackClaimableBalanceResult = value;
-    }
-
     private SetTrustLineFlagsResult setTrustLineFlagsResult;
-
-    public SetTrustLineFlagsResult getSetTrustLineFlagsResult() {
-      return this.setTrustLineFlagsResult;
-    }
-
-    public void setSetTrustLineFlagsResult(SetTrustLineFlagsResult value) {
-      this.setTrustLineFlagsResult = value;
-    }
-
     private LiquidityPoolDepositResult liquidityPoolDepositResult;
-
-    public LiquidityPoolDepositResult getLiquidityPoolDepositResult() {
-      return this.liquidityPoolDepositResult;
-    }
-
-    public void setLiquidityPoolDepositResult(LiquidityPoolDepositResult value) {
-      this.liquidityPoolDepositResult = value;
-    }
-
     private LiquidityPoolWithdrawResult liquidityPoolWithdrawResult;
-
-    public LiquidityPoolWithdrawResult getLiquidityPoolWithdrawResult() {
-      return this.liquidityPoolWithdrawResult;
-    }
-
-    public void setLiquidityPoolWithdrawResult(LiquidityPoolWithdrawResult value) {
-      this.liquidityPoolWithdrawResult = value;
-    }
-
     private InvokeHostFunctionResult invokeHostFunctionResult;
-
-    public InvokeHostFunctionResult getInvokeHostFunctionResult() {
-      return this.invokeHostFunctionResult;
-    }
-
-    public void setInvokeHostFunctionResult(InvokeHostFunctionResult value) {
-      this.invokeHostFunctionResult = value;
-    }
-
     private ExtendFootprintTTLResult extendFootprintTTLResult;
-
-    public ExtendFootprintTTLResult getExtendFootprintTTLResult() {
-      return this.extendFootprintTTLResult;
-    }
-
-    public void setExtendFootprintTTLResult(ExtendFootprintTTLResult value) {
-      this.extendFootprintTTLResult = value;
-    }
-
     private RestoreFootprintResult restoreFootprintResult;
-
-    public RestoreFootprintResult getRestoreFootprintResult() {
-      return this.restoreFootprintResult;
-    }
-
-    public void setRestoreFootprintResult(RestoreFootprintResult value) {
-      this.restoreFootprintResult = value;
-    }
-
-    public static final class Builder {
-      private OperationType discriminant;
-      private CreateAccountResult createAccountResult;
-      private PaymentResult paymentResult;
-      private PathPaymentStrictReceiveResult pathPaymentStrictReceiveResult;
-      private ManageSellOfferResult manageSellOfferResult;
-      private ManageSellOfferResult createPassiveSellOfferResult;
-      private SetOptionsResult setOptionsResult;
-      private ChangeTrustResult changeTrustResult;
-      private AllowTrustResult allowTrustResult;
-      private AccountMergeResult accountMergeResult;
-      private InflationResult inflationResult;
-      private ManageDataResult manageDataResult;
-      private BumpSequenceResult bumpSeqResult;
-      private ManageBuyOfferResult manageBuyOfferResult;
-      private PathPaymentStrictSendResult pathPaymentStrictSendResult;
-      private CreateClaimableBalanceResult createClaimableBalanceResult;
-      private ClaimClaimableBalanceResult claimClaimableBalanceResult;
-      private BeginSponsoringFutureReservesResult beginSponsoringFutureReservesResult;
-      private EndSponsoringFutureReservesResult endSponsoringFutureReservesResult;
-      private RevokeSponsorshipResult revokeSponsorshipResult;
-      private ClawbackResult clawbackResult;
-      private ClawbackClaimableBalanceResult clawbackClaimableBalanceResult;
-      private SetTrustLineFlagsResult setTrustLineFlagsResult;
-      private LiquidityPoolDepositResult liquidityPoolDepositResult;
-      private LiquidityPoolWithdrawResult liquidityPoolWithdrawResult;
-      private InvokeHostFunctionResult invokeHostFunctionResult;
-      private ExtendFootprintTTLResult extendFootprintTTLResult;
-      private RestoreFootprintResult restoreFootprintResult;
-
-      public Builder discriminant(OperationType discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder createAccountResult(CreateAccountResult createAccountResult) {
-        this.createAccountResult = createAccountResult;
-        return this;
-      }
-
-      public Builder paymentResult(PaymentResult paymentResult) {
-        this.paymentResult = paymentResult;
-        return this;
-      }
-
-      public Builder pathPaymentStrictReceiveResult(
-          PathPaymentStrictReceiveResult pathPaymentStrictReceiveResult) {
-        this.pathPaymentStrictReceiveResult = pathPaymentStrictReceiveResult;
-        return this;
-      }
-
-      public Builder manageSellOfferResult(ManageSellOfferResult manageSellOfferResult) {
-        this.manageSellOfferResult = manageSellOfferResult;
-        return this;
-      }
-
-      public Builder createPassiveSellOfferResult(
-          ManageSellOfferResult createPassiveSellOfferResult) {
-        this.createPassiveSellOfferResult = createPassiveSellOfferResult;
-        return this;
-      }
-
-      public Builder setOptionsResult(SetOptionsResult setOptionsResult) {
-        this.setOptionsResult = setOptionsResult;
-        return this;
-      }
-
-      public Builder changeTrustResult(ChangeTrustResult changeTrustResult) {
-        this.changeTrustResult = changeTrustResult;
-        return this;
-      }
-
-      public Builder allowTrustResult(AllowTrustResult allowTrustResult) {
-        this.allowTrustResult = allowTrustResult;
-        return this;
-      }
-
-      public Builder accountMergeResult(AccountMergeResult accountMergeResult) {
-        this.accountMergeResult = accountMergeResult;
-        return this;
-      }
-
-      public Builder inflationResult(InflationResult inflationResult) {
-        this.inflationResult = inflationResult;
-        return this;
-      }
-
-      public Builder manageDataResult(ManageDataResult manageDataResult) {
-        this.manageDataResult = manageDataResult;
-        return this;
-      }
-
-      public Builder bumpSeqResult(BumpSequenceResult bumpSeqResult) {
-        this.bumpSeqResult = bumpSeqResult;
-        return this;
-      }
-
-      public Builder manageBuyOfferResult(ManageBuyOfferResult manageBuyOfferResult) {
-        this.manageBuyOfferResult = manageBuyOfferResult;
-        return this;
-      }
-
-      public Builder pathPaymentStrictSendResult(
-          PathPaymentStrictSendResult pathPaymentStrictSendResult) {
-        this.pathPaymentStrictSendResult = pathPaymentStrictSendResult;
-        return this;
-      }
-
-      public Builder createClaimableBalanceResult(
-          CreateClaimableBalanceResult createClaimableBalanceResult) {
-        this.createClaimableBalanceResult = createClaimableBalanceResult;
-        return this;
-      }
-
-      public Builder claimClaimableBalanceResult(
-          ClaimClaimableBalanceResult claimClaimableBalanceResult) {
-        this.claimClaimableBalanceResult = claimClaimableBalanceResult;
-        return this;
-      }
-
-      public Builder beginSponsoringFutureReservesResult(
-          BeginSponsoringFutureReservesResult beginSponsoringFutureReservesResult) {
-        this.beginSponsoringFutureReservesResult = beginSponsoringFutureReservesResult;
-        return this;
-      }
-
-      public Builder endSponsoringFutureReservesResult(
-          EndSponsoringFutureReservesResult endSponsoringFutureReservesResult) {
-        this.endSponsoringFutureReservesResult = endSponsoringFutureReservesResult;
-        return this;
-      }
-
-      public Builder revokeSponsorshipResult(RevokeSponsorshipResult revokeSponsorshipResult) {
-        this.revokeSponsorshipResult = revokeSponsorshipResult;
-        return this;
-      }
-
-      public Builder clawbackResult(ClawbackResult clawbackResult) {
-        this.clawbackResult = clawbackResult;
-        return this;
-      }
-
-      public Builder clawbackClaimableBalanceResult(
-          ClawbackClaimableBalanceResult clawbackClaimableBalanceResult) {
-        this.clawbackClaimableBalanceResult = clawbackClaimableBalanceResult;
-        return this;
-      }
-
-      public Builder setTrustLineFlagsResult(SetTrustLineFlagsResult setTrustLineFlagsResult) {
-        this.setTrustLineFlagsResult = setTrustLineFlagsResult;
-        return this;
-      }
-
-      public Builder liquidityPoolDepositResult(
-          LiquidityPoolDepositResult liquidityPoolDepositResult) {
-        this.liquidityPoolDepositResult = liquidityPoolDepositResult;
-        return this;
-      }
-
-      public Builder liquidityPoolWithdrawResult(
-          LiquidityPoolWithdrawResult liquidityPoolWithdrawResult) {
-        this.liquidityPoolWithdrawResult = liquidityPoolWithdrawResult;
-        return this;
-      }
-
-      public Builder invokeHostFunctionResult(InvokeHostFunctionResult invokeHostFunctionResult) {
-        this.invokeHostFunctionResult = invokeHostFunctionResult;
-        return this;
-      }
-
-      public Builder extendFootprintTTLResult(ExtendFootprintTTLResult extendFootprintTTLResult) {
-        this.extendFootprintTTLResult = extendFootprintTTLResult;
-        return this;
-      }
-
-      public Builder restoreFootprintResult(RestoreFootprintResult restoreFootprintResult) {
-        this.restoreFootprintResult = restoreFootprintResult;
-        return this;
-      }
-
-      public OperationResultTr build() {
-        OperationResultTr val = new OperationResultTr();
-        val.setDiscriminant(discriminant);
-        val.setCreateAccountResult(this.createAccountResult);
-        val.setPaymentResult(this.paymentResult);
-        val.setPathPaymentStrictReceiveResult(this.pathPaymentStrictReceiveResult);
-        val.setManageSellOfferResult(this.manageSellOfferResult);
-        val.setCreatePassiveSellOfferResult(this.createPassiveSellOfferResult);
-        val.setSetOptionsResult(this.setOptionsResult);
-        val.setChangeTrustResult(this.changeTrustResult);
-        val.setAllowTrustResult(this.allowTrustResult);
-        val.setAccountMergeResult(this.accountMergeResult);
-        val.setInflationResult(this.inflationResult);
-        val.setManageDataResult(this.manageDataResult);
-        val.setBumpSeqResult(this.bumpSeqResult);
-        val.setManageBuyOfferResult(this.manageBuyOfferResult);
-        val.setPathPaymentStrictSendResult(this.pathPaymentStrictSendResult);
-        val.setCreateClaimableBalanceResult(this.createClaimableBalanceResult);
-        val.setClaimClaimableBalanceResult(this.claimClaimableBalanceResult);
-        val.setBeginSponsoringFutureReservesResult(this.beginSponsoringFutureReservesResult);
-        val.setEndSponsoringFutureReservesResult(this.endSponsoringFutureReservesResult);
-        val.setRevokeSponsorshipResult(this.revokeSponsorshipResult);
-        val.setClawbackResult(this.clawbackResult);
-        val.setClawbackClaimableBalanceResult(this.clawbackClaimableBalanceResult);
-        val.setSetTrustLineFlagsResult(this.setTrustLineFlagsResult);
-        val.setLiquidityPoolDepositResult(this.liquidityPoolDepositResult);
-        val.setLiquidityPoolWithdrawResult(this.liquidityPoolWithdrawResult);
-        val.setInvokeHostFunctionResult(this.invokeHostFunctionResult);
-        val.setExtendFootprintTTLResult(this.extendFootprintTTLResult);
-        val.setRestoreFootprintResult(this.restoreFootprintResult);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream, OperationResultTr encodedOperationResultTr) throws IOException {
@@ -978,80 +466,6 @@ public class OperationResult implements XdrElement {
           break;
       }
       return decodedOperationResultTr;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(
-          this.createAccountResult,
-          this.paymentResult,
-          this.pathPaymentStrictReceiveResult,
-          this.manageSellOfferResult,
-          this.createPassiveSellOfferResult,
-          this.setOptionsResult,
-          this.changeTrustResult,
-          this.allowTrustResult,
-          this.accountMergeResult,
-          this.inflationResult,
-          this.manageDataResult,
-          this.bumpSeqResult,
-          this.manageBuyOfferResult,
-          this.pathPaymentStrictSendResult,
-          this.createClaimableBalanceResult,
-          this.claimClaimableBalanceResult,
-          this.beginSponsoringFutureReservesResult,
-          this.endSponsoringFutureReservesResult,
-          this.revokeSponsorshipResult,
-          this.clawbackResult,
-          this.clawbackClaimableBalanceResult,
-          this.setTrustLineFlagsResult,
-          this.liquidityPoolDepositResult,
-          this.liquidityPoolWithdrawResult,
-          this.invokeHostFunctionResult,
-          this.extendFootprintTTLResult,
-          this.restoreFootprintResult,
-          this.type);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof OperationResultTr)) {
-        return false;
-      }
-
-      OperationResultTr other = (OperationResultTr) object;
-      return Objects.equals(this.createAccountResult, other.createAccountResult)
-          && Objects.equals(this.paymentResult, other.paymentResult)
-          && Objects.equals(
-              this.pathPaymentStrictReceiveResult, other.pathPaymentStrictReceiveResult)
-          && Objects.equals(this.manageSellOfferResult, other.manageSellOfferResult)
-          && Objects.equals(this.createPassiveSellOfferResult, other.createPassiveSellOfferResult)
-          && Objects.equals(this.setOptionsResult, other.setOptionsResult)
-          && Objects.equals(this.changeTrustResult, other.changeTrustResult)
-          && Objects.equals(this.allowTrustResult, other.allowTrustResult)
-          && Objects.equals(this.accountMergeResult, other.accountMergeResult)
-          && Objects.equals(this.inflationResult, other.inflationResult)
-          && Objects.equals(this.manageDataResult, other.manageDataResult)
-          && Objects.equals(this.bumpSeqResult, other.bumpSeqResult)
-          && Objects.equals(this.manageBuyOfferResult, other.manageBuyOfferResult)
-          && Objects.equals(this.pathPaymentStrictSendResult, other.pathPaymentStrictSendResult)
-          && Objects.equals(this.createClaimableBalanceResult, other.createClaimableBalanceResult)
-          && Objects.equals(this.claimClaimableBalanceResult, other.claimClaimableBalanceResult)
-          && Objects.equals(
-              this.beginSponsoringFutureReservesResult, other.beginSponsoringFutureReservesResult)
-          && Objects.equals(
-              this.endSponsoringFutureReservesResult, other.endSponsoringFutureReservesResult)
-          && Objects.equals(this.revokeSponsorshipResult, other.revokeSponsorshipResult)
-          && Objects.equals(this.clawbackResult, other.clawbackResult)
-          && Objects.equals(
-              this.clawbackClaimableBalanceResult, other.clawbackClaimableBalanceResult)
-          && Objects.equals(this.setTrustLineFlagsResult, other.setTrustLineFlagsResult)
-          && Objects.equals(this.liquidityPoolDepositResult, other.liquidityPoolDepositResult)
-          && Objects.equals(this.liquidityPoolWithdrawResult, other.liquidityPoolWithdrawResult)
-          && Objects.equals(this.invokeHostFunctionResult, other.invokeHostFunctionResult)
-          && Objects.equals(this.extendFootprintTTLResult, other.extendFootprintTTLResult)
-          && Objects.equals(this.restoreFootprintResult, other.restoreFootprintResult)
-          && Objects.equals(this.type, other.type);
     }
 
     @Override

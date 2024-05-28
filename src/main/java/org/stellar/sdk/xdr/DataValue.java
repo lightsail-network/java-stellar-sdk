@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,28 +20,17 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque DataValue&lt;64&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DataValue implements XdrElement {
   private byte[] DataValue;
 
-  public DataValue() {}
-
-  public DataValue(byte[] DataValue) {
-    this.DataValue = DataValue;
-  }
-
-  public byte[] getDataValue() {
-    return this.DataValue;
-  }
-
-  public void setDataValue(byte[] value) {
-    this.DataValue = value;
-  }
-
   public static void encode(XdrDataOutputStream stream, DataValue encodedDataValue)
       throws IOException {
-    int DataValuesize = encodedDataValue.DataValue.length;
-    stream.writeInt(DataValuesize);
-    stream.write(encodedDataValue.getDataValue(), 0, DataValuesize);
+    int DataValueSize = encodedDataValue.DataValue.length;
+    stream.writeInt(DataValueSize);
+    stream.write(encodedDataValue.getDataValue(), 0, DataValueSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -48,25 +39,10 @@ public class DataValue implements XdrElement {
 
   public static DataValue decode(XdrDataInputStream stream) throws IOException {
     DataValue decodedDataValue = new DataValue();
-    int DataValuesize = stream.readInt();
-    decodedDataValue.DataValue = new byte[DataValuesize];
-    stream.read(decodedDataValue.DataValue, 0, DataValuesize);
+    int DataValueSize = stream.readInt();
+    decodedDataValue.DataValue = new byte[DataValueSize];
+    stream.read(decodedDataValue.DataValue, 0, DataValueSize);
     return decodedDataValue;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.DataValue);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof DataValue)) {
-      return false;
-    }
-
-    DataValue other = (DataValue) object;
-    return Arrays.equals(this.DataValue, other.DataValue);
   }
 
   @Override

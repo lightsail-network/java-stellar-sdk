@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class CreateContractArgs implements XdrElement {
-  public CreateContractArgs() {}
-
   private ContractIDPreimage contractIDPreimage;
-
-  public ContractIDPreimage getContractIDPreimage() {
-    return this.contractIDPreimage;
-  }
-
-  public void setContractIDPreimage(ContractIDPreimage value) {
-    this.contractIDPreimage = value;
-  }
-
   private ContractExecutable executable;
-
-  public ContractExecutable getExecutable() {
-    return this.executable;
-  }
-
-  public void setExecutable(ContractExecutable value) {
-    this.executable = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, CreateContractArgs encodedCreateContractArgs) throws IOException {
@@ -60,22 +48,6 @@ public class CreateContractArgs implements XdrElement {
     decodedCreateContractArgs.contractIDPreimage = ContractIDPreimage.decode(stream);
     decodedCreateContractArgs.executable = ContractExecutable.decode(stream);
     return decodedCreateContractArgs;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.contractIDPreimage, this.executable);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof CreateContractArgs)) {
-      return false;
-    }
-
-    CreateContractArgs other = (CreateContractArgs) object;
-    return Objects.equals(this.contractIDPreimage, other.contractIDPreimage)
-        && Objects.equals(this.executable, other.executable);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class CreateContractArgs implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ContractIDPreimage contractIDPreimage;
-    private ContractExecutable executable;
-
-    public Builder contractIDPreimage(ContractIDPreimage contractIDPreimage) {
-      this.contractIDPreimage = contractIDPreimage;
-      return this;
-    }
-
-    public Builder executable(ContractExecutable executable) {
-      this.executable = executable;
-      return this;
-    }
-
-    public CreateContractArgs build() {
-      CreateContractArgs val = new CreateContractArgs();
-      val.setContractIDPreimage(this.contractIDPreimage);
-      val.setExecutable(this.executable);
-      return val;
-    }
   }
 }

@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef unsigned int uint32;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Uint32 implements XdrElement {
   private XdrUnsignedInteger uint32;
-
-  public Uint32() {}
-
-  public Uint32(XdrUnsignedInteger uint32) {
-    this.uint32 = uint32;
-  }
-
-  public XdrUnsignedInteger getUint32() {
-    return this.uint32;
-  }
-
-  public void setUint32(XdrUnsignedInteger value) {
-    this.uint32 = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Uint32 encodedUint32) throws IOException {
     encodedUint32.uint32.encode(stream);
@@ -47,21 +38,6 @@ public class Uint32 implements XdrElement {
     Uint32 decodedUint32 = new Uint32();
     decodedUint32.uint32 = XdrUnsignedInteger.decode(stream);
     return decodedUint32;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.uint32);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Uint32)) {
-      return false;
-    }
-
-    Uint32 other = (Uint32) object;
-    return Objects.equals(this.uint32, other.uint32);
   }
 
   @Override

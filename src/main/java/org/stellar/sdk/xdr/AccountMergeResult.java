@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,50 +33,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AccountMergeResult implements XdrElement {
-  public AccountMergeResult() {}
-
-  AccountMergeResultCode code;
-
-  public AccountMergeResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(AccountMergeResultCode value) {
-    this.code = value;
-  }
-
+  private AccountMergeResultCode discriminant;
   private Int64 sourceAccountBalance;
-
-  public Int64 getSourceAccountBalance() {
-    return this.sourceAccountBalance;
-  }
-
-  public void setSourceAccountBalance(Int64 value) {
-    this.sourceAccountBalance = value;
-  }
-
-  public static final class Builder {
-    private AccountMergeResultCode discriminant;
-    private Int64 sourceAccountBalance;
-
-    public Builder discriminant(AccountMergeResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder sourceAccountBalance(Int64 sourceAccountBalance) {
-      this.sourceAccountBalance = sourceAccountBalance;
-      return this;
-    }
-
-    public AccountMergeResult build() {
-      AccountMergeResult val = new AccountMergeResult();
-      val.setDiscriminant(discriminant);
-      val.setSourceAccountBalance(this.sourceAccountBalance);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, AccountMergeResult encodedAccountMergeResult) throws IOException {
@@ -117,22 +83,6 @@ public class AccountMergeResult implements XdrElement {
         break;
     }
     return decodedAccountMergeResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.sourceAccountBalance, this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AccountMergeResult)) {
-      return false;
-    }
-
-    AccountMergeResult other = (AccountMergeResult) object;
-    return Objects.equals(this.sourceAccountBalance, other.sourceAccountBalance)
-        && Objects.equals(this.code, other.code);
   }
 
   @Override

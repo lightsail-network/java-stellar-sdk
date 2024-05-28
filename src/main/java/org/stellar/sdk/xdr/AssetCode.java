@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,67 +30,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AssetCode implements XdrElement {
-  public AssetCode() {}
-
-  AssetType type;
-
-  public AssetType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(AssetType value) {
-    this.type = value;
-  }
-
+  private AssetType discriminant;
   private AssetCode4 assetCode4;
-
-  public AssetCode4 getAssetCode4() {
-    return this.assetCode4;
-  }
-
-  public void setAssetCode4(AssetCode4 value) {
-    this.assetCode4 = value;
-  }
-
   private AssetCode12 assetCode12;
-
-  public AssetCode12 getAssetCode12() {
-    return this.assetCode12;
-  }
-
-  public void setAssetCode12(AssetCode12 value) {
-    this.assetCode12 = value;
-  }
-
-  public static final class Builder {
-    private AssetType discriminant;
-    private AssetCode4 assetCode4;
-    private AssetCode12 assetCode12;
-
-    public Builder discriminant(AssetType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder assetCode4(AssetCode4 assetCode4) {
-      this.assetCode4 = assetCode4;
-      return this;
-    }
-
-    public Builder assetCode12(AssetCode12 assetCode12) {
-      this.assetCode12 = assetCode12;
-      return this;
-    }
-
-    public AssetCode build() {
-      AssetCode val = new AssetCode();
-      val.setDiscriminant(discriminant);
-      val.setAssetCode4(this.assetCode4);
-      val.setAssetCode12(this.assetCode12);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, AssetCode encodedAssetCode)
       throws IOException {
@@ -121,23 +71,6 @@ public class AssetCode implements XdrElement {
         break;
     }
     return decodedAssetCode;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.assetCode4, this.assetCode12, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AssetCode)) {
-      return false;
-    }
-
-    AssetCode other = (AssetCode) object;
-    return Objects.equals(this.assetCode4, other.assetCode4)
-        && Objects.equals(this.assetCode12, other.assetCode12)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

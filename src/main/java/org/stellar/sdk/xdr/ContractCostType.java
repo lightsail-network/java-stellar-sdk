@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -162,16 +160,16 @@ public enum ContractCostType implements XdrElement {
   InstantiateWasmExports(41),
   InstantiateWasmDataSegmentBytes(42),
   Sec1DecodePointUncompressed(43),
-  VerifyEcdsaSecp256r1Sig(44),
-  ;
-  private int mValue;
+  VerifyEcdsaSecp256r1Sig(44);
+
+  private final int value;
 
   ContractCostType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ContractCostType decode(XdrDataInputStream stream) throws IOException {

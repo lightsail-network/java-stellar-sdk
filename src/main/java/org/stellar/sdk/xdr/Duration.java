@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef uint64 Duration;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Duration implements XdrElement {
   private Uint64 Duration;
-
-  public Duration() {}
-
-  public Duration(Uint64 Duration) {
-    this.Duration = Duration;
-  }
-
-  public Uint64 getDuration() {
-    return this.Duration;
-  }
-
-  public void setDuration(Uint64 value) {
-    this.Duration = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Duration encodedDuration)
       throws IOException {
@@ -48,21 +39,6 @@ public class Duration implements XdrElement {
     Duration decodedDuration = new Duration();
     decodedDuration.Duration = Uint64.decode(stream);
     return decodedDuration;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.Duration);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Duration)) {
-      return false;
-    }
-
-    Duration other = (Duration) object;
-    return Objects.equals(this.Duration, other.Duration);
   }
 
   @Override

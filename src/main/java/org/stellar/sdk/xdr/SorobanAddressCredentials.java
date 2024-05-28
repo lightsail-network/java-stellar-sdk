@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,48 +27,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanAddressCredentials implements XdrElement {
-  public SorobanAddressCredentials() {}
-
   private SCAddress address;
-
-  public SCAddress getAddress() {
-    return this.address;
-  }
-
-  public void setAddress(SCAddress value) {
-    this.address = value;
-  }
-
   private Int64 nonce;
-
-  public Int64 getNonce() {
-    return this.nonce;
-  }
-
-  public void setNonce(Int64 value) {
-    this.nonce = value;
-  }
-
   private Uint32 signatureExpirationLedger;
-
-  public Uint32 getSignatureExpirationLedger() {
-    return this.signatureExpirationLedger;
-  }
-
-  public void setSignatureExpirationLedger(Uint32 value) {
-    this.signatureExpirationLedger = value;
-  }
-
   private SCVal signature;
-
-  public SCVal getSignature() {
-    return this.signature;
-  }
-
-  public void setSignature(SCVal value) {
-    this.signature = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SorobanAddressCredentials encodedSorobanAddressCredentials)
@@ -90,24 +60,6 @@ public class SorobanAddressCredentials implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.address, this.nonce, this.signatureExpirationLedger, this.signature);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanAddressCredentials)) {
-      return false;
-    }
-
-    SorobanAddressCredentials other = (SorobanAddressCredentials) object;
-    return Objects.equals(this.address, other.address)
-        && Objects.equals(this.nonce, other.nonce)
-        && Objects.equals(this.signatureExpirationLedger, other.signatureExpirationLedger)
-        && Objects.equals(this.signature, other.signature);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -129,41 +81,5 @@ public class SorobanAddressCredentials implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCAddress address;
-    private Int64 nonce;
-    private Uint32 signatureExpirationLedger;
-    private SCVal signature;
-
-    public Builder address(SCAddress address) {
-      this.address = address;
-      return this;
-    }
-
-    public Builder nonce(Int64 nonce) {
-      this.nonce = nonce;
-      return this;
-    }
-
-    public Builder signatureExpirationLedger(Uint32 signatureExpirationLedger) {
-      this.signatureExpirationLedger = signatureExpirationLedger;
-      return this;
-    }
-
-    public Builder signature(SCVal signature) {
-      this.signature = signature;
-      return this;
-    }
-
-    public SorobanAddressCredentials build() {
-      SorobanAddressCredentials val = new SorobanAddressCredentials();
-      val.setAddress(this.address);
-      val.setNonce(this.nonce);
-      val.setSignatureExpirationLedger(this.signatureExpirationLedger);
-      val.setSignature(this.signature);
-      return val;
-    }
   }
 }

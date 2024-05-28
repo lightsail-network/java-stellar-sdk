@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -31,68 +33,17 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class PathPaymentStrictSendOp implements XdrElement {
-  public PathPaymentStrictSendOp() {}
-
   private Asset sendAsset;
-
-  public Asset getSendAsset() {
-    return this.sendAsset;
-  }
-
-  public void setSendAsset(Asset value) {
-    this.sendAsset = value;
-  }
-
   private Int64 sendAmount;
-
-  public Int64 getSendAmount() {
-    return this.sendAmount;
-  }
-
-  public void setSendAmount(Int64 value) {
-    this.sendAmount = value;
-  }
-
   private MuxedAccount destination;
-
-  public MuxedAccount getDestination() {
-    return this.destination;
-  }
-
-  public void setDestination(MuxedAccount value) {
-    this.destination = value;
-  }
-
   private Asset destAsset;
-
-  public Asset getDestAsset() {
-    return this.destAsset;
-  }
-
-  public void setDestAsset(Asset value) {
-    this.destAsset = value;
-  }
-
   private Int64 destMin;
-
-  public Int64 getDestMin() {
-    return this.destMin;
-  }
-
-  public void setDestMin(Int64 value) {
-    this.destMin = value;
-  }
-
   private Asset[] path;
-
-  public Asset[] getPath() {
-    return this.path;
-  }
-
-  public void setPath(Asset[] value) {
-    this.path = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, PathPaymentStrictSendOp encodedPathPaymentStrictSendOp)
@@ -102,9 +53,9 @@ public class PathPaymentStrictSendOp implements XdrElement {
     MuxedAccount.encode(stream, encodedPathPaymentStrictSendOp.destination);
     Asset.encode(stream, encodedPathPaymentStrictSendOp.destAsset);
     Int64.encode(stream, encodedPathPaymentStrictSendOp.destMin);
-    int pathsize = encodedPathPaymentStrictSendOp.getPath().length;
-    stream.writeInt(pathsize);
-    for (int i = 0; i < pathsize; i++) {
+    int pathSize = encodedPathPaymentStrictSendOp.getPath().length;
+    stream.writeInt(pathSize);
+    for (int i = 0; i < pathSize; i++) {
       Asset.encode(stream, encodedPathPaymentStrictSendOp.path[i]);
     }
   }
@@ -120,38 +71,12 @@ public class PathPaymentStrictSendOp implements XdrElement {
     decodedPathPaymentStrictSendOp.destination = MuxedAccount.decode(stream);
     decodedPathPaymentStrictSendOp.destAsset = Asset.decode(stream);
     decodedPathPaymentStrictSendOp.destMin = Int64.decode(stream);
-    int pathsize = stream.readInt();
-    decodedPathPaymentStrictSendOp.path = new Asset[pathsize];
-    for (int i = 0; i < pathsize; i++) {
+    int pathSize = stream.readInt();
+    decodedPathPaymentStrictSendOp.path = new Asset[pathSize];
+    for (int i = 0; i < pathSize; i++) {
       decodedPathPaymentStrictSendOp.path[i] = Asset.decode(stream);
     }
     return decodedPathPaymentStrictSendOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.sendAsset,
-        this.sendAmount,
-        this.destination,
-        this.destAsset,
-        this.destMin,
-        Arrays.hashCode(this.path));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PathPaymentStrictSendOp)) {
-      return false;
-    }
-
-    PathPaymentStrictSendOp other = (PathPaymentStrictSendOp) object;
-    return Objects.equals(this.sendAsset, other.sendAsset)
-        && Objects.equals(this.sendAmount, other.sendAmount)
-        && Objects.equals(this.destination, other.destination)
-        && Objects.equals(this.destAsset, other.destAsset)
-        && Objects.equals(this.destMin, other.destMin)
-        && Arrays.equals(this.path, other.path);
   }
 
   @Override
@@ -176,55 +101,5 @@ public class PathPaymentStrictSendOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Asset sendAsset;
-    private Int64 sendAmount;
-    private MuxedAccount destination;
-    private Asset destAsset;
-    private Int64 destMin;
-    private Asset[] path;
-
-    public Builder sendAsset(Asset sendAsset) {
-      this.sendAsset = sendAsset;
-      return this;
-    }
-
-    public Builder sendAmount(Int64 sendAmount) {
-      this.sendAmount = sendAmount;
-      return this;
-    }
-
-    public Builder destination(MuxedAccount destination) {
-      this.destination = destination;
-      return this;
-    }
-
-    public Builder destAsset(Asset destAsset) {
-      this.destAsset = destAsset;
-      return this;
-    }
-
-    public Builder destMin(Int64 destMin) {
-      this.destMin = destMin;
-      return this;
-    }
-
-    public Builder path(Asset[] path) {
-      this.path = path;
-      return this;
-    }
-
-    public PathPaymentStrictSendOp build() {
-      PathPaymentStrictSendOp val = new PathPaymentStrictSendOp();
-      val.setSendAsset(this.sendAsset);
-      val.setSendAmount(this.sendAmount);
-      val.setDestination(this.destination);
-      val.setDestAsset(this.destAsset);
-      val.setDestMin(this.destMin);
-      val.setPath(this.path);
-      return val;
-    }
   }
 }

@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -75,16 +73,16 @@ public enum SCSpecType implements XdrElement {
   SC_SPEC_TYPE_MAP(1004),
   SC_SPEC_TYPE_TUPLE(1005),
   SC_SPEC_TYPE_BYTES_N(1006),
-  SC_SPEC_TYPE_UDT(2000),
-  ;
-  private int mValue;
+  SC_SPEC_TYPE_UDT(2000);
+
+  private final int value;
 
   SCSpecType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SCSpecType decode(XdrDataInputStream stream) throws IOException {

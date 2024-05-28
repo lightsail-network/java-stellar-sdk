@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -52,158 +55,26 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ConfigSettingContractLedgerCostV0 implements XdrElement {
-  public ConfigSettingContractLedgerCostV0() {}
-
   private Uint32 ledgerMaxReadLedgerEntries;
-
-  public Uint32 getLedgerMaxReadLedgerEntries() {
-    return this.ledgerMaxReadLedgerEntries;
-  }
-
-  public void setLedgerMaxReadLedgerEntries(Uint32 value) {
-    this.ledgerMaxReadLedgerEntries = value;
-  }
-
   private Uint32 ledgerMaxReadBytes;
-
-  public Uint32 getLedgerMaxReadBytes() {
-    return this.ledgerMaxReadBytes;
-  }
-
-  public void setLedgerMaxReadBytes(Uint32 value) {
-    this.ledgerMaxReadBytes = value;
-  }
-
   private Uint32 ledgerMaxWriteLedgerEntries;
-
-  public Uint32 getLedgerMaxWriteLedgerEntries() {
-    return this.ledgerMaxWriteLedgerEntries;
-  }
-
-  public void setLedgerMaxWriteLedgerEntries(Uint32 value) {
-    this.ledgerMaxWriteLedgerEntries = value;
-  }
-
   private Uint32 ledgerMaxWriteBytes;
-
-  public Uint32 getLedgerMaxWriteBytes() {
-    return this.ledgerMaxWriteBytes;
-  }
-
-  public void setLedgerMaxWriteBytes(Uint32 value) {
-    this.ledgerMaxWriteBytes = value;
-  }
-
   private Uint32 txMaxReadLedgerEntries;
-
-  public Uint32 getTxMaxReadLedgerEntries() {
-    return this.txMaxReadLedgerEntries;
-  }
-
-  public void setTxMaxReadLedgerEntries(Uint32 value) {
-    this.txMaxReadLedgerEntries = value;
-  }
-
   private Uint32 txMaxReadBytes;
-
-  public Uint32 getTxMaxReadBytes() {
-    return this.txMaxReadBytes;
-  }
-
-  public void setTxMaxReadBytes(Uint32 value) {
-    this.txMaxReadBytes = value;
-  }
-
   private Uint32 txMaxWriteLedgerEntries;
-
-  public Uint32 getTxMaxWriteLedgerEntries() {
-    return this.txMaxWriteLedgerEntries;
-  }
-
-  public void setTxMaxWriteLedgerEntries(Uint32 value) {
-    this.txMaxWriteLedgerEntries = value;
-  }
-
   private Uint32 txMaxWriteBytes;
-
-  public Uint32 getTxMaxWriteBytes() {
-    return this.txMaxWriteBytes;
-  }
-
-  public void setTxMaxWriteBytes(Uint32 value) {
-    this.txMaxWriteBytes = value;
-  }
-
   private Int64 feeReadLedgerEntry;
-
-  public Int64 getFeeReadLedgerEntry() {
-    return this.feeReadLedgerEntry;
-  }
-
-  public void setFeeReadLedgerEntry(Int64 value) {
-    this.feeReadLedgerEntry = value;
-  }
-
   private Int64 feeWriteLedgerEntry;
-
-  public Int64 getFeeWriteLedgerEntry() {
-    return this.feeWriteLedgerEntry;
-  }
-
-  public void setFeeWriteLedgerEntry(Int64 value) {
-    this.feeWriteLedgerEntry = value;
-  }
-
   private Int64 feeRead1KB;
-
-  public Int64 getFeeRead1KB() {
-    return this.feeRead1KB;
-  }
-
-  public void setFeeRead1KB(Int64 value) {
-    this.feeRead1KB = value;
-  }
-
   private Int64 bucketListTargetSizeBytes;
-
-  public Int64 getBucketListTargetSizeBytes() {
-    return this.bucketListTargetSizeBytes;
-  }
-
-  public void setBucketListTargetSizeBytes(Int64 value) {
-    this.bucketListTargetSizeBytes = value;
-  }
-
   private Int64 writeFee1KBBucketListLow;
-
-  public Int64 getWriteFee1KBBucketListLow() {
-    return this.writeFee1KBBucketListLow;
-  }
-
-  public void setWriteFee1KBBucketListLow(Int64 value) {
-    this.writeFee1KBBucketListLow = value;
-  }
-
   private Int64 writeFee1KBBucketListHigh;
-
-  public Int64 getWriteFee1KBBucketListHigh() {
-    return this.writeFee1KBBucketListHigh;
-  }
-
-  public void setWriteFee1KBBucketListHigh(Int64 value) {
-    this.writeFee1KBBucketListHigh = value;
-  }
-
   private Uint32 bucketListWriteFeeGrowthFactor;
-
-  public Uint32 getBucketListWriteFeeGrowthFactor() {
-    return this.bucketListWriteFeeGrowthFactor;
-  }
-
-  public void setBucketListWriteFeeGrowthFactor(Uint32 value) {
-    this.bucketListWriteFeeGrowthFactor = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -253,51 +124,6 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ledgerMaxReadLedgerEntries,
-        this.ledgerMaxReadBytes,
-        this.ledgerMaxWriteLedgerEntries,
-        this.ledgerMaxWriteBytes,
-        this.txMaxReadLedgerEntries,
-        this.txMaxReadBytes,
-        this.txMaxWriteLedgerEntries,
-        this.txMaxWriteBytes,
-        this.feeReadLedgerEntry,
-        this.feeWriteLedgerEntry,
-        this.feeRead1KB,
-        this.bucketListTargetSizeBytes,
-        this.writeFee1KBBucketListLow,
-        this.writeFee1KBBucketListHigh,
-        this.bucketListWriteFeeGrowthFactor);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ConfigSettingContractLedgerCostV0)) {
-      return false;
-    }
-
-    ConfigSettingContractLedgerCostV0 other = (ConfigSettingContractLedgerCostV0) object;
-    return Objects.equals(this.ledgerMaxReadLedgerEntries, other.ledgerMaxReadLedgerEntries)
-        && Objects.equals(this.ledgerMaxReadBytes, other.ledgerMaxReadBytes)
-        && Objects.equals(this.ledgerMaxWriteLedgerEntries, other.ledgerMaxWriteLedgerEntries)
-        && Objects.equals(this.ledgerMaxWriteBytes, other.ledgerMaxWriteBytes)
-        && Objects.equals(this.txMaxReadLedgerEntries, other.txMaxReadLedgerEntries)
-        && Objects.equals(this.txMaxReadBytes, other.txMaxReadBytes)
-        && Objects.equals(this.txMaxWriteLedgerEntries, other.txMaxWriteLedgerEntries)
-        && Objects.equals(this.txMaxWriteBytes, other.txMaxWriteBytes)
-        && Objects.equals(this.feeReadLedgerEntry, other.feeReadLedgerEntry)
-        && Objects.equals(this.feeWriteLedgerEntry, other.feeWriteLedgerEntry)
-        && Objects.equals(this.feeRead1KB, other.feeRead1KB)
-        && Objects.equals(this.bucketListTargetSizeBytes, other.bucketListTargetSizeBytes)
-        && Objects.equals(this.writeFee1KBBucketListLow, other.writeFee1KBBucketListLow)
-        && Objects.equals(this.writeFee1KBBucketListHigh, other.writeFee1KBBucketListHigh)
-        && Objects.equals(
-            this.bucketListWriteFeeGrowthFactor, other.bucketListWriteFeeGrowthFactor);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -319,118 +145,5 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 ledgerMaxReadLedgerEntries;
-    private Uint32 ledgerMaxReadBytes;
-    private Uint32 ledgerMaxWriteLedgerEntries;
-    private Uint32 ledgerMaxWriteBytes;
-    private Uint32 txMaxReadLedgerEntries;
-    private Uint32 txMaxReadBytes;
-    private Uint32 txMaxWriteLedgerEntries;
-    private Uint32 txMaxWriteBytes;
-    private Int64 feeReadLedgerEntry;
-    private Int64 feeWriteLedgerEntry;
-    private Int64 feeRead1KB;
-    private Int64 bucketListTargetSizeBytes;
-    private Int64 writeFee1KBBucketListLow;
-    private Int64 writeFee1KBBucketListHigh;
-    private Uint32 bucketListWriteFeeGrowthFactor;
-
-    public Builder ledgerMaxReadLedgerEntries(Uint32 ledgerMaxReadLedgerEntries) {
-      this.ledgerMaxReadLedgerEntries = ledgerMaxReadLedgerEntries;
-      return this;
-    }
-
-    public Builder ledgerMaxReadBytes(Uint32 ledgerMaxReadBytes) {
-      this.ledgerMaxReadBytes = ledgerMaxReadBytes;
-      return this;
-    }
-
-    public Builder ledgerMaxWriteLedgerEntries(Uint32 ledgerMaxWriteLedgerEntries) {
-      this.ledgerMaxWriteLedgerEntries = ledgerMaxWriteLedgerEntries;
-      return this;
-    }
-
-    public Builder ledgerMaxWriteBytes(Uint32 ledgerMaxWriteBytes) {
-      this.ledgerMaxWriteBytes = ledgerMaxWriteBytes;
-      return this;
-    }
-
-    public Builder txMaxReadLedgerEntries(Uint32 txMaxReadLedgerEntries) {
-      this.txMaxReadLedgerEntries = txMaxReadLedgerEntries;
-      return this;
-    }
-
-    public Builder txMaxReadBytes(Uint32 txMaxReadBytes) {
-      this.txMaxReadBytes = txMaxReadBytes;
-      return this;
-    }
-
-    public Builder txMaxWriteLedgerEntries(Uint32 txMaxWriteLedgerEntries) {
-      this.txMaxWriteLedgerEntries = txMaxWriteLedgerEntries;
-      return this;
-    }
-
-    public Builder txMaxWriteBytes(Uint32 txMaxWriteBytes) {
-      this.txMaxWriteBytes = txMaxWriteBytes;
-      return this;
-    }
-
-    public Builder feeReadLedgerEntry(Int64 feeReadLedgerEntry) {
-      this.feeReadLedgerEntry = feeReadLedgerEntry;
-      return this;
-    }
-
-    public Builder feeWriteLedgerEntry(Int64 feeWriteLedgerEntry) {
-      this.feeWriteLedgerEntry = feeWriteLedgerEntry;
-      return this;
-    }
-
-    public Builder feeRead1KB(Int64 feeRead1KB) {
-      this.feeRead1KB = feeRead1KB;
-      return this;
-    }
-
-    public Builder bucketListTargetSizeBytes(Int64 bucketListTargetSizeBytes) {
-      this.bucketListTargetSizeBytes = bucketListTargetSizeBytes;
-      return this;
-    }
-
-    public Builder writeFee1KBBucketListLow(Int64 writeFee1KBBucketListLow) {
-      this.writeFee1KBBucketListLow = writeFee1KBBucketListLow;
-      return this;
-    }
-
-    public Builder writeFee1KBBucketListHigh(Int64 writeFee1KBBucketListHigh) {
-      this.writeFee1KBBucketListHigh = writeFee1KBBucketListHigh;
-      return this;
-    }
-
-    public Builder bucketListWriteFeeGrowthFactor(Uint32 bucketListWriteFeeGrowthFactor) {
-      this.bucketListWriteFeeGrowthFactor = bucketListWriteFeeGrowthFactor;
-      return this;
-    }
-
-    public ConfigSettingContractLedgerCostV0 build() {
-      ConfigSettingContractLedgerCostV0 val = new ConfigSettingContractLedgerCostV0();
-      val.setLedgerMaxReadLedgerEntries(this.ledgerMaxReadLedgerEntries);
-      val.setLedgerMaxReadBytes(this.ledgerMaxReadBytes);
-      val.setLedgerMaxWriteLedgerEntries(this.ledgerMaxWriteLedgerEntries);
-      val.setLedgerMaxWriteBytes(this.ledgerMaxWriteBytes);
-      val.setTxMaxReadLedgerEntries(this.txMaxReadLedgerEntries);
-      val.setTxMaxReadBytes(this.txMaxReadBytes);
-      val.setTxMaxWriteLedgerEntries(this.txMaxWriteLedgerEntries);
-      val.setTxMaxWriteBytes(this.txMaxWriteBytes);
-      val.setFeeReadLedgerEntry(this.feeReadLedgerEntry);
-      val.setFeeWriteLedgerEntry(this.feeWriteLedgerEntry);
-      val.setFeeRead1KB(this.feeRead1KB);
-      val.setBucketListTargetSizeBytes(this.bucketListTargetSizeBytes);
-      val.setWriteFee1KBBucketListLow(this.writeFee1KBBucketListLow);
-      val.setWriteFee1KBBucketListHigh(this.writeFee1KBBucketListHigh);
-      val.setBucketListWriteFeeGrowthFactor(this.bucketListWriteFeeGrowthFactor);
-      return val;
-    }
   }
 }

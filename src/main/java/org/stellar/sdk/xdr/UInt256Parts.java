@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,48 +26,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class UInt256Parts implements XdrElement {
-  public UInt256Parts() {}
-
   private Uint64 hi_hi;
-
-  public Uint64 getHi_hi() {
-    return this.hi_hi;
-  }
-
-  public void setHi_hi(Uint64 value) {
-    this.hi_hi = value;
-  }
-
   private Uint64 hi_lo;
-
-  public Uint64 getHi_lo() {
-    return this.hi_lo;
-  }
-
-  public void setHi_lo(Uint64 value) {
-    this.hi_lo = value;
-  }
-
   private Uint64 lo_hi;
-
-  public Uint64 getLo_hi() {
-    return this.lo_hi;
-  }
-
-  public void setLo_hi(Uint64 value) {
-    this.lo_hi = value;
-  }
-
   private Uint64 lo_lo;
-
-  public Uint64 getLo_lo() {
-    return this.lo_lo;
-  }
-
-  public void setLo_lo(Uint64 value) {
-    this.lo_lo = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, UInt256Parts encodedUInt256Parts)
       throws IOException {
@@ -85,24 +55,6 @@ public class UInt256Parts implements XdrElement {
     decodedUInt256Parts.lo_hi = Uint64.decode(stream);
     decodedUInt256Parts.lo_lo = Uint64.decode(stream);
     return decodedUInt256Parts;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.hi_hi, this.hi_lo, this.lo_hi, this.lo_lo);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof UInt256Parts)) {
-      return false;
-    }
-
-    UInt256Parts other = (UInt256Parts) object;
-    return Objects.equals(this.hi_hi, other.hi_hi)
-        && Objects.equals(this.hi_lo, other.hi_lo)
-        && Objects.equals(this.lo_hi, other.lo_hi)
-        && Objects.equals(this.lo_lo, other.lo_lo);
   }
 
   @Override
@@ -127,41 +79,5 @@ public class UInt256Parts implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint64 hi_hi;
-    private Uint64 hi_lo;
-    private Uint64 lo_hi;
-    private Uint64 lo_lo;
-
-    public Builder hi_hi(Uint64 hi_hi) {
-      this.hi_hi = hi_hi;
-      return this;
-    }
-
-    public Builder hi_lo(Uint64 hi_lo) {
-      this.hi_lo = hi_lo;
-      return this;
-    }
-
-    public Builder lo_hi(Uint64 lo_hi) {
-      this.lo_hi = lo_hi;
-      return this;
-    }
-
-    public Builder lo_lo(Uint64 lo_lo) {
-      this.lo_lo = lo_lo;
-      return this;
-    }
-
-    public UInt256Parts build() {
-      UInt256Parts val = new UInt256Parts();
-      val.setHi_hi(this.hi_hi);
-      val.setHi_lo(this.hi_lo);
-      val.setLo_hi(this.lo_hi);
-      val.setLo_lo(this.lo_lo);
-      return val;
-    }
   }
 }

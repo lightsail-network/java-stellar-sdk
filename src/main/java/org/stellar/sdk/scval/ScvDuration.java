@@ -18,7 +18,7 @@ class ScvDuration {
       throw new IllegalArgumentException("Invalid Duration value, must be between 0 and 2^64-1");
     }
 
-    return new SCVal.Builder()
+    return SCVal.builder()
         .discriminant(TYPE)
         .duration(new Duration(new Uint64(new XdrUnsignedHyperInteger(value))))
         .build();

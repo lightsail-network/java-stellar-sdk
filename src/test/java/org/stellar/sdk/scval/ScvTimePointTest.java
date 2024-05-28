@@ -16,7 +16,7 @@ public class ScvTimePointTest {
     BigInteger value = XdrUnsignedHyperInteger.MAX_VALUE;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_TIMEPOINT)
             .timepoint(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();
@@ -31,7 +31,7 @@ public class ScvTimePointTest {
     BigInteger value = XdrUnsignedHyperInteger.MIN_VALUE;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_TIMEPOINT)
             .timepoint(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(value))))
             .build();

@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,28 +20,17 @@ import org.stellar.sdk.Base64Factory;
  * typedef PeerStats PeerStatList&lt;25&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PeerStatList implements XdrElement {
   private PeerStats[] PeerStatList;
 
-  public PeerStatList() {}
-
-  public PeerStatList(PeerStats[] PeerStatList) {
-    this.PeerStatList = PeerStatList;
-  }
-
-  public PeerStats[] getPeerStatList() {
-    return this.PeerStatList;
-  }
-
-  public void setPeerStatList(PeerStats[] value) {
-    this.PeerStatList = value;
-  }
-
   public static void encode(XdrDataOutputStream stream, PeerStatList encodedPeerStatList)
       throws IOException {
-    int PeerStatListsize = encodedPeerStatList.getPeerStatList().length;
-    stream.writeInt(PeerStatListsize);
-    for (int i = 0; i < PeerStatListsize; i++) {
+    int PeerStatListSize = encodedPeerStatList.getPeerStatList().length;
+    stream.writeInt(PeerStatListSize);
+    for (int i = 0; i < PeerStatListSize; i++) {
       PeerStats.encode(stream, encodedPeerStatList.PeerStatList[i]);
     }
   }
@@ -50,27 +41,12 @@ public class PeerStatList implements XdrElement {
 
   public static PeerStatList decode(XdrDataInputStream stream) throws IOException {
     PeerStatList decodedPeerStatList = new PeerStatList();
-    int PeerStatListsize = stream.readInt();
-    decodedPeerStatList.PeerStatList = new PeerStats[PeerStatListsize];
-    for (int i = 0; i < PeerStatListsize; i++) {
+    int PeerStatListSize = stream.readInt();
+    decodedPeerStatList.PeerStatList = new PeerStats[PeerStatListSize];
+    for (int i = 0; i < PeerStatListSize; i++) {
       decodedPeerStatList.PeerStatList[i] = PeerStats.decode(stream);
     }
     return decodedPeerStatList;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.PeerStatList);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PeerStatList)) {
-      return false;
-    }
-
-    PeerStatList other = (PeerStatList) object;
-    return Arrays.equals(this.PeerStatList, other.PeerStatList);
   }
 
   @Override

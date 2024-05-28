@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,16 +21,16 @@ import org.stellar.sdk.Base64Factory;
  */
 public enum ContractIDPreimageType implements XdrElement {
   CONTRACT_ID_PREIMAGE_FROM_ADDRESS(0),
-  CONTRACT_ID_PREIMAGE_FROM_ASSET(1),
-  ;
-  private int mValue;
+  CONTRACT_ID_PREIMAGE_FROM_ASSET(1);
+
+  private final int value;
 
   ContractIDPreimageType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ContractIDPreimageType decode(XdrDataInputStream stream) throws IOException {

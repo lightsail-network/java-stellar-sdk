@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,33 +30,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClawbackResult implements XdrElement {
-  public ClawbackResult() {}
-
-  ClawbackResultCode code;
-
-  public ClawbackResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(ClawbackResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private ClawbackResultCode discriminant;
-
-    public Builder discriminant(ClawbackResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public ClawbackResult build() {
-      ClawbackResult val = new ClawbackResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private ClawbackResultCode discriminant;
 
   public static void encode(XdrDataOutputStream stream, ClawbackResult encodedClawbackResult)
       throws IOException {
@@ -89,21 +71,6 @@ public class ClawbackResult implements XdrElement {
         break;
     }
     return decodedClawbackResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClawbackResult)) {
-      return false;
-    }
-
-    ClawbackResult other = (ClawbackResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

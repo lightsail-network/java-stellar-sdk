@@ -17,19 +17,16 @@ public class ScvMapTest {
     value.put(Scv.toString("key2"), Scv.toInt32(123));
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_MAP)
             .map(
                 new SCMap(
                     new SCMapEntry[] {
-                      new SCMapEntry.Builder()
+                      SCMapEntry.builder()
                           .key(Scv.toSymbol("key1"))
                           .val(Scv.toString("value1"))
                           .build(),
-                      new SCMapEntry.Builder()
-                          .key(Scv.toString("key2"))
-                          .val(Scv.toInt32(123))
-                          .build(),
+                      SCMapEntry.builder().key(Scv.toString("key2")).val(Scv.toInt32(123)).build(),
                     }))
             .build();
 

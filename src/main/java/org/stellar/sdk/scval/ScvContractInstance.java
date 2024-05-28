@@ -9,7 +9,7 @@ class ScvContractInstance {
   private static final SCValType TYPE = SCValType.SCV_CONTRACT_INSTANCE;
 
   static SCVal toSCVal(SCContractInstance value) {
-    return new SCVal.Builder().discriminant(TYPE).instance(value).build();
+    return SCVal.builder().discriminant(TYPE).instance(value).build();
   }
 
   static SCContractInstance fromSCVal(SCVal scVal) {

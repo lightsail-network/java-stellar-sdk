@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -20,24 +23,18 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ConfigUpgradeSet implements XdrElement {
-  public ConfigUpgradeSet() {}
-
   private ConfigSettingEntry[] updatedEntry;
-
-  public ConfigSettingEntry[] getUpdatedEntry() {
-    return this.updatedEntry;
-  }
-
-  public void setUpdatedEntry(ConfigSettingEntry[] value) {
-    this.updatedEntry = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, ConfigUpgradeSet encodedConfigUpgradeSet)
       throws IOException {
-    int updatedEntrysize = encodedConfigUpgradeSet.getUpdatedEntry().length;
-    stream.writeInt(updatedEntrysize);
-    for (int i = 0; i < updatedEntrysize; i++) {
+    int updatedEntrySize = encodedConfigUpgradeSet.getUpdatedEntry().length;
+    stream.writeInt(updatedEntrySize);
+    for (int i = 0; i < updatedEntrySize; i++) {
       ConfigSettingEntry.encode(stream, encodedConfigUpgradeSet.updatedEntry[i]);
     }
   }
@@ -48,27 +45,12 @@ public class ConfigUpgradeSet implements XdrElement {
 
   public static ConfigUpgradeSet decode(XdrDataInputStream stream) throws IOException {
     ConfigUpgradeSet decodedConfigUpgradeSet = new ConfigUpgradeSet();
-    int updatedEntrysize = stream.readInt();
-    decodedConfigUpgradeSet.updatedEntry = new ConfigSettingEntry[updatedEntrysize];
-    for (int i = 0; i < updatedEntrysize; i++) {
+    int updatedEntrySize = stream.readInt();
+    decodedConfigUpgradeSet.updatedEntry = new ConfigSettingEntry[updatedEntrySize];
+    for (int i = 0; i < updatedEntrySize; i++) {
       decodedConfigUpgradeSet.updatedEntry[i] = ConfigSettingEntry.decode(stream);
     }
     return decodedConfigUpgradeSet;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.updatedEntry);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ConfigUpgradeSet)) {
-      return false;
-    }
-
-    ConfigUpgradeSet other = (ConfigUpgradeSet) object;
-    return Arrays.equals(this.updatedEntry, other.updatedEntry);
   }
 
   @Override
@@ -93,20 +75,5 @@ public class ConfigUpgradeSet implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ConfigSettingEntry[] updatedEntry;
-
-    public Builder updatedEntry(ConfigSettingEntry[] updatedEntry) {
-      this.updatedEntry = updatedEntry;
-      return this;
-    }
-
-    public ConfigUpgradeSet build() {
-      ConfigUpgradeSet val = new ConfigUpgradeSet();
-      val.setUpdatedEntry(this.updatedEntry);
-      return val;
-    }
   }
 }

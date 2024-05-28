@@ -43,7 +43,7 @@ public class ExtendFootprintTTLOperation extends Operation {
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
     ExtendFootprintTTLOp op = new ExtendFootprintTTLOp();
-    op.setExt(new ExtensionPoint.Builder().discriminant(0).build());
+    op.setExt(ExtensionPoint.builder().discriminant(0).build());
     op.setExtendTo(new Uint32(new XdrUnsignedInteger(extendTo)));
 
     org.stellar.sdk.xdr.Operation.OperationBody body =

@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef Hash PoolID;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PoolID implements XdrElement {
   private Hash PoolID;
-
-  public PoolID() {}
-
-  public PoolID(Hash PoolID) {
-    this.PoolID = PoolID;
-  }
-
-  public Hash getPoolID() {
-    return this.PoolID;
-  }
-
-  public void setPoolID(Hash value) {
-    this.PoolID = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, PoolID encodedPoolID) throws IOException {
     Hash.encode(stream, encodedPoolID.PoolID);
@@ -47,21 +38,6 @@ public class PoolID implements XdrElement {
     PoolID decodedPoolID = new PoolID();
     decodedPoolID.PoolID = Hash.decode(stream);
     return decodedPoolID;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.PoolID);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof PoolID)) {
-      return false;
-    }
-
-    PoolID other = (PoolID) object;
-    return Objects.equals(this.PoolID, other.PoolID);
   }
 
   @Override

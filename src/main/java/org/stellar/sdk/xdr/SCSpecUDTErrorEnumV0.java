@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,48 +27,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecUDTErrorEnumV0 implements XdrElement {
-  public SCSpecUDTErrorEnumV0() {}
-
   private XdrString doc;
-
-  public XdrString getDoc() {
-    return this.doc;
-  }
-
-  public void setDoc(XdrString value) {
-    this.doc = value;
-  }
-
   private XdrString lib;
-
-  public XdrString getLib() {
-    return this.lib;
-  }
-
-  public void setLib(XdrString value) {
-    this.lib = value;
-  }
-
   private XdrString name;
-
-  public XdrString getName() {
-    return this.name;
-  }
-
-  public void setName(XdrString value) {
-    this.name = value;
-  }
-
   private SCSpecUDTErrorEnumCaseV0[] cases;
-
-  public SCSpecUDTErrorEnumCaseV0[] getCases() {
-    return this.cases;
-  }
-
-  public void setCases(SCSpecUDTErrorEnumCaseV0[] value) {
-    this.cases = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SCSpecUDTErrorEnumV0 encodedSCSpecUDTErrorEnumV0)
@@ -74,9 +43,9 @@ public class SCSpecUDTErrorEnumV0 implements XdrElement {
     encodedSCSpecUDTErrorEnumV0.doc.encode(stream);
     encodedSCSpecUDTErrorEnumV0.lib.encode(stream);
     encodedSCSpecUDTErrorEnumV0.name.encode(stream);
-    int casessize = encodedSCSpecUDTErrorEnumV0.getCases().length;
-    stream.writeInt(casessize);
-    for (int i = 0; i < casessize; i++) {
+    int casesSize = encodedSCSpecUDTErrorEnumV0.getCases().length;
+    stream.writeInt(casesSize);
+    for (int i = 0; i < casesSize; i++) {
       SCSpecUDTErrorEnumCaseV0.encode(stream, encodedSCSpecUDTErrorEnumV0.cases[i]);
     }
   }
@@ -90,30 +59,12 @@ public class SCSpecUDTErrorEnumV0 implements XdrElement {
     decodedSCSpecUDTErrorEnumV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTErrorEnumV0.lib = XdrString.decode(stream, 80);
     decodedSCSpecUDTErrorEnumV0.name = XdrString.decode(stream, 60);
-    int casessize = stream.readInt();
-    decodedSCSpecUDTErrorEnumV0.cases = new SCSpecUDTErrorEnumCaseV0[casessize];
-    for (int i = 0; i < casessize; i++) {
+    int casesSize = stream.readInt();
+    decodedSCSpecUDTErrorEnumV0.cases = new SCSpecUDTErrorEnumCaseV0[casesSize];
+    for (int i = 0; i < casesSize; i++) {
       decodedSCSpecUDTErrorEnumV0.cases[i] = SCSpecUDTErrorEnumCaseV0.decode(stream);
     }
     return decodedSCSpecUDTErrorEnumV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.doc, this.lib, this.name, Arrays.hashCode(this.cases));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecUDTErrorEnumV0)) {
-      return false;
-    }
-
-    SCSpecUDTErrorEnumV0 other = (SCSpecUDTErrorEnumV0) object;
-    return Objects.equals(this.doc, other.doc)
-        && Objects.equals(this.lib, other.lib)
-        && Objects.equals(this.name, other.name)
-        && Arrays.equals(this.cases, other.cases);
   }
 
   @Override
@@ -138,41 +89,5 @@ public class SCSpecUDTErrorEnumV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private XdrString doc;
-    private XdrString lib;
-    private XdrString name;
-    private SCSpecUDTErrorEnumCaseV0[] cases;
-
-    public Builder doc(XdrString doc) {
-      this.doc = doc;
-      return this;
-    }
-
-    public Builder lib(XdrString lib) {
-      this.lib = lib;
-      return this;
-    }
-
-    public Builder name(XdrString name) {
-      this.name = name;
-      return this;
-    }
-
-    public Builder cases(SCSpecUDTErrorEnumCaseV0[] cases) {
-      this.cases = cases;
-      return this;
-    }
-
-    public SCSpecUDTErrorEnumV0 build() {
-      SCSpecUDTErrorEnumV0 val = new SCSpecUDTErrorEnumV0();
-      val.setDoc(this.doc);
-      val.setLib(this.lib);
-      val.setName(this.name);
-      val.setCases(this.cases);
-      return val;
-    }
   }
 }

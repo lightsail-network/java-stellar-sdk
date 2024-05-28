@@ -168,10 +168,10 @@ public class Auth {
         new Uint32(new XdrUnsignedInteger(validUntilLedgerSeq)));
 
     HashIDPreimage preimage =
-        new HashIDPreimage.Builder()
+        HashIDPreimage.builder()
             .discriminant(EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION)
             .sorobanAuthorization(
-                new HashIDPreimage.HashIDPreimageSorobanAuthorization.Builder()
+                HashIDPreimage.HashIDPreimageSorobanAuthorization.builder()
                     .networkID(new Hash(network.getNetworkId()))
                     .nonce(addressCredentials.getNonce())
                     .invocation(clone.getRootInvocation())
@@ -278,12 +278,12 @@ public class Auth {
       Network network) {
     long nonce = new SecureRandom().nextLong();
     SorobanAuthorizationEntry entry =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(
-                new SorobanCredentials.Builder()
+                SorobanCredentials.builder()
                     .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
                     .address(
-                        new SorobanAddressCredentials.Builder()
+                        SorobanAddressCredentials.builder()
                             .address(new Address(publicKey).toSCAddress())
                             .nonce(new Int64(nonce))
                             .signatureExpirationLedger(

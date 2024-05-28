@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecTypeUDT implements XdrElement {
-  public SCSpecTypeUDT() {}
-
   private XdrString name;
-
-  public XdrString getName() {
-    return this.name;
-  }
-
-  public void setName(XdrString value) {
-    this.name = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeUDT encodedSCSpecTypeUDT)
       throws IOException {
@@ -47,21 +44,6 @@ public class SCSpecTypeUDT implements XdrElement {
     SCSpecTypeUDT decodedSCSpecTypeUDT = new SCSpecTypeUDT();
     decodedSCSpecTypeUDT.name = XdrString.decode(stream, 60);
     return decodedSCSpecTypeUDT;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.name);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecTypeUDT)) {
-      return false;
-    }
-
-    SCSpecTypeUDT other = (SCSpecTypeUDT) object;
-    return Objects.equals(this.name, other.name);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class SCSpecTypeUDT implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private XdrString name;
-
-    public Builder name(XdrString name) {
-      this.name = name;
-      return this;
-    }
-
-    public SCSpecTypeUDT build() {
-      SCSpecTypeUDT val = new SCSpecTypeUDT();
-      val.setName(this.name);
-      return val;
-    }
   }
 }

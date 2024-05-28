@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanAuthorizationEntry implements XdrElement {
-  public SorobanAuthorizationEntry() {}
-
   private SorobanCredentials credentials;
-
-  public SorobanCredentials getCredentials() {
-    return this.credentials;
-  }
-
-  public void setCredentials(SorobanCredentials value) {
-    this.credentials = value;
-  }
-
   private SorobanAuthorizedInvocation rootInvocation;
-
-  public SorobanAuthorizedInvocation getRootInvocation() {
-    return this.rootInvocation;
-  }
-
-  public void setRootInvocation(SorobanAuthorizedInvocation value) {
-    this.rootInvocation = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SorobanAuthorizationEntry encodedSorobanAuthorizationEntry)
@@ -61,22 +49,6 @@ public class SorobanAuthorizationEntry implements XdrElement {
     decodedSorobanAuthorizationEntry.credentials = SorobanCredentials.decode(stream);
     decodedSorobanAuthorizationEntry.rootInvocation = SorobanAuthorizedInvocation.decode(stream);
     return decodedSorobanAuthorizationEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.credentials, this.rootInvocation);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanAuthorizationEntry)) {
-      return false;
-    }
-
-    SorobanAuthorizationEntry other = (SorobanAuthorizationEntry) object;
-    return Objects.equals(this.credentials, other.credentials)
-        && Objects.equals(this.rootInvocation, other.rootInvocation);
   }
 
   @Override
@@ -101,27 +73,5 @@ public class SorobanAuthorizationEntry implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SorobanCredentials credentials;
-    private SorobanAuthorizedInvocation rootInvocation;
-
-    public Builder credentials(SorobanCredentials credentials) {
-      this.credentials = credentials;
-      return this;
-    }
-
-    public Builder rootInvocation(SorobanAuthorizedInvocation rootInvocation) {
-      this.rootInvocation = rootInvocation;
-      return this;
-    }
-
-    public SorobanAuthorizationEntry build() {
-      SorobanAuthorizationEntry val = new SorobanAuthorizationEntry();
-      val.setCredentials(this.credentials);
-      val.setRootInvocation(this.rootInvocation);
-      return val;
-    }
   }
 }

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,101 +31,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerEntryChange implements XdrElement {
-  public LedgerEntryChange() {}
-
-  LedgerEntryChangeType type;
-
-  public LedgerEntryChangeType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(LedgerEntryChangeType value) {
-    this.type = value;
-  }
-
+  private LedgerEntryChangeType discriminant;
   private LedgerEntry created;
-
-  public LedgerEntry getCreated() {
-    return this.created;
-  }
-
-  public void setCreated(LedgerEntry value) {
-    this.created = value;
-  }
-
   private LedgerEntry updated;
-
-  public LedgerEntry getUpdated() {
-    return this.updated;
-  }
-
-  public void setUpdated(LedgerEntry value) {
-    this.updated = value;
-  }
-
   private LedgerKey removed;
-
-  public LedgerKey getRemoved() {
-    return this.removed;
-  }
-
-  public void setRemoved(LedgerKey value) {
-    this.removed = value;
-  }
-
   private LedgerEntry state;
-
-  public LedgerEntry getState() {
-    return this.state;
-  }
-
-  public void setState(LedgerEntry value) {
-    this.state = value;
-  }
-
-  public static final class Builder {
-    private LedgerEntryChangeType discriminant;
-    private LedgerEntry created;
-    private LedgerEntry updated;
-    private LedgerKey removed;
-    private LedgerEntry state;
-
-    public Builder discriminant(LedgerEntryChangeType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder created(LedgerEntry created) {
-      this.created = created;
-      return this;
-    }
-
-    public Builder updated(LedgerEntry updated) {
-      this.updated = updated;
-      return this;
-    }
-
-    public Builder removed(LedgerKey removed) {
-      this.removed = removed;
-      return this;
-    }
-
-    public Builder state(LedgerEntry state) {
-      this.state = state;
-      return this;
-    }
-
-    public LedgerEntryChange build() {
-      LedgerEntryChange val = new LedgerEntryChange();
-      val.setDiscriminant(discriminant);
-      val.setCreated(this.created);
-      val.setUpdated(this.updated);
-      val.setRemoved(this.removed);
-      val.setState(this.state);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerEntryChange encodedLedgerEntryChange)
       throws IOException {
@@ -168,25 +86,6 @@ public class LedgerEntryChange implements XdrElement {
         break;
     }
     return decodedLedgerEntryChange;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.created, this.updated, this.removed, this.state, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerEntryChange)) {
-      return false;
-    }
-
-    LedgerEntryChange other = (LedgerEntryChange) object;
-    return Objects.equals(this.created, other.created)
-        && Objects.equals(this.updated, other.updated)
-        && Objects.equals(this.removed, other.removed)
-        && Objects.equals(this.state, other.state)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

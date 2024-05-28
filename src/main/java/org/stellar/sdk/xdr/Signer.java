@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Signer implements XdrElement {
-  public Signer() {}
-
   private SignerKey key;
-
-  public SignerKey getKey() {
-    return this.key;
-  }
-
-  public void setKey(SignerKey value) {
-    this.key = value;
-  }
-
   private Uint32 weight;
-
-  public Uint32 getWeight() {
-    return this.weight;
-  }
-
-  public void setWeight(Uint32 value) {
-    this.weight = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, Signer encodedSigner) throws IOException {
     SignerKey.encode(stream, encodedSigner.key);
@@ -59,21 +47,6 @@ public class Signer implements XdrElement {
     decodedSigner.key = SignerKey.decode(stream);
     decodedSigner.weight = Uint32.decode(stream);
     return decodedSigner;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.key, this.weight);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Signer)) {
-      return false;
-    }
-
-    Signer other = (Signer) object;
-    return Objects.equals(this.key, other.key) && Objects.equals(this.weight, other.weight);
   }
 
   @Override
@@ -98,27 +71,5 @@ public class Signer implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SignerKey key;
-    private Uint32 weight;
-
-    public Builder key(SignerKey key) {
-      this.key = key;
-      return this;
-    }
-
-    public Builder weight(Uint32 weight) {
-      this.weight = weight;
-      return this;
-    }
-
-    public Signer build() {
-      Signer val = new Signer();
-      val.setKey(this.key);
-      val.setWeight(this.weight);
-      return val;
-    }
   }
 }

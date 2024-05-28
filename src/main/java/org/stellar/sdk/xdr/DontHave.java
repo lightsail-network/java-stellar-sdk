@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class DontHave implements XdrElement {
-  public DontHave() {}
-
   private MessageType type;
-
-  public MessageType getType() {
-    return this.type;
-  }
-
-  public void setType(MessageType value) {
-    this.type = value;
-  }
-
   private Uint256 reqHash;
-
-  public Uint256 getReqHash() {
-    return this.reqHash;
-  }
-
-  public void setReqHash(Uint256 value) {
-    this.reqHash = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, DontHave encodedDontHave)
       throws IOException {
@@ -60,21 +48,6 @@ public class DontHave implements XdrElement {
     decodedDontHave.type = MessageType.decode(stream);
     decodedDontHave.reqHash = Uint256.decode(stream);
     return decodedDontHave;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.type, this.reqHash);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof DontHave)) {
-      return false;
-    }
-
-    DontHave other = (DontHave) object;
-    return Objects.equals(this.type, other.type) && Objects.equals(this.reqHash, other.reqHash);
   }
 
   @Override
@@ -99,27 +72,5 @@ public class DontHave implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private MessageType type;
-    private Uint256 reqHash;
-
-    public Builder type(MessageType type) {
-      this.type = type;
-      return this;
-    }
-
-    public Builder reqHash(Uint256 reqHash) {
-      this.reqHash = reqHash;
-      return this;
-    }
-
-    public DontHave build() {
-      DontHave val = new DontHave();
-      val.setType(this.type);
-      val.setReqHash(this.reqHash);
-      return val;
-    }
   }
 }

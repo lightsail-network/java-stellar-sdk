@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef PublicKey NodeID;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class NodeID implements XdrElement {
   private PublicKey NodeID;
-
-  public NodeID() {}
-
-  public NodeID(PublicKey NodeID) {
-    this.NodeID = NodeID;
-  }
-
-  public PublicKey getNodeID() {
-    return this.NodeID;
-  }
-
-  public void setNodeID(PublicKey value) {
-    this.NodeID = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, NodeID encodedNodeID) throws IOException {
     PublicKey.encode(stream, encodedNodeID.NodeID);
@@ -47,21 +38,6 @@ public class NodeID implements XdrElement {
     NodeID decodedNodeID = new NodeID();
     decodedNodeID.NodeID = PublicKey.decode(stream);
     return decodedNodeID;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.NodeID);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof NodeID)) {
-      return false;
-    }
-
-    NodeID other = (NodeID) object;
-    return Objects.equals(this.NodeID, other.NodeID);
   }
 
   @Override

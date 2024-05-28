@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,67 +31,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class MuxedAccount implements XdrElement {
-  public MuxedAccount() {}
-
-  CryptoKeyType type;
-
-  public CryptoKeyType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(CryptoKeyType value) {
-    this.type = value;
-  }
-
+  private CryptoKeyType discriminant;
   private Uint256 ed25519;
-
-  public Uint256 getEd25519() {
-    return this.ed25519;
-  }
-
-  public void setEd25519(Uint256 value) {
-    this.ed25519 = value;
-  }
-
   private MuxedAccountMed25519 med25519;
-
-  public MuxedAccountMed25519 getMed25519() {
-    return this.med25519;
-  }
-
-  public void setMed25519(MuxedAccountMed25519 value) {
-    this.med25519 = value;
-  }
-
-  public static final class Builder {
-    private CryptoKeyType discriminant;
-    private Uint256 ed25519;
-    private MuxedAccountMed25519 med25519;
-
-    public Builder discriminant(CryptoKeyType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder ed25519(Uint256 ed25519) {
-      this.ed25519 = ed25519;
-      return this;
-    }
-
-    public Builder med25519(MuxedAccountMed25519 med25519) {
-      this.med25519 = med25519;
-      return this;
-    }
-
-    public MuxedAccount build() {
-      MuxedAccount val = new MuxedAccount();
-      val.setDiscriminant(discriminant);
-      val.setEd25519(this.ed25519);
-      val.setMed25519(this.med25519);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, MuxedAccount encodedMuxedAccount)
       throws IOException {
@@ -122,23 +72,6 @@ public class MuxedAccount implements XdrElement {
         break;
     }
     return decodedMuxedAccount;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ed25519, this.med25519, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof MuxedAccount)) {
-      return false;
-    }
-
-    MuxedAccount other = (MuxedAccount) object;
-    return Objects.equals(this.ed25519, other.ed25519)
-        && Objects.equals(this.med25519, other.med25519)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override
@@ -176,28 +109,13 @@ public class MuxedAccount implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class MuxedAccountMed25519 implements XdrElement {
-    public MuxedAccountMed25519() {}
-
     private Uint64 id;
-
-    public Uint64 getId() {
-      return this.id;
-    }
-
-    public void setId(Uint64 value) {
-      this.id = value;
-    }
-
     private Uint256 ed25519;
-
-    public Uint256 getEd25519() {
-      return this.ed25519;
-    }
-
-    public void setEd25519(Uint256 value) {
-      this.ed25519 = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream, MuxedAccountMed25519 encodedMuxedAccountMed25519)
@@ -215,21 +133,6 @@ public class MuxedAccount implements XdrElement {
       decodedMuxedAccountMed25519.id = Uint64.decode(stream);
       decodedMuxedAccountMed25519.ed25519 = Uint256.decode(stream);
       return decodedMuxedAccountMed25519;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.id, this.ed25519);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof MuxedAccountMed25519)) {
-        return false;
-      }
-
-      MuxedAccountMed25519 other = (MuxedAccountMed25519) object;
-      return Objects.equals(this.id, other.id) && Objects.equals(this.ed25519, other.ed25519);
     }
 
     @Override
@@ -254,28 +157,6 @@ public class MuxedAccount implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
-    }
-
-    public static final class Builder {
-      private Uint64 id;
-      private Uint256 ed25519;
-
-      public Builder id(Uint64 id) {
-        this.id = id;
-        return this;
-      }
-
-      public Builder ed25519(Uint256 ed25519) {
-        this.ed25519 = ed25519;
-        return this;
-      }
-
-      public MuxedAccountMed25519 build() {
-        MuxedAccountMed25519 val = new MuxedAccountMed25519();
-        val.setId(this.id);
-        val.setEd25519(this.ed25519);
-        return val;
-      }
     }
   }
 }

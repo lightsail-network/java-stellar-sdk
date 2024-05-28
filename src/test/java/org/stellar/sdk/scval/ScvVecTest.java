@@ -16,7 +16,7 @@ public class ScvVecTest {
     value.add(Scv.toString("value1"));
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_VEC)
             .vec(
                 new org.stellar.sdk.xdr.SCVec(

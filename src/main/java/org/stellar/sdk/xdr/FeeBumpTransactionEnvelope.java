@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,36 +27,21 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class FeeBumpTransactionEnvelope implements XdrElement {
-  public FeeBumpTransactionEnvelope() {}
-
   private FeeBumpTransaction tx;
-
-  public FeeBumpTransaction getTx() {
-    return this.tx;
-  }
-
-  public void setTx(FeeBumpTransaction value) {
-    this.tx = value;
-  }
-
   private DecoratedSignature[] signatures;
-
-  public DecoratedSignature[] getSignatures() {
-    return this.signatures;
-  }
-
-  public void setSignatures(DecoratedSignature[] value) {
-    this.signatures = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, FeeBumpTransactionEnvelope encodedFeeBumpTransactionEnvelope)
       throws IOException {
     FeeBumpTransaction.encode(stream, encodedFeeBumpTransactionEnvelope.tx);
-    int signaturessize = encodedFeeBumpTransactionEnvelope.getSignatures().length;
-    stream.writeInt(signaturessize);
-    for (int i = 0; i < signaturessize; i++) {
+    int signaturesSize = encodedFeeBumpTransactionEnvelope.getSignatures().length;
+    stream.writeInt(signaturesSize);
+    for (int i = 0; i < signaturesSize; i++) {
       DecoratedSignature.encode(stream, encodedFeeBumpTransactionEnvelope.signatures[i]);
     }
   }
@@ -66,27 +53,12 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
   public static FeeBumpTransactionEnvelope decode(XdrDataInputStream stream) throws IOException {
     FeeBumpTransactionEnvelope decodedFeeBumpTransactionEnvelope = new FeeBumpTransactionEnvelope();
     decodedFeeBumpTransactionEnvelope.tx = FeeBumpTransaction.decode(stream);
-    int signaturessize = stream.readInt();
-    decodedFeeBumpTransactionEnvelope.signatures = new DecoratedSignature[signaturessize];
-    for (int i = 0; i < signaturessize; i++) {
+    int signaturesSize = stream.readInt();
+    decodedFeeBumpTransactionEnvelope.signatures = new DecoratedSignature[signaturesSize];
+    for (int i = 0; i < signaturesSize; i++) {
       decodedFeeBumpTransactionEnvelope.signatures[i] = DecoratedSignature.decode(stream);
     }
     return decodedFeeBumpTransactionEnvelope;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.tx, Arrays.hashCode(this.signatures));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof FeeBumpTransactionEnvelope)) {
-      return false;
-    }
-
-    FeeBumpTransactionEnvelope other = (FeeBumpTransactionEnvelope) object;
-    return Objects.equals(this.tx, other.tx) && Arrays.equals(this.signatures, other.signatures);
   }
 
   @Override
@@ -111,27 +83,5 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private FeeBumpTransaction tx;
-    private DecoratedSignature[] signatures;
-
-    public Builder tx(FeeBumpTransaction tx) {
-      this.tx = tx;
-      return this;
-    }
-
-    public Builder signatures(DecoratedSignature[] signatures) {
-      this.signatures = signatures;
-      return this;
-    }
-
-    public FeeBumpTransactionEnvelope build() {
-      FeeBumpTransactionEnvelope val = new FeeBumpTransactionEnvelope();
-      val.setTx(this.tx);
-      val.setSignatures(this.signatures);
-      return val;
-    }
   }
 }

@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,50 +26,26 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCPNomination implements XdrElement {
-  public SCPNomination() {}
-
   private Hash quorumSetHash;
-
-  public Hash getQuorumSetHash() {
-    return this.quorumSetHash;
-  }
-
-  public void setQuorumSetHash(Hash value) {
-    this.quorumSetHash = value;
-  }
-
   private Value[] votes;
-
-  public Value[] getVotes() {
-    return this.votes;
-  }
-
-  public void setVotes(Value[] value) {
-    this.votes = value;
-  }
-
   private Value[] accepted;
-
-  public Value[] getAccepted() {
-    return this.accepted;
-  }
-
-  public void setAccepted(Value[] value) {
-    this.accepted = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCPNomination encodedSCPNomination)
       throws IOException {
     Hash.encode(stream, encodedSCPNomination.quorumSetHash);
-    int votessize = encodedSCPNomination.getVotes().length;
-    stream.writeInt(votessize);
-    for (int i = 0; i < votessize; i++) {
+    int votesSize = encodedSCPNomination.getVotes().length;
+    stream.writeInt(votesSize);
+    for (int i = 0; i < votesSize; i++) {
       Value.encode(stream, encodedSCPNomination.votes[i]);
     }
-    int acceptedsize = encodedSCPNomination.getAccepted().length;
-    stream.writeInt(acceptedsize);
-    for (int i = 0; i < acceptedsize; i++) {
+    int acceptedSize = encodedSCPNomination.getAccepted().length;
+    stream.writeInt(acceptedSize);
+    for (int i = 0; i < acceptedSize; i++) {
       Value.encode(stream, encodedSCPNomination.accepted[i]);
     }
   }
@@ -79,35 +57,17 @@ public class SCPNomination implements XdrElement {
   public static SCPNomination decode(XdrDataInputStream stream) throws IOException {
     SCPNomination decodedSCPNomination = new SCPNomination();
     decodedSCPNomination.quorumSetHash = Hash.decode(stream);
-    int votessize = stream.readInt();
-    decodedSCPNomination.votes = new Value[votessize];
-    for (int i = 0; i < votessize; i++) {
+    int votesSize = stream.readInt();
+    decodedSCPNomination.votes = new Value[votesSize];
+    for (int i = 0; i < votesSize; i++) {
       decodedSCPNomination.votes[i] = Value.decode(stream);
     }
-    int acceptedsize = stream.readInt();
-    decodedSCPNomination.accepted = new Value[acceptedsize];
-    for (int i = 0; i < acceptedsize; i++) {
+    int acceptedSize = stream.readInt();
+    decodedSCPNomination.accepted = new Value[acceptedSize];
+    for (int i = 0; i < acceptedSize; i++) {
       decodedSCPNomination.accepted[i] = Value.decode(stream);
     }
     return decodedSCPNomination;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.quorumSetHash, Arrays.hashCode(this.votes), Arrays.hashCode(this.accepted));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCPNomination)) {
-      return false;
-    }
-
-    SCPNomination other = (SCPNomination) object;
-    return Objects.equals(this.quorumSetHash, other.quorumSetHash)
-        && Arrays.equals(this.votes, other.votes)
-        && Arrays.equals(this.accepted, other.accepted);
   }
 
   @Override
@@ -132,34 +92,5 @@ public class SCPNomination implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Hash quorumSetHash;
-    private Value[] votes;
-    private Value[] accepted;
-
-    public Builder quorumSetHash(Hash quorumSetHash) {
-      this.quorumSetHash = quorumSetHash;
-      return this;
-    }
-
-    public Builder votes(Value[] votes) {
-      this.votes = votes;
-      return this;
-    }
-
-    public Builder accepted(Value[] accepted) {
-      this.accepted = accepted;
-      return this;
-    }
-
-    public SCPNomination build() {
-      SCPNomination val = new SCPNomination();
-      val.setQuorumSetHash(this.quorumSetHash);
-      val.setVotes(this.votes);
-      val.setAccepted(this.accepted);
-      return val;
-    }
   }
 }

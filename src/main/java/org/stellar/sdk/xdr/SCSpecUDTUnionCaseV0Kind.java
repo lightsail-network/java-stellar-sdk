@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,16 +21,16 @@ import org.stellar.sdk.Base64Factory;
  */
 public enum SCSpecUDTUnionCaseV0Kind implements XdrElement {
   SC_SPEC_UDT_UNION_CASE_VOID_V0(0),
-  SC_SPEC_UDT_UNION_CASE_TUPLE_V0(1),
-  ;
-  private int mValue;
+  SC_SPEC_UDT_UNION_CASE_TUPLE_V0(1);
+
+  private final int value;
 
   SCSpecUDTUnionCaseV0Kind(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SCSpecUDTUnionCaseV0Kind decode(XdrDataInputStream stream) throws IOException {

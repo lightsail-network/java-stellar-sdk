@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,38 +26,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class StoredDebugTransactionSet implements XdrElement {
-  public StoredDebugTransactionSet() {}
-
   private StoredTransactionSet txSet;
-
-  public StoredTransactionSet getTxSet() {
-    return this.txSet;
-  }
-
-  public void setTxSet(StoredTransactionSet value) {
-    this.txSet = value;
-  }
-
   private Uint32 ledgerSeq;
-
-  public Uint32 getLedgerSeq() {
-    return this.ledgerSeq;
-  }
-
-  public void setLedgerSeq(Uint32 value) {
-    this.ledgerSeq = value;
-  }
-
   private StellarValue scpValue;
-
-  public StellarValue getScpValue() {
-    return this.scpValue;
-  }
-
-  public void setScpValue(StellarValue value) {
-    this.scpValue = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, StoredDebugTransactionSet encodedStoredDebugTransactionSet)
@@ -74,23 +53,6 @@ public class StoredDebugTransactionSet implements XdrElement {
     decodedStoredDebugTransactionSet.ledgerSeq = Uint32.decode(stream);
     decodedStoredDebugTransactionSet.scpValue = StellarValue.decode(stream);
     return decodedStoredDebugTransactionSet;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.txSet, this.ledgerSeq, this.scpValue);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof StoredDebugTransactionSet)) {
-      return false;
-    }
-
-    StoredDebugTransactionSet other = (StoredDebugTransactionSet) object;
-    return Objects.equals(this.txSet, other.txSet)
-        && Objects.equals(this.ledgerSeq, other.ledgerSeq)
-        && Objects.equals(this.scpValue, other.scpValue);
   }
 
   @Override
@@ -115,34 +77,5 @@ public class StoredDebugTransactionSet implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private StoredTransactionSet txSet;
-    private Uint32 ledgerSeq;
-    private StellarValue scpValue;
-
-    public Builder txSet(StoredTransactionSet txSet) {
-      this.txSet = txSet;
-      return this;
-    }
-
-    public Builder ledgerSeq(Uint32 ledgerSeq) {
-      this.ledgerSeq = ledgerSeq;
-      return this;
-    }
-
-    public Builder scpValue(StellarValue scpValue) {
-      this.scpValue = scpValue;
-      return this;
-    }
-
-    public StoredDebugTransactionSet build() {
-      StoredDebugTransactionSet val = new StoredDebugTransactionSet();
-      val.setTxSet(this.txSet);
-      val.setLedgerSeq(this.ledgerSeq);
-      val.setScpValue(this.scpValue);
-      return val;
-    }
   }
 }

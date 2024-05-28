@@ -15,7 +15,7 @@ public class ScvStringTest {
     String value = "hello";
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_STRING)
             .str(new SCString(new XdrString(value)))
             .build();
@@ -30,7 +30,7 @@ public class ScvStringTest {
     byte[] value = new byte[] {0, 1, 2, 3};
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_STRING)
             .str(new SCString(new XdrString(value)))
             .build();

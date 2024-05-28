@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef PublicKey AccountID;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountID implements XdrElement {
   private PublicKey AccountID;
-
-  public AccountID() {}
-
-  public AccountID(PublicKey AccountID) {
-    this.AccountID = AccountID;
-  }
-
-  public PublicKey getAccountID() {
-    return this.AccountID;
-  }
-
-  public void setAccountID(PublicKey value) {
-    this.AccountID = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, AccountID encodedAccountID)
       throws IOException {
@@ -48,21 +39,6 @@ public class AccountID implements XdrElement {
     AccountID decodedAccountID = new AccountID();
     decodedAccountID.AccountID = PublicKey.decode(stream);
     return decodedAccountID;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.AccountID);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AccountID)) {
-      return false;
-    }
-
-    AccountID other = (AccountID) object;
-    return Objects.equals(this.AccountID, other.AccountID);
   }
 
   @Override

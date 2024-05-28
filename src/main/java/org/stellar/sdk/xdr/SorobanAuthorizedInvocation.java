@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,36 +25,21 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanAuthorizedInvocation implements XdrElement {
-  public SorobanAuthorizedInvocation() {}
-
   private SorobanAuthorizedFunction function;
-
-  public SorobanAuthorizedFunction getFunction() {
-    return this.function;
-  }
-
-  public void setFunction(SorobanAuthorizedFunction value) {
-    this.function = value;
-  }
-
   private SorobanAuthorizedInvocation[] subInvocations;
-
-  public SorobanAuthorizedInvocation[] getSubInvocations() {
-    return this.subInvocations;
-  }
-
-  public void setSubInvocations(SorobanAuthorizedInvocation[] value) {
-    this.subInvocations = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SorobanAuthorizedInvocation encodedSorobanAuthorizedInvocation)
       throws IOException {
     SorobanAuthorizedFunction.encode(stream, encodedSorobanAuthorizedInvocation.function);
-    int subInvocationssize = encodedSorobanAuthorizedInvocation.getSubInvocations().length;
-    stream.writeInt(subInvocationssize);
-    for (int i = 0; i < subInvocationssize; i++) {
+    int subInvocationsSize = encodedSorobanAuthorizedInvocation.getSubInvocations().length;
+    stream.writeInt(subInvocationsSize);
+    for (int i = 0; i < subInvocationsSize; i++) {
       SorobanAuthorizedInvocation.encode(
           stream, encodedSorobanAuthorizedInvocation.subInvocations[i]);
     }
@@ -66,30 +53,14 @@ public class SorobanAuthorizedInvocation implements XdrElement {
     SorobanAuthorizedInvocation decodedSorobanAuthorizedInvocation =
         new SorobanAuthorizedInvocation();
     decodedSorobanAuthorizedInvocation.function = SorobanAuthorizedFunction.decode(stream);
-    int subInvocationssize = stream.readInt();
+    int subInvocationsSize = stream.readInt();
     decodedSorobanAuthorizedInvocation.subInvocations =
-        new SorobanAuthorizedInvocation[subInvocationssize];
-    for (int i = 0; i < subInvocationssize; i++) {
+        new SorobanAuthorizedInvocation[subInvocationsSize];
+    for (int i = 0; i < subInvocationsSize; i++) {
       decodedSorobanAuthorizedInvocation.subInvocations[i] =
           SorobanAuthorizedInvocation.decode(stream);
     }
     return decodedSorobanAuthorizedInvocation;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.function, Arrays.hashCode(this.subInvocations));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanAuthorizedInvocation)) {
-      return false;
-    }
-
-    SorobanAuthorizedInvocation other = (SorobanAuthorizedInvocation) object;
-    return Objects.equals(this.function, other.function)
-        && Arrays.equals(this.subInvocations, other.subInvocations);
   }
 
   @Override
@@ -114,27 +85,5 @@ public class SorobanAuthorizedInvocation implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SorobanAuthorizedFunction function;
-    private SorobanAuthorizedInvocation[] subInvocations;
-
-    public Builder function(SorobanAuthorizedFunction function) {
-      this.function = function;
-      return this;
-    }
-
-    public Builder subInvocations(SorobanAuthorizedInvocation[] subInvocations) {
-      this.subInvocations = subInvocations;
-      return this;
-    }
-
-    public SorobanAuthorizedInvocation build() {
-      SorobanAuthorizedInvocation val = new SorobanAuthorizedInvocation();
-      val.setFunction(this.function);
-      val.setSubInvocations(this.subInvocations);
-      return val;
-    }
   }
 }

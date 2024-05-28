@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -34,118 +36,17 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClaimPredicate implements XdrElement {
-  public ClaimPredicate() {}
-
-  ClaimPredicateType type;
-
-  public ClaimPredicateType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(ClaimPredicateType value) {
-    this.type = value;
-  }
-
+  private ClaimPredicateType discriminant;
   private ClaimPredicate[] andPredicates;
-
-  public ClaimPredicate[] getAndPredicates() {
-    return this.andPredicates;
-  }
-
-  public void setAndPredicates(ClaimPredicate[] value) {
-    this.andPredicates = value;
-  }
-
   private ClaimPredicate[] orPredicates;
-
-  public ClaimPredicate[] getOrPredicates() {
-    return this.orPredicates;
-  }
-
-  public void setOrPredicates(ClaimPredicate[] value) {
-    this.orPredicates = value;
-  }
-
   private ClaimPredicate notPredicate;
-
-  public ClaimPredicate getNotPredicate() {
-    return this.notPredicate;
-  }
-
-  public void setNotPredicate(ClaimPredicate value) {
-    this.notPredicate = value;
-  }
-
   private Int64 absBefore;
-
-  public Int64 getAbsBefore() {
-    return this.absBefore;
-  }
-
-  public void setAbsBefore(Int64 value) {
-    this.absBefore = value;
-  }
-
   private Int64 relBefore;
-
-  public Int64 getRelBefore() {
-    return this.relBefore;
-  }
-
-  public void setRelBefore(Int64 value) {
-    this.relBefore = value;
-  }
-
-  public static final class Builder {
-    private ClaimPredicateType discriminant;
-    private ClaimPredicate[] andPredicates;
-    private ClaimPredicate[] orPredicates;
-    private ClaimPredicate notPredicate;
-    private Int64 absBefore;
-    private Int64 relBefore;
-
-    public Builder discriminant(ClaimPredicateType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder andPredicates(ClaimPredicate[] andPredicates) {
-      this.andPredicates = andPredicates;
-      return this;
-    }
-
-    public Builder orPredicates(ClaimPredicate[] orPredicates) {
-      this.orPredicates = orPredicates;
-      return this;
-    }
-
-    public Builder notPredicate(ClaimPredicate notPredicate) {
-      this.notPredicate = notPredicate;
-      return this;
-    }
-
-    public Builder absBefore(Int64 absBefore) {
-      this.absBefore = absBefore;
-      return this;
-    }
-
-    public Builder relBefore(Int64 relBefore) {
-      this.relBefore = relBefore;
-      return this;
-    }
-
-    public ClaimPredicate build() {
-      ClaimPredicate val = new ClaimPredicate();
-      val.setDiscriminant(discriminant);
-      val.setAndPredicates(this.andPredicates);
-      val.setOrPredicates(this.orPredicates);
-      val.setNotPredicate(this.notPredicate);
-      val.setAbsBefore(this.absBefore);
-      val.setRelBefore(this.relBefore);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, ClaimPredicate encodedClaimPredicate)
       throws IOException {
@@ -156,16 +57,16 @@ public class ClaimPredicate implements XdrElement {
       case CLAIM_PREDICATE_UNCONDITIONAL:
         break;
       case CLAIM_PREDICATE_AND:
-        int andPredicatessize = encodedClaimPredicate.getAndPredicates().length;
-        stream.writeInt(andPredicatessize);
-        for (int i = 0; i < andPredicatessize; i++) {
+        int andPredicatesSize = encodedClaimPredicate.getAndPredicates().length;
+        stream.writeInt(andPredicatesSize);
+        for (int i = 0; i < andPredicatesSize; i++) {
           ClaimPredicate.encode(stream, encodedClaimPredicate.andPredicates[i]);
         }
         break;
       case CLAIM_PREDICATE_OR:
-        int orPredicatessize = encodedClaimPredicate.getOrPredicates().length;
-        stream.writeInt(orPredicatessize);
-        for (int i = 0; i < orPredicatessize; i++) {
+        int orPredicatesSize = encodedClaimPredicate.getOrPredicates().length;
+        stream.writeInt(orPredicatesSize);
+        for (int i = 0; i < orPredicatesSize; i++) {
           ClaimPredicate.encode(stream, encodedClaimPredicate.orPredicates[i]);
         }
         break;
@@ -198,16 +99,16 @@ public class ClaimPredicate implements XdrElement {
       case CLAIM_PREDICATE_UNCONDITIONAL:
         break;
       case CLAIM_PREDICATE_AND:
-        int andPredicatessize = stream.readInt();
-        decodedClaimPredicate.andPredicates = new ClaimPredicate[andPredicatessize];
-        for (int i = 0; i < andPredicatessize; i++) {
+        int andPredicatesSize = stream.readInt();
+        decodedClaimPredicate.andPredicates = new ClaimPredicate[andPredicatesSize];
+        for (int i = 0; i < andPredicatesSize; i++) {
           decodedClaimPredicate.andPredicates[i] = ClaimPredicate.decode(stream);
         }
         break;
       case CLAIM_PREDICATE_OR:
-        int orPredicatessize = stream.readInt();
-        decodedClaimPredicate.orPredicates = new ClaimPredicate[orPredicatessize];
-        for (int i = 0; i < orPredicatessize; i++) {
+        int orPredicatesSize = stream.readInt();
+        decodedClaimPredicate.orPredicates = new ClaimPredicate[orPredicatesSize];
+        for (int i = 0; i < orPredicatesSize; i++) {
           decodedClaimPredicate.orPredicates[i] = ClaimPredicate.decode(stream);
         }
         break;
@@ -225,32 +126,6 @@ public class ClaimPredicate implements XdrElement {
         break;
     }
     return decodedClaimPredicate;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        Arrays.hashCode(this.andPredicates),
-        Arrays.hashCode(this.orPredicates),
-        this.notPredicate,
-        this.absBefore,
-        this.relBefore,
-        this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClaimPredicate)) {
-      return false;
-    }
-
-    ClaimPredicate other = (ClaimPredicate) object;
-    return Arrays.equals(this.andPredicates, other.andPredicates)
-        && Arrays.equals(this.orPredicates, other.orPredicates)
-        && Objects.equals(this.notPredicate, other.notPredicate)
-        && Objects.equals(this.absBefore, other.absBefore)
-        && Objects.equals(this.relBefore, other.relBefore)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

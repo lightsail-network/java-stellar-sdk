@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -41,108 +44,21 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class StateArchivalSettings implements XdrElement {
-  public StateArchivalSettings() {}
-
   private Uint32 maxEntryTTL;
-
-  public Uint32 getMaxEntryTTL() {
-    return this.maxEntryTTL;
-  }
-
-  public void setMaxEntryTTL(Uint32 value) {
-    this.maxEntryTTL = value;
-  }
-
   private Uint32 minTemporaryTTL;
-
-  public Uint32 getMinTemporaryTTL() {
-    return this.minTemporaryTTL;
-  }
-
-  public void setMinTemporaryTTL(Uint32 value) {
-    this.minTemporaryTTL = value;
-  }
-
   private Uint32 minPersistentTTL;
-
-  public Uint32 getMinPersistentTTL() {
-    return this.minPersistentTTL;
-  }
-
-  public void setMinPersistentTTL(Uint32 value) {
-    this.minPersistentTTL = value;
-  }
-
   private Int64 persistentRentRateDenominator;
-
-  public Int64 getPersistentRentRateDenominator() {
-    return this.persistentRentRateDenominator;
-  }
-
-  public void setPersistentRentRateDenominator(Int64 value) {
-    this.persistentRentRateDenominator = value;
-  }
-
   private Int64 tempRentRateDenominator;
-
-  public Int64 getTempRentRateDenominator() {
-    return this.tempRentRateDenominator;
-  }
-
-  public void setTempRentRateDenominator(Int64 value) {
-    this.tempRentRateDenominator = value;
-  }
-
   private Uint32 maxEntriesToArchive;
-
-  public Uint32 getMaxEntriesToArchive() {
-    return this.maxEntriesToArchive;
-  }
-
-  public void setMaxEntriesToArchive(Uint32 value) {
-    this.maxEntriesToArchive = value;
-  }
-
   private Uint32 bucketListSizeWindowSampleSize;
-
-  public Uint32 getBucketListSizeWindowSampleSize() {
-    return this.bucketListSizeWindowSampleSize;
-  }
-
-  public void setBucketListSizeWindowSampleSize(Uint32 value) {
-    this.bucketListSizeWindowSampleSize = value;
-  }
-
   private Uint32 bucketListWindowSamplePeriod;
-
-  public Uint32 getBucketListWindowSamplePeriod() {
-    return this.bucketListWindowSamplePeriod;
-  }
-
-  public void setBucketListWindowSamplePeriod(Uint32 value) {
-    this.bucketListWindowSamplePeriod = value;
-  }
-
   private Uint32 evictionScanSize;
-
-  public Uint32 getEvictionScanSize() {
-    return this.evictionScanSize;
-  }
-
-  public void setEvictionScanSize(Uint32 value) {
-    this.evictionScanSize = value;
-  }
-
   private Uint32 startingEvictionScanLevel;
-
-  public Uint32 getStartingEvictionScanLevel() {
-    return this.startingEvictionScanLevel;
-  }
-
-  public void setStartingEvictionScanLevel(Uint32 value) {
-    this.startingEvictionScanLevel = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, StateArchivalSettings encodedStateArchivalSettings)
@@ -179,40 +95,6 @@ public class StateArchivalSettings implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.maxEntryTTL,
-        this.minTemporaryTTL,
-        this.minPersistentTTL,
-        this.persistentRentRateDenominator,
-        this.tempRentRateDenominator,
-        this.maxEntriesToArchive,
-        this.bucketListSizeWindowSampleSize,
-        this.bucketListWindowSamplePeriod,
-        this.evictionScanSize,
-        this.startingEvictionScanLevel);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof StateArchivalSettings)) {
-      return false;
-    }
-
-    StateArchivalSettings other = (StateArchivalSettings) object;
-    return Objects.equals(this.maxEntryTTL, other.maxEntryTTL)
-        && Objects.equals(this.minTemporaryTTL, other.minTemporaryTTL)
-        && Objects.equals(this.minPersistentTTL, other.minPersistentTTL)
-        && Objects.equals(this.persistentRentRateDenominator, other.persistentRentRateDenominator)
-        && Objects.equals(this.tempRentRateDenominator, other.tempRentRateDenominator)
-        && Objects.equals(this.maxEntriesToArchive, other.maxEntriesToArchive)
-        && Objects.equals(this.bucketListSizeWindowSampleSize, other.bucketListSizeWindowSampleSize)
-        && Objects.equals(this.bucketListWindowSamplePeriod, other.bucketListWindowSamplePeriod)
-        && Objects.equals(this.evictionScanSize, other.evictionScanSize)
-        && Objects.equals(this.startingEvictionScanLevel, other.startingEvictionScanLevel);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -234,83 +116,5 @@ public class StateArchivalSettings implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 maxEntryTTL;
-    private Uint32 minTemporaryTTL;
-    private Uint32 minPersistentTTL;
-    private Int64 persistentRentRateDenominator;
-    private Int64 tempRentRateDenominator;
-    private Uint32 maxEntriesToArchive;
-    private Uint32 bucketListSizeWindowSampleSize;
-    private Uint32 bucketListWindowSamplePeriod;
-    private Uint32 evictionScanSize;
-    private Uint32 startingEvictionScanLevel;
-
-    public Builder maxEntryTTL(Uint32 maxEntryTTL) {
-      this.maxEntryTTL = maxEntryTTL;
-      return this;
-    }
-
-    public Builder minTemporaryTTL(Uint32 minTemporaryTTL) {
-      this.minTemporaryTTL = minTemporaryTTL;
-      return this;
-    }
-
-    public Builder minPersistentTTL(Uint32 minPersistentTTL) {
-      this.minPersistentTTL = minPersistentTTL;
-      return this;
-    }
-
-    public Builder persistentRentRateDenominator(Int64 persistentRentRateDenominator) {
-      this.persistentRentRateDenominator = persistentRentRateDenominator;
-      return this;
-    }
-
-    public Builder tempRentRateDenominator(Int64 tempRentRateDenominator) {
-      this.tempRentRateDenominator = tempRentRateDenominator;
-      return this;
-    }
-
-    public Builder maxEntriesToArchive(Uint32 maxEntriesToArchive) {
-      this.maxEntriesToArchive = maxEntriesToArchive;
-      return this;
-    }
-
-    public Builder bucketListSizeWindowSampleSize(Uint32 bucketListSizeWindowSampleSize) {
-      this.bucketListSizeWindowSampleSize = bucketListSizeWindowSampleSize;
-      return this;
-    }
-
-    public Builder bucketListWindowSamplePeriod(Uint32 bucketListWindowSamplePeriod) {
-      this.bucketListWindowSamplePeriod = bucketListWindowSamplePeriod;
-      return this;
-    }
-
-    public Builder evictionScanSize(Uint32 evictionScanSize) {
-      this.evictionScanSize = evictionScanSize;
-      return this;
-    }
-
-    public Builder startingEvictionScanLevel(Uint32 startingEvictionScanLevel) {
-      this.startingEvictionScanLevel = startingEvictionScanLevel;
-      return this;
-    }
-
-    public StateArchivalSettings build() {
-      StateArchivalSettings val = new StateArchivalSettings();
-      val.setMaxEntryTTL(this.maxEntryTTL);
-      val.setMinTemporaryTTL(this.minTemporaryTTL);
-      val.setMinPersistentTTL(this.minPersistentTTL);
-      val.setPersistentRentRateDenominator(this.persistentRentRateDenominator);
-      val.setTempRentRateDenominator(this.tempRentRateDenominator);
-      val.setMaxEntriesToArchive(this.maxEntriesToArchive);
-      val.setBucketListSizeWindowSampleSize(this.bucketListSizeWindowSampleSize);
-      val.setBucketListWindowSamplePeriod(this.bucketListWindowSamplePeriod);
-      val.setEvictionScanSize(this.evictionScanSize);
-      val.setStartingEvictionScanLevel(this.startingEvictionScanLevel);
-      return val;
-    }
   }
 }

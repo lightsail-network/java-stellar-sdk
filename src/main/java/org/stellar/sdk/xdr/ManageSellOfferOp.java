@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,58 +30,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ManageSellOfferOp implements XdrElement {
-  public ManageSellOfferOp() {}
-
   private Asset selling;
-
-  public Asset getSelling() {
-    return this.selling;
-  }
-
-  public void setSelling(Asset value) {
-    this.selling = value;
-  }
-
   private Asset buying;
-
-  public Asset getBuying() {
-    return this.buying;
-  }
-
-  public void setBuying(Asset value) {
-    this.buying = value;
-  }
-
   private Int64 amount;
-
-  public Int64 getAmount() {
-    return this.amount;
-  }
-
-  public void setAmount(Int64 value) {
-    this.amount = value;
-  }
-
   private Price price;
-
-  public Price getPrice() {
-    return this.price;
-  }
-
-  public void setPrice(Price value) {
-    this.price = value;
-  }
-
   private Int64 offerID;
-
-  public Int64 getOfferID() {
-    return this.offerID;
-  }
-
-  public void setOfferID(Int64 value) {
-    this.offerID = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, ManageSellOfferOp encodedManageSellOfferOp)
       throws IOException {
@@ -104,25 +65,6 @@ public class ManageSellOfferOp implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.selling, this.buying, this.amount, this.price, this.offerID);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ManageSellOfferOp)) {
-      return false;
-    }
-
-    ManageSellOfferOp other = (ManageSellOfferOp) object;
-    return Objects.equals(this.selling, other.selling)
-        && Objects.equals(this.buying, other.buying)
-        && Objects.equals(this.amount, other.amount)
-        && Objects.equals(this.price, other.price)
-        && Objects.equals(this.offerID, other.offerID);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -144,48 +86,5 @@ public class ManageSellOfferOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Asset selling;
-    private Asset buying;
-    private Int64 amount;
-    private Price price;
-    private Int64 offerID;
-
-    public Builder selling(Asset selling) {
-      this.selling = selling;
-      return this;
-    }
-
-    public Builder buying(Asset buying) {
-      this.buying = buying;
-      return this;
-    }
-
-    public Builder amount(Int64 amount) {
-      this.amount = amount;
-      return this;
-    }
-
-    public Builder price(Price price) {
-      this.price = price;
-      return this;
-    }
-
-    public Builder offerID(Int64 offerID) {
-      this.offerID = offerID;
-      return this;
-    }
-
-    public ManageSellOfferOp build() {
-      ManageSellOfferOp val = new ManageSellOfferOp();
-      val.setSelling(this.selling);
-      val.setBuying(this.buying);
-      val.setAmount(this.amount);
-      val.setPrice(this.price);
-      val.setOfferID(this.offerID);
-      return val;
-    }
   }
 }

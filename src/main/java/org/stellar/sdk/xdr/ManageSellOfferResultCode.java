@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -55,16 +53,16 @@ public enum ManageSellOfferResultCode implements XdrElement {
   MANAGE_SELL_OFFER_SELL_NO_ISSUER(-9),
   MANAGE_SELL_OFFER_BUY_NO_ISSUER(-10),
   MANAGE_SELL_OFFER_NOT_FOUND(-11),
-  MANAGE_SELL_OFFER_LOW_RESERVE(-12),
-  ;
-  private int mValue;
+  MANAGE_SELL_OFFER_LOW_RESERVE(-12);
+
+  private final int value;
 
   ManageSellOfferResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ManageSellOfferResultCode decode(XdrDataInputStream stream) throws IOException {

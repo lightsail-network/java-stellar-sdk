@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AlphaNum12 implements XdrElement {
-  public AlphaNum12() {}
-
   private AssetCode12 assetCode;
-
-  public AssetCode12 getAssetCode() {
-    return this.assetCode;
-  }
-
-  public void setAssetCode(AssetCode12 value) {
-    this.assetCode = value;
-  }
-
   private AccountID issuer;
-
-  public AccountID getIssuer() {
-    return this.issuer;
-  }
-
-  public void setIssuer(AccountID value) {
-    this.issuer = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, AlphaNum12 encodedAlphaNum12)
       throws IOException {
@@ -60,22 +48,6 @@ public class AlphaNum12 implements XdrElement {
     decodedAlphaNum12.assetCode = AssetCode12.decode(stream);
     decodedAlphaNum12.issuer = AccountID.decode(stream);
     return decodedAlphaNum12;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.assetCode, this.issuer);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AlphaNum12)) {
-      return false;
-    }
-
-    AlphaNum12 other = (AlphaNum12) object;
-    return Objects.equals(this.assetCode, other.assetCode)
-        && Objects.equals(this.issuer, other.issuer);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class AlphaNum12 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private AssetCode12 assetCode;
-    private AccountID issuer;
-
-    public Builder assetCode(AssetCode12 assetCode) {
-      this.assetCode = assetCode;
-      return this;
-    }
-
-    public Builder issuer(AccountID issuer) {
-      this.issuer = issuer;
-      return this;
-    }
-
-    public AlphaNum12 build() {
-      AlphaNum12 val = new AlphaNum12();
-      val.setAssetCode(this.assetCode);
-      val.setIssuer(this.issuer);
-      return val;
-    }
   }
 }

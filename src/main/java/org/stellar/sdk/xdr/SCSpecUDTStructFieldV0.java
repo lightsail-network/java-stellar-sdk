@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,38 +26,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecUDTStructFieldV0 implements XdrElement {
-  public SCSpecUDTStructFieldV0() {}
-
   private XdrString doc;
-
-  public XdrString getDoc() {
-    return this.doc;
-  }
-
-  public void setDoc(XdrString value) {
-    this.doc = value;
-  }
-
   private XdrString name;
-
-  public XdrString getName() {
-    return this.name;
-  }
-
-  public void setName(XdrString value) {
-    this.name = value;
-  }
-
   private SCSpecTypeDef type;
-
-  public SCSpecTypeDef getType() {
-    return this.type;
-  }
-
-  public void setType(SCSpecTypeDef value) {
-    this.type = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SCSpecUDTStructFieldV0 encodedSCSpecUDTStructFieldV0)
@@ -74,23 +53,6 @@ public class SCSpecUDTStructFieldV0 implements XdrElement {
     decodedSCSpecUDTStructFieldV0.name = XdrString.decode(stream, 30);
     decodedSCSpecUDTStructFieldV0.type = SCSpecTypeDef.decode(stream);
     return decodedSCSpecUDTStructFieldV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.doc, this.name, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecUDTStructFieldV0)) {
-      return false;
-    }
-
-    SCSpecUDTStructFieldV0 other = (SCSpecUDTStructFieldV0) object;
-    return Objects.equals(this.doc, other.doc)
-        && Objects.equals(this.name, other.name)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override
@@ -115,34 +77,5 @@ public class SCSpecUDTStructFieldV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private XdrString doc;
-    private XdrString name;
-    private SCSpecTypeDef type;
-
-    public Builder doc(XdrString doc) {
-      this.doc = doc;
-      return this;
-    }
-
-    public Builder name(XdrString name) {
-      this.name = name;
-      return this;
-    }
-
-    public Builder type(SCSpecTypeDef type) {
-      this.type = type;
-      return this;
-    }
-
-    public SCSpecUDTStructFieldV0 build() {
-      SCSpecUDTStructFieldV0 val = new SCSpecUDTStructFieldV0();
-      val.setDoc(this.doc);
-      val.setName(this.name);
-      val.setType(this.type);
-      return val;
-    }
   }
 }

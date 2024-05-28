@@ -10,7 +10,7 @@ class ScvSymbol {
   private static final SCValType TYPE = SCValType.SCV_SYMBOL;
 
   static SCVal toSCVal(String value) {
-    return new SCVal.Builder().discriminant(TYPE).sym(new SCSymbol(new XdrString(value))).build();
+    return SCVal.builder().discriminant(TYPE).sym(new SCSymbol(new XdrString(value))).build();
   }
 
   static String fromSCVal(SCVal scVal) {

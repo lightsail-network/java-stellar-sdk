@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,27 +20,16 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque Thresholds[4];
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Thresholds implements XdrElement {
   private byte[] Thresholds;
 
-  public Thresholds() {}
-
-  public Thresholds(byte[] Thresholds) {
-    this.Thresholds = Thresholds;
-  }
-
-  public byte[] getThresholds() {
-    return this.Thresholds;
-  }
-
-  public void setThresholds(byte[] value) {
-    this.Thresholds = value;
-  }
-
   public static void encode(XdrDataOutputStream stream, Thresholds encodedThresholds)
       throws IOException {
-    int Thresholdssize = encodedThresholds.Thresholds.length;
-    stream.write(encodedThresholds.getThresholds(), 0, Thresholdssize);
+    int ThresholdsSize = encodedThresholds.Thresholds.length;
+    stream.write(encodedThresholds.getThresholds(), 0, ThresholdsSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -47,25 +38,10 @@ public class Thresholds implements XdrElement {
 
   public static Thresholds decode(XdrDataInputStream stream) throws IOException {
     Thresholds decodedThresholds = new Thresholds();
-    int Thresholdssize = 4;
-    decodedThresholds.Thresholds = new byte[Thresholdssize];
-    stream.read(decodedThresholds.Thresholds, 0, Thresholdssize);
+    int ThresholdsSize = 4;
+    decodedThresholds.Thresholds = new byte[ThresholdsSize];
+    stream.read(decodedThresholds.Thresholds, 0, ThresholdsSize);
     return decodedThresholds;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.Thresholds);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Thresholds)) {
-      return false;
-    }
-
-    Thresholds other = (Thresholds) object;
-    return Arrays.equals(this.Thresholds, other.Thresholds);
   }
 
   @Override

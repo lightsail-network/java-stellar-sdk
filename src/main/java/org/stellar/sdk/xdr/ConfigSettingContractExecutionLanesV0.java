@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,18 +25,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
-  public ConfigSettingContractExecutionLanesV0() {}
-
   private Uint32 ledgerMaxTxCount;
-
-  public Uint32 getLedgerMaxTxCount() {
-    return this.ledgerMaxTxCount;
-  }
-
-  public void setLedgerMaxTxCount(Uint32 value) {
-    this.ledgerMaxTxCount = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream,
@@ -52,21 +49,6 @@ public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
         new ConfigSettingContractExecutionLanesV0();
     decodedConfigSettingContractExecutionLanesV0.ledgerMaxTxCount = Uint32.decode(stream);
     return decodedConfigSettingContractExecutionLanesV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ledgerMaxTxCount);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ConfigSettingContractExecutionLanesV0)) {
-      return false;
-    }
-
-    ConfigSettingContractExecutionLanesV0 other = (ConfigSettingContractExecutionLanesV0) object;
-    return Objects.equals(this.ledgerMaxTxCount, other.ledgerMaxTxCount);
   }
 
   @Override
@@ -92,20 +74,5 @@ public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 ledgerMaxTxCount;
-
-    public Builder ledgerMaxTxCount(Uint32 ledgerMaxTxCount) {
-      this.ledgerMaxTxCount = ledgerMaxTxCount;
-      return this;
-    }
-
-    public ConfigSettingContractExecutionLanesV0 build() {
-      ConfigSettingContractExecutionLanesV0 val = new ConfigSettingContractExecutionLanesV0();
-      val.setLedgerMaxTxCount(this.ledgerMaxTxCount);
-      return val;
-    }
   }
 }

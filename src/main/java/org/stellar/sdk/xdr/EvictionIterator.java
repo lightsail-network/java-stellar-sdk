@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,38 +25,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class EvictionIterator implements XdrElement {
-  public EvictionIterator() {}
-
   private Uint32 bucketListLevel;
-
-  public Uint32 getBucketListLevel() {
-    return this.bucketListLevel;
-  }
-
-  public void setBucketListLevel(Uint32 value) {
-    this.bucketListLevel = value;
-  }
-
   private Boolean isCurrBucket;
-
-  public Boolean getIsCurrBucket() {
-    return this.isCurrBucket;
-  }
-
-  public void setIsCurrBucket(Boolean value) {
-    this.isCurrBucket = value;
-  }
-
   private Uint64 bucketFileOffset;
-
-  public Uint64 getBucketFileOffset() {
-    return this.bucketFileOffset;
-  }
-
-  public void setBucketFileOffset(Uint64 value) {
-    this.bucketFileOffset = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, EvictionIterator encodedEvictionIterator)
       throws IOException {
@@ -72,23 +51,6 @@ public class EvictionIterator implements XdrElement {
     decodedEvictionIterator.isCurrBucket = stream.readInt() == 1 ? true : false;
     decodedEvictionIterator.bucketFileOffset = Uint64.decode(stream);
     return decodedEvictionIterator;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.bucketListLevel, this.isCurrBucket, this.bucketFileOffset);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof EvictionIterator)) {
-      return false;
-    }
-
-    EvictionIterator other = (EvictionIterator) object;
-    return Objects.equals(this.bucketListLevel, other.bucketListLevel)
-        && Objects.equals(this.isCurrBucket, other.isCurrBucket)
-        && Objects.equals(this.bucketFileOffset, other.bucketFileOffset);
   }
 
   @Override
@@ -113,34 +75,5 @@ public class EvictionIterator implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 bucketListLevel;
-    private Boolean isCurrBucket;
-    private Uint64 bucketFileOffset;
-
-    public Builder bucketListLevel(Uint32 bucketListLevel) {
-      this.bucketListLevel = bucketListLevel;
-      return this;
-    }
-
-    public Builder isCurrBucket(Boolean isCurrBucket) {
-      this.isCurrBucket = isCurrBucket;
-      return this;
-    }
-
-    public Builder bucketFileOffset(Uint64 bucketFileOffset) {
-      this.bucketFileOffset = bucketFileOffset;
-      return this;
-    }
-
-    public EvictionIterator build() {
-      EvictionIterator val = new EvictionIterator();
-      val.setBucketListLevel(this.bucketListLevel);
-      val.setIsCurrBucket(this.isCurrBucket);
-      val.setBucketFileOffset(this.bucketFileOffset);
-      return val;
-    }
   }
 }

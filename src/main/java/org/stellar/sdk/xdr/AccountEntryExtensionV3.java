@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -29,38 +32,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AccountEntryExtensionV3 implements XdrElement {
-  public AccountEntryExtensionV3() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private Uint32 seqLedger;
-
-  public Uint32 getSeqLedger() {
-    return this.seqLedger;
-  }
-
-  public void setSeqLedger(Uint32 value) {
-    this.seqLedger = value;
-  }
-
   private TimePoint seqTime;
-
-  public TimePoint getSeqTime() {
-    return this.seqTime;
-  }
-
-  public void setSeqTime(TimePoint value) {
-    this.seqTime = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, AccountEntryExtensionV3 encodedAccountEntryExtensionV3)
@@ -80,23 +59,6 @@ public class AccountEntryExtensionV3 implements XdrElement {
     decodedAccountEntryExtensionV3.seqLedger = Uint32.decode(stream);
     decodedAccountEntryExtensionV3.seqTime = TimePoint.decode(stream);
     return decodedAccountEntryExtensionV3;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ext, this.seqLedger, this.seqTime);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AccountEntryExtensionV3)) {
-      return false;
-    }
-
-    AccountEntryExtensionV3 other = (AccountEntryExtensionV3) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.seqLedger, other.seqLedger)
-        && Objects.equals(this.seqTime, other.seqTime);
   }
 
   @Override
@@ -121,34 +83,5 @@ public class AccountEntryExtensionV3 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private Uint32 seqLedger;
-    private TimePoint seqTime;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder seqLedger(Uint32 seqLedger) {
-      this.seqLedger = seqLedger;
-      return this;
-    }
-
-    public Builder seqTime(TimePoint seqTime) {
-      this.seqTime = seqTime;
-      return this;
-    }
-
-    public AccountEntryExtensionV3 build() {
-      AccountEntryExtensionV3 val = new AccountEntryExtensionV3();
-      val.setExt(this.ext);
-      val.setSeqLedger(this.seqLedger);
-      val.setSeqTime(this.seqTime);
-      return val;
-    }
   }
 }

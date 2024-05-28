@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -26,84 +29,15 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClaimAtom implements XdrElement {
-  public ClaimAtom() {}
-
-  ClaimAtomType type;
-
-  public ClaimAtomType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(ClaimAtomType value) {
-    this.type = value;
-  }
-
+  private ClaimAtomType discriminant;
   private ClaimOfferAtomV0 v0;
-
-  public ClaimOfferAtomV0 getV0() {
-    return this.v0;
-  }
-
-  public void setV0(ClaimOfferAtomV0 value) {
-    this.v0 = value;
-  }
-
   private ClaimOfferAtom orderBook;
-
-  public ClaimOfferAtom getOrderBook() {
-    return this.orderBook;
-  }
-
-  public void setOrderBook(ClaimOfferAtom value) {
-    this.orderBook = value;
-  }
-
   private ClaimLiquidityAtom liquidityPool;
-
-  public ClaimLiquidityAtom getLiquidityPool() {
-    return this.liquidityPool;
-  }
-
-  public void setLiquidityPool(ClaimLiquidityAtom value) {
-    this.liquidityPool = value;
-  }
-
-  public static final class Builder {
-    private ClaimAtomType discriminant;
-    private ClaimOfferAtomV0 v0;
-    private ClaimOfferAtom orderBook;
-    private ClaimLiquidityAtom liquidityPool;
-
-    public Builder discriminant(ClaimAtomType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v0(ClaimOfferAtomV0 v0) {
-      this.v0 = v0;
-      return this;
-    }
-
-    public Builder orderBook(ClaimOfferAtom orderBook) {
-      this.orderBook = orderBook;
-      return this;
-    }
-
-    public Builder liquidityPool(ClaimLiquidityAtom liquidityPool) {
-      this.liquidityPool = liquidityPool;
-      return this;
-    }
-
-    public ClaimAtom build() {
-      ClaimAtom val = new ClaimAtom();
-      val.setDiscriminant(discriminant);
-      val.setV0(this.v0);
-      val.setOrderBook(this.orderBook);
-      val.setLiquidityPool(this.liquidityPool);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, ClaimAtom encodedClaimAtom)
       throws IOException {
@@ -143,24 +77,6 @@ public class ClaimAtom implements XdrElement {
         break;
     }
     return decodedClaimAtom;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v0, this.orderBook, this.liquidityPool, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClaimAtom)) {
-      return false;
-    }
-
-    ClaimAtom other = (ClaimAtom) object;
-    return Objects.equals(this.v0, other.v0)
-        && Objects.equals(this.orderBook, other.orderBook)
-        && Objects.equals(this.liquidityPool, other.liquidityPool)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

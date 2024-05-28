@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,61 +27,28 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecFunctionV0 implements XdrElement {
-  public SCSpecFunctionV0() {}
-
   private XdrString doc;
-
-  public XdrString getDoc() {
-    return this.doc;
-  }
-
-  public void setDoc(XdrString value) {
-    this.doc = value;
-  }
-
   private SCSymbol name;
-
-  public SCSymbol getName() {
-    return this.name;
-  }
-
-  public void setName(SCSymbol value) {
-    this.name = value;
-  }
-
   private SCSpecFunctionInputV0[] inputs;
-
-  public SCSpecFunctionInputV0[] getInputs() {
-    return this.inputs;
-  }
-
-  public void setInputs(SCSpecFunctionInputV0[] value) {
-    this.inputs = value;
-  }
-
   private SCSpecTypeDef[] outputs;
-
-  public SCSpecTypeDef[] getOutputs() {
-    return this.outputs;
-  }
-
-  public void setOutputs(SCSpecTypeDef[] value) {
-    this.outputs = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecFunctionV0 encodedSCSpecFunctionV0)
       throws IOException {
     encodedSCSpecFunctionV0.doc.encode(stream);
     SCSymbol.encode(stream, encodedSCSpecFunctionV0.name);
-    int inputssize = encodedSCSpecFunctionV0.getInputs().length;
-    stream.writeInt(inputssize);
-    for (int i = 0; i < inputssize; i++) {
+    int inputsSize = encodedSCSpecFunctionV0.getInputs().length;
+    stream.writeInt(inputsSize);
+    for (int i = 0; i < inputsSize; i++) {
       SCSpecFunctionInputV0.encode(stream, encodedSCSpecFunctionV0.inputs[i]);
     }
-    int outputssize = encodedSCSpecFunctionV0.getOutputs().length;
-    stream.writeInt(outputssize);
-    for (int i = 0; i < outputssize; i++) {
+    int outputsSize = encodedSCSpecFunctionV0.getOutputs().length;
+    stream.writeInt(outputsSize);
+    for (int i = 0; i < outputsSize; i++) {
       SCSpecTypeDef.encode(stream, encodedSCSpecFunctionV0.outputs[i]);
     }
   }
@@ -92,36 +61,17 @@ public class SCSpecFunctionV0 implements XdrElement {
     SCSpecFunctionV0 decodedSCSpecFunctionV0 = new SCSpecFunctionV0();
     decodedSCSpecFunctionV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecFunctionV0.name = SCSymbol.decode(stream);
-    int inputssize = stream.readInt();
-    decodedSCSpecFunctionV0.inputs = new SCSpecFunctionInputV0[inputssize];
-    for (int i = 0; i < inputssize; i++) {
+    int inputsSize = stream.readInt();
+    decodedSCSpecFunctionV0.inputs = new SCSpecFunctionInputV0[inputsSize];
+    for (int i = 0; i < inputsSize; i++) {
       decodedSCSpecFunctionV0.inputs[i] = SCSpecFunctionInputV0.decode(stream);
     }
-    int outputssize = stream.readInt();
-    decodedSCSpecFunctionV0.outputs = new SCSpecTypeDef[outputssize];
-    for (int i = 0; i < outputssize; i++) {
+    int outputsSize = stream.readInt();
+    decodedSCSpecFunctionV0.outputs = new SCSpecTypeDef[outputsSize];
+    for (int i = 0; i < outputsSize; i++) {
       decodedSCSpecFunctionV0.outputs[i] = SCSpecTypeDef.decode(stream);
     }
     return decodedSCSpecFunctionV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.doc, this.name, Arrays.hashCode(this.inputs), Arrays.hashCode(this.outputs));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecFunctionV0)) {
-      return false;
-    }
-
-    SCSpecFunctionV0 other = (SCSpecFunctionV0) object;
-    return Objects.equals(this.doc, other.doc)
-        && Objects.equals(this.name, other.name)
-        && Arrays.equals(this.inputs, other.inputs)
-        && Arrays.equals(this.outputs, other.outputs);
   }
 
   @Override
@@ -146,41 +96,5 @@ public class SCSpecFunctionV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private XdrString doc;
-    private SCSymbol name;
-    private SCSpecFunctionInputV0[] inputs;
-    private SCSpecTypeDef[] outputs;
-
-    public Builder doc(XdrString doc) {
-      this.doc = doc;
-      return this;
-    }
-
-    public Builder name(SCSymbol name) {
-      this.name = name;
-      return this;
-    }
-
-    public Builder inputs(SCSpecFunctionInputV0[] inputs) {
-      this.inputs = inputs;
-      return this;
-    }
-
-    public Builder outputs(SCSpecTypeDef[] outputs) {
-      this.outputs = outputs;
-      return this;
-    }
-
-    public SCSpecFunctionV0 build() {
-      SCSpecFunctionV0 val = new SCSpecFunctionV0();
-      val.setDoc(this.doc);
-      val.setName(this.name);
-      val.setInputs(this.inputs);
-      val.setOutputs(this.outputs);
-      return val;
-    }
   }
 }

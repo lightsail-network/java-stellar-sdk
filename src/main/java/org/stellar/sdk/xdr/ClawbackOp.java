@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,38 +26,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClawbackOp implements XdrElement {
-  public ClawbackOp() {}
-
   private Asset asset;
-
-  public Asset getAsset() {
-    return this.asset;
-  }
-
-  public void setAsset(Asset value) {
-    this.asset = value;
-  }
-
   private MuxedAccount from;
-
-  public MuxedAccount getFrom() {
-    return this.from;
-  }
-
-  public void setFrom(MuxedAccount value) {
-    this.from = value;
-  }
-
   private Int64 amount;
-
-  public Int64 getAmount() {
-    return this.amount;
-  }
-
-  public void setAmount(Int64 value) {
-    this.amount = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, ClawbackOp encodedClawbackOp)
       throws IOException {
@@ -73,23 +52,6 @@ public class ClawbackOp implements XdrElement {
     decodedClawbackOp.from = MuxedAccount.decode(stream);
     decodedClawbackOp.amount = Int64.decode(stream);
     return decodedClawbackOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.asset, this.from, this.amount);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClawbackOp)) {
-      return false;
-    }
-
-    ClawbackOp other = (ClawbackOp) object;
-    return Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.from, other.from)
-        && Objects.equals(this.amount, other.amount);
   }
 
   @Override
@@ -114,34 +76,5 @@ public class ClawbackOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Asset asset;
-    private MuxedAccount from;
-    private Int64 amount;
-
-    public Builder asset(Asset asset) {
-      this.asset = asset;
-      return this;
-    }
-
-    public Builder from(MuxedAccount from) {
-      this.from = from;
-      return this;
-    }
-
-    public Builder amount(Int64 amount) {
-      this.amount = amount;
-      return this;
-    }
-
-    public ClawbackOp build() {
-      ClawbackOp val = new ClawbackOp();
-      val.setAsset(this.asset);
-      val.setFrom(this.from);
-      val.setAmount(this.amount);
-      return val;
-    }
   }
 }

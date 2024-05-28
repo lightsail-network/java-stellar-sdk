@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,67 +31,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ContractIDPreimage implements XdrElement {
-  public ContractIDPreimage() {}
-
-  ContractIDPreimageType type;
-
-  public ContractIDPreimageType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(ContractIDPreimageType value) {
-    this.type = value;
-  }
-
+  private ContractIDPreimageType discriminant;
   private ContractIDPreimageFromAddress fromAddress;
-
-  public ContractIDPreimageFromAddress getFromAddress() {
-    return this.fromAddress;
-  }
-
-  public void setFromAddress(ContractIDPreimageFromAddress value) {
-    this.fromAddress = value;
-  }
-
   private Asset fromAsset;
-
-  public Asset getFromAsset() {
-    return this.fromAsset;
-  }
-
-  public void setFromAsset(Asset value) {
-    this.fromAsset = value;
-  }
-
-  public static final class Builder {
-    private ContractIDPreimageType discriminant;
-    private ContractIDPreimageFromAddress fromAddress;
-    private Asset fromAsset;
-
-    public Builder discriminant(ContractIDPreimageType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder fromAddress(ContractIDPreimageFromAddress fromAddress) {
-      this.fromAddress = fromAddress;
-      return this;
-    }
-
-    public Builder fromAsset(Asset fromAsset) {
-      this.fromAsset = fromAsset;
-      return this;
-    }
-
-    public ContractIDPreimage build() {
-      ContractIDPreimage val = new ContractIDPreimage();
-      val.setDiscriminant(discriminant);
-      val.setFromAddress(this.fromAddress);
-      val.setFromAsset(this.fromAsset);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ContractIDPreimage encodedContractIDPreimage) throws IOException {
@@ -122,23 +72,6 @@ public class ContractIDPreimage implements XdrElement {
         break;
     }
     return decodedContractIDPreimage;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.fromAddress, this.fromAsset, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ContractIDPreimage)) {
-      return false;
-    }
-
-    ContractIDPreimage other = (ContractIDPreimage) object;
-    return Objects.equals(this.fromAddress, other.fromAddress)
-        && Objects.equals(this.fromAsset, other.fromAsset)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override
@@ -176,28 +109,13 @@ public class ContractIDPreimage implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class ContractIDPreimageFromAddress implements XdrElement {
-    public ContractIDPreimageFromAddress() {}
-
     private SCAddress address;
-
-    public SCAddress getAddress() {
-      return this.address;
-    }
-
-    public void setAddress(SCAddress value) {
-      this.address = value;
-    }
-
     private Uint256 salt;
-
-    public Uint256 getSalt() {
-      return this.salt;
-    }
-
-    public void setSalt(Uint256 value) {
-      this.salt = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -218,21 +136,6 @@ public class ContractIDPreimage implements XdrElement {
       decodedContractIDPreimageFromAddress.address = SCAddress.decode(stream);
       decodedContractIDPreimageFromAddress.salt = Uint256.decode(stream);
       return decodedContractIDPreimageFromAddress;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.address, this.salt);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof ContractIDPreimageFromAddress)) {
-        return false;
-      }
-
-      ContractIDPreimageFromAddress other = (ContractIDPreimageFromAddress) object;
-      return Objects.equals(this.address, other.address) && Objects.equals(this.salt, other.salt);
     }
 
     @Override
@@ -257,28 +160,6 @@ public class ContractIDPreimage implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
-    }
-
-    public static final class Builder {
-      private SCAddress address;
-      private Uint256 salt;
-
-      public Builder address(SCAddress address) {
-        this.address = address;
-        return this;
-      }
-
-      public Builder salt(Uint256 salt) {
-        this.salt = salt;
-        return this;
-      }
-
-      public ContractIDPreimageFromAddress build() {
-        ContractIDPreimageFromAddress val = new ContractIDPreimageFromAddress();
-        val.setAddress(this.address);
-        val.setSalt(this.salt);
-        return val;
-      }
     }
   }
 }

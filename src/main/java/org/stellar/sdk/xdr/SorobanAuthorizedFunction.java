@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,67 +27,14 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanAuthorizedFunction implements XdrElement {
-  public SorobanAuthorizedFunction() {}
-
-  SorobanAuthorizedFunctionType type;
-
-  public SorobanAuthorizedFunctionType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(SorobanAuthorizedFunctionType value) {
-    this.type = value;
-  }
-
+  private SorobanAuthorizedFunctionType discriminant;
   private InvokeContractArgs contractFn;
-
-  public InvokeContractArgs getContractFn() {
-    return this.contractFn;
-  }
-
-  public void setContractFn(InvokeContractArgs value) {
-    this.contractFn = value;
-  }
-
   private CreateContractArgs createContractHostFn;
-
-  public CreateContractArgs getCreateContractHostFn() {
-    return this.createContractHostFn;
-  }
-
-  public void setCreateContractHostFn(CreateContractArgs value) {
-    this.createContractHostFn = value;
-  }
-
-  public static final class Builder {
-    private SorobanAuthorizedFunctionType discriminant;
-    private InvokeContractArgs contractFn;
-    private CreateContractArgs createContractHostFn;
-
-    public Builder discriminant(SorobanAuthorizedFunctionType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder contractFn(InvokeContractArgs contractFn) {
-      this.contractFn = contractFn;
-      return this;
-    }
-
-    public Builder createContractHostFn(CreateContractArgs createContractHostFn) {
-      this.createContractHostFn = createContractHostFn;
-      return this;
-    }
-
-    public SorobanAuthorizedFunction build() {
-      SorobanAuthorizedFunction val = new SorobanAuthorizedFunction();
-      val.setDiscriminant(discriminant);
-      val.setContractFn(this.contractFn);
-      val.setCreateContractHostFn(this.createContractHostFn);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SorobanAuthorizedFunction encodedSorobanAuthorizedFunction)
@@ -119,23 +69,6 @@ public class SorobanAuthorizedFunction implements XdrElement {
         break;
     }
     return decodedSorobanAuthorizedFunction;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.contractFn, this.createContractHostFn, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanAuthorizedFunction)) {
-      return false;
-    }
-
-    SorobanAuthorizedFunction other = (SorobanAuthorizedFunction) object;
-    return Objects.equals(this.contractFn, other.contractFn)
-        && Objects.equals(this.createContractHostFn, other.createContractHostFn)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

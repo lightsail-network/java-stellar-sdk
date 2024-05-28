@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,27 +20,16 @@ import org.stellar.sdk.Base64Factory;
  * typedef opaque SCBytes&lt;&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SCBytes implements XdrElement {
   private byte[] SCBytes;
 
-  public SCBytes() {}
-
-  public SCBytes(byte[] SCBytes) {
-    this.SCBytes = SCBytes;
-  }
-
-  public byte[] getSCBytes() {
-    return this.SCBytes;
-  }
-
-  public void setSCBytes(byte[] value) {
-    this.SCBytes = value;
-  }
-
   public static void encode(XdrDataOutputStream stream, SCBytes encodedSCBytes) throws IOException {
-    int SCBytessize = encodedSCBytes.SCBytes.length;
-    stream.writeInt(SCBytessize);
-    stream.write(encodedSCBytes.getSCBytes(), 0, SCBytessize);
+    int SCBytesSize = encodedSCBytes.SCBytes.length;
+    stream.writeInt(SCBytesSize);
+    stream.write(encodedSCBytes.getSCBytes(), 0, SCBytesSize);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -47,25 +38,10 @@ public class SCBytes implements XdrElement {
 
   public static SCBytes decode(XdrDataInputStream stream) throws IOException {
     SCBytes decodedSCBytes = new SCBytes();
-    int SCBytessize = stream.readInt();
-    decodedSCBytes.SCBytes = new byte[SCBytessize];
-    stream.read(decodedSCBytes.SCBytes, 0, SCBytessize);
+    int SCBytesSize = stream.readInt();
+    decodedSCBytes.SCBytes = new byte[SCBytesSize];
+    stream.read(decodedSCBytes.SCBytes, 0, SCBytesSize);
     return decodedSCBytes;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.SCBytes);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCBytes)) {
-      return false;
-    }
-
-    SCBytes other = (SCBytes) object;
-    return Arrays.equals(this.SCBytes, other.SCBytes);
   }
 
   @Override

@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,22 +20,11 @@ import org.stellar.sdk.Base64Factory;
  * typedef string SCString&lt;&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SCString implements XdrElement {
   private XdrString SCString;
-
-  public SCString() {}
-
-  public SCString(XdrString SCString) {
-    this.SCString = SCString;
-  }
-
-  public XdrString getSCString() {
-    return this.SCString;
-  }
-
-  public void setSCString(XdrString value) {
-    this.SCString = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCString encodedSCString)
       throws IOException {
@@ -48,21 +39,6 @@ public class SCString implements XdrElement {
     SCString decodedSCString = new SCString();
     decodedSCString.SCString = XdrString.decode(stream, Integer.MAX_VALUE);
     return decodedSCString;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.SCString);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCString)) {
-      return false;
-    }
-
-    SCString other = (SCString) object;
-    return Objects.equals(this.SCString, other.SCString);
   }
 
   @Override

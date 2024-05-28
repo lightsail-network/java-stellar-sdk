@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,39 +25,24 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerFootprint implements XdrElement {
-  public LedgerFootprint() {}
-
   private LedgerKey[] readOnly;
-
-  public LedgerKey[] getReadOnly() {
-    return this.readOnly;
-  }
-
-  public void setReadOnly(LedgerKey[] value) {
-    this.readOnly = value;
-  }
-
   private LedgerKey[] readWrite;
-
-  public LedgerKey[] getReadWrite() {
-    return this.readWrite;
-  }
-
-  public void setReadWrite(LedgerKey[] value) {
-    this.readWrite = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerFootprint encodedLedgerFootprint)
       throws IOException {
-    int readOnlysize = encodedLedgerFootprint.getReadOnly().length;
-    stream.writeInt(readOnlysize);
-    for (int i = 0; i < readOnlysize; i++) {
+    int readOnlySize = encodedLedgerFootprint.getReadOnly().length;
+    stream.writeInt(readOnlySize);
+    for (int i = 0; i < readOnlySize; i++) {
       LedgerKey.encode(stream, encodedLedgerFootprint.readOnly[i]);
     }
-    int readWritesize = encodedLedgerFootprint.getReadWrite().length;
-    stream.writeInt(readWritesize);
-    for (int i = 0; i < readWritesize; i++) {
+    int readWriteSize = encodedLedgerFootprint.getReadWrite().length;
+    stream.writeInt(readWriteSize);
+    for (int i = 0; i < readWriteSize; i++) {
       LedgerKey.encode(stream, encodedLedgerFootprint.readWrite[i]);
     }
   }
@@ -66,33 +53,17 @@ public class LedgerFootprint implements XdrElement {
 
   public static LedgerFootprint decode(XdrDataInputStream stream) throws IOException {
     LedgerFootprint decodedLedgerFootprint = new LedgerFootprint();
-    int readOnlysize = stream.readInt();
-    decodedLedgerFootprint.readOnly = new LedgerKey[readOnlysize];
-    for (int i = 0; i < readOnlysize; i++) {
+    int readOnlySize = stream.readInt();
+    decodedLedgerFootprint.readOnly = new LedgerKey[readOnlySize];
+    for (int i = 0; i < readOnlySize; i++) {
       decodedLedgerFootprint.readOnly[i] = LedgerKey.decode(stream);
     }
-    int readWritesize = stream.readInt();
-    decodedLedgerFootprint.readWrite = new LedgerKey[readWritesize];
-    for (int i = 0; i < readWritesize; i++) {
+    int readWriteSize = stream.readInt();
+    decodedLedgerFootprint.readWrite = new LedgerKey[readWriteSize];
+    for (int i = 0; i < readWriteSize; i++) {
       decodedLedgerFootprint.readWrite[i] = LedgerKey.decode(stream);
     }
     return decodedLedgerFootprint;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(Arrays.hashCode(this.readOnly), Arrays.hashCode(this.readWrite));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerFootprint)) {
-      return false;
-    }
-
-    LedgerFootprint other = (LedgerFootprint) object;
-    return Arrays.equals(this.readOnly, other.readOnly)
-        && Arrays.equals(this.readWrite, other.readWrite);
   }
 
   @Override
@@ -117,27 +88,5 @@ public class LedgerFootprint implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerKey[] readOnly;
-    private LedgerKey[] readWrite;
-
-    public Builder readOnly(LedgerKey[] readOnly) {
-      this.readOnly = readOnly;
-      return this;
-    }
-
-    public Builder readWrite(LedgerKey[] readWrite) {
-      this.readWrite = readWrite;
-      return this;
-    }
-
-    public LedgerFootprint build() {
-      LedgerFootprint val = new LedgerFootprint();
-      val.setReadOnly(this.readOnly);
-      val.setReadWrite(this.readWrite);
-      return val;
-    }
   }
 }

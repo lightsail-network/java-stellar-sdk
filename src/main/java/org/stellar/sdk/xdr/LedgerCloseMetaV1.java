@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -48,130 +50,52 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerCloseMetaV1 implements XdrElement {
-  public LedgerCloseMetaV1() {}
-
   private LedgerCloseMetaExt ext;
-
-  public LedgerCloseMetaExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(LedgerCloseMetaExt value) {
-    this.ext = value;
-  }
-
   private LedgerHeaderHistoryEntry ledgerHeader;
-
-  public LedgerHeaderHistoryEntry getLedgerHeader() {
-    return this.ledgerHeader;
-  }
-
-  public void setLedgerHeader(LedgerHeaderHistoryEntry value) {
-    this.ledgerHeader = value;
-  }
-
   private GeneralizedTransactionSet txSet;
-
-  public GeneralizedTransactionSet getTxSet() {
-    return this.txSet;
-  }
-
-  public void setTxSet(GeneralizedTransactionSet value) {
-    this.txSet = value;
-  }
-
   private TransactionResultMeta[] txProcessing;
-
-  public TransactionResultMeta[] getTxProcessing() {
-    return this.txProcessing;
-  }
-
-  public void setTxProcessing(TransactionResultMeta[] value) {
-    this.txProcessing = value;
-  }
-
   private UpgradeEntryMeta[] upgradesProcessing;
-
-  public UpgradeEntryMeta[] getUpgradesProcessing() {
-    return this.upgradesProcessing;
-  }
-
-  public void setUpgradesProcessing(UpgradeEntryMeta[] value) {
-    this.upgradesProcessing = value;
-  }
-
   private SCPHistoryEntry[] scpInfo;
-
-  public SCPHistoryEntry[] getScpInfo() {
-    return this.scpInfo;
-  }
-
-  public void setScpInfo(SCPHistoryEntry[] value) {
-    this.scpInfo = value;
-  }
-
   private Uint64 totalByteSizeOfBucketList;
-
-  public Uint64 getTotalByteSizeOfBucketList() {
-    return this.totalByteSizeOfBucketList;
-  }
-
-  public void setTotalByteSizeOfBucketList(Uint64 value) {
-    this.totalByteSizeOfBucketList = value;
-  }
-
   private LedgerKey[] evictedTemporaryLedgerKeys;
-
-  public LedgerKey[] getEvictedTemporaryLedgerKeys() {
-    return this.evictedTemporaryLedgerKeys;
-  }
-
-  public void setEvictedTemporaryLedgerKeys(LedgerKey[] value) {
-    this.evictedTemporaryLedgerKeys = value;
-  }
-
   private LedgerEntry[] evictedPersistentLedgerEntries;
-
-  public LedgerEntry[] getEvictedPersistentLedgerEntries() {
-    return this.evictedPersistentLedgerEntries;
-  }
-
-  public void setEvictedPersistentLedgerEntries(LedgerEntry[] value) {
-    this.evictedPersistentLedgerEntries = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, LedgerCloseMetaV1 encodedLedgerCloseMetaV1)
       throws IOException {
     LedgerCloseMetaExt.encode(stream, encodedLedgerCloseMetaV1.ext);
     LedgerHeaderHistoryEntry.encode(stream, encodedLedgerCloseMetaV1.ledgerHeader);
     GeneralizedTransactionSet.encode(stream, encodedLedgerCloseMetaV1.txSet);
-    int txProcessingsize = encodedLedgerCloseMetaV1.getTxProcessing().length;
-    stream.writeInt(txProcessingsize);
-    for (int i = 0; i < txProcessingsize; i++) {
+    int txProcessingSize = encodedLedgerCloseMetaV1.getTxProcessing().length;
+    stream.writeInt(txProcessingSize);
+    for (int i = 0; i < txProcessingSize; i++) {
       TransactionResultMeta.encode(stream, encodedLedgerCloseMetaV1.txProcessing[i]);
     }
-    int upgradesProcessingsize = encodedLedgerCloseMetaV1.getUpgradesProcessing().length;
-    stream.writeInt(upgradesProcessingsize);
-    for (int i = 0; i < upgradesProcessingsize; i++) {
+    int upgradesProcessingSize = encodedLedgerCloseMetaV1.getUpgradesProcessing().length;
+    stream.writeInt(upgradesProcessingSize);
+    for (int i = 0; i < upgradesProcessingSize; i++) {
       UpgradeEntryMeta.encode(stream, encodedLedgerCloseMetaV1.upgradesProcessing[i]);
     }
-    int scpInfosize = encodedLedgerCloseMetaV1.getScpInfo().length;
-    stream.writeInt(scpInfosize);
-    for (int i = 0; i < scpInfosize; i++) {
+    int scpInfoSize = encodedLedgerCloseMetaV1.getScpInfo().length;
+    stream.writeInt(scpInfoSize);
+    for (int i = 0; i < scpInfoSize; i++) {
       SCPHistoryEntry.encode(stream, encodedLedgerCloseMetaV1.scpInfo[i]);
     }
     Uint64.encode(stream, encodedLedgerCloseMetaV1.totalByteSizeOfBucketList);
-    int evictedTemporaryLedgerKeyssize =
+    int evictedTemporaryLedgerKeysSize =
         encodedLedgerCloseMetaV1.getEvictedTemporaryLedgerKeys().length;
-    stream.writeInt(evictedTemporaryLedgerKeyssize);
-    for (int i = 0; i < evictedTemporaryLedgerKeyssize; i++) {
+    stream.writeInt(evictedTemporaryLedgerKeysSize);
+    for (int i = 0; i < evictedTemporaryLedgerKeysSize; i++) {
       LedgerKey.encode(stream, encodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys[i]);
     }
-    int evictedPersistentLedgerEntriessize =
+    int evictedPersistentLedgerEntriesSize =
         encodedLedgerCloseMetaV1.getEvictedPersistentLedgerEntries().length;
-    stream.writeInt(evictedPersistentLedgerEntriessize);
-    for (int i = 0; i < evictedPersistentLedgerEntriessize; i++) {
+    stream.writeInt(evictedPersistentLedgerEntriesSize);
+    for (int i = 0; i < evictedPersistentLedgerEntriesSize; i++) {
       LedgerEntry.encode(stream, encodedLedgerCloseMetaV1.evictedPersistentLedgerEntries[i]);
     }
   }
@@ -185,67 +109,35 @@ public class LedgerCloseMetaV1 implements XdrElement {
     decodedLedgerCloseMetaV1.ext = LedgerCloseMetaExt.decode(stream);
     decodedLedgerCloseMetaV1.ledgerHeader = LedgerHeaderHistoryEntry.decode(stream);
     decodedLedgerCloseMetaV1.txSet = GeneralizedTransactionSet.decode(stream);
-    int txProcessingsize = stream.readInt();
-    decodedLedgerCloseMetaV1.txProcessing = new TransactionResultMeta[txProcessingsize];
-    for (int i = 0; i < txProcessingsize; i++) {
+    int txProcessingSize = stream.readInt();
+    decodedLedgerCloseMetaV1.txProcessing = new TransactionResultMeta[txProcessingSize];
+    for (int i = 0; i < txProcessingSize; i++) {
       decodedLedgerCloseMetaV1.txProcessing[i] = TransactionResultMeta.decode(stream);
     }
-    int upgradesProcessingsize = stream.readInt();
-    decodedLedgerCloseMetaV1.upgradesProcessing = new UpgradeEntryMeta[upgradesProcessingsize];
-    for (int i = 0; i < upgradesProcessingsize; i++) {
+    int upgradesProcessingSize = stream.readInt();
+    decodedLedgerCloseMetaV1.upgradesProcessing = new UpgradeEntryMeta[upgradesProcessingSize];
+    for (int i = 0; i < upgradesProcessingSize; i++) {
       decodedLedgerCloseMetaV1.upgradesProcessing[i] = UpgradeEntryMeta.decode(stream);
     }
-    int scpInfosize = stream.readInt();
-    decodedLedgerCloseMetaV1.scpInfo = new SCPHistoryEntry[scpInfosize];
-    for (int i = 0; i < scpInfosize; i++) {
+    int scpInfoSize = stream.readInt();
+    decodedLedgerCloseMetaV1.scpInfo = new SCPHistoryEntry[scpInfoSize];
+    for (int i = 0; i < scpInfoSize; i++) {
       decodedLedgerCloseMetaV1.scpInfo[i] = SCPHistoryEntry.decode(stream);
     }
     decodedLedgerCloseMetaV1.totalByteSizeOfBucketList = Uint64.decode(stream);
-    int evictedTemporaryLedgerKeyssize = stream.readInt();
+    int evictedTemporaryLedgerKeysSize = stream.readInt();
     decodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys =
-        new LedgerKey[evictedTemporaryLedgerKeyssize];
-    for (int i = 0; i < evictedTemporaryLedgerKeyssize; i++) {
+        new LedgerKey[evictedTemporaryLedgerKeysSize];
+    for (int i = 0; i < evictedTemporaryLedgerKeysSize; i++) {
       decodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys[i] = LedgerKey.decode(stream);
     }
-    int evictedPersistentLedgerEntriessize = stream.readInt();
+    int evictedPersistentLedgerEntriesSize = stream.readInt();
     decodedLedgerCloseMetaV1.evictedPersistentLedgerEntries =
-        new LedgerEntry[evictedPersistentLedgerEntriessize];
-    for (int i = 0; i < evictedPersistentLedgerEntriessize; i++) {
+        new LedgerEntry[evictedPersistentLedgerEntriesSize];
+    for (int i = 0; i < evictedPersistentLedgerEntriesSize; i++) {
       decodedLedgerCloseMetaV1.evictedPersistentLedgerEntries[i] = LedgerEntry.decode(stream);
     }
     return decodedLedgerCloseMetaV1;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ext,
-        this.ledgerHeader,
-        this.txSet,
-        Arrays.hashCode(this.txProcessing),
-        Arrays.hashCode(this.upgradesProcessing),
-        Arrays.hashCode(this.scpInfo),
-        this.totalByteSizeOfBucketList,
-        Arrays.hashCode(this.evictedTemporaryLedgerKeys),
-        Arrays.hashCode(this.evictedPersistentLedgerEntries));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerCloseMetaV1)) {
-      return false;
-    }
-
-    LedgerCloseMetaV1 other = (LedgerCloseMetaV1) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.ledgerHeader, other.ledgerHeader)
-        && Objects.equals(this.txSet, other.txSet)
-        && Arrays.equals(this.txProcessing, other.txProcessing)
-        && Arrays.equals(this.upgradesProcessing, other.upgradesProcessing)
-        && Arrays.equals(this.scpInfo, other.scpInfo)
-        && Objects.equals(this.totalByteSizeOfBucketList, other.totalByteSizeOfBucketList)
-        && Arrays.equals(this.evictedTemporaryLedgerKeys, other.evictedTemporaryLedgerKeys)
-        && Arrays.equals(this.evictedPersistentLedgerEntries, other.evictedPersistentLedgerEntries);
   }
 
   @Override
@@ -270,76 +162,5 @@ public class LedgerCloseMetaV1 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerCloseMetaExt ext;
-    private LedgerHeaderHistoryEntry ledgerHeader;
-    private GeneralizedTransactionSet txSet;
-    private TransactionResultMeta[] txProcessing;
-    private UpgradeEntryMeta[] upgradesProcessing;
-    private SCPHistoryEntry[] scpInfo;
-    private Uint64 totalByteSizeOfBucketList;
-    private LedgerKey[] evictedTemporaryLedgerKeys;
-    private LedgerEntry[] evictedPersistentLedgerEntries;
-
-    public Builder ext(LedgerCloseMetaExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder ledgerHeader(LedgerHeaderHistoryEntry ledgerHeader) {
-      this.ledgerHeader = ledgerHeader;
-      return this;
-    }
-
-    public Builder txSet(GeneralizedTransactionSet txSet) {
-      this.txSet = txSet;
-      return this;
-    }
-
-    public Builder txProcessing(TransactionResultMeta[] txProcessing) {
-      this.txProcessing = txProcessing;
-      return this;
-    }
-
-    public Builder upgradesProcessing(UpgradeEntryMeta[] upgradesProcessing) {
-      this.upgradesProcessing = upgradesProcessing;
-      return this;
-    }
-
-    public Builder scpInfo(SCPHistoryEntry[] scpInfo) {
-      this.scpInfo = scpInfo;
-      return this;
-    }
-
-    public Builder totalByteSizeOfBucketList(Uint64 totalByteSizeOfBucketList) {
-      this.totalByteSizeOfBucketList = totalByteSizeOfBucketList;
-      return this;
-    }
-
-    public Builder evictedTemporaryLedgerKeys(LedgerKey[] evictedTemporaryLedgerKeys) {
-      this.evictedTemporaryLedgerKeys = evictedTemporaryLedgerKeys;
-      return this;
-    }
-
-    public Builder evictedPersistentLedgerEntries(LedgerEntry[] evictedPersistentLedgerEntries) {
-      this.evictedPersistentLedgerEntries = evictedPersistentLedgerEntries;
-      return this;
-    }
-
-    public LedgerCloseMetaV1 build() {
-      LedgerCloseMetaV1 val = new LedgerCloseMetaV1();
-      val.setExt(this.ext);
-      val.setLedgerHeader(this.ledgerHeader);
-      val.setTxSet(this.txSet);
-      val.setTxProcessing(this.txProcessing);
-      val.setUpgradesProcessing(this.upgradesProcessing);
-      val.setScpInfo(this.scpInfo);
-      val.setTotalByteSizeOfBucketList(this.totalByteSizeOfBucketList);
-      val.setEvictedTemporaryLedgerKeys(this.evictedTemporaryLedgerKeys);
-      val.setEvictedPersistentLedgerEntries(this.evictedPersistentLedgerEntries);
-      return val;
-    }
   }
 }

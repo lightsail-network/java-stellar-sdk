@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecTypeBytesN implements XdrElement {
-  public SCSpecTypeBytesN() {}
-
   private Uint32 n;
-
-  public Uint32 getN() {
-    return this.n;
-  }
-
-  public void setN(Uint32 value) {
-    this.n = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeBytesN encodedSCSpecTypeBytesN)
       throws IOException {
@@ -47,21 +44,6 @@ public class SCSpecTypeBytesN implements XdrElement {
     SCSpecTypeBytesN decodedSCSpecTypeBytesN = new SCSpecTypeBytesN();
     decodedSCSpecTypeBytesN.n = Uint32.decode(stream);
     return decodedSCSpecTypeBytesN;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.n);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecTypeBytesN)) {
-      return false;
-    }
-
-    SCSpecTypeBytesN other = (SCSpecTypeBytesN) object;
-    return Objects.equals(this.n, other.n);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class SCSpecTypeBytesN implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 n;
-
-    public Builder n(Uint32 n) {
-      this.n = n;
-      return this;
-    }
-
-    public SCSpecTypeBytesN build() {
-      SCSpecTypeBytesN val = new SCSpecTypeBytesN();
-      val.setN(this.n);
-      return val;
-    }
   }
 }

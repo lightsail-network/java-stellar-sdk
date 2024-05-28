@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,50 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCPHistoryEntry implements XdrElement {
-  public SCPHistoryEntry() {}
-
-  Integer v;
-
-  public Integer getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Integer value) {
-    this.v = value;
-  }
-
+  private Integer discriminant;
   private SCPHistoryEntryV0 v0;
-
-  public SCPHistoryEntryV0 getV0() {
-    return this.v0;
-  }
-
-  public void setV0(SCPHistoryEntryV0 value) {
-    this.v0 = value;
-  }
-
-  public static final class Builder {
-    private Integer discriminant;
-    private SCPHistoryEntryV0 v0;
-
-    public Builder discriminant(Integer discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v0(SCPHistoryEntryV0 v0) {
-      this.v0 = v0;
-      return this;
-    }
-
-    public SCPHistoryEntry build() {
-      SCPHistoryEntry val = new SCPHistoryEntry();
-      val.setDiscriminant(discriminant);
-      val.setV0(this.v0);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SCPHistoryEntry encodedSCPHistoryEntry)
       throws IOException {
@@ -93,21 +59,6 @@ public class SCPHistoryEntry implements XdrElement {
         break;
     }
     return decodedSCPHistoryEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v0, this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCPHistoryEntry)) {
-      return false;
-    }
-
-    SCPHistoryEntry other = (SCPHistoryEntry) object;
-    return Objects.equals(this.v0, other.v0) && Objects.equals(this.v, other.v);
   }
 
   @Override

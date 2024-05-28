@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -38,16 +36,16 @@ public enum AccountMergeResultCode implements XdrElement {
   ACCOUNT_MERGE_HAS_SUB_ENTRIES(-4),
   ACCOUNT_MERGE_SEQNUM_TOO_FAR(-5),
   ACCOUNT_MERGE_DEST_FULL(-6),
-  ACCOUNT_MERGE_IS_SPONSOR(-7),
-  ;
-  private int mValue;
+  ACCOUNT_MERGE_IS_SPONSOR(-7);
+
+  private final int value;
 
   AccountMergeResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static AccountMergeResultCode decode(XdrDataInputStream stream) throws IOException {

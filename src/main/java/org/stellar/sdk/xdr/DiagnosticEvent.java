@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class DiagnosticEvent implements XdrElement {
-  public DiagnosticEvent() {}
-
   private Boolean inSuccessfulContractCall;
-
-  public Boolean getInSuccessfulContractCall() {
-    return this.inSuccessfulContractCall;
-  }
-
-  public void setInSuccessfulContractCall(Boolean value) {
-    this.inSuccessfulContractCall = value;
-  }
-
   private ContractEvent event;
-
-  public ContractEvent getEvent() {
-    return this.event;
-  }
-
-  public void setEvent(ContractEvent value) {
-    this.event = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, DiagnosticEvent encodedDiagnosticEvent)
       throws IOException {
@@ -60,22 +48,6 @@ public class DiagnosticEvent implements XdrElement {
     decodedDiagnosticEvent.inSuccessfulContractCall = stream.readInt() == 1 ? true : false;
     decodedDiagnosticEvent.event = ContractEvent.decode(stream);
     return decodedDiagnosticEvent;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.inSuccessfulContractCall, this.event);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof DiagnosticEvent)) {
-      return false;
-    }
-
-    DiagnosticEvent other = (DiagnosticEvent) object;
-    return Objects.equals(this.inSuccessfulContractCall, other.inSuccessfulContractCall)
-        && Objects.equals(this.event, other.event);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class DiagnosticEvent implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Boolean inSuccessfulContractCall;
-    private ContractEvent event;
-
-    public Builder inSuccessfulContractCall(Boolean inSuccessfulContractCall) {
-      this.inSuccessfulContractCall = inSuccessfulContractCall;
-      return this;
-    }
-
-    public Builder event(ContractEvent event) {
-      this.event = event;
-      return this;
-    }
-
-    public DiagnosticEvent build() {
-      DiagnosticEvent val = new DiagnosticEvent();
-      val.setInSuccessfulContractCall(this.inSuccessfulContractCall);
-      val.setEvent(this.event);
-      return val;
-    }
   }
 }

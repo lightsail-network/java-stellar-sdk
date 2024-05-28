@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,16 +23,16 @@ import org.stellar.sdk.Base64Factory;
 public enum ClaimAtomType implements XdrElement {
   CLAIM_ATOM_TYPE_V0(0),
   CLAIM_ATOM_TYPE_ORDER_BOOK(1),
-  CLAIM_ATOM_TYPE_LIQUIDITY_POOL(2),
-  ;
-  private int mValue;
+  CLAIM_ATOM_TYPE_LIQUIDITY_POOL(2);
+
+  private final int value;
 
   ClaimAtomType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ClaimAtomType decode(XdrDataInputStream stream) throws IOException {

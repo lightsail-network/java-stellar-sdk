@@ -10,7 +10,7 @@ public class AccountEntryDecodeTest {
 
   @Test
   public void testDecodeSignerPayload() throws IOException {
-    AccountEntry.Builder bldr = new AccountEntry.Builder();
+    AccountEntry.AccountEntryBuilder bldr = AccountEntry.builder();
     Signer signer = new Signer();
     SignerKey signerKey = new SignerKey();
     signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
@@ -22,7 +22,7 @@ public class AccountEntryDecodeTest {
     bldr.signers(new Signer[] {signer});
     bldr.accountID(
         new AccountID(
-            new PublicKey.Builder()
+            PublicKey.builder()
                 .discriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519)
                 .ed25519(new Uint256(new byte[32]))
                 .build()));
@@ -33,29 +33,25 @@ public class AccountEntryDecodeTest {
     bldr.homeDomain(new String32(new XdrString("")));
     bldr.thresholds(new Thresholds(new byte[3]));
     bldr.ext(
-        new AccountEntry.AccountEntryExt.Builder()
+        AccountEntry.AccountEntryExt.builder()
             .discriminant(1)
             .v1(
-                new AccountEntryExtensionV1.Builder()
+                AccountEntryExtensionV1.builder()
                     .liabilities(
-                        new Liabilities.Builder()
-                            .buying(new Int64(0L))
-                            .selling(new Int64(0L))
-                            .build())
+                        Liabilities.builder().buying(new Int64(0L)).selling(new Int64(0L)).build())
                     .ext(
-                        new AccountEntryExtensionV1.AccountEntryExtensionV1Ext.Builder()
+                        AccountEntryExtensionV1.AccountEntryExtensionV1Ext.builder()
                             .discriminant(2)
                             .v2(
-                                new AccountEntryExtensionV2.Builder()
+                                AccountEntryExtensionV2.builder()
                                     .numSponsored(new Uint32(new XdrUnsignedInteger(0)))
                                     .numSponsoring(new Uint32(new XdrUnsignedInteger(0)))
                                     .signerSponsoringIDs(new SponsorshipDescriptor[] {})
                                     .ext(
-                                        new AccountEntryExtensionV2.AccountEntryExtensionV2Ext
-                                                .Builder()
+                                        AccountEntryExtensionV2.AccountEntryExtensionV2Ext.builder()
                                             .discriminant(3)
                                             .v3(
-                                                new AccountEntryExtensionV3.Builder()
+                                                AccountEntryExtensionV3.builder()
                                                     .seqLedger(
                                                         new Uint32(new XdrUnsignedInteger(1)))
                                                     .seqTime(
@@ -63,7 +59,7 @@ public class AccountEntryDecodeTest {
                                                             new Uint64(
                                                                 new XdrUnsignedHyperInteger(2L))))
                                                     .ext(
-                                                        new ExtensionPoint.Builder()
+                                                        ExtensionPoint.builder()
                                                             .discriminant(0)
                                                             .build())
                                                     .build())

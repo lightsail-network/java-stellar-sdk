@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class BumpSequenceOp implements XdrElement {
-  public BumpSequenceOp() {}
-
   private SequenceNumber bumpTo;
-
-  public SequenceNumber getBumpTo() {
-    return this.bumpTo;
-  }
-
-  public void setBumpTo(SequenceNumber value) {
-    this.bumpTo = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, BumpSequenceOp encodedBumpSequenceOp)
       throws IOException {
@@ -47,21 +44,6 @@ public class BumpSequenceOp implements XdrElement {
     BumpSequenceOp decodedBumpSequenceOp = new BumpSequenceOp();
     decodedBumpSequenceOp.bumpTo = SequenceNumber.decode(stream);
     return decodedBumpSequenceOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.bumpTo);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BumpSequenceOp)) {
-      return false;
-    }
-
-    BumpSequenceOp other = (BumpSequenceOp) object;
-    return Objects.equals(this.bumpTo, other.bumpTo);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class BumpSequenceOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SequenceNumber bumpTo;
-
-    public Builder bumpTo(SequenceNumber bumpTo) {
-      this.bumpTo = bumpTo;
-      return this;
-    }
-
-    public BumpSequenceOp build() {
-      BumpSequenceOp val = new BumpSequenceOp();
-      val.setBumpTo(this.bumpTo);
-      return val;
-    }
   }
 }

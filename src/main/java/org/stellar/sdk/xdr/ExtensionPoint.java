@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,33 +25,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ExtensionPoint implements XdrElement {
-  public ExtensionPoint() {}
-
-  Integer v;
-
-  public Integer getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Integer value) {
-    this.v = value;
-  }
-
-  public static final class Builder {
-    private Integer discriminant;
-
-    public Builder discriminant(Integer discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public ExtensionPoint build() {
-      ExtensionPoint val = new ExtensionPoint();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private Integer discriminant;
 
   public static void encode(XdrDataOutputStream stream, ExtensionPoint encodedExtensionPoint)
       throws IOException {
@@ -74,21 +56,6 @@ public class ExtensionPoint implements XdrElement {
         break;
     }
     return decodedExtensionPoint;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ExtensionPoint)) {
-      return false;
-    }
-
-    ExtensionPoint other = (ExtensionPoint) object;
-    return Objects.equals(this.v, other.v);
   }
 
   @Override

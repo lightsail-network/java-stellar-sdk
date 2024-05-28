@@ -12,10 +12,7 @@ class ScvVec {
   private static final SCValType TYPE = SCValType.SCV_VEC;
 
   static SCVal toSCVal(Collection<SCVal> value) {
-    return new SCVal.Builder()
-        .discriminant(TYPE)
-        .vec(new SCVec(value.toArray(new SCVal[0])))
-        .build();
+    return SCVal.builder().discriminant(TYPE).vec(new SCVec(value.toArray(new SCVal[0]))).build();
   }
 
   static List<SCVal> fromSCVal(SCVal scVal) {

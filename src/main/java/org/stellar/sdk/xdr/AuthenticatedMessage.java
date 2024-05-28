@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,50 +30,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class AuthenticatedMessage implements XdrElement {
-  public AuthenticatedMessage() {}
-
-  Uint32 v;
-
-  public Uint32 getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Uint32 value) {
-    this.v = value;
-  }
-
+  private Uint32 discriminant;
   private AuthenticatedMessageV0 v0;
-
-  public AuthenticatedMessageV0 getV0() {
-    return this.v0;
-  }
-
-  public void setV0(AuthenticatedMessageV0 value) {
-    this.v0 = value;
-  }
-
-  public static final class Builder {
-    private Uint32 discriminant;
-    private AuthenticatedMessageV0 v0;
-
-    public Builder discriminant(Uint32 discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v0(AuthenticatedMessageV0 v0) {
-      this.v0 = v0;
-      return this;
-    }
-
-    public AuthenticatedMessage build() {
-      AuthenticatedMessage val = new AuthenticatedMessage();
-      val.setDiscriminant(discriminant);
-      val.setV0(this.v0);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, AuthenticatedMessage encodedAuthenticatedMessage)
@@ -100,21 +66,6 @@ public class AuthenticatedMessage implements XdrElement {
         break;
     }
     return decodedAuthenticatedMessage;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v0, this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof AuthenticatedMessage)) {
-      return false;
-    }
-
-    AuthenticatedMessage other = (AuthenticatedMessage) object;
-    return Objects.equals(this.v0, other.v0) && Objects.equals(this.v, other.v);
   }
 
   @Override
@@ -153,38 +104,14 @@ public class AuthenticatedMessage implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class AuthenticatedMessageV0 implements XdrElement {
-    public AuthenticatedMessageV0() {}
-
     private Uint64 sequence;
-
-    public Uint64 getSequence() {
-      return this.sequence;
-    }
-
-    public void setSequence(Uint64 value) {
-      this.sequence = value;
-    }
-
     private StellarMessage message;
-
-    public StellarMessage getMessage() {
-      return this.message;
-    }
-
-    public void setMessage(StellarMessage value) {
-      this.message = value;
-    }
-
     private HmacSha256Mac mac;
-
-    public HmacSha256Mac getMac() {
-      return this.mac;
-    }
-
-    public void setMac(HmacSha256Mac value) {
-      this.mac = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream, AuthenticatedMessageV0 encodedAuthenticatedMessageV0)
@@ -204,23 +131,6 @@ public class AuthenticatedMessage implements XdrElement {
       decodedAuthenticatedMessageV0.message = StellarMessage.decode(stream);
       decodedAuthenticatedMessageV0.mac = HmacSha256Mac.decode(stream);
       return decodedAuthenticatedMessageV0;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.sequence, this.message, this.mac);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof AuthenticatedMessageV0)) {
-        return false;
-      }
-
-      AuthenticatedMessageV0 other = (AuthenticatedMessageV0) object;
-      return Objects.equals(this.sequence, other.sequence)
-          && Objects.equals(this.message, other.message)
-          && Objects.equals(this.mac, other.mac);
     }
 
     @Override
@@ -245,35 +155,6 @@ public class AuthenticatedMessage implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
-    }
-
-    public static final class Builder {
-      private Uint64 sequence;
-      private StellarMessage message;
-      private HmacSha256Mac mac;
-
-      public Builder sequence(Uint64 sequence) {
-        this.sequence = sequence;
-        return this;
-      }
-
-      public Builder message(StellarMessage message) {
-        this.message = message;
-        return this;
-      }
-
-      public Builder mac(HmacSha256Mac mac) {
-        this.mac = mac;
-        return this;
-      }
-
-      public AuthenticatedMessageV0 build() {
-        AuthenticatedMessageV0 val = new AuthenticatedMessageV0();
-        val.setSequence(this.sequence);
-        val.setMessage(this.message);
-        val.setMac(this.mac);
-        return val;
-      }
     }
   }
 }

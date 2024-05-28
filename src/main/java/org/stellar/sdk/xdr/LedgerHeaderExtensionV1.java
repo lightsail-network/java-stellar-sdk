@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,28 +31,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerHeaderExtensionV1 implements XdrElement {
-  public LedgerHeaderExtensionV1() {}
-
   private Uint32 flags;
-
-  public Uint32 getFlags() {
-    return this.flags;
-  }
-
-  public void setFlags(Uint32 value) {
-    this.flags = value;
-  }
-
   private LedgerHeaderExtensionV1Ext ext;
-
-  public LedgerHeaderExtensionV1Ext getExt() {
-    return this.ext;
-  }
-
-  public void setExt(LedgerHeaderExtensionV1Ext value) {
-    this.ext = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, LedgerHeaderExtensionV1 encodedLedgerHeaderExtensionV1)
@@ -67,21 +55,6 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
     decodedLedgerHeaderExtensionV1.flags = Uint32.decode(stream);
     decodedLedgerHeaderExtensionV1.ext = LedgerHeaderExtensionV1Ext.decode(stream);
     return decodedLedgerHeaderExtensionV1;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.flags, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerHeaderExtensionV1)) {
-      return false;
-    }
-
-    LedgerHeaderExtensionV1 other = (LedgerHeaderExtensionV1) object;
-    return Objects.equals(this.flags, other.flags) && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -108,28 +81,6 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Uint32 flags;
-    private LedgerHeaderExtensionV1Ext ext;
-
-    public Builder flags(Uint32 flags) {
-      this.flags = flags;
-      return this;
-    }
-
-    public Builder ext(LedgerHeaderExtensionV1Ext ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public LedgerHeaderExtensionV1 build() {
-      LedgerHeaderExtensionV1 val = new LedgerHeaderExtensionV1();
-      val.setFlags(this.flags);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * LedgerHeaderExtensionV1Ext's original definition in the XDR file is:
    *
@@ -141,33 +92,12 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class LedgerHeaderExtensionV1Ext implements XdrElement {
-    public LedgerHeaderExtensionV1Ext() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public LedgerHeaderExtensionV1Ext build() {
-        LedgerHeaderExtensionV1Ext val = new LedgerHeaderExtensionV1Ext();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream, LedgerHeaderExtensionV1Ext encodedLedgerHeaderExtensionV1Ext)
@@ -195,21 +125,6 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
           break;
       }
       return decodedLedgerHeaderExtensionV1Ext;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof LedgerHeaderExtensionV1Ext)) {
-        return false;
-      }
-
-      LedgerHeaderExtensionV1Ext other = (LedgerHeaderExtensionV1Ext) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

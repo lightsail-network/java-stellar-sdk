@@ -131,18 +131,17 @@ public class TransactionPreconditions {
   }
 
   public Preconditions toXdr() {
-    Preconditions.Builder preconditionsBuilder = new Preconditions.Builder();
+    Preconditions.PreconditionsBuilder preconditionsBuilder = Preconditions.builder();
 
     if (hasV2()) {
       preconditionsBuilder.discriminant(PreconditionType.PRECOND_V2);
-      PreconditionsV2.Builder v2Builder = new PreconditionsV2.Builder();
-
+      PreconditionsV2.PreconditionsV2Builder v2Builder = PreconditionsV2.builder();
       v2Builder.extraSigners(extraSigners.toArray(new SignerKey[] {}));
       v2Builder.minSeqAge(new Duration(new Uint64(new XdrUnsignedHyperInteger(minSeqAge))));
 
       if (ledgerBounds != null) {
         v2Builder.ledgerBounds(
-            new org.stellar.sdk.xdr.LedgerBounds.Builder()
+            org.stellar.sdk.xdr.LedgerBounds.builder()
                 .minLedger(new Uint32(new XdrUnsignedInteger(ledgerBounds.getMinLedger())))
                 .maxLedger(new Uint32(new XdrUnsignedInteger(ledgerBounds.getMaxLedger())))
                 .build());

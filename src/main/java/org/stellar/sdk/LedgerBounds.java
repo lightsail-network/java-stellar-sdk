@@ -41,7 +41,7 @@ public class LedgerBounds {
    * @return the XDR LedgerBounds object.
    */
   public org.stellar.sdk.xdr.LedgerBounds toXdr() {
-    return new org.stellar.sdk.xdr.LedgerBounds.Builder()
+    return org.stellar.sdk.xdr.LedgerBounds.builder()
         .maxLedger(new Uint32(new XdrUnsignedInteger(maxLedger)))
         .minLedger(new Uint32(new XdrUnsignedInteger(minLedger)))
         .build();

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class OperationMeta implements XdrElement {
-  public OperationMeta() {}
-
   private LedgerEntryChanges changes;
-
-  public LedgerEntryChanges getChanges() {
-    return this.changes;
-  }
-
-  public void setChanges(LedgerEntryChanges value) {
-    this.changes = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, OperationMeta encodedOperationMeta)
       throws IOException {
@@ -47,21 +44,6 @@ public class OperationMeta implements XdrElement {
     OperationMeta decodedOperationMeta = new OperationMeta();
     decodedOperationMeta.changes = LedgerEntryChanges.decode(stream);
     return decodedOperationMeta;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.changes);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof OperationMeta)) {
-      return false;
-    }
-
-    OperationMeta other = (OperationMeta) object;
-    return Objects.equals(this.changes, other.changes);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class OperationMeta implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerEntryChanges changes;
-
-    public Builder changes(LedgerEntryChanges changes) {
-      this.changes = changes;
-      return this;
-    }
-
-    public OperationMeta build() {
-      OperationMeta val = new OperationMeta();
-      val.setChanges(this.changes);
-      return val;
-    }
   }
 }

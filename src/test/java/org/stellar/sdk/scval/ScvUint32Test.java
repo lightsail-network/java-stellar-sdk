@@ -14,7 +14,7 @@ public class ScvUint32Test {
     long value = XdrUnsignedInteger.MAX_VALUE;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_U32)
             .u32(new Uint32(new XdrUnsignedInteger(value)))
             .build();
@@ -29,7 +29,7 @@ public class ScvUint32Test {
     long value = XdrUnsignedInteger.MAX_VALUE;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_U32)
             .u32(new Uint32(new XdrUnsignedInteger(value)))
             .build();

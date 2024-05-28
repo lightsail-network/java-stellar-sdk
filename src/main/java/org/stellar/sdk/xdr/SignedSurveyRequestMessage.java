@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SignedSurveyRequestMessage implements XdrElement {
-  public SignedSurveyRequestMessage() {}
-
   private Signature requestSignature;
-
-  public Signature getRequestSignature() {
-    return this.requestSignature;
-  }
-
-  public void setRequestSignature(Signature value) {
-    this.requestSignature = value;
-  }
-
   private SurveyRequestMessage request;
-
-  public SurveyRequestMessage getRequest() {
-    return this.request;
-  }
-
-  public void setRequest(SurveyRequestMessage value) {
-    this.request = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SignedSurveyRequestMessage encodedSignedSurveyRequestMessage)
@@ -61,22 +49,6 @@ public class SignedSurveyRequestMessage implements XdrElement {
     decodedSignedSurveyRequestMessage.requestSignature = Signature.decode(stream);
     decodedSignedSurveyRequestMessage.request = SurveyRequestMessage.decode(stream);
     return decodedSignedSurveyRequestMessage;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.requestSignature, this.request);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SignedSurveyRequestMessage)) {
-      return false;
-    }
-
-    SignedSurveyRequestMessage other = (SignedSurveyRequestMessage) object;
-    return Objects.equals(this.requestSignature, other.requestSignature)
-        && Objects.equals(this.request, other.request);
   }
 
   @Override
@@ -101,27 +73,5 @@ public class SignedSurveyRequestMessage implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Signature requestSignature;
-    private SurveyRequestMessage request;
-
-    public Builder requestSignature(Signature requestSignature) {
-      this.requestSignature = requestSignature;
-      return this;
-    }
-
-    public Builder request(SurveyRequestMessage request) {
-      this.request = request;
-      return this;
-    }
-
-    public SignedSurveyRequestMessage build() {
-      SignedSurveyRequestMessage val = new SignedSurveyRequestMessage();
-      val.setRequestSignature(this.requestSignature);
-      val.setRequest(this.request);
-      return val;
-    }
   }
 }

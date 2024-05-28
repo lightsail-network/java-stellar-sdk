@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -27,33 +30,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ManageDataResult implements XdrElement {
-  public ManageDataResult() {}
-
-  ManageDataResultCode code;
-
-  public ManageDataResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(ManageDataResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private ManageDataResultCode discriminant;
-
-    public Builder discriminant(ManageDataResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public ManageDataResult build() {
-      ManageDataResult val = new ManageDataResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private ManageDataResultCode discriminant;
 
   public static void encode(XdrDataOutputStream stream, ManageDataResult encodedManageDataResult)
       throws IOException {
@@ -89,21 +71,6 @@ public class ManageDataResult implements XdrElement {
         break;
     }
     return decodedManageDataResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ManageDataResult)) {
-      return false;
-    }
-
-    ManageDataResult other = (ManageDataResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

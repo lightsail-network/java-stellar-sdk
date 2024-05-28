@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ManageDataOp implements XdrElement {
-  public ManageDataOp() {}
-
   private String64 dataName;
-
-  public String64 getDataName() {
-    return this.dataName;
-  }
-
-  public void setDataName(String64 value) {
-    this.dataName = value;
-  }
-
   private DataValue dataValue;
-
-  public DataValue getDataValue() {
-    return this.dataValue;
-  }
-
-  public void setDataValue(DataValue value) {
-    this.dataValue = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, ManageDataOp encodedManageDataOp)
       throws IOException {
@@ -71,22 +59,6 @@ public class ManageDataOp implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.dataName, this.dataValue);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ManageDataOp)) {
-      return false;
-    }
-
-    ManageDataOp other = (ManageDataOp) object;
-    return Objects.equals(this.dataName, other.dataName)
-        && Objects.equals(this.dataValue, other.dataValue);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -108,27 +80,5 @@ public class ManageDataOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private String64 dataName;
-    private DataValue dataValue;
-
-    public Builder dataName(String64 dataName) {
-      this.dataName = dataName;
-      return this;
-    }
-
-    public Builder dataValue(DataValue dataValue) {
-      this.dataValue = dataValue;
-      return this;
-    }
-
-    public ManageDataOp build() {
-      ManageDataOp val = new ManageDataOp();
-      val.setDataName(this.dataName);
-      val.setDataValue(this.dataValue);
-      return val;
-    }
   }
 }

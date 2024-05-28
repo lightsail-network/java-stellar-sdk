@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,50 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionPhase implements XdrElement {
-  public TransactionPhase() {}
-
-  Integer v;
-
-  public Integer getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Integer value) {
-    this.v = value;
-  }
-
+  private Integer discriminant;
   private TxSetComponent[] v0Components;
-
-  public TxSetComponent[] getV0Components() {
-    return this.v0Components;
-  }
-
-  public void setV0Components(TxSetComponent[] value) {
-    this.v0Components = value;
-  }
-
-  public static final class Builder {
-    private Integer discriminant;
-    private TxSetComponent[] v0Components;
-
-    public Builder discriminant(Integer discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v0Components(TxSetComponent[] v0Components) {
-      this.v0Components = v0Components;
-      return this;
-    }
-
-    public TransactionPhase build() {
-      TransactionPhase val = new TransactionPhase();
-      val.setDiscriminant(discriminant);
-      val.setV0Components(this.v0Components);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, TransactionPhase encodedTransactionPhase)
       throws IOException {
@@ -75,9 +40,9 @@ public class TransactionPhase implements XdrElement {
     stream.writeInt(encodedTransactionPhase.getDiscriminant().intValue());
     switch (encodedTransactionPhase.getDiscriminant()) {
       case 0:
-        int v0Componentssize = encodedTransactionPhase.getV0Components().length;
-        stream.writeInt(v0Componentssize);
-        for (int i = 0; i < v0Componentssize; i++) {
+        int v0ComponentsSize = encodedTransactionPhase.getV0Components().length;
+        stream.writeInt(v0ComponentsSize);
+        for (int i = 0; i < v0ComponentsSize; i++) {
           TxSetComponent.encode(stream, encodedTransactionPhase.v0Components[i]);
         }
         break;
@@ -94,29 +59,14 @@ public class TransactionPhase implements XdrElement {
     decodedTransactionPhase.setDiscriminant(discriminant);
     switch (decodedTransactionPhase.getDiscriminant()) {
       case 0:
-        int v0Componentssize = stream.readInt();
-        decodedTransactionPhase.v0Components = new TxSetComponent[v0Componentssize];
-        for (int i = 0; i < v0Componentssize; i++) {
+        int v0ComponentsSize = stream.readInt();
+        decodedTransactionPhase.v0Components = new TxSetComponent[v0ComponentsSize];
+        for (int i = 0; i < v0ComponentsSize; i++) {
           decodedTransactionPhase.v0Components[i] = TxSetComponent.decode(stream);
         }
         break;
     }
     return decodedTransactionPhase;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(Arrays.hashCode(this.v0Components), this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionPhase)) {
-      return false;
-    }
-
-    TransactionPhase other = (TransactionPhase) object;
-    return Arrays.equals(this.v0Components, other.v0Components) && Objects.equals(this.v, other.v);
   }
 
   @Override

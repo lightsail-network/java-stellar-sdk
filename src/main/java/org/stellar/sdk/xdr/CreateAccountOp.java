@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class CreateAccountOp implements XdrElement {
-  public CreateAccountOp() {}
-
   private AccountID destination;
-
-  public AccountID getDestination() {
-    return this.destination;
-  }
-
-  public void setDestination(AccountID value) {
-    this.destination = value;
-  }
-
   private Int64 startingBalance;
-
-  public Int64 getStartingBalance() {
-    return this.startingBalance;
-  }
-
-  public void setStartingBalance(Int64 value) {
-    this.startingBalance = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, CreateAccountOp encodedCreateAccountOp)
       throws IOException {
@@ -60,22 +48,6 @@ public class CreateAccountOp implements XdrElement {
     decodedCreateAccountOp.destination = AccountID.decode(stream);
     decodedCreateAccountOp.startingBalance = Int64.decode(stream);
     return decodedCreateAccountOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.destination, this.startingBalance);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof CreateAccountOp)) {
-      return false;
-    }
-
-    CreateAccountOp other = (CreateAccountOp) object;
-    return Objects.equals(this.destination, other.destination)
-        && Objects.equals(this.startingBalance, other.startingBalance);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class CreateAccountOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private AccountID destination;
-    private Int64 startingBalance;
-
-    public Builder destination(AccountID destination) {
-      this.destination = destination;
-      return this;
-    }
-
-    public Builder startingBalance(Int64 startingBalance) {
-      this.startingBalance = startingBalance;
-      return this;
-    }
-
-    public CreateAccountOp build() {
-      CreateAccountOp val = new CreateAccountOp();
-      val.setDestination(this.destination);
-      val.setStartingBalance(this.startingBalance);
-      return val;
-    }
   }
 }

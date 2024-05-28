@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,16 +45,16 @@ public enum ConfigSettingID implements XdrElement {
   CONFIG_SETTING_STATE_ARCHIVAL(10),
   CONFIG_SETTING_CONTRACT_EXECUTION_LANES(11),
   CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW(12),
-  CONFIG_SETTING_EVICTION_ITERATOR(13),
-  ;
-  private int mValue;
+  CONFIG_SETTING_EVICTION_ITERATOR(13);
+
+  private final int value;
 
   ConfigSettingID(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ConfigSettingID decode(XdrDataInputStream stream) throws IOException {

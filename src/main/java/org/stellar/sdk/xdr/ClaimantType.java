@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,16 +19,16 @@ import org.stellar.sdk.Base64Factory;
  * </pre>
  */
 public enum ClaimantType implements XdrElement {
-  CLAIMANT_TYPE_V0(0),
-  ;
-  private int mValue;
+  CLAIMANT_TYPE_V0(0);
+
+  private final int value;
 
   ClaimantType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static ClaimantType decode(XdrDataInputStream stream) throws IOException {

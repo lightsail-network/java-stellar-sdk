@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,16 +21,16 @@ import org.stellar.sdk.Base64Factory;
  */
 public enum SCAddressType implements XdrElement {
   SC_ADDRESS_TYPE_ACCOUNT(0),
-  SC_ADDRESS_TYPE_CONTRACT(1),
-  ;
-  private int mValue;
+  SC_ADDRESS_TYPE_CONTRACT(1);
+
+  private final int value;
 
   SCAddressType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SCAddressType decode(XdrDataInputStream stream) throws IOException {

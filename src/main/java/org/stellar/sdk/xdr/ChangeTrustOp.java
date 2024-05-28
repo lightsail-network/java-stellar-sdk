@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,28 +27,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ChangeTrustOp implements XdrElement {
-  public ChangeTrustOp() {}
-
   private ChangeTrustAsset line;
-
-  public ChangeTrustAsset getLine() {
-    return this.line;
-  }
-
-  public void setLine(ChangeTrustAsset value) {
-    this.line = value;
-  }
-
   private Int64 limit;
-
-  public Int64 getLimit() {
-    return this.limit;
-  }
-
-  public void setLimit(Int64 value) {
-    this.limit = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, ChangeTrustOp encodedChangeTrustOp)
       throws IOException {
@@ -62,21 +50,6 @@ public class ChangeTrustOp implements XdrElement {
     decodedChangeTrustOp.line = ChangeTrustAsset.decode(stream);
     decodedChangeTrustOp.limit = Int64.decode(stream);
     return decodedChangeTrustOp;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.line, this.limit);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ChangeTrustOp)) {
-      return false;
-    }
-
-    ChangeTrustOp other = (ChangeTrustOp) object;
-    return Objects.equals(this.line, other.line) && Objects.equals(this.limit, other.limit);
   }
 
   @Override
@@ -101,27 +74,5 @@ public class ChangeTrustOp implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ChangeTrustAsset line;
-    private Int64 limit;
-
-    public Builder line(ChangeTrustAsset line) {
-      this.line = line;
-      return this;
-    }
-
-    public Builder limit(Int64 limit) {
-      this.limit = limit;
-      return this;
-    }
-
-    public ChangeTrustOp build() {
-      ChangeTrustOp val = new ChangeTrustOp();
-      val.setLine(this.line);
-      val.setLimit(this.limit);
-      return val;
-    }
   }
 }

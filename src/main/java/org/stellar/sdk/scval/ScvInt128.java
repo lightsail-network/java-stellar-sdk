@@ -39,14 +39,14 @@ class ScvInt128 {
     }
 
     Int128Parts int128Parts =
-        new Int128Parts.Builder()
+        Int128Parts.builder()
             .hi(new Int64(Longs.fromByteArray(Arrays.copyOfRange(paddedBytes, 0, 8))))
             .lo(
                 new Uint64(
                     new XdrUnsignedHyperInteger(
                         new BigInteger(1, Arrays.copyOfRange(paddedBytes, 8, 16)))))
             .build();
-    return new SCVal.Builder().discriminant(TYPE).i128(int128Parts).build();
+    return SCVal.builder().discriminant(TYPE).i128(int128Parts).build();
   }
 
   static BigInteger fromSCVal(SCVal scVal) {

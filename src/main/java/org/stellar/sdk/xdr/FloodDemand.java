@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,18 +24,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class FloodDemand implements XdrElement {
-  public FloodDemand() {}
-
   private TxDemandVector txHashes;
-
-  public TxDemandVector getTxHashes() {
-    return this.txHashes;
-  }
-
-  public void setTxHashes(TxDemandVector value) {
-    this.txHashes = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, FloodDemand encodedFloodDemand)
       throws IOException {
@@ -47,21 +44,6 @@ public class FloodDemand implements XdrElement {
     FloodDemand decodedFloodDemand = new FloodDemand();
     decodedFloodDemand.txHashes = TxDemandVector.decode(stream);
     return decodedFloodDemand;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.txHashes);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof FloodDemand)) {
-      return false;
-    }
-
-    FloodDemand other = (FloodDemand) object;
-    return Objects.equals(this.txHashes, other.txHashes);
   }
 
   @Override
@@ -86,20 +68,5 @@ public class FloodDemand implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private TxDemandVector txHashes;
-
-    public Builder txHashes(TxDemandVector txHashes) {
-      this.txHashes = txHashes;
-      return this;
-    }
-
-    public FloodDemand build() {
-      FloodDemand val = new FloodDemand();
-      val.setTxHashes(this.txHashes);
-      return val;
-    }
   }
 }

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,28 +24,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCContractInstance implements XdrElement {
-  public SCContractInstance() {}
-
   private ContractExecutable executable;
-
-  public ContractExecutable getExecutable() {
-    return this.executable;
-  }
-
-  public void setExecutable(ContractExecutable value) {
-    this.executable = value;
-  }
-
   private SCMap storage;
-
-  public SCMap getStorage() {
-    return this.storage;
-  }
-
-  public void setStorage(SCMap value) {
-    this.storage = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SCContractInstance encodedSCContractInstance) throws IOException {
@@ -70,22 +58,6 @@ public class SCContractInstance implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.executable, this.storage);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCContractInstance)) {
-      return false;
-    }
-
-    SCContractInstance other = (SCContractInstance) object;
-    return Objects.equals(this.executable, other.executable)
-        && Objects.equals(this.storage, other.storage);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -107,27 +79,5 @@ public class SCContractInstance implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ContractExecutable executable;
-    private SCMap storage;
-
-    public Builder executable(ContractExecutable executable) {
-      this.executable = executable;
-      return this;
-    }
-
-    public Builder storage(SCMap storage) {
-      this.storage = storage;
-      return this;
-    }
-
-    public SCContractInstance build() {
-      SCContractInstance val = new SCContractInstance();
-      val.setExecutable(this.executable);
-      val.setStorage(this.storage);
-      return val;
-    }
   }
 }

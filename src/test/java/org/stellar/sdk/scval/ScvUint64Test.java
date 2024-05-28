@@ -15,7 +15,7 @@ public class ScvUint64Test {
     BigInteger value = XdrUnsignedHyperInteger.MAX_VALUE;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_U64)
             .u64(new Uint64(new XdrUnsignedHyperInteger(value)))
             .build();
@@ -30,7 +30,7 @@ public class ScvUint64Test {
     BigInteger value = XdrUnsignedHyperInteger.MIN_VALUE;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_U64)
             .u64(new Uint64(new XdrUnsignedHyperInteger(value)))
             .build();

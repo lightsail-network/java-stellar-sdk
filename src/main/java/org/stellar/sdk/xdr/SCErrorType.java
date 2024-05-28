@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,16 +37,16 @@ public enum SCErrorType implements XdrElement {
   SCE_EVENTS(6),
   SCE_BUDGET(7),
   SCE_VALUE(8),
-  SCE_AUTH(9),
-  ;
-  private int mValue;
+  SCE_AUTH(9);
+
+  private final int value;
 
   SCErrorType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SCErrorType decode(XdrDataInputStream stream) throws IOException {

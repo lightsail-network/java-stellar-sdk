@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -30,28 +33,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class BucketMetadata implements XdrElement {
-  public BucketMetadata() {}
-
   private Uint32 ledgerVersion;
-
-  public Uint32 getLedgerVersion() {
-    return this.ledgerVersion;
-  }
-
-  public void setLedgerVersion(Uint32 value) {
-    this.ledgerVersion = value;
-  }
-
   private BucketMetadataExt ext;
-
-  public BucketMetadataExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(BucketMetadataExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, BucketMetadata encodedBucketMetadata)
       throws IOException {
@@ -68,22 +56,6 @@ public class BucketMetadata implements XdrElement {
     decodedBucketMetadata.ledgerVersion = Uint32.decode(stream);
     decodedBucketMetadata.ext = BucketMetadataExt.decode(stream);
     return decodedBucketMetadata;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ledgerVersion, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BucketMetadata)) {
-      return false;
-    }
-
-    BucketMetadata other = (BucketMetadata) object;
-    return Objects.equals(this.ledgerVersion, other.ledgerVersion)
-        && Objects.equals(this.ext, other.ext);
   }
 
   @Override
@@ -110,28 +82,6 @@ public class BucketMetadata implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
-  public static final class Builder {
-    private Uint32 ledgerVersion;
-    private BucketMetadataExt ext;
-
-    public Builder ledgerVersion(Uint32 ledgerVersion) {
-      this.ledgerVersion = ledgerVersion;
-      return this;
-    }
-
-    public Builder ext(BucketMetadataExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public BucketMetadata build() {
-      BucketMetadata val = new BucketMetadata();
-      val.setLedgerVersion(this.ledgerVersion);
-      val.setExt(this.ext);
-      return val;
-    }
-  }
-
   /**
    * BucketMetadataExt's original definition in the XDR file is:
    *
@@ -143,33 +93,12 @@ public class BucketMetadata implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class BucketMetadataExt implements XdrElement {
-    public BucketMetadataExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public BucketMetadataExt build() {
-        BucketMetadataExt val = new BucketMetadataExt();
-        val.setDiscriminant(discriminant);
-        return val;
-      }
-    }
+    private Integer discriminant;
 
     public static void encode(
         XdrDataOutputStream stream, BucketMetadataExt encodedBucketMetadataExt) throws IOException {
@@ -195,21 +124,6 @@ public class BucketMetadata implements XdrElement {
           break;
       }
       return decodedBucketMetadataExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof BucketMetadataExt)) {
-        return false;
-      }
-
-      BucketMetadataExt other = (BucketMetadataExt) object;
-      return Objects.equals(this.v, other.v);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ScvInt32Test {
     int value = -234;
 
     SCVal expectedScVal =
-        new SCVal.Builder().discriminant(SCValType.SCV_I32).i32(new Int32(value)).build();
+        SCVal.builder().discriminant(SCValType.SCV_I32).i32(new Int32(value)).build();
 
     SCVal actualScVal = Scv.toInt32(value);
     assertEquals(expectedScVal, actualScVal);

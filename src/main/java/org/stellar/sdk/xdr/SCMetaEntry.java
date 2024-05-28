@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,50 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCMetaEntry implements XdrElement {
-  public SCMetaEntry() {}
-
-  SCMetaKind kind;
-
-  public SCMetaKind getDiscriminant() {
-    return this.kind;
-  }
-
-  public void setDiscriminant(SCMetaKind value) {
-    this.kind = value;
-  }
-
+  private SCMetaKind discriminant;
   private SCMetaV0 v0;
-
-  public SCMetaV0 getV0() {
-    return this.v0;
-  }
-
-  public void setV0(SCMetaV0 value) {
-    this.v0 = value;
-  }
-
-  public static final class Builder {
-    private SCMetaKind discriminant;
-    private SCMetaV0 v0;
-
-    public Builder discriminant(SCMetaKind discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v0(SCMetaV0 v0) {
-      this.v0 = v0;
-      return this;
-    }
-
-    public SCMetaEntry build() {
-      SCMetaEntry val = new SCMetaEntry();
-      val.setDiscriminant(discriminant);
-      val.setV0(this.v0);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SCMetaEntry encodedSCMetaEntry)
       throws IOException {
@@ -93,21 +59,6 @@ public class SCMetaEntry implements XdrElement {
         break;
     }
     return decodedSCMetaEntry;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v0, this.kind);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCMetaEntry)) {
-      return false;
-    }
-
-    SCMetaEntry other = (SCMetaEntry) object;
-    return Objects.equals(this.v0, other.v0) && Objects.equals(this.kind, other.kind);
   }
 
   @Override

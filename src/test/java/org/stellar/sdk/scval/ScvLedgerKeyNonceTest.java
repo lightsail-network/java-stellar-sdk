@@ -14,9 +14,9 @@ public class ScvLedgerKeyNonceTest {
     long value = 123456L;
 
     SCVal expectedScVal =
-        new SCVal.Builder()
+        SCVal.builder()
             .discriminant(SCValType.SCV_LEDGER_KEY_NONCE)
-            .nonce_key(new SCNonceKey.Builder().nonce(new Int64(value)).build())
+            .nonce_key(SCNonceKey.builder().nonce(new Int64(value)).build())
             .build();
 
     SCVal actualScVal = Scv.toLedgerKeyNonce(value);

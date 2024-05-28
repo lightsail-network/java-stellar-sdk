@@ -157,13 +157,13 @@ public abstract class Asset implements Comparable<Asset> {
    */
   public String getContractId(Network network) throws IOException {
     HashIDPreimage preimage =
-        new HashIDPreimage.Builder()
+        HashIDPreimage.builder()
             .discriminant(EnvelopeType.ENVELOPE_TYPE_CONTRACT_ID)
             .contractID(
-                new HashIDPreimage.HashIDPreimageContractID.Builder()
+                HashIDPreimage.HashIDPreimageContractID.builder()
                     .networkID(new Hash(network.getNetworkId()))
                     .contractIDPreimage(
-                        new ContractIDPreimage.Builder()
+                        ContractIDPreimage.builder()
                             .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
                             .fromAsset(this.toXdr())
                             .build())

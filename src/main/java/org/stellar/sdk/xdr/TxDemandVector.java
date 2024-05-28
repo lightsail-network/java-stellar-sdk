@@ -8,7 +8,9 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -18,28 +20,17 @@ import org.stellar.sdk.Base64Factory;
  * typedef Hash TxDemandVector&lt;TX_DEMAND_VECTOR_MAX_SIZE&gt;;
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TxDemandVector implements XdrElement {
   private Hash[] TxDemandVector;
 
-  public TxDemandVector() {}
-
-  public TxDemandVector(Hash[] TxDemandVector) {
-    this.TxDemandVector = TxDemandVector;
-  }
-
-  public Hash[] getTxDemandVector() {
-    return this.TxDemandVector;
-  }
-
-  public void setTxDemandVector(Hash[] value) {
-    this.TxDemandVector = value;
-  }
-
   public static void encode(XdrDataOutputStream stream, TxDemandVector encodedTxDemandVector)
       throws IOException {
-    int TxDemandVectorsize = encodedTxDemandVector.getTxDemandVector().length;
-    stream.writeInt(TxDemandVectorsize);
-    for (int i = 0; i < TxDemandVectorsize; i++) {
+    int TxDemandVectorSize = encodedTxDemandVector.getTxDemandVector().length;
+    stream.writeInt(TxDemandVectorSize);
+    for (int i = 0; i < TxDemandVectorSize; i++) {
       Hash.encode(stream, encodedTxDemandVector.TxDemandVector[i]);
     }
   }
@@ -50,27 +41,12 @@ public class TxDemandVector implements XdrElement {
 
   public static TxDemandVector decode(XdrDataInputStream stream) throws IOException {
     TxDemandVector decodedTxDemandVector = new TxDemandVector();
-    int TxDemandVectorsize = stream.readInt();
-    decodedTxDemandVector.TxDemandVector = new Hash[TxDemandVectorsize];
-    for (int i = 0; i < TxDemandVectorsize; i++) {
+    int TxDemandVectorSize = stream.readInt();
+    decodedTxDemandVector.TxDemandVector = new Hash[TxDemandVectorSize];
+    for (int i = 0; i < TxDemandVectorSize; i++) {
       decodedTxDemandVector.TxDemandVector[i] = Hash.decode(stream);
     }
     return decodedTxDemandVector;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.TxDemandVector);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TxDemandVector)) {
-      return false;
-    }
-
-    TxDemandVector other = (TxDemandVector) object;
-    return Arrays.equals(this.TxDemandVector, other.TxDemandVector);
   }
 
   @Override

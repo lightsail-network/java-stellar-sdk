@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerCloseMetaExtV1 implements XdrElement {
-  public LedgerCloseMetaExtV1() {}
-
   private ExtensionPoint ext;
-
-  public ExtensionPoint getExt() {
-    return this.ext;
-  }
-
-  public void setExt(ExtensionPoint value) {
-    this.ext = value;
-  }
-
   private Int64 sorobanFeeWrite1KB;
-
-  public Int64 getSorobanFeeWrite1KB() {
-    return this.sorobanFeeWrite1KB;
-  }
-
-  public void setSorobanFeeWrite1KB(Int64 value) {
-    this.sorobanFeeWrite1KB = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, LedgerCloseMetaExtV1 encodedLedgerCloseMetaExtV1)
@@ -61,22 +49,6 @@ public class LedgerCloseMetaExtV1 implements XdrElement {
     decodedLedgerCloseMetaExtV1.ext = ExtensionPoint.decode(stream);
     decodedLedgerCloseMetaExtV1.sorobanFeeWrite1KB = Int64.decode(stream);
     return decodedLedgerCloseMetaExtV1;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.ext, this.sorobanFeeWrite1KB);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerCloseMetaExtV1)) {
-      return false;
-    }
-
-    LedgerCloseMetaExtV1 other = (LedgerCloseMetaExtV1) object;
-    return Objects.equals(this.ext, other.ext)
-        && Objects.equals(this.sorobanFeeWrite1KB, other.sorobanFeeWrite1KB);
   }
 
   @Override
@@ -101,27 +73,5 @@ public class LedgerCloseMetaExtV1 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private ExtensionPoint ext;
-    private Int64 sorobanFeeWrite1KB;
-
-    public Builder ext(ExtensionPoint ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder sorobanFeeWrite1KB(Int64 sorobanFeeWrite1KB) {
-      this.sorobanFeeWrite1KB = sorobanFeeWrite1KB;
-      return this;
-    }
-
-    public LedgerCloseMetaExtV1 build() {
-      LedgerCloseMetaExtV1 val = new LedgerCloseMetaExtV1();
-      val.setExt(this.ext);
-      val.setSorobanFeeWrite1KB(this.sorobanFeeWrite1KB);
-      return val;
-    }
   }
 }

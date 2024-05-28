@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,16 +19,16 @@ import org.stellar.sdk.Base64Factory;
  * </pre>
  */
 public enum SCEnvMetaKind implements XdrElement {
-  SC_ENV_META_KIND_INTERFACE_VERSION(0),
-  ;
-  private int mValue;
+  SC_ENV_META_KIND_INTERFACE_VERSION(0);
+
+  private final int value;
 
   SCEnvMetaKind(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static SCEnvMetaKind decode(XdrDataInputStream stream) throws IOException {

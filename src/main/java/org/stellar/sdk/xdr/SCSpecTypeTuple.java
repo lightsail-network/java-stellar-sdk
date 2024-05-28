@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,24 +24,18 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecTypeTuple implements XdrElement {
-  public SCSpecTypeTuple() {}
-
   private SCSpecTypeDef[] valueTypes;
-
-  public SCSpecTypeDef[] getValueTypes() {
-    return this.valueTypes;
-  }
-
-  public void setValueTypes(SCSpecTypeDef[] value) {
-    this.valueTypes = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecTypeTuple encodedSCSpecTypeTuple)
       throws IOException {
-    int valueTypessize = encodedSCSpecTypeTuple.getValueTypes().length;
-    stream.writeInt(valueTypessize);
-    for (int i = 0; i < valueTypessize; i++) {
+    int valueTypesSize = encodedSCSpecTypeTuple.getValueTypes().length;
+    stream.writeInt(valueTypesSize);
+    for (int i = 0; i < valueTypesSize; i++) {
       SCSpecTypeDef.encode(stream, encodedSCSpecTypeTuple.valueTypes[i]);
     }
   }
@@ -49,27 +46,12 @@ public class SCSpecTypeTuple implements XdrElement {
 
   public static SCSpecTypeTuple decode(XdrDataInputStream stream) throws IOException {
     SCSpecTypeTuple decodedSCSpecTypeTuple = new SCSpecTypeTuple();
-    int valueTypessize = stream.readInt();
-    decodedSCSpecTypeTuple.valueTypes = new SCSpecTypeDef[valueTypessize];
-    for (int i = 0; i < valueTypessize; i++) {
+    int valueTypesSize = stream.readInt();
+    decodedSCSpecTypeTuple.valueTypes = new SCSpecTypeDef[valueTypesSize];
+    for (int i = 0; i < valueTypesSize; i++) {
       decodedSCSpecTypeTuple.valueTypes[i] = SCSpecTypeDef.decode(stream);
     }
     return decodedSCSpecTypeTuple;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(this.valueTypes);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecTypeTuple)) {
-      return false;
-    }
-
-    SCSpecTypeTuple other = (SCSpecTypeTuple) object;
-    return Arrays.equals(this.valueTypes, other.valueTypes);
   }
 
   @Override
@@ -94,20 +76,5 @@ public class SCSpecTypeTuple implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SCSpecTypeDef[] valueTypes;
-
-    public Builder valueTypes(SCSpecTypeDef[] valueTypes) {
-      this.valueTypes = valueTypes;
-      return this;
-    }
-
-    public SCSpecTypeTuple build() {
-      SCSpecTypeTuple val = new SCSpecTypeTuple();
-      val.setValueTypes(this.valueTypes);
-      return val;
-    }
   }
 }

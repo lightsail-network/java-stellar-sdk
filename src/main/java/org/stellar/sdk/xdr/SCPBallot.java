@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -22,28 +25,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCPBallot implements XdrElement {
-  public SCPBallot() {}
-
   private Uint32 counter;
-
-  public Uint32 getCounter() {
-    return this.counter;
-  }
-
-  public void setCounter(Uint32 value) {
-    this.counter = value;
-  }
-
   private Value value;
-
-  public Value getValue() {
-    return this.value;
-  }
-
-  public void setValue(Value value) {
-    this.value = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCPBallot encodedSCPBallot)
       throws IOException {
@@ -60,21 +48,6 @@ public class SCPBallot implements XdrElement {
     decodedSCPBallot.counter = Uint32.decode(stream);
     decodedSCPBallot.value = Value.decode(stream);
     return decodedSCPBallot;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.counter, this.value);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCPBallot)) {
-      return false;
-    }
-
-    SCPBallot other = (SCPBallot) object;
-    return Objects.equals(this.counter, other.counter) && Objects.equals(this.value, other.value);
   }
 
   @Override
@@ -99,27 +72,5 @@ public class SCPBallot implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Uint32 counter;
-    private Value value;
-
-    public Builder counter(Uint32 counter) {
-      this.counter = counter;
-      return this;
-    }
-
-    public Builder value(Value value) {
-      this.value = value;
-      return this;
-    }
-
-    public SCPBallot build() {
-      SCPBallot val = new SCPBallot();
-      val.setCounter(this.counter);
-      val.setValue(this.value);
-      return val;
-    }
   }
 }

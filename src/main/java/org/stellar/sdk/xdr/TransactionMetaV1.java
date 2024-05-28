@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,35 +25,20 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TransactionMetaV1 implements XdrElement {
-  public TransactionMetaV1() {}
-
   private LedgerEntryChanges txChanges;
-
-  public LedgerEntryChanges getTxChanges() {
-    return this.txChanges;
-  }
-
-  public void setTxChanges(LedgerEntryChanges value) {
-    this.txChanges = value;
-  }
-
   private OperationMeta[] operations;
-
-  public OperationMeta[] getOperations() {
-    return this.operations;
-  }
-
-  public void setOperations(OperationMeta[] value) {
-    this.operations = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TransactionMetaV1 encodedTransactionMetaV1)
       throws IOException {
     LedgerEntryChanges.encode(stream, encodedTransactionMetaV1.txChanges);
-    int operationssize = encodedTransactionMetaV1.getOperations().length;
-    stream.writeInt(operationssize);
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = encodedTransactionMetaV1.getOperations().length;
+    stream.writeInt(operationsSize);
+    for (int i = 0; i < operationsSize; i++) {
       OperationMeta.encode(stream, encodedTransactionMetaV1.operations[i]);
     }
   }
@@ -63,28 +50,12 @@ public class TransactionMetaV1 implements XdrElement {
   public static TransactionMetaV1 decode(XdrDataInputStream stream) throws IOException {
     TransactionMetaV1 decodedTransactionMetaV1 = new TransactionMetaV1();
     decodedTransactionMetaV1.txChanges = LedgerEntryChanges.decode(stream);
-    int operationssize = stream.readInt();
-    decodedTransactionMetaV1.operations = new OperationMeta[operationssize];
-    for (int i = 0; i < operationssize; i++) {
+    int operationsSize = stream.readInt();
+    decodedTransactionMetaV1.operations = new OperationMeta[operationsSize];
+    for (int i = 0; i < operationsSize; i++) {
       decodedTransactionMetaV1.operations[i] = OperationMeta.decode(stream);
     }
     return decodedTransactionMetaV1;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.txChanges, Arrays.hashCode(this.operations));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TransactionMetaV1)) {
-      return false;
-    }
-
-    TransactionMetaV1 other = (TransactionMetaV1) object;
-    return Objects.equals(this.txChanges, other.txChanges)
-        && Arrays.equals(this.operations, other.operations);
   }
 
   @Override
@@ -109,27 +80,5 @@ public class TransactionMetaV1 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private LedgerEntryChanges txChanges;
-    private OperationMeta[] operations;
-
-    public Builder txChanges(LedgerEntryChanges txChanges) {
-      this.txChanges = txChanges;
-      return this;
-    }
-
-    public Builder operations(OperationMeta[] operations) {
-      this.operations = operations;
-      return this;
-    }
-
-    public TransactionMetaV1 build() {
-      TransactionMetaV1 val = new TransactionMetaV1();
-      val.setTxChanges(this.txChanges);
-      val.setOperations(this.operations);
-      return val;
-    }
   }
 }

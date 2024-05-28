@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,16 +28,16 @@ public enum RestoreFootprintResultCode implements XdrElement {
   RESTORE_FOOTPRINT_SUCCESS(0),
   RESTORE_FOOTPRINT_MALFORMED(-1),
   RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED(-2),
-  RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE(-3),
-  ;
-  private int mValue;
+  RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE(-3);
+
+  private final int value;
 
   RestoreFootprintResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static RestoreFootprintResultCode decode(XdrDataInputStream stream) throws IOException {

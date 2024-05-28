@@ -22,7 +22,7 @@ class ScvTimePoint {
               MIN_VALUE, MAX_VALUE, value));
     }
 
-    return new SCVal.Builder()
+    return SCVal.builder()
         .discriminant(TYPE)
         .timepoint(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(value))))
         .build();

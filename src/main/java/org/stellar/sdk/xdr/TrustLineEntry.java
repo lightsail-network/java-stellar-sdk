@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -49,68 +52,17 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TrustLineEntry implements XdrElement {
-  public TrustLineEntry() {}
-
   private AccountID accountID;
-
-  public AccountID getAccountID() {
-    return this.accountID;
-  }
-
-  public void setAccountID(AccountID value) {
-    this.accountID = value;
-  }
-
   private TrustLineAsset asset;
-
-  public TrustLineAsset getAsset() {
-    return this.asset;
-  }
-
-  public void setAsset(TrustLineAsset value) {
-    this.asset = value;
-  }
-
   private Int64 balance;
-
-  public Int64 getBalance() {
-    return this.balance;
-  }
-
-  public void setBalance(Int64 value) {
-    this.balance = value;
-  }
-
   private Int64 limit;
-
-  public Int64 getLimit() {
-    return this.limit;
-  }
-
-  public void setLimit(Int64 value) {
-    this.limit = value;
-  }
-
   private Uint32 flags;
-
-  public Uint32 getFlags() {
-    return this.flags;
-  }
-
-  public void setFlags(Uint32 value) {
-    this.flags = value;
-  }
-
   private TrustLineEntryExt ext;
-
-  public TrustLineEntryExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(TrustLineEntryExt value) {
-    this.ext = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, TrustLineEntry encodedTrustLineEntry)
       throws IOException {
@@ -138,26 +90,6 @@ public class TrustLineEntry implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(this.accountID, this.asset, this.balance, this.limit, this.flags, this.ext);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof TrustLineEntry)) {
-      return false;
-    }
-
-    TrustLineEntry other = (TrustLineEntry) object;
-    return Objects.equals(this.accountID, other.accountID)
-        && Objects.equals(this.asset, other.asset)
-        && Objects.equals(this.balance, other.balance)
-        && Objects.equals(this.limit, other.limit)
-        && Objects.equals(this.flags, other.flags)
-        && Objects.equals(this.ext, other.ext);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -179,56 +111,6 @@ public class TrustLineEntry implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private AccountID accountID;
-    private TrustLineAsset asset;
-    private Int64 balance;
-    private Int64 limit;
-    private Uint32 flags;
-    private TrustLineEntryExt ext;
-
-    public Builder accountID(AccountID accountID) {
-      this.accountID = accountID;
-      return this;
-    }
-
-    public Builder asset(TrustLineAsset asset) {
-      this.asset = asset;
-      return this;
-    }
-
-    public Builder balance(Int64 balance) {
-      this.balance = balance;
-      return this;
-    }
-
-    public Builder limit(Int64 limit) {
-      this.limit = limit;
-      return this;
-    }
-
-    public Builder flags(Uint32 flags) {
-      this.flags = flags;
-      return this;
-    }
-
-    public Builder ext(TrustLineEntryExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public TrustLineEntry build() {
-      TrustLineEntry val = new TrustLineEntry();
-      val.setAccountID(this.accountID);
-      val.setAsset(this.asset);
-      val.setBalance(this.balance);
-      val.setLimit(this.limit);
-      val.setFlags(this.flags);
-      val.setExt(this.ext);
-      return val;
-    }
   }
 
   /**
@@ -256,50 +138,13 @@ public class TrustLineEntry implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class TrustLineEntryExt implements XdrElement {
-    public TrustLineEntryExt() {}
-
-    Integer v;
-
-    public Integer getDiscriminant() {
-      return this.v;
-    }
-
-    public void setDiscriminant(Integer value) {
-      this.v = value;
-    }
-
+    private Integer discriminant;
     private TrustLineEntryV1 v1;
-
-    public TrustLineEntryV1 getV1() {
-      return this.v1;
-    }
-
-    public void setV1(TrustLineEntryV1 value) {
-      this.v1 = value;
-    }
-
-    public static final class Builder {
-      private Integer discriminant;
-      private TrustLineEntryV1 v1;
-
-      public Builder discriminant(Integer discriminant) {
-        this.discriminant = discriminant;
-        return this;
-      }
-
-      public Builder v1(TrustLineEntryV1 v1) {
-        this.v1 = v1;
-        return this;
-      }
-
-      public TrustLineEntryExt build() {
-        TrustLineEntryExt val = new TrustLineEntryExt();
-        val.setDiscriminant(discriminant);
-        val.setV1(this.v1);
-        return val;
-      }
-    }
 
     public static void encode(
         XdrDataOutputStream stream, TrustLineEntryExt encodedTrustLineEntryExt) throws IOException {
@@ -331,21 +176,6 @@ public class TrustLineEntry implements XdrElement {
           break;
       }
       return decodedTrustLineEntryExt;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.v1, this.v);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof TrustLineEntryExt)) {
-        return false;
-      }
-
-      TrustLineEntryExt other = (TrustLineEntryExt) object;
-      return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
     }
 
     @Override
@@ -391,28 +221,13 @@ public class TrustLineEntry implements XdrElement {
      *         }
      * </pre>
      */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder(toBuilder = true)
     public static class TrustLineEntryV1 implements XdrElement {
-      public TrustLineEntryV1() {}
-
       private Liabilities liabilities;
-
-      public Liabilities getLiabilities() {
-        return this.liabilities;
-      }
-
-      public void setLiabilities(Liabilities value) {
-        this.liabilities = value;
-      }
-
       private TrustLineEntryV1Ext ext;
-
-      public TrustLineEntryV1Ext getExt() {
-        return this.ext;
-      }
-
-      public void setExt(TrustLineEntryV1Ext value) {
-        this.ext = value;
-      }
 
       public static void encode(
           XdrDataOutputStream stream, TrustLineEntryV1 encodedTrustLineEntryV1) throws IOException {
@@ -429,22 +244,6 @@ public class TrustLineEntry implements XdrElement {
         decodedTrustLineEntryV1.liabilities = Liabilities.decode(stream);
         decodedTrustLineEntryV1.ext = TrustLineEntryV1Ext.decode(stream);
         return decodedTrustLineEntryV1;
-      }
-
-      @Override
-      public int hashCode() {
-        return Objects.hash(this.liabilities, this.ext);
-      }
-
-      @Override
-      public boolean equals(Object object) {
-        if (!(object instanceof TrustLineEntryV1)) {
-          return false;
-        }
-
-        TrustLineEntryV1 other = (TrustLineEntryV1) object;
-        return Objects.equals(this.liabilities, other.liabilities)
-            && Objects.equals(this.ext, other.ext);
       }
 
       @Override
@@ -471,28 +270,6 @@ public class TrustLineEntry implements XdrElement {
         return decode(xdrDataInputStream);
       }
 
-      public static final class Builder {
-        private Liabilities liabilities;
-        private TrustLineEntryV1Ext ext;
-
-        public Builder liabilities(Liabilities liabilities) {
-          this.liabilities = liabilities;
-          return this;
-        }
-
-        public Builder ext(TrustLineEntryV1Ext ext) {
-          this.ext = ext;
-          return this;
-        }
-
-        public TrustLineEntryV1 build() {
-          TrustLineEntryV1 val = new TrustLineEntryV1();
-          val.setLiabilities(this.liabilities);
-          val.setExt(this.ext);
-          return val;
-        }
-      }
-
       /**
        * TrustLineEntryV1Ext's original definition in the XDR file is:
        *
@@ -506,50 +283,13 @@ public class TrustLineEntry implements XdrElement {
        *             }
        * </pre>
        */
+      @Data
+      @NoArgsConstructor
+      @AllArgsConstructor
+      @Builder(toBuilder = true)
       public static class TrustLineEntryV1Ext implements XdrElement {
-        public TrustLineEntryV1Ext() {}
-
-        Integer v;
-
-        public Integer getDiscriminant() {
-          return this.v;
-        }
-
-        public void setDiscriminant(Integer value) {
-          this.v = value;
-        }
-
+        private Integer discriminant;
         private TrustLineEntryExtensionV2 v2;
-
-        public TrustLineEntryExtensionV2 getV2() {
-          return this.v2;
-        }
-
-        public void setV2(TrustLineEntryExtensionV2 value) {
-          this.v2 = value;
-        }
-
-        public static final class Builder {
-          private Integer discriminant;
-          private TrustLineEntryExtensionV2 v2;
-
-          public Builder discriminant(Integer discriminant) {
-            this.discriminant = discriminant;
-            return this;
-          }
-
-          public Builder v2(TrustLineEntryExtensionV2 v2) {
-            this.v2 = v2;
-            return this;
-          }
-
-          public TrustLineEntryV1Ext build() {
-            TrustLineEntryV1Ext val = new TrustLineEntryV1Ext();
-            val.setDiscriminant(discriminant);
-            val.setV2(this.v2);
-            return val;
-          }
-        }
 
         public static void encode(
             XdrDataOutputStream stream, TrustLineEntryV1Ext encodedTrustLineEntryV1Ext)
@@ -582,21 +322,6 @@ public class TrustLineEntry implements XdrElement {
               break;
           }
           return decodedTrustLineEntryV1Ext;
-        }
-
-        @Override
-        public int hashCode() {
-          return Objects.hash(this.v2, this.v);
-        }
-
-        @Override
-        public boolean equals(Object object) {
-          if (!(object instanceof TrustLineEntryV1Ext)) {
-            return false;
-          }
-
-          TrustLineEntryV1Ext other = (TrustLineEntryV1Ext) object;
-          return Objects.equals(this.v2, other.v2) && Objects.equals(this.v, other.v);
         }
 
         @Override

@@ -36,12 +36,12 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class InvokeHostFunctionOperationTest {
   CreateContractArgs createContractArgs =
-      new CreateContractArgs.Builder()
+      CreateContractArgs.builder()
           .contractIDPreimage(
-              new ContractIDPreimage.Builder()
+              ContractIDPreimage.builder()
                   .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                   .fromAddress(
-                      new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                      ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                           .address(
                               new Address(
                                       "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -50,7 +50,7 @@ public class InvokeHostFunctionOperationTest {
                           .build())
                   .build())
           .executable(
-              new ContractExecutable.Builder()
+              ContractExecutable.builder()
                   .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                   .build())
           .build();
@@ -59,7 +59,7 @@ public class InvokeHostFunctionOperationTest {
   public void testConstructorsFromHostFunction() {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -79,21 +79,21 @@ public class InvokeHostFunctionOperationTest {
   public void testConstructorsFromHostFunctionAndSorobanAuthorizationEntries() {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
     SorobanAuthorizationEntry auth =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(
-                new SorobanCredentials.Builder()
+                SorobanCredentials.builder()
                     .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)
                     .build())
             .rootInvocation(
-                new SorobanAuthorizedInvocation.Builder()
+                SorobanAuthorizedInvocation.builder()
                     .subInvocations(new SorobanAuthorizedInvocation[] {})
                     .function(
-                        new SorobanAuthorizedFunction.Builder()
+                        SorobanAuthorizedFunction.builder()
                             .discriminant(
                                 SorobanAuthorizedFunctionType
                                     .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN)
@@ -118,7 +118,7 @@ public class InvokeHostFunctionOperationTest {
   @Test
   public void testFromXdr() {
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -133,7 +133,7 @@ public class InvokeHostFunctionOperationTest {
   public void testEquals() {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -154,7 +154,7 @@ public class InvokeHostFunctionOperationTest {
   public void testNotEqualsHostFunction() {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -165,12 +165,12 @@ public class InvokeHostFunctionOperationTest {
             .build();
 
     CreateContractArgs createContractArgs2 =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(
                                 new Address(
                                         "GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX")
@@ -179,12 +179,12 @@ public class InvokeHostFunctionOperationTest {
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction hostFunction2 =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs2)
             .build();
@@ -200,17 +200,17 @@ public class InvokeHostFunctionOperationTest {
   public void testNotEqualsAuth() {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
     SorobanAuthorizationEntry auth1 =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(
-                new SorobanCredentials.Builder()
+                SorobanCredentials.builder()
                     .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
                     .address(
-                        new SorobanAddressCredentials.Builder()
+                        SorobanAddressCredentials.builder()
                             .address(
                                 new Address(
                                         "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW")
@@ -220,10 +220,10 @@ public class InvokeHostFunctionOperationTest {
                             .build())
                     .build())
             .rootInvocation(
-                new SorobanAuthorizedInvocation.Builder()
+                SorobanAuthorizedInvocation.builder()
                     .subInvocations(new SorobanAuthorizedInvocation[] {})
                     .function(
-                        new SorobanAuthorizedFunction.Builder()
+                        SorobanAuthorizedFunction.builder()
                             .discriminant(
                                 SorobanAuthorizedFunctionType
                                     .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN)
@@ -233,16 +233,16 @@ public class InvokeHostFunctionOperationTest {
             .build();
 
     SorobanAuthorizationEntry auth2 =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(
-                new SorobanCredentials.Builder()
+                SorobanCredentials.builder()
                     .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)
                     .build())
             .rootInvocation(
-                new SorobanAuthorizedInvocation.Builder()
+                SorobanAuthorizedInvocation.builder()
                     .subInvocations(new SorobanAuthorizedInvocation[] {})
                     .function(
-                        new SorobanAuthorizedFunction.Builder()
+                        SorobanAuthorizedFunction.builder()
                             .discriminant(
                                 SorobanAuthorizedFunctionType
                                     .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN)
@@ -269,7 +269,7 @@ public class InvokeHostFunctionOperationTest {
   public void testNotEqualsSource() {
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     HostFunction hostFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -289,7 +289,7 @@ public class InvokeHostFunctionOperationTest {
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.uploadContractWasmOperationBuilder(wasm).build();
     HostFunction expectedFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM)
             .wasm(wasm)
             .build();
@@ -321,24 +321,24 @@ public class InvokeHostFunctionOperationTest {
             .build();
 
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(address.toSCAddress())
                             .salt(new Uint256(salt))
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_WASM)
                     .wasm_hash(new Hash(wasmId))
                     .build())
             .build();
     HostFunction expectedFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -370,24 +370,24 @@ public class InvokeHostFunctionOperationTest {
         InvokeHostFunctionOperation.createContractOperationBuilder(wasmId, address, salt).build();
 
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(address.toSCAddress())
                             .salt(new Uint256(salt))
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_WASM)
                     .wasm_hash(new Hash(wasmId))
                     .build())
             .build();
     HostFunction expectedFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -413,23 +413,23 @@ public class InvokeHostFunctionOperationTest {
         InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(address, salt)
             .build();
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(address.toSCAddress())
                             .salt(new Uint256(salt))
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction expectedFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -450,19 +450,19 @@ public class InvokeHostFunctionOperationTest {
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(asset).build();
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
                     .fromAsset(asset.toXdr())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     HostFunction expectedFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
             .createContract(createContractArgs)
             .build();
@@ -490,13 +490,13 @@ public class InvokeHostFunctionOperationTest {
     SCVal paramScVal = parameters.get(0);
 
     InvokeContractArgs invokeContractArgs =
-        new InvokeContractArgs.Builder()
+        InvokeContractArgs.builder()
             .contractAddress(contractIdScAddress)
             .functionName(functionNameSCSymbol)
             .args(new SCVal[] {paramScVal})
             .build();
     HostFunction expectedFunction =
-        new HostFunction.Builder()
+        HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
             .invokeContract(invokeContractArgs)
             .build();

@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -78,373 +81,32 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCVal implements XdrElement {
-  public SCVal() {}
-
-  SCValType type;
-
-  public SCValType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(SCValType value) {
-    this.type = value;
-  }
-
+  private SCValType discriminant;
   private Boolean b;
-
-  public Boolean getB() {
-    return this.b;
-  }
-
-  public void setB(Boolean value) {
-    this.b = value;
-  }
-
   private SCError error;
-
-  public SCError getError() {
-    return this.error;
-  }
-
-  public void setError(SCError value) {
-    this.error = value;
-  }
-
   private Uint32 u32;
-
-  public Uint32 getU32() {
-    return this.u32;
-  }
-
-  public void setU32(Uint32 value) {
-    this.u32 = value;
-  }
-
   private Int32 i32;
-
-  public Int32 getI32() {
-    return this.i32;
-  }
-
-  public void setI32(Int32 value) {
-    this.i32 = value;
-  }
-
   private Uint64 u64;
-
-  public Uint64 getU64() {
-    return this.u64;
-  }
-
-  public void setU64(Uint64 value) {
-    this.u64 = value;
-  }
-
   private Int64 i64;
-
-  public Int64 getI64() {
-    return this.i64;
-  }
-
-  public void setI64(Int64 value) {
-    this.i64 = value;
-  }
-
   private TimePoint timepoint;
-
-  public TimePoint getTimepoint() {
-    return this.timepoint;
-  }
-
-  public void setTimepoint(TimePoint value) {
-    this.timepoint = value;
-  }
-
   private Duration duration;
-
-  public Duration getDuration() {
-    return this.duration;
-  }
-
-  public void setDuration(Duration value) {
-    this.duration = value;
-  }
-
   private UInt128Parts u128;
-
-  public UInt128Parts getU128() {
-    return this.u128;
-  }
-
-  public void setU128(UInt128Parts value) {
-    this.u128 = value;
-  }
-
   private Int128Parts i128;
-
-  public Int128Parts getI128() {
-    return this.i128;
-  }
-
-  public void setI128(Int128Parts value) {
-    this.i128 = value;
-  }
-
   private UInt256Parts u256;
-
-  public UInt256Parts getU256() {
-    return this.u256;
-  }
-
-  public void setU256(UInt256Parts value) {
-    this.u256 = value;
-  }
-
   private Int256Parts i256;
-
-  public Int256Parts getI256() {
-    return this.i256;
-  }
-
-  public void setI256(Int256Parts value) {
-    this.i256 = value;
-  }
-
   private SCBytes bytes;
-
-  public SCBytes getBytes() {
-    return this.bytes;
-  }
-
-  public void setBytes(SCBytes value) {
-    this.bytes = value;
-  }
-
   private SCString str;
-
-  public SCString getStr() {
-    return this.str;
-  }
-
-  public void setStr(SCString value) {
-    this.str = value;
-  }
-
   private SCSymbol sym;
-
-  public SCSymbol getSym() {
-    return this.sym;
-  }
-
-  public void setSym(SCSymbol value) {
-    this.sym = value;
-  }
-
   private SCVec vec;
-
-  public SCVec getVec() {
-    return this.vec;
-  }
-
-  public void setVec(SCVec value) {
-    this.vec = value;
-  }
-
   private SCMap map;
-
-  public SCMap getMap() {
-    return this.map;
-  }
-
-  public void setMap(SCMap value) {
-    this.map = value;
-  }
-
   private SCAddress address;
-
-  public SCAddress getAddress() {
-    return this.address;
-  }
-
-  public void setAddress(SCAddress value) {
-    this.address = value;
-  }
-
   private SCNonceKey nonce_key;
-
-  public SCNonceKey getNonce_key() {
-    return this.nonce_key;
-  }
-
-  public void setNonce_key(SCNonceKey value) {
-    this.nonce_key = value;
-  }
-
   private SCContractInstance instance;
-
-  public SCContractInstance getInstance() {
-    return this.instance;
-  }
-
-  public void setInstance(SCContractInstance value) {
-    this.instance = value;
-  }
-
-  public static final class Builder {
-    private SCValType discriminant;
-    private Boolean b;
-    private SCError error;
-    private Uint32 u32;
-    private Int32 i32;
-    private Uint64 u64;
-    private Int64 i64;
-    private TimePoint timepoint;
-    private Duration duration;
-    private UInt128Parts u128;
-    private Int128Parts i128;
-    private UInt256Parts u256;
-    private Int256Parts i256;
-    private SCBytes bytes;
-    private SCString str;
-    private SCSymbol sym;
-    private SCVec vec;
-    private SCMap map;
-    private SCAddress address;
-    private SCNonceKey nonce_key;
-    private SCContractInstance instance;
-
-    public Builder discriminant(SCValType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder b(Boolean b) {
-      this.b = b;
-      return this;
-    }
-
-    public Builder error(SCError error) {
-      this.error = error;
-      return this;
-    }
-
-    public Builder u32(Uint32 u32) {
-      this.u32 = u32;
-      return this;
-    }
-
-    public Builder i32(Int32 i32) {
-      this.i32 = i32;
-      return this;
-    }
-
-    public Builder u64(Uint64 u64) {
-      this.u64 = u64;
-      return this;
-    }
-
-    public Builder i64(Int64 i64) {
-      this.i64 = i64;
-      return this;
-    }
-
-    public Builder timepoint(TimePoint timepoint) {
-      this.timepoint = timepoint;
-      return this;
-    }
-
-    public Builder duration(Duration duration) {
-      this.duration = duration;
-      return this;
-    }
-
-    public Builder u128(UInt128Parts u128) {
-      this.u128 = u128;
-      return this;
-    }
-
-    public Builder i128(Int128Parts i128) {
-      this.i128 = i128;
-      return this;
-    }
-
-    public Builder u256(UInt256Parts u256) {
-      this.u256 = u256;
-      return this;
-    }
-
-    public Builder i256(Int256Parts i256) {
-      this.i256 = i256;
-      return this;
-    }
-
-    public Builder bytes(SCBytes bytes) {
-      this.bytes = bytes;
-      return this;
-    }
-
-    public Builder str(SCString str) {
-      this.str = str;
-      return this;
-    }
-
-    public Builder sym(SCSymbol sym) {
-      this.sym = sym;
-      return this;
-    }
-
-    public Builder vec(SCVec vec) {
-      this.vec = vec;
-      return this;
-    }
-
-    public Builder map(SCMap map) {
-      this.map = map;
-      return this;
-    }
-
-    public Builder address(SCAddress address) {
-      this.address = address;
-      return this;
-    }
-
-    public Builder nonce_key(SCNonceKey nonce_key) {
-      this.nonce_key = nonce_key;
-      return this;
-    }
-
-    public Builder instance(SCContractInstance instance) {
-      this.instance = instance;
-      return this;
-    }
-
-    public SCVal build() {
-      SCVal val = new SCVal();
-      val.setDiscriminant(discriminant);
-      val.setB(this.b);
-      val.setError(this.error);
-      val.setU32(this.u32);
-      val.setI32(this.i32);
-      val.setU64(this.u64);
-      val.setI64(this.i64);
-      val.setTimepoint(this.timepoint);
-      val.setDuration(this.duration);
-      val.setU128(this.u128);
-      val.setI128(this.i128);
-      val.setU256(this.u256);
-      val.setI256(this.i256);
-      val.setBytes(this.bytes);
-      val.setStr(this.str);
-      val.setSym(this.sym);
-      val.setVec(this.vec);
-      val.setMap(this.map);
-      val.setAddress(this.address);
-      val.setNonce_key(this.nonce_key);
-      val.setInstance(this.instance);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, SCVal encodedSCVal) throws IOException {
     // Xdrgen::AST::Identifier
@@ -609,62 +271,6 @@ public class SCVal implements XdrElement {
         break;
     }
     return decodedSCVal;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.b,
-        this.error,
-        this.u32,
-        this.i32,
-        this.u64,
-        this.i64,
-        this.timepoint,
-        this.duration,
-        this.u128,
-        this.i128,
-        this.u256,
-        this.i256,
-        this.bytes,
-        this.str,
-        this.sym,
-        this.vec,
-        this.map,
-        this.address,
-        this.nonce_key,
-        this.instance,
-        this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCVal)) {
-      return false;
-    }
-
-    SCVal other = (SCVal) object;
-    return Objects.equals(this.b, other.b)
-        && Objects.equals(this.error, other.error)
-        && Objects.equals(this.u32, other.u32)
-        && Objects.equals(this.i32, other.i32)
-        && Objects.equals(this.u64, other.u64)
-        && Objects.equals(this.i64, other.i64)
-        && Objects.equals(this.timepoint, other.timepoint)
-        && Objects.equals(this.duration, other.duration)
-        && Objects.equals(this.u128, other.u128)
-        && Objects.equals(this.i128, other.i128)
-        && Objects.equals(this.u256, other.u256)
-        && Objects.equals(this.i256, other.i256)
-        && Objects.equals(this.bytes, other.bytes)
-        && Objects.equals(this.str, other.str)
-        && Objects.equals(this.sym, other.sym)
-        && Objects.equals(this.vec, other.vec)
-        && Objects.equals(this.map, other.map)
-        && Objects.equals(this.address, other.address)
-        && Objects.equals(this.nonce_key, other.nonce_key)
-        && Objects.equals(this.instance, other.instance)
-        && Objects.equals(this.type, other.type);
   }
 
   @Override

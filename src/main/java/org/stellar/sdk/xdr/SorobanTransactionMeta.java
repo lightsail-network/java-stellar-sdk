@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -31,62 +33,29 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SorobanTransactionMeta implements XdrElement {
-  public SorobanTransactionMeta() {}
-
   private SorobanTransactionMetaExt ext;
-
-  public SorobanTransactionMetaExt getExt() {
-    return this.ext;
-  }
-
-  public void setExt(SorobanTransactionMetaExt value) {
-    this.ext = value;
-  }
-
   private ContractEvent[] events;
-
-  public ContractEvent[] getEvents() {
-    return this.events;
-  }
-
-  public void setEvents(ContractEvent[] value) {
-    this.events = value;
-  }
-
   private SCVal returnValue;
-
-  public SCVal getReturnValue() {
-    return this.returnValue;
-  }
-
-  public void setReturnValue(SCVal value) {
-    this.returnValue = value;
-  }
-
   private DiagnosticEvent[] diagnosticEvents;
-
-  public DiagnosticEvent[] getDiagnosticEvents() {
-    return this.diagnosticEvents;
-  }
-
-  public void setDiagnosticEvents(DiagnosticEvent[] value) {
-    this.diagnosticEvents = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, SorobanTransactionMeta encodedSorobanTransactionMeta)
       throws IOException {
     SorobanTransactionMetaExt.encode(stream, encodedSorobanTransactionMeta.ext);
-    int eventssize = encodedSorobanTransactionMeta.getEvents().length;
-    stream.writeInt(eventssize);
-    for (int i = 0; i < eventssize; i++) {
+    int eventsSize = encodedSorobanTransactionMeta.getEvents().length;
+    stream.writeInt(eventsSize);
+    for (int i = 0; i < eventsSize; i++) {
       ContractEvent.encode(stream, encodedSorobanTransactionMeta.events[i]);
     }
     SCVal.encode(stream, encodedSorobanTransactionMeta.returnValue);
-    int diagnosticEventssize = encodedSorobanTransactionMeta.getDiagnosticEvents().length;
-    stream.writeInt(diagnosticEventssize);
-    for (int i = 0; i < diagnosticEventssize; i++) {
+    int diagnosticEventsSize = encodedSorobanTransactionMeta.getDiagnosticEvents().length;
+    stream.writeInt(diagnosticEventsSize);
+    for (int i = 0; i < diagnosticEventsSize; i++) {
       DiagnosticEvent.encode(stream, encodedSorobanTransactionMeta.diagnosticEvents[i]);
     }
   }
@@ -98,40 +67,18 @@ public class SorobanTransactionMeta implements XdrElement {
   public static SorobanTransactionMeta decode(XdrDataInputStream stream) throws IOException {
     SorobanTransactionMeta decodedSorobanTransactionMeta = new SorobanTransactionMeta();
     decodedSorobanTransactionMeta.ext = SorobanTransactionMetaExt.decode(stream);
-    int eventssize = stream.readInt();
-    decodedSorobanTransactionMeta.events = new ContractEvent[eventssize];
-    for (int i = 0; i < eventssize; i++) {
+    int eventsSize = stream.readInt();
+    decodedSorobanTransactionMeta.events = new ContractEvent[eventsSize];
+    for (int i = 0; i < eventsSize; i++) {
       decodedSorobanTransactionMeta.events[i] = ContractEvent.decode(stream);
     }
     decodedSorobanTransactionMeta.returnValue = SCVal.decode(stream);
-    int diagnosticEventssize = stream.readInt();
-    decodedSorobanTransactionMeta.diagnosticEvents = new DiagnosticEvent[diagnosticEventssize];
-    for (int i = 0; i < diagnosticEventssize; i++) {
+    int diagnosticEventsSize = stream.readInt();
+    decodedSorobanTransactionMeta.diagnosticEvents = new DiagnosticEvent[diagnosticEventsSize];
+    for (int i = 0; i < diagnosticEventsSize; i++) {
       decodedSorobanTransactionMeta.diagnosticEvents[i] = DiagnosticEvent.decode(stream);
     }
     return decodedSorobanTransactionMeta;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.ext,
-        Arrays.hashCode(this.events),
-        this.returnValue,
-        Arrays.hashCode(this.diagnosticEvents));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SorobanTransactionMeta)) {
-      return false;
-    }
-
-    SorobanTransactionMeta other = (SorobanTransactionMeta) object;
-    return Objects.equals(this.ext, other.ext)
-        && Arrays.equals(this.events, other.events)
-        && Objects.equals(this.returnValue, other.returnValue)
-        && Arrays.equals(this.diagnosticEvents, other.diagnosticEvents);
   }
 
   @Override
@@ -156,41 +103,5 @@ public class SorobanTransactionMeta implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private SorobanTransactionMetaExt ext;
-    private ContractEvent[] events;
-    private SCVal returnValue;
-    private DiagnosticEvent[] diagnosticEvents;
-
-    public Builder ext(SorobanTransactionMetaExt ext) {
-      this.ext = ext;
-      return this;
-    }
-
-    public Builder events(ContractEvent[] events) {
-      this.events = events;
-      return this;
-    }
-
-    public Builder returnValue(SCVal returnValue) {
-      this.returnValue = returnValue;
-      return this;
-    }
-
-    public Builder diagnosticEvents(DiagnosticEvent[] diagnosticEvents) {
-      this.diagnosticEvents = diagnosticEvents;
-      return this;
-    }
-
-    public SorobanTransactionMeta build() {
-      SorobanTransactionMeta val = new SorobanTransactionMeta();
-      val.setExt(this.ext);
-      val.setEvents(this.events);
-      val.setReturnValue(this.returnValue);
-      val.setDiagnosticEvents(this.diagnosticEvents);
-      return val;
-    }
   }
 }

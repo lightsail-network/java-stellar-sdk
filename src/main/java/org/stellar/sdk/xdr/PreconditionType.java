@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,16 +23,16 @@ import org.stellar.sdk.Base64Factory;
 public enum PreconditionType implements XdrElement {
   PRECOND_NONE(0),
   PRECOND_TIME(1),
-  PRECOND_V2(2),
-  ;
-  private int mValue;
+  PRECOND_V2(2);
+
+  private final int value;
 
   PreconditionType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static PreconditionType decode(XdrDataInputStream stream) throws IOException {

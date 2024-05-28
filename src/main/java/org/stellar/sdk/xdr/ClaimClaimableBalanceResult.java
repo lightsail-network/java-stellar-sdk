@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,33 +31,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClaimClaimableBalanceResult implements XdrElement {
-  public ClaimClaimableBalanceResult() {}
-
-  ClaimClaimableBalanceResultCode code;
-
-  public ClaimClaimableBalanceResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(ClaimClaimableBalanceResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private ClaimClaimableBalanceResultCode discriminant;
-
-    public Builder discriminant(ClaimClaimableBalanceResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public ClaimClaimableBalanceResult build() {
-      ClaimClaimableBalanceResult val = new ClaimClaimableBalanceResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private ClaimClaimableBalanceResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream, ClaimClaimableBalanceResult encodedClaimClaimableBalanceResult)
@@ -94,21 +76,6 @@ public class ClaimClaimableBalanceResult implements XdrElement {
         break;
     }
     return decodedClaimClaimableBalanceResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ClaimClaimableBalanceResult)) {
-      return false;
-    }
-
-    ClaimClaimableBalanceResult other = (ClaimClaimableBalanceResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

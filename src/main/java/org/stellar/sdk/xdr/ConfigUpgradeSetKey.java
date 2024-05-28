@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -21,28 +24,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class ConfigUpgradeSetKey implements XdrElement {
-  public ConfigUpgradeSetKey() {}
-
   private Hash contractID;
-
-  public Hash getContractID() {
-    return this.contractID;
-  }
-
-  public void setContractID(Hash value) {
-    this.contractID = value;
-  }
-
   private Hash contentHash;
-
-  public Hash getContentHash() {
-    return this.contentHash;
-  }
-
-  public void setContentHash(Hash value) {
-    this.contentHash = value;
-  }
 
   public static void encode(
       XdrDataOutputStream stream, ConfigUpgradeSetKey encodedConfigUpgradeSetKey)
@@ -60,22 +48,6 @@ public class ConfigUpgradeSetKey implements XdrElement {
     decodedConfigUpgradeSetKey.contractID = Hash.decode(stream);
     decodedConfigUpgradeSetKey.contentHash = Hash.decode(stream);
     return decodedConfigUpgradeSetKey;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.contractID, this.contentHash);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof ConfigUpgradeSetKey)) {
-      return false;
-    }
-
-    ConfigUpgradeSetKey other = (ConfigUpgradeSetKey) object;
-    return Objects.equals(this.contractID, other.contractID)
-        && Objects.equals(this.contentHash, other.contentHash);
   }
 
   @Override
@@ -100,27 +72,5 @@ public class ConfigUpgradeSetKey implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private Hash contractID;
-    private Hash contentHash;
-
-    public Builder contractID(Hash contractID) {
-      this.contractID = contractID;
-      return this;
-    }
-
-    public Builder contentHash(Hash contentHash) {
-      this.contentHash = contentHash;
-      return this;
-    }
-
-    public ConfigUpgradeSetKey build() {
-      ConfigUpgradeSetKey val = new ConfigUpgradeSetKey();
-      val.setContractID(this.contractID);
-      val.setContentHash(this.contentHash);
-      return val;
-    }
   }
 }

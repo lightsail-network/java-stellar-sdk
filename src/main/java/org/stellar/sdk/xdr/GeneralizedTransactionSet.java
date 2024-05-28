@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -23,50 +26,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class GeneralizedTransactionSet implements XdrElement {
-  public GeneralizedTransactionSet() {}
-
-  Integer v;
-
-  public Integer getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Integer value) {
-    this.v = value;
-  }
-
+  private Integer discriminant;
   private TransactionSetV1 v1TxSet;
-
-  public TransactionSetV1 getV1TxSet() {
-    return this.v1TxSet;
-  }
-
-  public void setV1TxSet(TransactionSetV1 value) {
-    this.v1TxSet = value;
-  }
-
-  public static final class Builder {
-    private Integer discriminant;
-    private TransactionSetV1 v1TxSet;
-
-    public Builder discriminant(Integer discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v1TxSet(TransactionSetV1 v1TxSet) {
-      this.v1TxSet = v1TxSet;
-      return this;
-    }
-
-    public GeneralizedTransactionSet build() {
-      GeneralizedTransactionSet val = new GeneralizedTransactionSet();
-      val.setDiscriminant(discriminant);
-      val.setV1TxSet(this.v1TxSet);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, GeneralizedTransactionSet encodedGeneralizedTransactionSet)
@@ -95,21 +61,6 @@ public class GeneralizedTransactionSet implements XdrElement {
         break;
     }
     return decodedGeneralizedTransactionSet;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v1TxSet, this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof GeneralizedTransactionSet)) {
-      return false;
-    }
-
-    GeneralizedTransactionSet other = (GeneralizedTransactionSet) object;
-    return Objects.equals(this.v1TxSet, other.v1TxSet) && Objects.equals(this.v, other.v);
   }
 
   @Override

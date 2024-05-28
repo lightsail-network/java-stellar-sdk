@@ -234,7 +234,7 @@ public class SorobanServerTest {
             + "}";
 
     String contractId = "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K";
-    SCVal key = new SCVal.Builder().discriminant(SCV_LEDGER_KEY_CONTRACT_INSTANCE).build();
+    SCVal key = SCVal.builder().discriminant(SCV_LEDGER_KEY_CONTRACT_INSTANCE).build();
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -246,13 +246,13 @@ public class SorobanServerTest {
 
             Address address = new Address(contractId);
             LedgerKey.LedgerKeyContractData ledgerKeyContractData =
-                new LedgerKey.LedgerKeyContractData.Builder()
+                LedgerKey.LedgerKeyContractData.builder()
                     .contract(address.toSCAddress())
                     .key(key)
                     .durability(ContractDataDurability.PERSISTENT)
                     .build();
             LedgerKey ledgerKey =
-                new LedgerKey.Builder()
+                LedgerKey.builder()
                     .discriminant(LedgerEntryType.CONTRACT_DATA)
                     .contractData(ledgerKeyContractData)
                     .build();
@@ -307,7 +307,7 @@ public class SorobanServerTest {
             + "  }\n"
             + "}";
     String contractId = "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K";
-    SCVal key = new SCVal.Builder().discriminant(SCV_LEDGER_KEY_CONTRACT_INSTANCE).build();
+    SCVal key = SCVal.builder().discriminant(SCV_LEDGER_KEY_CONTRACT_INSTANCE).build();
 
     MockWebServer mockWebServer = new MockWebServer();
     Dispatcher dispatcher =
@@ -319,13 +319,13 @@ public class SorobanServerTest {
 
             Address address = new Address(contractId);
             LedgerKey.LedgerKeyContractData ledgerKeyContractData =
-                new LedgerKey.LedgerKeyContractData.Builder()
+                LedgerKey.LedgerKeyContractData.builder()
                     .contract(address.toSCAddress())
                     .key(key)
                     .durability(ContractDataDurability.PERSISTENT)
                     .build();
             LedgerKey ledgerKey =
-                new LedgerKey.Builder()
+                LedgerKey.builder()
                     .discriminant(LedgerEntryType.CONTRACT_DATA)
                     .contractData(ledgerKeyContractData)
                     .build();
@@ -387,11 +387,11 @@ public class SorobanServerTest {
 
     String accountId0 = "GCZJ46F2ENQAEEZVVY4RKTGVXWZNETKZBZ4LIW5CMUF7AHP6M7BEV464";
     LedgerKey.LedgerKeyAccount ledgerKeyAccount0 =
-        new LedgerKey.LedgerKeyAccount.Builder()
+        LedgerKey.LedgerKeyAccount.builder()
             .accountID(KeyPair.fromAccountId(accountId0).getXdrAccountId())
             .build();
     LedgerKey ledgerKey0 =
-        new LedgerKey.Builder()
+        LedgerKey.builder()
             .account(ledgerKeyAccount0)
             .discriminant(LedgerEntryType.ACCOUNT)
             .build();
@@ -399,11 +399,11 @@ public class SorobanServerTest {
 
     String accountId1 = "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54";
     LedgerKey.LedgerKeyAccount ledgerKeyAccount1 =
-        new LedgerKey.LedgerKeyAccount.Builder()
+        LedgerKey.LedgerKeyAccount.builder()
             .accountID(KeyPair.fromAccountId(accountId1).getXdrAccountId())
             .build();
     LedgerKey ledgerKey1 =
-        new LedgerKey.Builder()
+        LedgerKey.builder()
             .account(ledgerKeyAccount1)
             .discriminant(LedgerEntryType.ACCOUNT)
             .build();
@@ -1011,10 +1011,10 @@ public class SorobanServerTest {
             + "  }\n"
             + "}\n";
     LedgerKey ledgerKey =
-        new LedgerKey.Builder()
+        LedgerKey.builder()
             .discriminant(LedgerEntryType.ACCOUNT)
             .account(
-                new LedgerKey.LedgerKeyAccount.Builder()
+                LedgerKey.LedgerKeyAccount.builder()
                     .accountID(
                         KeyPair.fromAccountId(
                                 "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -1022,11 +1022,11 @@ public class SorobanServerTest {
                     .build())
             .build();
     SorobanTransactionData originSorobanData =
-        new SorobanTransactionData.Builder()
+        SorobanTransactionData.builder()
             .resources(
-                new SorobanResources.Builder()
+                SorobanResources.builder()
                     .footprint(
-                        new LedgerFootprint.Builder()
+                        LedgerFootprint.builder()
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
@@ -1035,7 +1035,7 @@ public class SorobanServerTest {
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(new ExtensionPoint.Builder().discriminant(0).build())
+            .ext(ExtensionPoint.builder().discriminant(0).build())
             .build();
     Transaction transaction = buildSorobanTransaction(originSorobanData, null);
 
@@ -1126,12 +1126,12 @@ public class SorobanServerTest {
             + "  }\n"
             + "}\n";
     CreateContractArgs createContractArgs =
-        new CreateContractArgs.Builder()
+        CreateContractArgs.builder()
             .contractIDPreimage(
-                new ContractIDPreimage.Builder()
+                ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
                     .fromAddress(
-                        new ContractIDPreimage.ContractIDPreimageFromAddress.Builder()
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
                             .address(
                                 new Address(
                                         "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -1140,21 +1140,21 @@ public class SorobanServerTest {
                             .build())
                     .build())
             .executable(
-                new ContractExecutable.Builder()
+                ContractExecutable.builder()
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
                     .build())
             .build();
     SorobanAuthorizationEntry auth =
-        new SorobanAuthorizationEntry.Builder()
+        SorobanAuthorizationEntry.builder()
             .credentials(
-                new SorobanCredentials.Builder()
+                SorobanCredentials.builder()
                     .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)
                     .build())
             .rootInvocation(
-                new SorobanAuthorizedInvocation.Builder()
+                SorobanAuthorizedInvocation.builder()
                     .subInvocations(new SorobanAuthorizedInvocation[] {})
                     .function(
-                        new SorobanAuthorizedFunction.Builder()
+                        SorobanAuthorizedFunction.builder()
                             .discriminant(
                                 SorobanAuthorizedFunctionType
                                     .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN)
@@ -1447,13 +1447,13 @@ public class SorobanServerTest {
     }
 
     InvokeContractArgs invokeContractArgs =
-        new InvokeContractArgs.Builder()
+        InvokeContractArgs.builder()
             .contractAddress(new Address(contractId).toSCAddress())
             .functionName(new SCSymbol(new XdrString("increment")))
             .args(
                 new SCVal[] {
                   new Address(opInvokerKp.getAccountId()).toSCVal(),
-                  new SCVal.Builder()
+                  SCVal.builder()
                       .discriminant(SCValType.SCV_U32)
                       .u32(new Uint32(new XdrUnsignedInteger(10)))
                       .build()
@@ -1469,7 +1469,7 @@ public class SorobanServerTest {
                 InvokeHostFunctionOperation.builder()
                     .sourceAccount(opInvokerKp.getAccountId())
                     .hostFunction(
-                        new HostFunction.Builder()
+                        HostFunction.builder()
                             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
                             .invokeContract(invokeContractArgs)
                             .build())

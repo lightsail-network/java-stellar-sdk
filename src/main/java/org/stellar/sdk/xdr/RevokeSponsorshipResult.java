@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -28,33 +31,12 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class RevokeSponsorshipResult implements XdrElement {
-  public RevokeSponsorshipResult() {}
-
-  RevokeSponsorshipResultCode code;
-
-  public RevokeSponsorshipResultCode getDiscriminant() {
-    return this.code;
-  }
-
-  public void setDiscriminant(RevokeSponsorshipResultCode value) {
-    this.code = value;
-  }
-
-  public static final class Builder {
-    private RevokeSponsorshipResultCode discriminant;
-
-    public Builder discriminant(RevokeSponsorshipResultCode discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public RevokeSponsorshipResult build() {
-      RevokeSponsorshipResult val = new RevokeSponsorshipResult();
-      val.setDiscriminant(discriminant);
-      return val;
-    }
-  }
+  private RevokeSponsorshipResultCode discriminant;
 
   public static void encode(
       XdrDataOutputStream stream, RevokeSponsorshipResult encodedRevokeSponsorshipResult)
@@ -93,21 +75,6 @@ public class RevokeSponsorshipResult implements XdrElement {
         break;
     }
     return decodedRevokeSponsorshipResult;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.code);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof RevokeSponsorshipResult)) {
-      return false;
-    }
-
-    RevokeSponsorshipResult other = (RevokeSponsorshipResult) object;
-    return Objects.equals(this.code, other.code);
   }
 
   @Override

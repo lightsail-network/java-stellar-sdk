@@ -9,7 +9,7 @@ import org.stellar.sdk.xdr.SCValType;
 public class ScvVoidTest {
   @Test
   public void testScvVoid() {
-    SCVal expectedScVal = new SCVal.Builder().discriminant(SCValType.SCV_VOID).build();
+    SCVal expectedScVal = SCVal.builder().discriminant(SCValType.SCV_VOID).build();
 
     SCVal actualScVal = Scv.toVoid();
     assertEquals(expectedScVal, actualScVal);

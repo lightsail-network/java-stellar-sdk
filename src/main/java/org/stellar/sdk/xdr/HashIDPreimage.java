@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -50,101 +53,16 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class HashIDPreimage implements XdrElement {
-  public HashIDPreimage() {}
-
-  EnvelopeType type;
-
-  public EnvelopeType getDiscriminant() {
-    return this.type;
-  }
-
-  public void setDiscriminant(EnvelopeType value) {
-    this.type = value;
-  }
-
+  private EnvelopeType discriminant;
   private HashIDPreimageOperationID operationID;
-
-  public HashIDPreimageOperationID getOperationID() {
-    return this.operationID;
-  }
-
-  public void setOperationID(HashIDPreimageOperationID value) {
-    this.operationID = value;
-  }
-
   private HashIDPreimageRevokeID revokeID;
-
-  public HashIDPreimageRevokeID getRevokeID() {
-    return this.revokeID;
-  }
-
-  public void setRevokeID(HashIDPreimageRevokeID value) {
-    this.revokeID = value;
-  }
-
   private HashIDPreimageContractID contractID;
-
-  public HashIDPreimageContractID getContractID() {
-    return this.contractID;
-  }
-
-  public void setContractID(HashIDPreimageContractID value) {
-    this.contractID = value;
-  }
-
   private HashIDPreimageSorobanAuthorization sorobanAuthorization;
-
-  public HashIDPreimageSorobanAuthorization getSorobanAuthorization() {
-    return this.sorobanAuthorization;
-  }
-
-  public void setSorobanAuthorization(HashIDPreimageSorobanAuthorization value) {
-    this.sorobanAuthorization = value;
-  }
-
-  public static final class Builder {
-    private EnvelopeType discriminant;
-    private HashIDPreimageOperationID operationID;
-    private HashIDPreimageRevokeID revokeID;
-    private HashIDPreimageContractID contractID;
-    private HashIDPreimageSorobanAuthorization sorobanAuthorization;
-
-    public Builder discriminant(EnvelopeType discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder operationID(HashIDPreimageOperationID operationID) {
-      this.operationID = operationID;
-      return this;
-    }
-
-    public Builder revokeID(HashIDPreimageRevokeID revokeID) {
-      this.revokeID = revokeID;
-      return this;
-    }
-
-    public Builder contractID(HashIDPreimageContractID contractID) {
-      this.contractID = contractID;
-      return this;
-    }
-
-    public Builder sorobanAuthorization(HashIDPreimageSorobanAuthorization sorobanAuthorization) {
-      this.sorobanAuthorization = sorobanAuthorization;
-      return this;
-    }
-
-    public HashIDPreimage build() {
-      HashIDPreimage val = new HashIDPreimage();
-      val.setDiscriminant(discriminant);
-      val.setOperationID(this.operationID);
-      val.setRevokeID(this.revokeID);
-      val.setContractID(this.contractID);
-      val.setSorobanAuthorization(this.sorobanAuthorization);
-      return val;
-    }
-  }
 
   public static void encode(XdrDataOutputStream stream, HashIDPreimage encodedHashIDPreimage)
       throws IOException {
@@ -195,26 +113,6 @@ public class HashIDPreimage implements XdrElement {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(
-        this.operationID, this.revokeID, this.contractID, this.sorobanAuthorization, this.type);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof HashIDPreimage)) {
-      return false;
-    }
-
-    HashIDPreimage other = (HashIDPreimage) object;
-    return Objects.equals(this.operationID, other.operationID)
-        && Objects.equals(this.revokeID, other.revokeID)
-        && Objects.equals(this.contractID, other.contractID)
-        && Objects.equals(this.sorobanAuthorization, other.sorobanAuthorization)
-        && Objects.equals(this.type, other.type);
-  }
-
-  @Override
   public String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
@@ -250,38 +148,14 @@ public class HashIDPreimage implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class HashIDPreimageOperationID implements XdrElement {
-    public HashIDPreimageOperationID() {}
-
     private AccountID sourceAccount;
-
-    public AccountID getSourceAccount() {
-      return this.sourceAccount;
-    }
-
-    public void setSourceAccount(AccountID value) {
-      this.sourceAccount = value;
-    }
-
     private SequenceNumber seqNum;
-
-    public SequenceNumber getSeqNum() {
-      return this.seqNum;
-    }
-
-    public void setSeqNum(SequenceNumber value) {
-      this.seqNum = value;
-    }
-
     private Uint32 opNum;
-
-    public Uint32 getOpNum() {
-      return this.opNum;
-    }
-
-    public void setOpNum(Uint32 value) {
-      this.opNum = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream, HashIDPreimageOperationID encodedHashIDPreimageOperationID)
@@ -301,23 +175,6 @@ public class HashIDPreimage implements XdrElement {
       decodedHashIDPreimageOperationID.seqNum = SequenceNumber.decode(stream);
       decodedHashIDPreimageOperationID.opNum = Uint32.decode(stream);
       return decodedHashIDPreimageOperationID;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.sourceAccount, this.seqNum, this.opNum);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof HashIDPreimageOperationID)) {
-        return false;
-      }
-
-      HashIDPreimageOperationID other = (HashIDPreimageOperationID) object;
-      return Objects.equals(this.sourceAccount, other.sourceAccount)
-          && Objects.equals(this.seqNum, other.seqNum)
-          && Objects.equals(this.opNum, other.opNum);
     }
 
     @Override
@@ -343,35 +200,6 @@ public class HashIDPreimage implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
     }
-
-    public static final class Builder {
-      private AccountID sourceAccount;
-      private SequenceNumber seqNum;
-      private Uint32 opNum;
-
-      public Builder sourceAccount(AccountID sourceAccount) {
-        this.sourceAccount = sourceAccount;
-        return this;
-      }
-
-      public Builder seqNum(SequenceNumber seqNum) {
-        this.seqNum = seqNum;
-        return this;
-      }
-
-      public Builder opNum(Uint32 opNum) {
-        this.opNum = opNum;
-        return this;
-      }
-
-      public HashIDPreimageOperationID build() {
-        HashIDPreimageOperationID val = new HashIDPreimageOperationID();
-        val.setSourceAccount(this.sourceAccount);
-        val.setSeqNum(this.seqNum);
-        val.setOpNum(this.opNum);
-        return val;
-      }
-    }
   }
 
   /**
@@ -388,58 +216,16 @@ public class HashIDPreimage implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class HashIDPreimageRevokeID implements XdrElement {
-    public HashIDPreimageRevokeID() {}
-
     private AccountID sourceAccount;
-
-    public AccountID getSourceAccount() {
-      return this.sourceAccount;
-    }
-
-    public void setSourceAccount(AccountID value) {
-      this.sourceAccount = value;
-    }
-
     private SequenceNumber seqNum;
-
-    public SequenceNumber getSeqNum() {
-      return this.seqNum;
-    }
-
-    public void setSeqNum(SequenceNumber value) {
-      this.seqNum = value;
-    }
-
     private Uint32 opNum;
-
-    public Uint32 getOpNum() {
-      return this.opNum;
-    }
-
-    public void setOpNum(Uint32 value) {
-      this.opNum = value;
-    }
-
     private PoolID liquidityPoolID;
-
-    public PoolID getLiquidityPoolID() {
-      return this.liquidityPoolID;
-    }
-
-    public void setLiquidityPoolID(PoolID value) {
-      this.liquidityPoolID = value;
-    }
-
     private Asset asset;
-
-    public Asset getAsset() {
-      return this.asset;
-    }
-
-    public void setAsset(Asset value) {
-      this.asset = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream, HashIDPreimageRevokeID encodedHashIDPreimageRevokeID)
@@ -466,26 +252,6 @@ public class HashIDPreimage implements XdrElement {
     }
 
     @Override
-    public int hashCode() {
-      return Objects.hash(
-          this.sourceAccount, this.seqNum, this.opNum, this.liquidityPoolID, this.asset);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof HashIDPreimageRevokeID)) {
-        return false;
-      }
-
-      HashIDPreimageRevokeID other = (HashIDPreimageRevokeID) object;
-      return Objects.equals(this.sourceAccount, other.sourceAccount)
-          && Objects.equals(this.seqNum, other.seqNum)
-          && Objects.equals(this.opNum, other.opNum)
-          && Objects.equals(this.liquidityPoolID, other.liquidityPoolID)
-          && Objects.equals(this.asset, other.asset);
-    }
-
-    @Override
     public String toXdrBase64() throws IOException {
       return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
@@ -508,49 +274,6 @@ public class HashIDPreimage implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
     }
-
-    public static final class Builder {
-      private AccountID sourceAccount;
-      private SequenceNumber seqNum;
-      private Uint32 opNum;
-      private PoolID liquidityPoolID;
-      private Asset asset;
-
-      public Builder sourceAccount(AccountID sourceAccount) {
-        this.sourceAccount = sourceAccount;
-        return this;
-      }
-
-      public Builder seqNum(SequenceNumber seqNum) {
-        this.seqNum = seqNum;
-        return this;
-      }
-
-      public Builder opNum(Uint32 opNum) {
-        this.opNum = opNum;
-        return this;
-      }
-
-      public Builder liquidityPoolID(PoolID liquidityPoolID) {
-        this.liquidityPoolID = liquidityPoolID;
-        return this;
-      }
-
-      public Builder asset(Asset asset) {
-        this.asset = asset;
-        return this;
-      }
-
-      public HashIDPreimageRevokeID build() {
-        HashIDPreimageRevokeID val = new HashIDPreimageRevokeID();
-        val.setSourceAccount(this.sourceAccount);
-        val.setSeqNum(this.seqNum);
-        val.setOpNum(this.opNum);
-        val.setLiquidityPoolID(this.liquidityPoolID);
-        val.setAsset(this.asset);
-        return val;
-      }
-    }
   }
 
   /**
@@ -564,28 +287,13 @@ public class HashIDPreimage implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class HashIDPreimageContractID implements XdrElement {
-    public HashIDPreimageContractID() {}
-
     private Hash networkID;
-
-    public Hash getNetworkID() {
-      return this.networkID;
-    }
-
-    public void setNetworkID(Hash value) {
-      this.networkID = value;
-    }
-
     private ContractIDPreimage contractIDPreimage;
-
-    public ContractIDPreimage getContractIDPreimage() {
-      return this.contractIDPreimage;
-    }
-
-    public void setContractIDPreimage(ContractIDPreimage value) {
-      this.contractIDPreimage = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream, HashIDPreimageContractID encodedHashIDPreimageContractID)
@@ -603,22 +311,6 @@ public class HashIDPreimage implements XdrElement {
       decodedHashIDPreimageContractID.networkID = Hash.decode(stream);
       decodedHashIDPreimageContractID.contractIDPreimage = ContractIDPreimage.decode(stream);
       return decodedHashIDPreimageContractID;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(this.networkID, this.contractIDPreimage);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof HashIDPreimageContractID)) {
-        return false;
-      }
-
-      HashIDPreimageContractID other = (HashIDPreimageContractID) object;
-      return Objects.equals(this.networkID, other.networkID)
-          && Objects.equals(this.contractIDPreimage, other.contractIDPreimage);
     }
 
     @Override
@@ -644,28 +336,6 @@ public class HashIDPreimage implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
     }
-
-    public static final class Builder {
-      private Hash networkID;
-      private ContractIDPreimage contractIDPreimage;
-
-      public Builder networkID(Hash networkID) {
-        this.networkID = networkID;
-        return this;
-      }
-
-      public Builder contractIDPreimage(ContractIDPreimage contractIDPreimage) {
-        this.contractIDPreimage = contractIDPreimage;
-        return this;
-      }
-
-      public HashIDPreimageContractID build() {
-        HashIDPreimageContractID val = new HashIDPreimageContractID();
-        val.setNetworkID(this.networkID);
-        val.setContractIDPreimage(this.contractIDPreimage);
-        return val;
-      }
-    }
   }
 
   /**
@@ -681,48 +351,15 @@ public class HashIDPreimage implements XdrElement {
    *     }
    * </pre>
    */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
   public static class HashIDPreimageSorobanAuthorization implements XdrElement {
-    public HashIDPreimageSorobanAuthorization() {}
-
     private Hash networkID;
-
-    public Hash getNetworkID() {
-      return this.networkID;
-    }
-
-    public void setNetworkID(Hash value) {
-      this.networkID = value;
-    }
-
     private Int64 nonce;
-
-    public Int64 getNonce() {
-      return this.nonce;
-    }
-
-    public void setNonce(Int64 value) {
-      this.nonce = value;
-    }
-
     private Uint32 signatureExpirationLedger;
-
-    public Uint32 getSignatureExpirationLedger() {
-      return this.signatureExpirationLedger;
-    }
-
-    public void setSignatureExpirationLedger(Uint32 value) {
-      this.signatureExpirationLedger = value;
-    }
-
     private SorobanAuthorizedInvocation invocation;
-
-    public SorobanAuthorizedInvocation getInvocation() {
-      return this.invocation;
-    }
-
-    public void setInvocation(SorobanAuthorizedInvocation value) {
-      this.invocation = value;
-    }
 
     public static void encode(
         XdrDataOutputStream stream,
@@ -752,25 +389,6 @@ public class HashIDPreimage implements XdrElement {
     }
 
     @Override
-    public int hashCode() {
-      return Objects.hash(
-          this.networkID, this.nonce, this.signatureExpirationLedger, this.invocation);
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      if (!(object instanceof HashIDPreimageSorobanAuthorization)) {
-        return false;
-      }
-
-      HashIDPreimageSorobanAuthorization other = (HashIDPreimageSorobanAuthorization) object;
-      return Objects.equals(this.networkID, other.networkID)
-          && Objects.equals(this.nonce, other.nonce)
-          && Objects.equals(this.signatureExpirationLedger, other.signatureExpirationLedger)
-          && Objects.equals(this.invocation, other.invocation);
-    }
-
-    @Override
     public String toXdrBase64() throws IOException {
       return Base64Factory.getInstance().encodeToString(toXdrByteArray());
     }
@@ -793,42 +411,6 @@ public class HashIDPreimage implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       return decode(xdrDataInputStream);
-    }
-
-    public static final class Builder {
-      private Hash networkID;
-      private Int64 nonce;
-      private Uint32 signatureExpirationLedger;
-      private SorobanAuthorizedInvocation invocation;
-
-      public Builder networkID(Hash networkID) {
-        this.networkID = networkID;
-        return this;
-      }
-
-      public Builder nonce(Int64 nonce) {
-        this.nonce = nonce;
-        return this;
-      }
-
-      public Builder signatureExpirationLedger(Uint32 signatureExpirationLedger) {
-        this.signatureExpirationLedger = signatureExpirationLedger;
-        return this;
-      }
-
-      public Builder invocation(SorobanAuthorizedInvocation invocation) {
-        this.invocation = invocation;
-        return this;
-      }
-
-      public HashIDPreimageSorobanAuthorization build() {
-        HashIDPreimageSorobanAuthorization val = new HashIDPreimageSorobanAuthorization();
-        val.setNetworkID(this.networkID);
-        val.setNonce(this.nonce);
-        val.setSignatureExpirationLedger(this.signatureExpirationLedger);
-        val.setInvocation(this.invocation);
-        return val;
-      }
     }
   }
 }

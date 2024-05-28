@@ -8,8 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -25,57 +27,24 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class SCSpecUDTUnionV0 implements XdrElement {
-  public SCSpecUDTUnionV0() {}
-
   private XdrString doc;
-
-  public XdrString getDoc() {
-    return this.doc;
-  }
-
-  public void setDoc(XdrString value) {
-    this.doc = value;
-  }
-
   private XdrString lib;
-
-  public XdrString getLib() {
-    return this.lib;
-  }
-
-  public void setLib(XdrString value) {
-    this.lib = value;
-  }
-
   private XdrString name;
-
-  public XdrString getName() {
-    return this.name;
-  }
-
-  public void setName(XdrString value) {
-    this.name = value;
-  }
-
   private SCSpecUDTUnionCaseV0[] cases;
-
-  public SCSpecUDTUnionCaseV0[] getCases() {
-    return this.cases;
-  }
-
-  public void setCases(SCSpecUDTUnionCaseV0[] value) {
-    this.cases = value;
-  }
 
   public static void encode(XdrDataOutputStream stream, SCSpecUDTUnionV0 encodedSCSpecUDTUnionV0)
       throws IOException {
     encodedSCSpecUDTUnionV0.doc.encode(stream);
     encodedSCSpecUDTUnionV0.lib.encode(stream);
     encodedSCSpecUDTUnionV0.name.encode(stream);
-    int casessize = encodedSCSpecUDTUnionV0.getCases().length;
-    stream.writeInt(casessize);
-    for (int i = 0; i < casessize; i++) {
+    int casesSize = encodedSCSpecUDTUnionV0.getCases().length;
+    stream.writeInt(casesSize);
+    for (int i = 0; i < casesSize; i++) {
       SCSpecUDTUnionCaseV0.encode(stream, encodedSCSpecUDTUnionV0.cases[i]);
     }
   }
@@ -89,30 +58,12 @@ public class SCSpecUDTUnionV0 implements XdrElement {
     decodedSCSpecUDTUnionV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTUnionV0.lib = XdrString.decode(stream, 80);
     decodedSCSpecUDTUnionV0.name = XdrString.decode(stream, 60);
-    int casessize = stream.readInt();
-    decodedSCSpecUDTUnionV0.cases = new SCSpecUDTUnionCaseV0[casessize];
-    for (int i = 0; i < casessize; i++) {
+    int casesSize = stream.readInt();
+    decodedSCSpecUDTUnionV0.cases = new SCSpecUDTUnionCaseV0[casesSize];
+    for (int i = 0; i < casesSize; i++) {
       decodedSCSpecUDTUnionV0.cases[i] = SCSpecUDTUnionCaseV0.decode(stream);
     }
     return decodedSCSpecUDTUnionV0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.doc, this.lib, this.name, Arrays.hashCode(this.cases));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof SCSpecUDTUnionV0)) {
-      return false;
-    }
-
-    SCSpecUDTUnionV0 other = (SCSpecUDTUnionV0) object;
-    return Objects.equals(this.doc, other.doc)
-        && Objects.equals(this.lib, other.lib)
-        && Objects.equals(this.name, other.name)
-        && Arrays.equals(this.cases, other.cases);
   }
 
   @Override
@@ -137,41 +88,5 @@ public class SCSpecUDTUnionV0 implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
-  }
-
-  public static final class Builder {
-    private XdrString doc;
-    private XdrString lib;
-    private XdrString name;
-    private SCSpecUDTUnionCaseV0[] cases;
-
-    public Builder doc(XdrString doc) {
-      this.doc = doc;
-      return this;
-    }
-
-    public Builder lib(XdrString lib) {
-      this.lib = lib;
-      return this;
-    }
-
-    public Builder name(XdrString name) {
-      this.name = name;
-      return this;
-    }
-
-    public Builder cases(SCSpecUDTUnionCaseV0[] cases) {
-      this.cases = cases;
-      return this;
-    }
-
-    public SCSpecUDTUnionV0 build() {
-      SCSpecUDTUnionV0 val = new SCSpecUDTUnionV0();
-      val.setDoc(this.doc);
-      val.setLib(this.lib);
-      val.setName(this.name);
-      val.setCases(this.cases);
-      return val;
-    }
   }
 }

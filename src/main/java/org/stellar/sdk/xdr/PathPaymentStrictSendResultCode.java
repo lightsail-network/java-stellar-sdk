@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -56,16 +54,16 @@ public enum PathPaymentStrictSendResultCode implements XdrElement {
   PATH_PAYMENT_STRICT_SEND_NO_ISSUER(-9),
   PATH_PAYMENT_STRICT_SEND_TOO_FEW_OFFERS(-10),
   PATH_PAYMENT_STRICT_SEND_OFFER_CROSS_SELF(-11),
-  PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN(-12),
-  ;
-  private int mValue;
+  PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN(-12);
+
+  private final int value;
 
   PathPaymentStrictSendResultCode(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static PathPaymentStrictSendResultCode decode(XdrDataInputStream stream)

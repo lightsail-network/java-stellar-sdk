@@ -3,8 +3,6 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,16 +37,16 @@ public enum EnvelopeType implements XdrElement {
   ENVELOPE_TYPE_OP_ID(6),
   ENVELOPE_TYPE_POOL_REVOKE_OP_ID(7),
   ENVELOPE_TYPE_CONTRACT_ID(8),
-  ENVELOPE_TYPE_SOROBAN_AUTHORIZATION(9),
-  ;
-  private int mValue;
+  ENVELOPE_TYPE_SOROBAN_AUTHORIZATION(9);
+
+  private final int value;
 
   EnvelopeType(int value) {
-    mValue = value;
+    this.value = value;
   }
 
   public int getValue() {
-    return mValue;
+    return value;
   }
 
   public static EnvelopeType decode(XdrDataInputStream stream) throws IOException {

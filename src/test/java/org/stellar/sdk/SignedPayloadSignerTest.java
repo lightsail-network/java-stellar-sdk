@@ -35,7 +35,7 @@ public class SignedPayloadSignerTest {
   public void itFailsWhenSignerNotED25519() {
     try {
       new SignedPayloadSigner(
-          new AccountID(new PublicKey.Builder().ed25519(new Uint256(new byte[] {})).build()),
+          new AccountID(PublicKey.builder().ed25519(new Uint256(new byte[] {})).build()),
           new byte[] {});
       fail("should not create a payload signer if signer wasn't ed25519 type");
     } catch (IllegalArgumentException ignored) {

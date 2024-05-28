@@ -8,7 +8,10 @@ import static org.stellar.sdk.xdr.Constants.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
@@ -24,50 +27,13 @@ import org.stellar.sdk.Base64Factory;
  * };
  * </pre>
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LedgerCloseMetaExt implements XdrElement {
-  public LedgerCloseMetaExt() {}
-
-  Integer v;
-
-  public Integer getDiscriminant() {
-    return this.v;
-  }
-
-  public void setDiscriminant(Integer value) {
-    this.v = value;
-  }
-
+  private Integer discriminant;
   private LedgerCloseMetaExtV1 v1;
-
-  public LedgerCloseMetaExtV1 getV1() {
-    return this.v1;
-  }
-
-  public void setV1(LedgerCloseMetaExtV1 value) {
-    this.v1 = value;
-  }
-
-  public static final class Builder {
-    private Integer discriminant;
-    private LedgerCloseMetaExtV1 v1;
-
-    public Builder discriminant(Integer discriminant) {
-      this.discriminant = discriminant;
-      return this;
-    }
-
-    public Builder v1(LedgerCloseMetaExtV1 v1) {
-      this.v1 = v1;
-      return this;
-    }
-
-    public LedgerCloseMetaExt build() {
-      LedgerCloseMetaExt val = new LedgerCloseMetaExt();
-      val.setDiscriminant(discriminant);
-      val.setV1(this.v1);
-      return val;
-    }
-  }
 
   public static void encode(
       XdrDataOutputStream stream, LedgerCloseMetaExt encodedLedgerCloseMetaExt) throws IOException {
@@ -99,21 +65,6 @@ public class LedgerCloseMetaExt implements XdrElement {
         break;
     }
     return decodedLedgerCloseMetaExt;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.v1, this.v);
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof LedgerCloseMetaExt)) {
-      return false;
-    }
-
-    LedgerCloseMetaExt other = (LedgerCloseMetaExt) object;
-    return Objects.equals(this.v1, other.v1) && Objects.equals(this.v, other.v);
   }
 
   @Override
