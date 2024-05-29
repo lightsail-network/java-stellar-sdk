@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,14 +23,9 @@ import org.stellar.sdk.Base64Factory;
 public class Thresholds implements XdrElement {
   private byte[] Thresholds;
 
-  public static void encode(XdrDataOutputStream stream, Thresholds encodedThresholds)
-      throws IOException {
-    int ThresholdsSize = encodedThresholds.Thresholds.length;
-    stream.write(encodedThresholds.getThresholds(), 0, ThresholdsSize);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    int ThresholdsSize = Thresholds.length;
+    stream.write(getThresholds(), 0, ThresholdsSize);
   }
 
   public static Thresholds decode(XdrDataInputStream stream) throws IOException {
@@ -42,19 +34,6 @@ public class Thresholds implements XdrElement {
     decodedThresholds.Thresholds = new byte[ThresholdsSize];
     stream.read(decodedThresholds.Thresholds, 0, ThresholdsSize);
     return decodedThresholds;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Thresholds fromXdrBase64(String xdr) throws IOException {

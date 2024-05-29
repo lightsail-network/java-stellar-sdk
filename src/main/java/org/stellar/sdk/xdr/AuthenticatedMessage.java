@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,22 +35,13 @@ public class AuthenticatedMessage implements XdrElement {
   private Uint32 discriminant;
   private AuthenticatedMessageV0 v0;
 
-  public static void encode(
-      XdrDataOutputStream stream, AuthenticatedMessage encodedAuthenticatedMessage)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // Uint32
-    stream.writeInt(
-        encodedAuthenticatedMessage.getDiscriminant().getUint32().getNumber().intValue());
-    switch (encodedAuthenticatedMessage.getDiscriminant().getUint32().getNumber().intValue()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getUint32().getNumber().intValue());
+    switch (discriminant.getUint32().getNumber().intValue()) {
       case 0:
-        AuthenticatedMessageV0.encode(stream, encodedAuthenticatedMessage.v0);
+        v0.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static AuthenticatedMessage decode(XdrDataInputStream stream) throws IOException {
@@ -66,19 +54,6 @@ public class AuthenticatedMessage implements XdrElement {
         break;
     }
     return decodedAuthenticatedMessage;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static AuthenticatedMessage fromXdrBase64(String xdr) throws IOException {
@@ -113,16 +88,10 @@ public class AuthenticatedMessage implements XdrElement {
     private StellarMessage message;
     private HmacSha256Mac mac;
 
-    public static void encode(
-        XdrDataOutputStream stream, AuthenticatedMessageV0 encodedAuthenticatedMessageV0)
-        throws IOException {
-      Uint64.encode(stream, encodedAuthenticatedMessageV0.sequence);
-      StellarMessage.encode(stream, encodedAuthenticatedMessageV0.message);
-      HmacSha256Mac.encode(stream, encodedAuthenticatedMessageV0.mac);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      sequence.encode(stream);
+      message.encode(stream);
+      mac.encode(stream);
     }
 
     public static AuthenticatedMessageV0 decode(XdrDataInputStream stream) throws IOException {
@@ -131,19 +100,6 @@ public class AuthenticatedMessage implements XdrElement {
       decodedAuthenticatedMessageV0.message = StellarMessage.decode(stream);
       decodedAuthenticatedMessageV0.mac = HmacSha256Mac.decode(stream);
       return decodedAuthenticatedMessageV0;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static AuthenticatedMessageV0 fromXdrBase64(String xdr) throws IOException {

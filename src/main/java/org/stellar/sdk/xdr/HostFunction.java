@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,28 +36,21 @@ public class HostFunction implements XdrElement {
   private CreateContractArgs createContract;
   private byte[] wasm;
 
-  public static void encode(XdrDataOutputStream stream, HostFunction encodedHostFunction)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // HostFunctionType
-    stream.writeInt(encodedHostFunction.getDiscriminant().getValue());
-    switch (encodedHostFunction.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case HOST_FUNCTION_TYPE_INVOKE_CONTRACT:
-        InvokeContractArgs.encode(stream, encodedHostFunction.invokeContract);
+        invokeContract.encode(stream);
         break;
       case HOST_FUNCTION_TYPE_CREATE_CONTRACT:
-        CreateContractArgs.encode(stream, encodedHostFunction.createContract);
+        createContract.encode(stream);
         break;
       case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
-        int wasmSize = encodedHostFunction.wasm.length;
+        int wasmSize = wasm.length;
         stream.writeInt(wasmSize);
-        stream.write(encodedHostFunction.getWasm(), 0, wasmSize);
+        stream.write(getWasm(), 0, wasmSize);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static HostFunction decode(XdrDataInputStream stream) throws IOException {
@@ -81,19 +71,6 @@ public class HostFunction implements XdrElement {
         break;
     }
     return decodedHostFunction;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static HostFunction fromXdrBase64(String xdr) throws IOException {

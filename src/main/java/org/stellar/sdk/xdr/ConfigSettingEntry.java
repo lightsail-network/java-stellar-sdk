@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -72,67 +69,56 @@ public class ConfigSettingEntry implements XdrElement {
   private Uint64[] bucketListSizeWindow;
   private EvictionIterator evictionIterator;
 
-  public static void encode(
-      XdrDataOutputStream stream, ConfigSettingEntry encodedConfigSettingEntry) throws IOException {
-    // Xdrgen::AST::Identifier
-    // ConfigSettingID
-    stream.writeInt(encodedConfigSettingEntry.getDiscriminant().getValue());
-    switch (encodedConfigSettingEntry.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES:
-        Uint32.encode(stream, encodedConfigSettingEntry.contractMaxSizeBytes);
+        contractMaxSizeBytes.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_COMPUTE_V0:
-        ConfigSettingContractComputeV0.encode(stream, encodedConfigSettingEntry.contractCompute);
+        contractCompute.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_LEDGER_COST_V0:
-        ConfigSettingContractLedgerCostV0.encode(
-            stream, encodedConfigSettingEntry.contractLedgerCost);
+        contractLedgerCost.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0:
-        ConfigSettingContractHistoricalDataV0.encode(
-            stream, encodedConfigSettingEntry.contractHistoricalData);
+        contractHistoricalData.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_EVENTS_V0:
-        ConfigSettingContractEventsV0.encode(stream, encodedConfigSettingEntry.contractEvents);
+        contractEvents.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_BANDWIDTH_V0:
-        ConfigSettingContractBandwidthV0.encode(
-            stream, encodedConfigSettingEntry.contractBandwidth);
+        contractBandwidth.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS:
-        ContractCostParams.encode(stream, encodedConfigSettingEntry.contractCostParamsCpuInsns);
+        contractCostParamsCpuInsns.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES:
-        ContractCostParams.encode(stream, encodedConfigSettingEntry.contractCostParamsMemBytes);
+        contractCostParamsMemBytes.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES:
-        Uint32.encode(stream, encodedConfigSettingEntry.contractDataKeySizeBytes);
+        contractDataKeySizeBytes.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES:
-        Uint32.encode(stream, encodedConfigSettingEntry.contractDataEntrySizeBytes);
+        contractDataEntrySizeBytes.encode(stream);
         break;
       case CONFIG_SETTING_STATE_ARCHIVAL:
-        StateArchivalSettings.encode(stream, encodedConfigSettingEntry.stateArchivalSettings);
+        stateArchivalSettings.encode(stream);
         break;
       case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
-        ConfigSettingContractExecutionLanesV0.encode(
-            stream, encodedConfigSettingEntry.contractExecutionLanes);
+        contractExecutionLanes.encode(stream);
         break;
       case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-        int bucketListSizeWindowSize = encodedConfigSettingEntry.getBucketListSizeWindow().length;
+        int bucketListSizeWindowSize = getBucketListSizeWindow().length;
         stream.writeInt(bucketListSizeWindowSize);
         for (int i = 0; i < bucketListSizeWindowSize; i++) {
-          Uint64.encode(stream, encodedConfigSettingEntry.bucketListSizeWindow[i]);
+          bucketListSizeWindow[i].encode(stream);
         }
         break;
       case CONFIG_SETTING_EVICTION_ITERATOR:
-        EvictionIterator.encode(stream, encodedConfigSettingEntry.evictionIterator);
+        evictionIterator.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ConfigSettingEntry decode(XdrDataInputStream stream) throws IOException {
@@ -192,19 +178,6 @@ public class ConfigSettingEntry implements XdrElement {
         break;
     }
     return decodedConfigSettingEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ConfigSettingEntry fromXdrBase64(String xdr) throws IOException {

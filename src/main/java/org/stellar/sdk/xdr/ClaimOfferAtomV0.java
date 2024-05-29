@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,18 +43,13 @@ public class ClaimOfferAtomV0 implements XdrElement {
   private Asset assetBought;
   private Int64 amountBought;
 
-  public static void encode(XdrDataOutputStream stream, ClaimOfferAtomV0 encodedClaimOfferAtomV0)
-      throws IOException {
-    Uint256.encode(stream, encodedClaimOfferAtomV0.sellerEd25519);
-    Int64.encode(stream, encodedClaimOfferAtomV0.offerID);
-    Asset.encode(stream, encodedClaimOfferAtomV0.assetSold);
-    Int64.encode(stream, encodedClaimOfferAtomV0.amountSold);
-    Asset.encode(stream, encodedClaimOfferAtomV0.assetBought);
-    Int64.encode(stream, encodedClaimOfferAtomV0.amountBought);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    sellerEd25519.encode(stream);
+    offerID.encode(stream);
+    assetSold.encode(stream);
+    amountSold.encode(stream);
+    assetBought.encode(stream);
+    amountBought.encode(stream);
   }
 
   public static ClaimOfferAtomV0 decode(XdrDataInputStream stream) throws IOException {
@@ -69,19 +61,6 @@ public class ClaimOfferAtomV0 implements XdrElement {
     decodedClaimOfferAtomV0.assetBought = Asset.decode(stream);
     decodedClaimOfferAtomV0.amountBought = Int64.decode(stream);
     return decodedClaimOfferAtomV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ClaimOfferAtomV0 fromXdrBase64(String xdr) throws IOException {

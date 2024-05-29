@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,13 +33,9 @@ import org.stellar.sdk.Base64Factory;
 public class ExtendFootprintTTLResult implements XdrElement {
   private ExtendFootprintTTLResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream, ExtendFootprintTTLResult encodedExtendFootprintTTLResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // ExtendFootprintTTLResultCode
-    stream.writeInt(encodedExtendFootprintTTLResult.getDiscriminant().getValue());
-    switch (encodedExtendFootprintTTLResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case EXTEND_FOOTPRINT_TTL_SUCCESS:
         break;
       case EXTEND_FOOTPRINT_TTL_MALFORMED:
@@ -50,10 +43,6 @@ public class ExtendFootprintTTLResult implements XdrElement {
       case EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ExtendFootprintTTLResult decode(XdrDataInputStream stream) throws IOException {
@@ -69,19 +58,6 @@ public class ExtendFootprintTTLResult implements XdrElement {
         break;
     }
     return decodedExtendFootprintTTLResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ExtendFootprintTTLResult fromXdrBase64(String xdr) throws IOException {

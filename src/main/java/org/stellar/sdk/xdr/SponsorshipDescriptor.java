@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,19 +23,13 @@ import org.stellar.sdk.Base64Factory;
 public class SponsorshipDescriptor implements XdrElement {
   private AccountID SponsorshipDescriptor;
 
-  public static void encode(
-      XdrDataOutputStream stream, SponsorshipDescriptor encodedSponsorshipDescriptor)
-      throws IOException {
-    if (encodedSponsorshipDescriptor.SponsorshipDescriptor != null) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    if (SponsorshipDescriptor != null) {
       stream.writeInt(1);
-      AccountID.encode(stream, encodedSponsorshipDescriptor.SponsorshipDescriptor);
+      SponsorshipDescriptor.encode(stream);
     } else {
       stream.writeInt(0);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SponsorshipDescriptor decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +39,6 @@ public class SponsorshipDescriptor implements XdrElement {
       decodedSponsorshipDescriptor.SponsorshipDescriptor = AccountID.decode(stream);
     }
     return decodedSponsorshipDescriptor;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SponsorshipDescriptor fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,15 +30,9 @@ public class SignedSurveyRequestMessage implements XdrElement {
   private Signature requestSignature;
   private SurveyRequestMessage request;
 
-  public static void encode(
-      XdrDataOutputStream stream, SignedSurveyRequestMessage encodedSignedSurveyRequestMessage)
-      throws IOException {
-    Signature.encode(stream, encodedSignedSurveyRequestMessage.requestSignature);
-    SurveyRequestMessage.encode(stream, encodedSignedSurveyRequestMessage.request);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    requestSignature.encode(stream);
+    request.encode(stream);
   }
 
   public static SignedSurveyRequestMessage decode(XdrDataInputStream stream) throws IOException {
@@ -49,19 +40,6 @@ public class SignedSurveyRequestMessage implements XdrElement {
     decodedSignedSurveyRequestMessage.requestSignature = Signature.decode(stream);
     decodedSignedSurveyRequestMessage.request = SurveyRequestMessage.decode(stream);
     return decodedSignedSurveyRequestMessage;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SignedSurveyRequestMessage fromXdrBase64(String xdr) throws IOException {

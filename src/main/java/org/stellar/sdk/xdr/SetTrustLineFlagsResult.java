@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,13 +35,9 @@ import org.stellar.sdk.Base64Factory;
 public class SetTrustLineFlagsResult implements XdrElement {
   private SetTrustLineFlagsResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream, SetTrustLineFlagsResult encodedSetTrustLineFlagsResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // SetTrustLineFlagsResultCode
-    stream.writeInt(encodedSetTrustLineFlagsResult.getDiscriminant().getValue());
-    switch (encodedSetTrustLineFlagsResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SET_TRUST_LINE_FLAGS_SUCCESS:
         break;
       case SET_TRUST_LINE_FLAGS_MALFORMED:
@@ -54,10 +47,6 @@ public class SetTrustLineFlagsResult implements XdrElement {
       case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SetTrustLineFlagsResult decode(XdrDataInputStream stream) throws IOException {
@@ -75,19 +64,6 @@ public class SetTrustLineFlagsResult implements XdrElement {
         break;
     }
     return decodedSetTrustLineFlagsResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SetTrustLineFlagsResult fromXdrBase64(String xdr) throws IOException {

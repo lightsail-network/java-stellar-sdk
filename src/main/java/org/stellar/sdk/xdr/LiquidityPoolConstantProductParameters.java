@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,17 +32,10 @@ public class LiquidityPoolConstantProductParameters implements XdrElement {
   private Asset assetB;
   private Int32 fee;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      LiquidityPoolConstantProductParameters encodedLiquidityPoolConstantProductParameters)
-      throws IOException {
-    Asset.encode(stream, encodedLiquidityPoolConstantProductParameters.assetA);
-    Asset.encode(stream, encodedLiquidityPoolConstantProductParameters.assetB);
-    Int32.encode(stream, encodedLiquidityPoolConstantProductParameters.fee);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    assetA.encode(stream);
+    assetB.encode(stream);
+    fee.encode(stream);
   }
 
   public static LiquidityPoolConstantProductParameters decode(XdrDataInputStream stream)
@@ -56,19 +46,6 @@ public class LiquidityPoolConstantProductParameters implements XdrElement {
     decodedLiquidityPoolConstantProductParameters.assetB = Asset.decode(stream);
     decodedLiquidityPoolConstantProductParameters.fee = Int32.decode(stream);
     return decodedLiquidityPoolConstantProductParameters;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LiquidityPoolConstantProductParameters fromXdrBase64(String xdr)

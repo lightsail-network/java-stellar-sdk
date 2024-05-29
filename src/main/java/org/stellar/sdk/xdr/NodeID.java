@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,31 +23,14 @@ import org.stellar.sdk.Base64Factory;
 public class NodeID implements XdrElement {
   private PublicKey NodeID;
 
-  public static void encode(XdrDataOutputStream stream, NodeID encodedNodeID) throws IOException {
-    PublicKey.encode(stream, encodedNodeID.NodeID);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    NodeID.encode(stream);
   }
 
   public static NodeID decode(XdrDataInputStream stream) throws IOException {
     NodeID decodedNodeID = new NodeID();
     decodedNodeID.NodeID = PublicKey.decode(stream);
     return decodedNodeID;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static NodeID fromXdrBase64(String xdr) throws IOException {

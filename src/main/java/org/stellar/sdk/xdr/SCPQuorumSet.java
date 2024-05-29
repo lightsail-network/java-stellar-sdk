@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,23 +32,18 @@ public class SCPQuorumSet implements XdrElement {
   private NodeID[] validators;
   private SCPQuorumSet[] innerSets;
 
-  public static void encode(XdrDataOutputStream stream, SCPQuorumSet encodedSCPQuorumSet)
-      throws IOException {
-    Uint32.encode(stream, encodedSCPQuorumSet.threshold);
-    int validatorsSize = encodedSCPQuorumSet.getValidators().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    threshold.encode(stream);
+    int validatorsSize = getValidators().length;
     stream.writeInt(validatorsSize);
     for (int i = 0; i < validatorsSize; i++) {
-      NodeID.encode(stream, encodedSCPQuorumSet.validators[i]);
+      validators[i].encode(stream);
     }
-    int innerSetsSize = encodedSCPQuorumSet.getInnerSets().length;
+    int innerSetsSize = getInnerSets().length;
     stream.writeInt(innerSetsSize);
     for (int i = 0; i < innerSetsSize; i++) {
-      SCPQuorumSet.encode(stream, encodedSCPQuorumSet.innerSets[i]);
+      innerSets[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCPQuorumSet decode(XdrDataInputStream stream) throws IOException {
@@ -68,19 +60,6 @@ public class SCPQuorumSet implements XdrElement {
       decodedSCPQuorumSet.innerSets[i] = SCPQuorumSet.decode(stream);
     }
     return decodedSCPQuorumSet;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCPQuorumSet fromXdrBase64(String xdr) throws IOException {

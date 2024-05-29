@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,16 +33,10 @@ public class ContractCostParamEntry implements XdrElement {
   private Int64 constTerm;
   private Int64 linearTerm;
 
-  public static void encode(
-      XdrDataOutputStream stream, ContractCostParamEntry encodedContractCostParamEntry)
-      throws IOException {
-    ExtensionPoint.encode(stream, encodedContractCostParamEntry.ext);
-    Int64.encode(stream, encodedContractCostParamEntry.constTerm);
-    Int64.encode(stream, encodedContractCostParamEntry.linearTerm);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
+    constTerm.encode(stream);
+    linearTerm.encode(stream);
   }
 
   public static ContractCostParamEntry decode(XdrDataInputStream stream) throws IOException {
@@ -54,19 +45,6 @@ public class ContractCostParamEntry implements XdrElement {
     decodedContractCostParamEntry.constTerm = Int64.decode(stream);
     decodedContractCostParamEntry.linearTerm = Int64.decode(stream);
     return decodedContractCostParamEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ContractCostParamEntry fromXdrBase64(String xdr) throws IOException {

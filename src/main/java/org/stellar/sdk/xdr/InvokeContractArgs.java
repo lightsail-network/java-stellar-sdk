@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,19 +31,14 @@ public class InvokeContractArgs implements XdrElement {
   private SCSymbol functionName;
   private SCVal[] args;
 
-  public static void encode(
-      XdrDataOutputStream stream, InvokeContractArgs encodedInvokeContractArgs) throws IOException {
-    SCAddress.encode(stream, encodedInvokeContractArgs.contractAddress);
-    SCSymbol.encode(stream, encodedInvokeContractArgs.functionName);
-    int argsSize = encodedInvokeContractArgs.getArgs().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    contractAddress.encode(stream);
+    functionName.encode(stream);
+    int argsSize = getArgs().length;
     stream.writeInt(argsSize);
     for (int i = 0; i < argsSize; i++) {
-      SCVal.encode(stream, encodedInvokeContractArgs.args[i]);
+      args[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static InvokeContractArgs decode(XdrDataInputStream stream) throws IOException {
@@ -59,19 +51,6 @@ public class InvokeContractArgs implements XdrElement {
       decodedInvokeContractArgs.args[i] = SCVal.decode(stream);
     }
     return decodedInvokeContractArgs;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static InvokeContractArgs fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,14 +23,9 @@ import org.stellar.sdk.Base64Factory;
 public class AssetCode12 implements XdrElement {
   private byte[] AssetCode12;
 
-  public static void encode(XdrDataOutputStream stream, AssetCode12 encodedAssetCode12)
-      throws IOException {
-    int AssetCode12Size = encodedAssetCode12.AssetCode12.length;
-    stream.write(encodedAssetCode12.getAssetCode12(), 0, AssetCode12Size);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    int AssetCode12Size = AssetCode12.length;
+    stream.write(getAssetCode12(), 0, AssetCode12Size);
   }
 
   public static AssetCode12 decode(XdrDataInputStream stream) throws IOException {
@@ -42,19 +34,6 @@ public class AssetCode12 implements XdrElement {
     decodedAssetCode12.AssetCode12 = new byte[AssetCode12Size];
     stream.read(decodedAssetCode12.AssetCode12, 0, AssetCode12Size);
     return decodedAssetCode12;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static AssetCode12 fromXdrBase64(String xdr) throws IOException {

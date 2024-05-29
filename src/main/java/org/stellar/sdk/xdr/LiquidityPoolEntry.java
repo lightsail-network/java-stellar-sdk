@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,14 +45,9 @@ public class LiquidityPoolEntry implements XdrElement {
   private PoolID liquidityPoolID;
   private LiquidityPoolEntryBody body;
 
-  public static void encode(
-      XdrDataOutputStream stream, LiquidityPoolEntry encodedLiquidityPoolEntry) throws IOException {
-    PoolID.encode(stream, encodedLiquidityPoolEntry.liquidityPoolID);
-    LiquidityPoolEntryBody.encode(stream, encodedLiquidityPoolEntry.body);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    liquidityPoolID.encode(stream);
+    body.encode(stream);
   }
 
   public static LiquidityPoolEntry decode(XdrDataInputStream stream) throws IOException {
@@ -63,19 +55,6 @@ public class LiquidityPoolEntry implements XdrElement {
     decodedLiquidityPoolEntry.liquidityPoolID = PoolID.decode(stream);
     decodedLiquidityPoolEntry.body = LiquidityPoolEntryBody.decode(stream);
     return decodedLiquidityPoolEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LiquidityPoolEntry fromXdrBase64(String xdr) throws IOException {
@@ -117,22 +96,13 @@ public class LiquidityPoolEntry implements XdrElement {
     private LiquidityPoolType discriminant;
     private LiquidityPoolEntryConstantProduct constantProduct;
 
-    public static void encode(
-        XdrDataOutputStream stream, LiquidityPoolEntryBody encodedLiquidityPoolEntryBody)
-        throws IOException {
-      // Xdrgen::AST::Identifier
-      // LiquidityPoolType
-      stream.writeInt(encodedLiquidityPoolEntryBody.getDiscriminant().getValue());
-      switch (encodedLiquidityPoolEntryBody.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant.getValue());
+      switch (discriminant) {
         case LIQUIDITY_POOL_CONSTANT_PRODUCT:
-          LiquidityPoolEntryConstantProduct.encode(
-              stream, encodedLiquidityPoolEntryBody.constantProduct);
+          constantProduct.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static LiquidityPoolEntryBody decode(XdrDataInputStream stream) throws IOException {
@@ -146,19 +116,6 @@ public class LiquidityPoolEntry implements XdrElement {
           break;
       }
       return decodedLiquidityPoolEntryBody;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static LiquidityPoolEntryBody fromXdrBase64(String xdr) throws IOException {
@@ -199,20 +156,12 @@ public class LiquidityPoolEntry implements XdrElement {
       private Int64 totalPoolShares;
       private Int64 poolSharesTrustLineCount;
 
-      public static void encode(
-          XdrDataOutputStream stream,
-          LiquidityPoolEntryConstantProduct encodedLiquidityPoolEntryConstantProduct)
-          throws IOException {
-        LiquidityPoolConstantProductParameters.encode(
-            stream, encodedLiquidityPoolEntryConstantProduct.params);
-        Int64.encode(stream, encodedLiquidityPoolEntryConstantProduct.reserveA);
-        Int64.encode(stream, encodedLiquidityPoolEntryConstantProduct.reserveB);
-        Int64.encode(stream, encodedLiquidityPoolEntryConstantProduct.totalPoolShares);
-        Int64.encode(stream, encodedLiquidityPoolEntryConstantProduct.poolSharesTrustLineCount);
-      }
-
       public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
+        params.encode(stream);
+        reserveA.encode(stream);
+        reserveB.encode(stream);
+        totalPoolShares.encode(stream);
+        poolSharesTrustLineCount.encode(stream);
       }
 
       public static LiquidityPoolEntryConstantProduct decode(XdrDataInputStream stream)
@@ -226,19 +175,6 @@ public class LiquidityPoolEntry implements XdrElement {
         decodedLiquidityPoolEntryConstantProduct.totalPoolShares = Int64.decode(stream);
         decodedLiquidityPoolEntryConstantProduct.poolSharesTrustLineCount = Int64.decode(stream);
         return decodedLiquidityPoolEntryConstantProduct;
-      }
-
-      @Override
-      public String toXdrBase64() throws IOException {
-        return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-      }
-
-      @Override
-      public byte[] toXdrByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-        encode(xdrDataOutputStream);
-        return byteArrayOutputStream.toByteArray();
       }
 
       public static LiquidityPoolEntryConstantProduct fromXdrBase64(String xdr) throws IOException {

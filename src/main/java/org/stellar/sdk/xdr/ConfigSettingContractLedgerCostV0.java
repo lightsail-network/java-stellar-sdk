@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -76,29 +73,22 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
   private Int64 writeFee1KBBucketListHigh;
   private Uint32 bucketListWriteFeeGrowthFactor;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      ConfigSettingContractLedgerCostV0 encodedConfigSettingContractLedgerCostV0)
-      throws IOException {
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.ledgerMaxReadLedgerEntries);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.ledgerMaxReadBytes);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.ledgerMaxWriteLedgerEntries);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.ledgerMaxWriteBytes);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.txMaxReadLedgerEntries);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.txMaxReadBytes);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.txMaxWriteLedgerEntries);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.txMaxWriteBytes);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.feeReadLedgerEntry);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.feeWriteLedgerEntry);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.feeRead1KB);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.bucketListTargetSizeBytes);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListLow);
-    Int64.encode(stream, encodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListHigh);
-    Uint32.encode(stream, encodedConfigSettingContractLedgerCostV0.bucketListWriteFeeGrowthFactor);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ledgerMaxReadLedgerEntries.encode(stream);
+    ledgerMaxReadBytes.encode(stream);
+    ledgerMaxWriteLedgerEntries.encode(stream);
+    ledgerMaxWriteBytes.encode(stream);
+    txMaxReadLedgerEntries.encode(stream);
+    txMaxReadBytes.encode(stream);
+    txMaxWriteLedgerEntries.encode(stream);
+    txMaxWriteBytes.encode(stream);
+    feeReadLedgerEntry.encode(stream);
+    feeWriteLedgerEntry.encode(stream);
+    feeRead1KB.encode(stream);
+    bucketListTargetSizeBytes.encode(stream);
+    writeFee1KBBucketListLow.encode(stream);
+    writeFee1KBBucketListHigh.encode(stream);
+    bucketListWriteFeeGrowthFactor.encode(stream);
   }
 
   public static ConfigSettingContractLedgerCostV0 decode(XdrDataInputStream stream)
@@ -121,19 +111,6 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     decodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListHigh = Int64.decode(stream);
     decodedConfigSettingContractLedgerCostV0.bucketListWriteFeeGrowthFactor = Uint32.decode(stream);
     return decodedConfigSettingContractLedgerCostV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ConfigSettingContractLedgerCostV0 fromXdrBase64(String xdr) throws IOException {

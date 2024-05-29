@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,23 +32,15 @@ public class SorobanTransactionMetaExt implements XdrElement {
   private Integer discriminant;
   private SorobanTransactionMetaExtV1 v1;
 
-  public static void encode(
-      XdrDataOutputStream stream, SorobanTransactionMetaExt encodedSorobanTransactionMetaExt)
-      throws IOException {
-    // Xdrgen::AST::Typespecs::Int
-    // Integer
-    stream.writeInt(encodedSorobanTransactionMetaExt.getDiscriminant().intValue());
-    switch (encodedSorobanTransactionMetaExt.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant);
+    switch (discriminant) {
       case 0:
         break;
       case 1:
-        SorobanTransactionMetaExtV1.encode(stream, encodedSorobanTransactionMetaExt.v1);
+        v1.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SorobanTransactionMetaExt decode(XdrDataInputStream stream) throws IOException {
@@ -66,19 +55,6 @@ public class SorobanTransactionMetaExt implements XdrElement {
         break;
     }
     return decodedSorobanTransactionMetaExt;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SorobanTransactionMetaExt fromXdrBase64(String xdr) throws IOException {

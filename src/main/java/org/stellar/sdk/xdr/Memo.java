@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,30 +41,24 @@ public class Memo implements XdrElement {
   private Hash hash;
   private Hash retHash;
 
-  public static void encode(XdrDataOutputStream stream, Memo encodedMemo) throws IOException {
-    // Xdrgen::AST::Identifier
-    // MemoType
-    stream.writeInt(encodedMemo.getDiscriminant().getValue());
-    switch (encodedMemo.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case MEMO_NONE:
         break;
       case MEMO_TEXT:
-        encodedMemo.text.encode(stream);
+        text.encode(stream);
         break;
       case MEMO_ID:
-        Uint64.encode(stream, encodedMemo.id);
+        id.encode(stream);
         break;
       case MEMO_HASH:
-        Hash.encode(stream, encodedMemo.hash);
+        hash.encode(stream);
         break;
       case MEMO_RETURN:
-        Hash.encode(stream, encodedMemo.retHash);
+        retHash.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static Memo decode(XdrDataInputStream stream) throws IOException {
@@ -91,19 +82,6 @@ public class Memo implements XdrElement {
         break;
     }
     return decodedMemo;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Memo fromXdrBase64(String xdr) throws IOException {

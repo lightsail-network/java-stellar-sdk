@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +30,9 @@ public class SCMapEntry implements XdrElement {
   private SCVal key;
   private SCVal val;
 
-  public static void encode(XdrDataOutputStream stream, SCMapEntry encodedSCMapEntry)
-      throws IOException {
-    SCVal.encode(stream, encodedSCMapEntry.key);
-    SCVal.encode(stream, encodedSCMapEntry.val);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    key.encode(stream);
+    val.encode(stream);
   }
 
   public static SCMapEntry decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +40,6 @@ public class SCMapEntry implements XdrElement {
     decodedSCMapEntry.key = SCVal.decode(stream);
     decodedSCMapEntry.val = SCVal.decode(stream);
     return decodedSCMapEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCMapEntry fromXdrBase64(String xdr) throws IOException {

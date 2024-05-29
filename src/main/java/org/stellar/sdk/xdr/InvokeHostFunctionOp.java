@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,19 +32,13 @@ public class InvokeHostFunctionOp implements XdrElement {
   private HostFunction hostFunction;
   private SorobanAuthorizationEntry[] auth;
 
-  public static void encode(
-      XdrDataOutputStream stream, InvokeHostFunctionOp encodedInvokeHostFunctionOp)
-      throws IOException {
-    HostFunction.encode(stream, encodedInvokeHostFunctionOp.hostFunction);
-    int authSize = encodedInvokeHostFunctionOp.getAuth().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    hostFunction.encode(stream);
+    int authSize = getAuth().length;
     stream.writeInt(authSize);
     for (int i = 0; i < authSize; i++) {
-      SorobanAuthorizationEntry.encode(stream, encodedInvokeHostFunctionOp.auth[i]);
+      auth[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static InvokeHostFunctionOp decode(XdrDataInputStream stream) throws IOException {
@@ -59,19 +50,6 @@ public class InvokeHostFunctionOp implements XdrElement {
       decodedInvokeHostFunctionOp.auth[i] = SorobanAuthorizationEntry.decode(stream);
     }
     return decodedInvokeHostFunctionOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static InvokeHostFunctionOp fromXdrBase64(String xdr) throws IOException {

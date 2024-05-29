@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,15 +37,11 @@ public class CreateClaimableBalanceResult implements XdrElement {
   private CreateClaimableBalanceResultCode discriminant;
   private ClaimableBalanceID balanceID;
 
-  public static void encode(
-      XdrDataOutputStream stream, CreateClaimableBalanceResult encodedCreateClaimableBalanceResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // CreateClaimableBalanceResultCode
-    stream.writeInt(encodedCreateClaimableBalanceResult.getDiscriminant().getValue());
-    switch (encodedCreateClaimableBalanceResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CREATE_CLAIMABLE_BALANCE_SUCCESS:
-        ClaimableBalanceID.encode(stream, encodedCreateClaimableBalanceResult.balanceID);
+        balanceID.encode(stream);
         break;
       case CREATE_CLAIMABLE_BALANCE_MALFORMED:
       case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
@@ -57,10 +50,6 @@ public class CreateClaimableBalanceResult implements XdrElement {
       case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static CreateClaimableBalanceResult decode(XdrDataInputStream stream) throws IOException {
@@ -80,19 +69,6 @@ public class CreateClaimableBalanceResult implements XdrElement {
         break;
     }
     return decodedCreateClaimableBalanceResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static CreateClaimableBalanceResult fromXdrBase64(String xdr) throws IOException {

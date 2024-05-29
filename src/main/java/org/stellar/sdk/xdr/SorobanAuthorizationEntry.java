@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,15 +30,9 @@ public class SorobanAuthorizationEntry implements XdrElement {
   private SorobanCredentials credentials;
   private SorobanAuthorizedInvocation rootInvocation;
 
-  public static void encode(
-      XdrDataOutputStream stream, SorobanAuthorizationEntry encodedSorobanAuthorizationEntry)
-      throws IOException {
-    SorobanCredentials.encode(stream, encodedSorobanAuthorizationEntry.credentials);
-    SorobanAuthorizedInvocation.encode(stream, encodedSorobanAuthorizationEntry.rootInvocation);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    credentials.encode(stream);
+    rootInvocation.encode(stream);
   }
 
   public static SorobanAuthorizationEntry decode(XdrDataInputStream stream) throws IOException {
@@ -49,19 +40,6 @@ public class SorobanAuthorizationEntry implements XdrElement {
     decodedSorobanAuthorizationEntry.credentials = SorobanCredentials.decode(stream);
     decodedSorobanAuthorizationEntry.rootInvocation = SorobanAuthorizedInvocation.decode(stream);
     return decodedSorobanAuthorizationEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SorobanAuthorizationEntry fromXdrBase64(String xdr) throws IOException {

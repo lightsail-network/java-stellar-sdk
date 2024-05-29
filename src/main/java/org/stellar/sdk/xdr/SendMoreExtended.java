@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +30,9 @@ public class SendMoreExtended implements XdrElement {
   private Uint32 numMessages;
   private Uint32 numBytes;
 
-  public static void encode(XdrDataOutputStream stream, SendMoreExtended encodedSendMoreExtended)
-      throws IOException {
-    Uint32.encode(stream, encodedSendMoreExtended.numMessages);
-    Uint32.encode(stream, encodedSendMoreExtended.numBytes);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    numMessages.encode(stream);
+    numBytes.encode(stream);
   }
 
   public static SendMoreExtended decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +40,6 @@ public class SendMoreExtended implements XdrElement {
     decodedSendMoreExtended.numMessages = Uint32.decode(stream);
     decodedSendMoreExtended.numBytes = Uint32.decode(stream);
     return decodedSendMoreExtended;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SendMoreExtended fromXdrBase64(String xdr) throws IOException {

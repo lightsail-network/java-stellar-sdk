@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,16 +38,10 @@ public class AccountEntryExtensionV3 implements XdrElement {
   private Uint32 seqLedger;
   private TimePoint seqTime;
 
-  public static void encode(
-      XdrDataOutputStream stream, AccountEntryExtensionV3 encodedAccountEntryExtensionV3)
-      throws IOException {
-    ExtensionPoint.encode(stream, encodedAccountEntryExtensionV3.ext);
-    Uint32.encode(stream, encodedAccountEntryExtensionV3.seqLedger);
-    TimePoint.encode(stream, encodedAccountEntryExtensionV3.seqTime);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
+    seqLedger.encode(stream);
+    seqTime.encode(stream);
   }
 
   public static AccountEntryExtensionV3 decode(XdrDataInputStream stream) throws IOException {
@@ -59,19 +50,6 @@ public class AccountEntryExtensionV3 implements XdrElement {
     decodedAccountEntryExtensionV3.seqLedger = Uint32.decode(stream);
     decodedAccountEntryExtensionV3.seqTime = TimePoint.decode(stream);
     return decodedAccountEntryExtensionV3;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static AccountEntryExtensionV3 fromXdrBase64(String xdr) throws IOException {

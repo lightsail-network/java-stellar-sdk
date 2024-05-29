@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,13 +30,9 @@ public class Price implements XdrElement {
   private Int32 n;
   private Int32 d;
 
-  public static void encode(XdrDataOutputStream stream, Price encodedPrice) throws IOException {
-    Int32.encode(stream, encodedPrice.n);
-    Int32.encode(stream, encodedPrice.d);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    n.encode(stream);
+    d.encode(stream);
   }
 
   public static Price decode(XdrDataInputStream stream) throws IOException {
@@ -47,19 +40,6 @@ public class Price implements XdrElement {
     decodedPrice.n = Int32.decode(stream);
     decodedPrice.d = Int32.decode(stream);
     return decodedPrice;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Price fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -97,14 +94,11 @@ public class OperationResult implements XdrElement {
   private OperationResultCode discriminant;
   private OperationResultTr tr;
 
-  public static void encode(XdrDataOutputStream stream, OperationResult encodedOperationResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // OperationResultCode
-    stream.writeInt(encodedOperationResult.getDiscriminant().getValue());
-    switch (encodedOperationResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case opINNER:
-        OperationResultTr.encode(stream, encodedOperationResult.tr);
+        tr.encode(stream);
         break;
       case opBAD_AUTH:
       case opNO_ACCOUNT:
@@ -114,10 +108,6 @@ public class OperationResult implements XdrElement {
       case opTOO_MANY_SPONSORING:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static OperationResult decode(XdrDataInputStream stream) throws IOException {
@@ -137,19 +127,6 @@ public class OperationResult implements XdrElement {
         break;
     }
     return decodedOperationResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static OperationResult fromXdrBase64(String xdr) throws IOException {
@@ -260,110 +237,91 @@ public class OperationResult implements XdrElement {
     private ExtendFootprintTTLResult extendFootprintTTLResult;
     private RestoreFootprintResult restoreFootprintResult;
 
-    public static void encode(
-        XdrDataOutputStream stream, OperationResultTr encodedOperationResultTr) throws IOException {
-      // Xdrgen::AST::Identifier
-      // OperationType
-      stream.writeInt(encodedOperationResultTr.getDiscriminant().getValue());
-      switch (encodedOperationResultTr.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant.getValue());
+      switch (discriminant) {
         case CREATE_ACCOUNT:
-          CreateAccountResult.encode(stream, encodedOperationResultTr.createAccountResult);
+          createAccountResult.encode(stream);
           break;
         case PAYMENT:
-          PaymentResult.encode(stream, encodedOperationResultTr.paymentResult);
+          paymentResult.encode(stream);
           break;
         case PATH_PAYMENT_STRICT_RECEIVE:
-          PathPaymentStrictReceiveResult.encode(
-              stream, encodedOperationResultTr.pathPaymentStrictReceiveResult);
+          pathPaymentStrictReceiveResult.encode(stream);
           break;
         case MANAGE_SELL_OFFER:
-          ManageSellOfferResult.encode(stream, encodedOperationResultTr.manageSellOfferResult);
+          manageSellOfferResult.encode(stream);
           break;
         case CREATE_PASSIVE_SELL_OFFER:
-          ManageSellOfferResult.encode(
-              stream, encodedOperationResultTr.createPassiveSellOfferResult);
+          createPassiveSellOfferResult.encode(stream);
           break;
         case SET_OPTIONS:
-          SetOptionsResult.encode(stream, encodedOperationResultTr.setOptionsResult);
+          setOptionsResult.encode(stream);
           break;
         case CHANGE_TRUST:
-          ChangeTrustResult.encode(stream, encodedOperationResultTr.changeTrustResult);
+          changeTrustResult.encode(stream);
           break;
         case ALLOW_TRUST:
-          AllowTrustResult.encode(stream, encodedOperationResultTr.allowTrustResult);
+          allowTrustResult.encode(stream);
           break;
         case ACCOUNT_MERGE:
-          AccountMergeResult.encode(stream, encodedOperationResultTr.accountMergeResult);
+          accountMergeResult.encode(stream);
           break;
         case INFLATION:
-          InflationResult.encode(stream, encodedOperationResultTr.inflationResult);
+          inflationResult.encode(stream);
           break;
         case MANAGE_DATA:
-          ManageDataResult.encode(stream, encodedOperationResultTr.manageDataResult);
+          manageDataResult.encode(stream);
           break;
         case BUMP_SEQUENCE:
-          BumpSequenceResult.encode(stream, encodedOperationResultTr.bumpSeqResult);
+          bumpSeqResult.encode(stream);
           break;
         case MANAGE_BUY_OFFER:
-          ManageBuyOfferResult.encode(stream, encodedOperationResultTr.manageBuyOfferResult);
+          manageBuyOfferResult.encode(stream);
           break;
         case PATH_PAYMENT_STRICT_SEND:
-          PathPaymentStrictSendResult.encode(
-              stream, encodedOperationResultTr.pathPaymentStrictSendResult);
+          pathPaymentStrictSendResult.encode(stream);
           break;
         case CREATE_CLAIMABLE_BALANCE:
-          CreateClaimableBalanceResult.encode(
-              stream, encodedOperationResultTr.createClaimableBalanceResult);
+          createClaimableBalanceResult.encode(stream);
           break;
         case CLAIM_CLAIMABLE_BALANCE:
-          ClaimClaimableBalanceResult.encode(
-              stream, encodedOperationResultTr.claimClaimableBalanceResult);
+          claimClaimableBalanceResult.encode(stream);
           break;
         case BEGIN_SPONSORING_FUTURE_RESERVES:
-          BeginSponsoringFutureReservesResult.encode(
-              stream, encodedOperationResultTr.beginSponsoringFutureReservesResult);
+          beginSponsoringFutureReservesResult.encode(stream);
           break;
         case END_SPONSORING_FUTURE_RESERVES:
-          EndSponsoringFutureReservesResult.encode(
-              stream, encodedOperationResultTr.endSponsoringFutureReservesResult);
+          endSponsoringFutureReservesResult.encode(stream);
           break;
         case REVOKE_SPONSORSHIP:
-          RevokeSponsorshipResult.encode(stream, encodedOperationResultTr.revokeSponsorshipResult);
+          revokeSponsorshipResult.encode(stream);
           break;
         case CLAWBACK:
-          ClawbackResult.encode(stream, encodedOperationResultTr.clawbackResult);
+          clawbackResult.encode(stream);
           break;
         case CLAWBACK_CLAIMABLE_BALANCE:
-          ClawbackClaimableBalanceResult.encode(
-              stream, encodedOperationResultTr.clawbackClaimableBalanceResult);
+          clawbackClaimableBalanceResult.encode(stream);
           break;
         case SET_TRUST_LINE_FLAGS:
-          SetTrustLineFlagsResult.encode(stream, encodedOperationResultTr.setTrustLineFlagsResult);
+          setTrustLineFlagsResult.encode(stream);
           break;
         case LIQUIDITY_POOL_DEPOSIT:
-          LiquidityPoolDepositResult.encode(
-              stream, encodedOperationResultTr.liquidityPoolDepositResult);
+          liquidityPoolDepositResult.encode(stream);
           break;
         case LIQUIDITY_POOL_WITHDRAW:
-          LiquidityPoolWithdrawResult.encode(
-              stream, encodedOperationResultTr.liquidityPoolWithdrawResult);
+          liquidityPoolWithdrawResult.encode(stream);
           break;
         case INVOKE_HOST_FUNCTION:
-          InvokeHostFunctionResult.encode(
-              stream, encodedOperationResultTr.invokeHostFunctionResult);
+          invokeHostFunctionResult.encode(stream);
           break;
         case EXTEND_FOOTPRINT_TTL:
-          ExtendFootprintTTLResult.encode(
-              stream, encodedOperationResultTr.extendFootprintTTLResult);
+          extendFootprintTTLResult.encode(stream);
           break;
         case RESTORE_FOOTPRINT:
-          RestoreFootprintResult.encode(stream, encodedOperationResultTr.restoreFootprintResult);
+          restoreFootprintResult.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static OperationResultTr decode(XdrDataInputStream stream) throws IOException {
@@ -466,19 +424,6 @@ public class OperationResult implements XdrElement {
           break;
       }
       return decodedOperationResultTr;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static OperationResultTr fromXdrBase64(String xdr) throws IOException {

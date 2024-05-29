@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,19 +40,13 @@ public class ManageOfferSuccessResult implements XdrElement {
   private ClaimAtom[] offersClaimed;
   private ManageOfferSuccessResultOffer offer;
 
-  public static void encode(
-      XdrDataOutputStream stream, ManageOfferSuccessResult encodedManageOfferSuccessResult)
-      throws IOException {
-    int offersClaimedSize = encodedManageOfferSuccessResult.getOffersClaimed().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    int offersClaimedSize = getOffersClaimed().length;
     stream.writeInt(offersClaimedSize);
     for (int i = 0; i < offersClaimedSize; i++) {
-      ClaimAtom.encode(stream, encodedManageOfferSuccessResult.offersClaimed[i]);
+      offersClaimed[i].encode(stream);
     }
-    ManageOfferSuccessResultOffer.encode(stream, encodedManageOfferSuccessResult.offer);
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    offer.encode(stream);
   }
 
   public static ManageOfferSuccessResult decode(XdrDataInputStream stream) throws IOException {
@@ -67,19 +58,6 @@ public class ManageOfferSuccessResult implements XdrElement {
     }
     decodedManageOfferSuccessResult.offer = ManageOfferSuccessResultOffer.decode(stream);
     return decodedManageOfferSuccessResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ManageOfferSuccessResult fromXdrBase64(String xdr) throws IOException {
@@ -115,25 +93,16 @@ public class ManageOfferSuccessResult implements XdrElement {
     private ManageOfferEffect discriminant;
     private OfferEntry offer;
 
-    public static void encode(
-        XdrDataOutputStream stream,
-        ManageOfferSuccessResultOffer encodedManageOfferSuccessResultOffer)
-        throws IOException {
-      // Xdrgen::AST::Identifier
-      // ManageOfferEffect
-      stream.writeInt(encodedManageOfferSuccessResultOffer.getDiscriminant().getValue());
-      switch (encodedManageOfferSuccessResultOffer.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant.getValue());
+      switch (discriminant) {
         case MANAGE_OFFER_CREATED:
         case MANAGE_OFFER_UPDATED:
-          OfferEntry.encode(stream, encodedManageOfferSuccessResultOffer.offer);
+          offer.encode(stream);
           break;
         case MANAGE_OFFER_DELETED:
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static ManageOfferSuccessResultOffer decode(XdrDataInputStream stream)
@@ -151,19 +120,6 @@ public class ManageOfferSuccessResult implements XdrElement {
           break;
       }
       return decodedManageOfferSuccessResultOffer;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static ManageOfferSuccessResultOffer fromXdrBase64(String xdr) throws IOException {

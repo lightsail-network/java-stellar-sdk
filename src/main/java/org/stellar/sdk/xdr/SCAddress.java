@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,23 +33,16 @@ public class SCAddress implements XdrElement {
   private AccountID accountId;
   private Hash contractId;
 
-  public static void encode(XdrDataOutputStream stream, SCAddress encodedSCAddress)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // SCAddressType
-    stream.writeInt(encodedSCAddress.getDiscriminant().getValue());
-    switch (encodedSCAddress.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SC_ADDRESS_TYPE_ACCOUNT:
-        AccountID.encode(stream, encodedSCAddress.accountId);
+        accountId.encode(stream);
         break;
       case SC_ADDRESS_TYPE_CONTRACT:
-        Hash.encode(stream, encodedSCAddress.contractId);
+        contractId.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCAddress decode(XdrDataInputStream stream) throws IOException {
@@ -68,19 +58,6 @@ public class SCAddress implements XdrElement {
         break;
     }
     return decodedSCAddress;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCAddress fromXdrBase64(String xdr) throws IOException {

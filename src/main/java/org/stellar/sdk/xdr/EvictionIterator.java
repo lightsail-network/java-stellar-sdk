@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,15 +31,10 @@ public class EvictionIterator implements XdrElement {
   private Boolean isCurrBucket;
   private Uint64 bucketFileOffset;
 
-  public static void encode(XdrDataOutputStream stream, EvictionIterator encodedEvictionIterator)
-      throws IOException {
-    Uint32.encode(stream, encodedEvictionIterator.bucketListLevel);
-    stream.writeInt(encodedEvictionIterator.isCurrBucket ? 1 : 0);
-    Uint64.encode(stream, encodedEvictionIterator.bucketFileOffset);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    bucketListLevel.encode(stream);
+    stream.writeInt(isCurrBucket ? 1 : 0);
+    bucketFileOffset.encode(stream);
   }
 
   public static EvictionIterator decode(XdrDataInputStream stream) throws IOException {
@@ -51,19 +43,6 @@ public class EvictionIterator implements XdrElement {
     decodedEvictionIterator.isCurrBucket = stream.readInt() == 1 ? true : false;
     decodedEvictionIterator.bucketFileOffset = Uint64.decode(stream);
     return decodedEvictionIterator;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static EvictionIterator fromXdrBase64(String xdr) throws IOException {

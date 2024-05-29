@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,15 +29,9 @@ public class ConfigUpgradeSetKey implements XdrElement {
   private Hash contractID;
   private Hash contentHash;
 
-  public static void encode(
-      XdrDataOutputStream stream, ConfigUpgradeSetKey encodedConfigUpgradeSetKey)
-      throws IOException {
-    Hash.encode(stream, encodedConfigUpgradeSetKey.contractID);
-    Hash.encode(stream, encodedConfigUpgradeSetKey.contentHash);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    contractID.encode(stream);
+    contentHash.encode(stream);
   }
 
   public static ConfigUpgradeSetKey decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +39,6 @@ public class ConfigUpgradeSetKey implements XdrElement {
     decodedConfigUpgradeSetKey.contractID = Hash.decode(stream);
     decodedConfigUpgradeSetKey.contentHash = Hash.decode(stream);
     return decodedConfigUpgradeSetKey;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ConfigUpgradeSetKey fromXdrBase64(String xdr) throws IOException {

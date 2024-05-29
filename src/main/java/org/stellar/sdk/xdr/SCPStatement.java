@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,15 +64,10 @@ public class SCPStatement implements XdrElement {
   private Uint64 slotIndex;
   private SCPStatementPledges pledges;
 
-  public static void encode(XdrDataOutputStream stream, SCPStatement encodedSCPStatement)
-      throws IOException {
-    NodeID.encode(stream, encodedSCPStatement.nodeID);
-    Uint64.encode(stream, encodedSCPStatement.slotIndex);
-    SCPStatementPledges.encode(stream, encodedSCPStatement.pledges);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    nodeID.encode(stream);
+    slotIndex.encode(stream);
+    pledges.encode(stream);
   }
 
   public static SCPStatement decode(XdrDataInputStream stream) throws IOException {
@@ -84,19 +76,6 @@ public class SCPStatement implements XdrElement {
     decodedSCPStatement.slotIndex = Uint64.decode(stream);
     decodedSCPStatement.pledges = SCPStatementPledges.decode(stream);
     return decodedSCPStatement;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCPStatement fromXdrBase64(String xdr) throws IOException {
@@ -158,30 +137,22 @@ public class SCPStatement implements XdrElement {
     private SCPStatementExternalize externalize;
     private SCPNomination nominate;
 
-    public static void encode(
-        XdrDataOutputStream stream, SCPStatementPledges encodedSCPStatementPledges)
-        throws IOException {
-      // Xdrgen::AST::Identifier
-      // SCPStatementType
-      stream.writeInt(encodedSCPStatementPledges.getDiscriminant().getValue());
-      switch (encodedSCPStatementPledges.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant.getValue());
+      switch (discriminant) {
         case SCP_ST_PREPARE:
-          SCPStatementPrepare.encode(stream, encodedSCPStatementPledges.prepare);
+          prepare.encode(stream);
           break;
         case SCP_ST_CONFIRM:
-          SCPStatementConfirm.encode(stream, encodedSCPStatementPledges.confirm);
+          confirm.encode(stream);
           break;
         case SCP_ST_EXTERNALIZE:
-          SCPStatementExternalize.encode(stream, encodedSCPStatementPledges.externalize);
+          externalize.encode(stream);
           break;
         case SCP_ST_NOMINATE:
-          SCPNomination.encode(stream, encodedSCPStatementPledges.nominate);
+          nominate.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static SCPStatementPledges decode(XdrDataInputStream stream) throws IOException {
@@ -203,19 +174,6 @@ public class SCPStatement implements XdrElement {
           break;
       }
       return decodedSCPStatementPledges;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static SCPStatementPledges fromXdrBase64(String xdr) throws IOException {
@@ -256,29 +214,23 @@ public class SCPStatement implements XdrElement {
       private Uint32 nC;
       private Uint32 nH;
 
-      public static void encode(
-          XdrDataOutputStream stream, SCPStatementPrepare encodedSCPStatementPrepare)
-          throws IOException {
-        Hash.encode(stream, encodedSCPStatementPrepare.quorumSetHash);
-        SCPBallot.encode(stream, encodedSCPStatementPrepare.ballot);
-        if (encodedSCPStatementPrepare.prepared != null) {
-          stream.writeInt(1);
-          SCPBallot.encode(stream, encodedSCPStatementPrepare.prepared);
-        } else {
-          stream.writeInt(0);
-        }
-        if (encodedSCPStatementPrepare.preparedPrime != null) {
-          stream.writeInt(1);
-          SCPBallot.encode(stream, encodedSCPStatementPrepare.preparedPrime);
-        } else {
-          stream.writeInt(0);
-        }
-        Uint32.encode(stream, encodedSCPStatementPrepare.nC);
-        Uint32.encode(stream, encodedSCPStatementPrepare.nH);
-      }
-
       public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
+        quorumSetHash.encode(stream);
+        ballot.encode(stream);
+        if (prepared != null) {
+          stream.writeInt(1);
+          prepared.encode(stream);
+        } else {
+          stream.writeInt(0);
+        }
+        if (preparedPrime != null) {
+          stream.writeInt(1);
+          preparedPrime.encode(stream);
+        } else {
+          stream.writeInt(0);
+        }
+        nC.encode(stream);
+        nH.encode(stream);
       }
 
       public static SCPStatementPrepare decode(XdrDataInputStream stream) throws IOException {
@@ -296,19 +248,6 @@ public class SCPStatement implements XdrElement {
         decodedSCPStatementPrepare.nC = Uint32.decode(stream);
         decodedSCPStatementPrepare.nH = Uint32.decode(stream);
         return decodedSCPStatementPrepare;
-      }
-
-      @Override
-      public String toXdrBase64() throws IOException {
-        return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-      }
-
-      @Override
-      public byte[] toXdrByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-        encode(xdrDataOutputStream);
-        return byteArrayOutputStream.toByteArray();
       }
 
       public static SCPStatementPrepare fromXdrBase64(String xdr) throws IOException {
@@ -348,18 +287,12 @@ public class SCPStatement implements XdrElement {
       private Uint32 nH;
       private Hash quorumSetHash;
 
-      public static void encode(
-          XdrDataOutputStream stream, SCPStatementConfirm encodedSCPStatementConfirm)
-          throws IOException {
-        SCPBallot.encode(stream, encodedSCPStatementConfirm.ballot);
-        Uint32.encode(stream, encodedSCPStatementConfirm.nPrepared);
-        Uint32.encode(stream, encodedSCPStatementConfirm.nCommit);
-        Uint32.encode(stream, encodedSCPStatementConfirm.nH);
-        Hash.encode(stream, encodedSCPStatementConfirm.quorumSetHash);
-      }
-
       public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
+        ballot.encode(stream);
+        nPrepared.encode(stream);
+        nCommit.encode(stream);
+        nH.encode(stream);
+        quorumSetHash.encode(stream);
       }
 
       public static SCPStatementConfirm decode(XdrDataInputStream stream) throws IOException {
@@ -370,19 +303,6 @@ public class SCPStatement implements XdrElement {
         decodedSCPStatementConfirm.nH = Uint32.decode(stream);
         decodedSCPStatementConfirm.quorumSetHash = Hash.decode(stream);
         return decodedSCPStatementConfirm;
-      }
-
-      @Override
-      public String toXdrBase64() throws IOException {
-        return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-      }
-
-      @Override
-      public byte[] toXdrByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-        encode(xdrDataOutputStream);
-        return byteArrayOutputStream.toByteArray();
       }
 
       public static SCPStatementConfirm fromXdrBase64(String xdr) throws IOException {
@@ -418,16 +338,10 @@ public class SCPStatement implements XdrElement {
       private Uint32 nH;
       private Hash commitQuorumSetHash;
 
-      public static void encode(
-          XdrDataOutputStream stream, SCPStatementExternalize encodedSCPStatementExternalize)
-          throws IOException {
-        SCPBallot.encode(stream, encodedSCPStatementExternalize.commit);
-        Uint32.encode(stream, encodedSCPStatementExternalize.nH);
-        Hash.encode(stream, encodedSCPStatementExternalize.commitQuorumSetHash);
-      }
-
       public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
+        commit.encode(stream);
+        nH.encode(stream);
+        commitQuorumSetHash.encode(stream);
       }
 
       public static SCPStatementExternalize decode(XdrDataInputStream stream) throws IOException {
@@ -436,19 +350,6 @@ public class SCPStatement implements XdrElement {
         decodedSCPStatementExternalize.nH = Uint32.decode(stream);
         decodedSCPStatementExternalize.commitQuorumSetHash = Hash.decode(stream);
         return decodedSCPStatementExternalize;
-      }
-
-      @Override
-      public String toXdrBase64() throws IOException {
-        return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-      }
-
-      @Override
-      public byte[] toXdrByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-        encode(xdrDataOutputStream);
-        return byteArrayOutputStream.toByteArray();
       }
 
       public static SCPStatementExternalize fromXdrBase64(String xdr) throws IOException {

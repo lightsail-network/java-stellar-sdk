@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,32 +28,14 @@ import org.stellar.sdk.Base64Factory;
 public class RestoreFootprintOp implements XdrElement {
   private ExtensionPoint ext;
 
-  public static void encode(
-      XdrDataOutputStream stream, RestoreFootprintOp encodedRestoreFootprintOp) throws IOException {
-    ExtensionPoint.encode(stream, encodedRestoreFootprintOp.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
   }
 
   public static RestoreFootprintOp decode(XdrDataInputStream stream) throws IOException {
     RestoreFootprintOp decodedRestoreFootprintOp = new RestoreFootprintOp();
     decodedRestoreFootprintOp.ext = ExtensionPoint.decode(stream);
     return decodedRestoreFootprintOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static RestoreFootprintOp fromXdrBase64(String xdr) throws IOException {

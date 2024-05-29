@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,15 +30,9 @@ public class TransactionResultPair implements XdrElement {
   private Hash transactionHash;
   private TransactionResult result;
 
-  public static void encode(
-      XdrDataOutputStream stream, TransactionResultPair encodedTransactionResultPair)
-      throws IOException {
-    Hash.encode(stream, encodedTransactionResultPair.transactionHash);
-    TransactionResult.encode(stream, encodedTransactionResultPair.result);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    transactionHash.encode(stream);
+    result.encode(stream);
   }
 
   public static TransactionResultPair decode(XdrDataInputStream stream) throws IOException {
@@ -49,19 +40,6 @@ public class TransactionResultPair implements XdrElement {
     decodedTransactionResultPair.transactionHash = Hash.decode(stream);
     decodedTransactionResultPair.result = TransactionResult.decode(stream);
     return decodedTransactionResultPair;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TransactionResultPair fromXdrBase64(String xdr) throws IOException {

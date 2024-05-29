@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,32 +23,14 @@ import org.stellar.sdk.Base64Factory;
 public class TimePoint implements XdrElement {
   private Uint64 TimePoint;
 
-  public static void encode(XdrDataOutputStream stream, TimePoint encodedTimePoint)
-      throws IOException {
-    Uint64.encode(stream, encodedTimePoint.TimePoint);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    TimePoint.encode(stream);
   }
 
   public static TimePoint decode(XdrDataInputStream stream) throws IOException {
     TimePoint decodedTimePoint = new TimePoint();
     decodedTimePoint.TimePoint = Uint64.decode(stream);
     return decodedTimePoint;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TimePoint fromXdrBase64(String xdr) throws IOException {

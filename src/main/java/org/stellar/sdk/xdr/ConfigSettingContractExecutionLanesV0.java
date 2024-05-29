@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,15 +29,8 @@ import org.stellar.sdk.Base64Factory;
 public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
   private Uint32 ledgerMaxTxCount;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      ConfigSettingContractExecutionLanesV0 encodedConfigSettingContractExecutionLanesV0)
-      throws IOException {
-    Uint32.encode(stream, encodedConfigSettingContractExecutionLanesV0.ledgerMaxTxCount);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ledgerMaxTxCount.encode(stream);
   }
 
   public static ConfigSettingContractExecutionLanesV0 decode(XdrDataInputStream stream)
@@ -49,19 +39,6 @@ public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
         new ConfigSettingContractExecutionLanesV0();
     decodedConfigSettingContractExecutionLanesV0.ledgerMaxTxCount = Uint32.decode(stream);
     return decodedConfigSettingContractExecutionLanesV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ConfigSettingContractExecutionLanesV0 fromXdrBase64(String xdr) throws IOException {

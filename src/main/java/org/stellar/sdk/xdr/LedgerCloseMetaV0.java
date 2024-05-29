@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,29 +45,24 @@ public class LedgerCloseMetaV0 implements XdrElement {
   private UpgradeEntryMeta[] upgradesProcessing;
   private SCPHistoryEntry[] scpInfo;
 
-  public static void encode(XdrDataOutputStream stream, LedgerCloseMetaV0 encodedLedgerCloseMetaV0)
-      throws IOException {
-    LedgerHeaderHistoryEntry.encode(stream, encodedLedgerCloseMetaV0.ledgerHeader);
-    TransactionSet.encode(stream, encodedLedgerCloseMetaV0.txSet);
-    int txProcessingSize = encodedLedgerCloseMetaV0.getTxProcessing().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    ledgerHeader.encode(stream);
+    txSet.encode(stream);
+    int txProcessingSize = getTxProcessing().length;
     stream.writeInt(txProcessingSize);
     for (int i = 0; i < txProcessingSize; i++) {
-      TransactionResultMeta.encode(stream, encodedLedgerCloseMetaV0.txProcessing[i]);
+      txProcessing[i].encode(stream);
     }
-    int upgradesProcessingSize = encodedLedgerCloseMetaV0.getUpgradesProcessing().length;
+    int upgradesProcessingSize = getUpgradesProcessing().length;
     stream.writeInt(upgradesProcessingSize);
     for (int i = 0; i < upgradesProcessingSize; i++) {
-      UpgradeEntryMeta.encode(stream, encodedLedgerCloseMetaV0.upgradesProcessing[i]);
+      upgradesProcessing[i].encode(stream);
     }
-    int scpInfoSize = encodedLedgerCloseMetaV0.getScpInfo().length;
+    int scpInfoSize = getScpInfo().length;
     stream.writeInt(scpInfoSize);
     for (int i = 0; i < scpInfoSize; i++) {
-      SCPHistoryEntry.encode(stream, encodedLedgerCloseMetaV0.scpInfo[i]);
+      scpInfo[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LedgerCloseMetaV0 decode(XdrDataInputStream stream) throws IOException {
@@ -93,19 +85,6 @@ public class LedgerCloseMetaV0 implements XdrElement {
       decodedLedgerCloseMetaV0.scpInfo[i] = SCPHistoryEntry.decode(stream);
     }
     return decodedLedgerCloseMetaV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerCloseMetaV0 fromXdrBase64(String xdr) throws IOException {

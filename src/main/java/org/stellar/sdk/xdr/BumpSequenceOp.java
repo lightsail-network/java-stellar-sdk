@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,32 +28,14 @@ import org.stellar.sdk.Base64Factory;
 public class BumpSequenceOp implements XdrElement {
   private SequenceNumber bumpTo;
 
-  public static void encode(XdrDataOutputStream stream, BumpSequenceOp encodedBumpSequenceOp)
-      throws IOException {
-    SequenceNumber.encode(stream, encodedBumpSequenceOp.bumpTo);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    bumpTo.encode(stream);
   }
 
   public static BumpSequenceOp decode(XdrDataInputStream stream) throws IOException {
     BumpSequenceOp decodedBumpSequenceOp = new BumpSequenceOp();
     decodedBumpSequenceOp.bumpTo = SequenceNumber.decode(stream);
     return decodedBumpSequenceOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static BumpSequenceOp fromXdrBase64(String xdr) throws IOException {

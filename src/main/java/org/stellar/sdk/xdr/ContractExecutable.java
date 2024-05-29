@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,22 +32,15 @@ public class ContractExecutable implements XdrElement {
   private ContractExecutableType discriminant;
   private Hash wasm_hash;
 
-  public static void encode(
-      XdrDataOutputStream stream, ContractExecutable encodedContractExecutable) throws IOException {
-    // Xdrgen::AST::Identifier
-    // ContractExecutableType
-    stream.writeInt(encodedContractExecutable.getDiscriminant().getValue());
-    switch (encodedContractExecutable.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CONTRACT_EXECUTABLE_WASM:
-        Hash.encode(stream, encodedContractExecutable.wasm_hash);
+        wasm_hash.encode(stream);
         break;
       case CONTRACT_EXECUTABLE_STELLAR_ASSET:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ContractExecutable decode(XdrDataInputStream stream) throws IOException {
@@ -65,19 +55,6 @@ public class ContractExecutable implements XdrElement {
         break;
     }
     return decodedContractExecutable;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ContractExecutable fromXdrBase64(String xdr) throws IOException {

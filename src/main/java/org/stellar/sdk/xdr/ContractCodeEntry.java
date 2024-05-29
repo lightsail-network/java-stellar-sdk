@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,17 +42,12 @@ public class ContractCodeEntry implements XdrElement {
   private Hash hash;
   private byte[] code;
 
-  public static void encode(XdrDataOutputStream stream, ContractCodeEntry encodedContractCodeEntry)
-      throws IOException {
-    ContractCodeEntryExt.encode(stream, encodedContractCodeEntry.ext);
-    Hash.encode(stream, encodedContractCodeEntry.hash);
-    int codeSize = encodedContractCodeEntry.code.length;
-    stream.writeInt(codeSize);
-    stream.write(encodedContractCodeEntry.getCode(), 0, codeSize);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
+    hash.encode(stream);
+    int codeSize = code.length;
+    stream.writeInt(codeSize);
+    stream.write(getCode(), 0, codeSize);
   }
 
   public static ContractCodeEntry decode(XdrDataInputStream stream) throws IOException {
@@ -66,19 +58,6 @@ public class ContractCodeEntry implements XdrElement {
     decodedContractCodeEntry.code = new byte[codeSize];
     stream.read(decodedContractCodeEntry.code, 0, codeSize);
     return decodedContractCodeEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ContractCodeEntry fromXdrBase64(String xdr) throws IOException {
@@ -117,23 +96,15 @@ public class ContractCodeEntry implements XdrElement {
     private Integer discriminant;
     private ContractCodeEntryV1 v1;
 
-    public static void encode(
-        XdrDataOutputStream stream, ContractCodeEntryExt encodedContractCodeEntryExt)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedContractCodeEntryExt.getDiscriminant().intValue());
-      switch (encodedContractCodeEntryExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
         case 1:
-          ContractCodeEntryV1.encode(stream, encodedContractCodeEntryExt.v1);
+          v1.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static ContractCodeEntryExt decode(XdrDataInputStream stream) throws IOException {
@@ -148,19 +119,6 @@ public class ContractCodeEntry implements XdrElement {
           break;
       }
       return decodedContractCodeEntryExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static ContractCodeEntryExt fromXdrBase64(String xdr) throws IOException {
@@ -193,15 +151,9 @@ public class ContractCodeEntry implements XdrElement {
       private ExtensionPoint ext;
       private ContractCodeCostInputs costInputs;
 
-      public static void encode(
-          XdrDataOutputStream stream, ContractCodeEntryV1 encodedContractCodeEntryV1)
-          throws IOException {
-        ExtensionPoint.encode(stream, encodedContractCodeEntryV1.ext);
-        ContractCodeCostInputs.encode(stream, encodedContractCodeEntryV1.costInputs);
-      }
-
       public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
+        ext.encode(stream);
+        costInputs.encode(stream);
       }
 
       public static ContractCodeEntryV1 decode(XdrDataInputStream stream) throws IOException {
@@ -209,19 +161,6 @@ public class ContractCodeEntry implements XdrElement {
         decodedContractCodeEntryV1.ext = ExtensionPoint.decode(stream);
         decodedContractCodeEntryV1.costInputs = ContractCodeCostInputs.decode(stream);
         return decodedContractCodeEntryV1;
-      }
-
-      @Override
-      public String toXdrBase64() throws IOException {
-        return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-      }
-
-      @Override
-      public byte[] toXdrByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-        encode(xdrDataOutputStream);
-        return byteArrayOutputStream.toByteArray();
       }
 
       public static ContractCodeEntryV1 fromXdrBase64(String xdr) throws IOException {

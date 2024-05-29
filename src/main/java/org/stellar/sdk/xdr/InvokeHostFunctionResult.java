@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,15 +36,11 @@ public class InvokeHostFunctionResult implements XdrElement {
   private InvokeHostFunctionResultCode discriminant;
   private Hash success;
 
-  public static void encode(
-      XdrDataOutputStream stream, InvokeHostFunctionResult encodedInvokeHostFunctionResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // InvokeHostFunctionResultCode
-    stream.writeInt(encodedInvokeHostFunctionResult.getDiscriminant().getValue());
-    switch (encodedInvokeHostFunctionResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case INVOKE_HOST_FUNCTION_SUCCESS:
-        Hash.encode(stream, encodedInvokeHostFunctionResult.success);
+        success.encode(stream);
         break;
       case INVOKE_HOST_FUNCTION_MALFORMED:
       case INVOKE_HOST_FUNCTION_TRAPPED:
@@ -56,10 +49,6 @@ public class InvokeHostFunctionResult implements XdrElement {
       case INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static InvokeHostFunctionResult decode(XdrDataInputStream stream) throws IOException {
@@ -78,19 +67,6 @@ public class InvokeHostFunctionResult implements XdrElement {
         break;
     }
     return decodedInvokeHostFunctionResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static InvokeHostFunctionResult fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +30,9 @@ public class TTLEntry implements XdrElement {
   private Hash keyHash;
   private Uint32 liveUntilLedgerSeq;
 
-  public static void encode(XdrDataOutputStream stream, TTLEntry encodedTTLEntry)
-      throws IOException {
-    Hash.encode(stream, encodedTTLEntry.keyHash);
-    Uint32.encode(stream, encodedTTLEntry.liveUntilLedgerSeq);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    keyHash.encode(stream);
+    liveUntilLedgerSeq.encode(stream);
   }
 
   public static TTLEntry decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +40,6 @@ public class TTLEntry implements XdrElement {
     decodedTTLEntry.keyHash = Hash.decode(stream);
     decodedTTLEntry.liveUntilLedgerSeq = Uint32.decode(stream);
     return decodedTTLEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TTLEntry fromXdrBase64(String xdr) throws IOException {

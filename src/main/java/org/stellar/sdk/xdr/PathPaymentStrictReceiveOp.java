@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,23 +42,17 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
   private Int64 destAmount;
   private Asset[] path;
 
-  public static void encode(
-      XdrDataOutputStream stream, PathPaymentStrictReceiveOp encodedPathPaymentStrictReceiveOp)
-      throws IOException {
-    Asset.encode(stream, encodedPathPaymentStrictReceiveOp.sendAsset);
-    Int64.encode(stream, encodedPathPaymentStrictReceiveOp.sendMax);
-    MuxedAccount.encode(stream, encodedPathPaymentStrictReceiveOp.destination);
-    Asset.encode(stream, encodedPathPaymentStrictReceiveOp.destAsset);
-    Int64.encode(stream, encodedPathPaymentStrictReceiveOp.destAmount);
-    int pathSize = encodedPathPaymentStrictReceiveOp.getPath().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    sendAsset.encode(stream);
+    sendMax.encode(stream);
+    destination.encode(stream);
+    destAsset.encode(stream);
+    destAmount.encode(stream);
+    int pathSize = getPath().length;
     stream.writeInt(pathSize);
     for (int i = 0; i < pathSize; i++) {
-      Asset.encode(stream, encodedPathPaymentStrictReceiveOp.path[i]);
+      path[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static PathPaymentStrictReceiveOp decode(XdrDataInputStream stream) throws IOException {
@@ -77,19 +68,6 @@ public class PathPaymentStrictReceiveOp implements XdrElement {
       decodedPathPaymentStrictReceiveOp.path[i] = Asset.decode(stream);
     }
     return decodedPathPaymentStrictReceiveOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static PathPaymentStrictReceiveOp fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,27 +58,22 @@ public class PeerStats implements XdrElement {
   private Uint64 uniqueFetchMessageRecv;
   private Uint64 duplicateFetchMessageRecv;
 
-  public static void encode(XdrDataOutputStream stream, PeerStats encodedPeerStats)
-      throws IOException {
-    NodeID.encode(stream, encodedPeerStats.id);
-    encodedPeerStats.versionStr.encode(stream);
-    Uint64.encode(stream, encodedPeerStats.messagesRead);
-    Uint64.encode(stream, encodedPeerStats.messagesWritten);
-    Uint64.encode(stream, encodedPeerStats.bytesRead);
-    Uint64.encode(stream, encodedPeerStats.bytesWritten);
-    Uint64.encode(stream, encodedPeerStats.secondsConnected);
-    Uint64.encode(stream, encodedPeerStats.uniqueFloodBytesRecv);
-    Uint64.encode(stream, encodedPeerStats.duplicateFloodBytesRecv);
-    Uint64.encode(stream, encodedPeerStats.uniqueFetchBytesRecv);
-    Uint64.encode(stream, encodedPeerStats.duplicateFetchBytesRecv);
-    Uint64.encode(stream, encodedPeerStats.uniqueFloodMessageRecv);
-    Uint64.encode(stream, encodedPeerStats.duplicateFloodMessageRecv);
-    Uint64.encode(stream, encodedPeerStats.uniqueFetchMessageRecv);
-    Uint64.encode(stream, encodedPeerStats.duplicateFetchMessageRecv);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    id.encode(stream);
+    versionStr.encode(stream);
+    messagesRead.encode(stream);
+    messagesWritten.encode(stream);
+    bytesRead.encode(stream);
+    bytesWritten.encode(stream);
+    secondsConnected.encode(stream);
+    uniqueFloodBytesRecv.encode(stream);
+    duplicateFloodBytesRecv.encode(stream);
+    uniqueFetchBytesRecv.encode(stream);
+    duplicateFetchBytesRecv.encode(stream);
+    uniqueFloodMessageRecv.encode(stream);
+    duplicateFloodMessageRecv.encode(stream);
+    uniqueFetchMessageRecv.encode(stream);
+    duplicateFetchMessageRecv.encode(stream);
   }
 
   public static PeerStats decode(XdrDataInputStream stream) throws IOException {
@@ -102,19 +94,6 @@ public class PeerStats implements XdrElement {
     decodedPeerStats.uniqueFetchMessageRecv = Uint64.decode(stream);
     decodedPeerStats.duplicateFetchMessageRecv = Uint64.decode(stream);
     return decodedPeerStats;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static PeerStats fromXdrBase64(String xdr) throws IOException {

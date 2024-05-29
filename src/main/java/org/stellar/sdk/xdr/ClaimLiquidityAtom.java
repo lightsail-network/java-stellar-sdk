@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,17 +40,12 @@ public class ClaimLiquidityAtom implements XdrElement {
   private Asset assetBought;
   private Int64 amountBought;
 
-  public static void encode(
-      XdrDataOutputStream stream, ClaimLiquidityAtom encodedClaimLiquidityAtom) throws IOException {
-    PoolID.encode(stream, encodedClaimLiquidityAtom.liquidityPoolID);
-    Asset.encode(stream, encodedClaimLiquidityAtom.assetSold);
-    Int64.encode(stream, encodedClaimLiquidityAtom.amountSold);
-    Asset.encode(stream, encodedClaimLiquidityAtom.assetBought);
-    Int64.encode(stream, encodedClaimLiquidityAtom.amountBought);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    liquidityPoolID.encode(stream);
+    assetSold.encode(stream);
+    amountSold.encode(stream);
+    assetBought.encode(stream);
+    amountBought.encode(stream);
   }
 
   public static ClaimLiquidityAtom decode(XdrDataInputStream stream) throws IOException {
@@ -64,19 +56,6 @@ public class ClaimLiquidityAtom implements XdrElement {
     decodedClaimLiquidityAtom.assetBought = Asset.decode(stream);
     decodedClaimLiquidityAtom.amountBought = Int64.decode(stream);
     return decodedClaimLiquidityAtom;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ClaimLiquidityAtom fromXdrBase64(String xdr) throws IOException {

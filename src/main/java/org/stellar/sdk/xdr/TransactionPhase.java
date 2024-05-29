@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,24 +30,17 @@ public class TransactionPhase implements XdrElement {
   private Integer discriminant;
   private TxSetComponent[] v0Components;
 
-  public static void encode(XdrDataOutputStream stream, TransactionPhase encodedTransactionPhase)
-      throws IOException {
-    // Xdrgen::AST::Typespecs::Int
-    // Integer
-    stream.writeInt(encodedTransactionPhase.getDiscriminant().intValue());
-    switch (encodedTransactionPhase.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant);
+    switch (discriminant) {
       case 0:
-        int v0ComponentsSize = encodedTransactionPhase.getV0Components().length;
+        int v0ComponentsSize = getV0Components().length;
         stream.writeInt(v0ComponentsSize);
         for (int i = 0; i < v0ComponentsSize; i++) {
-          TxSetComponent.encode(stream, encodedTransactionPhase.v0Components[i]);
+          v0Components[i].encode(stream);
         }
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static TransactionPhase decode(XdrDataInputStream stream) throws IOException {
@@ -67,19 +57,6 @@ public class TransactionPhase implements XdrElement {
         break;
     }
     return decodedTransactionPhase;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TransactionPhase fromXdrBase64(String xdr) throws IOException {

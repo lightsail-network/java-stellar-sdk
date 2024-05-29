@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -108,90 +105,84 @@ public class SCVal implements XdrElement {
   private SCNonceKey nonce_key;
   private SCContractInstance instance;
 
-  public static void encode(XdrDataOutputStream stream, SCVal encodedSCVal) throws IOException {
-    // Xdrgen::AST::Identifier
-    // SCValType
-    stream.writeInt(encodedSCVal.getDiscriminant().getValue());
-    switch (encodedSCVal.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SCV_BOOL:
-        stream.writeInt(encodedSCVal.b ? 1 : 0);
+        stream.writeInt(b ? 1 : 0);
         break;
       case SCV_VOID:
         break;
       case SCV_ERROR:
-        SCError.encode(stream, encodedSCVal.error);
+        error.encode(stream);
         break;
       case SCV_U32:
-        Uint32.encode(stream, encodedSCVal.u32);
+        u32.encode(stream);
         break;
       case SCV_I32:
-        Int32.encode(stream, encodedSCVal.i32);
+        i32.encode(stream);
         break;
       case SCV_U64:
-        Uint64.encode(stream, encodedSCVal.u64);
+        u64.encode(stream);
         break;
       case SCV_I64:
-        Int64.encode(stream, encodedSCVal.i64);
+        i64.encode(stream);
         break;
       case SCV_TIMEPOINT:
-        TimePoint.encode(stream, encodedSCVal.timepoint);
+        timepoint.encode(stream);
         break;
       case SCV_DURATION:
-        Duration.encode(stream, encodedSCVal.duration);
+        duration.encode(stream);
         break;
       case SCV_U128:
-        UInt128Parts.encode(stream, encodedSCVal.u128);
+        u128.encode(stream);
         break;
       case SCV_I128:
-        Int128Parts.encode(stream, encodedSCVal.i128);
+        i128.encode(stream);
         break;
       case SCV_U256:
-        UInt256Parts.encode(stream, encodedSCVal.u256);
+        u256.encode(stream);
         break;
       case SCV_I256:
-        Int256Parts.encode(stream, encodedSCVal.i256);
+        i256.encode(stream);
         break;
       case SCV_BYTES:
-        SCBytes.encode(stream, encodedSCVal.bytes);
+        bytes.encode(stream);
         break;
       case SCV_STRING:
-        SCString.encode(stream, encodedSCVal.str);
+        str.encode(stream);
         break;
       case SCV_SYMBOL:
-        SCSymbol.encode(stream, encodedSCVal.sym);
+        sym.encode(stream);
         break;
       case SCV_VEC:
-        if (encodedSCVal.vec != null) {
+        if (vec != null) {
           stream.writeInt(1);
-          SCVec.encode(stream, encodedSCVal.vec);
+          vec.encode(stream);
         } else {
           stream.writeInt(0);
         }
         break;
       case SCV_MAP:
-        if (encodedSCVal.map != null) {
+        if (map != null) {
           stream.writeInt(1);
-          SCMap.encode(stream, encodedSCVal.map);
+          map.encode(stream);
         } else {
           stream.writeInt(0);
         }
         break;
       case SCV_ADDRESS:
-        SCAddress.encode(stream, encodedSCVal.address);
+        address.encode(stream);
         break;
       case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
         break;
       case SCV_LEDGER_KEY_NONCE:
-        SCNonceKey.encode(stream, encodedSCVal.nonce_key);
+        nonce_key.encode(stream);
         break;
       case SCV_CONTRACT_INSTANCE:
-        SCContractInstance.encode(stream, encodedSCVal.instance);
+        instance.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCVal decode(XdrDataInputStream stream) throws IOException {
@@ -271,19 +262,6 @@ public class SCVal implements XdrElement {
         break;
     }
     return decodedSCVal;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCVal fromXdrBase64(String xdr) throws IOException {

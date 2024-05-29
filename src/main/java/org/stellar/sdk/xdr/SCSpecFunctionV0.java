@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,29 +34,24 @@ public class SCSpecFunctionV0 implements XdrElement {
   private SCSpecFunctionInputV0[] inputs;
   private SCSpecTypeDef[] outputs;
 
-  public static void encode(XdrDataOutputStream stream, SCSpecFunctionV0 encodedSCSpecFunctionV0)
-      throws IOException {
-    encodedSCSpecFunctionV0.doc.encode(stream);
-    SCSymbol.encode(stream, encodedSCSpecFunctionV0.name);
-    int inputsSize = encodedSCSpecFunctionV0.getInputs().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    doc.encode(stream);
+    name.encode(stream);
+    int inputsSize = getInputs().length;
     stream.writeInt(inputsSize);
     for (int i = 0; i < inputsSize; i++) {
-      SCSpecFunctionInputV0.encode(stream, encodedSCSpecFunctionV0.inputs[i]);
+      inputs[i].encode(stream);
     }
-    int outputsSize = encodedSCSpecFunctionV0.getOutputs().length;
+    int outputsSize = getOutputs().length;
     stream.writeInt(outputsSize);
     for (int i = 0; i < outputsSize; i++) {
-      SCSpecTypeDef.encode(stream, encodedSCSpecFunctionV0.outputs[i]);
+      outputs[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCSpecFunctionV0 decode(XdrDataInputStream stream) throws IOException {
     SCSpecFunctionV0 decodedSCSpecFunctionV0 = new SCSpecFunctionV0();
-    decodedSCSpecFunctionV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
+    decodedSCSpecFunctionV0.doc = XdrString.decode(stream, Constants.SC_SPEC_DOC_LIMIT);
     decodedSCSpecFunctionV0.name = SCSymbol.decode(stream);
     int inputsSize = stream.readInt();
     decodedSCSpecFunctionV0.inputs = new SCSpecFunctionInputV0[inputsSize];
@@ -72,19 +64,6 @@ public class SCSpecFunctionV0 implements XdrElement {
       decodedSCSpecFunctionV0.outputs[i] = SCSpecTypeDef.decode(stream);
     }
     return decodedSCSpecFunctionV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecFunctionV0 fromXdrBase64(String xdr) throws IOException {

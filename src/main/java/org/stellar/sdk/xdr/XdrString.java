@@ -1,7 +1,6 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.nio.charset.StandardCharsets;
@@ -34,19 +33,6 @@ public class XdrString implements XdrElement {
     byte[] bytes = new byte[size];
     stream.read(bytes);
     return new XdrString(bytes);
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static XdrString fromXdrBase64(String xdr, int maxSize) throws IOException {

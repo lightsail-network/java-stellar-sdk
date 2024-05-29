@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,28 +43,21 @@ public class TrustLineAsset implements XdrElement {
   private AlphaNum12 alphaNum12;
   private PoolID liquidityPoolID;
 
-  public static void encode(XdrDataOutputStream stream, TrustLineAsset encodedTrustLineAsset)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // AssetType
-    stream.writeInt(encodedTrustLineAsset.getDiscriminant().getValue());
-    switch (encodedTrustLineAsset.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case ASSET_TYPE_NATIVE:
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM4:
-        AlphaNum4.encode(stream, encodedTrustLineAsset.alphaNum4);
+        alphaNum4.encode(stream);
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM12:
-        AlphaNum12.encode(stream, encodedTrustLineAsset.alphaNum12);
+        alphaNum12.encode(stream);
         break;
       case ASSET_TYPE_POOL_SHARE:
-        PoolID.encode(stream, encodedTrustLineAsset.liquidityPoolID);
+        liquidityPoolID.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static TrustLineAsset decode(XdrDataInputStream stream) throws IOException {
@@ -88,19 +78,6 @@ public class TrustLineAsset implements XdrElement {
         break;
     }
     return decodedTrustLineAsset;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TrustLineAsset fromXdrBase64(String xdr) throws IOException {

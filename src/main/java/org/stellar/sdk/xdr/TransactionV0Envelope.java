@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,19 +32,13 @@ public class TransactionV0Envelope implements XdrElement {
   private TransactionV0 tx;
   private DecoratedSignature[] signatures;
 
-  public static void encode(
-      XdrDataOutputStream stream, TransactionV0Envelope encodedTransactionV0Envelope)
-      throws IOException {
-    TransactionV0.encode(stream, encodedTransactionV0Envelope.tx);
-    int signaturesSize = encodedTransactionV0Envelope.getSignatures().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    tx.encode(stream);
+    int signaturesSize = getSignatures().length;
     stream.writeInt(signaturesSize);
     for (int i = 0; i < signaturesSize; i++) {
-      DecoratedSignature.encode(stream, encodedTransactionV0Envelope.signatures[i]);
+      signatures[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static TransactionV0Envelope decode(XdrDataInputStream stream) throws IOException {
@@ -59,19 +50,6 @@ public class TransactionV0Envelope implements XdrElement {
       decodedTransactionV0Envelope.signatures[i] = DecoratedSignature.decode(stream);
     }
     return decodedTransactionV0Envelope;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TransactionV0Envelope fromXdrBase64(String xdr) throws IOException {

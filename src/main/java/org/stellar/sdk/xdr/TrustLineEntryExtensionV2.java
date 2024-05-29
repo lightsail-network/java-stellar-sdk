@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,15 +36,9 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
   private Int32 liquidityPoolUseCount;
   private TrustLineEntryExtensionV2Ext ext;
 
-  public static void encode(
-      XdrDataOutputStream stream, TrustLineEntryExtensionV2 encodedTrustLineEntryExtensionV2)
-      throws IOException {
-    Int32.encode(stream, encodedTrustLineEntryExtensionV2.liquidityPoolUseCount);
-    TrustLineEntryExtensionV2Ext.encode(stream, encodedTrustLineEntryExtensionV2.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    liquidityPoolUseCount.encode(stream);
+    ext.encode(stream);
   }
 
   public static TrustLineEntryExtensionV2 decode(XdrDataInputStream stream) throws IOException {
@@ -55,19 +46,6 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
     decodedTrustLineEntryExtensionV2.liquidityPoolUseCount = Int32.decode(stream);
     decodedTrustLineEntryExtensionV2.ext = TrustLineEntryExtensionV2Ext.decode(stream);
     return decodedTrustLineEntryExtensionV2;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TrustLineEntryExtensionV2 fromXdrBase64(String xdr) throws IOException {
@@ -99,21 +77,12 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
   public static class TrustLineEntryExtensionV2Ext implements XdrElement {
     private Integer discriminant;
 
-    public static void encode(
-        XdrDataOutputStream stream,
-        TrustLineEntryExtensionV2Ext encodedTrustLineEntryExtensionV2Ext)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedTrustLineEntryExtensionV2Ext.getDiscriminant().intValue());
-      switch (encodedTrustLineEntryExtensionV2Ext.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static TrustLineEntryExtensionV2Ext decode(XdrDataInputStream stream)
@@ -127,19 +96,6 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
           break;
       }
       return decodedTrustLineEntryExtensionV2Ext;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static TrustLineEntryExtensionV2Ext fromXdrBase64(String xdr) throws IOException {

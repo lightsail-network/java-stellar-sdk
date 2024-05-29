@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,13 +35,9 @@ import org.stellar.sdk.Base64Factory;
 public class LiquidityPoolWithdrawResult implements XdrElement {
   private LiquidityPoolWithdrawResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream, LiquidityPoolWithdrawResult encodedLiquidityPoolWithdrawResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // LiquidityPoolWithdrawResultCode
-    stream.writeInt(encodedLiquidityPoolWithdrawResult.getDiscriminant().getValue());
-    switch (encodedLiquidityPoolWithdrawResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
         break;
       case LIQUIDITY_POOL_WITHDRAW_MALFORMED:
@@ -54,10 +47,6 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
       case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LiquidityPoolWithdrawResult decode(XdrDataInputStream stream) throws IOException {
@@ -76,19 +65,6 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
         break;
     }
     return decodedLiquidityPoolWithdrawResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LiquidityPoolWithdrawResult fromXdrBase64(String xdr) throws IOException {

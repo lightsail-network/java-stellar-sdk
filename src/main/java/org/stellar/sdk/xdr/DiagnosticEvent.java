@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +30,9 @@ public class DiagnosticEvent implements XdrElement {
   private Boolean inSuccessfulContractCall;
   private ContractEvent event;
 
-  public static void encode(XdrDataOutputStream stream, DiagnosticEvent encodedDiagnosticEvent)
-      throws IOException {
-    stream.writeInt(encodedDiagnosticEvent.inSuccessfulContractCall ? 1 : 0);
-    ContractEvent.encode(stream, encodedDiagnosticEvent.event);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    stream.writeInt(inSuccessfulContractCall ? 1 : 0);
+    event.encode(stream);
   }
 
   public static DiagnosticEvent decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +40,6 @@ public class DiagnosticEvent implements XdrElement {
     decodedDiagnosticEvent.inSuccessfulContractCall = stream.readInt() == 1 ? true : false;
     decodedDiagnosticEvent.event = ContractEvent.decode(stream);
     return decodedDiagnosticEvent;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static DiagnosticEvent fromXdrBase64(String xdr) throws IOException {

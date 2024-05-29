@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,16 +44,11 @@ public class FeeBumpTransaction implements XdrElement {
   private FeeBumpTransactionInnerTx innerTx;
   private FeeBumpTransactionExt ext;
 
-  public static void encode(
-      XdrDataOutputStream stream, FeeBumpTransaction encodedFeeBumpTransaction) throws IOException {
-    MuxedAccount.encode(stream, encodedFeeBumpTransaction.feeSource);
-    Int64.encode(stream, encodedFeeBumpTransaction.fee);
-    FeeBumpTransactionInnerTx.encode(stream, encodedFeeBumpTransaction.innerTx);
-    FeeBumpTransactionExt.encode(stream, encodedFeeBumpTransaction.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    feeSource.encode(stream);
+    fee.encode(stream);
+    innerTx.encode(stream);
+    ext.encode(stream);
   }
 
   public static FeeBumpTransaction decode(XdrDataInputStream stream) throws IOException {
@@ -66,19 +58,6 @@ public class FeeBumpTransaction implements XdrElement {
     decodedFeeBumpTransaction.innerTx = FeeBumpTransactionInnerTx.decode(stream);
     decodedFeeBumpTransaction.ext = FeeBumpTransactionExt.decode(stream);
     return decodedFeeBumpTransaction;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static FeeBumpTransaction fromXdrBase64(String xdr) throws IOException {
@@ -111,21 +90,13 @@ public class FeeBumpTransaction implements XdrElement {
     private EnvelopeType discriminant;
     private TransactionV1Envelope v1;
 
-    public static void encode(
-        XdrDataOutputStream stream, FeeBumpTransactionInnerTx encodedFeeBumpTransactionInnerTx)
-        throws IOException {
-      // Xdrgen::AST::Identifier
-      // EnvelopeType
-      stream.writeInt(encodedFeeBumpTransactionInnerTx.getDiscriminant().getValue());
-      switch (encodedFeeBumpTransactionInnerTx.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant.getValue());
+      switch (discriminant) {
         case ENVELOPE_TYPE_TX:
-          TransactionV1Envelope.encode(stream, encodedFeeBumpTransactionInnerTx.v1);
+          v1.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static FeeBumpTransactionInnerTx decode(XdrDataInputStream stream) throws IOException {
@@ -138,19 +109,6 @@ public class FeeBumpTransaction implements XdrElement {
           break;
       }
       return decodedFeeBumpTransactionInnerTx;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static FeeBumpTransactionInnerTx fromXdrBase64(String xdr) throws IOException {
@@ -183,20 +141,12 @@ public class FeeBumpTransaction implements XdrElement {
   public static class FeeBumpTransactionExt implements XdrElement {
     private Integer discriminant;
 
-    public static void encode(
-        XdrDataOutputStream stream, FeeBumpTransactionExt encodedFeeBumpTransactionExt)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedFeeBumpTransactionExt.getDiscriminant().intValue());
-      switch (encodedFeeBumpTransactionExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static FeeBumpTransactionExt decode(XdrDataInputStream stream) throws IOException {
@@ -208,19 +158,6 @@ public class FeeBumpTransaction implements XdrElement {
           break;
       }
       return decodedFeeBumpTransactionExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static FeeBumpTransactionExt fromXdrBase64(String xdr) throws IOException {

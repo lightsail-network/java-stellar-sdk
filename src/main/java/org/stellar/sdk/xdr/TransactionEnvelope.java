@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,27 +36,19 @@ public class TransactionEnvelope implements XdrElement {
   private TransactionV1Envelope v1;
   private FeeBumpTransactionEnvelope feeBump;
 
-  public static void encode(
-      XdrDataOutputStream stream, TransactionEnvelope encodedTransactionEnvelope)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // EnvelopeType
-    stream.writeInt(encodedTransactionEnvelope.getDiscriminant().getValue());
-    switch (encodedTransactionEnvelope.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case ENVELOPE_TYPE_TX_V0:
-        TransactionV0Envelope.encode(stream, encodedTransactionEnvelope.v0);
+        v0.encode(stream);
         break;
       case ENVELOPE_TYPE_TX:
-        TransactionV1Envelope.encode(stream, encodedTransactionEnvelope.v1);
+        v1.encode(stream);
         break;
       case ENVELOPE_TYPE_TX_FEE_BUMP:
-        FeeBumpTransactionEnvelope.encode(stream, encodedTransactionEnvelope.feeBump);
+        feeBump.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static TransactionEnvelope decode(XdrDataInputStream stream) throws IOException {
@@ -78,19 +67,6 @@ public class TransactionEnvelope implements XdrElement {
         break;
     }
     return decodedTransactionEnvelope;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TransactionEnvelope fromXdrBase64(String xdr) throws IOException {

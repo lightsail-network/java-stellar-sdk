@@ -178,7 +178,7 @@ public class KeyPair {
     try {
       ByteArrayOutputStream publicKeyBytesStream = new ByteArrayOutputStream();
       XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(publicKeyBytesStream);
-      PublicKey.encode(xdrOutputStream, this.getXdrPublicKey());
+      this.getXdrPublicKey().encode(xdrOutputStream);
       byte[] publicKeyBytes = publicKeyBytesStream.toByteArray();
       byte[] signatureHintBytes =
           Arrays.copyOfRange(publicKeyBytes, publicKeyBytes.length - 4, publicKeyBytes.length);

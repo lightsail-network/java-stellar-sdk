@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,31 +28,14 @@ import org.stellar.sdk.Base64Factory;
 public class Auth implements XdrElement {
   private Integer flags;
 
-  public static void encode(XdrDataOutputStream stream, Auth encodedAuth) throws IOException {
-    stream.writeInt(encodedAuth.flags);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    stream.writeInt(flags);
   }
 
   public static Auth decode(XdrDataInputStream stream) throws IOException {
     Auth decodedAuth = new Auth();
     decodedAuth.flags = stream.readInt();
     return decodedAuth;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Auth fromXdrBase64(String xdr) throws IOException {

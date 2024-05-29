@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,22 +30,13 @@ public class LiquidityPoolParameters implements XdrElement {
   private LiquidityPoolType discriminant;
   private LiquidityPoolConstantProductParameters constantProduct;
 
-  public static void encode(
-      XdrDataOutputStream stream, LiquidityPoolParameters encodedLiquidityPoolParameters)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // LiquidityPoolType
-    stream.writeInt(encodedLiquidityPoolParameters.getDiscriminant().getValue());
-    switch (encodedLiquidityPoolParameters.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case LIQUIDITY_POOL_CONSTANT_PRODUCT:
-        LiquidityPoolConstantProductParameters.encode(
-            stream, encodedLiquidityPoolParameters.constantProduct);
+        constantProduct.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LiquidityPoolParameters decode(XdrDataInputStream stream) throws IOException {
@@ -62,19 +50,6 @@ public class LiquidityPoolParameters implements XdrElement {
         break;
     }
     return decodedLiquidityPoolParameters;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LiquidityPoolParameters fromXdrBase64(String xdr) throws IOException {

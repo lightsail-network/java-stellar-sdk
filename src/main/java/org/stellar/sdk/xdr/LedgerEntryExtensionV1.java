@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,15 +36,9 @@ public class LedgerEntryExtensionV1 implements XdrElement {
   private SponsorshipDescriptor sponsoringID;
   private LedgerEntryExtensionV1Ext ext;
 
-  public static void encode(
-      XdrDataOutputStream stream, LedgerEntryExtensionV1 encodedLedgerEntryExtensionV1)
-      throws IOException {
-    SponsorshipDescriptor.encode(stream, encodedLedgerEntryExtensionV1.sponsoringID);
-    LedgerEntryExtensionV1Ext.encode(stream, encodedLedgerEntryExtensionV1.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    sponsoringID.encode(stream);
+    ext.encode(stream);
   }
 
   public static LedgerEntryExtensionV1 decode(XdrDataInputStream stream) throws IOException {
@@ -55,19 +46,6 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     decodedLedgerEntryExtensionV1.sponsoringID = SponsorshipDescriptor.decode(stream);
     decodedLedgerEntryExtensionV1.ext = LedgerEntryExtensionV1Ext.decode(stream);
     return decodedLedgerEntryExtensionV1;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerEntryExtensionV1 fromXdrBase64(String xdr) throws IOException {
@@ -99,20 +77,12 @@ public class LedgerEntryExtensionV1 implements XdrElement {
   public static class LedgerEntryExtensionV1Ext implements XdrElement {
     private Integer discriminant;
 
-    public static void encode(
-        XdrDataOutputStream stream, LedgerEntryExtensionV1Ext encodedLedgerEntryExtensionV1Ext)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedLedgerEntryExtensionV1Ext.getDiscriminant().intValue());
-      switch (encodedLedgerEntryExtensionV1Ext.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static LedgerEntryExtensionV1Ext decode(XdrDataInputStream stream) throws IOException {
@@ -124,19 +94,6 @@ public class LedgerEntryExtensionV1 implements XdrElement {
           break;
       }
       return decodedLedgerEntryExtensionV1Ext;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static LedgerEntryExtensionV1Ext fromXdrBase64(String xdr) throws IOException {

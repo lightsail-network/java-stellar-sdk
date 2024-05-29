@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,17 +60,11 @@ public class SorobanTransactionMetaExtV1 implements XdrElement {
   private Int64 totalRefundableResourceFeeCharged;
   private Int64 rentFeeCharged;
 
-  public static void encode(
-      XdrDataOutputStream stream, SorobanTransactionMetaExtV1 encodedSorobanTransactionMetaExtV1)
-      throws IOException {
-    ExtensionPoint.encode(stream, encodedSorobanTransactionMetaExtV1.ext);
-    Int64.encode(stream, encodedSorobanTransactionMetaExtV1.totalNonRefundableResourceFeeCharged);
-    Int64.encode(stream, encodedSorobanTransactionMetaExtV1.totalRefundableResourceFeeCharged);
-    Int64.encode(stream, encodedSorobanTransactionMetaExtV1.rentFeeCharged);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
+    totalNonRefundableResourceFeeCharged.encode(stream);
+    totalRefundableResourceFeeCharged.encode(stream);
+    rentFeeCharged.encode(stream);
   }
 
   public static SorobanTransactionMetaExtV1 decode(XdrDataInputStream stream) throws IOException {
@@ -84,19 +75,6 @@ public class SorobanTransactionMetaExtV1 implements XdrElement {
     decodedSorobanTransactionMetaExtV1.totalRefundableResourceFeeCharged = Int64.decode(stream);
     decodedSorobanTransactionMetaExtV1.rentFeeCharged = Int64.decode(stream);
     return decodedSorobanTransactionMetaExtV1;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SorobanTransactionMetaExtV1 fromXdrBase64(String xdr) throws IOException {

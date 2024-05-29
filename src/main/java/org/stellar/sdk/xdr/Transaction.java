@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,23 +58,18 @@ public class Transaction implements XdrElement {
   private Operation[] operations;
   private TransactionExt ext;
 
-  public static void encode(XdrDataOutputStream stream, Transaction encodedTransaction)
-      throws IOException {
-    MuxedAccount.encode(stream, encodedTransaction.sourceAccount);
-    Uint32.encode(stream, encodedTransaction.fee);
-    SequenceNumber.encode(stream, encodedTransaction.seqNum);
-    Preconditions.encode(stream, encodedTransaction.cond);
-    Memo.encode(stream, encodedTransaction.memo);
-    int operationsSize = encodedTransaction.getOperations().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    sourceAccount.encode(stream);
+    fee.encode(stream);
+    seqNum.encode(stream);
+    cond.encode(stream);
+    memo.encode(stream);
+    int operationsSize = getOperations().length;
     stream.writeInt(operationsSize);
     for (int i = 0; i < operationsSize; i++) {
-      Operation.encode(stream, encodedTransaction.operations[i]);
+      operations[i].encode(stream);
     }
-    TransactionExt.encode(stream, encodedTransaction.ext);
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
   }
 
   public static Transaction decode(XdrDataInputStream stream) throws IOException {
@@ -94,19 +86,6 @@ public class Transaction implements XdrElement {
     }
     decodedTransaction.ext = TransactionExt.decode(stream);
     return decodedTransaction;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Transaction fromXdrBase64(String xdr) throws IOException {
@@ -141,22 +120,15 @@ public class Transaction implements XdrElement {
     private Integer discriminant;
     private SorobanTransactionData sorobanData;
 
-    public static void encode(XdrDataOutputStream stream, TransactionExt encodedTransactionExt)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedTransactionExt.getDiscriminant().intValue());
-      switch (encodedTransactionExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
         case 1:
-          SorobanTransactionData.encode(stream, encodedTransactionExt.sorobanData);
+          sorobanData.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static TransactionExt decode(XdrDataInputStream stream) throws IOException {
@@ -171,19 +143,6 @@ public class Transaction implements XdrElement {
           break;
       }
       return decodedTransactionExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static TransactionExt fromXdrBase64(String xdr) throws IOException {

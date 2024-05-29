@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,32 +27,14 @@ import org.stellar.sdk.Base64Factory;
 public class SCNonceKey implements XdrElement {
   private Int64 nonce;
 
-  public static void encode(XdrDataOutputStream stream, SCNonceKey encodedSCNonceKey)
-      throws IOException {
-    Int64.encode(stream, encodedSCNonceKey.nonce);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    nonce.encode(stream);
   }
 
   public static SCNonceKey decode(XdrDataInputStream stream) throws IOException {
     SCNonceKey decodedSCNonceKey = new SCNonceKey();
     decodedSCNonceKey.nonce = Int64.decode(stream);
     return decodedSCNonceKey;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCNonceKey fromXdrBase64(String xdr) throws IOException {

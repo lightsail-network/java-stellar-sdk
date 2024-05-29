@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,15 +34,10 @@ public class AllowTrustOp implements XdrElement {
   private AssetCode asset;
   private Uint32 authorize;
 
-  public static void encode(XdrDataOutputStream stream, AllowTrustOp encodedAllowTrustOp)
-      throws IOException {
-    AccountID.encode(stream, encodedAllowTrustOp.trustor);
-    AssetCode.encode(stream, encodedAllowTrustOp.asset);
-    Uint32.encode(stream, encodedAllowTrustOp.authorize);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    trustor.encode(stream);
+    asset.encode(stream);
+    authorize.encode(stream);
   }
 
   public static AllowTrustOp decode(XdrDataInputStream stream) throws IOException {
@@ -54,19 +46,6 @@ public class AllowTrustOp implements XdrElement {
     decodedAllowTrustOp.asset = AssetCode.decode(stream);
     decodedAllowTrustOp.authorize = Uint32.decode(stream);
     return decodedAllowTrustOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static AllowTrustOp fromXdrBase64(String xdr) throws IOException {

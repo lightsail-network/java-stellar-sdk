@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,14 +38,11 @@ public class AccountMergeResult implements XdrElement {
   private AccountMergeResultCode discriminant;
   private Int64 sourceAccountBalance;
 
-  public static void encode(
-      XdrDataOutputStream stream, AccountMergeResult encodedAccountMergeResult) throws IOException {
-    // Xdrgen::AST::Identifier
-    // AccountMergeResultCode
-    stream.writeInt(encodedAccountMergeResult.getDiscriminant().getValue());
-    switch (encodedAccountMergeResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case ACCOUNT_MERGE_SUCCESS:
-        Int64.encode(stream, encodedAccountMergeResult.sourceAccountBalance);
+        sourceAccountBalance.encode(stream);
         break;
       case ACCOUNT_MERGE_MALFORMED:
       case ACCOUNT_MERGE_NO_ACCOUNT:
@@ -59,10 +53,6 @@ public class AccountMergeResult implements XdrElement {
       case ACCOUNT_MERGE_IS_SPONSOR:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static AccountMergeResult decode(XdrDataInputStream stream) throws IOException {
@@ -83,19 +73,6 @@ public class AccountMergeResult implements XdrElement {
         break;
     }
     return decodedAccountMergeResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static AccountMergeResult fromXdrBase64(String xdr) throws IOException {

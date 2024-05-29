@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,32 +28,14 @@ import org.stellar.sdk.Base64Factory;
 public class SCSpecTypeUDT implements XdrElement {
   private XdrString name;
 
-  public static void encode(XdrDataOutputStream stream, SCSpecTypeUDT encodedSCSpecTypeUDT)
-      throws IOException {
-    encodedSCSpecTypeUDT.name.encode(stream);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    name.encode(stream);
   }
 
   public static SCSpecTypeUDT decode(XdrDataInputStream stream) throws IOException {
     SCSpecTypeUDT decodedSCSpecTypeUDT = new SCSpecTypeUDT();
     decodedSCSpecTypeUDT.name = XdrString.decode(stream, 60);
     return decodedSCSpecTypeUDT;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecTypeUDT fromXdrBase64(String xdr) throws IOException {

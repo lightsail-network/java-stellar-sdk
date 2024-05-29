@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,15 +30,9 @@ public class LedgerCloseValueSignature implements XdrElement {
   private NodeID nodeID;
   private Signature signature;
 
-  public static void encode(
-      XdrDataOutputStream stream, LedgerCloseValueSignature encodedLedgerCloseValueSignature)
-      throws IOException {
-    NodeID.encode(stream, encodedLedgerCloseValueSignature.nodeID);
-    Signature.encode(stream, encodedLedgerCloseValueSignature.signature);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    nodeID.encode(stream);
+    signature.encode(stream);
   }
 
   public static LedgerCloseValueSignature decode(XdrDataInputStream stream) throws IOException {
@@ -49,19 +40,6 @@ public class LedgerCloseValueSignature implements XdrElement {
     decodedLedgerCloseValueSignature.nodeID = NodeID.decode(stream);
     decodedLedgerCloseValueSignature.signature = Signature.decode(stream);
     return decodedLedgerCloseValueSignature;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerCloseValueSignature fromXdrBase64(String xdr) throws IOException {

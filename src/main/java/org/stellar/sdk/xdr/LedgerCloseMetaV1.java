@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,43 +62,36 @@ public class LedgerCloseMetaV1 implements XdrElement {
   private LedgerKey[] evictedTemporaryLedgerKeys;
   private LedgerEntry[] evictedPersistentLedgerEntries;
 
-  public static void encode(XdrDataOutputStream stream, LedgerCloseMetaV1 encodedLedgerCloseMetaV1)
-      throws IOException {
-    LedgerCloseMetaExt.encode(stream, encodedLedgerCloseMetaV1.ext);
-    LedgerHeaderHistoryEntry.encode(stream, encodedLedgerCloseMetaV1.ledgerHeader);
-    GeneralizedTransactionSet.encode(stream, encodedLedgerCloseMetaV1.txSet);
-    int txProcessingSize = encodedLedgerCloseMetaV1.getTxProcessing().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    ext.encode(stream);
+    ledgerHeader.encode(stream);
+    txSet.encode(stream);
+    int txProcessingSize = getTxProcessing().length;
     stream.writeInt(txProcessingSize);
     for (int i = 0; i < txProcessingSize; i++) {
-      TransactionResultMeta.encode(stream, encodedLedgerCloseMetaV1.txProcessing[i]);
+      txProcessing[i].encode(stream);
     }
-    int upgradesProcessingSize = encodedLedgerCloseMetaV1.getUpgradesProcessing().length;
+    int upgradesProcessingSize = getUpgradesProcessing().length;
     stream.writeInt(upgradesProcessingSize);
     for (int i = 0; i < upgradesProcessingSize; i++) {
-      UpgradeEntryMeta.encode(stream, encodedLedgerCloseMetaV1.upgradesProcessing[i]);
+      upgradesProcessing[i].encode(stream);
     }
-    int scpInfoSize = encodedLedgerCloseMetaV1.getScpInfo().length;
+    int scpInfoSize = getScpInfo().length;
     stream.writeInt(scpInfoSize);
     for (int i = 0; i < scpInfoSize; i++) {
-      SCPHistoryEntry.encode(stream, encodedLedgerCloseMetaV1.scpInfo[i]);
+      scpInfo[i].encode(stream);
     }
-    Uint64.encode(stream, encodedLedgerCloseMetaV1.totalByteSizeOfBucketList);
-    int evictedTemporaryLedgerKeysSize =
-        encodedLedgerCloseMetaV1.getEvictedTemporaryLedgerKeys().length;
+    totalByteSizeOfBucketList.encode(stream);
+    int evictedTemporaryLedgerKeysSize = getEvictedTemporaryLedgerKeys().length;
     stream.writeInt(evictedTemporaryLedgerKeysSize);
     for (int i = 0; i < evictedTemporaryLedgerKeysSize; i++) {
-      LedgerKey.encode(stream, encodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys[i]);
+      evictedTemporaryLedgerKeys[i].encode(stream);
     }
-    int evictedPersistentLedgerEntriesSize =
-        encodedLedgerCloseMetaV1.getEvictedPersistentLedgerEntries().length;
+    int evictedPersistentLedgerEntriesSize = getEvictedPersistentLedgerEntries().length;
     stream.writeInt(evictedPersistentLedgerEntriesSize);
     for (int i = 0; i < evictedPersistentLedgerEntriesSize; i++) {
-      LedgerEntry.encode(stream, encodedLedgerCloseMetaV1.evictedPersistentLedgerEntries[i]);
+      evictedPersistentLedgerEntries[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LedgerCloseMetaV1 decode(XdrDataInputStream stream) throws IOException {
@@ -138,19 +128,6 @@ public class LedgerCloseMetaV1 implements XdrElement {
       decodedLedgerCloseMetaV1.evictedPersistentLedgerEntries[i] = LedgerEntry.decode(stream);
     }
     return decodedLedgerCloseMetaV1;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerCloseMetaV1 fromXdrBase64(String xdr) throws IOException {

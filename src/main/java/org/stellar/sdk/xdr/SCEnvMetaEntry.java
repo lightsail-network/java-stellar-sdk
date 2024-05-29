@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,20 +30,13 @@ public class SCEnvMetaEntry implements XdrElement {
   private SCEnvMetaKind discriminant;
   private Uint64 interfaceVersion;
 
-  public static void encode(XdrDataOutputStream stream, SCEnvMetaEntry encodedSCEnvMetaEntry)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // SCEnvMetaKind
-    stream.writeInt(encodedSCEnvMetaEntry.getDiscriminant().getValue());
-    switch (encodedSCEnvMetaEntry.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SC_ENV_META_KIND_INTERFACE_VERSION:
-        Uint64.encode(stream, encodedSCEnvMetaEntry.interfaceVersion);
+        interfaceVersion.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCEnvMetaEntry decode(XdrDataInputStream stream) throws IOException {
@@ -59,19 +49,6 @@ public class SCEnvMetaEntry implements XdrElement {
         break;
     }
     return decodedSCEnvMetaEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCEnvMetaEntry fromXdrBase64(String xdr) throws IOException {

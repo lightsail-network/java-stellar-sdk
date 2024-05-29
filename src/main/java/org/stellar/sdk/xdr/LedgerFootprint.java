@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,22 +30,17 @@ public class LedgerFootprint implements XdrElement {
   private LedgerKey[] readOnly;
   private LedgerKey[] readWrite;
 
-  public static void encode(XdrDataOutputStream stream, LedgerFootprint encodedLedgerFootprint)
-      throws IOException {
-    int readOnlySize = encodedLedgerFootprint.getReadOnly().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    int readOnlySize = getReadOnly().length;
     stream.writeInt(readOnlySize);
     for (int i = 0; i < readOnlySize; i++) {
-      LedgerKey.encode(stream, encodedLedgerFootprint.readOnly[i]);
+      readOnly[i].encode(stream);
     }
-    int readWriteSize = encodedLedgerFootprint.getReadWrite().length;
+    int readWriteSize = getReadWrite().length;
     stream.writeInt(readWriteSize);
     for (int i = 0; i < readWriteSize; i++) {
-      LedgerKey.encode(stream, encodedLedgerFootprint.readWrite[i]);
+      readWrite[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LedgerFootprint decode(XdrDataInputStream stream) throws IOException {
@@ -64,19 +56,6 @@ public class LedgerFootprint implements XdrElement {
       decodedLedgerFootprint.readWrite[i] = LedgerKey.decode(stream);
     }
     return decodedLedgerFootprint;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerFootprint fromXdrBase64(String xdr) throws IOException {
