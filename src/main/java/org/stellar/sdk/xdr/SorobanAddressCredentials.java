@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,17 +34,11 @@ public class SorobanAddressCredentials implements XdrElement {
   private Uint32 signatureExpirationLedger;
   private SCVal signature;
 
-  public static void encode(
-      XdrDataOutputStream stream, SorobanAddressCredentials encodedSorobanAddressCredentials)
-      throws IOException {
-    SCAddress.encode(stream, encodedSorobanAddressCredentials.address);
-    Int64.encode(stream, encodedSorobanAddressCredentials.nonce);
-    Uint32.encode(stream, encodedSorobanAddressCredentials.signatureExpirationLedger);
-    SCVal.encode(stream, encodedSorobanAddressCredentials.signature);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    address.encode(stream);
+    nonce.encode(stream);
+    signatureExpirationLedger.encode(stream);
+    signature.encode(stream);
   }
 
   public static SorobanAddressCredentials decode(XdrDataInputStream stream) throws IOException {
@@ -57,19 +48,6 @@ public class SorobanAddressCredentials implements XdrElement {
     decodedSorobanAddressCredentials.signatureExpirationLedger = Uint32.decode(stream);
     decodedSorobanAddressCredentials.signature = SCVal.decode(stream);
     return decodedSorobanAddressCredentials;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SorobanAddressCredentials fromXdrBase64(String xdr) throws IOException {

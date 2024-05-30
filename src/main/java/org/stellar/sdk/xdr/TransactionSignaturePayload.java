@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,16 +38,9 @@ public class TransactionSignaturePayload implements XdrElement {
   private Hash networkId;
   private TransactionSignaturePayloadTaggedTransaction taggedTransaction;
 
-  public static void encode(
-      XdrDataOutputStream stream, TransactionSignaturePayload encodedTransactionSignaturePayload)
-      throws IOException {
-    Hash.encode(stream, encodedTransactionSignaturePayload.networkId);
-    TransactionSignaturePayloadTaggedTransaction.encode(
-        stream, encodedTransactionSignaturePayload.taggedTransaction);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    networkId.encode(stream);
+    taggedTransaction.encode(stream);
   }
 
   public static TransactionSignaturePayload decode(XdrDataInputStream stream) throws IOException {
@@ -60,19 +50,6 @@ public class TransactionSignaturePayload implements XdrElement {
     decodedTransactionSignaturePayload.taggedTransaction =
         TransactionSignaturePayloadTaggedTransaction.decode(stream);
     return decodedTransactionSignaturePayload;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TransactionSignaturePayload fromXdrBase64(String xdr) throws IOException {
@@ -109,28 +86,16 @@ public class TransactionSignaturePayload implements XdrElement {
     private Transaction tx;
     private FeeBumpTransaction feeBump;
 
-    public static void encode(
-        XdrDataOutputStream stream,
-        TransactionSignaturePayloadTaggedTransaction
-            encodedTransactionSignaturePayloadTaggedTransaction)
-        throws IOException {
-      // Xdrgen::AST::Identifier
-      // EnvelopeType
-      stream.writeInt(
-          encodedTransactionSignaturePayloadTaggedTransaction.getDiscriminant().getValue());
-      switch (encodedTransactionSignaturePayloadTaggedTransaction.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant.getValue());
+      switch (discriminant) {
         case ENVELOPE_TYPE_TX:
-          Transaction.encode(stream, encodedTransactionSignaturePayloadTaggedTransaction.tx);
+          tx.encode(stream);
           break;
         case ENVELOPE_TYPE_TX_FEE_BUMP:
-          FeeBumpTransaction.encode(
-              stream, encodedTransactionSignaturePayloadTaggedTransaction.feeBump);
+          feeBump.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static TransactionSignaturePayloadTaggedTransaction decode(XdrDataInputStream stream)
@@ -150,19 +115,6 @@ public class TransactionSignaturePayload implements XdrElement {
           break;
       }
       return decodedTransactionSignaturePayloadTaggedTransaction;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static TransactionSignaturePayloadTaggedTransaction fromXdrBase64(String xdr)

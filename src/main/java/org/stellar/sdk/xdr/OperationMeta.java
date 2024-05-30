@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,32 +28,14 @@ import org.stellar.sdk.Base64Factory;
 public class OperationMeta implements XdrElement {
   private LedgerEntryChanges changes;
 
-  public static void encode(XdrDataOutputStream stream, OperationMeta encodedOperationMeta)
-      throws IOException {
-    LedgerEntryChanges.encode(stream, encodedOperationMeta.changes);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    changes.encode(stream);
   }
 
   public static OperationMeta decode(XdrDataInputStream stream) throws IOException {
     OperationMeta decodedOperationMeta = new OperationMeta();
     decodedOperationMeta.changes = LedgerEntryChanges.decode(stream);
     return decodedOperationMeta;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static OperationMeta fromXdrBase64(String xdr) throws IOException {

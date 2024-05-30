@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,26 +36,19 @@ public class ClaimAtom implements XdrElement {
   private ClaimOfferAtom orderBook;
   private ClaimLiquidityAtom liquidityPool;
 
-  public static void encode(XdrDataOutputStream stream, ClaimAtom encodedClaimAtom)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // ClaimAtomType
-    stream.writeInt(encodedClaimAtom.getDiscriminant().getValue());
-    switch (encodedClaimAtom.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CLAIM_ATOM_TYPE_V0:
-        ClaimOfferAtomV0.encode(stream, encodedClaimAtom.v0);
+        v0.encode(stream);
         break;
       case CLAIM_ATOM_TYPE_ORDER_BOOK:
-        ClaimOfferAtom.encode(stream, encodedClaimAtom.orderBook);
+        orderBook.encode(stream);
         break;
       case CLAIM_ATOM_TYPE_LIQUIDITY_POOL:
-        ClaimLiquidityAtom.encode(stream, encodedClaimAtom.liquidityPool);
+        liquidityPool.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ClaimAtom decode(XdrDataInputStream stream) throws IOException {
@@ -77,19 +67,6 @@ public class ClaimAtom implements XdrElement {
         break;
     }
     return decodedClaimAtom;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ClaimAtom fromXdrBase64(String xdr) throws IOException {

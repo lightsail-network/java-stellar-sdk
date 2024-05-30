@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,32 +23,14 @@ import org.stellar.sdk.Base64Factory;
 public class SCSymbol implements XdrElement {
   private XdrString SCSymbol;
 
-  public static void encode(XdrDataOutputStream stream, SCSymbol encodedSCSymbol)
-      throws IOException {
-    encodedSCSymbol.SCSymbol.encode(stream);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    SCSymbol.encode(stream);
   }
 
   public static SCSymbol decode(XdrDataInputStream stream) throws IOException {
     SCSymbol decodedSCSymbol = new SCSymbol();
-    decodedSCSymbol.SCSymbol = XdrString.decode(stream, SCSYMBOL_LIMIT);
+    decodedSCSymbol.SCSymbol = XdrString.decode(stream, Constants.SCSYMBOL_LIMIT);
     return decodedSCSymbol;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSymbol fromXdrBase64(String xdr) throws IOException {

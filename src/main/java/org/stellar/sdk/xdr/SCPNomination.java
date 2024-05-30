@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,23 +32,18 @@ public class SCPNomination implements XdrElement {
   private Value[] votes;
   private Value[] accepted;
 
-  public static void encode(XdrDataOutputStream stream, SCPNomination encodedSCPNomination)
-      throws IOException {
-    Hash.encode(stream, encodedSCPNomination.quorumSetHash);
-    int votesSize = encodedSCPNomination.getVotes().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    quorumSetHash.encode(stream);
+    int votesSize = getVotes().length;
     stream.writeInt(votesSize);
     for (int i = 0; i < votesSize; i++) {
-      Value.encode(stream, encodedSCPNomination.votes[i]);
+      votes[i].encode(stream);
     }
-    int acceptedSize = encodedSCPNomination.getAccepted().length;
+    int acceptedSize = getAccepted().length;
     stream.writeInt(acceptedSize);
     for (int i = 0; i < acceptedSize; i++) {
-      Value.encode(stream, encodedSCPNomination.accepted[i]);
+      accepted[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCPNomination decode(XdrDataInputStream stream) throws IOException {
@@ -68,19 +60,6 @@ public class SCPNomination implements XdrElement {
       decodedSCPNomination.accepted[i] = Value.decode(stream);
     }
     return decodedSCPNomination;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCPNomination fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,29 +39,22 @@ public class LedgerEntryChange implements XdrElement {
   private LedgerKey removed;
   private LedgerEntry state;
 
-  public static void encode(XdrDataOutputStream stream, LedgerEntryChange encodedLedgerEntryChange)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // LedgerEntryChangeType
-    stream.writeInt(encodedLedgerEntryChange.getDiscriminant().getValue());
-    switch (encodedLedgerEntryChange.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case LEDGER_ENTRY_CREATED:
-        LedgerEntry.encode(stream, encodedLedgerEntryChange.created);
+        created.encode(stream);
         break;
       case LEDGER_ENTRY_UPDATED:
-        LedgerEntry.encode(stream, encodedLedgerEntryChange.updated);
+        updated.encode(stream);
         break;
       case LEDGER_ENTRY_REMOVED:
-        LedgerKey.encode(stream, encodedLedgerEntryChange.removed);
+        removed.encode(stream);
         break;
       case LEDGER_ENTRY_STATE:
-        LedgerEntry.encode(stream, encodedLedgerEntryChange.state);
+        state.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LedgerEntryChange decode(XdrDataInputStream stream) throws IOException {
@@ -86,19 +76,6 @@ public class LedgerEntryChange implements XdrElement {
         break;
     }
     return decodedLedgerEntryChange;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerEntryChange fromXdrBase64(String xdr) throws IOException {

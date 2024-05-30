@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,14 +38,9 @@ public class BucketMetadata implements XdrElement {
   private Uint32 ledgerVersion;
   private BucketMetadataExt ext;
 
-  public static void encode(XdrDataOutputStream stream, BucketMetadata encodedBucketMetadata)
-      throws IOException {
-    Uint32.encode(stream, encodedBucketMetadata.ledgerVersion);
-    BucketMetadataExt.encode(stream, encodedBucketMetadata.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ledgerVersion.encode(stream);
+    ext.encode(stream);
   }
 
   public static BucketMetadata decode(XdrDataInputStream stream) throws IOException {
@@ -56,19 +48,6 @@ public class BucketMetadata implements XdrElement {
     decodedBucketMetadata.ledgerVersion = Uint32.decode(stream);
     decodedBucketMetadata.ext = BucketMetadataExt.decode(stream);
     return decodedBucketMetadata;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static BucketMetadata fromXdrBase64(String xdr) throws IOException {
@@ -100,19 +79,12 @@ public class BucketMetadata implements XdrElement {
   public static class BucketMetadataExt implements XdrElement {
     private Integer discriminant;
 
-    public static void encode(
-        XdrDataOutputStream stream, BucketMetadataExt encodedBucketMetadataExt) throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedBucketMetadataExt.getDiscriminant().intValue());
-      switch (encodedBucketMetadataExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static BucketMetadataExt decode(XdrDataInputStream stream) throws IOException {
@@ -124,19 +96,6 @@ public class BucketMetadata implements XdrElement {
           break;
       }
       return decodedBucketMetadataExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static BucketMetadataExt fromXdrBase64(String xdr) throws IOException {

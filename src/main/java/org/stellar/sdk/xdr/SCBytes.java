@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,14 +23,10 @@ import org.stellar.sdk.Base64Factory;
 public class SCBytes implements XdrElement {
   private byte[] SCBytes;
 
-  public static void encode(XdrDataOutputStream stream, SCBytes encodedSCBytes) throws IOException {
-    int SCBytesSize = encodedSCBytes.SCBytes.length;
-    stream.writeInt(SCBytesSize);
-    stream.write(encodedSCBytes.getSCBytes(), 0, SCBytesSize);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    int SCBytesSize = SCBytes.length;
+    stream.writeInt(SCBytesSize);
+    stream.write(getSCBytes(), 0, SCBytesSize);
   }
 
   public static SCBytes decode(XdrDataInputStream stream) throws IOException {
@@ -42,19 +35,6 @@ public class SCBytes implements XdrElement {
     decodedSCBytes.SCBytes = new byte[SCBytesSize];
     stream.read(decodedSCBytes.SCBytes, 0, SCBytesSize);
     return decodedSCBytes;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCBytes fromXdrBase64(String xdr) throws IOException {

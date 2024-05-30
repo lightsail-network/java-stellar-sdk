@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,16 +39,10 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
   private LedgerHeader header;
   private LedgerHeaderHistoryEntryExt ext;
 
-  public static void encode(
-      XdrDataOutputStream stream, LedgerHeaderHistoryEntry encodedLedgerHeaderHistoryEntry)
-      throws IOException {
-    Hash.encode(stream, encodedLedgerHeaderHistoryEntry.hash);
-    LedgerHeader.encode(stream, encodedLedgerHeaderHistoryEntry.header);
-    LedgerHeaderHistoryEntryExt.encode(stream, encodedLedgerHeaderHistoryEntry.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    hash.encode(stream);
+    header.encode(stream);
+    ext.encode(stream);
   }
 
   public static LedgerHeaderHistoryEntry decode(XdrDataInputStream stream) throws IOException {
@@ -60,19 +51,6 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     decodedLedgerHeaderHistoryEntry.header = LedgerHeader.decode(stream);
     decodedLedgerHeaderHistoryEntry.ext = LedgerHeaderHistoryEntryExt.decode(stream);
     return decodedLedgerHeaderHistoryEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerHeaderHistoryEntry fromXdrBase64(String xdr) throws IOException {
@@ -104,20 +82,12 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
   public static class LedgerHeaderHistoryEntryExt implements XdrElement {
     private Integer discriminant;
 
-    public static void encode(
-        XdrDataOutputStream stream, LedgerHeaderHistoryEntryExt encodedLedgerHeaderHistoryEntryExt)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedLedgerHeaderHistoryEntryExt.getDiscriminant().intValue());
-      switch (encodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static LedgerHeaderHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
@@ -130,19 +100,6 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
           break;
       }
       return decodedLedgerHeaderHistoryEntryExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static LedgerHeaderHistoryEntryExt fromXdrBase64(String xdr) throws IOException {

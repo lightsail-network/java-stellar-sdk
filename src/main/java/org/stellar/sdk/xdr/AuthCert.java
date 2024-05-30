@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,15 +32,10 @@ public class AuthCert implements XdrElement {
   private Uint64 expiration;
   private Signature sig;
 
-  public static void encode(XdrDataOutputStream stream, AuthCert encodedAuthCert)
-      throws IOException {
-    Curve25519Public.encode(stream, encodedAuthCert.pubkey);
-    Uint64.encode(stream, encodedAuthCert.expiration);
-    Signature.encode(stream, encodedAuthCert.sig);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    pubkey.encode(stream);
+    expiration.encode(stream);
+    sig.encode(stream);
   }
 
   public static AuthCert decode(XdrDataInputStream stream) throws IOException {
@@ -52,19 +44,6 @@ public class AuthCert implements XdrElement {
     decodedAuthCert.expiration = Uint64.decode(stream);
     decodedAuthCert.sig = Signature.decode(stream);
     return decodedAuthCert;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static AuthCert fromXdrBase64(String xdr) throws IOException {

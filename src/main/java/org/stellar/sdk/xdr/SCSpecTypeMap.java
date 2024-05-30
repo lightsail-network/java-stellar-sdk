@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +30,9 @@ public class SCSpecTypeMap implements XdrElement {
   private SCSpecTypeDef keyType;
   private SCSpecTypeDef valueType;
 
-  public static void encode(XdrDataOutputStream stream, SCSpecTypeMap encodedSCSpecTypeMap)
-      throws IOException {
-    SCSpecTypeDef.encode(stream, encodedSCSpecTypeMap.keyType);
-    SCSpecTypeDef.encode(stream, encodedSCSpecTypeMap.valueType);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    keyType.encode(stream);
+    valueType.encode(stream);
   }
 
   public static SCSpecTypeMap decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +40,6 @@ public class SCSpecTypeMap implements XdrElement {
     decodedSCSpecTypeMap.keyType = SCSpecTypeDef.decode(stream);
     decodedSCSpecTypeMap.valueType = SCSpecTypeDef.decode(stream);
     return decodedSCSpecTypeMap;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecTypeMap fromXdrBase64(String xdr) throws IOException {

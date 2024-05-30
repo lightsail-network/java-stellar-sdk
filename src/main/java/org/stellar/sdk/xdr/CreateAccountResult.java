@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,13 +34,9 @@ import org.stellar.sdk.Base64Factory;
 public class CreateAccountResult implements XdrElement {
   private CreateAccountResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream, CreateAccountResult encodedCreateAccountResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // CreateAccountResultCode
-    stream.writeInt(encodedCreateAccountResult.getDiscriminant().getValue());
-    switch (encodedCreateAccountResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CREATE_ACCOUNT_SUCCESS:
         break;
       case CREATE_ACCOUNT_MALFORMED:
@@ -52,10 +45,6 @@ public class CreateAccountResult implements XdrElement {
       case CREATE_ACCOUNT_ALREADY_EXIST:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static CreateAccountResult decode(XdrDataInputStream stream) throws IOException {
@@ -72,19 +61,6 @@ public class CreateAccountResult implements XdrElement {
         break;
     }
     return decodedCreateAccountResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static CreateAccountResult fromXdrBase64(String xdr) throws IOException {

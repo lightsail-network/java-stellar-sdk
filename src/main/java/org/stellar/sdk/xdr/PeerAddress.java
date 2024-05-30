@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,15 +39,10 @@ public class PeerAddress implements XdrElement {
   private Uint32 port;
   private Uint32 numFailures;
 
-  public static void encode(XdrDataOutputStream stream, PeerAddress encodedPeerAddress)
-      throws IOException {
-    PeerAddressIp.encode(stream, encodedPeerAddress.ip);
-    Uint32.encode(stream, encodedPeerAddress.port);
-    Uint32.encode(stream, encodedPeerAddress.numFailures);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ip.encode(stream);
+    port.encode(stream);
+    numFailures.encode(stream);
   }
 
   public static PeerAddress decode(XdrDataInputStream stream) throws IOException {
@@ -59,19 +51,6 @@ public class PeerAddress implements XdrElement {
     decodedPeerAddress.port = Uint32.decode(stream);
     decodedPeerAddress.numFailures = Uint32.decode(stream);
     return decodedPeerAddress;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static PeerAddress fromXdrBase64(String xdr) throws IOException {
@@ -107,25 +86,18 @@ public class PeerAddress implements XdrElement {
     private byte[] ipv4;
     private byte[] ipv6;
 
-    public static void encode(XdrDataOutputStream stream, PeerAddressIp encodedPeerAddressIp)
-        throws IOException {
-      // Xdrgen::AST::Identifier
-      // IPAddrType
-      stream.writeInt(encodedPeerAddressIp.getDiscriminant().getValue());
-      switch (encodedPeerAddressIp.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant.getValue());
+      switch (discriminant) {
         case IPv4:
-          int ipv4Size = encodedPeerAddressIp.ipv4.length;
-          stream.write(encodedPeerAddressIp.getIpv4(), 0, ipv4Size);
+          int ipv4Size = ipv4.length;
+          stream.write(getIpv4(), 0, ipv4Size);
           break;
         case IPv6:
-          int ipv6Size = encodedPeerAddressIp.ipv6.length;
-          stream.write(encodedPeerAddressIp.getIpv6(), 0, ipv6Size);
+          int ipv6Size = ipv6.length;
+          stream.write(getIpv6(), 0, ipv6Size);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static PeerAddressIp decode(XdrDataInputStream stream) throws IOException {
@@ -145,19 +117,6 @@ public class PeerAddress implements XdrElement {
           break;
       }
       return decodedPeerAddressIp;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static PeerAddressIp fromXdrBase64(String xdr) throws IOException {

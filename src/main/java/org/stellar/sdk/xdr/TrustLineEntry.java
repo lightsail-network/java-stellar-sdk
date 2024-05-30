@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,18 +61,13 @@ public class TrustLineEntry implements XdrElement {
   private Uint32 flags;
   private TrustLineEntryExt ext;
 
-  public static void encode(XdrDataOutputStream stream, TrustLineEntry encodedTrustLineEntry)
-      throws IOException {
-    AccountID.encode(stream, encodedTrustLineEntry.accountID);
-    TrustLineAsset.encode(stream, encodedTrustLineEntry.asset);
-    Int64.encode(stream, encodedTrustLineEntry.balance);
-    Int64.encode(stream, encodedTrustLineEntry.limit);
-    Uint32.encode(stream, encodedTrustLineEntry.flags);
-    TrustLineEntryExt.encode(stream, encodedTrustLineEntry.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    accountID.encode(stream);
+    asset.encode(stream);
+    balance.encode(stream);
+    limit.encode(stream);
+    flags.encode(stream);
+    ext.encode(stream);
   }
 
   public static TrustLineEntry decode(XdrDataInputStream stream) throws IOException {
@@ -87,19 +79,6 @@ public class TrustLineEntry implements XdrElement {
     decodedTrustLineEntry.flags = Uint32.decode(stream);
     decodedTrustLineEntry.ext = TrustLineEntryExt.decode(stream);
     return decodedTrustLineEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TrustLineEntry fromXdrBase64(String xdr) throws IOException {
@@ -146,22 +125,15 @@ public class TrustLineEntry implements XdrElement {
     private Integer discriminant;
     private TrustLineEntryV1 v1;
 
-    public static void encode(
-        XdrDataOutputStream stream, TrustLineEntryExt encodedTrustLineEntryExt) throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedTrustLineEntryExt.getDiscriminant().intValue());
-      switch (encodedTrustLineEntryExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
         case 1:
-          TrustLineEntryV1.encode(stream, encodedTrustLineEntryExt.v1);
+          v1.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static TrustLineEntryExt decode(XdrDataInputStream stream) throws IOException {
@@ -176,19 +148,6 @@ public class TrustLineEntry implements XdrElement {
           break;
       }
       return decodedTrustLineEntryExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static TrustLineEntryExt fromXdrBase64(String xdr) throws IOException {
@@ -229,14 +188,9 @@ public class TrustLineEntry implements XdrElement {
       private Liabilities liabilities;
       private TrustLineEntryV1Ext ext;
 
-      public static void encode(
-          XdrDataOutputStream stream, TrustLineEntryV1 encodedTrustLineEntryV1) throws IOException {
-        Liabilities.encode(stream, encodedTrustLineEntryV1.liabilities);
-        TrustLineEntryV1Ext.encode(stream, encodedTrustLineEntryV1.ext);
-      }
-
       public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
+        liabilities.encode(stream);
+        ext.encode(stream);
       }
 
       public static TrustLineEntryV1 decode(XdrDataInputStream stream) throws IOException {
@@ -244,19 +198,6 @@ public class TrustLineEntry implements XdrElement {
         decodedTrustLineEntryV1.liabilities = Liabilities.decode(stream);
         decodedTrustLineEntryV1.ext = TrustLineEntryV1Ext.decode(stream);
         return decodedTrustLineEntryV1;
-      }
-
-      @Override
-      public String toXdrBase64() throws IOException {
-        return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-      }
-
-      @Override
-      public byte[] toXdrByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-        encode(xdrDataOutputStream);
-        return byteArrayOutputStream.toByteArray();
       }
 
       public static TrustLineEntryV1 fromXdrBase64(String xdr) throws IOException {
@@ -291,23 +232,15 @@ public class TrustLineEntry implements XdrElement {
         private Integer discriminant;
         private TrustLineEntryExtensionV2 v2;
 
-        public static void encode(
-            XdrDataOutputStream stream, TrustLineEntryV1Ext encodedTrustLineEntryV1Ext)
-            throws IOException {
-          // Xdrgen::AST::Typespecs::Int
-          // Integer
-          stream.writeInt(encodedTrustLineEntryV1Ext.getDiscriminant().intValue());
-          switch (encodedTrustLineEntryV1Ext.getDiscriminant()) {
+        public void encode(XdrDataOutputStream stream) throws IOException {
+          stream.writeInt(discriminant);
+          switch (discriminant) {
             case 0:
               break;
             case 2:
-              TrustLineEntryExtensionV2.encode(stream, encodedTrustLineEntryV1Ext.v2);
+              v2.encode(stream);
               break;
           }
-        }
-
-        public void encode(XdrDataOutputStream stream) throws IOException {
-          encode(stream, this);
         }
 
         public static TrustLineEntryV1Ext decode(XdrDataInputStream stream) throws IOException {
@@ -322,19 +255,6 @@ public class TrustLineEntry implements XdrElement {
               break;
           }
           return decodedTrustLineEntryV1Ext;
-        }
-
-        @Override
-        public String toXdrBase64() throws IOException {
-          return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-        }
-
-        @Override
-        public byte[] toXdrByteArray() throws IOException {
-          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-          XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-          encode(xdrDataOutputStream);
-          return byteArrayOutputStream.toByteArray();
         }
 
         public static TrustLineEntryV1Ext fromXdrBase64(String xdr) throws IOException {

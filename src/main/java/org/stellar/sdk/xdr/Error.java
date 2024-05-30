@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,13 +30,9 @@ public class Error implements XdrElement {
   private ErrorCode code;
   private XdrString msg;
 
-  public static void encode(XdrDataOutputStream stream, Error encodedError) throws IOException {
-    ErrorCode.encode(stream, encodedError.code);
-    encodedError.msg.encode(stream);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    code.encode(stream);
+    msg.encode(stream);
   }
 
   public static Error decode(XdrDataInputStream stream) throws IOException {
@@ -47,19 +40,6 @@ public class Error implements XdrElement {
     decodedError.code = ErrorCode.decode(stream);
     decodedError.msg = XdrString.decode(stream, 100);
     return decodedError;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Error fromXdrBase64(String xdr) throws IOException {

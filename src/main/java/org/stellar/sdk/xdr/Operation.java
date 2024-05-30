@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -94,19 +91,14 @@ public class Operation implements XdrElement {
   private MuxedAccount sourceAccount;
   private OperationBody body;
 
-  public static void encode(XdrDataOutputStream stream, Operation encodedOperation)
-      throws IOException {
-    if (encodedOperation.sourceAccount != null) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    if (sourceAccount != null) {
       stream.writeInt(1);
-      MuxedAccount.encode(stream, encodedOperation.sourceAccount);
+      sourceAccount.encode(stream);
     } else {
       stream.writeInt(0);
     }
-    OperationBody.encode(stream, encodedOperation.body);
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    body.encode(stream);
   }
 
   public static Operation decode(XdrDataInputStream stream) throws IOException {
@@ -117,19 +109,6 @@ public class Operation implements XdrElement {
     }
     decodedOperation.body = OperationBody.decode(stream);
     return decodedOperation;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Operation fromXdrBase64(String xdr) throws IOException {
@@ -238,99 +217,89 @@ public class Operation implements XdrElement {
     private ExtendFootprintTTLOp extendFootprintTTLOp;
     private RestoreFootprintOp restoreFootprintOp;
 
-    public static void encode(XdrDataOutputStream stream, OperationBody encodedOperationBody)
-        throws IOException {
-      // Xdrgen::AST::Identifier
-      // OperationType
-      stream.writeInt(encodedOperationBody.getDiscriminant().getValue());
-      switch (encodedOperationBody.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant.getValue());
+      switch (discriminant) {
         case CREATE_ACCOUNT:
-          CreateAccountOp.encode(stream, encodedOperationBody.createAccountOp);
+          createAccountOp.encode(stream);
           break;
         case PAYMENT:
-          PaymentOp.encode(stream, encodedOperationBody.paymentOp);
+          paymentOp.encode(stream);
           break;
         case PATH_PAYMENT_STRICT_RECEIVE:
-          PathPaymentStrictReceiveOp.encode(
-              stream, encodedOperationBody.pathPaymentStrictReceiveOp);
+          pathPaymentStrictReceiveOp.encode(stream);
           break;
         case MANAGE_SELL_OFFER:
-          ManageSellOfferOp.encode(stream, encodedOperationBody.manageSellOfferOp);
+          manageSellOfferOp.encode(stream);
           break;
         case CREATE_PASSIVE_SELL_OFFER:
-          CreatePassiveSellOfferOp.encode(stream, encodedOperationBody.createPassiveSellOfferOp);
+          createPassiveSellOfferOp.encode(stream);
           break;
         case SET_OPTIONS:
-          SetOptionsOp.encode(stream, encodedOperationBody.setOptionsOp);
+          setOptionsOp.encode(stream);
           break;
         case CHANGE_TRUST:
-          ChangeTrustOp.encode(stream, encodedOperationBody.changeTrustOp);
+          changeTrustOp.encode(stream);
           break;
         case ALLOW_TRUST:
-          AllowTrustOp.encode(stream, encodedOperationBody.allowTrustOp);
+          allowTrustOp.encode(stream);
           break;
         case ACCOUNT_MERGE:
-          MuxedAccount.encode(stream, encodedOperationBody.destination);
+          destination.encode(stream);
           break;
         case INFLATION:
           break;
         case MANAGE_DATA:
-          ManageDataOp.encode(stream, encodedOperationBody.manageDataOp);
+          manageDataOp.encode(stream);
           break;
         case BUMP_SEQUENCE:
-          BumpSequenceOp.encode(stream, encodedOperationBody.bumpSequenceOp);
+          bumpSequenceOp.encode(stream);
           break;
         case MANAGE_BUY_OFFER:
-          ManageBuyOfferOp.encode(stream, encodedOperationBody.manageBuyOfferOp);
+          manageBuyOfferOp.encode(stream);
           break;
         case PATH_PAYMENT_STRICT_SEND:
-          PathPaymentStrictSendOp.encode(stream, encodedOperationBody.pathPaymentStrictSendOp);
+          pathPaymentStrictSendOp.encode(stream);
           break;
         case CREATE_CLAIMABLE_BALANCE:
-          CreateClaimableBalanceOp.encode(stream, encodedOperationBody.createClaimableBalanceOp);
+          createClaimableBalanceOp.encode(stream);
           break;
         case CLAIM_CLAIMABLE_BALANCE:
-          ClaimClaimableBalanceOp.encode(stream, encodedOperationBody.claimClaimableBalanceOp);
+          claimClaimableBalanceOp.encode(stream);
           break;
         case BEGIN_SPONSORING_FUTURE_RESERVES:
-          BeginSponsoringFutureReservesOp.encode(
-              stream, encodedOperationBody.beginSponsoringFutureReservesOp);
+          beginSponsoringFutureReservesOp.encode(stream);
           break;
         case END_SPONSORING_FUTURE_RESERVES:
           break;
         case REVOKE_SPONSORSHIP:
-          RevokeSponsorshipOp.encode(stream, encodedOperationBody.revokeSponsorshipOp);
+          revokeSponsorshipOp.encode(stream);
           break;
         case CLAWBACK:
-          ClawbackOp.encode(stream, encodedOperationBody.clawbackOp);
+          clawbackOp.encode(stream);
           break;
         case CLAWBACK_CLAIMABLE_BALANCE:
-          ClawbackClaimableBalanceOp.encode(
-              stream, encodedOperationBody.clawbackClaimableBalanceOp);
+          clawbackClaimableBalanceOp.encode(stream);
           break;
         case SET_TRUST_LINE_FLAGS:
-          SetTrustLineFlagsOp.encode(stream, encodedOperationBody.setTrustLineFlagsOp);
+          setTrustLineFlagsOp.encode(stream);
           break;
         case LIQUIDITY_POOL_DEPOSIT:
-          LiquidityPoolDepositOp.encode(stream, encodedOperationBody.liquidityPoolDepositOp);
+          liquidityPoolDepositOp.encode(stream);
           break;
         case LIQUIDITY_POOL_WITHDRAW:
-          LiquidityPoolWithdrawOp.encode(stream, encodedOperationBody.liquidityPoolWithdrawOp);
+          liquidityPoolWithdrawOp.encode(stream);
           break;
         case INVOKE_HOST_FUNCTION:
-          InvokeHostFunctionOp.encode(stream, encodedOperationBody.invokeHostFunctionOp);
+          invokeHostFunctionOp.encode(stream);
           break;
         case EXTEND_FOOTPRINT_TTL:
-          ExtendFootprintTTLOp.encode(stream, encodedOperationBody.extendFootprintTTLOp);
+          extendFootprintTTLOp.encode(stream);
           break;
         case RESTORE_FOOTPRINT:
-          RestoreFootprintOp.encode(stream, encodedOperationBody.restoreFootprintOp);
+          restoreFootprintOp.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static OperationBody decode(XdrDataInputStream stream) throws IOException {
@@ -422,19 +391,6 @@ public class Operation implements XdrElement {
           break;
       }
       return decodedOperationBody;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static OperationBody fromXdrBase64(String xdr) throws IOException {

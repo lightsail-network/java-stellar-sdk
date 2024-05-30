@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,28 +43,21 @@ public class ChangeTrustAsset implements XdrElement {
   private AlphaNum12 alphaNum12;
   private LiquidityPoolParameters liquidityPool;
 
-  public static void encode(XdrDataOutputStream stream, ChangeTrustAsset encodedChangeTrustAsset)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // AssetType
-    stream.writeInt(encodedChangeTrustAsset.getDiscriminant().getValue());
-    switch (encodedChangeTrustAsset.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case ASSET_TYPE_NATIVE:
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM4:
-        AlphaNum4.encode(stream, encodedChangeTrustAsset.alphaNum4);
+        alphaNum4.encode(stream);
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM12:
-        AlphaNum12.encode(stream, encodedChangeTrustAsset.alphaNum12);
+        alphaNum12.encode(stream);
         break;
       case ASSET_TYPE_POOL_SHARE:
-        LiquidityPoolParameters.encode(stream, encodedChangeTrustAsset.liquidityPool);
+        liquidityPool.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ChangeTrustAsset decode(XdrDataInputStream stream) throws IOException {
@@ -88,19 +78,6 @@ public class ChangeTrustAsset implements XdrElement {
         break;
     }
     return decodedChangeTrustAsset;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ChangeTrustAsset fromXdrBase64(String xdr) throws IOException {

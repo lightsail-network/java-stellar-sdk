@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,14 +23,9 @@ import org.stellar.sdk.Base64Factory;
 public class SignatureHint implements XdrElement {
   private byte[] SignatureHint;
 
-  public static void encode(XdrDataOutputStream stream, SignatureHint encodedSignatureHint)
-      throws IOException {
-    int SignatureHintSize = encodedSignatureHint.SignatureHint.length;
-    stream.write(encodedSignatureHint.getSignatureHint(), 0, SignatureHintSize);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    int SignatureHintSize = SignatureHint.length;
+    stream.write(getSignatureHint(), 0, SignatureHintSize);
   }
 
   public static SignatureHint decode(XdrDataInputStream stream) throws IOException {
@@ -42,19 +34,6 @@ public class SignatureHint implements XdrElement {
     decodedSignatureHint.SignatureHint = new byte[SignatureHintSize];
     stream.read(decodedSignatureHint.SignatureHint, 0, SignatureHintSize);
     return decodedSignatureHint;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SignatureHint fromXdrBase64(String xdr) throws IOException {

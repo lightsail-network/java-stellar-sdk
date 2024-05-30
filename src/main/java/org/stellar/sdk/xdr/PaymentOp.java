@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,15 +32,10 @@ public class PaymentOp implements XdrElement {
   private Asset asset;
   private Int64 amount;
 
-  public static void encode(XdrDataOutputStream stream, PaymentOp encodedPaymentOp)
-      throws IOException {
-    MuxedAccount.encode(stream, encodedPaymentOp.destination);
-    Asset.encode(stream, encodedPaymentOp.asset);
-    Int64.encode(stream, encodedPaymentOp.amount);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    destination.encode(stream);
+    asset.encode(stream);
+    amount.encode(stream);
   }
 
   public static PaymentOp decode(XdrDataInputStream stream) throws IOException {
@@ -52,19 +44,6 @@ public class PaymentOp implements XdrElement {
     decodedPaymentOp.asset = Asset.decode(stream);
     decodedPaymentOp.amount = Int64.decode(stream);
     return decodedPaymentOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static PaymentOp fromXdrBase64(String xdr) throws IOException {

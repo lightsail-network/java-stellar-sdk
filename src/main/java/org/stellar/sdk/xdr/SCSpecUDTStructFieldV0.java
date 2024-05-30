@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,37 +32,18 @@ public class SCSpecUDTStructFieldV0 implements XdrElement {
   private XdrString name;
   private SCSpecTypeDef type;
 
-  public static void encode(
-      XdrDataOutputStream stream, SCSpecUDTStructFieldV0 encodedSCSpecUDTStructFieldV0)
-      throws IOException {
-    encodedSCSpecUDTStructFieldV0.doc.encode(stream);
-    encodedSCSpecUDTStructFieldV0.name.encode(stream);
-    SCSpecTypeDef.encode(stream, encodedSCSpecUDTStructFieldV0.type);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    doc.encode(stream);
+    name.encode(stream);
+    type.encode(stream);
   }
 
   public static SCSpecUDTStructFieldV0 decode(XdrDataInputStream stream) throws IOException {
     SCSpecUDTStructFieldV0 decodedSCSpecUDTStructFieldV0 = new SCSpecUDTStructFieldV0();
-    decodedSCSpecUDTStructFieldV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
+    decodedSCSpecUDTStructFieldV0.doc = XdrString.decode(stream, Constants.SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTStructFieldV0.name = XdrString.decode(stream, 30);
     decodedSCSpecUDTStructFieldV0.type = SCSpecTypeDef.decode(stream);
     return decodedSCSpecUDTStructFieldV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecUDTStructFieldV0 fromXdrBase64(String xdr) throws IOException {

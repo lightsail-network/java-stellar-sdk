@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,14 +34,9 @@ import org.stellar.sdk.Base64Factory;
 public class ClawbackClaimableBalanceResult implements XdrElement {
   private ClawbackClaimableBalanceResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      ClawbackClaimableBalanceResult encodedClawbackClaimableBalanceResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // ClawbackClaimableBalanceResultCode
-    stream.writeInt(encodedClawbackClaimableBalanceResult.getDiscriminant().getValue());
-    switch (encodedClawbackClaimableBalanceResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
         break;
       case CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
@@ -52,10 +44,6 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
       case CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ClawbackClaimableBalanceResult decode(XdrDataInputStream stream)
@@ -74,19 +62,6 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
         break;
     }
     return decodedClawbackClaimableBalanceResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ClawbackClaimableBalanceResult fromXdrBase64(String xdr) throws IOException {

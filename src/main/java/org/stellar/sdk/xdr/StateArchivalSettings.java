@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,23 +57,17 @@ public class StateArchivalSettings implements XdrElement {
   private Uint32 evictionScanSize;
   private Uint32 startingEvictionScanLevel;
 
-  public static void encode(
-      XdrDataOutputStream stream, StateArchivalSettings encodedStateArchivalSettings)
-      throws IOException {
-    Uint32.encode(stream, encodedStateArchivalSettings.maxEntryTTL);
-    Uint32.encode(stream, encodedStateArchivalSettings.minTemporaryTTL);
-    Uint32.encode(stream, encodedStateArchivalSettings.minPersistentTTL);
-    Int64.encode(stream, encodedStateArchivalSettings.persistentRentRateDenominator);
-    Int64.encode(stream, encodedStateArchivalSettings.tempRentRateDenominator);
-    Uint32.encode(stream, encodedStateArchivalSettings.maxEntriesToArchive);
-    Uint32.encode(stream, encodedStateArchivalSettings.bucketListSizeWindowSampleSize);
-    Uint32.encode(stream, encodedStateArchivalSettings.bucketListWindowSamplePeriod);
-    Uint32.encode(stream, encodedStateArchivalSettings.evictionScanSize);
-    Uint32.encode(stream, encodedStateArchivalSettings.startingEvictionScanLevel);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    maxEntryTTL.encode(stream);
+    minTemporaryTTL.encode(stream);
+    minPersistentTTL.encode(stream);
+    persistentRentRateDenominator.encode(stream);
+    tempRentRateDenominator.encode(stream);
+    maxEntriesToArchive.encode(stream);
+    bucketListSizeWindowSampleSize.encode(stream);
+    bucketListWindowSamplePeriod.encode(stream);
+    evictionScanSize.encode(stream);
+    startingEvictionScanLevel.encode(stream);
   }
 
   public static StateArchivalSettings decode(XdrDataInputStream stream) throws IOException {
@@ -92,19 +83,6 @@ public class StateArchivalSettings implements XdrElement {
     decodedStateArchivalSettings.evictionScanSize = Uint32.decode(stream);
     decodedStateArchivalSettings.startingEvictionScanLevel = Uint32.decode(stream);
     return decodedStateArchivalSettings;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static StateArchivalSettings fromXdrBase64(String xdr) throws IOException {

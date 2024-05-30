@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,21 +31,14 @@ import org.stellar.sdk.Base64Factory;
 public class BumpSequenceResult implements XdrElement {
   private BumpSequenceResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream, BumpSequenceResult encodedBumpSequenceResult) throws IOException {
-    // Xdrgen::AST::Identifier
-    // BumpSequenceResultCode
-    stream.writeInt(encodedBumpSequenceResult.getDiscriminant().getValue());
-    switch (encodedBumpSequenceResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case BUMP_SEQUENCE_SUCCESS:
         break;
       case BUMP_SEQUENCE_BAD_SEQ:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static BumpSequenceResult decode(XdrDataInputStream stream) throws IOException {
@@ -62,19 +52,6 @@ public class BumpSequenceResult implements XdrElement {
         break;
     }
     return decodedBumpSequenceResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static BumpSequenceResult fromXdrBase64(String xdr) throws IOException {

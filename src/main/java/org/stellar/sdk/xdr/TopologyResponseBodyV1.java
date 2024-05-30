@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,19 +40,13 @@ public class TopologyResponseBodyV1 implements XdrElement {
   private Uint32 maxInboundPeerCount;
   private Uint32 maxOutboundPeerCount;
 
-  public static void encode(
-      XdrDataOutputStream stream, TopologyResponseBodyV1 encodedTopologyResponseBodyV1)
-      throws IOException {
-    PeerStatList.encode(stream, encodedTopologyResponseBodyV1.inboundPeers);
-    PeerStatList.encode(stream, encodedTopologyResponseBodyV1.outboundPeers);
-    Uint32.encode(stream, encodedTopologyResponseBodyV1.totalInboundPeerCount);
-    Uint32.encode(stream, encodedTopologyResponseBodyV1.totalOutboundPeerCount);
-    Uint32.encode(stream, encodedTopologyResponseBodyV1.maxInboundPeerCount);
-    Uint32.encode(stream, encodedTopologyResponseBodyV1.maxOutboundPeerCount);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    inboundPeers.encode(stream);
+    outboundPeers.encode(stream);
+    totalInboundPeerCount.encode(stream);
+    totalOutboundPeerCount.encode(stream);
+    maxInboundPeerCount.encode(stream);
+    maxOutboundPeerCount.encode(stream);
   }
 
   public static TopologyResponseBodyV1 decode(XdrDataInputStream stream) throws IOException {
@@ -67,19 +58,6 @@ public class TopologyResponseBodyV1 implements XdrElement {
     decodedTopologyResponseBodyV1.maxInboundPeerCount = Uint32.decode(stream);
     decodedTopologyResponseBodyV1.maxOutboundPeerCount = Uint32.decode(stream);
     return decodedTopologyResponseBodyV1;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TopologyResponseBodyV1 fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,15 +28,8 @@ import org.stellar.sdk.Base64Factory;
 public class BeginSponsoringFutureReservesOp implements XdrElement {
   private AccountID sponsoredID;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      BeginSponsoringFutureReservesOp encodedBeginSponsoringFutureReservesOp)
-      throws IOException {
-    AccountID.encode(stream, encodedBeginSponsoringFutureReservesOp.sponsoredID);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    sponsoredID.encode(stream);
   }
 
   public static BeginSponsoringFutureReservesOp decode(XdrDataInputStream stream)
@@ -48,19 +38,6 @@ public class BeginSponsoringFutureReservesOp implements XdrElement {
         new BeginSponsoringFutureReservesOp();
     decodedBeginSponsoringFutureReservesOp.sponsoredID = AccountID.decode(stream);
     return decodedBeginSponsoringFutureReservesOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static BeginSponsoringFutureReservesOp fromXdrBase64(String xdr) throws IOException {

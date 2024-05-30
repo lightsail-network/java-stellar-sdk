@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +30,9 @@ public class SCPEnvelope implements XdrElement {
   private SCPStatement statement;
   private Signature signature;
 
-  public static void encode(XdrDataOutputStream stream, SCPEnvelope encodedSCPEnvelope)
-      throws IOException {
-    SCPStatement.encode(stream, encodedSCPEnvelope.statement);
-    Signature.encode(stream, encodedSCPEnvelope.signature);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    statement.encode(stream);
+    signature.encode(stream);
   }
 
   public static SCPEnvelope decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +40,6 @@ public class SCPEnvelope implements XdrElement {
     decodedSCPEnvelope.statement = SCPStatement.decode(stream);
     decodedSCPEnvelope.signature = Signature.decode(stream);
     return decodedSCPEnvelope;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCPEnvelope fromXdrBase64(String xdr) throws IOException {

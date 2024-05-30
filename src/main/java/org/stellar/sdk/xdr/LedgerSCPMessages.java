@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,18 +30,13 @@ public class LedgerSCPMessages implements XdrElement {
   private Uint32 ledgerSeq;
   private SCPEnvelope[] messages;
 
-  public static void encode(XdrDataOutputStream stream, LedgerSCPMessages encodedLedgerSCPMessages)
-      throws IOException {
-    Uint32.encode(stream, encodedLedgerSCPMessages.ledgerSeq);
-    int messagesSize = encodedLedgerSCPMessages.getMessages().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    ledgerSeq.encode(stream);
+    int messagesSize = getMessages().length;
     stream.writeInt(messagesSize);
     for (int i = 0; i < messagesSize; i++) {
-      SCPEnvelope.encode(stream, encodedLedgerSCPMessages.messages[i]);
+      messages[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LedgerSCPMessages decode(XdrDataInputStream stream) throws IOException {
@@ -56,19 +48,6 @@ public class LedgerSCPMessages implements XdrElement {
       decodedLedgerSCPMessages.messages[i] = SCPEnvelope.decode(stream);
     }
     return decodedLedgerSCPMessages;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerSCPMessages fromXdrBase64(String xdr) throws IOException {

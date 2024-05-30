@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +30,9 @@ public class DontHave implements XdrElement {
   private MessageType type;
   private Uint256 reqHash;
 
-  public static void encode(XdrDataOutputStream stream, DontHave encodedDontHave)
-      throws IOException {
-    MessageType.encode(stream, encodedDontHave.type);
-    Uint256.encode(stream, encodedDontHave.reqHash);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    type.encode(stream);
+    reqHash.encode(stream);
   }
 
   public static DontHave decode(XdrDataInputStream stream) throws IOException {
@@ -48,19 +40,6 @@ public class DontHave implements XdrElement {
     decodedDontHave.type = MessageType.decode(stream);
     decodedDontHave.reqHash = Uint256.decode(stream);
     return decodedDontHave;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static DontHave fromXdrBase64(String xdr) throws IOException {

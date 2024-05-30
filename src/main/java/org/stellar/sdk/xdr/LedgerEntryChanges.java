@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,17 +23,12 @@ import org.stellar.sdk.Base64Factory;
 public class LedgerEntryChanges implements XdrElement {
   private LedgerEntryChange[] LedgerEntryChanges;
 
-  public static void encode(
-      XdrDataOutputStream stream, LedgerEntryChanges encodedLedgerEntryChanges) throws IOException {
-    int LedgerEntryChangesSize = encodedLedgerEntryChanges.getLedgerEntryChanges().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    int LedgerEntryChangesSize = getLedgerEntryChanges().length;
     stream.writeInt(LedgerEntryChangesSize);
     for (int i = 0; i < LedgerEntryChangesSize; i++) {
-      LedgerEntryChange.encode(stream, encodedLedgerEntryChanges.LedgerEntryChanges[i]);
+      LedgerEntryChanges[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LedgerEntryChanges decode(XdrDataInputStream stream) throws IOException {
@@ -47,19 +39,6 @@ public class LedgerEntryChanges implements XdrElement {
       decodedLedgerEntryChanges.LedgerEntryChanges[i] = LedgerEntryChange.decode(stream);
     }
     return decodedLedgerEntryChanges;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerEntryChanges fromXdrBase64(String xdr) throws IOException {

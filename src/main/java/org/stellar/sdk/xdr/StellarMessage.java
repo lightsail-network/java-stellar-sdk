@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -96,81 +93,73 @@ public class StellarMessage implements XdrElement {
   private FloodAdvert floodAdvert;
   private FloodDemand floodDemand;
 
-  public static void encode(XdrDataOutputStream stream, StellarMessage encodedStellarMessage)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // MessageType
-    stream.writeInt(encodedStellarMessage.getDiscriminant().getValue());
-    switch (encodedStellarMessage.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case ERROR_MSG:
-        Error.encode(stream, encodedStellarMessage.error);
+        error.encode(stream);
         break;
       case HELLO:
-        Hello.encode(stream, encodedStellarMessage.hello);
+        hello.encode(stream);
         break;
       case AUTH:
-        Auth.encode(stream, encodedStellarMessage.auth);
+        auth.encode(stream);
         break;
       case DONT_HAVE:
-        DontHave.encode(stream, encodedStellarMessage.dontHave);
+        dontHave.encode(stream);
         break;
       case GET_PEERS:
         break;
       case PEERS:
-        int peersSize = encodedStellarMessage.getPeers().length;
+        int peersSize = getPeers().length;
         stream.writeInt(peersSize);
         for (int i = 0; i < peersSize; i++) {
-          PeerAddress.encode(stream, encodedStellarMessage.peers[i]);
+          peers[i].encode(stream);
         }
         break;
       case GET_TX_SET:
-        Uint256.encode(stream, encodedStellarMessage.txSetHash);
+        txSetHash.encode(stream);
         break;
       case TX_SET:
-        TransactionSet.encode(stream, encodedStellarMessage.txSet);
+        txSet.encode(stream);
         break;
       case GENERALIZED_TX_SET:
-        GeneralizedTransactionSet.encode(stream, encodedStellarMessage.generalizedTxSet);
+        generalizedTxSet.encode(stream);
         break;
       case TRANSACTION:
-        TransactionEnvelope.encode(stream, encodedStellarMessage.transaction);
+        transaction.encode(stream);
         break;
       case SURVEY_REQUEST:
-        SignedSurveyRequestMessage.encode(stream, encodedStellarMessage.signedSurveyRequestMessage);
+        signedSurveyRequestMessage.encode(stream);
         break;
       case SURVEY_RESPONSE:
-        SignedSurveyResponseMessage.encode(
-            stream, encodedStellarMessage.signedSurveyResponseMessage);
+        signedSurveyResponseMessage.encode(stream);
         break;
       case GET_SCP_QUORUMSET:
-        Uint256.encode(stream, encodedStellarMessage.qSetHash);
+        qSetHash.encode(stream);
         break;
       case SCP_QUORUMSET:
-        SCPQuorumSet.encode(stream, encodedStellarMessage.qSet);
+        qSet.encode(stream);
         break;
       case SCP_MESSAGE:
-        SCPEnvelope.encode(stream, encodedStellarMessage.envelope);
+        envelope.encode(stream);
         break;
       case GET_SCP_STATE:
-        Uint32.encode(stream, encodedStellarMessage.getSCPLedgerSeq);
+        getSCPLedgerSeq.encode(stream);
         break;
       case SEND_MORE:
-        SendMore.encode(stream, encodedStellarMessage.sendMoreMessage);
+        sendMoreMessage.encode(stream);
         break;
       case SEND_MORE_EXTENDED:
-        SendMoreExtended.encode(stream, encodedStellarMessage.sendMoreExtendedMessage);
+        sendMoreExtendedMessage.encode(stream);
         break;
       case FLOOD_ADVERT:
-        FloodAdvert.encode(stream, encodedStellarMessage.floodAdvert);
+        floodAdvert.encode(stream);
         break;
       case FLOOD_DEMAND:
-        FloodDemand.encode(stream, encodedStellarMessage.floodDemand);
+        floodDemand.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static StellarMessage decode(XdrDataInputStream stream) throws IOException {
@@ -245,19 +234,6 @@ public class StellarMessage implements XdrElement {
         break;
     }
     return decodedStellarMessage;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static StellarMessage fromXdrBase64(String xdr) throws IOException {

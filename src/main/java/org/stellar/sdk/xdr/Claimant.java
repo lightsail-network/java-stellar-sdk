@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,20 +34,13 @@ public class Claimant implements XdrElement {
   private ClaimantType discriminant;
   private ClaimantV0 v0;
 
-  public static void encode(XdrDataOutputStream stream, Claimant encodedClaimant)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // ClaimantType
-    stream.writeInt(encodedClaimant.getDiscriminant().getValue());
-    switch (encodedClaimant.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CLAIMANT_TYPE_V0:
-        ClaimantV0.encode(stream, encodedClaimant.v0);
+        v0.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static Claimant decode(XdrDataInputStream stream) throws IOException {
@@ -63,19 +53,6 @@ public class Claimant implements XdrElement {
         break;
     }
     return decodedClaimant;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Claimant fromXdrBase64(String xdr) throws IOException {
@@ -108,14 +85,9 @@ public class Claimant implements XdrElement {
     private AccountID destination;
     private ClaimPredicate predicate;
 
-    public static void encode(XdrDataOutputStream stream, ClaimantV0 encodedClaimantV0)
-        throws IOException {
-      AccountID.encode(stream, encodedClaimantV0.destination);
-      ClaimPredicate.encode(stream, encodedClaimantV0.predicate);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      destination.encode(stream);
+      predicate.encode(stream);
     }
 
     public static ClaimantV0 decode(XdrDataInputStream stream) throws IOException {
@@ -123,19 +95,6 @@ public class Claimant implements XdrElement {
       decodedClaimantV0.destination = AccountID.decode(stream);
       decodedClaimantV0.predicate = ClaimPredicate.decode(stream);
       return decodedClaimantV0;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static ClaimantV0 fromXdrBase64(String xdr) throws IOException {

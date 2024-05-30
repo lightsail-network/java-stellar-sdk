@@ -1,7 +1,6 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import lombok.Value;
@@ -54,19 +53,6 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     int copyStartIndex = bytes.length - numBytesToCopy;
     System.arraycopy(bytes, copyStartIndex, paddedBytes, 8 - numBytesToCopy, numBytesToCopy);
     return paddedBytes;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static XdrUnsignedHyperInteger fromXdrBase64(String xdr) throws IOException {

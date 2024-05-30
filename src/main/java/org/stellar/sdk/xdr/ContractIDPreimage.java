@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,23 +37,16 @@ public class ContractIDPreimage implements XdrElement {
   private ContractIDPreimageFromAddress fromAddress;
   private Asset fromAsset;
 
-  public static void encode(
-      XdrDataOutputStream stream, ContractIDPreimage encodedContractIDPreimage) throws IOException {
-    // Xdrgen::AST::Identifier
-    // ContractIDPreimageType
-    stream.writeInt(encodedContractIDPreimage.getDiscriminant().getValue());
-    switch (encodedContractIDPreimage.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CONTRACT_ID_PREIMAGE_FROM_ADDRESS:
-        ContractIDPreimageFromAddress.encode(stream, encodedContractIDPreimage.fromAddress);
+        fromAddress.encode(stream);
         break;
       case CONTRACT_ID_PREIMAGE_FROM_ASSET:
-        Asset.encode(stream, encodedContractIDPreimage.fromAsset);
+        fromAsset.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ContractIDPreimage decode(XdrDataInputStream stream) throws IOException {
@@ -72,19 +62,6 @@ public class ContractIDPreimage implements XdrElement {
         break;
     }
     return decodedContractIDPreimage;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ContractIDPreimage fromXdrBase64(String xdr) throws IOException {
@@ -117,16 +94,9 @@ public class ContractIDPreimage implements XdrElement {
     private SCAddress address;
     private Uint256 salt;
 
-    public static void encode(
-        XdrDataOutputStream stream,
-        ContractIDPreimageFromAddress encodedContractIDPreimageFromAddress)
-        throws IOException {
-      SCAddress.encode(stream, encodedContractIDPreimageFromAddress.address);
-      Uint256.encode(stream, encodedContractIDPreimageFromAddress.salt);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      address.encode(stream);
+      salt.encode(stream);
     }
 
     public static ContractIDPreimageFromAddress decode(XdrDataInputStream stream)
@@ -136,19 +106,6 @@ public class ContractIDPreimage implements XdrElement {
       decodedContractIDPreimageFromAddress.address = SCAddress.decode(stream);
       decodedContractIDPreimageFromAddress.salt = Uint256.decode(stream);
       return decodedContractIDPreimageFromAddress;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static ContractIDPreimageFromAddress fromXdrBase64(String xdr) throws IOException {

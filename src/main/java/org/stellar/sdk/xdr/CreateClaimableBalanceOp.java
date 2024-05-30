@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,20 +32,14 @@ public class CreateClaimableBalanceOp implements XdrElement {
   private Int64 amount;
   private Claimant[] claimants;
 
-  public static void encode(
-      XdrDataOutputStream stream, CreateClaimableBalanceOp encodedCreateClaimableBalanceOp)
-      throws IOException {
-    Asset.encode(stream, encodedCreateClaimableBalanceOp.asset);
-    Int64.encode(stream, encodedCreateClaimableBalanceOp.amount);
-    int claimantsSize = encodedCreateClaimableBalanceOp.getClaimants().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    asset.encode(stream);
+    amount.encode(stream);
+    int claimantsSize = getClaimants().length;
     stream.writeInt(claimantsSize);
     for (int i = 0; i < claimantsSize; i++) {
-      Claimant.encode(stream, encodedCreateClaimableBalanceOp.claimants[i]);
+      claimants[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static CreateClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
@@ -61,19 +52,6 @@ public class CreateClaimableBalanceOp implements XdrElement {
       decodedCreateClaimableBalanceOp.claimants[i] = Claimant.decode(stream);
     }
     return decodedCreateClaimableBalanceOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static CreateClaimableBalanceOp fromXdrBase64(String xdr) throws IOException {

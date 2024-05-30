@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,24 +33,16 @@ public class StoredTransactionSet implements XdrElement {
   private TransactionSet txSet;
   private GeneralizedTransactionSet generalizedTxSet;
 
-  public static void encode(
-      XdrDataOutputStream stream, StoredTransactionSet encodedStoredTransactionSet)
-      throws IOException {
-    // Xdrgen::AST::Typespecs::Int
-    // Integer
-    stream.writeInt(encodedStoredTransactionSet.getDiscriminant().intValue());
-    switch (encodedStoredTransactionSet.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant);
+    switch (discriminant) {
       case 0:
-        TransactionSet.encode(stream, encodedStoredTransactionSet.txSet);
+        txSet.encode(stream);
         break;
       case 1:
-        GeneralizedTransactionSet.encode(stream, encodedStoredTransactionSet.generalizedTxSet);
+        generalizedTxSet.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static StoredTransactionSet decode(XdrDataInputStream stream) throws IOException {
@@ -69,19 +58,6 @@ public class StoredTransactionSet implements XdrElement {
         break;
     }
     return decodedStoredTransactionSet;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static StoredTransactionSet fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,23 +33,16 @@ public class SurveyResponseBody implements XdrElement {
   private TopologyResponseBodyV0 topologyResponseBodyV0;
   private TopologyResponseBodyV1 topologyResponseBodyV1;
 
-  public static void encode(
-      XdrDataOutputStream stream, SurveyResponseBody encodedSurveyResponseBody) throws IOException {
-    // Xdrgen::AST::Identifier
-    // SurveyMessageResponseType
-    stream.writeInt(encodedSurveyResponseBody.getDiscriminant().getValue());
-    switch (encodedSurveyResponseBody.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SURVEY_TOPOLOGY_RESPONSE_V0:
-        TopologyResponseBodyV0.encode(stream, encodedSurveyResponseBody.topologyResponseBodyV0);
+        topologyResponseBodyV0.encode(stream);
         break;
       case SURVEY_TOPOLOGY_RESPONSE_V1:
-        TopologyResponseBodyV1.encode(stream, encodedSurveyResponseBody.topologyResponseBodyV1);
+        topologyResponseBodyV1.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SurveyResponseBody decode(XdrDataInputStream stream) throws IOException {
@@ -68,19 +58,6 @@ public class SurveyResponseBody implements XdrElement {
         break;
     }
     return decodedSurveyResponseBody;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SurveyResponseBody fromXdrBase64(String xdr) throws IOException {

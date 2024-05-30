@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,21 +34,13 @@ public class TxSetComponent implements XdrElement {
   private TxSetComponentType discriminant;
   private TxSetComponentTxsMaybeDiscountedFee txsMaybeDiscountedFee;
 
-  public static void encode(XdrDataOutputStream stream, TxSetComponent encodedTxSetComponent)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // TxSetComponentType
-    stream.writeInt(encodedTxSetComponent.getDiscriminant().getValue());
-    switch (encodedTxSetComponent.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE:
-        TxSetComponentTxsMaybeDiscountedFee.encode(
-            stream, encodedTxSetComponent.txsMaybeDiscountedFee);
+        txsMaybeDiscountedFee.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static TxSetComponent decode(XdrDataInputStream stream) throws IOException {
@@ -65,19 +54,6 @@ public class TxSetComponent implements XdrElement {
         break;
     }
     return decodedTxSetComponent;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TxSetComponent fromXdrBase64(String xdr) throws IOException {
@@ -110,25 +86,18 @@ public class TxSetComponent implements XdrElement {
     private Int64 baseFee;
     private TransactionEnvelope[] txs;
 
-    public static void encode(
-        XdrDataOutputStream stream,
-        TxSetComponentTxsMaybeDiscountedFee encodedTxSetComponentTxsMaybeDiscountedFee)
-        throws IOException {
-      if (encodedTxSetComponentTxsMaybeDiscountedFee.baseFee != null) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      if (baseFee != null) {
         stream.writeInt(1);
-        Int64.encode(stream, encodedTxSetComponentTxsMaybeDiscountedFee.baseFee);
+        baseFee.encode(stream);
       } else {
         stream.writeInt(0);
       }
-      int txsSize = encodedTxSetComponentTxsMaybeDiscountedFee.getTxs().length;
+      int txsSize = getTxs().length;
       stream.writeInt(txsSize);
       for (int i = 0; i < txsSize; i++) {
-        TransactionEnvelope.encode(stream, encodedTxSetComponentTxsMaybeDiscountedFee.txs[i]);
+        txs[i].encode(stream);
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static TxSetComponentTxsMaybeDiscountedFee decode(XdrDataInputStream stream)
@@ -145,19 +114,6 @@ public class TxSetComponent implements XdrElement {
         decodedTxSetComponentTxsMaybeDiscountedFee.txs[i] = TransactionEnvelope.decode(stream);
       }
       return decodedTxSetComponentTxsMaybeDiscountedFee;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static TxSetComponentTxsMaybeDiscountedFee fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,25 +40,19 @@ public class SorobanTransactionMeta implements XdrElement {
   private SCVal returnValue;
   private DiagnosticEvent[] diagnosticEvents;
 
-  public static void encode(
-      XdrDataOutputStream stream, SorobanTransactionMeta encodedSorobanTransactionMeta)
-      throws IOException {
-    SorobanTransactionMetaExt.encode(stream, encodedSorobanTransactionMeta.ext);
-    int eventsSize = encodedSorobanTransactionMeta.getEvents().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    ext.encode(stream);
+    int eventsSize = getEvents().length;
     stream.writeInt(eventsSize);
     for (int i = 0; i < eventsSize; i++) {
-      ContractEvent.encode(stream, encodedSorobanTransactionMeta.events[i]);
+      events[i].encode(stream);
     }
-    SCVal.encode(stream, encodedSorobanTransactionMeta.returnValue);
-    int diagnosticEventsSize = encodedSorobanTransactionMeta.getDiagnosticEvents().length;
+    returnValue.encode(stream);
+    int diagnosticEventsSize = getDiagnosticEvents().length;
     stream.writeInt(diagnosticEventsSize);
     for (int i = 0; i < diagnosticEventsSize; i++) {
-      DiagnosticEvent.encode(stream, encodedSorobanTransactionMeta.diagnosticEvents[i]);
+      diagnosticEvents[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SorobanTransactionMeta decode(XdrDataInputStream stream) throws IOException {
@@ -79,19 +70,6 @@ public class SorobanTransactionMeta implements XdrElement {
       decodedSorobanTransactionMeta.diagnosticEvents[i] = DiagnosticEvent.decode(stream);
     }
     return decodedSorobanTransactionMeta;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SorobanTransactionMeta fromXdrBase64(String xdr) throws IOException {

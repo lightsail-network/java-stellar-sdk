@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,17 +36,10 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
   private Uint32 txMaxSizeBytes;
   private Int64 feeTxSize1KB;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      ConfigSettingContractBandwidthV0 encodedConfigSettingContractBandwidthV0)
-      throws IOException {
-    Uint32.encode(stream, encodedConfigSettingContractBandwidthV0.ledgerMaxTxsSizeBytes);
-    Uint32.encode(stream, encodedConfigSettingContractBandwidthV0.txMaxSizeBytes);
-    Int64.encode(stream, encodedConfigSettingContractBandwidthV0.feeTxSize1KB);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ledgerMaxTxsSizeBytes.encode(stream);
+    txMaxSizeBytes.encode(stream);
+    feeTxSize1KB.encode(stream);
   }
 
   public static ConfigSettingContractBandwidthV0 decode(XdrDataInputStream stream)
@@ -60,19 +50,6 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
     decodedConfigSettingContractBandwidthV0.txMaxSizeBytes = Uint32.decode(stream);
     decodedConfigSettingContractBandwidthV0.feeTxSize1KB = Int64.decode(stream);
     return decodedConfigSettingContractBandwidthV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ConfigSettingContractBandwidthV0 fromXdrBase64(String xdr) throws IOException {

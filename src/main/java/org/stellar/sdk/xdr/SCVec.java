@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,16 +23,12 @@ import org.stellar.sdk.Base64Factory;
 public class SCVec implements XdrElement {
   private SCVal[] SCVec;
 
-  public static void encode(XdrDataOutputStream stream, SCVec encodedSCVec) throws IOException {
-    int SCVecSize = encodedSCVec.getSCVec().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    int SCVecSize = getSCVec().length;
     stream.writeInt(SCVecSize);
     for (int i = 0; i < SCVecSize; i++) {
-      SCVal.encode(stream, encodedSCVec.SCVec[i]);
+      SCVec[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCVec decode(XdrDataInputStream stream) throws IOException {
@@ -46,19 +39,6 @@ public class SCVec implements XdrElement {
       decodedSCVec.SCVec[i] = SCVal.decode(stream);
     }
     return decodedSCVec;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCVec fromXdrBase64(String xdr) throws IOException {

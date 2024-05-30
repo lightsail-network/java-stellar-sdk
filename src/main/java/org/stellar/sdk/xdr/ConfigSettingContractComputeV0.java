@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,18 +40,11 @@ public class ConfigSettingContractComputeV0 implements XdrElement {
   private Int64 feeRatePerInstructionsIncrement;
   private Uint32 txMemoryLimit;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      ConfigSettingContractComputeV0 encodedConfigSettingContractComputeV0)
-      throws IOException {
-    Int64.encode(stream, encodedConfigSettingContractComputeV0.ledgerMaxInstructions);
-    Int64.encode(stream, encodedConfigSettingContractComputeV0.txMaxInstructions);
-    Int64.encode(stream, encodedConfigSettingContractComputeV0.feeRatePerInstructionsIncrement);
-    Uint32.encode(stream, encodedConfigSettingContractComputeV0.txMemoryLimit);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ledgerMaxInstructions.encode(stream);
+    txMaxInstructions.encode(stream);
+    feeRatePerInstructionsIncrement.encode(stream);
+    txMemoryLimit.encode(stream);
   }
 
   public static ConfigSettingContractComputeV0 decode(XdrDataInputStream stream)
@@ -66,19 +56,6 @@ public class ConfigSettingContractComputeV0 implements XdrElement {
     decodedConfigSettingContractComputeV0.feeRatePerInstructionsIncrement = Int64.decode(stream);
     decodedConfigSettingContractComputeV0.txMemoryLimit = Uint32.decode(stream);
     return decodedConfigSettingContractComputeV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ConfigSettingContractComputeV0 fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,23 +33,16 @@ public class LedgerCloseMeta implements XdrElement {
   private LedgerCloseMetaV0 v0;
   private LedgerCloseMetaV1 v1;
 
-  public static void encode(XdrDataOutputStream stream, LedgerCloseMeta encodedLedgerCloseMeta)
-      throws IOException {
-    // Xdrgen::AST::Typespecs::Int
-    // Integer
-    stream.writeInt(encodedLedgerCloseMeta.getDiscriminant().intValue());
-    switch (encodedLedgerCloseMeta.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant);
+    switch (discriminant) {
       case 0:
-        LedgerCloseMetaV0.encode(stream, encodedLedgerCloseMeta.v0);
+        v0.encode(stream);
         break;
       case 1:
-        LedgerCloseMetaV1.encode(stream, encodedLedgerCloseMeta.v1);
+        v1.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LedgerCloseMeta decode(XdrDataInputStream stream) throws IOException {
@@ -68,19 +58,6 @@ public class LedgerCloseMeta implements XdrElement {
         break;
     }
     return decodedLedgerCloseMeta;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerCloseMeta fromXdrBase64(String xdr) throws IOException {

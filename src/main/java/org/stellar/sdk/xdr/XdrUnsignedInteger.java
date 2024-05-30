@@ -1,7 +1,6 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
@@ -42,19 +41,6 @@ public class XdrUnsignedInteger implements XdrElement {
   @Override
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(number.intValue());
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static XdrUnsignedInteger fromXdrBase64(String xdr) throws IOException {

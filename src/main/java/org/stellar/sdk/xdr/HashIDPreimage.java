@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,30 +61,22 @@ public class HashIDPreimage implements XdrElement {
   private HashIDPreimageContractID contractID;
   private HashIDPreimageSorobanAuthorization sorobanAuthorization;
 
-  public static void encode(XdrDataOutputStream stream, HashIDPreimage encodedHashIDPreimage)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // EnvelopeType
-    stream.writeInt(encodedHashIDPreimage.getDiscriminant().getValue());
-    switch (encodedHashIDPreimage.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case ENVELOPE_TYPE_OP_ID:
-        HashIDPreimageOperationID.encode(stream, encodedHashIDPreimage.operationID);
+        operationID.encode(stream);
         break;
       case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
-        HashIDPreimageRevokeID.encode(stream, encodedHashIDPreimage.revokeID);
+        revokeID.encode(stream);
         break;
       case ENVELOPE_TYPE_CONTRACT_ID:
-        HashIDPreimageContractID.encode(stream, encodedHashIDPreimage.contractID);
+        contractID.encode(stream);
         break;
       case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
-        HashIDPreimageSorobanAuthorization.encode(
-            stream, encodedHashIDPreimage.sorobanAuthorization);
+        sorobanAuthorization.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static HashIDPreimage decode(XdrDataInputStream stream) throws IOException {
@@ -110,19 +99,6 @@ public class HashIDPreimage implements XdrElement {
         break;
     }
     return decodedHashIDPreimage;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static HashIDPreimage fromXdrBase64(String xdr) throws IOException {
@@ -157,16 +133,10 @@ public class HashIDPreimage implements XdrElement {
     private SequenceNumber seqNum;
     private Uint32 opNum;
 
-    public static void encode(
-        XdrDataOutputStream stream, HashIDPreimageOperationID encodedHashIDPreimageOperationID)
-        throws IOException {
-      AccountID.encode(stream, encodedHashIDPreimageOperationID.sourceAccount);
-      SequenceNumber.encode(stream, encodedHashIDPreimageOperationID.seqNum);
-      Uint32.encode(stream, encodedHashIDPreimageOperationID.opNum);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      sourceAccount.encode(stream);
+      seqNum.encode(stream);
+      opNum.encode(stream);
     }
 
     public static HashIDPreimageOperationID decode(XdrDataInputStream stream) throws IOException {
@@ -175,19 +145,6 @@ public class HashIDPreimage implements XdrElement {
       decodedHashIDPreimageOperationID.seqNum = SequenceNumber.decode(stream);
       decodedHashIDPreimageOperationID.opNum = Uint32.decode(stream);
       return decodedHashIDPreimageOperationID;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static HashIDPreimageOperationID fromXdrBase64(String xdr) throws IOException {
@@ -227,18 +184,12 @@ public class HashIDPreimage implements XdrElement {
     private PoolID liquidityPoolID;
     private Asset asset;
 
-    public static void encode(
-        XdrDataOutputStream stream, HashIDPreimageRevokeID encodedHashIDPreimageRevokeID)
-        throws IOException {
-      AccountID.encode(stream, encodedHashIDPreimageRevokeID.sourceAccount);
-      SequenceNumber.encode(stream, encodedHashIDPreimageRevokeID.seqNum);
-      Uint32.encode(stream, encodedHashIDPreimageRevokeID.opNum);
-      PoolID.encode(stream, encodedHashIDPreimageRevokeID.liquidityPoolID);
-      Asset.encode(stream, encodedHashIDPreimageRevokeID.asset);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      sourceAccount.encode(stream);
+      seqNum.encode(stream);
+      opNum.encode(stream);
+      liquidityPoolID.encode(stream);
+      asset.encode(stream);
     }
 
     public static HashIDPreimageRevokeID decode(XdrDataInputStream stream) throws IOException {
@@ -249,19 +200,6 @@ public class HashIDPreimage implements XdrElement {
       decodedHashIDPreimageRevokeID.liquidityPoolID = PoolID.decode(stream);
       decodedHashIDPreimageRevokeID.asset = Asset.decode(stream);
       return decodedHashIDPreimageRevokeID;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static HashIDPreimageRevokeID fromXdrBase64(String xdr) throws IOException {
@@ -295,15 +233,9 @@ public class HashIDPreimage implements XdrElement {
     private Hash networkID;
     private ContractIDPreimage contractIDPreimage;
 
-    public static void encode(
-        XdrDataOutputStream stream, HashIDPreimageContractID encodedHashIDPreimageContractID)
-        throws IOException {
-      Hash.encode(stream, encodedHashIDPreimageContractID.networkID);
-      ContractIDPreimage.encode(stream, encodedHashIDPreimageContractID.contractIDPreimage);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      networkID.encode(stream);
+      contractIDPreimage.encode(stream);
     }
 
     public static HashIDPreimageContractID decode(XdrDataInputStream stream) throws IOException {
@@ -311,19 +243,6 @@ public class HashIDPreimage implements XdrElement {
       decodedHashIDPreimageContractID.networkID = Hash.decode(stream);
       decodedHashIDPreimageContractID.contractIDPreimage = ContractIDPreimage.decode(stream);
       return decodedHashIDPreimageContractID;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static HashIDPreimageContractID fromXdrBase64(String xdr) throws IOException {
@@ -361,19 +280,11 @@ public class HashIDPreimage implements XdrElement {
     private Uint32 signatureExpirationLedger;
     private SorobanAuthorizedInvocation invocation;
 
-    public static void encode(
-        XdrDataOutputStream stream,
-        HashIDPreimageSorobanAuthorization encodedHashIDPreimageSorobanAuthorization)
-        throws IOException {
-      Hash.encode(stream, encodedHashIDPreimageSorobanAuthorization.networkID);
-      Int64.encode(stream, encodedHashIDPreimageSorobanAuthorization.nonce);
-      Uint32.encode(stream, encodedHashIDPreimageSorobanAuthorization.signatureExpirationLedger);
-      SorobanAuthorizedInvocation.encode(
-          stream, encodedHashIDPreimageSorobanAuthorization.invocation);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      networkID.encode(stream);
+      nonce.encode(stream);
+      signatureExpirationLedger.encode(stream);
+      invocation.encode(stream);
     }
 
     public static HashIDPreimageSorobanAuthorization decode(XdrDataInputStream stream)
@@ -386,19 +297,6 @@ public class HashIDPreimage implements XdrElement {
       decodedHashIDPreimageSorobanAuthorization.invocation =
           SorobanAuthorizedInvocation.decode(stream);
       return decodedHashIDPreimageSorobanAuthorization;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static HashIDPreimageSorobanAuthorization fromXdrBase64(String xdr) throws IOException {

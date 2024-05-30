@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,17 +35,11 @@ public class TopologyResponseBodyV0 implements XdrElement {
   private Uint32 totalInboundPeerCount;
   private Uint32 totalOutboundPeerCount;
 
-  public static void encode(
-      XdrDataOutputStream stream, TopologyResponseBodyV0 encodedTopologyResponseBodyV0)
-      throws IOException {
-    PeerStatList.encode(stream, encodedTopologyResponseBodyV0.inboundPeers);
-    PeerStatList.encode(stream, encodedTopologyResponseBodyV0.outboundPeers);
-    Uint32.encode(stream, encodedTopologyResponseBodyV0.totalInboundPeerCount);
-    Uint32.encode(stream, encodedTopologyResponseBodyV0.totalOutboundPeerCount);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    inboundPeers.encode(stream);
+    outboundPeers.encode(stream);
+    totalInboundPeerCount.encode(stream);
+    totalOutboundPeerCount.encode(stream);
   }
 
   public static TopologyResponseBodyV0 decode(XdrDataInputStream stream) throws IOException {
@@ -58,19 +49,6 @@ public class TopologyResponseBodyV0 implements XdrElement {
     decodedTopologyResponseBodyV0.totalInboundPeerCount = Uint32.decode(stream);
     decodedTopologyResponseBodyV0.totalOutboundPeerCount = Uint32.decode(stream);
     return decodedTopologyResponseBodyV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TopologyResponseBodyV0 fromXdrBase64(String xdr) throws IOException {

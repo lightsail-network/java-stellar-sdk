@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,17 +23,12 @@ import org.stellar.sdk.Base64Factory;
 public class TxDemandVector implements XdrElement {
   private Hash[] TxDemandVector;
 
-  public static void encode(XdrDataOutputStream stream, TxDemandVector encodedTxDemandVector)
-      throws IOException {
-    int TxDemandVectorSize = encodedTxDemandVector.getTxDemandVector().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    int TxDemandVectorSize = getTxDemandVector().length;
     stream.writeInt(TxDemandVectorSize);
     for (int i = 0; i < TxDemandVectorSize; i++) {
-      Hash.encode(stream, encodedTxDemandVector.TxDemandVector[i]);
+      TxDemandVector[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static TxDemandVector decode(XdrDataInputStream stream) throws IOException {
@@ -47,19 +39,6 @@ public class TxDemandVector implements XdrElement {
       decodedTxDemandVector.TxDemandVector[i] = Hash.decode(stream);
     }
     return decodedTxDemandVector;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TxDemandVector fromXdrBase64(String xdr) throws IOException {

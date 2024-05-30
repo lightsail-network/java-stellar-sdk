@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,28 +32,22 @@ public class PersistedSCPStateV0 implements XdrElement {
   private SCPQuorumSet[] quorumSets;
   private StoredTransactionSet[] txSets;
 
-  public static void encode(
-      XdrDataOutputStream stream, PersistedSCPStateV0 encodedPersistedSCPStateV0)
-      throws IOException {
-    int scpEnvelopesSize = encodedPersistedSCPStateV0.getScpEnvelopes().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    int scpEnvelopesSize = getScpEnvelopes().length;
     stream.writeInt(scpEnvelopesSize);
     for (int i = 0; i < scpEnvelopesSize; i++) {
-      SCPEnvelope.encode(stream, encodedPersistedSCPStateV0.scpEnvelopes[i]);
+      scpEnvelopes[i].encode(stream);
     }
-    int quorumSetsSize = encodedPersistedSCPStateV0.getQuorumSets().length;
+    int quorumSetsSize = getQuorumSets().length;
     stream.writeInt(quorumSetsSize);
     for (int i = 0; i < quorumSetsSize; i++) {
-      SCPQuorumSet.encode(stream, encodedPersistedSCPStateV0.quorumSets[i]);
+      quorumSets[i].encode(stream);
     }
-    int txSetsSize = encodedPersistedSCPStateV0.getTxSets().length;
+    int txSetsSize = getTxSets().length;
     stream.writeInt(txSetsSize);
     for (int i = 0; i < txSetsSize; i++) {
-      StoredTransactionSet.encode(stream, encodedPersistedSCPStateV0.txSets[i]);
+      txSets[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static PersistedSCPStateV0 decode(XdrDataInputStream stream) throws IOException {
@@ -77,19 +68,6 @@ public class PersistedSCPStateV0 implements XdrElement {
       decodedPersistedSCPStateV0.txSets[i] = StoredTransactionSet.decode(stream);
     }
     return decodedPersistedSCPStateV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static PersistedSCPStateV0 fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,19 +30,14 @@ public class ManageDataOp implements XdrElement {
   private String64 dataName;
   private DataValue dataValue;
 
-  public static void encode(XdrDataOutputStream stream, ManageDataOp encodedManageDataOp)
-      throws IOException {
-    String64.encode(stream, encodedManageDataOp.dataName);
-    if (encodedManageDataOp.dataValue != null) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    dataName.encode(stream);
+    if (dataValue != null) {
       stream.writeInt(1);
-      DataValue.encode(stream, encodedManageDataOp.dataValue);
+      dataValue.encode(stream);
     } else {
       stream.writeInt(0);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ManageDataOp decode(XdrDataInputStream stream) throws IOException {
@@ -56,19 +48,6 @@ public class ManageDataOp implements XdrElement {
       decodedManageDataOp.dataValue = DataValue.decode(stream);
     }
     return decodedManageDataOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ManageDataOp fromXdrBase64(String xdr) throws IOException {

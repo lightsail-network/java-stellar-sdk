@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,17 +28,12 @@ import org.stellar.sdk.Base64Factory;
 public class SCSpecTypeTuple implements XdrElement {
   private SCSpecTypeDef[] valueTypes;
 
-  public static void encode(XdrDataOutputStream stream, SCSpecTypeTuple encodedSCSpecTypeTuple)
-      throws IOException {
-    int valueTypesSize = encodedSCSpecTypeTuple.getValueTypes().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    int valueTypesSize = getValueTypes().length;
     stream.writeInt(valueTypesSize);
     for (int i = 0; i < valueTypesSize; i++) {
-      SCSpecTypeDef.encode(stream, encodedSCSpecTypeTuple.valueTypes[i]);
+      valueTypes[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCSpecTypeTuple decode(XdrDataInputStream stream) throws IOException {
@@ -52,19 +44,6 @@ public class SCSpecTypeTuple implements XdrElement {
       decodedSCSpecTypeTuple.valueTypes[i] = SCSpecTypeDef.decode(stream);
     }
     return decodedSCSpecTypeTuple;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecTypeTuple fromXdrBase64(String xdr) throws IOException {

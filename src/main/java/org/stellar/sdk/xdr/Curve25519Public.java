@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,14 +28,9 @@ import org.stellar.sdk.Base64Factory;
 public class Curve25519Public implements XdrElement {
   private byte[] key;
 
-  public static void encode(XdrDataOutputStream stream, Curve25519Public encodedCurve25519Public)
-      throws IOException {
-    int keySize = encodedCurve25519Public.key.length;
-    stream.write(encodedCurve25519Public.getKey(), 0, keySize);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    int keySize = key.length;
+    stream.write(getKey(), 0, keySize);
   }
 
   public static Curve25519Public decode(XdrDataInputStream stream) throws IOException {
@@ -47,19 +39,6 @@ public class Curve25519Public implements XdrElement {
     decodedCurve25519Public.key = new byte[keySize];
     stream.read(decodedCurve25519Public.key, 0, keySize);
     return decodedCurve25519Public;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Curve25519Public fromXdrBase64(String xdr) throws IOException {

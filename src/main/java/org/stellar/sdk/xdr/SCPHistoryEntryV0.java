@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,18 +30,13 @@ public class SCPHistoryEntryV0 implements XdrElement {
   private SCPQuorumSet[] quorumSets;
   private LedgerSCPMessages ledgerMessages;
 
-  public static void encode(XdrDataOutputStream stream, SCPHistoryEntryV0 encodedSCPHistoryEntryV0)
-      throws IOException {
-    int quorumSetsSize = encodedSCPHistoryEntryV0.getQuorumSets().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    int quorumSetsSize = getQuorumSets().length;
     stream.writeInt(quorumSetsSize);
     for (int i = 0; i < quorumSetsSize; i++) {
-      SCPQuorumSet.encode(stream, encodedSCPHistoryEntryV0.quorumSets[i]);
+      quorumSets[i].encode(stream);
     }
-    LedgerSCPMessages.encode(stream, encodedSCPHistoryEntryV0.ledgerMessages);
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ledgerMessages.encode(stream);
   }
 
   public static SCPHistoryEntryV0 decode(XdrDataInputStream stream) throws IOException {
@@ -56,19 +48,6 @@ public class SCPHistoryEntryV0 implements XdrElement {
     }
     decodedSCPHistoryEntryV0.ledgerMessages = LedgerSCPMessages.decode(stream);
     return decodedSCPHistoryEntryV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCPHistoryEntryV0 fromXdrBase64(String xdr) throws IOException {

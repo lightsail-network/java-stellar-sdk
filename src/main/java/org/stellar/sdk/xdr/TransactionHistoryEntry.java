@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,16 +41,10 @@ public class TransactionHistoryEntry implements XdrElement {
   private TransactionSet txSet;
   private TransactionHistoryEntryExt ext;
 
-  public static void encode(
-      XdrDataOutputStream stream, TransactionHistoryEntry encodedTransactionHistoryEntry)
-      throws IOException {
-    Uint32.encode(stream, encodedTransactionHistoryEntry.ledgerSeq);
-    TransactionSet.encode(stream, encodedTransactionHistoryEntry.txSet);
-    TransactionHistoryEntryExt.encode(stream, encodedTransactionHistoryEntry.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ledgerSeq.encode(stream);
+    txSet.encode(stream);
+    ext.encode(stream);
   }
 
   public static TransactionHistoryEntry decode(XdrDataInputStream stream) throws IOException {
@@ -62,19 +53,6 @@ public class TransactionHistoryEntry implements XdrElement {
     decodedTransactionHistoryEntry.txSet = TransactionSet.decode(stream);
     decodedTransactionHistoryEntry.ext = TransactionHistoryEntryExt.decode(stream);
     return decodedTransactionHistoryEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TransactionHistoryEntry fromXdrBase64(String xdr) throws IOException {
@@ -109,24 +87,15 @@ public class TransactionHistoryEntry implements XdrElement {
     private Integer discriminant;
     private GeneralizedTransactionSet generalizedTxSet;
 
-    public static void encode(
-        XdrDataOutputStream stream, TransactionHistoryEntryExt encodedTransactionHistoryEntryExt)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedTransactionHistoryEntryExt.getDiscriminant().intValue());
-      switch (encodedTransactionHistoryEntryExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
         case 1:
-          GeneralizedTransactionSet.encode(
-              stream, encodedTransactionHistoryEntryExt.generalizedTxSet);
+          generalizedTxSet.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static TransactionHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
@@ -143,19 +112,6 @@ public class TransactionHistoryEntry implements XdrElement {
           break;
       }
       return decodedTransactionHistoryEntryExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static TransactionHistoryEntryExt fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,15 +23,10 @@ import org.stellar.sdk.Base64Factory;
 public class UpgradeType implements XdrElement {
   private byte[] UpgradeType;
 
-  public static void encode(XdrDataOutputStream stream, UpgradeType encodedUpgradeType)
-      throws IOException {
-    int UpgradeTypeSize = encodedUpgradeType.UpgradeType.length;
-    stream.writeInt(UpgradeTypeSize);
-    stream.write(encodedUpgradeType.getUpgradeType(), 0, UpgradeTypeSize);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    int UpgradeTypeSize = UpgradeType.length;
+    stream.writeInt(UpgradeTypeSize);
+    stream.write(getUpgradeType(), 0, UpgradeTypeSize);
   }
 
   public static UpgradeType decode(XdrDataInputStream stream) throws IOException {
@@ -43,19 +35,6 @@ public class UpgradeType implements XdrElement {
     decodedUpgradeType.UpgradeType = new byte[UpgradeTypeSize];
     stream.read(decodedUpgradeType.UpgradeType, 0, UpgradeTypeSize);
     return decodedUpgradeType;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static UpgradeType fromXdrBase64(String xdr) throws IOException {

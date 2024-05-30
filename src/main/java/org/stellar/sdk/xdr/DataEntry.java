@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,16 +41,11 @@ public class DataEntry implements XdrElement {
   private DataValue dataValue;
   private DataEntryExt ext;
 
-  public static void encode(XdrDataOutputStream stream, DataEntry encodedDataEntry)
-      throws IOException {
-    AccountID.encode(stream, encodedDataEntry.accountID);
-    String64.encode(stream, encodedDataEntry.dataName);
-    DataValue.encode(stream, encodedDataEntry.dataValue);
-    DataEntryExt.encode(stream, encodedDataEntry.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    accountID.encode(stream);
+    dataName.encode(stream);
+    dataValue.encode(stream);
+    ext.encode(stream);
   }
 
   public static DataEntry decode(XdrDataInputStream stream) throws IOException {
@@ -63,19 +55,6 @@ public class DataEntry implements XdrElement {
     decodedDataEntry.dataValue = DataValue.decode(stream);
     decodedDataEntry.ext = DataEntryExt.decode(stream);
     return decodedDataEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static DataEntry fromXdrBase64(String xdr) throws IOException {
@@ -107,19 +86,12 @@ public class DataEntry implements XdrElement {
   public static class DataEntryExt implements XdrElement {
     private Integer discriminant;
 
-    public static void encode(XdrDataOutputStream stream, DataEntryExt encodedDataEntryExt)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedDataEntryExt.getDiscriminant().intValue());
-      switch (encodedDataEntryExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static DataEntryExt decode(XdrDataInputStream stream) throws IOException {
@@ -131,19 +103,6 @@ public class DataEntry implements XdrElement {
           break;
       }
       return decodedDataEntryExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static DataEntryExt fromXdrBase64(String xdr) throws IOException {

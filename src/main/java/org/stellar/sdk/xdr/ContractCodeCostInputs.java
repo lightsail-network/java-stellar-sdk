@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,24 +47,18 @@ public class ContractCodeCostInputs implements XdrElement {
   private Uint32 nExports;
   private Uint32 nDataSegmentBytes;
 
-  public static void encode(
-      XdrDataOutputStream stream, ContractCodeCostInputs encodedContractCodeCostInputs)
-      throws IOException {
-    ExtensionPoint.encode(stream, encodedContractCodeCostInputs.ext);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nInstructions);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nFunctions);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nGlobals);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nTableEntries);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nTypes);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nDataSegments);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nElemSegments);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nImports);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nExports);
-    Uint32.encode(stream, encodedContractCodeCostInputs.nDataSegmentBytes);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
+    nInstructions.encode(stream);
+    nFunctions.encode(stream);
+    nGlobals.encode(stream);
+    nTableEntries.encode(stream);
+    nTypes.encode(stream);
+    nDataSegments.encode(stream);
+    nElemSegments.encode(stream);
+    nImports.encode(stream);
+    nExports.encode(stream);
+    nDataSegmentBytes.encode(stream);
   }
 
   public static ContractCodeCostInputs decode(XdrDataInputStream stream) throws IOException {
@@ -84,19 +75,6 @@ public class ContractCodeCostInputs implements XdrElement {
     decodedContractCodeCostInputs.nExports = Uint32.decode(stream);
     decodedContractCodeCostInputs.nDataSegmentBytes = Uint32.decode(stream);
     return decodedContractCodeCostInputs;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ContractCodeCostInputs fromXdrBase64(String xdr) throws IOException {

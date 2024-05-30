@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,12 +36,9 @@ import org.stellar.sdk.Base64Factory;
 public class AllowTrustResult implements XdrElement {
   private AllowTrustResultCode discriminant;
 
-  public static void encode(XdrDataOutputStream stream, AllowTrustResult encodedAllowTrustResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // AllowTrustResultCode
-    stream.writeInt(encodedAllowTrustResult.getDiscriminant().getValue());
-    switch (encodedAllowTrustResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case ALLOW_TRUST_SUCCESS:
         break;
       case ALLOW_TRUST_MALFORMED:
@@ -55,10 +49,6 @@ public class AllowTrustResult implements XdrElement {
       case ALLOW_TRUST_LOW_RESERVE:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static AllowTrustResult decode(XdrDataInputStream stream) throws IOException {
@@ -77,19 +67,6 @@ public class AllowTrustResult implements XdrElement {
         break;
     }
     return decodedAllowTrustResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static AllowTrustResult fromXdrBase64(String xdr) throws IOException {

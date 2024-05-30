@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,20 +30,13 @@ public class PublicKey implements XdrElement {
   private PublicKeyType discriminant;
   private Uint256 ed25519;
 
-  public static void encode(XdrDataOutputStream stream, PublicKey encodedPublicKey)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // PublicKeyType
-    stream.writeInt(encodedPublicKey.getDiscriminant().getValue());
-    switch (encodedPublicKey.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case PUBLIC_KEY_TYPE_ED25519:
-        Uint256.encode(stream, encodedPublicKey.ed25519);
+        ed25519.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static PublicKey decode(XdrDataInputStream stream) throws IOException {
@@ -59,19 +49,6 @@ public class PublicKey implements XdrElement {
         break;
     }
     return decodedPublicKey;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static PublicKey fromXdrBase64(String xdr) throws IOException {

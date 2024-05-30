@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,24 +33,16 @@ public class SCSpecUDTUnionCaseV0 implements XdrElement {
   private SCSpecUDTUnionCaseVoidV0 voidCase;
   private SCSpecUDTUnionCaseTupleV0 tupleCase;
 
-  public static void encode(
-      XdrDataOutputStream stream, SCSpecUDTUnionCaseV0 encodedSCSpecUDTUnionCaseV0)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // SCSpecUDTUnionCaseV0Kind
-    stream.writeInt(encodedSCSpecUDTUnionCaseV0.getDiscriminant().getValue());
-    switch (encodedSCSpecUDTUnionCaseV0.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SC_SPEC_UDT_UNION_CASE_VOID_V0:
-        SCSpecUDTUnionCaseVoidV0.encode(stream, encodedSCSpecUDTUnionCaseV0.voidCase);
+        voidCase.encode(stream);
         break;
       case SC_SPEC_UDT_UNION_CASE_TUPLE_V0:
-        SCSpecUDTUnionCaseTupleV0.encode(stream, encodedSCSpecUDTUnionCaseV0.tupleCase);
+        tupleCase.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCSpecUDTUnionCaseV0 decode(XdrDataInputStream stream) throws IOException {
@@ -69,19 +58,6 @@ public class SCSpecUDTUnionCaseV0 implements XdrElement {
         break;
     }
     return decodedSCSpecUDTUnionCaseV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecUDTUnionCaseV0 fromXdrBase64(String xdr) throws IOException {

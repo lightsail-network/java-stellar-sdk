@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,13 +41,11 @@ public class SCError implements XdrElement {
   private Uint32 contractCode;
   private SCErrorCode code;
 
-  public static void encode(XdrDataOutputStream stream, SCError encodedSCError) throws IOException {
-    // Xdrgen::AST::Identifier
-    // SCErrorType
-    stream.writeInt(encodedSCError.getDiscriminant().getValue());
-    switch (encodedSCError.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SCE_CONTRACT:
-        Uint32.encode(stream, encodedSCError.contractCode);
+        contractCode.encode(stream);
         break;
       case SCE_WASM_VM:
       case SCE_CONTEXT:
@@ -61,13 +56,9 @@ public class SCError implements XdrElement {
       case SCE_BUDGET:
       case SCE_VALUE:
       case SCE_AUTH:
-        SCErrorCode.encode(stream, encodedSCError.code);
+        code.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCError decode(XdrDataInputStream stream) throws IOException {
@@ -91,19 +82,6 @@ public class SCError implements XdrElement {
         break;
     }
     return decodedSCError;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCError fromXdrBase64(String xdr) throws IOException {

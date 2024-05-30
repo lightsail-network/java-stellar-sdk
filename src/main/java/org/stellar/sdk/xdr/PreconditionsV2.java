@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,37 +61,32 @@ public class PreconditionsV2 implements XdrElement {
   private Uint32 minSeqLedgerGap;
   private SignerKey[] extraSigners;
 
-  public static void encode(XdrDataOutputStream stream, PreconditionsV2 encodedPreconditionsV2)
-      throws IOException {
-    if (encodedPreconditionsV2.timeBounds != null) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    if (timeBounds != null) {
       stream.writeInt(1);
-      TimeBounds.encode(stream, encodedPreconditionsV2.timeBounds);
+      timeBounds.encode(stream);
     } else {
       stream.writeInt(0);
     }
-    if (encodedPreconditionsV2.ledgerBounds != null) {
+    if (ledgerBounds != null) {
       stream.writeInt(1);
-      LedgerBounds.encode(stream, encodedPreconditionsV2.ledgerBounds);
+      ledgerBounds.encode(stream);
     } else {
       stream.writeInt(0);
     }
-    if (encodedPreconditionsV2.minSeqNum != null) {
+    if (minSeqNum != null) {
       stream.writeInt(1);
-      SequenceNumber.encode(stream, encodedPreconditionsV2.minSeqNum);
+      minSeqNum.encode(stream);
     } else {
       stream.writeInt(0);
     }
-    Duration.encode(stream, encodedPreconditionsV2.minSeqAge);
-    Uint32.encode(stream, encodedPreconditionsV2.minSeqLedgerGap);
-    int extraSignersSize = encodedPreconditionsV2.getExtraSigners().length;
+    minSeqAge.encode(stream);
+    minSeqLedgerGap.encode(stream);
+    int extraSignersSize = getExtraSigners().length;
     stream.writeInt(extraSignersSize);
     for (int i = 0; i < extraSignersSize; i++) {
-      SignerKey.encode(stream, encodedPreconditionsV2.extraSigners[i]);
+      extraSigners[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static PreconditionsV2 decode(XdrDataInputStream stream) throws IOException {
@@ -119,19 +111,6 @@ public class PreconditionsV2 implements XdrElement {
       decodedPreconditionsV2.extraSigners[i] = SignerKey.decode(stream);
     }
     return decodedPreconditionsV2;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static PreconditionsV2 fromXdrBase64(String xdr) throws IOException {

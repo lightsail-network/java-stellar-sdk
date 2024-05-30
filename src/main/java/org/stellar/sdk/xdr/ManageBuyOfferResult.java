@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,15 +43,11 @@ public class ManageBuyOfferResult implements XdrElement {
   private ManageBuyOfferResultCode discriminant;
   private ManageOfferSuccessResult success;
 
-  public static void encode(
-      XdrDataOutputStream stream, ManageBuyOfferResult encodedManageBuyOfferResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // ManageBuyOfferResultCode
-    stream.writeInt(encodedManageBuyOfferResult.getDiscriminant().getValue());
-    switch (encodedManageBuyOfferResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case MANAGE_BUY_OFFER_SUCCESS:
-        ManageOfferSuccessResult.encode(stream, encodedManageBuyOfferResult.success);
+        success.encode(stream);
         break;
       case MANAGE_BUY_OFFER_MALFORMED:
       case MANAGE_BUY_OFFER_SELL_NO_TRUST:
@@ -70,10 +63,6 @@ public class ManageBuyOfferResult implements XdrElement {
       case MANAGE_BUY_OFFER_LOW_RESERVE:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ManageBuyOfferResult decode(XdrDataInputStream stream) throws IOException {
@@ -99,19 +88,6 @@ public class ManageBuyOfferResult implements XdrElement {
         break;
     }
     return decodedManageBuyOfferResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ManageBuyOfferResult fromXdrBase64(String xdr) throws IOException {

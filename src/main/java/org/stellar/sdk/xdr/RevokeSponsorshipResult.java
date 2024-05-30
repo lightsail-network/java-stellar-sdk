@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,13 +35,9 @@ import org.stellar.sdk.Base64Factory;
 public class RevokeSponsorshipResult implements XdrElement {
   private RevokeSponsorshipResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream, RevokeSponsorshipResult encodedRevokeSponsorshipResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // RevokeSponsorshipResultCode
-    stream.writeInt(encodedRevokeSponsorshipResult.getDiscriminant().getValue());
-    switch (encodedRevokeSponsorshipResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case REVOKE_SPONSORSHIP_SUCCESS:
         break;
       case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
@@ -54,10 +47,6 @@ public class RevokeSponsorshipResult implements XdrElement {
       case REVOKE_SPONSORSHIP_MALFORMED:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static RevokeSponsorshipResult decode(XdrDataInputStream stream) throws IOException {
@@ -75,19 +64,6 @@ public class RevokeSponsorshipResult implements XdrElement {
         break;
     }
     return decodedRevokeSponsorshipResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static RevokeSponsorshipResult fromXdrBase64(String xdr) throws IOException {

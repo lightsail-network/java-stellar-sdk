@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,47 +45,40 @@ public class ClaimPredicate implements XdrElement {
   private Int64 absBefore;
   private Int64 relBefore;
 
-  public static void encode(XdrDataOutputStream stream, ClaimPredicate encodedClaimPredicate)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // ClaimPredicateType
-    stream.writeInt(encodedClaimPredicate.getDiscriminant().getValue());
-    switch (encodedClaimPredicate.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CLAIM_PREDICATE_UNCONDITIONAL:
         break;
       case CLAIM_PREDICATE_AND:
-        int andPredicatesSize = encodedClaimPredicate.getAndPredicates().length;
+        int andPredicatesSize = getAndPredicates().length;
         stream.writeInt(andPredicatesSize);
         for (int i = 0; i < andPredicatesSize; i++) {
-          ClaimPredicate.encode(stream, encodedClaimPredicate.andPredicates[i]);
+          andPredicates[i].encode(stream);
         }
         break;
       case CLAIM_PREDICATE_OR:
-        int orPredicatesSize = encodedClaimPredicate.getOrPredicates().length;
+        int orPredicatesSize = getOrPredicates().length;
         stream.writeInt(orPredicatesSize);
         for (int i = 0; i < orPredicatesSize; i++) {
-          ClaimPredicate.encode(stream, encodedClaimPredicate.orPredicates[i]);
+          orPredicates[i].encode(stream);
         }
         break;
       case CLAIM_PREDICATE_NOT:
-        if (encodedClaimPredicate.notPredicate != null) {
+        if (notPredicate != null) {
           stream.writeInt(1);
-          ClaimPredicate.encode(stream, encodedClaimPredicate.notPredicate);
+          notPredicate.encode(stream);
         } else {
           stream.writeInt(0);
         }
         break;
       case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-        Int64.encode(stream, encodedClaimPredicate.absBefore);
+        absBefore.encode(stream);
         break;
       case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-        Int64.encode(stream, encodedClaimPredicate.relBefore);
+        relBefore.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ClaimPredicate decode(XdrDataInputStream stream) throws IOException {
@@ -126,19 +116,6 @@ public class ClaimPredicate implements XdrElement {
         break;
     }
     return decodedClaimPredicate;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ClaimPredicate fromXdrBase64(String xdr) throws IOException {

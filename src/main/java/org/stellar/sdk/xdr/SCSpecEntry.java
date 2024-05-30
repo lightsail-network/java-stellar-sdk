@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,32 +42,25 @@ public class SCSpecEntry implements XdrElement {
   private SCSpecUDTEnumV0 udtEnumV0;
   private SCSpecUDTErrorEnumV0 udtErrorEnumV0;
 
-  public static void encode(XdrDataOutputStream stream, SCSpecEntry encodedSCSpecEntry)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // SCSpecEntryKind
-    stream.writeInt(encodedSCSpecEntry.getDiscriminant().getValue());
-    switch (encodedSCSpecEntry.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SC_SPEC_ENTRY_FUNCTION_V0:
-        SCSpecFunctionV0.encode(stream, encodedSCSpecEntry.functionV0);
+        functionV0.encode(stream);
         break;
       case SC_SPEC_ENTRY_UDT_STRUCT_V0:
-        SCSpecUDTStructV0.encode(stream, encodedSCSpecEntry.udtStructV0);
+        udtStructV0.encode(stream);
         break;
       case SC_SPEC_ENTRY_UDT_UNION_V0:
-        SCSpecUDTUnionV0.encode(stream, encodedSCSpecEntry.udtUnionV0);
+        udtUnionV0.encode(stream);
         break;
       case SC_SPEC_ENTRY_UDT_ENUM_V0:
-        SCSpecUDTEnumV0.encode(stream, encodedSCSpecEntry.udtEnumV0);
+        udtEnumV0.encode(stream);
         break;
       case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
-        SCSpecUDTErrorEnumV0.encode(stream, encodedSCSpecEntry.udtErrorEnumV0);
+        udtErrorEnumV0.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCSpecEntry decode(XdrDataInputStream stream) throws IOException {
@@ -95,19 +85,6 @@ public class SCSpecEntry implements XdrElement {
         break;
     }
     return decodedSCSpecEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecEntry fromXdrBase64(String xdr) throws IOException {

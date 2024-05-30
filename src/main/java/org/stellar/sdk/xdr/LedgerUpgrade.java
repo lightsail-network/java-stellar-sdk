@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,38 +51,31 @@ public class LedgerUpgrade implements XdrElement {
   private ConfigUpgradeSetKey newConfig;
   private Uint32 newMaxSorobanTxSetSize;
 
-  public static void encode(XdrDataOutputStream stream, LedgerUpgrade encodedLedgerUpgrade)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // LedgerUpgradeType
-    stream.writeInt(encodedLedgerUpgrade.getDiscriminant().getValue());
-    switch (encodedLedgerUpgrade.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case LEDGER_UPGRADE_VERSION:
-        Uint32.encode(stream, encodedLedgerUpgrade.newLedgerVersion);
+        newLedgerVersion.encode(stream);
         break;
       case LEDGER_UPGRADE_BASE_FEE:
-        Uint32.encode(stream, encodedLedgerUpgrade.newBaseFee);
+        newBaseFee.encode(stream);
         break;
       case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
-        Uint32.encode(stream, encodedLedgerUpgrade.newMaxTxSetSize);
+        newMaxTxSetSize.encode(stream);
         break;
       case LEDGER_UPGRADE_BASE_RESERVE:
-        Uint32.encode(stream, encodedLedgerUpgrade.newBaseReserve);
+        newBaseReserve.encode(stream);
         break;
       case LEDGER_UPGRADE_FLAGS:
-        Uint32.encode(stream, encodedLedgerUpgrade.newFlags);
+        newFlags.encode(stream);
         break;
       case LEDGER_UPGRADE_CONFIG:
-        ConfigUpgradeSetKey.encode(stream, encodedLedgerUpgrade.newConfig);
+        newConfig.encode(stream);
         break;
       case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
-        Uint32.encode(stream, encodedLedgerUpgrade.newMaxSorobanTxSetSize);
+        newMaxSorobanTxSetSize.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static LedgerUpgrade decode(XdrDataInputStream stream) throws IOException {
@@ -116,19 +106,6 @@ public class LedgerUpgrade implements XdrElement {
         break;
     }
     return decodedLedgerUpgrade;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static LedgerUpgrade fromXdrBase64(String xdr) throws IOException {

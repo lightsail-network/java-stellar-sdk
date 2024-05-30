@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,14 +34,9 @@ import org.stellar.sdk.Base64Factory;
 public class BeginSponsoringFutureReservesResult implements XdrElement {
   private BeginSponsoringFutureReservesResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      BeginSponsoringFutureReservesResult encodedBeginSponsoringFutureReservesResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // BeginSponsoringFutureReservesResultCode
-    stream.writeInt(encodedBeginSponsoringFutureReservesResult.getDiscriminant().getValue());
-    switch (encodedBeginSponsoringFutureReservesResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
         break;
       case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
@@ -52,10 +44,6 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
       case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static BeginSponsoringFutureReservesResult decode(XdrDataInputStream stream)
@@ -74,19 +62,6 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
         break;
     }
     return decodedBeginSponsoringFutureReservesResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static BeginSponsoringFutureReservesResult fromXdrBase64(String xdr) throws IOException {

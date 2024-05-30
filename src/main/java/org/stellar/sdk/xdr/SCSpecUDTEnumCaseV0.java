@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,37 +32,18 @@ public class SCSpecUDTEnumCaseV0 implements XdrElement {
   private XdrString name;
   private Uint32 value;
 
-  public static void encode(
-      XdrDataOutputStream stream, SCSpecUDTEnumCaseV0 encodedSCSpecUDTEnumCaseV0)
-      throws IOException {
-    encodedSCSpecUDTEnumCaseV0.doc.encode(stream);
-    encodedSCSpecUDTEnumCaseV0.name.encode(stream);
-    Uint32.encode(stream, encodedSCSpecUDTEnumCaseV0.value);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    doc.encode(stream);
+    name.encode(stream);
+    value.encode(stream);
   }
 
   public static SCSpecUDTEnumCaseV0 decode(XdrDataInputStream stream) throws IOException {
     SCSpecUDTEnumCaseV0 decodedSCSpecUDTEnumCaseV0 = new SCSpecUDTEnumCaseV0();
-    decodedSCSpecUDTEnumCaseV0.doc = XdrString.decode(stream, SC_SPEC_DOC_LIMIT);
+    decodedSCSpecUDTEnumCaseV0.doc = XdrString.decode(stream, Constants.SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTEnumCaseV0.name = XdrString.decode(stream, 60);
     decodedSCSpecUDTEnumCaseV0.value = Uint32.decode(stream);
     return decodedSCSpecUDTEnumCaseV0;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecUDTEnumCaseV0 fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,15 +30,9 @@ public class ExtendFootprintTTLOp implements XdrElement {
   private ExtensionPoint ext;
   private Uint32 extendTo;
 
-  public static void encode(
-      XdrDataOutputStream stream, ExtendFootprintTTLOp encodedExtendFootprintTTLOp)
-      throws IOException {
-    ExtensionPoint.encode(stream, encodedExtendFootprintTTLOp.ext);
-    Uint32.encode(stream, encodedExtendFootprintTTLOp.extendTo);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
+    extendTo.encode(stream);
   }
 
   public static ExtendFootprintTTLOp decode(XdrDataInputStream stream) throws IOException {
@@ -49,19 +40,6 @@ public class ExtendFootprintTTLOp implements XdrElement {
     decodedExtendFootprintTTLOp.ext = ExtensionPoint.decode(stream);
     decodedExtendFootprintTTLOp.extendTo = Uint32.decode(stream);
     return decodedExtendFootprintTTLOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ExtendFootprintTTLOp fromXdrBase64(String xdr) throws IOException {

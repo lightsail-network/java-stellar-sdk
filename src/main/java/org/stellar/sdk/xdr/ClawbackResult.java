@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,12 +34,9 @@ import org.stellar.sdk.Base64Factory;
 public class ClawbackResult implements XdrElement {
   private ClawbackResultCode discriminant;
 
-  public static void encode(XdrDataOutputStream stream, ClawbackResult encodedClawbackResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // ClawbackResultCode
-    stream.writeInt(encodedClawbackResult.getDiscriminant().getValue());
-    switch (encodedClawbackResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case CLAWBACK_SUCCESS:
         break;
       case CLAWBACK_MALFORMED:
@@ -51,10 +45,6 @@ public class ClawbackResult implements XdrElement {
       case CLAWBACK_UNDERFUNDED:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static ClawbackResult decode(XdrDataInputStream stream) throws IOException {
@@ -71,19 +61,6 @@ public class ClawbackResult implements XdrElement {
         break;
     }
     return decodedClawbackResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ClawbackResult fromXdrBase64(String xdr) throws IOException {

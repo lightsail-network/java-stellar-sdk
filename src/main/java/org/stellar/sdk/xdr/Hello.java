@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,20 +44,16 @@ public class Hello implements XdrElement {
   private AuthCert cert;
   private Uint256 nonce;
 
-  public static void encode(XdrDataOutputStream stream, Hello encodedHello) throws IOException {
-    Uint32.encode(stream, encodedHello.ledgerVersion);
-    Uint32.encode(stream, encodedHello.overlayVersion);
-    Uint32.encode(stream, encodedHello.overlayMinVersion);
-    Hash.encode(stream, encodedHello.networkID);
-    encodedHello.versionStr.encode(stream);
-    stream.writeInt(encodedHello.listeningPort);
-    NodeID.encode(stream, encodedHello.peerID);
-    AuthCert.encode(stream, encodedHello.cert);
-    Uint256.encode(stream, encodedHello.nonce);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ledgerVersion.encode(stream);
+    overlayVersion.encode(stream);
+    overlayMinVersion.encode(stream);
+    networkID.encode(stream);
+    versionStr.encode(stream);
+    stream.writeInt(listeningPort);
+    peerID.encode(stream);
+    cert.encode(stream);
+    nonce.encode(stream);
   }
 
   public static Hello decode(XdrDataInputStream stream) throws IOException {
@@ -75,19 +68,6 @@ public class Hello implements XdrElement {
     decodedHello.cert = AuthCert.decode(stream);
     decodedHello.nonce = Uint256.decode(stream);
     return decodedHello;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Hello fromXdrBase64(String xdr) throws IOException {

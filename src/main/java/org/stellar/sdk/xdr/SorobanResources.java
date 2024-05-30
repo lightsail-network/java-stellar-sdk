@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,16 +39,11 @@ public class SorobanResources implements XdrElement {
   private Uint32 readBytes;
   private Uint32 writeBytes;
 
-  public static void encode(XdrDataOutputStream stream, SorobanResources encodedSorobanResources)
-      throws IOException {
-    LedgerFootprint.encode(stream, encodedSorobanResources.footprint);
-    Uint32.encode(stream, encodedSorobanResources.instructions);
-    Uint32.encode(stream, encodedSorobanResources.readBytes);
-    Uint32.encode(stream, encodedSorobanResources.writeBytes);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    footprint.encode(stream);
+    instructions.encode(stream);
+    readBytes.encode(stream);
+    writeBytes.encode(stream);
   }
 
   public static SorobanResources decode(XdrDataInputStream stream) throws IOException {
@@ -61,19 +53,6 @@ public class SorobanResources implements XdrElement {
     decodedSorobanResources.readBytes = Uint32.decode(stream);
     decodedSorobanResources.writeBytes = Uint32.decode(stream);
     return decodedSorobanResources;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SorobanResources fromXdrBase64(String xdr) throws IOException {

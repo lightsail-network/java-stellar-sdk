@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,23 +32,14 @@ import org.stellar.sdk.Base64Factory;
 public class EndSponsoringFutureReservesResult implements XdrElement {
   private EndSponsoringFutureReservesResultCode discriminant;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      EndSponsoringFutureReservesResult encodedEndSponsoringFutureReservesResult)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // EndSponsoringFutureReservesResultCode
-    stream.writeInt(encodedEndSponsoringFutureReservesResult.getDiscriminant().getValue());
-    switch (encodedEndSponsoringFutureReservesResult.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
         break;
       case END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED:
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static EndSponsoringFutureReservesResult decode(XdrDataInputStream stream)
@@ -68,19 +56,6 @@ public class EndSponsoringFutureReservesResult implements XdrElement {
         break;
     }
     return decodedEndSponsoringFutureReservesResult;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static EndSponsoringFutureReservesResult fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,17 +38,12 @@ public class ManageSellOfferOp implements XdrElement {
   private Price price;
   private Int64 offerID;
 
-  public static void encode(XdrDataOutputStream stream, ManageSellOfferOp encodedManageSellOfferOp)
-      throws IOException {
-    Asset.encode(stream, encodedManageSellOfferOp.selling);
-    Asset.encode(stream, encodedManageSellOfferOp.buying);
-    Int64.encode(stream, encodedManageSellOfferOp.amount);
-    Price.encode(stream, encodedManageSellOfferOp.price);
-    Int64.encode(stream, encodedManageSellOfferOp.offerID);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    selling.encode(stream);
+    buying.encode(stream);
+    amount.encode(stream);
+    price.encode(stream);
+    offerID.encode(stream);
   }
 
   public static ManageSellOfferOp decode(XdrDataInputStream stream) throws IOException {
@@ -62,19 +54,6 @@ public class ManageSellOfferOp implements XdrElement {
     decodedManageSellOfferOp.price = Price.decode(stream);
     decodedManageSellOfferOp.offerID = Int64.decode(stream);
     return decodedManageSellOfferOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ManageSellOfferOp fromXdrBase64(String xdr) throws IOException {

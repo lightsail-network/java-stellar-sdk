@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,25 +35,18 @@ public class Preconditions implements XdrElement {
   private TimeBounds timeBounds;
   private PreconditionsV2 v2;
 
-  public static void encode(XdrDataOutputStream stream, Preconditions encodedPreconditions)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // PreconditionType
-    stream.writeInt(encodedPreconditions.getDiscriminant().getValue());
-    switch (encodedPreconditions.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case PRECOND_NONE:
         break;
       case PRECOND_TIME:
-        TimeBounds.encode(stream, encodedPreconditions.timeBounds);
+        timeBounds.encode(stream);
         break;
       case PRECOND_V2:
-        PreconditionsV2.encode(stream, encodedPreconditions.v2);
+        v2.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static Preconditions decode(XdrDataInputStream stream) throws IOException {
@@ -74,19 +64,6 @@ public class Preconditions implements XdrElement {
         break;
     }
     return decodedPreconditions;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static Preconditions fromXdrBase64(String xdr) throws IOException {

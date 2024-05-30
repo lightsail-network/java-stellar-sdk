@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,14 +28,9 @@ import org.stellar.sdk.Base64Factory;
 public class HmacSha256Mac implements XdrElement {
   private byte[] mac;
 
-  public static void encode(XdrDataOutputStream stream, HmacSha256Mac encodedHmacSha256Mac)
-      throws IOException {
-    int macSize = encodedHmacSha256Mac.mac.length;
-    stream.write(encodedHmacSha256Mac.getMac(), 0, macSize);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    int macSize = mac.length;
+    stream.write(getMac(), 0, macSize);
   }
 
   public static HmacSha256Mac decode(XdrDataInputStream stream) throws IOException {
@@ -47,19 +39,6 @@ public class HmacSha256Mac implements XdrElement {
     decodedHmacSha256Mac.mac = new byte[macSize];
     stream.read(decodedHmacSha256Mac.mac, 0, macSize);
     return decodedHmacSha256Mac;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static HmacSha256Mac fromXdrBase64(String xdr) throws IOException {

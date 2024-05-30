@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,23 +37,16 @@ public class MuxedAccount implements XdrElement {
   private Uint256 ed25519;
   private MuxedAccountMed25519 med25519;
 
-  public static void encode(XdrDataOutputStream stream, MuxedAccount encodedMuxedAccount)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // CryptoKeyType
-    stream.writeInt(encodedMuxedAccount.getDiscriminant().getValue());
-    switch (encodedMuxedAccount.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case KEY_TYPE_ED25519:
-        Uint256.encode(stream, encodedMuxedAccount.ed25519);
+        ed25519.encode(stream);
         break;
       case KEY_TYPE_MUXED_ED25519:
-        MuxedAccountMed25519.encode(stream, encodedMuxedAccount.med25519);
+        med25519.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static MuxedAccount decode(XdrDataInputStream stream) throws IOException {
@@ -72,19 +62,6 @@ public class MuxedAccount implements XdrElement {
         break;
     }
     return decodedMuxedAccount;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static MuxedAccount fromXdrBase64(String xdr) throws IOException {
@@ -117,15 +94,9 @@ public class MuxedAccount implements XdrElement {
     private Uint64 id;
     private Uint256 ed25519;
 
-    public static void encode(
-        XdrDataOutputStream stream, MuxedAccountMed25519 encodedMuxedAccountMed25519)
-        throws IOException {
-      Uint64.encode(stream, encodedMuxedAccountMed25519.id);
-      Uint256.encode(stream, encodedMuxedAccountMed25519.ed25519);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      id.encode(stream);
+      ed25519.encode(stream);
     }
 
     public static MuxedAccountMed25519 decode(XdrDataInputStream stream) throws IOException {
@@ -133,19 +104,6 @@ public class MuxedAccount implements XdrElement {
       decodedMuxedAccountMed25519.id = Uint64.decode(stream);
       decodedMuxedAccountMed25519.ed25519 = Uint256.decode(stream);
       return decodedMuxedAccountMed25519;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static MuxedAccountMed25519 fromXdrBase64(String xdr) throws IOException {

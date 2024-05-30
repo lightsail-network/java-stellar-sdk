@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,33 +39,26 @@ public class TransactionMeta implements XdrElement {
   private TransactionMetaV2 v2;
   private TransactionMetaV3 v3;
 
-  public static void encode(XdrDataOutputStream stream, TransactionMeta encodedTransactionMeta)
-      throws IOException {
-    // Xdrgen::AST::Typespecs::Int
-    // Integer
-    stream.writeInt(encodedTransactionMeta.getDiscriminant().intValue());
-    switch (encodedTransactionMeta.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant);
+    switch (discriminant) {
       case 0:
-        int operationsSize = encodedTransactionMeta.getOperations().length;
+        int operationsSize = getOperations().length;
         stream.writeInt(operationsSize);
         for (int i = 0; i < operationsSize; i++) {
-          OperationMeta.encode(stream, encodedTransactionMeta.operations[i]);
+          operations[i].encode(stream);
         }
         break;
       case 1:
-        TransactionMetaV1.encode(stream, encodedTransactionMeta.v1);
+        v1.encode(stream);
         break;
       case 2:
-        TransactionMetaV2.encode(stream, encodedTransactionMeta.v2);
+        v2.encode(stream);
         break;
       case 3:
-        TransactionMetaV3.encode(stream, encodedTransactionMeta.v3);
+        v3.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static TransactionMeta decode(XdrDataInputStream stream) throws IOException {
@@ -94,19 +84,6 @@ public class TransactionMeta implements XdrElement {
         break;
     }
     return decodedTransactionMeta;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TransactionMeta fromXdrBase64(String xdr) throws IOException {

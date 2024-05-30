@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,20 +55,15 @@ public class OfferEntry implements XdrElement {
   private Uint32 flags;
   private OfferEntryExt ext;
 
-  public static void encode(XdrDataOutputStream stream, OfferEntry encodedOfferEntry)
-      throws IOException {
-    AccountID.encode(stream, encodedOfferEntry.sellerID);
-    Int64.encode(stream, encodedOfferEntry.offerID);
-    Asset.encode(stream, encodedOfferEntry.selling);
-    Asset.encode(stream, encodedOfferEntry.buying);
-    Int64.encode(stream, encodedOfferEntry.amount);
-    Price.encode(stream, encodedOfferEntry.price);
-    Uint32.encode(stream, encodedOfferEntry.flags);
-    OfferEntryExt.encode(stream, encodedOfferEntry.ext);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    sellerID.encode(stream);
+    offerID.encode(stream);
+    selling.encode(stream);
+    buying.encode(stream);
+    amount.encode(stream);
+    price.encode(stream);
+    flags.encode(stream);
+    ext.encode(stream);
   }
 
   public static OfferEntry decode(XdrDataInputStream stream) throws IOException {
@@ -85,19 +77,6 @@ public class OfferEntry implements XdrElement {
     decodedOfferEntry.flags = Uint32.decode(stream);
     decodedOfferEntry.ext = OfferEntryExt.decode(stream);
     return decodedOfferEntry;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static OfferEntry fromXdrBase64(String xdr) throws IOException {
@@ -129,19 +108,12 @@ public class OfferEntry implements XdrElement {
   public static class OfferEntryExt implements XdrElement {
     private Integer discriminant;
 
-    public static void encode(XdrDataOutputStream stream, OfferEntryExt encodedOfferEntryExt)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedOfferEntryExt.getDiscriminant().intValue());
-      switch (encodedOfferEntryExt.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static OfferEntryExt decode(XdrDataInputStream stream) throws IOException {
@@ -153,19 +125,6 @@ public class OfferEntry implements XdrElement {
           break;
       }
       return decodedOfferEntryExt;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static OfferEntryExt fromXdrBase64(String xdr) throws IOException {

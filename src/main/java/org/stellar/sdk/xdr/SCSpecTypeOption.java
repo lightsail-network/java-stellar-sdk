@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,32 +28,14 @@ import org.stellar.sdk.Base64Factory;
 public class SCSpecTypeOption implements XdrElement {
   private SCSpecTypeDef valueType;
 
-  public static void encode(XdrDataOutputStream stream, SCSpecTypeOption encodedSCSpecTypeOption)
-      throws IOException {
-    SCSpecTypeDef.encode(stream, encodedSCSpecTypeOption.valueType);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    valueType.encode(stream);
   }
 
   public static SCSpecTypeOption decode(XdrDataInputStream stream) throws IOException {
     SCSpecTypeOption decodedSCSpecTypeOption = new SCSpecTypeOption();
     decodedSCSpecTypeOption.valueType = SCSpecTypeDef.decode(stream);
     return decodedSCSpecTypeOption;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecTypeOption fromXdrBase64(String xdr) throws IOException {

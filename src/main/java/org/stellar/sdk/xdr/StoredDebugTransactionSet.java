@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,16 +32,10 @@ public class StoredDebugTransactionSet implements XdrElement {
   private Uint32 ledgerSeq;
   private StellarValue scpValue;
 
-  public static void encode(
-      XdrDataOutputStream stream, StoredDebugTransactionSet encodedStoredDebugTransactionSet)
-      throws IOException {
-    StoredTransactionSet.encode(stream, encodedStoredDebugTransactionSet.txSet);
-    Uint32.encode(stream, encodedStoredDebugTransactionSet.ledgerSeq);
-    StellarValue.encode(stream, encodedStoredDebugTransactionSet.scpValue);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    txSet.encode(stream);
+    ledgerSeq.encode(stream);
+    scpValue.encode(stream);
   }
 
   public static StoredDebugTransactionSet decode(XdrDataInputStream stream) throws IOException {
@@ -53,19 +44,6 @@ public class StoredDebugTransactionSet implements XdrElement {
     decodedStoredDebugTransactionSet.ledgerSeq = Uint32.decode(stream);
     decodedStoredDebugTransactionSet.scpValue = StellarValue.decode(stream);
     return decodedStoredDebugTransactionSet;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static StoredDebugTransactionSet fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,19 +32,13 @@ public class TransactionV1Envelope implements XdrElement {
   private Transaction tx;
   private DecoratedSignature[] signatures;
 
-  public static void encode(
-      XdrDataOutputStream stream, TransactionV1Envelope encodedTransactionV1Envelope)
-      throws IOException {
-    Transaction.encode(stream, encodedTransactionV1Envelope.tx);
-    int signaturesSize = encodedTransactionV1Envelope.getSignatures().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    tx.encode(stream);
+    int signaturesSize = getSignatures().length;
     stream.writeInt(signaturesSize);
     for (int i = 0; i < signaturesSize; i++) {
-      DecoratedSignature.encode(stream, encodedTransactionV1Envelope.signatures[i]);
+      signatures[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static TransactionV1Envelope decode(XdrDataInputStream stream) throws IOException {
@@ -59,19 +50,6 @@ public class TransactionV1Envelope implements XdrElement {
       decodedTransactionV1Envelope.signatures[i] = DecoratedSignature.decode(stream);
     }
     return decodedTransactionV1Envelope;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static TransactionV1Envelope fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,12 +67,9 @@ public class SCSpecTypeDef implements XdrElement {
   private SCSpecTypeBytesN bytesN;
   private SCSpecTypeUDT udt;
 
-  public static void encode(XdrDataOutputStream stream, SCSpecTypeDef encodedSCSpecTypeDef)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // SCSpecType
-    stream.writeInt(encodedSCSpecTypeDef.getDiscriminant().getValue());
-    switch (encodedSCSpecTypeDef.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SC_SPEC_TYPE_VAL:
       case SC_SPEC_TYPE_BOOL:
       case SC_SPEC_TYPE_VOID:
@@ -96,31 +90,27 @@ public class SCSpecTypeDef implements XdrElement {
       case SC_SPEC_TYPE_ADDRESS:
         break;
       case SC_SPEC_TYPE_OPTION:
-        SCSpecTypeOption.encode(stream, encodedSCSpecTypeDef.option);
+        option.encode(stream);
         break;
       case SC_SPEC_TYPE_RESULT:
-        SCSpecTypeResult.encode(stream, encodedSCSpecTypeDef.result);
+        result.encode(stream);
         break;
       case SC_SPEC_TYPE_VEC:
-        SCSpecTypeVec.encode(stream, encodedSCSpecTypeDef.vec);
+        vec.encode(stream);
         break;
       case SC_SPEC_TYPE_MAP:
-        SCSpecTypeMap.encode(stream, encodedSCSpecTypeDef.map);
+        map.encode(stream);
         break;
       case SC_SPEC_TYPE_TUPLE:
-        SCSpecTypeTuple.encode(stream, encodedSCSpecTypeDef.tuple);
+        tuple.encode(stream);
         break;
       case SC_SPEC_TYPE_BYTES_N:
-        SCSpecTypeBytesN.encode(stream, encodedSCSpecTypeDef.bytesN);
+        bytesN.encode(stream);
         break;
       case SC_SPEC_TYPE_UDT:
-        SCSpecTypeUDT.encode(stream, encodedSCSpecTypeDef.udt);
+        udt.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SCSpecTypeDef decode(XdrDataInputStream stream) throws IOException {
@@ -170,19 +160,6 @@ public class SCSpecTypeDef implements XdrElement {
         break;
     }
     return decodedSCSpecTypeDef;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SCSpecTypeDef fromXdrBase64(String xdr) throws IOException {

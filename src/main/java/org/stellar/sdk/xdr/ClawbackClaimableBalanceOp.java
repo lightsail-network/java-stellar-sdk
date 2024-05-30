@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,33 +28,14 @@ import org.stellar.sdk.Base64Factory;
 public class ClawbackClaimableBalanceOp implements XdrElement {
   private ClaimableBalanceID balanceID;
 
-  public static void encode(
-      XdrDataOutputStream stream, ClawbackClaimableBalanceOp encodedClawbackClaimableBalanceOp)
-      throws IOException {
-    ClaimableBalanceID.encode(stream, encodedClawbackClaimableBalanceOp.balanceID);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    balanceID.encode(stream);
   }
 
   public static ClawbackClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
     ClawbackClaimableBalanceOp decodedClawbackClaimableBalanceOp = new ClawbackClaimableBalanceOp();
     decodedClawbackClaimableBalanceOp.balanceID = ClaimableBalanceID.decode(stream);
     return decodedClawbackClaimableBalanceOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ClawbackClaimableBalanceOp fromXdrBase64(String xdr) throws IOException {

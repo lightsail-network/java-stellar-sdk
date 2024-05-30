@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,21 +47,16 @@ public class ContractEvent implements XdrElement {
   private ContractEventType type;
   private ContractEventBody body;
 
-  public static void encode(XdrDataOutputStream stream, ContractEvent encodedContractEvent)
-      throws IOException {
-    ExtensionPoint.encode(stream, encodedContractEvent.ext);
-    if (encodedContractEvent.contractID != null) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    ext.encode(stream);
+    if (contractID != null) {
       stream.writeInt(1);
-      Hash.encode(stream, encodedContractEvent.contractID);
+      contractID.encode(stream);
     } else {
       stream.writeInt(0);
     }
-    ContractEventType.encode(stream, encodedContractEvent.type);
-    ContractEventBody.encode(stream, encodedContractEvent.body);
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    type.encode(stream);
+    body.encode(stream);
   }
 
   public static ContractEvent decode(XdrDataInputStream stream) throws IOException {
@@ -77,19 +69,6 @@ public class ContractEvent implements XdrElement {
     decodedContractEvent.type = ContractEventType.decode(stream);
     decodedContractEvent.body = ContractEventBody.decode(stream);
     return decodedContractEvent;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static ContractEvent fromXdrBase64(String xdr) throws IOException {
@@ -126,20 +105,13 @@ public class ContractEvent implements XdrElement {
     private Integer discriminant;
     private ContractEventV0 v0;
 
-    public static void encode(
-        XdrDataOutputStream stream, ContractEventBody encodedContractEventBody) throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedContractEventBody.getDiscriminant().intValue());
-      switch (encodedContractEventBody.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
-          ContractEventV0.encode(stream, encodedContractEventBody.v0);
+          v0.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static ContractEventBody decode(XdrDataInputStream stream) throws IOException {
@@ -152,19 +124,6 @@ public class ContractEvent implements XdrElement {
           break;
       }
       return decodedContractEventBody;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static ContractEventBody fromXdrBase64(String xdr) throws IOException {
@@ -197,18 +156,13 @@ public class ContractEvent implements XdrElement {
       private SCVal[] topics;
       private SCVal data;
 
-      public static void encode(XdrDataOutputStream stream, ContractEventV0 encodedContractEventV0)
-          throws IOException {
-        int topicsSize = encodedContractEventV0.getTopics().length;
+      public void encode(XdrDataOutputStream stream) throws IOException {
+        int topicsSize = getTopics().length;
         stream.writeInt(topicsSize);
         for (int i = 0; i < topicsSize; i++) {
-          SCVal.encode(stream, encodedContractEventV0.topics[i]);
+          topics[i].encode(stream);
         }
-        SCVal.encode(stream, encodedContractEventV0.data);
-      }
-
-      public void encode(XdrDataOutputStream stream) throws IOException {
-        encode(stream, this);
+        data.encode(stream);
       }
 
       public static ContractEventV0 decode(XdrDataInputStream stream) throws IOException {
@@ -220,19 +174,6 @@ public class ContractEvent implements XdrElement {
         }
         decodedContractEventV0.data = SCVal.decode(stream);
         return decodedContractEventV0;
-      }
-
-      @Override
-      public String toXdrBase64() throws IOException {
-        return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-      }
-
-      @Override
-      public byte[] toXdrByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-        encode(xdrDataOutputStream);
-        return byteArrayOutputStream.toByteArray();
       }
 
       public static ContractEventV0 fromXdrBase64(String xdr) throws IOException {

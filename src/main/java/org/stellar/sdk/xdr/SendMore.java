@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,32 +28,14 @@ import org.stellar.sdk.Base64Factory;
 public class SendMore implements XdrElement {
   private Uint32 numMessages;
 
-  public static void encode(XdrDataOutputStream stream, SendMore encodedSendMore)
-      throws IOException {
-    Uint32.encode(stream, encodedSendMore.numMessages);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    numMessages.encode(stream);
   }
 
   public static SendMore decode(XdrDataInputStream stream) throws IOException {
     SendMore decodedSendMore = new SendMore();
     decodedSendMore.numMessages = Uint32.decode(stream);
     return decodedSendMore;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SendMore fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,66 +51,61 @@ public class SetOptionsOp implements XdrElement {
   private String32 homeDomain;
   private Signer signer;
 
-  public static void encode(XdrDataOutputStream stream, SetOptionsOp encodedSetOptionsOp)
-      throws IOException {
-    if (encodedSetOptionsOp.inflationDest != null) {
-      stream.writeInt(1);
-      AccountID.encode(stream, encodedSetOptionsOp.inflationDest);
-    } else {
-      stream.writeInt(0);
-    }
-    if (encodedSetOptionsOp.clearFlags != null) {
-      stream.writeInt(1);
-      Uint32.encode(stream, encodedSetOptionsOp.clearFlags);
-    } else {
-      stream.writeInt(0);
-    }
-    if (encodedSetOptionsOp.setFlags != null) {
-      stream.writeInt(1);
-      Uint32.encode(stream, encodedSetOptionsOp.setFlags);
-    } else {
-      stream.writeInt(0);
-    }
-    if (encodedSetOptionsOp.masterWeight != null) {
-      stream.writeInt(1);
-      Uint32.encode(stream, encodedSetOptionsOp.masterWeight);
-    } else {
-      stream.writeInt(0);
-    }
-    if (encodedSetOptionsOp.lowThreshold != null) {
-      stream.writeInt(1);
-      Uint32.encode(stream, encodedSetOptionsOp.lowThreshold);
-    } else {
-      stream.writeInt(0);
-    }
-    if (encodedSetOptionsOp.medThreshold != null) {
-      stream.writeInt(1);
-      Uint32.encode(stream, encodedSetOptionsOp.medThreshold);
-    } else {
-      stream.writeInt(0);
-    }
-    if (encodedSetOptionsOp.highThreshold != null) {
-      stream.writeInt(1);
-      Uint32.encode(stream, encodedSetOptionsOp.highThreshold);
-    } else {
-      stream.writeInt(0);
-    }
-    if (encodedSetOptionsOp.homeDomain != null) {
-      stream.writeInt(1);
-      String32.encode(stream, encodedSetOptionsOp.homeDomain);
-    } else {
-      stream.writeInt(0);
-    }
-    if (encodedSetOptionsOp.signer != null) {
-      stream.writeInt(1);
-      Signer.encode(stream, encodedSetOptionsOp.signer);
-    } else {
-      stream.writeInt(0);
-    }
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    if (inflationDest != null) {
+      stream.writeInt(1);
+      inflationDest.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
+    if (clearFlags != null) {
+      stream.writeInt(1);
+      clearFlags.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
+    if (setFlags != null) {
+      stream.writeInt(1);
+      setFlags.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
+    if (masterWeight != null) {
+      stream.writeInt(1);
+      masterWeight.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
+    if (lowThreshold != null) {
+      stream.writeInt(1);
+      lowThreshold.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
+    if (medThreshold != null) {
+      stream.writeInt(1);
+      medThreshold.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
+    if (highThreshold != null) {
+      stream.writeInt(1);
+      highThreshold.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
+    if (homeDomain != null) {
+      stream.writeInt(1);
+      homeDomain.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
+    if (signer != null) {
+      stream.writeInt(1);
+      signer.encode(stream);
+    } else {
+      stream.writeInt(0);
+    }
   }
 
   public static SetOptionsOp decode(XdrDataInputStream stream) throws IOException {
@@ -155,19 +147,6 @@ public class SetOptionsOp implements XdrElement {
       decodedSetOptionsOp.signer = Signer.decode(stream);
     }
     return decodedSetOptionsOp;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SetOptionsOp fromXdrBase64(String xdr) throws IOException {

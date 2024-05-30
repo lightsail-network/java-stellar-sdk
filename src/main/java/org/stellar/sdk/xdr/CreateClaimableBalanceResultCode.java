@@ -4,7 +4,6 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
@@ -62,26 +61,8 @@ public enum CreateClaimableBalanceResultCode implements XdrElement {
     }
   }
 
-  public static void encode(XdrDataOutputStream stream, CreateClaimableBalanceResultCode value)
-      throws IOException {
-    stream.writeInt(value.getValue());
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
+    stream.writeInt(value);
   }
 
   public static CreateClaimableBalanceResultCode fromXdrBase64(String xdr) throws IOException {

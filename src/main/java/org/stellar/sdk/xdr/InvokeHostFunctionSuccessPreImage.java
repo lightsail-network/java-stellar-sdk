@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,20 +30,13 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
   private SCVal returnValue;
   private ContractEvent[] events;
 
-  public static void encode(
-      XdrDataOutputStream stream,
-      InvokeHostFunctionSuccessPreImage encodedInvokeHostFunctionSuccessPreImage)
-      throws IOException {
-    SCVal.encode(stream, encodedInvokeHostFunctionSuccessPreImage.returnValue);
-    int eventsSize = encodedInvokeHostFunctionSuccessPreImage.getEvents().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    returnValue.encode(stream);
+    int eventsSize = getEvents().length;
     stream.writeInt(eventsSize);
     for (int i = 0; i < eventsSize; i++) {
-      ContractEvent.encode(stream, encodedInvokeHostFunctionSuccessPreImage.events[i]);
+      events[i].encode(stream);
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static InvokeHostFunctionSuccessPreImage decode(XdrDataInputStream stream)
@@ -60,19 +50,6 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
       decodedInvokeHostFunctionSuccessPreImage.events[i] = ContractEvent.decode(stream);
     }
     return decodedInvokeHostFunctionSuccessPreImage;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static InvokeHostFunctionSuccessPreImage fromXdrBase64(String xdr) throws IOException {

@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,29 +47,22 @@ public class SignerKey implements XdrElement {
   private Uint256 hashX;
   private SignerKeyEd25519SignedPayload ed25519SignedPayload;
 
-  public static void encode(XdrDataOutputStream stream, SignerKey encodedSignerKey)
-      throws IOException {
-    // Xdrgen::AST::Identifier
-    // SignerKeyType
-    stream.writeInt(encodedSignerKey.getDiscriminant().getValue());
-    switch (encodedSignerKey.getDiscriminant()) {
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(discriminant.getValue());
+    switch (discriminant) {
       case SIGNER_KEY_TYPE_ED25519:
-        Uint256.encode(stream, encodedSignerKey.ed25519);
+        ed25519.encode(stream);
         break;
       case SIGNER_KEY_TYPE_PRE_AUTH_TX:
-        Uint256.encode(stream, encodedSignerKey.preAuthTx);
+        preAuthTx.encode(stream);
         break;
       case SIGNER_KEY_TYPE_HASH_X:
-        Uint256.encode(stream, encodedSignerKey.hashX);
+        hashX.encode(stream);
         break;
       case SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD:
-        SignerKeyEd25519SignedPayload.encode(stream, encodedSignerKey.ed25519SignedPayload);
+        ed25519SignedPayload.encode(stream);
         break;
     }
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
   }
 
   public static SignerKey decode(XdrDataInputStream stream) throws IOException {
@@ -94,19 +84,6 @@ public class SignerKey implements XdrElement {
         break;
     }
     return decodedSignerKey;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SignerKey fromXdrBase64(String xdr) throws IOException {
@@ -141,18 +118,11 @@ public class SignerKey implements XdrElement {
     private Uint256 ed25519;
     private byte[] payload;
 
-    public static void encode(
-        XdrDataOutputStream stream,
-        SignerKeyEd25519SignedPayload encodedSignerKeyEd25519SignedPayload)
-        throws IOException {
-      Uint256.encode(stream, encodedSignerKeyEd25519SignedPayload.ed25519);
-      int payloadSize = encodedSignerKeyEd25519SignedPayload.payload.length;
-      stream.writeInt(payloadSize);
-      stream.write(encodedSignerKeyEd25519SignedPayload.getPayload(), 0, payloadSize);
-    }
-
     public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
+      ed25519.encode(stream);
+      int payloadSize = payload.length;
+      stream.writeInt(payloadSize);
+      stream.write(getPayload(), 0, payloadSize);
     }
 
     public static SignerKeyEd25519SignedPayload decode(XdrDataInputStream stream)
@@ -164,19 +134,6 @@ public class SignerKey implements XdrElement {
       decodedSignerKeyEd25519SignedPayload.payload = new byte[payloadSize];
       stream.read(decodedSignerKeyEd25519SignedPayload.payload, 0, payloadSize);
       return decodedSignerKeyEd25519SignedPayload;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static SignerKeyEd25519SignedPayload fromXdrBase64(String xdr) throws IOException {

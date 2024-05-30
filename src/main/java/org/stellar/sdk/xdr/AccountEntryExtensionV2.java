@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,21 +42,15 @@ public class AccountEntryExtensionV2 implements XdrElement {
   private SponsorshipDescriptor[] signerSponsoringIDs;
   private AccountEntryExtensionV2Ext ext;
 
-  public static void encode(
-      XdrDataOutputStream stream, AccountEntryExtensionV2 encodedAccountEntryExtensionV2)
-      throws IOException {
-    Uint32.encode(stream, encodedAccountEntryExtensionV2.numSponsored);
-    Uint32.encode(stream, encodedAccountEntryExtensionV2.numSponsoring);
-    int signerSponsoringIDsSize = encodedAccountEntryExtensionV2.getSignerSponsoringIDs().length;
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    numSponsored.encode(stream);
+    numSponsoring.encode(stream);
+    int signerSponsoringIDsSize = getSignerSponsoringIDs().length;
     stream.writeInt(signerSponsoringIDsSize);
     for (int i = 0; i < signerSponsoringIDsSize; i++) {
-      SponsorshipDescriptor.encode(stream, encodedAccountEntryExtensionV2.signerSponsoringIDs[i]);
+      signerSponsoringIDs[i].encode(stream);
     }
-    AccountEntryExtensionV2Ext.encode(stream, encodedAccountEntryExtensionV2.ext);
-  }
-
-  public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    ext.encode(stream);
   }
 
   public static AccountEntryExtensionV2 decode(XdrDataInputStream stream) throws IOException {
@@ -74,19 +65,6 @@ public class AccountEntryExtensionV2 implements XdrElement {
     }
     decodedAccountEntryExtensionV2.ext = AccountEntryExtensionV2Ext.decode(stream);
     return decodedAccountEntryExtensionV2;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static AccountEntryExtensionV2 fromXdrBase64(String xdr) throws IOException {
@@ -121,23 +99,15 @@ public class AccountEntryExtensionV2 implements XdrElement {
     private Integer discriminant;
     private AccountEntryExtensionV3 v3;
 
-    public static void encode(
-        XdrDataOutputStream stream, AccountEntryExtensionV2Ext encodedAccountEntryExtensionV2Ext)
-        throws IOException {
-      // Xdrgen::AST::Typespecs::Int
-      // Integer
-      stream.writeInt(encodedAccountEntryExtensionV2Ext.getDiscriminant().intValue());
-      switch (encodedAccountEntryExtensionV2Ext.getDiscriminant()) {
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
         case 0:
           break;
         case 3:
-          AccountEntryExtensionV3.encode(stream, encodedAccountEntryExtensionV2Ext.v3);
+          v3.encode(stream);
           break;
       }
-    }
-
-    public void encode(XdrDataOutputStream stream) throws IOException {
-      encode(stream, this);
     }
 
     public static AccountEntryExtensionV2Ext decode(XdrDataInputStream stream) throws IOException {
@@ -153,19 +123,6 @@ public class AccountEntryExtensionV2 implements XdrElement {
           break;
       }
       return decodedAccountEntryExtensionV2Ext;
-    }
-
-    @Override
-    public String toXdrBase64() throws IOException {
-      return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-    }
-
-    @Override
-    public byte[] toXdrByteArray() throws IOException {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-      encode(xdrDataOutputStream);
-      return byteArrayOutputStream.toByteArray();
     }
 
     public static AccountEntryExtensionV2Ext fromXdrBase64(String xdr) throws IOException {

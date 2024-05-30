@@ -3,10 +3,7 @@
 
 package org.stellar.sdk.xdr;
 
-import static org.stellar.sdk.xdr.Constants.*;
-
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,32 +23,14 @@ import org.stellar.sdk.Base64Factory;
 public class SequenceNumber implements XdrElement {
   private Int64 SequenceNumber;
 
-  public static void encode(XdrDataOutputStream stream, SequenceNumber encodedSequenceNumber)
-      throws IOException {
-    Int64.encode(stream, encodedSequenceNumber.SequenceNumber);
-  }
-
   public void encode(XdrDataOutputStream stream) throws IOException {
-    encode(stream, this);
+    SequenceNumber.encode(stream);
   }
 
   public static SequenceNumber decode(XdrDataInputStream stream) throws IOException {
     SequenceNumber decodedSequenceNumber = new SequenceNumber();
     decodedSequenceNumber.SequenceNumber = Int64.decode(stream);
     return decodedSequenceNumber;
-  }
-
-  @Override
-  public String toXdrBase64() throws IOException {
-    return Base64Factory.getInstance().encodeToString(toXdrByteArray());
-  }
-
-  @Override
-  public byte[] toXdrByteArray() throws IOException {
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    encode(xdrDataOutputStream);
-    return byteArrayOutputStream.toByteArray();
   }
 
   public static SequenceNumber fromXdrBase64(String xdr) throws IOException {
