@@ -4,13 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import org.junit.Test;
 import org.stellar.sdk.responses.GsonSingleton;
 
 public class GetLedgerEntriesDeserializerTest {
 
   @Test
-  public void testDeserializeEntriesNotNull() {
+  public void testDeserializeEntriesNotNull() throws IOException {
     SorobanRpcResponse<GetLedgerEntriesResponse> getLedgerEntriesResponse =
         GsonSingleton.getInstance()
             .fromJson(
@@ -35,6 +36,12 @@ public class GetLedgerEntriesDeserializerTest {
     assertEquals(
         getLedgerEntriesResponse.getResult().getEntries().get(0).getLiveUntilLedger().longValue(),
         996);
+    assertEquals(
+        getLedgerEntriesResponse.getResult().getEntries().get(0).parseXdr().toXdrBase64(),
+        getLedgerEntriesResponse.getResult().getEntries().get(0).getXdr());
+    assertEquals(
+        getLedgerEntriesResponse.getResult().getEntries().get(0).parseKey().toXdrBase64(),
+        getLedgerEntriesResponse.getResult().getEntries().get(0).getKey());
   }
 
   @Test

@@ -15,6 +15,8 @@ import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.TransactionResult;
 import org.stellar.sdk.xdr.XdrDataInputStream;
 
+// TODO: remove the file, use TransactionResponse instead.
+
 /**
  * Represents server response after submitting transaction.
  *

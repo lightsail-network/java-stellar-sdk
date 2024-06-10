@@ -1,15 +1,17 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import org.junit.Test;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
 import org.stellar.sdk.responses.GsonSingleton;
 
 public class GetEventsDeserializerTest {
   @Test
-  public void testDeserialize() {
+  public void testDeserialize() throws IOException {
     SorobanRpcResponse<GetEventsResponse> getEventsResponse =
         GsonSingleton.getInstance()
             .fromJson(json, new TypeToken<SorobanRpcResponse<GetEventsResponse>>() {}.getType());
@@ -31,6 +33,11 @@ public class GetEventsDeserializerTest {
     assertEquals(
         eventInfo0.getTransactionHash(),
         "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d");
+    assertEquals(eventInfo0.parseValue().toXdrBase64(), eventInfo0.getValue());
+    assertNotNull(eventInfo0.parseTopic());
+    assertEquals(eventInfo0.parseTopic().size(), 2);
+    assertEquals(eventInfo0.parseTopic().get(0).toXdrBase64(), eventInfo0.getTopic().get(0));
+    assertEquals(eventInfo0.parseTopic().get(1).toXdrBase64(), eventInfo0.getTopic().get(1));
 
     GetEventsResponse.EventInfo eventInfo1 = getEventsResponse.getResult().getEvents().get(1);
     assertEquals(eventInfo1.getType(), EventFilterType.SYSTEM);

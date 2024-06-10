@@ -10,6 +10,11 @@ import lombok.Getter;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.Memo;
+import org.stellar.sdk.Util;
+import org.stellar.sdk.xdr.OperationMeta;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.TransactionMeta;
+import org.stellar.sdk.xdr.TransactionResult;
 
 /**
  * Represents transaction response.
@@ -128,6 +133,46 @@ public class TransactionResponse extends Response implements Pageable {
   @Getter
   @SerializedName("_links")
   private final Links links;
+
+  /**
+   * Parses the {@code envelopeXdr} field from a string to an {@link
+   * org.stellar.sdk.xdr.TransactionEnvelope} object.
+   *
+   * @return the parsed {@link org.stellar.sdk.xdr.TransactionEnvelope} object
+   */
+  public TransactionEnvelope parseEnvelopeXdr() {
+    return Util.parseXdr(envelopeXdr, TransactionEnvelope::fromXdrBase64);
+  }
+
+  /**
+   * Parses the {@code resultXdr} field from a string to an {@link
+   * org.stellar.sdk.xdr.TransactionResult} object.
+   *
+   * @return the parsed {@link org.stellar.sdk.xdr.TransactionResult} object
+   */
+  public TransactionResult parseResultXdr() {
+    return Util.parseXdr(resultXdr, TransactionResult::fromXdrBase64);
+  }
+
+  /**
+   * Parses the {@code resultMetaXdr} field from a string to an {@link
+   * org.stellar.sdk.xdr.TransactionMeta} object.
+   *
+   * @return the parsed {@link org.stellar.sdk.xdr.TransactionMeta} object
+   */
+  public TransactionMeta parseResultMetaXdr() {
+    return Util.parseXdr(resultMetaXdr, TransactionMeta::fromXdrBase64);
+  }
+
+  /**
+   * Parses the {@code feeMetaXdr} field from a string to an {@link
+   * org.stellar.sdk.xdr.OperationMeta} object.
+   *
+   * @return the parsed {@link org.stellar.sdk.xdr.OperationMeta} object
+   */
+  public OperationMeta parseFeeMetaXdr() {
+    return Util.parseXdr(feeMetaXdr, OperationMeta::fromXdrBase64);
+  }
 
   /**
    * @return {@link Memo} object from this transaction.
