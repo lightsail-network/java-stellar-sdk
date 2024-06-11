@@ -1,11 +1,12 @@
 package org.stellar.sdk.responses;
 
+import java.io.IOException;
 import junit.framework.TestCase;
 import org.junit.Test;
 
 public class LedgerDeserializerTest extends TestCase {
   @Test
-  public void testDeserialize() {
+  public void testDeserialize() throws IOException {
     String json =
         "{\n"
             + "  \"_links\": {\n"
@@ -85,5 +86,7 @@ public class LedgerDeserializerTest extends TestCase {
     assertEquals(
         ledger.getLinks().getEffects().getHref(),
         "https://horizon.stellar.org/ledgers/48637678/effects{?cursor,limit,order}");
+    assertNotNull(ledger.parseHeaderXdr());
+    assertEquals(ledger.parseHeaderXdr().toXdrBase64(), ledger.getHeaderXdr());
   }
 }

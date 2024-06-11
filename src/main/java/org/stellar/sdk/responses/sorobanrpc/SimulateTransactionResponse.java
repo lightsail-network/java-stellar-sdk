@@ -3,7 +3,15 @@ package org.stellar.sdk.responses.sorobanrpc;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Value;
+import org.stellar.sdk.Util;
+import org.stellar.sdk.xdr.DiagnosticEvent;
+import org.stellar.sdk.xdr.LedgerEntry;
+import org.stellar.sdk.xdr.LedgerKey;
+import org.stellar.sdk.xdr.SCVal;
+import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
+import org.stellar.sdk.xdr.SorobanTransactionData;
 
 /**
  * Response for JSON-RPC method simulateTransaction.
@@ -44,6 +52,19 @@ public class SimulateTransactionResponse {
 
   Long latestLedger;
 
+  public SorobanTransactionData parseTransactionData() {
+    return Util.parseXdr(transactionData, SorobanTransactionData::fromXdrBase64);
+  }
+
+  public List<DiagnosticEvent> parseEvents() {
+    if (events == null) {
+      return null;
+    }
+    return events.stream()
+        .map(event -> Util.parseXdr(event, DiagnosticEvent::fromXdrBase64))
+        .collect(Collectors.toList());
+  }
+
   @Value
   public static class SimulateHostFunctionResult {
 
@@ -55,6 +76,30 @@ public class SimulateTransactionResponse {
 
     /** The field can be parsed as {@link org.stellar.sdk.xdr.SCVal} object. */
     String xdr;
+
+    /**
+     * Parses the {@code auth} field from a list of strings to a list of {@link
+     * org.stellar.sdk.xdr.SorobanAuthorizationEntry} objects.
+     *
+     * @return a list of parsed {@link org.stellar.sdk.xdr.SorobanAuthorizationEntry} objects
+     */
+    public List<SorobanAuthorizationEntry> parseAuth() {
+      if (auth == null) {
+        return null;
+      }
+      return auth.stream()
+          .map(entry -> Util.parseXdr(entry, SorobanAuthorizationEntry::fromXdrBase64))
+          .collect(Collectors.toList());
+    }
+
+    /**
+     * Parses the {@code xdr} field from a string to an {@link org.stellar.sdk.xdr.SCVal} object.
+     *
+     * @return the parsed {@link org.stellar.sdk.xdr.SCVal} object
+     */
+    public SCVal parseXdr() {
+      return Util.parseXdr(xdr, SCVal::fromXdrBase64);
+    }
   }
 
   @Value
@@ -72,6 +117,16 @@ public class SimulateTransactionResponse {
     String transactionData;
 
     Long minResourceFee;
+
+    /**
+     * Parses the {@code transactionData} field from a string to an {@link
+     * org.stellar.sdk.xdr.SorobanTransactionData} object.
+     *
+     * @return the parsed {@link org.stellar.sdk.xdr.SorobanTransactionData} object
+     */
+    public SorobanTransactionData parseTransactionData() {
+      return Util.parseXdr(transactionData, SorobanTransactionData::fromXdrBase64);
+    }
   }
 
   /**
@@ -85,5 +140,35 @@ public class SimulateTransactionResponse {
     String key;
     String before;
     String after;
+
+    /**
+     * Parses the {@code key} field from a string to an {@link org.stellar.sdk.xdr.LedgerKey}
+     * object.
+     *
+     * @return the parsed {@link org.stellar.sdk.xdr.LedgerKey} object
+     */
+    public LedgerKey parseKey() {
+      return Util.parseXdr(key, LedgerKey::fromXdrBase64);
+    }
+
+    /**
+     * Parses the {@code before} field from a string to an {@link org.stellar.sdk.xdr.LedgerEntry}
+     * object.
+     *
+     * @return the parsed {@link org.stellar.sdk.xdr.LedgerEntry} object
+     */
+    public LedgerEntry parseBefore() {
+      return Util.parseXdr(before, LedgerEntry::fromXdrBase64);
+    }
+
+    /**
+     * Parses the {@code after} field from a string to an {@link org.stellar.sdk.xdr.LedgerEntry}
+     * object.
+     *
+     * @return the parsed {@link org.stellar.sdk.xdr.LedgerEntry} object
+     */
+    public LedgerEntry parseAfter() {
+      return Util.parseXdr(after, LedgerEntry::fromXdrBase64);
+    }
   }
 }

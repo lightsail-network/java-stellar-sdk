@@ -5,6 +5,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## Pending
 ### Update
 chore: display the original definition in the XDR class document.
+feat: added a series of functions to parse xdr in the response.
 
 ## 0.44.0
 ### Update

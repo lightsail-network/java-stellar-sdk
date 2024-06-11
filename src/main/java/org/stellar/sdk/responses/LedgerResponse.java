@@ -3,6 +3,8 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.Util;
+import org.stellar.sdk.xdr.LedgerHeader;
 
 /**
  * Represents ledger response.
@@ -87,5 +89,15 @@ public class LedgerResponse extends Response implements Pageable {
 
     @SerializedName("effects")
     Link effects;
+  }
+
+  /**
+   * Parses the {@code headerXdr} field from a string to an {@link org.stellar.sdk.xdr.LedgerHeader}
+   * object.
+   *
+   * @return the parsed {@link org.stellar.sdk.xdr.LedgerHeader} object
+   */
+  public LedgerHeader parseHeaderXdr() {
+    return Util.parseXdr(headerXdr, LedgerHeader::fromXdrBase64);
   }
 }

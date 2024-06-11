@@ -1,15 +1,17 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import org.junit.Test;
 import org.stellar.sdk.responses.GsonSingleton;
 
 public class SendTransactionDeserializerTest {
   @Test
-  public void testDeserializeError() {
+  public void testDeserializeError() throws IOException {
     SorobanRpcResponse<SendTransactionResponse> getTransactionResponse =
         GsonSingleton.getInstance()
             .fromJson(
@@ -26,6 +28,11 @@ public class SendTransactionDeserializerTest {
         data.getHash(), "3b0c982bb8245be869d34ec822f999deb68f3a8480cf6e663643cf2f6e397e64");
     assertEquals(data.getLatestLedger().longValue(), 62L);
     assertEquals(data.getLatestLedgerCloseTime().longValue(), 1690447331L);
+    assertNotNull(data.parseDiagnosticEventsXdr());
+    assertNotNull(data.parseErrorResultXdr());
+    assertEquals(
+        data.parseDiagnosticEventsXdr().get(0).toXdrBase64(), data.getDiagnosticEventsXdr().get(0));
+    assertEquals(data.parseErrorResultXdr().toXdrBase64(), data.getErrorResultXdr());
   }
 
   @Test
@@ -43,6 +50,8 @@ public class SendTransactionDeserializerTest {
         data.getHash(), "5e58bb3530cf4ff852805ad1a5077b181b227e541301bdfa17f5a66991910d13");
     assertEquals(data.getLatestLedger().longValue(), 3449L);
     assertEquals(data.getLatestLedgerCloseTime().longValue(), 1690444223L);
+    assertNull(data.parseDiagnosticEventsXdr());
+    assertNull(data.parseErrorResultXdr());
   }
 
   @Test
@@ -60,6 +69,8 @@ public class SendTransactionDeserializerTest {
         data.getHash(), "5e58bb3530cf4ff852805ad1a5077b181b227e541301bdfa17f5a66991910d13");
     assertEquals(data.getLatestLedger().longValue(), 3449L);
     assertEquals(data.getLatestLedgerCloseTime().longValue(), 1690444223L);
+    assertNull(data.parseDiagnosticEventsXdr());
+    assertNull(data.parseErrorResultXdr());
   }
 
   @Test
@@ -77,6 +88,8 @@ public class SendTransactionDeserializerTest {
         data.getHash(), "5e58bb3530cf4ff852805ad1a5077b181b227e541301bdfa17f5a66991910d13");
     assertEquals(data.getLatestLedger().longValue(), 3449L);
     assertEquals(data.getLatestLedgerCloseTime().longValue(), 1690444223L);
+    assertNull(data.parseDiagnosticEventsXdr());
+    assertNull(data.parseErrorResultXdr());
   }
 
   String jsonError =

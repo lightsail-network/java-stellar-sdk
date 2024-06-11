@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -143,5 +144,30 @@ public class Util {
       bytes = Arrays.copyOfRange(bytes, bytes.length - 8, bytes.length);
     }
     return bytes;
+  }
+
+  /** The function that converts XDR string to XDR object. */
+  @FunctionalInterface
+  public interface XdrDecodeFunction<T, R> {
+    R apply(T t) throws IOException;
+  }
+
+  /**
+   * Parses XDR string to XDR object.
+   *
+   * @param xdr XDR string
+   * @param fromXdrBase64 function that converts XDR string to XDR object
+   * @return XDR object, or null if the input string is null or empty
+   * @param <T> type of XDR object
+   */
+  public static <T> T parseXdr(String xdr, XdrDecodeFunction<String, T> fromXdrBase64) {
+    if (xdr == null || xdr.isEmpty()) {
+      return null;
+    }
+    try {
+      return fromXdrBase64.apply(xdr);
+    } catch (IOException e) {
+      throw new UnexpectedException("Unable to parse XDR string", e);
+    }
   }
 }

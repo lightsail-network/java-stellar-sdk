@@ -1,15 +1,17 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import org.junit.Test;
 import org.stellar.sdk.responses.GsonSingleton;
 
 public class SimulateTransactionDeserializerTest {
   @Test
-  public void testDeserializeSuccess() {
+  public void testDeserializeSuccess() throws IOException {
     SorobanRpcResponse<SimulateTransactionResponse> simulateTransactionResponse =
         GsonSingleton.getInstance()
             .fromJson(
@@ -18,7 +20,7 @@ public class SimulateTransactionDeserializerTest {
     SimulateTransactionResponse data = simulateTransactionResponse.getResult();
     assertEquals(
         data.getTransactionData(),
-        "AAAAAAAAAAMAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAABgAAAAHFiyv7xPBU5zJPa/IMrT4CbkG7rRptIMPX1JGN7RZUEQAAABQAAAABAAAAAAAAAAd9NB8oNB2RvkInt877MS77oKzbRandwCJ7VsvW4NmL2QAAAAAAAAACAAAABgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKEAAAAVWqB4d0kcwg0AAAAAAAAAAAAAAAYAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAQAAAAAQAAAAIAAAAPAAAAB0NvdW50ZXIAAAAAEgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKEAAAABAAAAAAAWW9sAAAYkAAABnAAAA2AAAAAAAAAAqQ==");
+        "AAAAAAAAAAIAAAAGAAAAAcwD/nT9D7Dc2LxRdab+2vEUF8B+XoN7mQW21oxPT8ALAAAAFAAAAAEAAAAHy8vNUZ8vyZ2ybPHW0XbSrRtP7gEWsJ6zDzcfY9P8z88AAAABAAAABgAAAAHMA/50/Q+w3Ni8UXWm/trxFBfAfl6De5kFttaMT0/ACwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAAg4dbAxsGAGICfBG3iT2cKGYQ6hK4sJWzZ6or1C5v6GAAAAAEAHfKyAAAFiAAAAIgAAAAAAAAAAw==");
     assertEquals(data.getEvents().size(), 2);
     assertEquals(
         data.getEvents().get(0),
@@ -29,9 +31,12 @@ public class SimulateTransactionDeserializerTest {
     assertEquals(data.getMinResourceFee().longValue(), 94876L);
     assertEquals(data.getResults().size(), 1);
     assertEquals(data.getResults().get(0).getAuth().size(), 1);
+    assertNotNull(data.getResults().get(0).parseAuth());
+    assertEquals(
+        data.getResults().get(0).parseXdr().toXdrBase64(), data.getResults().get(0).getXdr());
     assertEquals(
         data.getResults().get(0).getAuth().get(0),
-        "AAAAAQAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKFaoHh3SRzCDQAAAAAAAAAAAAAAAAAAAAHFiyv7xPBU5zJPa/IMrT4CbkG7rRptIMPX1JGN7RZUEQAAAAlpbmNyZW1lbnQAAAAAAAACAAAAEgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKEAAAADAAAACgAAAAA=");
+        "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
     assertEquals(data.getResults().get(0).getXdr(), "AAAAAwAAAAo=");
     assertEquals(data.getCost().getCpuInstructions().longValue(), 1274180L);
     assertEquals(data.getCost().getMemoryBytes().longValue(), 162857L);
@@ -40,12 +45,24 @@ public class SimulateTransactionDeserializerTest {
     assertEquals(
         data.getStateChanges().get(0).getKey(),
         "AAAAAAAAAABuaCbVXZ2DlXWarV6UxwbW3GNJgpn3ASChIFp5bxSIWg==");
+    assertEquals(
+        data.getStateChanges().get(0).parseKey().toXdrBase64(),
+        data.getStateChanges().get(0).getKey());
     assertNull(data.getStateChanges().get(0).getBefore());
+    assertNull(data.getStateChanges().get(0).parseBefore());
     assertEquals(
         data.getStateChanges().get(0).getAfter(),
         "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=");
+    assertEquals(
+        data.getStateChanges().get(0).parseAfter().toXdrBase64(),
+        data.getStateChanges().get(0).getAfter());
+    assertNull(data.getStateChanges().get(0).parseBefore());
+    assertNotNull(data.getStateChanges().get(0).parseKey());
     assertEquals(data.getLatestLedger().longValue(), 694L);
     assertNull(data.getError());
+    assertNotNull(data.parseTransactionData());
+    assertNotNull(data.parseEvents());
+    assertEquals(data.parseEvents().size(), 2);
   }
 
   @Test
@@ -65,6 +82,8 @@ public class SimulateTransactionDeserializerTest {
     assertEquals(data.getCost().getCpuInstructions().longValue(), 0L);
     assertEquals(data.getCost().getMemoryBytes().longValue(), 0L);
     assertEquals(data.getLatestLedger().longValue(), 898L);
+    assertNull(data.parseTransactionData());
+    assertNull(data.parseEvents());
   }
 
   String jsonSuccess =
@@ -72,7 +91,7 @@ public class SimulateTransactionDeserializerTest {
           + "    \"jsonrpc\": \"2.0\",\n"
           + "    \"id\": \"4a69486e5a83404bbf9772f3f02c21e5\",\n"
           + "    \"result\": {\n"
-          + "        \"transactionData\": \"AAAAAAAAAAMAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAABgAAAAHFiyv7xPBU5zJPa/IMrT4CbkG7rRptIMPX1JGN7RZUEQAAABQAAAABAAAAAAAAAAd9NB8oNB2RvkInt877MS77oKzbRandwCJ7VsvW4NmL2QAAAAAAAAACAAAABgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKEAAAAVWqB4d0kcwg0AAAAAAAAAAAAAAAYAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAQAAAAAQAAAAIAAAAPAAAAB0NvdW50ZXIAAAAAEgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKEAAAABAAAAAAAWW9sAAAYkAAABnAAAA2AAAAAAAAAAqQ==\",\n"
+          + "        \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAcwD/nT9D7Dc2LxRdab+2vEUF8B+XoN7mQW21oxPT8ALAAAAFAAAAAEAAAAHy8vNUZ8vyZ2ybPHW0XbSrRtP7gEWsJ6zDzcfY9P8z88AAAABAAAABgAAAAHMA/50/Q+w3Ni8UXWm/trxFBfAfl6De5kFttaMT0/ACwAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAAAg4dbAxsGAGICfBG3iT2cKGYQ6hK4sJWzZ6or1C5v6GAAAAAEAHfKyAAAFiAAAAIgAAAAAAAAAAw==\",\n"
           + "        \"events\": [\n"
           + "            \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
           + "            \"AAAAAQAAAAAAAAABxYsr+8TwVOcyT2vyDK0+Am5Bu60abSDD19SRje0WVBEAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAAAo=\"\n"
@@ -81,7 +100,7 @@ public class SimulateTransactionDeserializerTest {
           + "        \"results\": [\n"
           + "            {\n"
           + "                \"auth\": [\n"
-          + "                    \"AAAAAQAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKFaoHh3SRzCDQAAAAAAAAAAAAAAAAAAAAHFiyv7xPBU5zJPa/IMrT4CbkG7rRptIMPX1JGN7RZUEQAAAAlpbmNyZW1lbnQAAAAAAAACAAAAEgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKEAAAADAAAACgAAAAA=\"\n"
+          + "                    \"AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA\"\n"
           + "                ],\n"
           + "                \"xdr\": \"AAAAAwAAAAo=\"\n"
           + "            }\n"
