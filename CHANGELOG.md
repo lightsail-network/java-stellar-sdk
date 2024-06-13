@@ -6,6 +6,10 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ### Update
 chore: display the original definition in the XDR class document.
 feat: added a series of functions to parse xdr in the response.
+refactor: removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
+
+### Breaking changes
+refactor: Removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
 
 ## 0.44.0
 ### Update

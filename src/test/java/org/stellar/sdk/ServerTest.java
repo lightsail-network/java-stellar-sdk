@@ -212,27 +212,8 @@ public class ServerTest {
   }
 
   @Test
-  public void testSubmitTransactionNetworkMisMatch()
-      throws IOException, AccountRequiresMemoException {
-    MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
-    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
-    mockWebServer.start();
-    HttpUrl baseUrl = mockWebServer.url("");
-    Server server = new Server(baseUrl.toString());
-
-    try {
-      server.submitTransaction(this.buildTransaction(Network.TESTNET), true);
-      fail("expected NetworkMismatchException exception");
-    } catch (NetworkMismatchException e) {
-      // expect exception
-    }
-  }
-
-  @Test
   public void testSubmitTransactionSuccess() throws IOException, AccountRequiresMemoException {
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
     mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
@@ -253,7 +234,6 @@ public class ServerTest {
   @Test
   public void testSubmitTransactionFail() throws IOException, AccountRequiresMemoException {
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
     mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(failureResponse));
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
@@ -282,7 +262,6 @@ public class ServerTest {
   @Test(expected = SubmitTransactionTimeoutResponseException.class)
   public void testSubmitTransactionTimeout() throws IOException, AccountRequiresMemoException {
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
     mockWebServer.enqueue(
         new MockResponse()
             .setResponseCode(504)
@@ -308,7 +287,6 @@ public class ServerTest {
   public void testSubmitTransactionTimeoutWithoutResponse()
       throws IOException, AccountRequiresMemoException {
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     Server server = new Server(baseUrl.toString());
@@ -328,7 +306,6 @@ public class ServerTest {
   @Test
   public void testSubmitTransactionInternalError() throws IOException {
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(publicRootResponse));
     mockWebServer.enqueue(
         new MockResponse().setResponseCode(500).setBody(internalServerErrorResponse));
     mockWebServer.start();
