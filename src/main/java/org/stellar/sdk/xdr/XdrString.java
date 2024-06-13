@@ -2,7 +2,6 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.nio.charset.StandardCharsets;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
@@ -28,7 +27,7 @@ public class XdrString implements XdrElement {
   public static XdrString decode(XdrDataInputStream stream, int maxSize) throws IOException {
     int size = stream.readInt();
     if (size > maxSize) {
-      throw new InvalidClassException("String length " + size + " exceeds max size " + maxSize);
+      throw new IllegalArgumentException("String length " + size + " exceeds max size " + maxSize);
     }
     byte[] bytes = new byte[size];
     stream.read(bytes);
