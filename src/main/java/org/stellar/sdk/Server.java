@@ -5,11 +5,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.*;
@@ -22,8 +19,6 @@ import org.stellar.sdk.xdr.CryptoKeyType;
 public class Server implements Closeable {
   private final HttpUrl serverURI;
   @Getter @Setter private OkHttpClient httpClient;
-  private Optional<Network> network;
-  private final ReentrantReadWriteLock networkLock;
 
   /** submitHttpClient is used only for submitting transactions. The read timeout is longer. */
   @Getter @Setter private OkHttpClient submitHttpClient;
@@ -64,8 +59,6 @@ public class Server implements Closeable {
     this.serverURI = HttpUrl.parse(serverURI);
     this.httpClient = httpClient;
     this.submitHttpClient = submitHttpClient;
-    this.network = Optional.empty();
-    this.networkLock = new ReentrantReadWriteLock();
   }
 
   /** Returns {@link RootResponse}. */
@@ -76,10 +69,7 @@ public class Server implements Closeable {
     Request request = new Request.Builder().get().url(serverURI).build();
     Response response = httpClient.newCall(request).execute();
 
-    RootResponse parsedResponse = responseHandler.handleResponse(response);
-
-    this.setNetwork(new Network(parsedResponse.getNetworkPassphrase()));
-    return parsedResponse;
+    return responseHandler.handleResponse(response);
   }
 
   /** Returns {@link AccountsRequestBuilder} instance. */
@@ -169,38 +159,6 @@ public class Server implements Closeable {
     return new LiquidityPoolsRequestBuilder(httpClient, serverURI);
   }
 
-  private Optional<Network> getNetwork() {
-    Lock readLock = this.networkLock.readLock();
-    readLock.lock();
-    try {
-      return this.network;
-    } finally {
-      readLock.unlock();
-    }
-  }
-
-  private void setNetwork(Network network) {
-    Lock writeLock = this.networkLock.writeLock();
-    writeLock.lock();
-    try {
-      this.network = Optional.of(network);
-    } finally {
-      writeLock.unlock();
-    }
-  }
-
-  private void checkTransactionNetwork(AbstractTransaction transaction) throws IOException {
-    Optional<Network> network = getNetwork();
-    if (!network.isPresent()) {
-      this.root();
-    }
-
-    network = getNetwork();
-    if (!network.get().equals(transaction.getNetwork())) {
-      throw new NetworkMismatchException(network.get(), transaction.getNetwork());
-    }
-  }
-
   /**
    * Submits a base64 encoded transaction envelope to the network
    *
@@ -261,12 +219,9 @@ public class Server implements Closeable {
   public SubmitTransactionResponse submitTransaction(
       Transaction transaction, boolean skipMemoRequiredCheck)
       throws IOException, AccountRequiresMemoException {
-    this.checkTransactionNetwork(transaction);
-
     if (!skipMemoRequiredCheck) {
       checkMemoRequired(transaction);
     }
-
     return this.submitTransactionXdr(transaction.toEnvelopeXdrBase64());
   }
 
@@ -286,12 +241,9 @@ public class Server implements Closeable {
   public SubmitTransactionResponse submitTransaction(
       FeeBumpTransaction transaction, boolean skipMemoRequiredCheck)
       throws IOException, AccountRequiresMemoException {
-    this.checkTransactionNetwork(transaction);
-
     if (!skipMemoRequiredCheck) {
       checkMemoRequired(transaction.getInnerTransaction());
     }
-
     return this.submitTransactionXdr(transaction.toEnvelopeXdrBase64());
   }
 
