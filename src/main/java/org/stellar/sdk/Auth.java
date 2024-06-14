@@ -25,7 +25,7 @@ public class Auth {
    * expiration details, returning a signed copy.
    *
    * <p>This "fills out" the authorization entry with a signature, indicating to the {@link
-   * InvokeHostFunctionOperation} it's attached to that:
+   * org.stellar.sdk.operations.InvokeHostFunctionOperation} it's attached to that:
    *
    * <ul>
    *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
@@ -58,7 +58,7 @@ public class Auth {
    * expiration details, returning a signed copy.
    *
    * <p>This "fills out" the authorization entry with a signature, indicating to the {@link
-   * InvokeHostFunctionOperation} it's attached to that:
+   * org.stellar.sdk.operations.InvokeHostFunctionOperation} it's attached to that:
    *
    * <ul>
    *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
@@ -97,7 +97,7 @@ public class Auth {
    * expiration details, returning a signed copy.
    *
    * <p>This "fills out" the authorization entry with a signature, indicating to the {@link
-   * InvokeHostFunctionOperation} it's attached to that:
+   * org.stellar.sdk.operations.InvokeHostFunctionOperation} it's attached to that:
    *
    * <ul>
    *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})
@@ -131,7 +131,7 @@ public class Auth {
    * expiration details, returning a signed copy.
    *
    * <p>This "fills out" the authorization entry with a signature, indicating to the {@link
-   * InvokeHostFunctionOperation} it's attached to that:
+   * org.stellar.sdk.operations.InvokeHostFunctionOperation} it's attached to that:
    *
    * <ul>
    *   <li>a particular identity (i.e. signing {@link KeyPair} or {@link Signer})

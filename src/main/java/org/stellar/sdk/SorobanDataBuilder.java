@@ -19,9 +19,10 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * Supports building {@link SorobanTransactionData} structures with various items set to specific
  * values.
  *
- * <p>This is recommended for when you are building {@link ExtendFootprintTTLOperation} and {@link
- * RestoreFootprintOperation} operations to avoid (re)building the entire data structure from
- * scratch.
+ * <p>This is recommended for when you are building {@link
+ * org.stellar.sdk.operations.ExtendFootprintTTLOperation} and {@link
+ * org.stellar.sdk.operations.RestoreFootprintOperation} operations to avoid (re)building the entire
+ * data structure from scratch.
  */
 public class SorobanDataBuilder {
   private final SorobanTransactionData data;

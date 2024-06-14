@@ -4,6 +4,8 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.stellar.sdk.operations.Operation;
+import org.stellar.sdk.operations.SetOptionsOperation;
 import org.stellar.sdk.xdr.SignerKey;
 
 public class SetOptionsOperationTest {

@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
+import org.stellar.sdk.operations.BumpSequenceOperation;
+import org.stellar.sdk.operations.CreateAccountOperation;
+import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.xdr.*;
 
 public class TransactionBuilderTest {
@@ -922,7 +925,7 @@ public class TransactionBuilderTest {
             account.getAccountId(),
             980,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation0, operation1},
+            new org.stellar.sdk.operations.Operation[] {operation0, operation1},
             new MemoText("hello"),
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<>(), new TimeBounds(100, 200)),

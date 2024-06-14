@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import org.junit.Test;
+import org.stellar.sdk.operations.PaymentOperation;
 import org.stellar.sdk.xdr.EnvelopeType;
 
 public class FeeBumpTransactionTest {

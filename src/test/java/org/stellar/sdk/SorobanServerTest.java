@@ -23,6 +23,8 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.stellar.sdk.operations.InvokeHostFunctionOperation;
+import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
 import org.stellar.sdk.requests.sorobanrpc.GetEventsRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetLedgerEntriesRequest;

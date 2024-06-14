@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import lombok.NonNull;
+import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 
 /** Builds a new Transaction object. */
@@ -260,8 +261,9 @@ public class TransactionBuilder {
    * <p>For non-contract(non-Soroban) transactions, this setting has no effect. In the case of
    * Soroban transactions, this is either an instance of {@link SorobanTransactionData} or a
    * base64-encoded string of said structure. This is usually obtained from the simulation response
-   * based on a transaction with a Soroban operation (e.g. {@link InvokeHostFunctionOperation},
-   * providing necessary resource and storage footprint estimations for contract invocation.
+   * based on a transaction with a Soroban operation (e.g. {@link
+   * org.stellar.sdk.operations.InvokeHostFunctionOperation}, providing necessary resource and
+   * storage footprint estimations for contract invocation.
    *
    * @param sorobanData Soroban data to set
    * @return Builder object so you can chain methods.
@@ -277,8 +279,9 @@ public class TransactionBuilder {
    * <p>For non-contract(non-Soroban) transactions, this setting has no effect. In the case of
    * Soroban transactions, this is either an instance of {@link SorobanTransactionData} or a
    * base64-encoded string of said structure. This is usually obtained from the simulation response
-   * based on a transaction with a Soroban operation (e.g. {@link InvokeHostFunctionOperation},
-   * providing necessary resource and storage footprint estimations for contract invocation.
+   * based on a transaction with a Soroban operation (e.g. {@link
+   * org.stellar.sdk.operations.InvokeHostFunctionOperation}, providing necessary resource and
+   * storage footprint estimations for contract invocation.
    *
    * @param sorobanData Soroban data to set
    * @return Builder object so you can chain methods.

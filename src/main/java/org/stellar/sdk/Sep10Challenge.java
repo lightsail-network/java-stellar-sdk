@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import lombok.Value;
+import org.stellar.sdk.operations.ManageDataOperation;
+import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Signature;
 import org.stellar.sdk.xdr.SignatureHint;
