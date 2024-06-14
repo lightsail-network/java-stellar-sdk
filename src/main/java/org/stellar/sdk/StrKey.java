@@ -183,7 +183,7 @@ public class StrKey {
    * @param accountID data to encode
    * @return "G..." representation of the key
    */
-  static String encodeEd25519PublicKey(AccountID accountID) {
+  public static String encodeEd25519PublicKey(AccountID accountID) {
     char[] encoded =
         encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
     return String.valueOf(encoded);
@@ -195,7 +195,7 @@ public class StrKey {
    * @param muxedAccount the muxed account to encode
    * @return "M..." or "G..." representation of the key
    */
-  static String encodeStellarMuxedAccount(MuxedAccount muxedAccount) {
+  public static String encodeStellarMuxedAccount(MuxedAccount muxedAccount) {
     switch (muxedAccount.getDiscriminant()) {
       case KEY_TYPE_MUXED_ED25519:
         return String.valueOf(
@@ -232,7 +232,7 @@ public class StrKey {
     return aid;
   }
 
-  static AccountID encodeToXDRAccountId(String data) {
+  public static AccountID encodeToXDRAccountId(String data) {
     AccountID accountID = new AccountID();
     PublicKey publicKey = new PublicKey();
     publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
@@ -245,7 +245,7 @@ public class StrKey {
     return accountID;
   }
 
-  static MuxedAccount encodeToXDRMuxedAccount(String data) {
+  public static MuxedAccount encodeToXDRMuxedAccount(String data) {
     MuxedAccount muxed = new MuxedAccount();
 
     if (data.isEmpty()) {

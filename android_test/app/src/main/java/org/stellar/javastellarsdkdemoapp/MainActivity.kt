@@ -31,7 +31,7 @@ import org.stellar.sdk.Account
 import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.Address
 import org.stellar.sdk.Auth
-import org.stellar.sdk.InvokeHostFunctionOperation
+import org.stellar.sdk.operations.InvokeHostFunctionOperation
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Network
 import org.stellar.sdk.Server

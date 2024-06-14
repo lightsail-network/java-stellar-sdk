@@ -18,6 +18,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.jetbrains.annotations.Nullable;
+import org.stellar.sdk.operations.InvokeHostFunctionOperation;
+import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.requests.ClientIdentificationInterceptor;
 import org.stellar.sdk.requests.ResponseHandler;
 import org.stellar.sdk.requests.sorobanrpc.GetEventsRequest;
@@ -310,8 +312,10 @@ public class SorobanServer implements Closeable {
    * @see <a href="https://soroban.stellar.org/api/methods/simulateTransaction"
    *     target="_blank">simulateTransaction documentation</a>
    * @param transaction The transaction to simulate. It should include exactly one operation, which
-   *     must be one of {@link InvokeHostFunctionOperation}, {@link ExtendFootprintTTLOperation}, or
-   *     {@link RestoreFootprintOperation}. Any provided footprint will be ignored.
+   *     must be one of {@link InvokeHostFunctionOperation}, {@link
+   *     org.stellar.sdk.operations.ExtendFootprintTTLOperation}, or {@link
+   *     org.stellar.sdk.operations.RestoreFootprintOperation}. Any provided footprint will be
+   *     ignored.
    * @param resourceConfig Additional resource include in the simulation.
    * @return A {@link SimulateTransactionResponse} object containing the cost, footprint,
    *     result/auth requirements (if applicable), and error of the transaction.
@@ -356,13 +360,14 @@ public class SorobanServer implements Closeable {
    * to inspect estimated fees for a given transaction in detail first, if that is of importance.
    *
    * @param transaction The transaction to prepare. It should include exactly one operation, which
-   *     must be one of {@link InvokeHostFunctionOperation}, {@link ExtendFootprintTTLOperation}, or
-   *     {@link RestoreFootprintOperation}. Any provided footprint will be ignored. You can use
-   *     {@link Transaction#isSorobanTransaction()} to check if a transaction is a Soroban
-   *     transaction. Any provided footprint will be overwritten. However, if your operation has
-   *     existing auth entries, they will be preferred over ALL auth entries from the simulation. In
-   *     other words, if you include auth entries, you don't care about the auth returned from the
-   *     simulation. Other fields (footprint, etc.) will be filled as normal.
+   *     must be one of {@link InvokeHostFunctionOperation}, {@link
+   *     org.stellar.sdk.operations.ExtendFootprintTTLOperation}, or {@link
+   *     org.stellar.sdk.operations.RestoreFootprintOperation}. Any provided footprint will be
+   *     ignored. You can use {@link Transaction#isSorobanTransaction()} to check if a transaction
+   *     is a Soroban transaction. Any provided footprint will be overwritten. However, if your
+   *     operation has existing auth entries, they will be preferred over ALL auth entries from the
+   *     simulation. In other words, if you include auth entries, you don't care about the auth
+   *     returned from the simulation. Other fields (footprint, etc.) will be filled as normal.
    * @return Returns a copy of the {@link Transaction}, with the expected authorizations (in the
    *     case of invocation) and ledger footprint added. The transaction fee will also automatically
    *     be padded with the contract's minimum resource fees discovered from the simulation.
@@ -390,13 +395,14 @@ public class SorobanServer implements Closeable {
    * interaction with user to confirm it is acceptable.
    *
    * @param transaction The transaction to prepare. It should include exactly one operation, which
-   *     must be one of {@link InvokeHostFunctionOperation}, {@link ExtendFootprintTTLOperation}, or
-   *     {@link RestoreFootprintOperation}. Any provided footprint will be ignored. You can use
-   *     {@link Transaction#isSorobanTransaction()} to check if a transaction is a Soroban
-   *     transaction. Any provided footprint will be overwritten. However, if your operation has
-   *     existing auth entries, they will be preferred over ALL auth entries from the simulation. In
-   *     other words, if you include auth entries, you don't care about the auth returned from the
-   *     simulation. Other fields (footprint, etc.) will be filled as normal.
+   *     must be one of {@link InvokeHostFunctionOperation}, {@link
+   *     org.stellar.sdk.operations.ExtendFootprintTTLOperation}, or {@link
+   *     org.stellar.sdk.operations.RestoreFootprintOperation}. Any provided footprint will be
+   *     ignored. You can use {@link Transaction#isSorobanTransaction()} to check if a transaction
+   *     is a Soroban transaction. Any provided footprint will be overwritten. However, if your
+   *     operation has existing auth entries, they will be preferred over ALL auth entries from the
+   *     simulation. In other words, if you include auth entries, you don't care about the auth
+   *     returned from the simulation. Other fields (footprint, etc.) will be filled as normal.
    * @param simulateTransactionResponse The {@link SimulateTransactionResponse} to use for preparing
    *     the transaction.
    * @return Returns a copy of the {@link Transaction}, with the expected authorizations (in the

@@ -15,6 +15,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+import org.stellar.sdk.operations.BumpSequenceOperation;
+import org.stellar.sdk.operations.CreateAccountOperation;
+import org.stellar.sdk.operations.ExtendFootprintTTLOperation;
+import org.stellar.sdk.operations.InvokeHostFunctionOperation;
+import org.stellar.sdk.operations.PaymentOperation;
+import org.stellar.sdk.operations.RestoreFootprintOperation;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.ContractExecutable;
@@ -58,7 +64,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {
+            new org.stellar.sdk.operations.Operation[] {
               new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
             },
             null,
@@ -102,7 +108,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {
+            new org.stellar.sdk.operations.Operation[] {
               new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
             },
             null,
@@ -139,7 +145,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {
+            new org.stellar.sdk.operations.Operation[] {
               new PaymentOperation.Builder(
                       destination.getAccountId(), new AssetTypeNative(), "2000")
                   .build()
@@ -178,7 +184,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {
+            new org.stellar.sdk.operations.Operation[] {
               new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
             },
             null,
@@ -263,7 +269,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {invokeHostFunctionOperation},
+            new org.stellar.sdk.operations.Operation[] {invokeHostFunctionOperation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -301,7 +307,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation},
+            new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -339,7 +345,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation},
+            new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -376,7 +382,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation},
+            new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -406,7 +412,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation, operation},
+            new org.stellar.sdk.operations.Operation[] {operation, operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -429,7 +435,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation},
+            new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -452,7 +458,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation},
+            new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -466,7 +472,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation},
+            new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -482,7 +488,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation},
+            new org.stellar.sdk.operations.Operation[] {operation},
             Memo.text("not equal tx"),
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
@@ -497,7 +503,7 @@ public class TransactionTest {
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.Operation[] {operation},
+            new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
                 null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),

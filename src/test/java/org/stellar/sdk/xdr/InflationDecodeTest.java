@@ -4,8 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.stellar.sdk.AccountConverter;
-import org.stellar.sdk.InflationOperation;
 import org.stellar.sdk.Network;
+import org.stellar.sdk.operations.InflationOperation;
+import org.stellar.sdk.operations.Operation;
 
 public class InflationDecodeTest {
 
@@ -17,7 +18,7 @@ public class InflationDecodeTest {
                 AccountConverter.enableMuxed(),
                 "AAAAAALC+FwxReetNDfMNvY5LOS1qSe7QqrfQPS28dnIV95NAAAAZAAAAAAAAATSAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAJAAAAAAAAAAA=",
                 Network.TESTNET);
-    org.stellar.sdk.Operation[] ops = tx.getOperations();
+    Operation[] ops = tx.getOperations();
     assertTrue(ops[0] instanceof InflationOperation);
   }
 }

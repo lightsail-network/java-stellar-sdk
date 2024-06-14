@@ -84,7 +84,7 @@ public class Util {
    * @param length length of the resulting array
    * @return padded byte array
    */
-  static byte[] paddedByteArray(String string, int length) {
+  public static byte[] paddedByteArray(String string, int length) {
     return Util.paddedByteArray(string.getBytes(), length);
   }
 

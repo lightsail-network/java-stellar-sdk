@@ -4,7 +4,8 @@ import lombok.Getter;
 import org.stellar.sdk.xdr.AccountFlags;
 
 /**
- * AccountFlag is the <code>enum</code> that can be used in {@link SetOptionsOperation}.
+ * AccountFlag is the <code>enum</code> that can be used in {@link
+ * org.stellar.sdk.operations.SetOptionsOperation}.
  *
  * @see <a href="https://developers.stellar.org/docs/glossary#flags" target="_blank">Account
  *     Flags</a>
