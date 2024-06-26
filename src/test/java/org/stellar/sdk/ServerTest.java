@@ -27,8 +27,8 @@ import org.stellar.sdk.operations.PaymentOperation;
 import org.stellar.sdk.requests.ErrorResponse;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
-import org.stellar.sdk.responses.SubmitTransactionTimeoutResponseException;
-import org.stellar.sdk.responses.SubmitTransactionUnknownResponseException;
+import org.stellar.sdk.exception.SubmitTransactionTimeoutResponseException;
+import org.stellar.sdk.exception.SubmitTransactionUnknownResponseException;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
 public class ServerTest {
