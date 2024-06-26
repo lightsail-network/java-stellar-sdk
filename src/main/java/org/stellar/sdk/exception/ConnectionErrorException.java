@@ -1,6 +1,4 @@
-package org.stellar.sdk.federation.exception;
-
-import org.stellar.sdk.exception.SdkException;
+package org.stellar.sdk.exception;
 
 /** Connection error when trying to connect to federation server. */
 public class ConnectionErrorException extends SdkException {}

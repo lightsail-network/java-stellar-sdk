@@ -1,11 +1,10 @@
 package org.stellar.sdk.federation;
 
-import org.stellar.sdk.federation.exception.ConnectionErrorException;
+import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.federation.exception.FederationServerInvalidException;
 import org.stellar.sdk.federation.exception.MalformedAddressException;
 import org.stellar.sdk.federation.exception.NoFederationServerException;
 import org.stellar.sdk.federation.exception.NotFoundException;
-import org.stellar.sdk.federation.exception.ServerErrorException;
 import org.stellar.sdk.federation.exception.StellarTomlNotFoundInvalidException;
 
 /**
@@ -37,7 +36,6 @@ public class Federation {
    *     HTTPS, etc.)
    * @throws StellarTomlNotFoundInvalidException Stellar.toml file was not found or was malformed.
    * @throws NotFoundException Stellar address not found by federation server
-   * @throws ServerErrorException Federation server responded with error
    * @return FederationResponse
    */
   public static FederationResponse resolve(String value) {
