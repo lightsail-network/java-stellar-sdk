@@ -1,11 +1,11 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SubmitTransactionUnknownResponseException extends RuntimeException {
+public class SubmitTransactionUnknownResponseException extends SdkException {
   private int code;
   private String body;
 

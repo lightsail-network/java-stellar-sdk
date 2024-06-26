@@ -1,6 +1,6 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk.exception;
 
-public class SubmitTransactionTimeoutResponseException extends RuntimeException {
+public class SubmitTransactionTimeoutResponseException extends SdkException {
   @Override
   public String getMessage() {
     return "Timeout. Please resubmit your transaction to receive submission status. More info: https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/timeout/";
