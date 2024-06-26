@@ -12,7 +12,7 @@ public class TooManyRequestsException extends NetworkException {
   private final Integer retryAfter;
 
   public TooManyRequestsException(Integer retryAfter) {
-    super(429, null);
+    super("The rate limit for the requesting IP address is over its allowed limit.", 429, null);
     this.retryAfter = retryAfter;
   }
 

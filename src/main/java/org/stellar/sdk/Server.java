@@ -92,9 +92,11 @@ public class Server implements Closeable {
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
+   * @throws UnknownResponseException if we get an unknown response from the server.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws RequestTimeoutException When the request times out.
    * @throws ConnectionErrorException if the request fails due to an IOException, including but not
    *     limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
   public RootResponse root() {
     TypeToken<RootResponse> type = new TypeToken<RootResponse>() {};

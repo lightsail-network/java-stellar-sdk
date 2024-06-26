@@ -20,7 +20,7 @@ public class BadResponseException extends NetworkException {
    * @param problem The parsed problem details, may be null if parsing failed
    */
   public BadResponseException(int code, String body, Problem problem) {
-    super(code, body);
+    super("Bad Response.", code, body);
     this.problem = problem;
   }
 }

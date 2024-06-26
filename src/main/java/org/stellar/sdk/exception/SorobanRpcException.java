@@ -9,7 +9,7 @@ import lombok.Getter;
  *     Specification - Error object</a>
  */
 @Getter
-public class SorobanRpcException extends SdkException {
+public class SorobanRpcException extends NetworkException {
   private final Integer code;
 
   private final String message;
@@ -17,7 +17,7 @@ public class SorobanRpcException extends SdkException {
   private final String data;
 
   public SorobanRpcException(Integer code, String message, String data) {
-    super(message);
+    super(message, code, data);
     this.code = code;
     this.message = message;
     this.data = data;
