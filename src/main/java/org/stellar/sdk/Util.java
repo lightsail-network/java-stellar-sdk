@@ -189,6 +189,7 @@ public class Util {
    * @return The response object of type T.
    * @throws ConnectionErrorException If there's an error during the HTTP request.
    */
+  // TODO: move to requestBuilder
   public static <T> T executeGetRequest(
       OkHttpClient httpClient, HttpUrl url, TypeToken<T> typeToken) {
     ResponseHandler<T> responseHandler = new ResponseHandler<>(typeToken);

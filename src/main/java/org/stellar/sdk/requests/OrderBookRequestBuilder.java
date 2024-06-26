@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.Util;
+import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.OrderBookResponse;
 
 /** Builds requests connected to order book. */
@@ -34,6 +35,20 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * Requests specific <code>uri</code> and returns {@link OrderBookResponse}.
+   *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
+   * @return {@link OrderBookResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   */
   public static OrderBookResponse execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<OrderBookResponse> type = new TypeToken<OrderBookResponse>() {};
     return Util.executeGetRequest(httpClient, uri, type);
@@ -63,6 +78,18 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
   }
 
+  /**
+   * Build and execute request.
+   *
+   * @return {@link OrderBookResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   */
   public OrderBookResponse execute() {
     return execute(this.httpClient, this.buildUri());
   }

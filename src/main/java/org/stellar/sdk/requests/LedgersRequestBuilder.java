@@ -1,11 +1,8 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.LedgerResponse;
@@ -21,17 +18,18 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link LedgerResponse}. This method is helpful
    * for getting the links.
    *
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link LedgerResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
-  public LedgerResponse ledger(HttpUrl uri) throws IOException {
+  public LedgerResponse ledger(HttpUrl uri) {
     TypeToken<LedgerResponse> type = new TypeToken<LedgerResponse>() {};
-    ResponseHandler<LedgerResponse> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -39,10 +37,16 @@ public class LedgersRequestBuilder extends RequestBuilder {
    *
    * @see <a href="https://developers.stellar.org/api/resources/ledgers/single/">Ledger Details</a>
    * @param ledgerSeq Ledger to fetch
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link LedgerResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
-  public LedgerResponse ledger(long ledgerSeq) throws IOException {
+  public LedgerResponse ledger(long ledgerSeq) {
     this.setSegments("ledgers", String.valueOf(ledgerSeq));
     return this.ledger(this.buildUri());
   }
@@ -51,10 +55,16 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link LedgerResponse}. This
    * method is helpful for getting the next set of results.
    *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link LedgerResponse}
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
    * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
    *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
   public static Page<LedgerResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<LedgerResponse>> type = new TypeToken<Page<LedgerResponse>>() {};

@@ -1,11 +1,8 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.TooManyRequestsException;
@@ -22,28 +19,34 @@ public class OffersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link OfferResponse}. This method is helpful
    * for getting the links.
    *
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link OfferResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
-  public OfferResponse offer(HttpUrl uri) throws IOException {
+  public OfferResponse offer(HttpUrl uri) {
     TypeToken<OfferResponse> type = new TypeToken<OfferResponse>() {};
-    ResponseHandler<OfferResponse> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
   /**
    * The offer details endpoint provides information on a single offer.
    *
    * @param offerId specifies which offer to load.
-   * @return The offer details.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link OfferResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
-  public OfferResponse offer(long offerId) throws IOException {
+  public OfferResponse offer(long offerId) {
     this.setSegments("offers", String.valueOf(offerId));
     return this.offer(this.buildUri());
   }
@@ -100,10 +103,16 @@ public class OffersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link OfferResponse}. This
    * method is helpful for getting the next set of results.
    *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link OfferResponse}
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
    * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
    *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
   public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<OfferResponse>> type = new TypeToken<Page<OfferResponse>>() {};

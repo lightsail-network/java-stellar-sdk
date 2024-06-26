@@ -55,9 +55,18 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
   }
 
   /**
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link PathResponse}.
+   *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
+   * @return {@link Page} of {@link PathResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
    * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
    *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
   public static Page<PathResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<PathResponse>> type = new TypeToken<Page<PathResponse>>() {};

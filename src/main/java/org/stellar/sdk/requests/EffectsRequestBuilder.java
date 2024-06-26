@@ -6,6 +6,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Util;
+import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.effects.EffectResponse;
@@ -91,10 +92,16 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link EffectResponse}. This
    * method is helpful for getting the next set of results.
    *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link EffectResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
+   *     limited to a timeout, connection failure etc.
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
    */
   public static Page<EffectResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<EffectResponse>> type = new TypeToken<Page<EffectResponse>>() {};
