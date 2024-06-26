@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import java.io.IOException;
 import lombok.NonNull;
 import org.stellar.sdk.exception.AssetCodeLengthInvalidException;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.ContractIDPreimage;
 import org.stellar.sdk.xdr.ContractIDPreimageType;
 import org.stellar.sdk.xdr.EnvelopeType;
@@ -156,7 +157,7 @@ public abstract class Asset implements Comparable<Asset> {
    * @param network The network where the asset is located.
    * @return The contract Id for the asset contract.
    */
-  public String getContractId(Network network) throws IOException {
+  public String getContractId(Network network) {
     HashIDPreimage preimage =
         HashIDPreimage.builder()
             .discriminant(EnvelopeType.ENVELOPE_TYPE_CONTRACT_ID)
@@ -170,7 +171,12 @@ public abstract class Asset implements Comparable<Asset> {
                             .build())
                     .build())
             .build();
-    byte[] rawContractId = Util.hash(preimage.toXdrByteArray());
+    byte[] rawContractId = null;
+    try {
+      rawContractId = Util.hash(preimage.toXdrByteArray());
+    } catch (IOException e) {
+      throw new UnexpectedException(e);
+    }
     return StrKey.encodeContract(rawContractId);
   }
 }
