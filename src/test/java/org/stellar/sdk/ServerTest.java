@@ -1,10 +1,6 @@
 package org.stellar.sdk;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -19,8 +15,8 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 import org.stellar.sdk.exception.AccountRequiresMemoException;
 import org.stellar.sdk.exception.BadRequestException;
-import org.stellar.sdk.exception.SubmitTransactionTimeoutResponseException;
-import org.stellar.sdk.exception.SubmitTransactionUnknownResponseException;
+import org.stellar.sdk.exception.BadResponseException;
+import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.operations.AccountMergeOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.ManageDataOperation;
@@ -28,7 +24,7 @@ import org.stellar.sdk.operations.PathPaymentStrictReceiveOperation;
 import org.stellar.sdk.operations.PathPaymentStrictSendOperation;
 import org.stellar.sdk.operations.PaymentOperation;
 import org.stellar.sdk.responses.Page;
-import org.stellar.sdk.responses.SubmitTransactionResponse;
+import org.stellar.sdk.responses.TransactionResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
 public class ServerTest {
@@ -112,7 +108,7 @@ public class ServerTest {
       "{\n"
           + "  \"type\": \"https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/transaction-failed/\",\n"
           + "  \"title\": \"Timeout\",\n"
-          + "  \"status\": 403,\n"
+          + "  \"status\": 504,\n"
           + "  \"detail\": \"TODO\",\n"
           + "  \"instance\": \"horizon-testnet-001.prd.stellar001.internal.stellar-ops.com/IxhaI70Tqo-112305\"\n"
           + "}";
@@ -226,16 +222,14 @@ public class ServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     Server server = new Server(baseUrl.toString());
 
-    SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction(), true);
-    assertTrue(response.isSuccess());
+    TransactionResponse response = server.submitTransaction(this.buildTransaction(), true);
     assertEquals(response.getLedger(), Long.valueOf(826150L));
     assertEquals(
         response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
     assertEquals(
-        response.getEnvelopeXdr().get(),
+        response.getEnvelopeXdr(),
         "AAAAAKu3N77S+cHLEDfVD2eW/CqRiN9yvAKH+qkeLjHQs1u+AAAAZAAMkoMAAAADAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAbYQq8ek1GitmNBUloGnetfWxSpxlsgK48Xi66dIL3MoAAAAAC+vCAAAAAAAAAAAB0LNbvgAAAEDadQ25SNHWTg0L+2wr/KNWd8/EwSNFkX/ncGmBGA3zkNGx7lAow78q8SQmnn2IsdkD9MwICirhsOYDNbaqShwO");
-    assertEquals(response.getResultXdr().get(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=");
-    assertNull(response.getExtras());
+    assertEquals(response.getResultXdr(), "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=");
   }
 
   @Test
@@ -246,27 +240,28 @@ public class ServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     Server server = new Server(baseUrl.toString());
 
-    SubmitTransactionResponse response = server.submitTransaction(this.buildTransaction(), true);
-    assertFalse(response.isSuccess());
-    assertNull(response.getLedger());
-    assertNull(response.getHash());
-    assertEquals(
-        response.getExtras().getEnvelopeXdr(),
-        "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
-    assertEquals(
-        response.getEnvelopeXdr().get(),
-        "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
-    assertEquals(
-        response.getExtras().getResultXdr(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
-    assertEquals(response.getResultXdr().get(), "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
-    assertNotNull(response.getExtras());
-    assertEquals("tx_failed", response.getExtras().getResultCodes().getTransactionResultCode());
-    assertEquals(
-        "op_no_destination",
-        response.getExtras().getResultCodes().getOperationsResultCodes().get(0));
+    try {
+      server.submitTransaction(this.buildTransaction(), true);
+      fail("submitTransaction didn't throw exception");
+    } catch (BadRequestException e) {
+      assertEquals(400, e.getCode());
+      assertEquals(
+          e.getProblem().getExtras().getResultXdr(),
+          "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
+      assertEquals(
+          e.getProblem().getExtras().getEnvelopeXdr(),
+          "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
+      assertEquals(
+          e.getProblem().getExtras().getResultCodes().getTransactionResultCode(), "tx_failed");
+      assertEquals(
+          e.getProblem().getExtras().getResultCodes().getOperationsResultCodes().get(0),
+          "op_no_destination");
+    } catch (Exception e) {
+      fail("submitTransaction thrown invalid exception");
+    }
   }
 
-  @Test(expected = SubmitTransactionTimeoutResponseException.class)
+  @Test(expected = RequestTimeoutException.class)
   public void testSubmitTransactionTimeout() throws IOException, AccountRequiresMemoException {
     MockWebServer mockWebServer = new MockWebServer();
     mockWebServer.enqueue(
@@ -290,7 +285,7 @@ public class ServerTest {
     server.submitTransaction(this.buildTransaction(), true);
   }
 
-  @Test(expected = SubmitTransactionTimeoutResponseException.class)
+  @Test(expected = RequestTimeoutException.class)
   public void testSubmitTransactionTimeoutWithoutResponse()
       throws IOException, AccountRequiresMemoException {
     MockWebServer mockWebServer = new MockWebServer();
@@ -330,7 +325,7 @@ public class ServerTest {
     try {
       server.submitTransaction(this.buildTransaction(), true);
       fail("submitTransaction didn't throw exception");
-    } catch (SubmitTransactionUnknownResponseException e) {
+    } catch (BadResponseException e) {
       assertEquals(500, e.getCode());
     } catch (Exception e) {
       fail("submitTransaction thrown invalid exception");

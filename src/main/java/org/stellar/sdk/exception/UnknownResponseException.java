@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SubmitTransactionUnknownResponseException extends SdkException {
+public class UnknownResponseException extends SdkException {
   private int code;
   private String body;
 

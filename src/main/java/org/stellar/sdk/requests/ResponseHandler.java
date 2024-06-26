@@ -5,8 +5,10 @@ import java.io.IOException;
 import okhttp3.Response;
 import org.stellar.sdk.exception.BadRequestException;
 import org.stellar.sdk.exception.BadResponseException;
+import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.exception.UnexpectedException;
+import org.stellar.sdk.exception.UnknownResponseException;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Problem;
 import org.stellar.sdk.responses.TypedResponse;
@@ -60,10 +62,22 @@ public class ResponseHandler<T> {
       if (response.body() == null) {
         throw new UnexpectedException("Unexpected empty response body");
       }
+
       try {
         content = response.body().string();
       } catch (IOException e) {
         throw new UnexpectedException("Unexpected error reading response", e);
+      }
+
+      if (response.code() >= 200 && response.code() < 300) {
+        T object = GsonSingleton.getInstance().fromJson(content, type.getType());
+        if (object instanceof org.stellar.sdk.responses.Response) {
+          ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
+        }
+        if (object instanceof TypedResponse) {
+          ((TypedResponse<T>) object).setType(type);
+        }
+        return object;
       }
 
       // Other errors
@@ -74,23 +88,20 @@ public class ResponseHandler<T> {
         } catch (Exception e) {
           // if we can't parse the response, we just ignore it
         }
+
         if (response.code() < 500) {
           // Codes in the 4xx range indicate an error that failed given the information provided
           throw new BadRequestException(response.code(), content, problem);
         } else {
           // Codes in the 5xx range indicate an error with the Horizon server.
+          if (response.code() == 504) {
+            throw new RequestTimeoutException();
+          }
           throw new BadResponseException(response.code(), content, problem);
         }
       }
 
-      T object = GsonSingleton.getInstance().fromJson(content, type.getType());
-      if (object instanceof org.stellar.sdk.responses.Response) {
-        ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
-      }
-      if (object instanceof TypedResponse) {
-        ((TypedResponse<T>) object).setType(type);
-      }
-      return object;
+      throw new UnknownResponseException(response.code(), content);
     } finally {
       response.close();
     }

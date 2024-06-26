@@ -13,8 +13,10 @@ import okhttp3.*;
 import okhttp3.Response;
 import org.stellar.sdk.exception.AccountRequiresMemoException;
 import org.stellar.sdk.exception.BadRequestException;
-import org.stellar.sdk.exception.SubmitTransactionTimeoutResponseException;
-import org.stellar.sdk.exception.SubmitTransactionUnknownResponseException;
+import org.stellar.sdk.exception.ConnectionErrorException;
+import org.stellar.sdk.exception.RequestTimeoutException;
+import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.exception.UnknownResponseException;
 import org.stellar.sdk.operations.AccountMergeOperation;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.operations.PathPaymentStrictReceiveOperation;
@@ -47,6 +49,11 @@ public class Server implements Closeable {
   /** ACCOUNT_REQUIRES_MEMO_KEY is the data name described in SEP 29. */
   private static final String ACCOUNT_REQUIRES_MEMO_KEY = "config.memo_required";
 
+  /**
+   * Constructs a new Server object with default HTTP clients.
+   *
+   * @param uri The URI of the Horizon server.
+   */
   public Server(String uri) {
     this(
         uri,
@@ -64,69 +71,109 @@ public class Server implements Closeable {
             .build());
   }
 
+  /**
+   * Constructs a new Server object with custom HTTP clients.
+   *
+   * @param serverURI The URI of the Horizon server.
+   * @param httpClient The OkHttpClient to use for general requests.
+   * @param submitHttpClient The OkHttpClient to use for submitting transactions.
+   */
   public Server(String serverURI, OkHttpClient httpClient, OkHttpClient submitHttpClient) {
     this.serverURI = HttpUrl.parse(serverURI);
     this.httpClient = httpClient;
     this.submitHttpClient = submitHttpClient;
   }
 
-  /** Returns {@link RootResponse}. */
+  /**
+   * Requests the root endpoint from the Horizon server.
+   *
+   * @return {@link RootResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
+   *     limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   */
   public RootResponse root() {
     TypeToken<RootResponse> type = new TypeToken<RootResponse>() {};
     return Util.executeGetRequest(httpClient, serverURI, type);
   }
 
-  /** Returns {@link AccountsRequestBuilder} instance. */
+  /**
+   * @return {@link AccountsRequestBuilder} instance.
+   */
   public AccountsRequestBuilder accounts() {
     return new AccountsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link AssetsRequestBuilder} instance. */
+  /**
+   * @return {@link AssetsRequestBuilder} instance.
+   */
   public AssetsRequestBuilder assets() {
     return new AssetsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link ClaimableBalancesRequestBuilder} instance. */
+  /**
+   * @return {@link ClaimableBalancesRequestBuilder} instance.
+   */
   public ClaimableBalancesRequestBuilder claimableBalances() {
     return new ClaimableBalancesRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link EffectsRequestBuilder} instance. */
+  /**
+   * @return {@link EffectsRequestBuilder} instance.
+   */
   public EffectsRequestBuilder effects() {
     return new EffectsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link LedgersRequestBuilder} instance. */
+  /**
+   * @return {@link LedgersRequestBuilder} instance.
+   */
   public LedgersRequestBuilder ledgers() {
     return new LedgersRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link OffersRequestBuilder} instance. */
+  /**
+   * @return {@link OffersRequestBuilder} instance.
+   */
   public OffersRequestBuilder offers() {
     return new OffersRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link OperationsRequestBuilder} instance. */
+  /**
+   * @return {@link OperationsRequestBuilder} instance.
+   */
   public OperationsRequestBuilder operations() {
     return new OperationsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link FeeStatsResponse} instance. */
+  /**
+   * @return {@link FeeStatsResponse} instance.
+   */
   public FeeStatsRequestBuilder feeStats() {
     return new FeeStatsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link OrderBookRequestBuilder} instance. */
+  /**
+   * @return {@link OrderBookRequestBuilder} instance.
+   */
   public OrderBookRequestBuilder orderBook() {
     return new OrderBookRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link TradesRequestBuilder} instance. */
+  /**
+   * @return {@link TradesRequestBuilder} instance.
+   */
   public TradesRequestBuilder trades() {
     return new TradesRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link TradeAggregationsRequestBuilder} instance. */
+  /**
+   * @return {@link TradeAggregationsRequestBuilder} instance.
+   */
   public TradeAggregationsRequestBuilder tradeAggregations(
       Asset baseAsset,
       Asset counterAsset,
@@ -138,27 +185,37 @@ public class Server implements Closeable {
         httpClient, serverURI, baseAsset, counterAsset, startTime, endTime, resolution, offset);
   }
 
-  /** Returns {@link StrictReceivePathsRequestBuilder} instance. */
+  /**
+   * @return {@link StrictReceivePathsRequestBuilder} instance.
+   */
   public StrictReceivePathsRequestBuilder strictReceivePaths() {
     return new StrictReceivePathsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link StrictSendPathsRequestBuilder} instance. */
+  /**
+   * @return {@link StrictSendPathsRequestBuilder} instance.
+   */
   public StrictSendPathsRequestBuilder strictSendPaths() {
     return new StrictSendPathsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link PaymentsRequestBuilder} instance. */
+  /**
+   * @return {@link PaymentsRequestBuilder} instance.
+   */
   public PaymentsRequestBuilder payments() {
     return new PaymentsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link TransactionsRequestBuilder} instance. */
+  /**
+   * @return {@link TransactionsRequestBuilder} instance.
+   */
   public TransactionsRequestBuilder transactions() {
     return new TransactionsRequestBuilder(httpClient, serverURI);
   }
 
-  /** Returns {@link LiquidityPoolsRequestBuilder} instance. */
+  /**
+   * @return {@link LiquidityPoolsRequestBuilder} instance.
+   */
   public LiquidityPoolsRequestBuilder liquidityPools() {
     return new LiquidityPoolsRequestBuilder(httpClient, serverURI);
   }
@@ -168,43 +225,28 @@ public class Server implements Closeable {
    *
    * @param transactionXdr base64 encoded transaction envelope to submit to the network
    * @return {@link SubmitTransactionResponse}
-   * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code>
-   *     or connection timeout occured.
-   * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occured.
+   * @throws UnknownResponseException When unknown Horizon response is returned.
    * @throws IOException
    */
-  public SubmitTransactionResponse submitTransactionXdr(String transactionXdr) throws IOException {
+  public TransactionResponse submitTransactionXdr(String transactionXdr) {
     HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
     RequestBody requestBody = new FormBody.Builder().add("tx", transactionXdr).build();
     Request submitTransactionRequest =
         new Request.Builder().url(transactionsURI).post(requestBody).build();
+    TypeToken<TransactionResponse> type = new TypeToken<TransactionResponse>() {};
 
-    Response response = null;
-    SubmitTransactionResponse submitTransactionResponse = null;
+    ResponseHandler<TransactionResponse> responseHandler = new ResponseHandler<>(type);
+    Response response;
     try {
       response = this.submitHttpClient.newCall(submitTransactionRequest).execute();
-      switch (response.code()) {
-        case 200:
-        case 400:
-          submitTransactionResponse =
-              GsonSingleton.getInstance()
-                  .fromJson(response.body().string(), SubmitTransactionResponse.class);
-          break;
-        case 504:
-          throw new SubmitTransactionTimeoutResponseException();
-        default:
-          throw new SubmitTransactionUnknownResponseException(
-              response.code(), response.body().string());
-      }
     } catch (SocketTimeoutException e) {
-      throw new SubmitTransactionTimeoutResponseException();
-    } finally {
-      if (response != null) {
-        response.close();
-      }
+      throw new RequestTimeoutException(e);
+    } catch (IOException e) {
+      throw new ConnectionErrorException(e);
     }
-
-    return submitTransactionResponse;
+    return responseHandler.handleResponse(response);
   }
 
   /**
@@ -213,16 +255,15 @@ public class Server implements Closeable {
    * @param transaction transaction to submit to the network
    * @param skipMemoRequiredCheck set to true to skip memoRequiredCheck
    * @return {@link SubmitTransactionResponse}
-   * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code>
-   *     or connection timeout occured.
-   * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occured.
+   * @throws UnknownResponseException When unknown Horizon response is returned.
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws IOException
    */
-  public SubmitTransactionResponse submitTransaction(
-      Transaction transaction, boolean skipMemoRequiredCheck)
-      throws IOException, AccountRequiresMemoException {
+  public TransactionResponse submitTransaction(
+      Transaction transaction, boolean skipMemoRequiredCheck) {
     if (!skipMemoRequiredCheck) {
       checkMemoRequired(transaction);
     }
@@ -235,16 +276,15 @@ public class Server implements Closeable {
    * @param transaction transaction to submit to the network
    * @param skipMemoRequiredCheck set to true to skip memoRequiredCheck
    * @return {@link SubmitTransactionResponse}
-   * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code>
-   *     or connection timeout occured.
-   * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occured.
+   * @throws UnknownResponseException When unknown Horizon response is returned.
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws IOException
    */
-  public SubmitTransactionResponse submitTransaction(
-      FeeBumpTransaction transaction, boolean skipMemoRequiredCheck)
-      throws IOException, AccountRequiresMemoException {
+  public TransactionResponse submitTransaction(
+      FeeBumpTransaction transaction, boolean skipMemoRequiredCheck) {
     if (!skipMemoRequiredCheck) {
       checkMemoRequired(transaction.getInnerTransaction());
     }
@@ -262,15 +302,14 @@ public class Server implements Closeable {
    *
    * @param transaction transaction to submit to the network.
    * @return {@link SubmitTransactionResponse}
-   * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code>
-   *     or connection timeout occured.
-   * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occured.
+   * @throws UnknownResponseException When unknown Horizon response is returned.
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws IOException
    */
-  public SubmitTransactionResponse submitTransaction(Transaction transaction)
-      throws IOException, AccountRequiresMemoException {
+  public TransactionResponse submitTransaction(Transaction transaction) {
     return submitTransaction(transaction, false);
   }
 
@@ -285,15 +324,14 @@ public class Server implements Closeable {
    *
    * @param transaction transaction to submit to the network.
    * @return {@link SubmitTransactionResponse}
-   * @throws SubmitTransactionTimeoutResponseException When Horizon returns a <code>Timeout</code>
-   *     or connection timeout occured.
-   * @throws SubmitTransactionUnknownResponseException When unknown Horizon response is returned.
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occured.
+   * @throws UnknownResponseException When unknown Horizon response is returned.
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws IOException
    */
-  public SubmitTransactionResponse submitTransaction(FeeBumpTransaction transaction)
-      throws IOException, AccountRequiresMemoException {
+  public TransactionResponse submitTransaction(FeeBumpTransaction transaction) {
     return submitTransaction(transaction, false);
   }
 
@@ -312,12 +350,11 @@ public class Server implements Closeable {
    *     account which requires a memo.
    * @throws IOException
    */
-  private void checkMemoRequired(Transaction transaction)
-      throws IOException, AccountRequiresMemoException {
-    if (!(transaction.getMemo() == null || transaction.getMemo().equals(Memo.none()))) {
+  private void checkMemoRequired(Transaction transaction) {
+    if (!transaction.getMemo().equals(Memo.none())) {
       return;
     }
-    Set<String> destinations = new HashSet<String>();
+    Set<String> destinations = new HashSet<>();
     Operation[] operations = transaction.getOperations();
     for (int i = 0; i < operations.length; i++) {
       String destination;
