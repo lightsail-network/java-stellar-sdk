@@ -10,8 +10,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import lombok.NonNull;
-import org.stellar.sdk.exception.FormatException;
 import org.stellar.sdk.exception.NoNetworkSelectedException;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 
@@ -75,7 +75,7 @@ public class TransactionBuilder {
               transaction.getNetwork());
     } catch (IOException e) {
       // This should never happen
-      throw new RuntimeException(e);
+      throw new UnexpectedException(e);
     }
 
     if (!(abstractTransaction instanceof Transaction)) {
@@ -146,7 +146,7 @@ public class TransactionBuilder {
    */
   public TransactionBuilder addMemo(@NonNull Memo memo) {
     if (this.memo != null) {
-      throw new RuntimeException("Memo has been already added.");
+      throw new IllegalArgumentException("Memo has been already added.");
     }
     this.memo = memo;
     return this;
@@ -225,11 +225,11 @@ public class TransactionBuilder {
     preconditions.isValid();
 
     if (baseFee == null) {
-      throw new FormatException("baseFee has to be set. you must call setBaseFee().");
+      throw new IllegalArgumentException("baseFee has to be set. you must call setBaseFee().");
     }
 
     if (network == null) {
-      throw new NoNetworkSelectedException();
+      throw new IllegalArgumentException("network has to be set. you must call setNetwork().");
     }
 
     long sequenceNumber = sourceAccount.getIncrementedSequenceNumber();

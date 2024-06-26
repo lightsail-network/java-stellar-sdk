@@ -3,6 +3,7 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import okhttp3.Response;
+import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.TypedResponse;
 

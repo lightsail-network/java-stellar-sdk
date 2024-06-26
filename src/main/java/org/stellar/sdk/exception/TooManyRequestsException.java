@@ -1,4 +1,4 @@
-package org.stellar.sdk.requests;
+package org.stellar.sdk.exception;
 
 import java.util.Optional;
 
