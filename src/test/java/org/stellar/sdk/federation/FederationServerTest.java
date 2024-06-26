@@ -9,6 +9,7 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.stellar.sdk.federation.exception.NotFoundException;
 
 public class FederationServerTest extends TestCase {
   private final String successResponse =
