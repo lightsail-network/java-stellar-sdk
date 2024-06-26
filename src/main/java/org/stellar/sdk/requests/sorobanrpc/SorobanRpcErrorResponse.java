@@ -9,7 +9,7 @@ import lombok.Getter;
  *     Specification - Error object</a>
  */
 @Getter
-public class SorobanRpcErrorResponse extends Exception {
+public class SorobanRpcErrorResponse extends RuntimeException {
   private final Integer code;
 
   private final String message;

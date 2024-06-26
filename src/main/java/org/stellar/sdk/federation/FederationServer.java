@@ -7,6 +7,13 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import okhttp3.*;
+import org.stellar.sdk.federation.exception.ConnectionErrorException;
+import org.stellar.sdk.federation.exception.FederationServerInvalidException;
+import org.stellar.sdk.federation.exception.MalformedAddressException;
+import org.stellar.sdk.federation.exception.NoFederationServerException;
+import org.stellar.sdk.federation.exception.NotFoundException;
+import org.stellar.sdk.federation.exception.ServerErrorException;
+import org.stellar.sdk.federation.exception.StellarTomlNotFoundInvalidException;
 import org.stellar.sdk.requests.ResponseHandler;
 
 /**

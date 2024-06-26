@@ -1,5 +1,13 @@
 package org.stellar.sdk.federation;
 
+import org.stellar.sdk.federation.exception.ConnectionErrorException;
+import org.stellar.sdk.federation.exception.FederationServerInvalidException;
+import org.stellar.sdk.federation.exception.MalformedAddressException;
+import org.stellar.sdk.federation.exception.NoFederationServerException;
+import org.stellar.sdk.federation.exception.NotFoundException;
+import org.stellar.sdk.federation.exception.ServerErrorException;
+import org.stellar.sdk.federation.exception.StellarTomlNotFoundInvalidException;
+
 /**
  * Helper class for resolving Stellar addresses.
  *
