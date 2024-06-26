@@ -135,7 +135,6 @@ public class FederationServer {
    * @throws MalformedAddressException Address is malformed
    * @throws ConnectionErrorException Connection problems
    * @throws NotFoundException Stellar address not found by federation server
-   * @throws ServerErrorException Federation server responded with error
    * @return FederationResponse
    */
   public FederationResponse resolveAddress(String address) {
