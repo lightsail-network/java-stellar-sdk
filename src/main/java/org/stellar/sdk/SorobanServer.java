@@ -18,6 +18,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.jetbrains.annotations.Nullable;
+import org.stellar.sdk.exception.AccountNotFoundException;
+import org.stellar.sdk.exception.PrepareTransactionException;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.requests.ClientIdentificationInterceptor;

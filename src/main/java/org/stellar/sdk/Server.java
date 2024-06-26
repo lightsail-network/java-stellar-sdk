@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import okhttp3.*;
 import okhttp3.Response;
+import org.stellar.sdk.exception.AccountRequiresMemoException;
 import org.stellar.sdk.operations.AccountMergeOperation;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.operations.PathPaymentStrictReceiveOperation;

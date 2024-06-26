@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
+import org.stellar.sdk.exception.FormatException;
 import org.stellar.sdk.operations.BumpSequenceOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;

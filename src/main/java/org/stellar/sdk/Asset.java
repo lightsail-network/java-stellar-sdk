@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import java.io.IOException;
 import lombok.NonNull;
+import org.stellar.sdk.exception.AssetCodeLengthInvalidException;
 import org.stellar.sdk.xdr.ContractIDPreimage;
 import org.stellar.sdk.xdr.ContractIDPreimageType;
 import org.stellar.sdk.xdr.EnvelopeType;

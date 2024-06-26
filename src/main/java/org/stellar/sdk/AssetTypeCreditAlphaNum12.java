@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import lombok.NonNull;
+import org.stellar.sdk.exception.AssetCodeLengthInvalidException;
 import org.stellar.sdk.xdr.*;
 
 /**

@@ -1,11 +1,11 @@
-package org.stellar.sdk;
+package org.stellar.sdk.exception;
 
 import lombok.Getter;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 
 /** Exception thrown when preparing a transaction failed. */
 @Getter
-public class PrepareTransactionException extends Exception {
+public class PrepareTransactionException extends SdkException {
   // The response returned by the Soroban-RPC instance when simulating the transaction.
   private final SimulateTransactionResponse simulateTransactionResponse;
 

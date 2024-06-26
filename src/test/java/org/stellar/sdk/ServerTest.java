@@ -17,6 +17,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
+import org.stellar.sdk.exception.AccountRequiresMemoException;
 import org.stellar.sdk.operations.AccountMergeOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.ManageDataOperation;

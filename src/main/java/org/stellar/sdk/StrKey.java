@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
+import org.stellar.sdk.exception.FormatException;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;

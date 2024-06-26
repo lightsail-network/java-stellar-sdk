@@ -23,6 +23,8 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.stellar.sdk.exception.AccountNotFoundException;
+import org.stellar.sdk.exception.PrepareTransactionException;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;

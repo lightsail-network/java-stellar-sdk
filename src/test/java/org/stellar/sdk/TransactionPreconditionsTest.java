@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import org.junit.Test;
+import org.stellar.sdk.exception.FormatException;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.PreconditionType;

@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
+import org.stellar.sdk.exception.InvalidSep10ChallengeException;
 import org.stellar.sdk.operations.BumpSequenceOperation;
 import org.stellar.sdk.operations.ManageDataOperation;
 import org.stellar.sdk.operations.Operation;
