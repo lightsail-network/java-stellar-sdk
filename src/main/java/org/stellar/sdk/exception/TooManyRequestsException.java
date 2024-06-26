@@ -8,11 +8,11 @@ import java.util.Optional;
  * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/"
  *     target="_blank">Rate Limiting</a>
  */
-public class TooManyRequestsException extends SdkException {
+public class TooManyRequestsException extends NetworkException {
   private final Integer retryAfter;
 
   public TooManyRequestsException(Integer retryAfter) {
-    super("The rate limit for the requesting IP address is over its allowed limit.");
+    super(429, null);
     this.retryAfter = retryAfter;
   }
 

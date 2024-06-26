@@ -244,7 +244,7 @@ public class ServerTest {
       server.submitTransaction(this.buildTransaction(), true);
       fail("submitTransaction didn't throw exception");
     } catch (BadRequestException e) {
-      assertEquals(400, e.getCode());
+      assertEquals(400, e.getCode().intValue());
       assertEquals(
           e.getProblem().getExtras().getResultXdr(),
           "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
@@ -326,7 +326,7 @@ public class ServerTest {
       server.submitTransaction(this.buildTransaction(), true);
       fail("submitTransaction didn't throw exception");
     } catch (BadResponseException e) {
-      assertEquals(500, e.getCode());
+      assertEquals(500, e.getCode().intValue());
     } catch (Exception e) {
       fail("submitTransaction thrown invalid exception");
     }
@@ -988,14 +988,14 @@ public class ServerTest {
       server.submitTransaction(transaction);
       fail();
     } catch (BadRequestException e) {
-      assertEquals(400, e.getCode());
+      assertEquals(400, e.getCode().intValue());
     }
 
     try {
       server.submitTransaction(feeBump(transaction));
       fail();
     } catch (BadRequestException e) {
-      assertEquals(400, e.getCode());
+      assertEquals(400, e.getCode().intValue());
     }
   }
 

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.exception.AccountNotFoundException;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.PrepareTransactionException;
+import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.SorobanRpcException;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
@@ -539,6 +541,8 @@ public class SorobanServer implements Closeable {
         throw new SorobanRpcException(error.getCode(), error.getMessage(), error.getData());
       }
       return sorobanRpcResponse.getResult();
+    } catch (SocketTimeoutException e) {
+      throw new RequestTimeoutException(e);
     } catch (IOException e) {
       throw new ConnectionErrorException(e);
     }

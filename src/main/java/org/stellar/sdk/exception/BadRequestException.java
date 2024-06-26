@@ -8,13 +8,7 @@ import org.stellar.sdk.responses.Problem;
  * error (4xx HTTP status codes).
  */
 @Getter
-public class BadRequestException extends SdkException {
-  /** The HTTP status code of the response. */
-  private final int code;
-
-  /** The raw body of the response. */
-  private final String body;
-
+public class BadRequestException extends NetworkException {
   /** The parsed problem details, if available. */
   private final Problem problem;
 
@@ -26,9 +20,7 @@ public class BadRequestException extends SdkException {
    * @param problem The parsed problem details, may be null if parsing failed
    */
   public BadRequestException(int code, String body, Problem problem) {
-    super("Bad request.");
-    this.code = code;
-    this.body = body;
+    super(code, body);
     this.problem = problem;
   }
 }
