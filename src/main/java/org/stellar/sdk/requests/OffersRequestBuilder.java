@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
@@ -101,18 +102,12 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OfferResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<OfferResponse>> type = new TypeToken<Page<OfferResponse>>() {};
-    ResponseHandler<Page<OfferResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -144,10 +139,10 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OfferResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public Page<OfferResponse> execute() throws IOException, TooManyRequestsException {
+  public Page<OfferResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 

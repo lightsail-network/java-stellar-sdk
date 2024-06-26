@@ -204,7 +204,7 @@ public class TransactionPreconditionsTest {
     try {
       preconditions.isValid();
       fail();
-    } catch (FormatException ignored) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -222,7 +222,7 @@ public class TransactionPreconditionsTest {
     try {
       preconditions.isValid();
       fail();
-    } catch (FormatException ignored) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -232,7 +232,7 @@ public class TransactionPreconditionsTest {
     try {
       preconditions.isValid();
       fail();
-    } catch (FormatException exception) {
+    } catch (IllegalArgumentException exception) {
       assertTrue(exception.getMessage().contains("Invalid preconditions, must define timebounds"));
     }
   }

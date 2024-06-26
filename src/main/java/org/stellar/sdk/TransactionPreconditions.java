@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
-import org.stellar.sdk.exception.FormatException;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.PreconditionType;
@@ -61,11 +60,11 @@ public class TransactionPreconditions {
 
   public void isValid() {
     if (timeBounds == null) {
-      throw new FormatException("Invalid preconditions, must define timebounds");
+      throw new IllegalArgumentException("Invalid preconditions, must define timebounds");
     }
 
     if (extraSigners.size() > MAX_EXTRA_SIGNERS_COUNT) {
-      throw new FormatException(
+      throw new IllegalArgumentException(
           "Invalid preconditions, too many extra signers, can only have up to "
               + MAX_EXTRA_SIGNERS_COUNT);
     }

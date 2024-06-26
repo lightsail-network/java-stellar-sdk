@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
@@ -128,18 +129,12 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link TransactionResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public static Page<TransactionResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  public static Page<TransactionResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<TransactionResponse>> type = new TypeToken<Page<TransactionResponse>>() {};
-    ResponseHandler<Page<TransactionResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -172,10 +167,10 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link TransactionResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public Page<TransactionResponse> execute() throws IOException, TooManyRequestsException {
+  public Page<TransactionResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 

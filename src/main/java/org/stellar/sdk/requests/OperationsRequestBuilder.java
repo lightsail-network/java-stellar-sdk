@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
@@ -169,18 +170,12 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OperationResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public static Page<OperationResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  public static Page<OperationResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<OperationResponse>> type = new TypeToken<Page<OperationResponse>>() {};
-    ResponseHandler<Page<OperationResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -212,10 +207,10 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OperationResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public Page<OperationResponse> execute() throws IOException, TooManyRequestsException {
+  public Page<OperationResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 

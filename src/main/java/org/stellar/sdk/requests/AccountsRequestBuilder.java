@@ -1,13 +1,12 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.Util;
+import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
@@ -27,17 +26,17 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link AccountResponse}. This method is helpful
    * for getting the links.
    *
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
+   *     limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
-  public AccountResponse account(HttpUrl uri) throws IOException {
+  public AccountResponse account(HttpUrl uri) {
     TypeToken<AccountResponse> type = new TypeToken<AccountResponse>() {};
-    ResponseHandler<AccountResponse> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -46,10 +45,15 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/accounts/single/">Account
    *     Details</a>
    * @param account Account to fetch
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
+   *     limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
-  public AccountResponse account(String account) throws IOException {
+  public AccountResponse account(String account) {
     this.setSegments("accounts", account);
     return this.account(this.buildUri());
   }
@@ -63,13 +67,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    */
   public AccountsRequestBuilder forSigner(String signer) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both asset and signer");
+      throw new IllegalArgumentException("cannot set both asset and signer");
     }
     if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both liquidity_pool and signer");
+      throw new IllegalArgumentException("cannot set both liquidity_pool and signer");
     }
     if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both sponsor and signer");
+      throw new IllegalArgumentException("cannot set both sponsor and signer");
     }
     uriBuilder.setQueryParameter(SIGNER_PARAMETER_NAME, signer);
     return this;
@@ -84,13 +88,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    */
   public AccountsRequestBuilder forAsset(AssetTypeCreditAlphaNum asset) {
     if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both liquidity_pool and asset");
+      throw new IllegalArgumentException("cannot set both liquidity_pool and asset");
     }
     if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both signer and asset");
+      throw new IllegalArgumentException("cannot set both signer and asset");
     }
     if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both sponsor and asset");
+      throw new IllegalArgumentException("cannot set both sponsor and asset");
     }
     setAssetParameter(ASSET_PARAMETER_NAME, asset);
     return this;
@@ -116,13 +120,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    */
   public AccountsRequestBuilder forLiquidityPool(String liquidityPoolID) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both asset and liquidity_pool");
+      throw new IllegalArgumentException("cannot set both asset and liquidity_pool");
     }
     if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both signer and liquidity_pool");
+      throw new IllegalArgumentException("cannot set both signer and liquidity_pool");
     }
     if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both sponsor and liquidity_pool");
+      throw new IllegalArgumentException("cannot set both sponsor and liquidity_pool");
     }
     uriBuilder.setQueryParameter(LIQUIDITY_POOL_PARAMETER_NAME, liquidityPoolID);
     return this;
@@ -138,13 +142,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    */
   public AccountsRequestBuilder forSponsor(String sponsor) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both asset and sponsor");
+      throw new IllegalArgumentException("cannot set both asset and sponsor");
     }
     if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both liquidity_pool and sponsor");
+      throw new IllegalArgumentException("cannot set both liquidity_pool and sponsor");
     }
     if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
-      throw new RuntimeException("cannot set both signer and sponsor");
+      throw new IllegalArgumentException("cannot set both signer and sponsor");
     }
     uriBuilder.setQueryParameter(SPONSOR_PARAMETER_NAME, sponsor);
     return this;
@@ -155,19 +159,17 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * method is helpful for getting the next set of results.
    *
    * @return {@link Page} of {@link AccountResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
+   *     limited to a timeout, connection failure etc.
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
    */
-  public static Page<AccountResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  public static Page<AccountResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<AccountResponse>> type = new TypeToken<Page<AccountResponse>>() {};
-    ResponseHandler<Page<AccountResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -199,11 +201,15 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * will contain only <code>keypair</code> field.
    *
    * @return {@link Page} of {@link AccountResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
+   *     limited to a timeout, connection failure etc.
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
    */
-  public Page<AccountResponse> execute() throws IOException, TooManyRequestsException {
+  public Page<AccountResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 

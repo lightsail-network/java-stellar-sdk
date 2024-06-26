@@ -256,7 +256,7 @@ public class TransactionBuilderTest {
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .build();
       fail();
-    } catch (FormatException ignored) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -543,7 +543,7 @@ public class TransactionBuilderTest {
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .build();
       fail();
-    } catch (FormatException ignored) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 

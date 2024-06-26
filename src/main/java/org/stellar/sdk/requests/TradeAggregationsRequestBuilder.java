@@ -1,14 +1,11 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.Util;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeAggregationResponse;
 
@@ -51,19 +48,13 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
     }
   }
 
-  public static Page<TradeAggregationResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  public static Page<TradeAggregationResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<TradeAggregationResponse>> type =
         new TypeToken<Page<TradeAggregationResponse>>() {};
-    ResponseHandler<Page<TradeAggregationResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
-  public Page<TradeAggregationResponse> execute() throws IOException, TooManyRequestsException {
+  public Page<TradeAggregationResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 }

@@ -1,11 +1,18 @@
 package org.stellar.sdk;
 
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.UnexpectedException;
+import org.stellar.sdk.requests.ResponseHandler;
 
 /**
  * Utility class for common operations.
@@ -170,5 +177,29 @@ public class Util {
     } catch (IOException e) {
       throw new UnexpectedException("Unable to parse XDR string", e);
     }
+  }
+
+  /**
+   * Executes a GET request and handles the response.
+   *
+   * @param <T> The type of the response object.
+   * @param httpClient The OkHttpClient to use for the request.
+   * @param url The URL to send the GET request to.
+   * @param typeToken The TypeToken representing the type of the response.
+   * @return The response object of type T.
+   * @throws ConnectionErrorException If there's an error during the HTTP request.
+   */
+  public static <T> T executeGetRequest(
+      OkHttpClient httpClient, HttpUrl url, TypeToken<T> typeToken) {
+    ResponseHandler<T> responseHandler = new ResponseHandler<>(typeToken);
+
+    Request request = new Request.Builder().get().url(url).build();
+    Response response = null;
+    try {
+      response = httpClient.newCall(request).execute();
+    } catch (IOException e) {
+      throw new ConnectionErrorException(e);
+    }
+    return responseHandler.handleResponse(response);
   }
 }

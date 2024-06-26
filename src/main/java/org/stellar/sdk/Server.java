@@ -71,14 +71,9 @@ public class Server implements Closeable {
   }
 
   /** Returns {@link RootResponse}. */
-  public RootResponse root() throws IOException {
+  public RootResponse root() {
     TypeToken<RootResponse> type = new TypeToken<RootResponse>() {};
-    ResponseHandler<RootResponse> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(serverURI).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, serverURI, type);
   }
 
   /** Returns {@link AccountsRequestBuilder} instance. */

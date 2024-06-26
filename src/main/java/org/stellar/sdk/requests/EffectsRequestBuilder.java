@@ -1,13 +1,11 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.effects.EffectResponse;
@@ -95,18 +93,12 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link EffectResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public static Page<EffectResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  public static Page<EffectResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<EffectResponse>> type = new TypeToken<Page<EffectResponse>>() {};
-    ResponseHandler<Page<EffectResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return Util.executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -138,10 +130,10 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link EffectResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public Page<EffectResponse> execute() throws IOException, TooManyRequestsException {
+  public Page<EffectResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 
