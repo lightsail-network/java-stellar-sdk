@@ -58,6 +58,10 @@ public class ResponseHandler<T> {
         throw new TooManyRequestsException(retryAfter);
       }
 
+      if (response.code() == 504) {
+        throw new RequestTimeoutException();
+      }
+
       String content = null;
       if (response.body() == null) {
         throw new UnexpectedException("Unexpected empty response body");
@@ -94,9 +98,6 @@ public class ResponseHandler<T> {
           throw new BadRequestException(response.code(), content, problem);
         } else {
           // Codes in the 5xx range indicate an error with the Horizon server.
-          if (response.code() == 504) {
-            throw new RequestTimeoutException();
-          }
           throw new BadResponseException(response.code(), content, problem);
         }
       }
