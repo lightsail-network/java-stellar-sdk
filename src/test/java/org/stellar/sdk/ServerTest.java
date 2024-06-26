@@ -18,17 +18,17 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 import org.stellar.sdk.exception.AccountRequiresMemoException;
+import org.stellar.sdk.exception.BadRequestException;
+import org.stellar.sdk.exception.SubmitTransactionTimeoutResponseException;
+import org.stellar.sdk.exception.SubmitTransactionUnknownResponseException;
 import org.stellar.sdk.operations.AccountMergeOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.ManageDataOperation;
 import org.stellar.sdk.operations.PathPaymentStrictReceiveOperation;
 import org.stellar.sdk.operations.PathPaymentStrictSendOperation;
 import org.stellar.sdk.operations.PaymentOperation;
-import org.stellar.sdk.requests.ErrorResponse;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.SubmitTransactionResponse;
-import org.stellar.sdk.exception.SubmitTransactionTimeoutResponseException;
-import org.stellar.sdk.exception.SubmitTransactionUnknownResponseException;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
 public class ServerTest {
@@ -992,14 +992,14 @@ public class ServerTest {
     try {
       server.submitTransaction(transaction);
       fail();
-    } catch (ErrorResponse e) {
+    } catch (BadRequestException e) {
       assertEquals(400, e.getCode());
     }
 
     try {
       server.submitTransaction(feeBump(transaction));
       fail();
-    } catch (ErrorResponse e) {
+    } catch (BadRequestException e) {
       assertEquals(400, e.getCode());
     }
   }

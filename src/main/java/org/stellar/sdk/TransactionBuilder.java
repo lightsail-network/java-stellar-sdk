@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import lombok.NonNull;
-import org.stellar.sdk.exception.NoNetworkSelectedException;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.xdr.SorobanTransactionData;

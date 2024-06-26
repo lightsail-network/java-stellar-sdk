@@ -12,6 +12,7 @@ import lombok.Setter;
 import okhttp3.*;
 import okhttp3.Response;
 import org.stellar.sdk.exception.AccountRequiresMemoException;
+import org.stellar.sdk.exception.BadRequestException;
 import org.stellar.sdk.exception.SubmitTransactionTimeoutResponseException;
 import org.stellar.sdk.exception.SubmitTransactionUnknownResponseException;
 import org.stellar.sdk.operations.AccountMergeOperation;
@@ -345,7 +346,7 @@ public class Server implements Closeable {
       AccountResponse.Data data;
       try {
         data = this.accounts().account(destination).getData();
-      } catch (ErrorResponse e) {
+      } catch (BadRequestException e) {
         if (e.getCode() == 404) {
           continue;
         }
