@@ -1,4 +1,4 @@
-package org.stellar.sdk.requests.sorobanrpc;
+package org.stellar.sdk.exception;
 
 import lombok.Getter;
 
@@ -9,14 +9,14 @@ import lombok.Getter;
  *     Specification - Error object</a>
  */
 @Getter
-public class SorobanRpcErrorResponse extends RuntimeException {
+public class SorobanRpcException extends SdkException {
   private final Integer code;
 
   private final String message;
 
   private final String data;
 
-  public SorobanRpcErrorResponse(Integer code, String message, String data) {
+  public SorobanRpcException(Integer code, String message, String data) {
     super(message);
     this.code = code;
     this.message = message;

@@ -19,7 +19,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.exception.AccountNotFoundException;
+import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.PrepareTransactionException;
+import org.stellar.sdk.exception.SorobanRpcException;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.requests.ClientIdentificationInterceptor;
@@ -29,7 +31,6 @@ import org.stellar.sdk.requests.sorobanrpc.GetLedgerEntriesRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
-import org.stellar.sdk.requests.sorobanrpc.SorobanRpcErrorResponse;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
 import org.stellar.sdk.responses.sorobanrpc.GetEventsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
@@ -94,15 +95,14 @@ public class SorobanServer implements Closeable {
    * @param accountId The public address of the account to load.
    * @return An {@link Account} object containing the sequence number and current state of the
    *     account.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
    * @throws AccountNotFoundException If the account does not exist on the network. You may need to
    *     fund it first.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
    */
-  public TransactionBuilderAccount getAccount(String accountId)
-      throws IOException, AccountNotFoundException, SorobanRpcErrorResponse {
+  public TransactionBuilderAccount getAccount(String accountId) {
     LedgerKey.LedgerKeyAccount ledgerKeyAccount =
         LedgerKey.LedgerKeyAccount.builder()
             .accountID(KeyPair.fromAccountId(accountId).getXdrAccountId())
@@ -129,15 +129,15 @@ public class SorobanServer implements Closeable {
   /**
    * General node health check.
    *
+   * @return A {@link GetHealthResponse} object containing the health check result.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
    * @see <a href="https://soroban.stellar.org/api/methods/getHealth" target="_blank">getHealth
    *     documentation</a>
-   * @return A {@link GetHealthResponse} object containing the health check result.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
    */
-  public GetHealthResponse getHealth() throws IOException, SorobanRpcErrorResponse {
+  public GetHealthResponse getHealth() {
     return this.<Void, GetHealthResponse>sendRequest(
         "getHealth", null, new TypeToken<SorobanRpcResponse<GetHealthResponse>>() {});
   }
@@ -152,14 +152,13 @@ public class SorobanServer implements Closeable {
    *     {@link Durability#TEMPORARY} or {@link Durability#PERSISTENT}.
    * @return A {@link GetLedgerEntriesResponse.LedgerEntryResult} object containing the ledger entry
    *     result.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
    */
   public Optional<GetLedgerEntriesResponse.LedgerEntryResult> getContractData(
-      String contractId, SCVal key, Durability durability)
-      throws IOException, SorobanRpcErrorResponse {
+      String contractId, SCVal key, Durability durability) {
 
     ContractDataDurability contractDataDurability;
     switch (durability) {
@@ -202,17 +201,16 @@ public class SorobanServer implements Closeable {
    * <p>Allows you to directly inspect the current state of contracts, contract's code, or any other
    * ledger entries.
    *
-   * @see <a href="https://soroban.stellar.org/api/methods/getLedgerEntries"
-   *     target="_blank">getLedgerEntries documentation</a>
    * @param keys The key of the contract data to load, at least one key must be provided.
    * @return A {@link GetLedgerEntriesResponse} object containing the current values.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
+   * @throws IllegalArgumentException If the keys collection is empty or invalid.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @see <a href="https://soroban.stellar.org/api/methods/getLedgerEntries"
+   *     target="_blank">getLedgerEntries documentation</a>
    */
-  public GetLedgerEntriesResponse getLedgerEntries(Collection<LedgerKey> keys)
-      throws IOException, SorobanRpcErrorResponse {
+  public GetLedgerEntriesResponse getLedgerEntries(Collection<LedgerKey> keys) {
     if (keys.isEmpty()) {
       throw new IllegalArgumentException("At least one key must be provided.");
     }
@@ -240,18 +238,17 @@ public class SorobanServer implements Closeable {
    * <p>When submitting a transaction, client should poll this to tell when the transaction has
    * completed.
    *
-   * @see <a href="https://soroban.stellar.org/api/methods/getTransaction"
-   *     target="_blank">getTransaction documentation</a>
    * @param hash The hash of the transaction to check. Encoded as a hex string.
    * @return A {@link GetTransactionResponse} object containing the transaction status, result, and
    *     other details.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @see <a href="https://soroban.stellar.org/api/methods/getTransaction"
+   *     target="_blank">getTransaction documentation</a>
    */
-  public GetTransactionResponse getTransaction(String hash)
-      throws IOException, SorobanRpcErrorResponse {
+  public GetTransactionResponse getTransaction(String hash) {
     GetTransactionRequest params = new GetTransactionRequest(hash);
     return this.sendRequest(
         "getTransaction", params, new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {});
@@ -260,17 +257,16 @@ public class SorobanServer implements Closeable {
   /**
    * Fetches all events that match the given {@link GetEventsRequest}.
    *
-   * @see <a href="https://soroban.stellar.org/api/methods/getEvents" target="_blank">getEvents
-   *     documentation</a>
    * @param getEventsRequest The {@link GetEventsRequest} to use for the request.
    * @return A {@link GetEventsResponse} object containing the events that match the request.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @see <a href="https://soroban.stellar.org/api/methods/getEvents" target="_blank">getEvents
+   *     documentation</a>
    */
-  public GetEventsResponse getEvents(GetEventsRequest getEventsRequest)
-      throws IOException, SorobanRpcErrorResponse {
+  public GetEventsResponse getEvents(GetEventsRequest getEventsRequest) {
     return this.sendRequest(
         "getEvents", getEventsRequest, new TypeToken<SorobanRpcResponse<GetEventsResponse>>() {});
   }
@@ -278,15 +274,15 @@ public class SorobanServer implements Closeable {
   /**
    * Fetches metadata about the network which Soroban-RPC is connected to.
    *
+   * @return A {@link GetNetworkResponse} object containing the network metadata.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
    * @see <a href="https://soroban.stellar.org/api/methods/getNetwork" target="_blank">getNetwork
    *     documentation</a>
-   * @return A {@link GetNetworkResponse} object containing the network metadata.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
    */
-  public GetNetworkResponse getNetwork() throws IOException, SorobanRpcErrorResponse {
+  public GetNetworkResponse getNetwork() {
     return this.<Void, GetNetworkResponse>sendRequest(
         "getNetwork", null, new TypeToken<SorobanRpcResponse<GetNetworkResponse>>() {});
   }
@@ -294,15 +290,15 @@ public class SorobanServer implements Closeable {
   /**
    * Fetches the latest ledger meta info from network which Soroban-RPC is connected to.
    *
+   * @return A {@link GetLatestLedgerResponse} object containing the latest ledger meta info.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
    * @see <a href="https://soroban.stellar.org/api/methods/getLatestLedger"
    *     target="_blank">getLatestLedger documentation</a>
-   * @return A {@link GetLatestLedgerResponse} object containing the latest ledger meta info.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
    */
-  public GetLatestLedgerResponse getLatestLedger() throws IOException, SorobanRpcErrorResponse {
+  public GetLatestLedgerResponse getLatestLedger() {
     return this.<Void, GetLatestLedgerResponse>sendRequest(
         "getLatestLedger", null, new TypeToken<SorobanRpcResponse<GetLatestLedgerResponse>>() {});
   }
@@ -311,8 +307,6 @@ public class SorobanServer implements Closeable {
    * Submit a trial contract invocation to get back return values, expected ledger footprint,
    * expected authorizations, and expected costs.
    *
-   * @see <a href="https://soroban.stellar.org/api/methods/simulateTransaction"
-   *     target="_blank">simulateTransaction documentation</a>
    * @param transaction The transaction to simulate. It should include exactly one operation, which
    *     must be one of {@link InvokeHostFunctionOperation}, {@link
    *     org.stellar.sdk.operations.ExtendFootprintTTLOperation}, or {@link
@@ -321,14 +315,15 @@ public class SorobanServer implements Closeable {
    * @param resourceConfig Additional resource include in the simulation.
    * @return A {@link SimulateTransactionResponse} object containing the cost, footprint,
    *     result/auth requirements (if applicable), and error of the transaction.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @see <a href="https://soroban.stellar.org/api/methods/simulateTransaction"
+   *     target="_blank">simulateTransaction documentation</a>
    */
   public SimulateTransactionResponse simulateTransaction(
-      Transaction transaction, @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig)
-      throws IOException, SorobanRpcErrorResponse {
+      Transaction transaction, @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig) {
     // TODO: In the future, it may be necessary to consider FeeBumpTransaction.
     SimulateTransactionRequest params =
         new SimulateTransactionRequest(transaction.toEnvelopeXdrBase64(), resourceConfig);
@@ -342,8 +337,7 @@ public class SorobanServer implements Closeable {
    * An alias for {@link #simulateTransaction(Transaction,
    * SimulateTransactionRequest.ResourceConfig)} with no resource leeway.
    */
-  public SimulateTransactionResponse simulateTransaction(Transaction transaction)
-      throws IOException, SorobanRpcErrorResponse {
+  public SimulateTransactionResponse simulateTransaction(Transaction transaction) {
     return simulateTransaction(transaction, null);
   }
 
@@ -374,13 +368,12 @@ public class SorobanServer implements Closeable {
    *     case of invocation) and ledger footprint added. The transaction fee will also automatically
    *     be padded with the contract's minimum resource fees discovered from the simulation.
    * @throws PrepareTransactionException If preparing the transaction fails.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
    */
-  public Transaction prepareTransaction(Transaction transaction)
-      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+  public Transaction prepareTransaction(Transaction transaction) {
     SimulateTransactionResponse simulateTransactionResponse = simulateTransaction(transaction);
     return prepareTransaction(transaction, simulateTransactionResponse);
   }
@@ -413,8 +406,7 @@ public class SorobanServer implements Closeable {
    * @throws PrepareTransactionException If preparing the transaction fails.
    */
   public Transaction prepareTransaction(
-      Transaction transaction, SimulateTransactionResponse simulateTransactionResponse)
-      throws PrepareTransactionException {
+      Transaction transaction, SimulateTransactionResponse simulateTransactionResponse) {
     if (simulateTransactionResponse.getError() != null) {
       throw new PrepareTransactionException(
           "simulation transaction failed, the response contains error information.",
@@ -429,18 +421,17 @@ public class SorobanServer implements Closeable {
    * validates the transaction and enqueues it. Clients should call {@link
    * SorobanServer#getTransaction} to learn about transaction's status.
    *
-   * @see <a href="https://soroban.stellar.org/api/methods/sendTransaction"
-   *     target="_blank">sendTransaction documentation</a>
    * @param transaction The transaction to submit.
    * @return A {@link SendTransactionResponse} object containing some details about the transaction
    *     that was submitted.
-   * @throws IOException If the request could not be executed due to cancellation, a connectivity
-   *     problem or timeout. Because networks can fail during an exchange, it is possible that the
-   *     remote server accepted the request before the failure.
-   * @throws SorobanRpcErrorResponse If the Soroban-RPC instance returns an error response.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @see <a href="https://soroban.stellar.org/api/methods/sendTransaction"
+   *     target="_blank">sendTransaction documentation</a>
    */
-  public SendTransactionResponse sendTransaction(Transaction transaction)
-      throws IOException, SorobanRpcErrorResponse {
+  public SendTransactionResponse sendTransaction(Transaction transaction) {
     // TODO: In the future, it may be necessary to consider FeeBumpTransaction.
     SendTransactionRequest params = new SendTransactionRequest(transaction.toEnvelopeXdrBase64());
     return this.sendRequest(
@@ -517,9 +508,22 @@ public class SorobanServer implements Closeable {
         transaction.getNetwork());
   }
 
+  /**
+   * Sends a request to the Soroban-RPC instance.
+   *
+   * @param method The method to call.
+   * @param params The parameters to send.
+   * @param responseType The response type to expect.
+   * @param <T> The type of the request parameters.
+   * @param <R> The type of the response result.
+   * @return The response from the Soroban-RPC instance.
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @throws ConnectionErrorException If the request could not be executed due to cancellation, a
+   *     connectivity problem or timeout. Because networks can fail during an exchange, it is
+   *     possible that the remote server accepted the request before the failure.
+   */
   private <T, R> R sendRequest(
-      String method, @Nullable T params, TypeToken<SorobanRpcResponse<R>> responseType)
-      throws IOException, SorobanRpcErrorResponse {
+      String method, @Nullable T params, TypeToken<SorobanRpcResponse<R>> responseType) {
     String requestId = generateRequestId();
     ResponseHandler<SorobanRpcResponse<R>> responseHandler = new ResponseHandler<>(responseType);
     SorobanRpcRequest<T> sorobanRpcRequest = new SorobanRpcRequest<>(requestId, method, params);
@@ -532,9 +536,11 @@ public class SorobanServer implements Closeable {
       SorobanRpcResponse<R> sorobanRpcResponse = responseHandler.handleResponse(response);
       if (sorobanRpcResponse.getError() != null) {
         SorobanRpcResponse.Error error = sorobanRpcResponse.getError();
-        throw new SorobanRpcErrorResponse(error.getCode(), error.getMessage(), error.getData());
+        throw new SorobanRpcException(error.getCode(), error.getMessage(), error.getData());
       }
       return sorobanRpcResponse.getResult();
+    } catch (IOException e) {
+      throw new ConnectionErrorException(e);
     }
   }
 

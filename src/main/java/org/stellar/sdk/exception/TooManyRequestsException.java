@@ -8,7 +8,7 @@ import java.util.Optional;
  * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/"
  *     target="_blank">Rate Limiting</a>
  */
-public class TooManyRequestsException extends RuntimeException {
+public class TooManyRequestsException extends SdkException {
   private final Integer retryAfter;
 
   public TooManyRequestsException(Integer retryAfter) {

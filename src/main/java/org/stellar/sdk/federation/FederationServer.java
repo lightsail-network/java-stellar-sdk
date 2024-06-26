@@ -120,7 +120,7 @@ public class FederationServer {
 
       return new FederationServer(federationServer, domain);
     } catch (IOException e) {
-      throw new ConnectionErrorException();
+      throw new ConnectionErrorException(e);
     } finally {
       if (response != null) {
         response.close();
@@ -162,7 +162,7 @@ public class FederationServer {
 
       return responseHandler.handleResponse(response);
     } catch (IOException e) {
-      throw new ConnectionErrorException();
+      throw new ConnectionErrorException(e);
     } finally {
       if (response != null) {
         response.close();
