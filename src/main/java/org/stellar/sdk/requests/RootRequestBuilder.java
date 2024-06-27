@@ -9,7 +9,7 @@ import org.stellar.sdk.responses.RootResponse;
 /** Builds requests connected to root. */
 public class RootRequestBuilder extends RequestBuilder {
   public RootRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "root");
+    super(httpClient, serverURI, "/");
   }
 
   /**
