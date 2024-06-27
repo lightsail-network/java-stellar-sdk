@@ -8,6 +8,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.stellar.sdk.federation.exception.MalformedAddressException;
 
 public class FederationTest extends TestCase {
   @Before

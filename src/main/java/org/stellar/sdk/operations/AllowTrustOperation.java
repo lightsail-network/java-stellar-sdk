@@ -113,7 +113,7 @@ public class AllowTrustOperation extends Operation {
           assetCode = new String(op.getAsset().getAssetCode12().getAssetCode12()).trim();
           break;
         default:
-          throw new RuntimeException("Unknown asset code");
+          throw new IllegalArgumentException("Unknown asset code");
       }
 
       int flag = op.getAuthorize().getUint32().getNumber().intValue();

@@ -19,6 +19,7 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.PublicKey;
@@ -78,8 +79,8 @@ public class KeyPair {
    * <strong>Insecure</strong> Creates a new Stellar KeyPair from a strkey encoded Stellar secret
    * seed. This method is <u>insecure</u>. Use only if you are aware of security implications.
    *
-   * @see <a
-   *     href="http://docs.oracle.com/javase/1.5.0/docs/guide/security/jce/JCERefGuide.html#PBEEx"
+   * @see <a href=
+   *     "http://docs.oracle.com/javase/1.5.0/docs/guide/security/jce/JCERefGuide.html#PBEEx"
    *     target="_blank">Using Password-Based Encryption</a>
    * @param seed The strkey encoded Stellar secret seed.
    * @return {@link KeyPair}
@@ -127,14 +128,14 @@ public class KeyPair {
     try {
       publicKeySpec = new EdDSAPublicKeySpec(publicKey, ed25519);
     } catch (IllegalArgumentException e) {
-      throw new RuntimeException("Public key is invalid");
+      throw new IllegalArgumentException("Public key is invalid", e);
     }
     return new KeyPair(new EdDSAPublicKey(publicKeySpec));
   }
 
   /**
-   * Finds the KeyPair for the path m/44'/148'/accountNumber' using the method described in <a
-   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md">SEP-0005</a>.
+   * Finds the KeyPair for the path m/44'/148'/accountNumber' using the method described in <a href=
+   * "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md">SEP-0005</a>.
    *
    * @param bip39Seed The output of BIP0039
    * @param accountNumber The number of the account
@@ -145,7 +146,7 @@ public class KeyPair {
       return KeyPair.fromSecretSeed(
           SLIP10.deriveEd25519PrivateKey(bip39Seed, 44, 148, accountNumber));
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new UnexpectedException(e);
     }
   }
 
@@ -182,12 +183,11 @@ public class KeyPair {
       byte[] publicKeyBytes = publicKeyBytesStream.toByteArray();
       byte[] signatureHintBytes =
           Arrays.copyOfRange(publicKeyBytes, publicKeyBytes.length - 4, publicKeyBytes.length);
-
       SignatureHint signatureHint = new SignatureHint();
       signatureHint.setSignatureHint(signatureHintBytes);
       return signatureHint;
     } catch (IOException e) {
-      throw new AssertionError(e);
+      throw new UnexpectedException(e);
     }
   }
 
@@ -231,7 +231,7 @@ public class KeyPair {
    */
   public byte[] sign(byte[] data) {
     if (privateKey == null) {
-      throw new RuntimeException(
+      throw new IllegalArgumentException(
           "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
     }
     try {
@@ -240,7 +240,7 @@ public class KeyPair {
       sgr.update(data);
       return sgr.sign();
     } catch (GeneralSecurityException e) {
-      throw new RuntimeException(e);
+      throw new UnexpectedException(e);
     }
   }
 
@@ -264,8 +264,8 @@ public class KeyPair {
 
   /**
    * Sign the provided payload data for payload signer where the input is the data being signed. Per
-   * the <a
-   * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint">CAP-40
+   * the <a href=
+   * "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#signature-hint">CAP-40
    * Signature spec</a> {@link DecoratedSignature}.
    *
    * @param signerPayload the payload signers raw data to sign
@@ -307,7 +307,7 @@ public class KeyPair {
     } catch (SignatureException e) {
       return false;
     } catch (GeneralSecurityException e) {
-      throw new RuntimeException(e);
+      throw new UnexpectedException(e);
     }
   }
 }

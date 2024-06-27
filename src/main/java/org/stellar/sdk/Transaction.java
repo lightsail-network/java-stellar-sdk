@@ -1,10 +1,10 @@
 package org.stellar.sdk;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.NonNull;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.operations.CreateClaimableBalanceOperation;
 import org.stellar.sdk.operations.ExtendFootprintTTLOperation;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
@@ -26,7 +26,6 @@ import org.stellar.sdk.xdr.TransactionV0;
 import org.stellar.sdk.xdr.TransactionV0Envelope;
 import org.stellar.sdk.xdr.TransactionV1Envelope;
 import org.stellar.sdk.xdr.Uint32;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 /**
@@ -80,7 +79,8 @@ public class Transaction extends AbstractTransaction {
     this.sorobanData = sorobanData != null ? new SorobanDataBuilder(sorobanData).build() : null;
   }
 
-  // setEnvelopeType is only used in tests which is why this method is package protected
+  // setEnvelopeType is only used in tests which is why this method is package
+  // protected
   void setEnvelopeType(EnvelopeType envelopeType) {
     this.envelopeType = envelopeType;
   }
@@ -107,7 +107,7 @@ public class Transaction extends AbstractTransaction {
    * Returns the claimable balance ID for the CreateClaimableBalanceOperation at the given index
    * within the transaction.
    */
-  public String getClaimableBalanceId(int index) throws IOException {
+  public String getClaimableBalanceId(int index) {
     if (index < 0 || index >= operations.length) {
       throw new IllegalArgumentException(
           "index: " + index + " is outside the bounds of the operations within this transaction");
@@ -140,16 +140,17 @@ public class Transaction extends AbstractTransaction {
             .discriminant(EnvelopeType.ENVELOPE_TYPE_OP_ID)
             .operationID(operationID)
             .build();
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    hashIDPreimage.encode(new XdrDataOutputStream(outputStream));
-    Hash operationIDHash = new Hash(Util.hash(outputStream.toByteArray()));
-    outputStream.reset();
-
-    ClaimableBalanceID result = new ClaimableBalanceID();
-    result.setDiscriminant(ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0);
-    result.setV0(operationIDHash);
-    result.encode(new XdrDataOutputStream(outputStream));
-    return Util.bytesToHex(outputStream.toByteArray()).toLowerCase();
+    try {
+      Hash operationIDHash = new Hash(Util.hash(hashIDPreimage.toXdrByteArray()));
+      ClaimableBalanceID claimableBalanceID =
+          ClaimableBalanceID.builder()
+              .v0(operationIDHash)
+              .discriminant(ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0)
+              .build();
+      return Util.bytesToHex(claimableBalanceID.toXdrByteArray()).toLowerCase();
+    } catch (IOException e) {
+      throw new UnexpectedException(e);
+    }
   }
 
   /** Generates Transaction XDR object. */
@@ -310,7 +311,7 @@ public class Transaction extends AbstractTransaction {
       v0Envelope.setSignatures(signatures);
       xdr.setV0(v0Envelope);
     } else {
-      throw new RuntimeException("invalid envelope type: " + this.envelopeType);
+      throw new IllegalArgumentException("invalid envelope type: " + this.envelopeType);
     }
 
     return xdr;

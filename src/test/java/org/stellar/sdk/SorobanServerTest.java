@@ -23,6 +23,9 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.stellar.sdk.exception.AccountNotFoundException;
+import org.stellar.sdk.exception.PrepareTransactionException;
+import org.stellar.sdk.exception.SorobanRpcException;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
@@ -31,7 +34,6 @@ import org.stellar.sdk.requests.sorobanrpc.GetLedgerEntriesRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
-import org.stellar.sdk.requests.sorobanrpc.SorobanRpcErrorResponse;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
 import org.stellar.sdk.responses.sorobanrpc.GetEventsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
@@ -74,8 +76,7 @@ public class SorobanServerTest {
   private final Gson gson = new Gson();
 
   @Test
-  public void testGetAccount()
-      throws IOException, SorobanRpcErrorResponse, AccountNotFoundException {
+  public void testGetAccount() throws IOException, SorobanRpcException, AccountNotFoundException {
     String accountId = "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54";
     String json =
         "{\n"
@@ -130,7 +131,7 @@ public class SorobanServerTest {
 
   @Test(expected = AccountNotFoundException.class)
   public void testGetAccountNotFoundThrows()
-      throws IOException, SorobanRpcErrorResponse, AccountNotFoundException {
+      throws IOException, SorobanRpcException, AccountNotFoundException {
     String accountId = "GBG6OSICP2YJ5ROY4HBGNSVRQDCQ4RYPFFUH6I6BI7LHYNW2CM7AJVBE";
     String json =
         "{\n"
@@ -171,7 +172,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetHealth() throws IOException, SorobanRpcErrorResponse {
+  public void testGetHealth() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "    \"jsonrpc\": \"2.0\",\n"
@@ -217,7 +218,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetContractData() throws IOException, SorobanRpcErrorResponse {
+  public void testGetContractData() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "  \"jsonrpc\": \"2.0\",\n"
@@ -298,7 +299,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetContractDataReturnNull() throws IOException, SorobanRpcErrorResponse {
+  public void testGetContractDataReturnNull() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "  \"jsonrpc\": \"2.0\",\n"
@@ -363,7 +364,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetLedgerEntries() throws IOException, SorobanRpcErrorResponse {
+  public void testGetLedgerEntries() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "  \"jsonrpc\": \"2.0\",\n"
@@ -459,7 +460,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetTransaction() throws IOException, SorobanRpcErrorResponse {
+  public void testGetTransaction() throws IOException, SorobanRpcException {
     String hash = "06dd9ee70bf93bbfe219e2b31363ab5a0361cc6285328592e4d3d1fed4c9025c";
     String json =
         "{\n"
@@ -512,7 +513,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetEvents() throws IOException, SorobanRpcErrorResponse {
+  public void testGetEvents() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "    \"jsonrpc\": \"2.0\",\n"
@@ -621,7 +622,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetNetwork() throws IOException, SorobanRpcErrorResponse {
+  public void testGetNetwork() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "    \"jsonrpc\": \"2.0\",\n"
@@ -665,7 +666,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetLatestLedger() throws IOException, SorobanRpcErrorResponse {
+  public void testGetLatestLedger() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "    \"jsonrpc\": \"2.0\",\n"
@@ -710,7 +711,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testSimulateTransaction() throws IOException, SorobanRpcErrorResponse {
+  public void testSimulateTransaction() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "    \"jsonrpc\": \"2.0\",\n"
@@ -807,8 +808,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testSimulateTransactionWithResourceLeeway()
-      throws IOException, SorobanRpcErrorResponse {
+  public void testSimulateTransactionWithResourceLeeway() throws IOException, SorobanRpcException {
     String json =
         "{\n"
             + "  \"jsonrpc\": \"2.0\",\n"
@@ -899,7 +899,7 @@ public class SorobanServerTest {
 
   @Test
   public void testPrepareTransaction()
-      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+      throws IOException, SorobanRpcException, PrepareTransactionException {
     String json =
         "{\n"
             + "  \"jsonrpc\": \"2.0\",\n"
@@ -987,7 +987,7 @@ public class SorobanServerTest {
 
   @Test
   public void testPrepareTransactionWithSorobanData()
-      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+      throws IOException, SorobanRpcException, PrepareTransactionException {
     // soroban data will be overwritten
     String json =
         "{\n"
@@ -1102,7 +1102,7 @@ public class SorobanServerTest {
 
   @Test
   public void testPrepareTransactionWithAuth()
-      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+      throws IOException, SorobanRpcException, PrepareTransactionException {
     // origin auth will not be overwritten
     String json =
         "{\n"
@@ -1225,7 +1225,7 @@ public class SorobanServerTest {
 
   @Test(expected = PrepareTransactionException.class)
   public void testPrepareTransactionWithPrepareTransactionExceptionThrowsErrorResponse()
-      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+      throws IOException, SorobanRpcException, PrepareTransactionException {
     String json =
         "{\n"
             + "    \"jsonrpc\": \"2.0\",\n"
@@ -1279,7 +1279,7 @@ public class SorobanServerTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testPrepareTransactionWithIllegalArgumentExceptionThrowsErrorResultsIsEmpty()
-      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+      throws IOException, SorobanRpcException, PrepareTransactionException {
     String json =
         "{\n"
             + "  \"jsonrpc\": \"2.0\",\n"
@@ -1333,7 +1333,7 @@ public class SorobanServerTest {
 
   @Test
   public void testSendTransaction()
-      throws IOException, SorobanRpcErrorResponse, PrepareTransactionException {
+      throws IOException, SorobanRpcException, PrepareTransactionException {
     String json =
         "{\n"
             + "    \"jsonrpc\": \"2.0\",\n"
@@ -1424,7 +1424,7 @@ public class SorobanServerTest {
     try {
       server.getNetwork();
       fail();
-    } catch (SorobanRpcErrorResponse e) {
+    } catch (SorobanRpcException e) {
       assertEquals(e.getCode().longValue(), -32601L);
       assertEquals(e.getMessage(), "method not found");
       assertEquals(e.getData(), "mockTest");

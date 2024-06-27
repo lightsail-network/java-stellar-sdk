@@ -152,7 +152,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
     public FeeBumpTransaction.Builder setBaseFee(long baseFee) {
       if (this.baseFee != null) {
-        throw new RuntimeException("base fee has been already set.");
+        throw new IllegalArgumentException("base fee has been already set.");
       }
 
       if (baseFee < MIN_BASE_FEE) {
@@ -182,7 +182,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
     public FeeBumpTransaction.Builder setFeeAccount(@NonNull String feeAccount) {
       if (this.feeAccount != null) {
-        throw new RuntimeException("fee account has been already been set.");
+        throw new IllegalArgumentException("fee account has been already been set.");
       }
 
       this.feeAccount = feeAccount;

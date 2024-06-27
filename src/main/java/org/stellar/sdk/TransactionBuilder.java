@@ -2,7 +2,6 @@ package org.stellar.sdk;
 
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,22 +62,16 @@ public class TransactionBuilder {
    * @param transaction the transaction to rebuild
    */
   public TransactionBuilder(Transaction transaction) {
-    AbstractTransaction abstractTransaction;
-    try {
-      // deep copy
-      abstractTransaction =
-          Transaction.fromEnvelopeXdr(
-              transaction.getAccountConverter(),
-              transaction.toEnvelopeXdrBase64(),
-              transaction.getNetwork());
-    } catch (IOException e) {
-      // This should never happen
-      throw new RuntimeException(e);
-    }
+    AbstractTransaction abstractTransaction =
+        Transaction.fromEnvelopeXdr(
+            transaction.getAccountConverter(),
+            transaction.toEnvelopeXdrBase64(),
+            transaction.getNetwork());
 
     if (!(abstractTransaction instanceof Transaction)) {
       // This should never happen
-      throw new RuntimeException("TransactionBuilder can only be used to rebuild a Transaction");
+      throw new IllegalArgumentException(
+          "TransactionBuilder can only be used to rebuild a Transaction");
     }
     Transaction tx = (Transaction) abstractTransaction;
 
@@ -144,7 +137,7 @@ public class TransactionBuilder {
    */
   public TransactionBuilder addMemo(@NonNull Memo memo) {
     if (this.memo != null) {
-      throw new RuntimeException("Memo has been already added.");
+      throw new IllegalArgumentException("Memo has been already added.");
     }
     this.memo = memo;
     return this;
@@ -170,7 +163,7 @@ public class TransactionBuilder {
    */
   public TransactionBuilder setTimeout(BigInteger timeout) {
     if (timeout.compareTo(BigInteger.ZERO) < 0) {
-      throw new RuntimeException("timeout cannot be negative");
+      throw new IllegalArgumentException("timeout cannot be negative");
     }
 
     txTimeout = timeout;
@@ -223,11 +216,11 @@ public class TransactionBuilder {
     preconditions.isValid();
 
     if (baseFee == null) {
-      throw new FormatException("baseFee has to be set. you must call setBaseFee().");
+      throw new IllegalArgumentException("baseFee has to be set. you must call setBaseFee().");
     }
 
     if (network == null) {
-      throw new NoNetworkSelectedException();
+      throw new IllegalArgumentException("network has to be set. you must call setNetwork().");
     }
 
     long sequenceNumber = sourceAccount.getIncrementedSequenceNumber();

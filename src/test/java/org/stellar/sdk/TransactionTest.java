@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+import org.stellar.sdk.exception.FormatException;
 import org.stellar.sdk.operations.BumpSequenceOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.ExtendFootprintTTLOperation;

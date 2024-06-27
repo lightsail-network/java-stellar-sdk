@@ -60,11 +60,11 @@ public class TransactionPreconditions {
 
   public void isValid() {
     if (timeBounds == null) {
-      throw new FormatException("Invalid preconditions, must define timebounds");
+      throw new IllegalArgumentException("Invalid preconditions, must define timebounds");
     }
 
     if (extraSigners.size() > MAX_EXTRA_SIGNERS_COUNT) {
-      throw new FormatException(
+      throw new IllegalArgumentException(
           "Invalid preconditions, too many extra signers, can only have up to "
               + MAX_EXTRA_SIGNERS_COUNT);
     }

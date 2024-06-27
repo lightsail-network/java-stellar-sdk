@@ -33,7 +33,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
 
     int type = json.getAsJsonObject().get("type_i").getAsInt();
     if (type < 0 || type >= AllOperationTypes.length) {
-      throw new RuntimeException("Invalid operation type");
+      throw new IllegalArgumentException("Invalid operation type");
     }
 
     switch (AllOperationTypes[type]) {
@@ -92,7 +92,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
       case RESTORE_FOOTPRINT:
         return gson.fromJson(json, RestoreFootprintOperationResponse.class);
       default:
-        throw new RuntimeException("Invalid operation type");
+        throw new IllegalArgumentException("Invalid operation type");
     }
   }
 }

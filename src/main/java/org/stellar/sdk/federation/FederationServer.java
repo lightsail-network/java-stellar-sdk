@@ -7,6 +7,12 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import okhttp3.*;
+import org.stellar.sdk.exception.ConnectionErrorException;
+import org.stellar.sdk.federation.exception.FederationServerInvalidException;
+import org.stellar.sdk.federation.exception.MalformedAddressException;
+import org.stellar.sdk.federation.exception.NoFederationServerException;
+import org.stellar.sdk.federation.exception.NotFoundException;
+import org.stellar.sdk.federation.exception.StellarTomlNotFoundInvalidException;
 import org.stellar.sdk.requests.ResponseHandler;
 
 /**
@@ -45,8 +51,7 @@ public class FederationServer {
    */
   public FederationServer(URI serverUri, String domain) {
     this.serverUri = HttpUrl.get(serverUri);
-    if (this.serverUri == null
-        || (this.serverUri != null && this.httpsConnection && !this.serverUri.isHttps())) {
+    if (this.serverUri == null || (httpsConnection && !this.serverUri.isHttps())) {
       throw new FederationServerInvalidException();
     }
     this.domain = domain;
@@ -102,7 +107,7 @@ public class FederationServer {
       response = httpClient.newCall(request).execute();
 
       if (response.code() >= 300) {
-        throw new StellarTomlNotFoundInvalidException();
+        throw new StellarTomlNotFoundInvalidException(response.code());
       }
 
       Toml stellarToml = new Toml().read(response.body().string());
@@ -114,7 +119,7 @@ public class FederationServer {
 
       return new FederationServer(federationServer, domain);
     } catch (IOException e) {
-      throw new ConnectionErrorException();
+      throw new ConnectionErrorException(e);
     } finally {
       if (response != null) {
         response.close();
@@ -129,7 +134,6 @@ public class FederationServer {
    * @throws MalformedAddressException Address is malformed
    * @throws ConnectionErrorException Connection problems
    * @throws NotFoundException Stellar address not found by federation server
-   * @throws ServerErrorException Federation server responded with error
    * @return FederationResponse
    */
   public FederationResponse resolveAddress(String address) {
@@ -147,20 +151,14 @@ public class FederationServer {
     ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = null;
-    try {
-      response = this.httpClient.newCall(request).execute();
+    try (Response response = this.httpClient.newCall(request).execute()) {
       if (response.code() == 404) {
         throw new NotFoundException();
       }
 
       return responseHandler.handleResponse(response);
     } catch (IOException e) {
-      throw new ConnectionErrorException();
-    } finally {
-      if (response != null) {
-        response.close();
-      }
+      throw new ConnectionErrorException(e);
     }
   }
 }

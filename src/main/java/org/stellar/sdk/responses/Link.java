@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.net.URI;
 import java.net.URISyntaxException;
 import lombok.Value;
+import org.stellar.sdk.exception.UnexpectedException;
 
 /** Represents links in responses. */
 @Value
@@ -19,7 +20,7 @@ public class Link {
     try {
       return new URI(href);
     } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
+      throw new UnexpectedException(e);
     }
   }
 }

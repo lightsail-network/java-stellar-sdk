@@ -91,7 +91,7 @@ public class Signer {
 
   private static Uint256 createUint256(byte[] hash) {
     if (hash.length != 32) {
-      throw new RuntimeException("hash must be 32 bytes long");
+      throw new IllegalArgumentException("hash must be 32 bytes long");
     }
     Uint256 value = new Uint256();
     value.setUint256(hash);

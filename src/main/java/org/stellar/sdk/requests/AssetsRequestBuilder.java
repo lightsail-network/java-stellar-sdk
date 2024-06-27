@@ -1,11 +1,10 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import org.stellar.sdk.exception.ConnectionErrorException;
+import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.AssetResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -24,18 +23,53 @@ public class AssetsRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public static Page<AssetResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  /**
+   * Requests specific <code>uri</code> and returns {@link Page} of {@link AssetResponse}. This *
+   * method is helpful for getting the next set of results.
+   *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
+   * @return {@link Page} of {@link AssetResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   */
+  public static Page<AssetResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<AssetResponse>> type = new TypeToken<Page<AssetResponse>>() {};
-    ResponseHandler<Page<AssetResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return executeGetRequest(httpClient, uri, type);
   }
 
-  public Page<AssetResponse> execute() throws IOException, TooManyRequestsException {
+  /**
+   * Build and execute request.
+   *
+   * @return {@link Page} of {@link AssetResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   */
+  public Page<AssetResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 

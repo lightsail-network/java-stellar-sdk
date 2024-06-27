@@ -1,11 +1,13 @@
-package org.stellar.sdk;
+package org.stellar.sdk.exception;
+
+import org.stellar.sdk.KeyPair;
 
 /**
  * Indicates that there was a problem decoding strkey encoded string.
  *
  * @see KeyPair
  */
-public class FormatException extends RuntimeException {
+public class FormatException extends SdkException {
   public FormatException() {
     super();
   }

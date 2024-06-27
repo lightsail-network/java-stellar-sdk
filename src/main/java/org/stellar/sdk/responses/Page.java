@@ -3,13 +3,15 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import org.stellar.sdk.exception.ConnectionErrorException;
+import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.requests.ResponseHandler;
 
 /**
@@ -34,10 +36,22 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
 
   /**
    * @return The next page of results or null when there is no link for the next page of results
-   * @throws URISyntaxException
-   * @throws IOException
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.TooManyRequestsException if the request fails due to too many
+   *     requests sent to the server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
-  public Page<T> getNextPage(OkHttpClient httpClient) throws URISyntaxException, IOException {
+  public Page<T> getNextPage(OkHttpClient httpClient) {
     if (this.getLinks().getNext() == null) {
       return null;
     }
@@ -51,8 +65,14 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
     String url = this.getLinks().getNext().getHref();
 
     Request request = new Request.Builder().get().url(url).build();
-    okhttp3.Response response = httpClient.newCall(request).execute();
-
+    okhttp3.Response response;
+    try {
+      response = httpClient.newCall(request).execute();
+    } catch (SocketTimeoutException e) {
+      throw new RequestTimeoutException(e);
+    } catch (IOException e) {
+      throw new ConnectionErrorException(e);
+    }
     return responseHandler.handleResponse(response);
   }
 

@@ -1,4 +1,4 @@
-package org.stellar.sdk;
+package org.stellar.sdk.exception;
 
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ import lombok.Getter;
  * target="_blank">SEP-0029</a> for more information.
  */
 @Getter
-public class AccountRequiresMemoException extends Exception {
+public class AccountRequiresMemoException extends SdkException {
   /** the account requiring the memo * */
   private final String accountId;
 

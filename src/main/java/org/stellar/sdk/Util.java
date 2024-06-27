@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import org.stellar.sdk.exception.UnexpectedException;
 
 /**
  * Utility class for common operations.
@@ -59,7 +60,7 @@ public class Util {
       md.update(data);
       return md.digest();
     } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException("SHA-256 not implemented");
+      throw new UnexpectedException("SHA-256 not implemented");
     }
   }
 

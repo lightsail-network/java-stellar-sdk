@@ -1,13 +1,11 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.OrderBookResponse;
 
 /** Builds requests connected to order book. */
@@ -36,15 +34,30 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  public static OrderBookResponse execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  /**
+   * Requests specific <code>uri</code> and returns {@link OrderBookResponse}.
+   *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
+   * @return {@link OrderBookResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
+   */
+  public static OrderBookResponse execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<OrderBookResponse> type = new TypeToken<OrderBookResponse>() {};
-    ResponseHandler<OrderBookResponse> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -53,7 +66,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a href= "https://developers.stellar.org/api/introduction/response-format/"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link OrderBookResponse} implementation with {@link OrderBookResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms
@@ -71,17 +84,36 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
   }
 
-  public OrderBookResponse execute() throws IOException, TooManyRequestsException {
+  /**
+   * Build and execute request.
+   *
+   * @return {@link OrderBookResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
+   */
+  public OrderBookResponse execute() {
     return execute(this.httpClient, this.buildUri());
   }
 
   @Override
   public RequestBuilder cursor(String cursor) {
-    throw new RuntimeException("Not implemented yet.");
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Override
   public RequestBuilder order(Order direction) {
-    throw new RuntimeException("Not implemented yet.");
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 }

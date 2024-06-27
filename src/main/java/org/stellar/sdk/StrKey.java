@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
+import org.stellar.sdk.exception.FormatException;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -348,7 +350,7 @@ public class StrKey {
 
       return charsEncoded;
     } catch (IOException e) {
-      throw new AssertionError(e);
+      throw new UnexpectedException(e);
     }
   }
 

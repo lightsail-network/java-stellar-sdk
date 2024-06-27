@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.Hash;
@@ -239,7 +240,7 @@ public class Auth {
             byte[] payload = Util.hash(preimage.toXdrByteArray());
             return signer.sign(payload);
           } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UnexpectedException(e);
           }
         };
     return authorizeInvocation(

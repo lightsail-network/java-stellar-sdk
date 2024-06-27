@@ -1,12 +1,10 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -20,28 +18,48 @@ public class OffersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link OfferResponse}. This method is helpful
    * for getting the links.
    *
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link OfferResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
-  public OfferResponse offer(HttpUrl uri) throws IOException {
+  public OfferResponse offer(HttpUrl uri) {
     TypeToken<OfferResponse> type = new TypeToken<OfferResponse>() {};
-    ResponseHandler<OfferResponse> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
    * The offer details endpoint provides information on a single offer.
    *
    * @param offerId specifies which offer to load.
-   * @return The offer details.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link OfferResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
-  public OfferResponse offer(long offerId) throws IOException {
+  public OfferResponse offer(long offerId) {
     this.setSegments("offers", String.valueOf(offerId));
     return this.offer(this.buildUri());
   }
@@ -98,20 +116,27 @@ public class OffersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link OfferResponse}. This
    * method is helpful for getting the next set of results.
    *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link OfferResponse}
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<OfferResponse>> type = new TypeToken<Page<OfferResponse>>() {};
-    ResponseHandler<Page<OfferResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -143,10 +168,10 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link OfferResponse}
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
    */
-  public Page<OfferResponse> execute() throws IOException, TooManyRequestsException {
+  public Page<OfferResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 

@@ -28,7 +28,7 @@ public final class LiquidityPoolID {
    */
   public LiquidityPoolID(LiquidityPoolType type, Asset a, Asset b, int fee) {
     if (a.compareTo(b) >= 0) {
-      throw new RuntimeException("AssetA must be < AssetB");
+      throw new IllegalArgumentException("AssetA must be < AssetB");
     }
 
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

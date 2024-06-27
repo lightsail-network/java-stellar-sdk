@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.SignatureHint;
@@ -118,7 +119,7 @@ public abstract class AbstractTransaction {
     try {
       return toEnvelopeXdr().toXdrBase64();
     } catch (IOException e) {
-      throw new AssertionError(e);
+      throw new UnexpectedException(e);
     }
   }
 
@@ -165,11 +166,16 @@ public abstract class AbstractTransaction {
    *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
    * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
-   * @throws IOException if the envelope is malformed
+   * @throws IllegalArgumentException if the envelope is malformed
    */
   public static AbstractTransaction fromEnvelopeXdr(
-      AccountConverter accountConverter, String envelope, Network network) throws IOException {
-    TransactionEnvelope transactionEnvelope = TransactionEnvelope.fromXdrBase64(envelope);
+      AccountConverter accountConverter, String envelope, Network network) {
+    TransactionEnvelope transactionEnvelope = null;
+    try {
+      transactionEnvelope = TransactionEnvelope.fromXdrBase64(envelope);
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e);
+    }
     return fromEnvelopeXdr(accountConverter, transactionEnvelope, network);
   }
 
@@ -179,10 +185,9 @@ public abstract class AbstractTransaction {
    *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
    * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
-   * @throws IOException if the envelope is malformed
+   * @throws IllegalArgumentException if the envelope is malformed
    */
-  public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network)
-      throws IOException {
+  public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network) {
     return fromEnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
   }
 
@@ -205,7 +210,7 @@ public abstract class AbstractTransaction {
               .build();
       return payload.toXdrByteArray();
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UnexpectedException(e);
     }
   }
 }

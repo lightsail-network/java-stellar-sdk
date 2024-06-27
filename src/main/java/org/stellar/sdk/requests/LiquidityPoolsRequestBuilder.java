@@ -1,12 +1,10 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.LiquidityPoolResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -23,29 +21,43 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link LiquidityPoolResponse}. This method is
    * helpful for getting the links.
    *
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link LiquidityPoolResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
-  public LiquidityPoolResponse liquidityPool(HttpUrl uri) throws IOException {
+  public LiquidityPoolResponse liquidityPool(HttpUrl uri) {
     TypeToken<LiquidityPoolResponse> type = new TypeToken<LiquidityPoolResponse>() {};
-    ResponseHandler<LiquidityPoolResponse> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
    * Requests <code>GET /liquidity_pools/{liquidity_pool_id}</code>
    *
    * @param liquidityPoolID Liquidity Pool to fetch
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link LiquidityPoolResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
    *     Pool Details</a>
    */
-  public LiquidityPoolResponse liquidityPool(String liquidityPoolID) throws IOException {
+  public LiquidityPoolResponse liquidityPool(String liquidityPoolID) {
     this.setSegments("liquidity_pools", liquidityPoolID);
     return this.liquidityPool(this.buildUri());
   }
@@ -54,12 +66,18 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * Requests <code>GET /liquidity_pools/{liquidity_pool_id}</code>
    *
    * @param liquidityPoolID Liquidity Pool to fetch
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @return {@link LiquidityPoolResponse}
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
+   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
    *     Pool Details</a>
    */
-  public LiquidityPoolResponse liquidityPool(LiquidityPoolID liquidityPoolID) throws IOException {
+  public LiquidityPoolResponse liquidityPool(LiquidityPoolID liquidityPoolID) {
     return this.liquidityPool(liquidityPoolID.toString());
   }
 
@@ -93,20 +111,27 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link LiquidityPoolResponse}.
    * This method is helpful for getting the next set of results.
    *
+   * @param httpClient {@link OkHttpClient} to use to send the request.
+   * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link LiquidityPoolResponse}
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<LiquidityPoolResponse> execute(OkHttpClient httpClient, HttpUrl uri)
-      throws IOException, TooManyRequestsException {
+  public static Page<LiquidityPoolResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<LiquidityPoolResponse>> type = new TypeToken<Page<LiquidityPoolResponse>>() {};
-    ResponseHandler<Page<LiquidityPoolResponse>> responseHandler = new ResponseHandler<>(type);
-
-    Request request = new Request.Builder().get().url(uri).build();
-    Response response = httpClient.newCall(request).execute();
-
-    return responseHandler.handleResponse(response);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -140,11 +165,22 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * Page} will contain only <code>keypair</code> field.
    *
    * @return {@link Page} of {@link LiquidityPoolResponse}
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws IOException if the request fails due to an IOException, including but not limited to a
-   *     timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
-  public Page<LiquidityPoolResponse> execute() throws IOException, TooManyRequestsException {
+  public Page<LiquidityPoolResponse> execute() {
     return execute(this.httpClient, this.buildUri());
   }
 

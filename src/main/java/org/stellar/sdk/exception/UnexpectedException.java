@@ -1,4 +1,4 @@
-package org.stellar.sdk;
+package org.stellar.sdk.exception;
 
 /**
  * This exception is thrown to indicate that an unexpected condition has occurred which
@@ -7,7 +7,7 @@ package org.stellar.sdk;
  * <p>Use this exception to signal that the code has reached a state that was not anticipated and
  * should be addressed during development or testing.
  */
-public class UnexpectedException extends RuntimeException {
+public class UnexpectedException extends SdkException {
   /** Constructs a new UnexpectedException. */
   public UnexpectedException() {}
 

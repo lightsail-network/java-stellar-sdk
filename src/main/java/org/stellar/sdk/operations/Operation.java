@@ -8,6 +8,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
+import org.stellar.sdk.exception.UnexpectedException;
 
 /** Abstract class for operations. */
 @SuperBuilder(toBuilder = true)
@@ -50,7 +51,7 @@ public abstract class Operation {
     try {
       return toXdr(accountConverter).toXdrBase64();
     } catch (IOException e) {
-      throw new AssertionError(e);
+      throw new UnexpectedException(e);
     }
   }
 
@@ -171,13 +172,13 @@ public abstract class Operation {
                         .build();
                 break;
               default:
-                throw new RuntimeException(
+                throw new IllegalArgumentException(
                     "Unknown revoke sponsorship ledger entry type "
                         + body.getRevokeSponsorshipOp().getLedgerKey().getDiscriminant());
             }
             break;
           default:
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                 "Unknown revoke sponsorship body "
                     + body.getRevokeSponsorshipOp().getDiscriminant());
         }
@@ -209,7 +210,7 @@ public abstract class Operation {
         operation = RestoreFootprintOperation.fromXdr(body.getRestoreFootprintOp());
         break;
       default:
-        throw new RuntimeException("Unknown operation body " + body.getDiscriminant());
+        throw new IllegalArgumentException("Unknown operation body " + body.getDiscriminant());
     }
     if (xdr.getSourceAccount() != null) {
       operation.setSourceAccount(accountConverter.decode(xdr.getSourceAccount()));

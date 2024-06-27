@@ -110,7 +110,7 @@ public abstract class Memo {
       case MEMO_RETURN:
         return returnHash(memo.getRetHash().getHash());
       default:
-        throw new RuntimeException("Unknown memo type");
+        throw new IllegalArgumentException("Unknown memo type");
     }
   }
 
