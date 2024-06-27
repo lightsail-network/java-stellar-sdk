@@ -42,7 +42,7 @@ public enum BumpSequenceResultCode implements XdrElement {
       case -1:
         return BUMP_SEQUENCE_BAD_SEQ;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

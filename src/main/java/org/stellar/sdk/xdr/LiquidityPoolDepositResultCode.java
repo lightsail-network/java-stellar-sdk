@@ -72,7 +72,7 @@ public enum LiquidityPoolDepositResultCode implements XdrElement {
       case -7:
         return LIQUIDITY_POOL_DEPOSIT_POOL_FULL;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

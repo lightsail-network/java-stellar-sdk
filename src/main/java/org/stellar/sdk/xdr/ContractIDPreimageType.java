@@ -40,7 +40,7 @@ public enum ContractIDPreimageType implements XdrElement {
       case 1:
         return CONTRACT_ID_PREIMAGE_FROM_ASSET;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

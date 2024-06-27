@@ -48,7 +48,7 @@ public enum ThresholdIndexes implements XdrElement {
       case 3:
         return THRESHOLD_HIGH;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

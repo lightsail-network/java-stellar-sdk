@@ -55,7 +55,7 @@ public enum ClawbackResultCode implements XdrElement {
       case -4:
         return CLAWBACK_UNDERFUNDED;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

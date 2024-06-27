@@ -149,7 +149,7 @@ public enum SCValType implements XdrElement {
       case 21:
         return SCV_LEDGER_KEY_NONCE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

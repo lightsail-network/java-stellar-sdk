@@ -74,7 +74,7 @@ public enum ChangeTrustResultCode implements XdrElement {
       case -8:
         return CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

@@ -75,7 +75,7 @@ public enum PaymentResultCode implements XdrElement {
       case -9:
         return PAYMENT_NO_ISSUER;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

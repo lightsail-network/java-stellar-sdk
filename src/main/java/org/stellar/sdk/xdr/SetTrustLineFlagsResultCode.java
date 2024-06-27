@@ -60,7 +60,7 @@ public enum SetTrustLineFlagsResultCode implements XdrElement {
       case -5:
         return SET_TRUST_LINE_FLAGS_LOW_RESERVE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

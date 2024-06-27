@@ -56,7 +56,7 @@ public enum CreateAccountResultCode implements XdrElement {
       case -4:
         return CREATE_ACCOUNT_ALREADY_EXIST;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

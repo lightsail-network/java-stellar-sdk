@@ -52,7 +52,7 @@ public enum MemoType implements XdrElement {
       case 4:
         return MEMO_RETURN;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

@@ -38,7 +38,7 @@ public enum TxSetComponentType implements XdrElement {
       case 0:
         return TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

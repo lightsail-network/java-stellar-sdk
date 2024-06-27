@@ -140,7 +140,7 @@ public enum OperationType implements XdrElement {
       case 26:
         return RESTORE_FOOTPRINT;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

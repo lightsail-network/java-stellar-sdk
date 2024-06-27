@@ -52,7 +52,7 @@ public enum SCSpecEntryKind implements XdrElement {
       case 4:
         return SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

@@ -79,7 +79,7 @@ public enum SetOptionsResultCode implements XdrElement {
       case -10:
         return SET_OPTIONS_AUTH_REVOCABLE_REQUIRED;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

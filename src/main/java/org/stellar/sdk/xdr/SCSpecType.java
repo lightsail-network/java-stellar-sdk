@@ -138,7 +138,7 @@ public enum SCSpecType implements XdrElement {
       case 2000:
         return SC_SPEC_TYPE_UDT;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

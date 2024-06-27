@@ -40,7 +40,7 @@ public enum RevokeSponsorshipType implements XdrElement {
       case 1:
         return REVOKE_SPONSORSHIP_SIGNER;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

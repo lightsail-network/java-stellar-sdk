@@ -72,7 +72,7 @@ public enum SCErrorType implements XdrElement {
       case 9:
         return SCE_AUTH;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

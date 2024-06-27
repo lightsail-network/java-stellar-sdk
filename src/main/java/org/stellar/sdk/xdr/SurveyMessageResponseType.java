@@ -40,7 +40,7 @@ public enum SurveyMessageResponseType implements XdrElement {
       case 1:
         return SURVEY_TOPOLOGY_RESPONSE_V1;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

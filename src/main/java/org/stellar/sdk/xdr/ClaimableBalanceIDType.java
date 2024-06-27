@@ -36,7 +36,7 @@ public enum ClaimableBalanceIDType implements XdrElement {
       case 0:
         return CLAIMABLE_BALANCE_ID_TYPE_V0;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

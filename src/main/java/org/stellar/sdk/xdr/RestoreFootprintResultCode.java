@@ -51,7 +51,7 @@ public enum RestoreFootprintResultCode implements XdrElement {
       case -3:
         return RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

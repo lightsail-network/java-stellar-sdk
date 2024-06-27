@@ -44,7 +44,7 @@ public enum HostFunctionType implements XdrElement {
       case 2:
         return HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

@@ -44,7 +44,7 @@ public enum ManageOfferEffect implements XdrElement {
       case 2:
         return MANAGE_OFFER_DELETED;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

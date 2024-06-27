@@ -13,7 +13,7 @@ xdr/Stellar-internal.x \
 xdr/Stellar-contract-config-setting.x
 
 # xdrgen commit to use, see https://github.com/stellar/xdrgen
-XDRGEN_COMMIT=bdf833dc492acc9e9cd580ed4dc6eb58c74066ea
+XDRGEN_COMMIT=6d4d47b4bc6815e26a52d62fd6613cfb56676d4b
 # stellar-xdr commit to use, see https://github.com/stellar/stellar-xdr
 XDRNEXT_COMMIT=1a04392432dacc0092caaeae22a600ea1af3c6a5
 
@@ -22,7 +22,7 @@ XDRNEXT_COMMIT=1a04392432dacc0092caaeae22a600ea1af3c6a5
 xdr-generate: $(XDRS)
 	docker run -it --rm -v $$PWD:/wd -w /wd ruby /bin/bash -c '\
 		gem install specific_install -v 0.3.8 && \
-		gem specific_install https://github.com/stellar/xdrgen.git -b $(XDRGEN_COMMIT) && \
+		gem specific_install https://github.com/lightsail-network/xdrgen.git -b $(XDRGEN_COMMIT) && \
 		xdrgen \
 			--language java \
 			--namespace org.stellar.sdk.xdr \

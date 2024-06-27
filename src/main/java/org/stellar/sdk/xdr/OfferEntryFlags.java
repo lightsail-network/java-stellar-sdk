@@ -38,7 +38,7 @@ public enum OfferEntryFlags implements XdrElement {
       case 1:
         return PASSIVE_FLAG;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

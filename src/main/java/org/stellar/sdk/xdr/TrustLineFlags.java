@@ -49,7 +49,7 @@ public enum TrustLineFlags implements XdrElement {
       case 4:
         return TRUSTLINE_CLAWBACK_ENABLED_FLAG;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

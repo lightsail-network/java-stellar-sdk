@@ -57,7 +57,7 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
       case -5:
         return CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

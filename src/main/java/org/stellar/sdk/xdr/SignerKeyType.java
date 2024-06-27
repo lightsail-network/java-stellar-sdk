@@ -48,7 +48,7 @@ public enum SignerKeyType implements XdrElement {
       case 3:
         return SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

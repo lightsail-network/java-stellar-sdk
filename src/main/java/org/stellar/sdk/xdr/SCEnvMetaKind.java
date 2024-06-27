@@ -36,7 +36,7 @@ public enum SCEnvMetaKind implements XdrElement {
       case 0:
         return SC_ENV_META_KIND_INTERFACE_VERSION;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 
