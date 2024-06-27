@@ -15,7 +15,7 @@ import org.stellar.sdk.exception.AccountRequiresMemoException;
 import org.stellar.sdk.exception.BadRequestException;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.RequestTimeoutException;
-import org.stellar.sdk.exception.UnknownResponseException;
+import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.operations.AccountMergeOperation;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.operations.PathPaymentStrictReceiveOperation;
@@ -213,11 +213,23 @@ public class Server implements Closeable {
    * Submits a base64 encoded transaction envelope to the network
    *
    * @param transactionXdr base64 encoded transaction envelope to submit to the network
-   * @return {@link SubmitTransactionResponse}
-   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
-   *     timeout occured.
-   * @throws UnknownResponseException When unknown Horizon response is returned.
-   * @throws IOException
+   * @return {@link TransactionResponse}
+   * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+   *     account which requires a memo.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public TransactionResponse submitTransactionXdr(String transactionXdr) {
     HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
@@ -243,13 +255,23 @@ public class Server implements Closeable {
    *
    * @param transaction transaction to submit to the network
    * @param skipMemoRequiredCheck set to true to skip memoRequiredCheck
-   * @return {@link SubmitTransactionResponse}
-   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
-   *     timeout occured.
-   * @throws UnknownResponseException When unknown Horizon response is returned.
+   * @return {@link TransactionResponse}
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
-   * @throws IOException
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public TransactionResponse submitTransaction(
       Transaction transaction, boolean skipMemoRequiredCheck) {
@@ -264,13 +286,23 @@ public class Server implements Closeable {
    *
    * @param transaction transaction to submit to the network
    * @param skipMemoRequiredCheck set to true to skip memoRequiredCheck
-   * @return {@link SubmitTransactionResponse}
-   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
-   *     timeout occured.
-   * @throws UnknownResponseException When unknown Horizon response is returned.
+   * @return {@link TransactionResponse}
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
-   * @throws IOException
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public TransactionResponse submitTransaction(
       FeeBumpTransaction transaction, boolean skipMemoRequiredCheck) {
@@ -290,13 +322,23 @@ public class Server implements Closeable {
    * Server#submitTransaction(Transaction, boolean)}.
    *
    * @param transaction transaction to submit to the network.
-   * @return {@link SubmitTransactionResponse}
-   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
-   *     timeout occured.
-   * @throws UnknownResponseException When unknown Horizon response is returned.
+   * @return {@link TransactionResponse}
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
-   * @throws IOException
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public TransactionResponse submitTransaction(Transaction transaction) {
     return submitTransaction(transaction, false);
@@ -312,13 +354,23 @@ public class Server implements Closeable {
    * Server#submitTransaction(Transaction, boolean)}.
    *
    * @param transaction transaction to submit to the network.
-   * @return {@link SubmitTransactionResponse}
-   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
-   *     timeout occured.
-   * @throws UnknownResponseException When unknown Horizon response is returned.
+   * @return {@link TransactionResponse}
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
-   * @throws IOException
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public TransactionResponse submitTransaction(FeeBumpTransaction transaction) {
     return submitTransaction(transaction, false);
@@ -337,7 +389,6 @@ public class Server implements Closeable {
    * @param transaction transaction to submit to the network.
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
-   * @throws IOException
    */
   private void checkMemoRequired(Transaction transaction) {
     if (!transaction.getMemo().equals(Memo.none())) {
