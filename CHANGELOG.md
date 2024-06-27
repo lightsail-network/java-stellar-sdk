@@ -4,15 +4,41 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 ### Update
-chore: display the original definition in the XDR class document.
-feat: added a series of functions to parse xdr in the response.
-refactor: removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
-refactor!: move the Operation classes to the `org.stellar.sdk.operations` package.
+- chore: display the original definition in the XDR class document.
+- feat: added a series of functions to parse xdr in the response.
+- refactor: removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
+- refactor!: move the Operation classes to the `org.stellar.sdk.operations` package.
+- chore: Display the original definition in the XDR class documentation.
+- feat: Added a series of functions to parse XDR in the response.
+- refactor: Removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`. Consequently, `NetworkMismatchException` has been removed.
+- refactor!: Moved the Operation classes to the `org.stellar.sdk.operations` package.
+- refactor!: Refactored the handling of exceptions.
+    - Moved the Exception classes to the `org.stellar.sdk.exception` and `org.stellar.sdk.federation.exception` packages.
+    - Now all exceptions inherit from `SdkException`, and `SdkException` inherits from `RuntimeException`. Please refer to the following link to understand why we use unchecked exceptions: [Why unchecked exceptions?](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/handling-exceptions.html#why-unchecked-exceptions)
+    - Detailed the possible exceptions that may be thrown in the documentation.
+    - In the previous code, there were instances where `RuntimeException` was directly thrown. We have now replaced these with more appropriate exceptions such as `IllegalArgumentException`.
+    - Except for StrKey, `FormatException` will no longer be thrown, and `IllegalArgumentException` will be used instead.
+    - Renamed `SorobanRpcErrorResponse` to `SorobanRpcException`.
+- refactor!: `Server.submitTransactionXdr` and `Server.submitTransaction` now return `TransactionResponse` instead of `SubmitTransactionResponse`. An exception will be thrown when the transaction submission fails. Please refer to the documentation for more information.
+- refactor!: `Server.root()` now returns `RootRequestBuilder`.
 
 ### Breaking changes
-refactor: removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
-refactor!: move the Operation classes to the `org.stellar.sdk.operations` package.
-
+- refactor: removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
+- refactor!: move the Operation classes to the `org.stellar.sdk.operations` package.
+- chore: Display the original definition in the XDR class documentation.
+- feat: Added a series of functions to parse XDR in the response.
+- refactor: Removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`. Consequently, `NetworkMismatchException` has been removed.
+- refactor!: Moved the Operation classes to the `org.stellar.sdk.operations` package.
+- refactor!: Refactored the handling of exceptions.
+    - Moved the Exception classes to the `org.stellar.sdk.exception` and `org.stellar.sdk.federation.exception` packages.
+    - Now all exceptions inherit from `SdkException`, and `SdkException` inherits from `RuntimeException`. Please refer to the following link to understand why we use unchecked exceptions: [Why unchecked exceptions?](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/handling-exceptions.html#why-unchecked-exceptions)
+    - Detailed the possible exceptions that may be thrown in the documentation.
+    - In the previous code, there were instances where `RuntimeException` was directly thrown. We have now replaced these with more appropriate exceptions such as `IllegalArgumentException`.
+    - Except for StrKey, `FormatException` will no longer be thrown, and `IllegalArgumentException` will be used instead.
+    - Renamed `SorobanRpcErrorResponse` to `SorobanRpcException`.
+- refactor!: `Server.submitTransactionXdr` and `Server.submitTransaction` now return `TransactionResponse` instead of `SubmitTransactionResponse`. An exception will be thrown when the transaction submission fails. Please refer to the documentation for more information.
+- refactor!: `Server.root()` now returns `RootRequestBuilder`.
+- 
 ## 0.44.0
 ### Update
 - feat: add support for Soroban-RPC v21. ([#593](https://github.com/lightsail-network/java-stellar-sdk/pull/593))
