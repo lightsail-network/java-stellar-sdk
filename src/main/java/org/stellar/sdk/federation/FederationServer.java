@@ -51,8 +51,7 @@ public class FederationServer {
    */
   public FederationServer(URI serverUri, String domain) {
     this.serverUri = HttpUrl.get(serverUri);
-    if (this.serverUri == null
-        || (this.serverUri != null && this.httpsConnection && !this.serverUri.isHttps())) {
+    if (this.serverUri == null || (httpsConnection && !this.serverUri.isHttps())) {
       throw new FederationServerInvalidException();
     }
     this.domain = domain;
@@ -108,7 +107,7 @@ public class FederationServer {
       response = httpClient.newCall(request).execute();
 
       if (response.code() >= 300) {
-        throw new StellarTomlNotFoundInvalidException();
+        throw new StellarTomlNotFoundInvalidException(response.code());
       }
 
       Toml stellarToml = new Toml().read(response.body().string());
@@ -152,9 +151,7 @@ public class FederationServer {
     ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<>(type);
 
     Request request = new Request.Builder().get().url(uri).build();
-    Response response = null;
-    try {
-      response = this.httpClient.newCall(request).execute();
+    try (Response response = this.httpClient.newCall(request).execute()) {
       if (response.code() == 404) {
         throw new NotFoundException();
       }
@@ -162,10 +159,6 @@ public class FederationServer {
       return responseHandler.handleResponse(response);
     } catch (IOException e) {
       throw new ConnectionErrorException(e);
-    } finally {
-      if (response != null) {
-        response.close();
-      }
     }
   }
 }

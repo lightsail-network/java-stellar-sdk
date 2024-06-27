@@ -1,21 +1,11 @@
 package org.stellar.sdk;
 
-import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.SocketTimeoutException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.stellar.sdk.exception.ConnectionErrorException;
-import org.stellar.sdk.exception.RequestTimeoutException;
-import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.exception.UnexpectedException;
-import org.stellar.sdk.requests.ResponseHandler;
 
 /**
  * Utility class for common operations.
@@ -180,42 +170,5 @@ public class Util {
     } catch (IOException e) {
       throw new UnexpectedException("Unable to parse XDR string", e);
     }
-  }
-
-  /**
-   * Executes a GET request and handles the response.
-   *
-   * @param <T> The type of the response object.
-   * @param httpClient The OkHttpClient to use for the request.
-   * @param url The URL to send the GET request to.
-   * @param typeToken The TypeToken representing the type of the response.
-   * @return The response object of type T.
-   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
-   *     (4xx)
-   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
-   *     response from the server (5xx)
-   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
-   *     server
-   * @throws RequestTimeoutException if the request fails due to a timeout
-   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
-   *     status code
-   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
-   *     limited to connection failure.
-   */
-  // TODO: move to requestBuilder
-  public static <T> T executeGetRequest(
-      OkHttpClient httpClient, HttpUrl url, TypeToken<T> typeToken) {
-    ResponseHandler<T> responseHandler = new ResponseHandler<>(typeToken);
-
-    Request request = new Request.Builder().get().url(url).build();
-    Response response;
-    try {
-      response = httpClient.newCall(request).execute();
-    } catch (SocketTimeoutException e) {
-      throw new RequestTimeoutException(e);
-    } catch (IOException e) {
-      throw new ConnectionErrorException(e);
-    }
-    return responseHandler.handleResponse(response);
   }
 }

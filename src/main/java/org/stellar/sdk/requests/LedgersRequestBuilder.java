@@ -3,7 +3,6 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.LedgerResponse;
 import org.stellar.sdk.responses.Page;
@@ -19,17 +18,24 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * for getting the links.
    *
    * @return {@link LedgerResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public LedgerResponse ledger(HttpUrl uri) {
     TypeToken<LedgerResponse> type = new TypeToken<LedgerResponse>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -38,13 +44,20 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/ledgers/single/">Ledger Details</a>
    * @param ledgerSeq Ledger to fetch
    * @return {@link LedgerResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public LedgerResponse ledger(long ledgerSeq) {
     this.setSegments("ledgers", String.valueOf(ledgerSeq));
@@ -58,17 +71,24 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @param httpClient {@link OkHttpClient} to use to send the request.
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link LedgerResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public static Page<LedgerResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<LedgerResponse>> type = new TypeToken<Page<LedgerResponse>>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**

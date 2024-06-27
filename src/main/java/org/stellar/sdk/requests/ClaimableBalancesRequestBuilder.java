@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.AssetResponse;
@@ -22,17 +21,24 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    * helpful for getting the links.
    *
    * @return {@link ClaimableBalanceResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
    */
   public ClaimableBalanceResponse claimableBalance(HttpUrl uri) {
     TypeToken<ClaimableBalanceResponse> type = new TypeToken<ClaimableBalanceResponse>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -40,13 +46,20 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    *
    * @param id specifies which claimable balance to load.
    * @return The claimable balance details.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
    */
   public ClaimableBalanceResponse claimableBalance(String id) {
     this.setSegments("claimable_balances", id);
@@ -104,7 +117,7 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
   public static Page<ClaimableBalanceResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<ClaimableBalanceResponse>> type =
         new TypeToken<Page<ClaimableBalanceResponse>>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**

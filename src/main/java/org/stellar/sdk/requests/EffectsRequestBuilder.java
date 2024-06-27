@@ -5,7 +5,6 @@ import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
@@ -95,17 +94,24 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @param httpClient {@link OkHttpClient} to use to send the request.
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link EffectResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
-   *     limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
    */
   public static Page<EffectResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<EffectResponse>> type = new TypeToken<Page<EffectResponse>>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -136,9 +142,20 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * Build and execute request.
    *
    * @return {@link Page} of {@link EffectResponse}
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
    */
   public Page<EffectResponse> execute() {
     return execute(this.httpClient, this.buildUri());

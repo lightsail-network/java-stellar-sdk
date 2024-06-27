@@ -15,7 +15,6 @@ import org.stellar.sdk.exception.AccountRequiresMemoException;
 import org.stellar.sdk.exception.BadRequestException;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.RequestTimeoutException;
-import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.exception.UnknownResponseException;
 import org.stellar.sdk.operations.AccountMergeOperation;
 import org.stellar.sdk.operations.Operation;
@@ -85,22 +84,10 @@ public class Server implements Closeable {
   }
 
   /**
-   * Requests the root endpoint from the Horizon server.
-   *
-   * @return {@link RootResponse}
-   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
-   *     (4xx)
-   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
-   *     response from the server (5xx)
-   * @throws UnknownResponseException if we get an unknown response from the server.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws RequestTimeoutException When the request times out.
-   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
-   *     limited to a timeout, connection failure etc.
+   * @return {@link RootRequestBuilder} instance.
    */
-  public RootResponse root() {
-    TypeToken<RootResponse> type = new TypeToken<RootResponse>() {};
-    return Util.executeGetRequest(httpClient, serverURI, type);
+  public RootRequestBuilder root() {
+    return new RootRequestBuilder(httpClient, serverURI);
   }
 
   /**

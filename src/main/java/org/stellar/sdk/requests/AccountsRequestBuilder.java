@@ -5,8 +5,8 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.ConnectionErrorException;
+import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
@@ -26,17 +26,24 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link AccountResponse}. This method is helpful
    * for getting the links.
    *
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
-   *     limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
    */
   public AccountResponse account(HttpUrl uri) {
     TypeToken<AccountResponse> type = new TypeToken<AccountResponse>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -45,13 +52,20 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/accounts/single/">Account
    *     Details</a>
    * @param account Account to fetch
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
-   *     limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
    */
   public AccountResponse account(String account) {
     this.setSegments("accounts", account);
@@ -159,17 +173,24 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * method is helpful for getting the next set of results.
    *
    * @return {@link Page} of {@link AccountResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
-   *     limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
    */
   public static Page<AccountResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<AccountResponse>> type = new TypeToken<Page<AccountResponse>>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -201,13 +222,20 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * will contain only <code>keypair</code> field.
    *
    * @return {@link Page} of {@link AccountResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws ConnectionErrorException if the request fails due to an IOException, including but not
-   *     limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws RequestTimeoutException When Horizon returns a <code>Timeout</code> or connection
+   *     timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
    */
   public Page<AccountResponse> execute() {
     return execute(this.httpClient, this.buildUri());

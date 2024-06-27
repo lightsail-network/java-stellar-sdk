@@ -5,7 +5,6 @@ import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.Util;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
@@ -21,17 +20,24 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * helpful for getting the links.
    *
    * @return {@link TransactionResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public TransactionResponse transaction(HttpUrl uri) {
     TypeToken<TransactionResponse> type = new TypeToken<TransactionResponse>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -41,13 +47,20 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *     Details</a>
    * @param transactionId Transaction to fetch
    * @return {@link TransactionResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public TransactionResponse transaction(String transactionId) {
     this.setSegments("transactions", transactionId);
@@ -133,17 +146,24 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param httpClient {@link OkHttpClient} to use to send the request.
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link TransactionResponse}
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
    *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public static Page<TransactionResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
     TypeToken<Page<TransactionResponse>> type = new TypeToken<Page<TransactionResponse>>() {};
-    return Util.executeGetRequest(httpClient, uri, type);
+    return executeGetRequest(httpClient, uri, type);
   }
 
   /**
@@ -175,9 +195,20 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * Build and execute request.
    *
    * @return {@link Page} of {@link TransactionResponse}
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
    */
   public Page<TransactionResponse> execute() {
     return execute(this.httpClient, this.buildUri());

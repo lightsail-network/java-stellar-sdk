@@ -24,11 +24,4 @@ public class FederationResponse {
   /** Memo value or null when no memo attached */
   @SerializedName("memo")
   String memo;
-
-  public FederationResponse(String stellarAddress, String accountId, String memoType, String memo) {
-    this.stellarAddress = stellarAddress;
-    this.accountId = accountId;
-    this.memoType = memoType;
-    this.memo = memo;
-  }
 }

@@ -10,9 +10,10 @@ import lombok.Getter;
  * <ul>
  *   <li>When the server returns a non-2xx status code
  *   <li>When the error field in the information returned by the RPC server is not empty.
+ *   <li>When the required resources are not found on the server, such as when an account does not
+ *       exist.
  *   <li>When a request times out
  *   <li>When a request cannot be executed due to cancellation or connectivity problems, etc.
- *   <li>When an {@link IllegalStateException} occurs because the call has already been executed
  * </ul>
  */
 @Getter
