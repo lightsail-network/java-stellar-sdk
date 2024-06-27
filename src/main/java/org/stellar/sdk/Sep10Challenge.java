@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -55,8 +54,7 @@ public class Sep10Challenge {
       String clientAccountId,
       String domainName,
       String webAuthDomain,
-      TimeBounds timebounds)
-      throws InvalidSep10ChallengeException {
+      TimeBounds timebounds) {
     return newChallenge(
         signer, network, clientAccountId, domainName, webAuthDomain, timebounds, "", "");
   }
@@ -87,8 +85,7 @@ public class Sep10Challenge {
       TimeBounds timebounds,
       String clientDomain,
       String clientSigningKey,
-      Memo memo)
-      throws InvalidSep10ChallengeException {
+      Memo memo) {
     byte[] nonce = new byte[48];
     SecureRandom random = new SecureRandom();
     random.nextBytes(nonce);
@@ -169,8 +166,7 @@ public class Sep10Challenge {
       String webAuthDomain,
       TimeBounds timebounds,
       String clientDomain,
-      String clientSigningKey)
-      throws InvalidSep10ChallengeException {
+      String clientSigningKey) {
     return newChallenge(
         signer,
         network,
@@ -211,15 +207,14 @@ public class Sep10Challenge {
    *     contained within.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
-   * @throws IOException If read XDR string fails, the exception will be thrown.
+   * @throws IllegalArgumentException If read XDR string fails, the exception will be thrown.
    */
   public static ChallengeTransaction readChallengeTransaction(
       String challengeXdr,
       String serverAccountId,
       Network network,
       String[] domainNames,
-      String webAuthDomain)
-      throws InvalidSep10ChallengeException, IOException {
+      String webAuthDomain) {
     if (domainNames == null || domainNames.length == 0) {
       throw new IllegalArgumentException(
           "At least one domain name must be included in domainNames.");
@@ -390,15 +385,14 @@ public class Sep10Challenge {
    *     contained within.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
-   * @throws IOException If read XDR string fails, the exception will be thrown.
+   * @throws IllegalArgumentException If read XDR string fails, the exception will be thrown.
    */
   public static ChallengeTransaction readChallengeTransaction(
       String challengeXdr,
       String serverAccountId,
       Network network,
       String domainName,
-      String webAuthDomain)
-      throws InvalidSep10ChallengeException, IOException {
+      String webAuthDomain) {
     return readChallengeTransaction(
         challengeXdr, serverAccountId, network, new String[] {domainName}, webAuthDomain);
   }
@@ -422,7 +416,7 @@ public class Sep10Challenge {
    * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
-   * @throws IOException If read XDR string fails, the exception will be thrown.
+   * @throws IllegalArgumentException If read XDR string fails, the exception will be thrown.
    */
   public static Set<String> verifyChallengeTransactionSigners(
       String challengeXdr,
@@ -430,8 +424,7 @@ public class Sep10Challenge {
       Network network,
       String domainName,
       String webAuthDomain,
-      Set<String> signers)
-      throws InvalidSep10ChallengeException, IOException {
+      Set<String> signers) {
     return verifyChallengeTransactionSigners(
         challengeXdr, serverAccountId, network, new String[] {domainName}, webAuthDomain, signers);
   }
@@ -455,7 +448,7 @@ public class Sep10Challenge {
    * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
-   * @throws IOException If read XDR string fails, the exception will be thrown.
+   * @throws IllegalArgumentException If read XDR string fails, the exception will be thrown.
    */
   public static Set<String> verifyChallengeTransactionSigners(
       String challengeXdr,
@@ -463,8 +456,7 @@ public class Sep10Challenge {
       Network network,
       String[] domainNames,
       String webAuthDomain,
-      Set<String> signers)
-      throws InvalidSep10ChallengeException, IOException {
+      Set<String> signers) {
     if (signers == null || signers.isEmpty()) {
       throw new InvalidSep10ChallengeException(
           "No verifiable signers provided, at least one G... address must be provided.");
@@ -593,7 +585,7 @@ public class Sep10Challenge {
    * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
-   * @throws IOException If read XDR string fails, the exception will be thrown.
+   * @throws IllegalArgumentException If read XDR string fails, the exception will be thrown.
    */
   public static Set<String> verifyChallengeTransactionThreshold(
       String challengeXdr,
@@ -602,8 +594,7 @@ public class Sep10Challenge {
       String[] domainNames,
       String webAuthDomain,
       int threshold,
-      Set<Signer> signers)
-      throws InvalidSep10ChallengeException, IOException {
+      Set<Signer> signers) {
     if (signers == null || signers.isEmpty()) {
       throw new InvalidSep10ChallengeException(
           "No verifiable signers provided, at least one G... address must be provided.");
@@ -657,7 +648,7 @@ public class Sep10Challenge {
    * @return a set of signers that were found is returned, excluding the server account ID.
    * @throws InvalidSep10ChallengeException If the SEP-0010 validation fails, the exception will be
    *     thrown.
-   * @throws IOException If read XDR string fails, the exception will be thrown.
+   * @throws IllegalArgumentException If read XDR string fails, the exception will be thrown.
    */
   public static Set<String> verifyChallengeTransactionThreshold(
       String challengeXdr,
@@ -666,8 +657,7 @@ public class Sep10Challenge {
       String domainName,
       String webAuthDomain,
       int threshold,
-      Set<Signer> signers)
-      throws InvalidSep10ChallengeException, IOException {
+      Set<Signer> signers) {
     return verifyChallengeTransactionThreshold(
         challengeXdr,
         serverAccountId,
@@ -679,7 +669,7 @@ public class Sep10Challenge {
   }
 
   private static Set<String> verifyTransactionSignatures(
-      Transaction transaction, Set<String> signers) throws InvalidSep10ChallengeException {
+      Transaction transaction, Set<String> signers) {
     if (transaction.getSignatures().isEmpty()) {
       throw new InvalidSep10ChallengeException("Transaction has no signatures.");
     }
@@ -720,8 +710,7 @@ public class Sep10Challenge {
     return signersFound;
   }
 
-  private static boolean verifyTransactionSignature(Transaction transaction, String accountId)
-      throws InvalidSep10ChallengeException {
+  private static boolean verifyTransactionSignature(Transaction transaction, String accountId) {
     return !verifyTransactionSignatures(transaction, Collections.singleton(accountId)).isEmpty();
   }
 

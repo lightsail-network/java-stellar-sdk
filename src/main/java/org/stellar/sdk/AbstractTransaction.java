@@ -166,11 +166,16 @@ public abstract class AbstractTransaction {
    *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
    * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
-   * @throws IOException if the envelope is malformed
+   * @throws IllegalArgumentException if the envelope is malformed
    */
   public static AbstractTransaction fromEnvelopeXdr(
-      AccountConverter accountConverter, String envelope, Network network) throws IOException {
-    TransactionEnvelope transactionEnvelope = TransactionEnvelope.fromXdrBase64(envelope);
+      AccountConverter accountConverter, String envelope, Network network) {
+    TransactionEnvelope transactionEnvelope = null;
+    try {
+      transactionEnvelope = TransactionEnvelope.fromXdrBase64(envelope);
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e);
+    }
     return fromEnvelopeXdr(accountConverter, transactionEnvelope, network);
   }
 
@@ -180,10 +185,9 @@ public abstract class AbstractTransaction {
    *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
    * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
-   * @throws IOException if the envelope is malformed
+   * @throws IllegalArgumentException if the envelope is malformed
    */
-  public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network)
-      throws IOException {
+  public static AbstractTransaction fromEnvelopeXdr(String envelope, Network network) {
     return fromEnvelopeXdr(AccountConverter.enableMuxed(), envelope, network);
   }
 

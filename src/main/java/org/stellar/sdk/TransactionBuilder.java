@@ -2,7 +2,6 @@ package org.stellar.sdk;
 
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import lombok.NonNull;
-import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 
@@ -64,18 +62,11 @@ public class TransactionBuilder {
    * @param transaction the transaction to rebuild
    */
   public TransactionBuilder(Transaction transaction) {
-    AbstractTransaction abstractTransaction;
-    try {
-      // deep copy
-      abstractTransaction =
-          Transaction.fromEnvelopeXdr(
-              transaction.getAccountConverter(),
-              transaction.toEnvelopeXdrBase64(),
-              transaction.getNetwork());
-    } catch (IOException e) {
-      // This should never happen
-      throw new UnexpectedException(e);
-    }
+    AbstractTransaction abstractTransaction =
+        Transaction.fromEnvelopeXdr(
+            transaction.getAccountConverter(),
+            transaction.toEnvelopeXdrBase64(),
+            transaction.getNetwork());
 
     if (!(abstractTransaction instanceof Transaction)) {
       // This should never happen
