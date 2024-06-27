@@ -52,7 +52,7 @@ public enum ClawbackClaimableBalanceResultCode implements XdrElement {
       case -3:
         return CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

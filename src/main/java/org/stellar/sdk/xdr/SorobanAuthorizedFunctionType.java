@@ -40,7 +40,7 @@ public enum SorobanAuthorizedFunctionType implements XdrElement {
       case 1:
         return SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

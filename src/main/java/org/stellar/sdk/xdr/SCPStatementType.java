@@ -48,7 +48,7 @@ public enum SCPStatementType implements XdrElement {
       case 3:
         return SCP_ST_NOMINATE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

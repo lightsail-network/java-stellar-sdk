@@ -56,7 +56,7 @@ public enum ManageDataResultCode implements XdrElement {
       case -4:
         return MANAGE_DATA_INVALID_NAME;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

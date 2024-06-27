@@ -40,7 +40,7 @@ public enum SorobanCredentialsType implements XdrElement {
       case 1:
         return SOROBAN_CREDENTIALS_ADDRESS;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

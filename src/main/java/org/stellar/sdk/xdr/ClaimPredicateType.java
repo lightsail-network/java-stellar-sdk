@@ -56,7 +56,7 @@ public enum ClaimPredicateType implements XdrElement {
       case 5:
         return CLAIM_PREDICATE_BEFORE_RELATIVE_TIME;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

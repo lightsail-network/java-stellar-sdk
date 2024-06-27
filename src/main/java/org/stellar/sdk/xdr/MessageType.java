@@ -122,7 +122,7 @@ public enum MessageType implements XdrElement {
       case 19:
         return FLOOD_DEMAND;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

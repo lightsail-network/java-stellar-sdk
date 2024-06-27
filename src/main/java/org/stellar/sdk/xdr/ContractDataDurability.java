@@ -39,7 +39,7 @@ public enum ContractDataDurability implements XdrElement {
       case 1:
         return PERSISTENT;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

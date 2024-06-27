@@ -88,7 +88,7 @@ public enum ConfigSettingID implements XdrElement {
       case 13:
         return CONFIG_SETTING_EVICTION_ITERATOR;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

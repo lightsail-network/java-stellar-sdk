@@ -48,7 +48,7 @@ public enum LedgerEntryChangeType implements XdrElement {
       case 3:
         return LEDGER_ENTRY_STATE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

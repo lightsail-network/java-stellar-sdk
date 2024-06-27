@@ -44,7 +44,7 @@ public enum ContractEventType implements XdrElement {
       case 2:
         return DIAGNOSTIC;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

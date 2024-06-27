@@ -40,7 +40,7 @@ public enum SCSpecUDTUnionCaseV0Kind implements XdrElement {
       case 1:
         return SC_SPEC_UDT_UNION_CASE_TUPLE_V0;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

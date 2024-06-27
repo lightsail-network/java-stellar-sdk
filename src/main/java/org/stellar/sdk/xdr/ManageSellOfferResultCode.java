@@ -94,7 +94,7 @@ public enum ManageSellOfferResultCode implements XdrElement {
       case -12:
         return MANAGE_SELL_OFFER_LOW_RESERVE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

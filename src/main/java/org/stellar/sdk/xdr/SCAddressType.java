@@ -40,7 +40,7 @@ public enum SCAddressType implements XdrElement {
       case 1:
         return SC_ADDRESS_TYPE_CONTRACT;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

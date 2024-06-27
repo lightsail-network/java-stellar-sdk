@@ -59,7 +59,7 @@ public enum InvokeHostFunctionResultCode implements XdrElement {
       case -5:
         return INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

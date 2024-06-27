@@ -96,7 +96,7 @@ public enum PathPaymentStrictSendResultCode implements XdrElement {
       case -12:
         return PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

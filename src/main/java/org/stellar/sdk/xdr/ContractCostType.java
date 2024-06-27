@@ -265,7 +265,7 @@ public enum ContractCostType implements XdrElement {
       case 44:
         return VerifyEcdsaSecp256r1Sig;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

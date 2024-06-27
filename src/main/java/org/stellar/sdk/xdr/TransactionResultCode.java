@@ -112,7 +112,7 @@ public enum TransactionResultCode implements XdrElement {
       case -17:
         return txSOROBAN_INVALID;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

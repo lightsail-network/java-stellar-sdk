@@ -48,7 +48,7 @@ public enum AssetType implements XdrElement {
       case 3:
         return ASSET_TYPE_POOL_SHARE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

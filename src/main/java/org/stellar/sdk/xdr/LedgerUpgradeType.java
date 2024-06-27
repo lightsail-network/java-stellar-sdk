@@ -60,7 +60,7 @@ public enum LedgerUpgradeType implements XdrElement {
       case 7:
         return LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

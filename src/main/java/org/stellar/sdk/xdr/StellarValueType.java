@@ -40,7 +40,7 @@ public enum StellarValueType implements XdrElement {
       case 1:
         return STELLAR_VALUE_SIGNED;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

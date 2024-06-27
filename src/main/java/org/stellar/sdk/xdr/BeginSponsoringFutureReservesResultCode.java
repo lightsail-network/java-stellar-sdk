@@ -52,7 +52,7 @@ public enum BeginSponsoringFutureReservesResultCode implements XdrElement {
       case -3:
         return BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

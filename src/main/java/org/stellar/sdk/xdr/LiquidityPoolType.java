@@ -36,7 +36,7 @@ public enum LiquidityPoolType implements XdrElement {
       case 0:
         return LIQUIDITY_POOL_CONSTANT_PRODUCT;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

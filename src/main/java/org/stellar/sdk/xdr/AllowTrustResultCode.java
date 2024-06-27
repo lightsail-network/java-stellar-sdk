@@ -64,7 +64,7 @@ public enum AllowTrustResultCode implements XdrElement {
       case -6:
         return ALLOW_TRUST_LOW_RESERVE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

@@ -54,7 +54,7 @@ public enum CryptoKeyType implements XdrElement {
       case 256:
         return KEY_TYPE_MUXED_ED25519;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

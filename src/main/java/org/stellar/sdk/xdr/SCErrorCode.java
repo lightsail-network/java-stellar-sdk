@@ -72,7 +72,7 @@ public enum SCErrorCode implements XdrElement {
       case 9:
         return SCEC_UNEXPECTED_SIZE;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

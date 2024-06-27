@@ -72,7 +72,7 @@ public enum EnvelopeType implements XdrElement {
       case 9:
         return ENVELOPE_TYPE_SOROBAN_AUTHORIZATION;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

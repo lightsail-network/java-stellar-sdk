@@ -44,7 +44,7 @@ public enum EndSponsoringFutureReservesResultCode implements XdrElement {
       case -1:
         return END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 

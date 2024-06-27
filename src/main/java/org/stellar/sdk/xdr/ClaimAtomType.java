@@ -44,7 +44,7 @@ public enum ClaimAtomType implements XdrElement {
       case 2:
         return CLAIM_ATOM_TYPE_LIQUIDITY_POOL;
       default:
-        throw new RuntimeException("Unknown enum value: " + value);
+        throw new IllegalArgumentException("Unknown enum value: " + value);
     }
   }
 
