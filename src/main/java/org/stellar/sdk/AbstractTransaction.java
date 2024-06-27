@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.SignatureHint;
@@ -118,7 +119,7 @@ public abstract class AbstractTransaction {
     try {
       return toEnvelopeXdr().toXdrBase64();
     } catch (IOException e) {
-      throw new AssertionError(e);
+      throw new UnexpectedException(e);
     }
   }
 
@@ -205,7 +206,7 @@ public abstract class AbstractTransaction {
               .build();
       return payload.toXdrByteArray();
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UnexpectedException(e);
     }
   }
 }

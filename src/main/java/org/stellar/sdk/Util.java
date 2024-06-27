@@ -60,7 +60,7 @@ public class Util {
       md.update(data);
       return md.digest();
     } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException("SHA-256 not implemented");
+      throw new UnexpectedException("SHA-256 not implemented");
     }
   }
 

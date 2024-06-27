@@ -79,7 +79,8 @@ public class TransactionBuilder {
 
     if (!(abstractTransaction instanceof Transaction)) {
       // This should never happen
-      throw new RuntimeException("TransactionBuilder can only be used to rebuild a Transaction");
+      throw new IllegalArgumentException(
+          "TransactionBuilder can only be used to rebuild a Transaction");
     }
     Transaction tx = (Transaction) abstractTransaction;
 
@@ -171,7 +172,7 @@ public class TransactionBuilder {
    */
   public TransactionBuilder setTimeout(BigInteger timeout) {
     if (timeout.compareTo(BigInteger.ZERO) < 0) {
-      throw new RuntimeException("timeout cannot be negative");
+      throw new IllegalArgumentException("timeout cannot be negative");
     }
 
     txTimeout = timeout;

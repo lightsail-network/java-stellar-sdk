@@ -66,7 +66,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a href= "https://developers.stellar.org/api/introduction/response-format/"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link OrderBookResponse} implementation with {@link OrderBookResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms
@@ -109,11 +109,11 @@ public class OrderBookRequestBuilder extends RequestBuilder {
 
   @Override
   public RequestBuilder cursor(String cursor) {
-    throw new RuntimeException("Not implemented yet.");
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Override
   public RequestBuilder order(Order direction) {
-    throw new RuntimeException("Not implemented yet.");
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 }

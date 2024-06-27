@@ -18,7 +18,8 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
 
   public StrictSendPathsRequestBuilder destinationAccount(String account) {
     if (uriBuilder.build().queryParameter("destination_assets") != null) {
-      throw new RuntimeException("cannot set both destination_assets and destination_account");
+      throw new IllegalArgumentException(
+          "cannot set both destination_assets and destination_account");
     }
     uriBuilder.setQueryParameter("destination_account", account);
     return this;
@@ -26,7 +27,8 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
 
   public StrictSendPathsRequestBuilder destinationAssets(List<Asset> assets) {
     if (uriBuilder.build().queryParameter("destination_account") != null) {
-      throw new RuntimeException("cannot set both destination_assets and destination_account");
+      throw new IllegalArgumentException(
+          "cannot set both destination_assets and destination_account");
     }
     setAssetsParameter("destination_assets", assets);
     return this;

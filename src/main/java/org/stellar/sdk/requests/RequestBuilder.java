@@ -36,7 +36,7 @@ public abstract class RequestBuilder {
 
   protected RequestBuilder setSegments(String... segments) {
     if (segmentsAdded) {
-      throw new RuntimeException("URL segments have been already added.");
+      throw new IllegalArgumentException("URL segments have been already added.");
     }
 
     segmentsAdded = true;
@@ -116,7 +116,7 @@ public abstract class RequestBuilder {
       AssetTypeCreditAlphaNum creditAsset = (AssetTypeCreditAlphaNum) asset;
       return creditAsset.getCode() + ":" + creditAsset.getIssuer();
     } else {
-      throw new RuntimeException("unsupported asset " + asset.getType());
+      throw new IllegalArgumentException("unsupported asset " + asset.getType());
     }
   }
 

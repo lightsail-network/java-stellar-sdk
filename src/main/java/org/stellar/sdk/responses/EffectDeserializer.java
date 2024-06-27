@@ -145,7 +145,7 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
       case 97:
         return gson.fromJson(json, ContractDebitedEffectResponse.class);
       default:
-        throw new RuntimeException("Invalid effect type");
+        throw new UnsupportedOperationException("Invalid effect type");
     }
   }
 }

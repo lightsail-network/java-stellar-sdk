@@ -50,7 +50,7 @@ public class LiquidityPoolDepositOperation extends Operation {
   public LiquidityPoolDepositOperation(
       AssetAmount a, AssetAmount b, @NonNull Price minPrice, @NonNull Price maxPrice) {
     if (a.getAsset().compareTo(b.getAsset()) >= 0) {
-      throw new RuntimeException("AssetA must be < AssetB");
+      throw new IllegalArgumentException("AssetA must be < AssetB");
     }
     this.liquidityPoolID =
         new LiquidityPoolID(
