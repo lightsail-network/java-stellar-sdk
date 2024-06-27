@@ -140,7 +140,7 @@ private fun testSDK(): String {
     return try {
         // send request to horizon server
         val server = Server("https://horizon.stellar.org")
-        val horizonResp = server.root()
+        val horizonResp = server.root().execute()
         if (horizonResp == null || horizonResp.networkPassphrase != Network.PUBLIC.networkPassphrase) {
             throw Exception("Query Horizon failed")
         }
