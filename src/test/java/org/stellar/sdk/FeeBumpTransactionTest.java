@@ -19,10 +19,10 @@ public class FeeBumpTransactionTest {
     Transaction inner =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, network)
             .addOperation(
-                new PaymentOperation.Builder(
-                        "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ",
-                        new AssetTypeNative(),
-                        "200")
+                PaymentOperation.builder()
+                    .destination("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ")
+                    .asset(new AssetTypeNative())
+                    .amount("200")
                     .build())
             .setBaseFee(baseFee)
             .addPreconditions(

@@ -31,8 +31,8 @@ public class RestoreFootprintOperationTest {
     RestoreFootprintOperation originOp =
         RestoreFootprintOperation.builder().sourceAccount(source).build();
     org.stellar.sdk.xdr.Operation xdrObject = originOp.toXdr();
-    Operation restartOp = Operation.fromXdr(xdrObject);
-    Assert.assertEquals(restartOp, originOp);
+    Operation restoreOp = Operation.fromXdr(xdrObject);
+    Assert.assertEquals(restoreOp, originOp);
   }
 
   @Test

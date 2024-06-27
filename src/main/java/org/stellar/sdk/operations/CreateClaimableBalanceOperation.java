@@ -2,9 +2,12 @@ package org.stellar.sdk.operations;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Claimant;
@@ -17,28 +20,40 @@ import org.stellar.sdk.xdr.OperationType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#create-claimable-balance"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-claimable-balance"
  * target="_blank">CreateClaimableBalance</a> operation.
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class CreateClaimableBalanceOperation extends Operation {
-
   /* The amount of the asset. */
   @NonNull private final String amount;
   /* The asset for the claimable balance. */
   @NonNull private final Asset asset;
   /* The list of claimants for the claimable balance. */
-  private final List<Claimant> claimants;
+  @NonNull private final List<Claimant> claimants;
 
-  private CreateClaimableBalanceOperation(
-      @NonNull String amount, @NonNull Asset asset, @NonNull List<Claimant> claimants) {
-    this.asset = asset;
-    this.amount = amount;
-    this.claimants = claimants;
-    if (this.claimants.isEmpty()) {
-      throw new IllegalArgumentException("claimants cannot be empty");
+  /**
+   * Construct a new {@link CreateClaimableBalanceOperation} object from a {@link
+   * CreateClaimableBalanceOp} XDR object.
+   *
+   * @param op {@link CreateClaimableBalanceOp} XDR object
+   * @return {@link CreateClaimableBalanceOperation} object
+   */
+  public static CreateClaimableBalanceOperation fromXdr(CreateClaimableBalanceOp op) {
+    Asset asset = Asset.fromXdr(op.getAsset());
+    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    List<Claimant> claimants = new ArrayList<>();
+    for (org.stellar.sdk.xdr.Claimant c : op.getClaimants()) {
+      claimants.add(
+          new Claimant(
+              StrKey.encodeEd25519PublicKey(c.getV0().getDestination()),
+              Predicate.fromXdr(c.getV0().getPredicate())));
     }
+    return new CreateClaimableBalanceOperation(amount, asset, claimants);
   }
 
   @Override
@@ -73,63 +88,16 @@ public class CreateClaimableBalanceOperation extends Operation {
     return body;
   }
 
-  public static class Builder {
+  private static final class CreateClaimableBalanceOperationBuilderImpl
+      extends CreateClaimableBalanceOperationBuilder<
+          CreateClaimableBalanceOperation, CreateClaimableBalanceOperationBuilderImpl> {
 
-    private final String amount;
-    private final Asset asset;
-    private final List<Claimant> claimants;
-
-    private String sourceAccount;
-
-    /**
-     * Construct a new CreateClaimableBalance builder from a CreateClaimableBalance XDR.
-     *
-     * @param op {@link CreateClaimableBalanceOp}
-     */
-    Builder(CreateClaimableBalanceOp op) {
-      asset = Asset.fromXdr(op.getAsset());
-      amount = Operation.fromXdrAmount(op.getAmount().getInt64());
-      claimants = new ArrayList<>();
-      for (org.stellar.sdk.xdr.Claimant c : op.getClaimants()) {
-        claimants.add(
-            new Claimant(
-                StrKey.encodeEd25519PublicKey(c.getV0().getDestination()),
-                Predicate.fromXdr(c.getV0().getPredicate())));
-      }
-    }
-
-    /**
-     * Creates a new CreateClaimableBalance builder.
-     *
-     * @param amount The amount which can be claimed.
-     * @param asset The asset which can be claimed/
-     * @param claimants The list of entities which can claim the balance.
-     */
-    public Builder(String amount, Asset asset, List<Claimant> claimants) {
-      this.amount = amount;
-      this.asset = asset;
-      this.claimants = claimants;
-    }
-
-    /**
-     * Sets the source account for this operation.
-     *
-     * @param sourceAccount The operation's source account.
-     * @return Builder object so you can chain methods.
-     */
-    public CreateClaimableBalanceOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      this.sourceAccount = sourceAccount;
-      return this;
-    }
-
-    /** Builds an operation */
     public CreateClaimableBalanceOperation build() {
-      CreateClaimableBalanceOperation operation =
-          new CreateClaimableBalanceOperation(amount, asset, claimants);
-      if (sourceAccount != null) {
-        operation.setSourceAccount(sourceAccount);
+      CreateClaimableBalanceOperation op = new CreateClaimableBalanceOperation(this);
+      if (op.claimants.isEmpty()) {
+        throw new IllegalArgumentException("claimants cannot be empty");
       }
-      return operation;
+      return op;
     }
   }
 }

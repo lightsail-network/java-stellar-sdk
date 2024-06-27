@@ -1,10 +1,11 @@
 package org.stellar.sdk.operations;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPoolID;
@@ -17,12 +18,14 @@ import org.stellar.sdk.xdr.OperationType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#liquidity-pool-deposit"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#liquidity-pool-deposit"
  * target="_blank">LiquidityPoolDeposit</a> operation.
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class LiquidityPoolDepositOperation extends Operation {
   /** The liquidity pool ID. * */
   @NonNull private final LiquidityPoolID liquidityPoolID;
@@ -39,14 +42,6 @@ public class LiquidityPoolDepositOperation extends Operation {
   /** Maximum deposit_a/deposit_b price. * */
   @NonNull private final Price maxPrice;
 
-  public LiquidityPoolDepositOperation(LiquidityPoolDepositOp op) {
-    this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
-    this.maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64());
-    this.maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64());
-    this.minPrice = Price.fromXdr(op.getMinPrice());
-    this.maxPrice = Price.fromXdr(op.getMaxPrice());
-  }
-
   public LiquidityPoolDepositOperation(
       AssetAmount a, AssetAmount b, @NonNull Price minPrice, @NonNull Price maxPrice) {
     if (a.getAsset().compareTo(b.getAsset()) >= 0) {
@@ -57,11 +52,28 @@ public class LiquidityPoolDepositOperation extends Operation {
             LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             a.getAsset(),
             b.getAsset(),
-            LiquidityPoolParameters.Fee);
+            LiquidityPoolParameters.FEE);
     this.maxAmountA = a.getAmount();
     this.maxAmountB = b.getAmount();
     this.minPrice = minPrice;
     this.maxPrice = maxPrice;
+  }
+
+  /**
+   * Construct a new {@link LiquidityPoolDepositOperation} object from the {@link AccountConverter}
+   * object and the {@link LiquidityPoolDepositOp} XDR object.
+   *
+   * @param op {@link LiquidityPoolDepositOp} XDR object
+   * @return {@link LiquidityPoolDepositOperation} object
+   */
+  public static LiquidityPoolDepositOperation fromXdr(LiquidityPoolDepositOp op) {
+    LiquidityPoolID liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
+    String maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64());
+    String maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64());
+    Price minPrice = Price.fromXdr(op.getMinPrice());
+    Price maxPrice = Price.fromXdr(op.getMaxPrice());
+    return new LiquidityPoolDepositOperation(
+        liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
   }
 
   @Override

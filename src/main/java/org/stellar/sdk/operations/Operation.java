@@ -72,104 +72,90 @@ public abstract class Operation {
     Operation operation;
     switch (body.getDiscriminant()) {
       case CREATE_ACCOUNT:
-        operation = new CreateAccountOperation.Builder(body.getCreateAccountOp()).build();
+        operation = CreateAccountOperation.fromXdr(body.getCreateAccountOp());
         break;
       case PAYMENT:
-        operation = new PaymentOperation.Builder(accountConverter, body.getPaymentOp()).build();
+        operation = PaymentOperation.fromXdr(accountConverter, body.getPaymentOp());
         break;
       case PATH_PAYMENT_STRICT_RECEIVE:
         operation =
-            new PathPaymentStrictReceiveOperation.Builder(
-                    accountConverter, body.getPathPaymentStrictReceiveOp())
-                .build();
+            PathPaymentStrictReceiveOperation.fromXdr(
+                accountConverter, body.getPathPaymentStrictReceiveOp());
         break;
       case MANAGE_SELL_OFFER:
-        operation = new ManageSellOfferOperation.Builder(body.getManageSellOfferOp()).build();
+        operation = ManageSellOfferOperation.fromXdr(body.getManageSellOfferOp());
         break;
       case MANAGE_BUY_OFFER:
-        operation = new ManageBuyOfferOperation.Builder(body.getManageBuyOfferOp()).build();
+        operation = ManageBuyOfferOperation.fromXdr(body.getManageBuyOfferOp());
         break;
       case CREATE_PASSIVE_SELL_OFFER:
-        operation =
-            new CreatePassiveSellOfferOperation.Builder(body.getCreatePassiveSellOfferOp()).build();
+        operation = CreatePassiveSellOfferOperation.fromXdr(body.getCreatePassiveSellOfferOp());
         break;
       case SET_OPTIONS:
-        operation = new SetOptionsOperation.Builder(body.getSetOptionsOp()).build();
+        operation = SetOptionsOperation.fromXdr(body.getSetOptionsOp());
         break;
       case CHANGE_TRUST:
-        operation = new ChangeTrustOperation.Builder(body.getChangeTrustOp()).build();
+        operation = ChangeTrustOperation.fromXdr(body.getChangeTrustOp());
         break;
       case ALLOW_TRUST:
-        operation = new AllowTrustOperation.Builder(body.getAllowTrustOp()).build();
+        operation = AllowTrustOperation.fromXdr(body.getAllowTrustOp());
         break;
       case ACCOUNT_MERGE:
-        operation = new AccountMergeOperation.Builder(accountConverter, body).build();
+        operation = AccountMergeOperation.fromXdr(accountConverter, body.getDestination());
         break;
       case INFLATION:
-        operation = new InflationOperation();
+        operation = InflationOperation.builder().build();
         break;
       case MANAGE_DATA:
-        operation = new ManageDataOperation.Builder(body.getManageDataOp()).build();
+        operation = ManageDataOperation.fromXdr(body.getManageDataOp());
         break;
       case BUMP_SEQUENCE:
-        operation = new BumpSequenceOperation.Builder(body.getBumpSequenceOp()).build();
+        operation = BumpSequenceOperation.fromXdr(body.getBumpSequenceOp());
         break;
       case PATH_PAYMENT_STRICT_SEND:
         operation =
-            new PathPaymentStrictSendOperation.Builder(
-                    accountConverter, body.getPathPaymentStrictSendOp())
-                .build();
+            PathPaymentStrictSendOperation.fromXdr(
+                accountConverter, body.getPathPaymentStrictSendOp());
         break;
       case CREATE_CLAIMABLE_BALANCE:
-        operation =
-            new CreateClaimableBalanceOperation.Builder(body.getCreateClaimableBalanceOp()).build();
+        operation = CreateClaimableBalanceOperation.fromXdr(body.getCreateClaimableBalanceOp());
         break;
       case CLAIM_CLAIMABLE_BALANCE:
-        operation =
-            new ClaimClaimableBalanceOperation.Builder(body.getClaimClaimableBalanceOp()).build();
+        operation = ClaimClaimableBalanceOperation.fromXdr(body.getClaimClaimableBalanceOp());
         break;
       case BEGIN_SPONSORING_FUTURE_RESERVES:
         operation =
-            new BeginSponsoringFutureReservesOperation.Builder(
-                    body.getBeginSponsoringFutureReservesOp())
-                .build();
+            BeginSponsoringFutureReservesOperation.fromXdr(
+                body.getBeginSponsoringFutureReservesOp());
         break;
       case END_SPONSORING_FUTURE_RESERVES:
-        operation = new EndSponsoringFutureReservesOperation();
+        operation = EndSponsoringFutureReservesOperation.builder().build();
         break;
       case REVOKE_SPONSORSHIP:
         switch (body.getRevokeSponsorshipOp().getDiscriminant()) {
           case REVOKE_SPONSORSHIP_SIGNER:
-            operation =
-                new RevokeSignerSponsorshipOperation.Builder(body.getRevokeSponsorshipOp()).build();
+            operation = RevokeSignerSponsorshipOperation.fromXdr(body.getRevokeSponsorshipOp());
             break;
           case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
             switch (body.getRevokeSponsorshipOp().getLedgerKey().getDiscriminant()) {
               case DATA:
-                operation =
-                    new RevokeDataSponsorshipOperation.Builder(body.getRevokeSponsorshipOp())
-                        .build();
+                operation = RevokeDataSponsorshipOperation.fromXdr(body.getRevokeSponsorshipOp());
                 break;
               case OFFER:
-                operation =
-                    new RevokeOfferSponsorshipOperation.Builder(body.getRevokeSponsorshipOp())
-                        .build();
+                operation = RevokeOfferSponsorshipOperation.fromXdr(body.getRevokeSponsorshipOp());
                 break;
               case ACCOUNT:
                 operation =
-                    new RevokeAccountSponsorshipOperation.Builder(body.getRevokeSponsorshipOp())
-                        .build();
+                    RevokeAccountSponsorshipOperation.fromXdr(body.getRevokeSponsorshipOp());
                 break;
               case TRUSTLINE:
                 operation =
-                    new RevokeTrustlineSponsorshipOperation.Builder(body.getRevokeSponsorshipOp())
-                        .build();
+                    RevokeTrustlineSponsorshipOperation.fromXdr(body.getRevokeSponsorshipOp());
                 break;
               case CLAIMABLE_BALANCE:
                 operation =
-                    new RevokeClaimableBalanceSponsorshipOperation.Builder(
-                            body.getRevokeSponsorshipOp())
-                        .build();
+                    RevokeClaimableBalanceSponsorshipOperation.fromXdr(
+                        body.getRevokeSponsorshipOp());
                 break;
               default:
                 throw new IllegalArgumentException(
@@ -184,21 +170,19 @@ public abstract class Operation {
         }
         break;
       case CLAWBACK:
-        operation = new ClawbackOperation.Builder(accountConverter, body.getClawbackOp()).build();
+        operation = ClawbackOperation.fromXdr(accountConverter, body.getClawbackOp());
         break;
       case CLAWBACK_CLAIMABLE_BALANCE:
-        operation =
-            new ClawbackClaimableBalanceOperation.Builder(body.getClawbackClaimableBalanceOp())
-                .build();
+        operation = ClawbackClaimableBalanceOperation.fromXdr(body.getClawbackClaimableBalanceOp());
         break;
       case SET_TRUST_LINE_FLAGS:
-        operation = new SetTrustlineFlagsOperation.Builder(body.getSetTrustLineFlagsOp()).build();
+        operation = SetTrustlineFlagsOperation.fromXdr(body.getSetTrustLineFlagsOp());
         break;
       case LIQUIDITY_POOL_DEPOSIT:
-        operation = new LiquidityPoolDepositOperation(body.getLiquidityPoolDepositOp());
+        operation = LiquidityPoolDepositOperation.fromXdr(body.getLiquidityPoolDepositOp());
         break;
       case LIQUIDITY_POOL_WITHDRAW:
-        operation = new LiquidityPoolWithdrawOperation(body.getLiquidityPoolWithdrawOp());
+        operation = LiquidityPoolWithdrawOperation.fromXdr(body.getLiquidityPoolWithdrawOp());
         break;
       case INVOKE_HOST_FUNCTION:
         operation = InvokeHostFunctionOperation.fromXdr(body.getInvokeHostFunctionOp());

@@ -22,7 +22,8 @@ import org.stellar.sdk.xdr.MuxedAccount;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
-public class ClaimableBalanceIdTest {
+// TODO: refactor the test
+public class CreateClaimableBalanceOperationTest {
 
   @Test
   public void testClaimableBalanceIds() throws IOException {
@@ -30,9 +31,10 @@ public class ClaimableBalanceIdTest {
         KeyPair.fromSecretSeed("SCZANGBA5YHTNYVVV4C3U252E2B6P6F5T3U6MM63WBSBZATAQI3EBTQ4")
             .getAccountId();
     CreateClaimableBalanceOperation op0 =
-        new CreateClaimableBalanceOperation.Builder(
-                "420",
-                new AssetTypeNative(),
+        CreateClaimableBalanceOperation.builder()
+            .asset(new AssetTypeNative())
+            .amount("420")
+            .claimants(
                 Collections.singletonList(
                     new Claimant(
                         "GCACCFMIWJAHUUASSE2WC7V6VVDLYRLSJYZ3DJEXCG523FSHTNII6KOG",
@@ -42,7 +44,7 @@ public class ClaimableBalanceIdTest {
         new TransactionBuilder(
                 AccountConverter.enableMuxed(), new Account(sourceAccount, 123l), Network.TESTNET)
             .addOperation(op0)
-            .addOperation(new BumpSequenceOperation.Builder(2l).build())
+            .addOperation(BumpSequenceOperation.builder().bumpTo(2).build())
             .addOperation(op0)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -60,15 +62,17 @@ public class ClaimableBalanceIdTest {
     assertEquals(expectedIdIndex2, transaction.getClaimableBalanceId(2));
 
     CreateClaimableBalanceOperation opWithSourceAccount =
-        new CreateClaimableBalanceOperation.Builder(
-                "420",
-                new AssetTypeNative(),
+        CreateClaimableBalanceOperation.builder()
+            .asset(new AssetTypeNative())
+            .amount("420")
+            .claimants(
                 Collections.singletonList(
                     new Claimant(
                         "GCACCFMIWJAHUUASSE2WC7V6VVDLYRLSJYZ3DJEXCG523FSHTNII6KOG",
                         new Predicate.Unconditional())))
-            .setSourceAccount("GABXJTV7ELEB2TQZKJYEGXBUIG6QODJULKJDI65KZMIZZG2EACJU5EA7")
+            .sourceAccount("GABXJTV7ELEB2TQZKJYEGXBUIG6QODJULKJDI65KZMIZZG2EACJU5EA7")
             .build();
+
     transaction =
         new TransactionBuilder(
                 AccountConverter.enableMuxed(), new Account(sourceAccount, 123l), Network.TESTNET)
@@ -105,7 +109,7 @@ public class ClaimableBalanceIdTest {
                 new Account(StrKey.encodeStellarMuxedAccount(muxedAccount), 123l),
                 Network.TESTNET)
             .addOperation(op0)
-            .addOperation(new BumpSequenceOperation.Builder(2l).build())
+            .addOperation(BumpSequenceOperation.builder().bumpTo(2).build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();

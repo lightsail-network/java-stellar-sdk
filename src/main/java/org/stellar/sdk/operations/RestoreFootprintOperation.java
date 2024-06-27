@@ -1,9 +1,9 @@
 package org.stellar.sdk.operations;
 
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.Value;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.xdr.ExtensionPoint;
@@ -12,13 +12,14 @@ import org.stellar.sdk.xdr.RestoreFootprintOp;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#restore-footprint"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint"
  * target="_blank">RestoreFootprint</a> operation.
  */
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-@Value
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RestoreFootprintOperation extends Operation {
   /**
    * Constructs a new RestoreFootprintOperation object from the XDR representation of the {@link

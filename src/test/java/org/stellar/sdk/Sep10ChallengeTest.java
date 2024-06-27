@@ -356,8 +356,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -464,8 +466,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), 100L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -509,8 +513,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
     Operation[] operations = new Operation[] {operation};
 
@@ -637,7 +643,7 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     SetOptionsOperation setOptionsOperation =
-        new SetOptionsOperation.Builder().setSourceAccount(client.getAccountId()).build();
+        SetOptionsOperation.builder().sourceAccount(client.getAccountId()).build();
 
     Operation[] operations = new Operation[] {setOptionsOperation};
     Transaction transaction =
@@ -679,7 +685,7 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce).build();
+        ManageDataOperation.builder().name(domainName + " auth").value(encodedNonce).build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
@@ -722,8 +728,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -764,8 +772,10 @@ public class Sep10ChallengeTest {
             .getBytes(StandardCharsets.UTF_8);
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -810,8 +820,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -850,8 +862,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", null)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(null)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -896,12 +910,16 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
     ManageDataOperation operation2 =
-        new ManageDataOperation.Builder("key", "value".getBytes())
-            .setSourceAccount(server.getAccountId())
+        ManageDataOperation.builder()
+            .name("key")
+            .value("value".getBytes())
+            .sourceAccount(server.getAccountId())
             .build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
@@ -944,12 +962,16 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
     ManageDataOperation operation2 =
-        new ManageDataOperation.Builder("key", "value".getBytes())
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name("key")
+            .value("value".getBytes())
+            .sourceAccount(client.getAccountId())
             .build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
@@ -992,11 +1014,13 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
     ManageDataOperation operation2 =
-        new ManageDataOperation.Builder("key", "value".getBytes()).build();
+        ManageDataOperation.builder().name("key").value("value".getBytes()).build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
         new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
@@ -1037,11 +1061,13 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
     BumpSequenceOperation operation2 =
-        new BumpSequenceOperation.Builder(0L).setSourceAccount(server.getAccountId()).build();
+        BumpSequenceOperation.builder().bumpTo(0L).sourceAccount(server.getAccountId()).build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
         new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
@@ -1288,12 +1314,16 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation domainNameOperation =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
     ManageDataOperation webAuthDomainOperation =
-        new ManageDataOperation.Builder("web_auth_domain", null)
-            .setSourceAccount(server.getAccountId())
+        ManageDataOperation.builder()
+            .name("web_auth_domain")
+            .value(null)
+            .sourceAccount(server.getAccountId())
             .build();
     Operation[] operations = new Operation[] {domainNameOperation, webAuthDomainOperation};
     Transaction transaction =
@@ -1337,16 +1367,22 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation domainNameOperation =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
     ManageDataOperation webAuthDomainOperation =
-        new ManageDataOperation.Builder("web_auth_domain", webAuthDomain.getBytes())
-            .setSourceAccount(server.getAccountId())
+        ManageDataOperation.builder()
+            .name("web_auth_domain")
+            .value(webAuthDomain.getBytes())
+            .sourceAccount(server.getAccountId())
             .build();
     ManageDataOperation otherDomainOperation =
-        new ManageDataOperation.Builder("subsequent_op", null)
-            .setSourceAccount(server.getAccountId())
+        ManageDataOperation.builder()
+            .name("subsequent_op")
+            .value(null)
+            .sourceAccount(server.getAccountId())
             .build();
     Operation[] operations =
         new Operation[] {domainNameOperation, webAuthDomainOperation, otherDomainOperation};
@@ -1427,8 +1463,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -1471,8 +1509,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -1519,9 +1559,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(
-                "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG")
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount("MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG")
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -1565,8 +1606,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(client.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(client.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -1803,8 +1846,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(masterClient.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(masterClient.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -2352,8 +2397,10 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation manageDataOperation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(masterClient.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(masterClient.getAccountId())
             .build();
 
     Operation[] operations = new Operation[] {manageDataOperation1};
@@ -2948,12 +2995,16 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(masterClient.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(masterClient.getAccountId())
             .build();
     ManageDataOperation operation2 =
-        new ManageDataOperation.Builder("key", "value".getBytes())
-            .setSourceAccount(server.getAccountId())
+        ManageDataOperation.builder()
+            .name("key")
+            .value("value".getBytes())
+            .sourceAccount(server.getAccountId())
             .build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
@@ -3001,12 +3052,16 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(masterClient.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(masterClient.getAccountId())
             .build();
     ManageDataOperation operation2 =
-        new ManageDataOperation.Builder("key", "value".getBytes())
-            .setSourceAccount(masterClient.getAccountId())
+        ManageDataOperation.builder()
+            .name("key")
+            .value("value".getBytes())
+            .sourceAccount(masterClient.getAccountId())
             .build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
@@ -3057,11 +3112,13 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(masterClient.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(masterClient.getAccountId())
             .build();
     ManageDataOperation operation2 =
-        new ManageDataOperation.Builder("key", "value".getBytes()).build();
+        ManageDataOperation.builder().name("key").value("value".getBytes()).build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
         new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
@@ -3109,11 +3166,13 @@ public class Sep10ChallengeTest {
 
     Account sourceAccount = new Account(server.getAccountId(), -1L);
     ManageDataOperation operation1 =
-        new ManageDataOperation.Builder(domainName + " auth", encodedNonce)
-            .setSourceAccount(masterClient.getAccountId())
+        ManageDataOperation.builder()
+            .name(domainName + " auth")
+            .value(encodedNonce)
+            .sourceAccount(masterClient.getAccountId())
             .build();
     BumpSequenceOperation operation2 =
-        new BumpSequenceOperation.Builder(0L).setSourceAccount(server.getAccountId()).build();
+        BumpSequenceOperation.builder().bumpTo(0L).sourceAccount(server.getAccountId()).build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
         new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)

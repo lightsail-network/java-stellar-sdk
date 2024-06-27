@@ -102,14 +102,16 @@ public class Sep10Challenge {
 
     Account sourceAccount = new Account(signer.getAccountId(), -1L);
     ManageDataOperation domainNameOperation =
-        new ManageDataOperation.Builder(
-                String.format("%s %s", domainName, HOME_DOMAIN_MANAGER_DATA_NAME_FLAG),
-                encodedNonce)
-            .setSourceAccount(clientAccountId)
+        ManageDataOperation.builder()
+            .name(String.format("%s %s", domainName, HOME_DOMAIN_MANAGER_DATA_NAME_FLAG))
+            .value(encodedNonce)
+            .sourceAccount(clientAccountId)
             .build();
     ManageDataOperation webAuthDomainOperation =
-        new ManageDataOperation.Builder(WEB_AUTH_DOMAIN_MANAGER_DATA_NAME, webAuthDomain.getBytes())
-            .setSourceAccount(sourceAccount.getAccountId())
+        ManageDataOperation.builder()
+            .name(WEB_AUTH_DOMAIN_MANAGER_DATA_NAME)
+            .value(webAuthDomain.getBytes())
+            .sourceAccount(sourceAccount.getAccountId())
             .build();
 
     TransactionBuilder builder =
@@ -131,8 +133,10 @@ public class Sep10Challenge {
         throw new InvalidSep10ChallengeException(clientSigningKey + " is not a valid account id");
       }
       builder.addOperation(
-          new ManageDataOperation.Builder(CLIENT_DOMAIN_DATA_NAME, clientDomain.getBytes())
-              .setSourceAccount(clientSigningKey)
+          ManageDataOperation.builder()
+              .name(CLIENT_DOMAIN_DATA_NAME)
+              .value(clientDomain.getBytes())
+              .sourceAccount(clientSigningKey)
               .build());
     }
 

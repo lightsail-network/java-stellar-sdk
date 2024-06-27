@@ -24,8 +24,9 @@ public class TransactionBuilderTest {
     try {
       new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
           .addOperation(
-              new CreateAccountOperation.Builder(
-                      "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR", "2000")
+              CreateAccountOperation.builder()
+                  .destination("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")
+                  .startingBalance("2000")
                   .build())
           .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
           .build();
@@ -48,7 +49,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
@@ -89,7 +93,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addMemo(Memo.text("Hello world!"))
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -123,7 +130,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addPreconditions(
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(42, 1337)).build())
             .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
@@ -181,7 +191,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .setBaseFee(200)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .build();
@@ -225,7 +238,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(KeyPair.random().getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addPreconditions(
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(42, 1337)).build())
             .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
@@ -251,7 +267,10 @@ public class TransactionBuilderTest {
     try {
       new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
           .addOperation(
-              new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+              CreateAccountOperation.builder()
+                  .destination(KeyPair.random().getAccountId())
+                  .startingBalance("2000")
+                  .build())
           .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .build();
@@ -266,7 +285,10 @@ public class TransactionBuilderTest {
     try {
       new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
           .addOperation(
-              new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+              CreateAccountOperation.builder()
+                  .destination(KeyPair.random().getAccountId())
+                  .startingBalance("2000")
+                  .build())
           .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
           .setTimeout(-1)
           .build();
@@ -284,7 +306,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(KeyPair.random().getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .setTimeout(10)
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
@@ -314,7 +339,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(newAccount.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
                     .timeBounds(
@@ -358,7 +386,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(newAccount.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
                     .timeBounds(
@@ -395,7 +426,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(newAccount.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
                     .timeBounds(
@@ -432,7 +466,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(newAccount.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
                     .timeBounds(
@@ -484,7 +521,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(newAccount.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(newAccount.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
                     .timeBounds(
@@ -528,7 +568,10 @@ public class TransactionBuilderTest {
     try {
       new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
           .addOperation(
-              new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+              CreateAccountOperation.builder()
+                  .destination(KeyPair.random().getAccountId())
+                  .startingBalance("2000")
+                  .build())
           .addPreconditions(
               TransactionPreconditions.builder()
                   .timeBounds(
@@ -553,7 +596,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(KeyPair.random().getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
                     .timeBounds(
@@ -577,7 +623,10 @@ public class TransactionBuilderTest {
     try {
       new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
           .addOperation(
-              new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+              CreateAccountOperation.builder()
+                  .destination(KeyPair.random().getAccountId())
+                  .startingBalance("2000")
+                  .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .build();
       fail();
@@ -593,7 +642,10 @@ public class TransactionBuilderTest {
     try {
       new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
           .addOperation(
-              new CreateAccountOperation.Builder(KeyPair.random().getAccountId(), "2000").build())
+              CreateAccountOperation.builder()
+                  .destination(KeyPair.random().getAccountId())
+                  .startingBalance("2000")
+                  .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .addPreconditions(
               TransactionPreconditions.builder().timeBounds(new TimeBounds(10, 20)).build())
@@ -621,7 +673,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .addPreconditions(
                 TransactionPreconditions.builder()
@@ -700,7 +755,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .build();
@@ -750,7 +808,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .setTimeout(10)
             .build();
@@ -801,7 +862,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
@@ -851,7 +915,10 @@ public class TransactionBuilderTest {
       Account account = new Account(source.getAccountId(), 2908908335136768L);
       new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
           .addOperation(
-              new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+              CreateAccountOperation.builder()
+                  .destination(destination.getAccountId())
+                  .startingBalance("2000")
+                  .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .addMemo(Memo.none())
           .addMemo(Memo.none());
@@ -873,7 +940,10 @@ public class TransactionBuilderTest {
     try {
       new TransactionBuilder(AccountConverter.enableMuxed(), account, null)
           .addOperation(
-              new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+              CreateAccountOperation.builder()
+                  .destination(destination.getAccountId())
+                  .startingBalance("2000")
+                  .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .addMemo(Memo.none())
           .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
@@ -890,8 +960,8 @@ public class TransactionBuilderTest {
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
-    BumpSequenceOperation operation0 = new BumpSequenceOperation.Builder(1L).build();
-    BumpSequenceOperation operation1 = new BumpSequenceOperation.Builder(2L).build();
+    BumpSequenceOperation operation0 = BumpSequenceOperation.builder().bumpTo(1L).build();
+    BumpSequenceOperation operation1 = BumpSequenceOperation.builder().bumpTo(2L).build();
     LedgerKey ledgerKey =
         LedgerKey.builder()
             .discriminant(LedgerEntryType.ACCOUNT)
@@ -977,7 +1047,10 @@ public class TransactionBuilderTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .setSorobanData(sorobanData)
