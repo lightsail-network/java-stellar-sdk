@@ -120,7 +120,8 @@ public class AllowTrustOperation extends Operation {
      * The account can hold a balance and maintain offers but cannot receive payments, send payments
      * or manage offers.
      */
-    AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG(TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue());
+    AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG(
+        TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue());
 
     private final int value;
 
