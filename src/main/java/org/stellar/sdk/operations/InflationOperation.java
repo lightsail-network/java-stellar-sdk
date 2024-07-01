@@ -1,7 +1,6 @@
 package org.stellar.sdk.operations;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -13,9 +12,8 @@ import org.stellar.sdk.xdr.OperationType;
  * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#inflation"
  * target="_blank">Inflation</a> operation.
  */
-@Getter
-@AllArgsConstructor
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class InflationOperation extends Operation {

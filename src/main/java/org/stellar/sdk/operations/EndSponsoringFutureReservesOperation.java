@@ -1,7 +1,6 @@
 package org.stellar.sdk.operations;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -13,7 +12,6 @@ import org.stellar.sdk.xdr.OperationType;
  * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#end-sponsoring-future-reserves"
  * target="_blank">EndSponsoringFutureReserves</a> operation.
  */
-@Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
