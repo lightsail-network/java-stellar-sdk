@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.LedgerEntryType;
@@ -14,7 +16,7 @@ import org.stellar.sdk.xdr.RevokeSponsorshipType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#revoke-sponsorship"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#revoke-sponsorship"
  * target="_blank">Revoke sponsorship</a> operation.
  *
  * <p>Revokes the sponsorship of an account entry.
@@ -23,12 +25,26 @@ import org.stellar.sdk.xdr.RevokeSponsorshipType;
  *     target="_blank">Sponsored Reserves</a>
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class RevokeAccountSponsorshipOperation extends Operation {
 
   /** The account whose sponsorship will be revoked. */
   @NonNull private final String accountId;
+
+  /**
+   * Construct a new {@link RevokeAccountSponsorshipOperation} object from a {@link
+   * RevokeSponsorshipOp} XDR object.
+   *
+   * @param op {@link RevokeSponsorshipOp} XDR object
+   * @return {@link RevokeAccountSponsorshipOperation} object
+   */
+  public static RevokeAccountSponsorshipOperation fromXdr(RevokeSponsorshipOp op) {
+    String accountId = StrKey.encodeEd25519PublicKey(op.getLedgerKey().getAccount().getAccountID());
+    return new RevokeAccountSponsorshipOperation(accountId);
+  }
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -47,52 +63,5 @@ public class RevokeAccountSponsorshipOperation extends Operation {
     body.setRevokeSponsorshipOp(op);
 
     return body;
-  }
-
-  public static class Builder {
-
-    private final String accountId;
-
-    private String sourceAccount;
-
-    /**
-     * Construct a new RevokeAccountSponsorshipOperation builder from a RevokeSponsorship XDR.
-     *
-     * @param op {@link RevokeSponsorshipOp}
-     */
-    Builder(RevokeSponsorshipOp op) {
-      accountId = StrKey.encodeEd25519PublicKey(op.getLedgerKey().getAccount().getAccountID());
-    }
-
-    /**
-     * Creates a new RevokeAccountSponsorshipOperation builder.
-     *
-     * @param accountId The id of the account whose sponsorship will be revoked.
-     */
-    public Builder(String accountId) {
-      this.accountId = accountId;
-    }
-
-    /**
-     * Sets the source account for this operation.
-     *
-     * @param sourceAccount The operation's source account.
-     * @return Builder object so you can chain methods.
-     */
-    public RevokeAccountSponsorshipOperation.Builder setSourceAccount(
-        @NonNull String sourceAccount) {
-      this.sourceAccount = sourceAccount;
-      return this;
-    }
-
-    /** Builds an operation */
-    public RevokeAccountSponsorshipOperation build() {
-      RevokeAccountSponsorshipOperation operation =
-          new RevokeAccountSponsorshipOperation(accountId);
-      if (sourceAccount != null) {
-        operation.setSourceAccount(sourceAccount);
-      }
-      return operation;
-    }
   }
 }

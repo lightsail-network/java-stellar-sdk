@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Price;
@@ -13,12 +15,14 @@ import org.stellar.sdk.xdr.OperationType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#create-passive-sell-offer"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-passive-sell-offer"
  * target="_blank">CreatePassiveSellOffer</a> operation.
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class CreatePassiveSellOfferOperation extends Operation {
 
   /** The asset being sold in this operation */
@@ -32,6 +36,21 @@ public class CreatePassiveSellOfferOperation extends Operation {
 
   /** Price of 1 unit of selling in terms of buying. */
   @NonNull private final Price price;
+
+  /**
+   * Construct a new {@link CreatePassiveSellOfferOperation} object from a {@link
+   * CreatePassiveSellOfferOp} XDR object.
+   *
+   * @param op {@link CreatePassiveSellOfferOp} XDR object
+   * @return {@link CreatePassiveSellOfferOperation} object
+   */
+  public static CreatePassiveSellOfferOperation fromXdr(CreatePassiveSellOfferOp op) {
+    Asset selling = Asset.fromXdr(op.getSelling());
+    Asset buying = Asset.fromXdr(op.getBuying());
+    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    Price price = Price.fromXdr(op.getPrice());
+    return new CreatePassiveSellOfferOperation(selling, buying, amount, price);
+  }
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -49,82 +68,5 @@ public class CreatePassiveSellOfferOperation extends Operation {
     body.setCreatePassiveSellOfferOp(op);
 
     return body;
-  }
-
-  /**
-   * Builds CreatePassiveSellOffer operation.
-   *
-   * @see CreatePassiveSellOfferOperation
-   */
-  public static class Builder {
-
-    private final Asset selling;
-    private final Asset buying;
-    private final String amount;
-    private final Price price;
-
-    private String sourceAccount;
-
-    /**
-     * Construct a new CreatePassiveOffer builder from a CreatePassiveOfferOp XDR.
-     *
-     * @param op
-     */
-    Builder(CreatePassiveSellOfferOp op) {
-      selling = Asset.fromXdr(op.getSelling());
-      buying = Asset.fromXdr(op.getBuying());
-      amount = Operation.fromXdrAmount(op.getAmount().getInt64());
-      price = Price.fromXdr(op.getPrice());
-    }
-
-    /**
-     * Creates a new CreatePassiveSellOffer builder.
-     *
-     * @param selling The asset being sold in this operation
-     * @param buying The asset being bought in this operation
-     * @param amount Amount of selling being sold.
-     * @param price Price of 1 unit of selling in terms of buying.
-     * @throws ArithmeticException when amount has more than 7 decimal places.
-     */
-    public Builder(
-        @NonNull Asset selling,
-        @NonNull Asset buying,
-        @NonNull String amount,
-        @NonNull Price price) {
-      this.selling = selling;
-      this.buying = buying;
-      this.amount = amount;
-      this.price = price;
-    }
-
-    /** An alias for {@link Builder#Builder(Asset, Asset, String, Price)} */
-    public Builder(
-        @NonNull Asset selling,
-        @NonNull Asset buying,
-        @NonNull String amount,
-        @NonNull String price) {
-      this(selling, buying, amount, Price.fromString(price));
-    }
-
-    /**
-     * Sets the source account for this operation.
-     *
-     * @param sourceAccount The operation's source account.
-     * @return Builder object so you can chain methods.
-     */
-    public CreatePassiveSellOfferOperation.Builder setSourceAccount(@NonNull String sourceAccount) {
-      this.sourceAccount = sourceAccount;
-      return this;
-    }
-
-    /** Builds an operation */
-    public CreatePassiveSellOfferOperation build() {
-      CreatePassiveSellOfferOperation operation =
-          new CreatePassiveSellOfferOperation(selling, buying, amount, price);
-      if (sourceAccount != null) {
-        operation.setSourceAccount(sourceAccount);
-      }
-      return operation;
-    }
   }
 }

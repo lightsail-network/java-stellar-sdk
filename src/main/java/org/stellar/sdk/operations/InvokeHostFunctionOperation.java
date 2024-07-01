@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
-import lombok.Value;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.AccountConverter;
@@ -34,21 +36,23 @@ import org.stellar.sdk.xdr.XdrString;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#invoke-host-function"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#invoke-host-function"
  * target="_blank">InvokeHostFunction</a> operation.
  *
  * @see org.stellar.sdk.scval.Scv
  */
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-@Value
 public class InvokeHostFunctionOperation extends Operation {
 
   /** The host function to invoke. */
-  @NonNull HostFunction hostFunction;
+  @NonNull private final HostFunction hostFunction;
 
   /** The authorizations required to execute the host function */
-  @NonNull @Builder.Default List<SorobanAuthorizationEntry> auth = new ArrayList<>();
+  @NonNull @Builder.Default private final List<SorobanAuthorizationEntry> auth = new ArrayList<>();
 
   /**
    * Constructs a new InvokeHostFunctionOperation object from the XDR representation of the {@link
@@ -231,7 +235,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    * @see org.stellar.sdk.scval.Scv
    * @see <a
-   *     href="https://soroban.stellar.org/docs/fundamentals-and-concepts/interacting-with-contracts"
+   *     href="https://developers.stellar.org/docs/smart-contracts/guides/transactions/invoke-contract-tx-sdk"
    *     target="_blank">Interacting with Contracts</a>
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> invokeContractFunctionOperationBuilder(

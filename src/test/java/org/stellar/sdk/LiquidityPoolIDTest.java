@@ -17,7 +17,7 @@ public class LiquidityPoolIDTest {
   public void testLiquidityPoolID() {
     LiquidityPoolID id =
         new LiquidityPoolID(
-            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.Fee);
+            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.FEE);
     assertEquals("cc22414997d7e3d9a9ac3b1d65ca9cc3e5f35ce33e0bd6a885648b11aaa3b72d", id.toString());
   }
 
@@ -25,7 +25,7 @@ public class LiquidityPoolIDTest {
   public void testLiquidityPoolIDMisorderedAssets() {
     try {
       new LiquidityPoolID(
-          LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, b, a, LiquidityPoolParameters.Fee);
+          LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, b, a, LiquidityPoolParameters.FEE);
       fail();
     } catch (RuntimeException e) {
       assertEquals("AssetA must be < AssetB", e.getMessage());
@@ -36,7 +36,7 @@ public class LiquidityPoolIDTest {
   public void testEquality() {
     LiquidityPoolID pool1 =
         new LiquidityPoolID(
-            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.Fee);
+            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.FEE);
     assertEquals(pool1, pool1);
   }
 
@@ -44,10 +44,10 @@ public class LiquidityPoolIDTest {
   public void testInequality() {
     LiquidityPoolID pool1 =
         new LiquidityPoolID(
-            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.Fee);
+            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.FEE);
     LiquidityPoolID pool2 =
         new LiquidityPoolID(
-            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, b, c, LiquidityPoolParameters.Fee);
+            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, b, c, LiquidityPoolParameters.FEE);
     assertNotEquals(pool1, pool2);
   }
 }

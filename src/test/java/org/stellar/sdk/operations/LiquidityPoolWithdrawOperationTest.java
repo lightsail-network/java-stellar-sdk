@@ -25,7 +25,7 @@ public class LiquidityPoolWithdrawOperationTest {
           LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
           nativeAsset,
           creditAsset,
-          LiquidityPoolParameters.Fee);
+          LiquidityPoolParameters.FEE);
 
   @Test
   public void testLiquidityPoolWithdrawOperationValid() {
@@ -33,8 +33,13 @@ public class LiquidityPoolWithdrawOperationTest {
     String minAmountA = "1000";
     String minAmountB = "2000";
     LiquidityPoolWithdrawOperation operation =
-        new LiquidityPoolWithdrawOperation(liquidityPoolID, amount, minAmountA, minAmountB);
-    operation.setSourceAccount(source.getAccountId());
+        LiquidityPoolWithdrawOperation.builder()
+            .liquidityPoolID(liquidityPoolID)
+            .amount(amount)
+            .minAmountA(minAmountA)
+            .minAmountB(minAmountB)
+            .sourceAccount(source.getAccountId())
+            .build();
 
     org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
     LiquidityPoolWithdrawOperation parsedOperation =

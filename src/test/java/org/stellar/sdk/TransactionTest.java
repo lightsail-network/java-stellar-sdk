@@ -66,7 +66,10 @@ public class TransactionTest {
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
             new org.stellar.sdk.operations.Operation[] {
-              new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
+              CreateAccountOperation.builder()
+                  .destination(destination.getAccountId())
+                  .startingBalance("2000")
+                  .build()
             },
             null,
             new TransactionPreconditions(
@@ -110,7 +113,10 @@ public class TransactionTest {
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
             new org.stellar.sdk.operations.Operation[] {
-              new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
+              CreateAccountOperation.builder()
+                  .destination(destination.getAccountId())
+                  .startingBalance("2000")
+                  .build()
             },
             null,
             new TransactionPreconditions(
@@ -147,8 +153,10 @@ public class TransactionTest {
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
             new org.stellar.sdk.operations.Operation[] {
-              new PaymentOperation.Builder(
-                      destination.getAccountId(), new AssetTypeNative(), "2000")
+              PaymentOperation.builder()
+                  .destination(destination.getAccountId())
+                  .asset(new AssetTypeNative())
+                  .amount("2000")
                   .build()
             },
             null,
@@ -186,7 +194,10 @@ public class TransactionTest {
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
             new org.stellar.sdk.operations.Operation[] {
-              new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build()
+              CreateAccountOperation.builder()
+                  .destination(destination.getAccountId())
+                  .startingBalance("2000")
+                  .build()
             },
             null,
             new TransactionPreconditions(
@@ -428,7 +439,7 @@ public class TransactionTest {
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
-    BumpSequenceOperation operation = new BumpSequenceOperation.Builder(0L).build();
+    BumpSequenceOperation operation = BumpSequenceOperation.builder().bumpTo(0).build();
 
     Transaction transaction =
         new Transaction(
@@ -451,7 +462,7 @@ public class TransactionTest {
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
-    BumpSequenceOperation operation = new BumpSequenceOperation.Builder(0L).build();
+    BumpSequenceOperation operation = BumpSequenceOperation.builder().bumpTo(0).build();
 
     Transaction transaction1 =
         new Transaction(

@@ -129,8 +129,9 @@ public class InvokeHostFunctionOperationTest {
     InvokeHostFunctionOperation originOp =
         InvokeHostFunctionOperation.builder().hostFunction(hostFunction).build();
     org.stellar.sdk.xdr.Operation xdrObject = originOp.toXdr();
-    Operation restartOp = Operation.fromXdr(xdrObject);
-    assertEquals(restartOp, originOp);
+    InvokeHostFunctionOperation restoreOp =
+        (InvokeHostFunctionOperation) Operation.fromXdr(xdrObject);
+    assertEquals(restoreOp, originOp);
   }
 
   @Test

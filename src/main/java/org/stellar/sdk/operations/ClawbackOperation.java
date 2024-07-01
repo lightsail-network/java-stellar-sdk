@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
@@ -16,20 +18,32 @@ import org.stellar.sdk.xdr.OperationType;
  * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#clawback"
  * target="_blank">Clawback</a> operation.
  */
+@Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class ClawbackOperation extends Operation {
   /** The account owning of the trustline. */
-  @Getter @NonNull private final String from;
+  @NonNull private final String from;
 
-  @NonNull private final AssetTypeCreditAlphaNum asset;
+  @NonNull private final Asset asset;
 
   /** The amount to be clawed back. */
-  @Getter @NonNull private final String amount;
+  @NonNull private final String amount;
 
-  /** The asset to be clawed back. */
-  public Asset getAsset() {
-    return asset;
+  /**
+   * Construct a new {@link ClawbackOperation} object from the {@link AccountConverter} object and
+   * the {@link ClawbackOp} XDR object.
+   *
+   * @param op {@link ClawbackOp} XDR object
+   * @return {@link ClawbackOperation} object
+   */
+  public static ClawbackOperation fromXdr(AccountConverter accountConverter, ClawbackOp op) {
+    String from = accountConverter.decode(op.getFrom());
+    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    AssetTypeCreditAlphaNum asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
+    return new ClawbackOperation(from, asset, amount);
   }
 
   @Override
@@ -51,56 +65,14 @@ public class ClawbackOperation extends Operation {
     return body;
   }
 
-  /**
-   * Builds ClawbackOperation operation.
-   *
-   * @see ClawbackOperation
-   */
-  public static class Builder {
-
-    private final String from;
-    private final AssetTypeCreditAlphaNum asset;
-    private final String amount;
-
-    private String sourceAccount;
-
-    Builder(AccountConverter accountConverter, ClawbackOp op) {
-      from = accountConverter.decode(op.getFrom());
-      amount = Operation.fromXdrAmount(op.getAmount().getInt64().longValue());
-      asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
-    }
-
-    /**
-     * Creates a new ClawbackOperation builder.
-     *
-     * @param from The account holding the trustline.
-     * @param asset The asset held in the trustline.
-     * @param amount The amount to be clawed back.
-     */
-    public Builder(String from, Asset asset, String amount) {
-      this.from = from;
-      this.asset = Util.assertNonNativeAsset(asset);
-      this.amount = amount;
-    }
-
-    /**
-     * Set source account of this operation
-     *
-     * @param sourceAccount Source account
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setSourceAccount(String sourceAccount) {
-      this.sourceAccount = sourceAccount;
-      return this;
-    }
-
-    /** Builds an operation */
+  private static final class ClawbackOperationBuilderImpl
+      extends ClawbackOperationBuilder<ClawbackOperation, ClawbackOperationBuilderImpl> {
     public ClawbackOperation build() {
-      ClawbackOperation operation = new ClawbackOperation(from, asset, amount);
-      if (sourceAccount != null) {
-        operation.setSourceAccount(sourceAccount);
+      ClawbackOperation op = new ClawbackOperation(this);
+      if (!(op.asset instanceof AssetTypeCreditAlphaNum)) {
+        throw new IllegalArgumentException("native assets are not supported");
       }
-      return operation;
+      return op;
     }
   }
 }

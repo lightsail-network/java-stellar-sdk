@@ -12,7 +12,7 @@ import org.stellar.sdk.xdr.*;
 public abstract class LiquidityPoolParameters {
   LiquidityPoolParameters() {}
 
-  public static Integer Fee = 30;
+  public static Integer FEE = 30;
 
   /**
    * LiquidityPoolParameters represents the parameters specifying a liquidity pool.

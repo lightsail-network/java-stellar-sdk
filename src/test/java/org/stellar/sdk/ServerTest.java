@@ -201,7 +201,10 @@ public class ServerTest {
     TransactionBuilder builder =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, network)
             .addOperation(
-                new CreateAccountOperation.Builder(destination.getAccountId(), "2000").build())
+                CreateAccountOperation.builder()
+                    .destination(destination.getAccountId())
+                    .startingBalance("2000")
+                    .build())
             .addMemo(Memo.text("Hello world!"))
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE);
@@ -403,29 +406,35 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_B,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_B)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_C,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_D)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .addMemo(new MemoText("Hello, Stellar."))
             .setBaseFee(100)
@@ -450,28 +459,33 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_MEMO_ID, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_ID)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_ID,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_ID)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_ID,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_ID)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
-            .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_ID).build())
+            .addOperation(
+                AccountMergeOperation.builder().destination(DESTINATION_ACCOUNT_MEMO_ID).build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -496,29 +510,35 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -541,29 +561,35 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -602,29 +628,35 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_B,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_B)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -662,29 +694,35 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_C,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -722,29 +760,35 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_D)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -782,29 +826,35 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_MEMO_REQUIRED,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_C,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_D)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -841,31 +891,38 @@ public class ServerTest {
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
-            .addOperation(new ManageDataOperation.Builder("Hello", "Stellar".getBytes()).build())
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10")
+                ManageDataOperation.builder().name("Hello").value("Stellar".getBytes()).build())
+            .addOperation(
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_A,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_C,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -904,28 +961,33 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_NO_FOUND, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_NO_FOUND)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_FOUND,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_NO_FOUND)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_NO_FOUND,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_NO_FOUND)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
-            .addOperation(new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_NO_FOUND).build())
+            .addOperation(
+                AccountMergeOperation.builder().destination(DESTINATION_ACCOUNT_NO_FOUND).build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();
@@ -949,37 +1011,47 @@ public class ServerTest {
     Transaction transaction =
         new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_FETCH_ERROR, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_FETCH_ERROR)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_A, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PaymentOperation.Builder(
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_B, new AssetTypeNative(), "10")
+                PaymentOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_B)
+                    .asset(new AssetTypeNative())
+                    .amount("10")
                     .build())
             .addOperation(
-                new PathPaymentStrictReceiveOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_C,
+                PathPaymentStrictReceiveOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendMax("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destAmount("5")
                     .build())
             .addOperation(
-                new PathPaymentStrictSendOperation.Builder(
-                        new AssetTypeNative(),
-                        "10",
-                        DESTINATION_ACCOUNT_MEMO_REQUIRED_D,
+                PathPaymentStrictSendOperation.builder()
+                    .sendAsset(new AssetTypeNative())
+                    .sendAmount("10")
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_D)
+                    .destAsset(
                         new AssetTypeCreditAlphaNum4(
-                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"),
-                        "5")
+                            "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
+                    .destMin("5")
                     .build())
             .addOperation(
-                new AccountMergeOperation.Builder(DESTINATION_ACCOUNT_MEMO_REQUIRED_D).build())
+                AccountMergeOperation.builder()
+                    .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_D)
+                    .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(100)
             .build();

@@ -26,7 +26,7 @@ public class LiquidityPoolDepositOperationTest {
           LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
           nativeAsset,
           creditAsset,
-          LiquidityPoolParameters.Fee);
+          LiquidityPoolParameters.FEE);
 
   @Test
   public void testLiquidityPoolDepositOperationValid() {
@@ -35,9 +35,14 @@ public class LiquidityPoolDepositOperationTest {
     Price minPrice = Price.fromString("0.01");
     Price maxPrice = Price.fromString("0.02");
     LiquidityPoolDepositOperation operation =
-        new LiquidityPoolDepositOperation(
-            liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
-    operation.setSourceAccount(source.getAccountId());
+        LiquidityPoolDepositOperation.builder()
+            .liquidityPoolID(liquidityPoolID)
+            .maxAmountA(maxAmountA)
+            .maxAmountB(maxAmountB)
+            .minPrice(minPrice)
+            .maxPrice(maxPrice)
+            .sourceAccount(source.getAccountId())
+            .build();
 
     org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
     LiquidityPoolDepositOperation parsedOperation =

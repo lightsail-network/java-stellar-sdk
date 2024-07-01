@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.xdr.Int64;
@@ -12,12 +14,14 @@ import org.stellar.sdk.xdr.PaymentOp;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#payment"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#payment"
  * target="_blank">Payment</a> operation.
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class PaymentOperation extends Operation {
   /** Account that receives the payment. */
   @NonNull private final String destination;
@@ -27,6 +31,20 @@ public class PaymentOperation extends Operation {
 
   /** Amount of the asset to send. */
   @NonNull private final String amount;
+
+  /**
+   * Construct a new {@link PaymentOperation} object from the {@link AccountConverter} object and
+   * the {@link PaymentOp} XDR object.
+   *
+   * @param op {@link PaymentOp} XDR object
+   * @return {@link PaymentOperation} object
+   */
+  public static PaymentOperation fromXdr(AccountConverter accountConverter, PaymentOp op) {
+    String destination = accountConverter.decode(op.getDestination());
+    Asset asset = Asset.fromXdr(op.getAsset());
+    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    return new PaymentOperation(destination, asset, amount);
+  }
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -46,64 +64,5 @@ public class PaymentOperation extends Operation {
     body.setDiscriminant(OperationType.PAYMENT);
     body.setPaymentOp(op);
     return body;
-  }
-
-  /**
-   * Builds Payment operation.
-   *
-   * @see PaymentOperation
-   */
-  public static class Builder {
-
-    private final String destination;
-    private final Asset asset;
-    private final String amount;
-
-    private String sourceAccount;
-
-    /**
-     * Construct a new PaymentOperation builder from a PaymentOp XDR.
-     *
-     * @param op {@link PaymentOp}
-     */
-    Builder(AccountConverter accountConverter, PaymentOp op) {
-      destination = accountConverter.decode(op.getDestination());
-      asset = Asset.fromXdr(op.getAsset());
-      amount = Operation.fromXdrAmount(op.getAmount().getInt64());
-    }
-
-    /**
-     * Creates a new PaymentOperation builder.
-     *
-     * @param destination The destination account id
-     * @param asset The asset to send.
-     * @param amount The amount to send in lumens.
-     * @throws ArithmeticException when amount has more than 7 decimal places.
-     */
-    public Builder(String destination, Asset asset, String amount) {
-      this.destination = destination;
-      this.asset = asset;
-      this.amount = amount;
-    }
-
-    /**
-     * Sets the source account for this operation.
-     *
-     * @param account The operation's source account.
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setSourceAccount(String account) {
-      sourceAccount = account;
-      return this;
-    }
-
-    /** Builds an operation */
-    public PaymentOperation build() {
-      PaymentOperation operation = new PaymentOperation(destination, asset, amount);
-      if (sourceAccount != null) {
-        operation.setSourceAccount(sourceAccount);
-      }
-      return operation;
-    }
   }
 }

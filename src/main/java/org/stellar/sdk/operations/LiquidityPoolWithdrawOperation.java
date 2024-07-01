@@ -1,10 +1,11 @@
 package org.stellar.sdk.operations;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPoolID;
@@ -16,12 +17,14 @@ import org.stellar.sdk.xdr.OperationType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#liquidity-pool-deposit"
- * target="_blank">LiquidityPoolDeposit</a> operation.
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#liquidity-pool-withdraw"
+ * target="_blank">iquidityPoolWithdraw</a> operation.
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class LiquidityPoolWithdrawOperation extends Operation {
   /** The liquidity pool ID. * */
   @NonNull private final LiquidityPoolID liquidityPoolID;
@@ -35,23 +38,32 @@ public class LiquidityPoolWithdrawOperation extends Operation {
   /** Minimum amount of second asset to withdraw. * */
   @NonNull private final String minAmountB;
 
-  public LiquidityPoolWithdrawOperation(LiquidityPoolWithdrawOp op) {
-    this.liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
-    this.amount = Operation.fromXdrAmount(op.getAmount().getInt64());
-    this.minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64());
-    this.minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64());
-  }
-
-  public LiquidityPoolWithdrawOperation(AssetAmount a, AssetAmount b, @NonNull String amount) {
+  public LiquidityPoolWithdrawOperation(
+      @NonNull AssetAmount a, @NonNull AssetAmount b, @NonNull String amount) {
     this.liquidityPoolID =
         new LiquidityPoolID(
             LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             a.getAsset(),
             b.getAsset(),
-            LiquidityPoolParameters.Fee);
+            LiquidityPoolParameters.FEE);
     this.amount = amount;
     this.minAmountA = a.getAmount();
     this.minAmountB = b.getAmount();
+  }
+
+  /**
+   * Construct a new {@link LiquidityPoolWithdrawOperation} object from the {@link AccountConverter}
+   * object and the {@link LiquidityPoolWithdrawOp} XDR object.
+   *
+   * @param op {@link LiquidityPoolWithdrawOp} XDR object
+   * @return {@link LiquidityPoolWithdrawOperation} object
+   */
+  public static LiquidityPoolWithdrawOperation fromXdr(LiquidityPoolWithdrawOp op) {
+    LiquidityPoolID liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
+    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    String minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64());
+    String minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64());
+    return new LiquidityPoolWithdrawOperation(liquidityPoolID, amount, minAmountA, minAmountB);
   }
 
   @Override

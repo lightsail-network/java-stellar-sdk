@@ -1,8 +1,11 @@
 package org.stellar.sdk.operations;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.AccountFlag;
 import org.stellar.sdk.StrKey;
@@ -10,88 +13,103 @@ import org.stellar.sdk.xdr.*;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#set-options">SetOptions</a>
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-options">SetOptions</a>
  * operation.
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class SetOptionsOperation extends Operation {
 
   /** Account of the inflation destination. */
-  private final String inflationDestination;
+  @Nullable private final String inflationDestination;
 
   /**
    * Indicates which flags to clear. For details about the flags, please refer to the <a
    * href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
    * You can also use {@link AccountFlag} enum.
    */
-  private final Integer clearFlags;
+  @Nullable private final Integer clearFlags;
 
   /**
    * Indicates which flags to set. For details about the flags, please refer to the <a
    * href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
    * You can also use {@link AccountFlag} enum.
    */
-  private final Integer setFlags;
+  @Nullable private final Integer setFlags;
 
   /** Weight of the master key. */
-  private final Integer masterKeyWeight;
+  @Nullable private final Integer masterKeyWeight;
 
   /**
    * A number from 0-255 representing the threshold this account sets on all operations it performs
    * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
    * low threshold</a>.
    */
-  private final Integer lowThreshold;
+  @Nullable private final Integer lowThreshold;
 
   /**
    * A number from 0-255 representing the threshold this account sets on all operations it performs
    * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
    * medium threshold</a>.
    */
-  private final Integer mediumThreshold;
+  @Nullable private final Integer mediumThreshold;
 
   /**
    * A number from 0-255 representing the threshold this account sets on all operations it performs
    * that have <a href="https://developers.stellar.org/docs/glossary/multisig/" target="_blank">a
    * high threshold</a>.
    */
-  private final Integer highThreshold;
+  @Nullable private final Integer highThreshold;
 
   /** The home domain of an account. */
-  private final String homeDomain;
+  @Nullable private final String homeDomain;
 
   /** Additional signer added/removed in this operation. */
-  private final SignerKey signer;
+  @Nullable private final SignerKey signer;
 
   /** Additional signer weight. The signer is deleted if the weight is 0. */
-  private final Integer signerWeight;
+  @Nullable private final Integer signerWeight;
 
-  private SetOptionsOperation(
-      String inflationDestination,
-      Integer clearFlags,
-      Integer setFlags,
-      Integer masterKeyWeight,
-      Integer lowThreshold,
-      Integer mediumThreshold,
-      Integer highThreshold,
-      String homeDomain,
-      SignerKey signer,
-      Integer signerWeight) {
-    this.inflationDestination = inflationDestination;
-    this.clearFlags = clearFlags;
-    this.setFlags = setFlags;
-    this.masterKeyWeight = masterKeyWeight;
-    this.lowThreshold = lowThreshold;
-    this.mediumThreshold = mediumThreshold;
-    this.highThreshold = highThreshold;
-    this.homeDomain = homeDomain;
-    this.signer = signer;
-    this.signerWeight = signerWeight;
-
-    if (this.homeDomain != null && new XdrString(this.homeDomain).getBytes().length > 32) {
-      throw new IllegalArgumentException("home domain cannot exceed 32 bytes");
+  /**
+   * Construct a new {@link SetOptionsOperation} object from a {@link SetOptionsOp} XDR object.
+   *
+   * @param op {@link SetOptionsOp} XDR object
+   * @return {@link SetOptionsOperation} object
+   */
+  public static SetOptionsOperation fromXdr(SetOptionsOp op) {
+    SetOptionsOperationBuilder<?, ?> builder = SetOptionsOperation.builder();
+    if (op.getInflationDest() != null) {
+      builder.inflationDestination(StrKey.encodeEd25519PublicKey(op.getInflationDest()));
     }
+    if (op.getClearFlags() != null) {
+      builder.clearFlags(op.getClearFlags().getUint32().getNumber().intValue());
+    }
+    if (op.getSetFlags() != null) {
+      builder.setFlags(op.getSetFlags().getUint32().getNumber().intValue());
+    }
+    if (op.getMasterWeight() != null) {
+      builder.masterKeyWeight(op.getMasterWeight().getUint32().getNumber().intValue());
+    }
+    if (op.getLowThreshold() != null) {
+      builder.lowThreshold(op.getLowThreshold().getUint32().getNumber().intValue());
+    }
+    if (op.getMedThreshold() != null) {
+      builder.mediumThreshold(op.getMedThreshold().getUint32().getNumber().intValue());
+    }
+    if (op.getHighThreshold() != null) {
+      builder.highThreshold(op.getHighThreshold().getUint32().getNumber().intValue());
+    }
+    if (op.getHomeDomain() != null) {
+      builder.homeDomain(op.getHomeDomain().getString32().toString());
+    }
+    if (op.getSigner() != null) {
+      builder.signer(op.getSigner().getKey());
+      builder.signerWeight(op.getSigner().getWeight().getUint32().getNumber().intValue());
+    }
+    return builder.build();
   }
 
   @Override
@@ -135,10 +153,10 @@ public class SetOptionsOperation extends Operation {
       homeDomain.setString32(new XdrString(this.homeDomain));
       op.setHomeDomain(homeDomain);
     }
-    if (signer != null) {
+    if (signer != null && signerWeight != null) {
       org.stellar.sdk.xdr.Signer signer = new org.stellar.sdk.xdr.Signer();
       Uint32 weight = new Uint32();
-      weight.setUint32(new XdrUnsignedInteger(signerWeight & 0xFF));
+      weight.setUint32(new XdrUnsignedInteger(signerWeight));
       signer.setKey(this.signer);
       signer.setWeight(weight);
       op.setSigner(signer);
@@ -151,202 +169,23 @@ public class SetOptionsOperation extends Operation {
     return body;
   }
 
-  /**
-   * Builds SetOptions operation.
-   *
-   * @see SetOptionsOperation
-   */
-  public static class Builder {
-
-    private String inflationDestination;
-    private Integer clearFlags;
-    private Integer setFlags;
-    private Integer masterKeyWeight;
-    private Integer lowThreshold;
-    private Integer mediumThreshold;
-    private Integer highThreshold;
-    private String homeDomain;
-    private SignerKey signer;
-    private Integer signerWeight;
-    private String sourceAccount;
-
-    Builder(SetOptionsOp op) {
-      if (op.getInflationDest() != null) {
-        inflationDestination = StrKey.encodeEd25519PublicKey(op.getInflationDest());
-      }
-      if (op.getClearFlags() != null) {
-        clearFlags = op.getClearFlags().getUint32().getNumber().intValue();
-      }
-      if (op.getSetFlags() != null) {
-        setFlags = op.getSetFlags().getUint32().getNumber().intValue();
-      }
-      if (op.getMasterWeight() != null) {
-        masterKeyWeight = op.getMasterWeight().getUint32().getNumber().intValue();
-      }
-      if (op.getLowThreshold() != null) {
-        lowThreshold = op.getLowThreshold().getUint32().getNumber().intValue();
-      }
-      if (op.getMedThreshold() != null) {
-        mediumThreshold = op.getMedThreshold().getUint32().getNumber().intValue();
-      }
-      if (op.getHighThreshold() != null) {
-        highThreshold = op.getHighThreshold().getUint32().getNumber().intValue();
-      }
-      if (op.getHomeDomain() != null) {
-        homeDomain = op.getHomeDomain().getString32().toString();
-      }
-      if (op.getSigner() != null) {
-        signer = op.getSigner().getKey();
-        signerWeight = op.getSigner().getWeight().getUint32().getNumber().intValue() & 0xFF;
-      }
-    }
-
-    /** Creates a new SetOptionsOperation builder. */
-    public Builder() {}
-
-    /**
-     * Sets the inflation destination for the account.
-     *
-     * @param inflationDestination The inflation destination account.
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setInflationDestination(String inflationDestination) {
-      this.inflationDestination = inflationDestination;
-      return this;
-    }
-
-    /**
-     * Clears the given flags from the account.
-     *
-     * @param clearFlags For details about the flags, please refer to the <a
-     *     href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts
-     *     doc</a>.
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setClearFlags(int clearFlags) {
-      this.clearFlags = clearFlags;
-      return this;
-    }
-
-    /**
-     * Sets the given flags on the account.
-     *
-     * @param setFlags For details about the flags, please refer to the <a
-     *     href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts
-     *     doc</a>.
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setSetFlags(int setFlags) {
-      this.setFlags = setFlags;
-      return this;
-    }
-
-    /**
-     * Weight of the master key.
-     *
-     * @param masterKeyWeight Number between 0 and 255
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setMasterKeyWeight(int masterKeyWeight) {
-      this.masterKeyWeight = masterKeyWeight;
-      return this;
-    }
-
-    /**
-     * A number from 0-255 representing the threshold this account sets on all operations it
-     * performs that have a low threshold.
-     *
-     * @param lowThreshold Number between 0 and 255
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setLowThreshold(int lowThreshold) {
-      this.lowThreshold = lowThreshold;
-      return this;
-    }
-
-    /**
-     * A number from 0-255 representing the threshold this account sets on all operations it
-     * performs that have a medium threshold.
-     *
-     * @param mediumThreshold Number between 0 and 255
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setMediumThreshold(int mediumThreshold) {
-      this.mediumThreshold = mediumThreshold;
-      return this;
-    }
-
-    /**
-     * A number from 0-255 representing the threshold this account sets on all operations it
-     * performs that have a high threshold.
-     *
-     * @param highThreshold Number between 0 and 255
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setHighThreshold(int highThreshold) {
-      this.highThreshold = highThreshold;
-      return this;
-    }
-
-    /**
-     * Sets the account's home domain address used in <a
-     * href="https://developers.stellar.org/docs/glossary/federation/"
-     * target="_blank">Federation</a>.
-     *
-     * @param homeDomain A string of the address which can be up to 32 characters.
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setHomeDomain(String homeDomain) {
-      if (homeDomain.length() > 32) {
-        throw new IllegalArgumentException("Home domain must be <= 32 characters");
-      }
-      this.homeDomain = homeDomain;
-      return this;
-    }
-
-    /**
-     * Add, update, or remove a signer from the account. Signer is deleted if the weight = 0;
-     *
-     * @param signer The signer key. Use {@link org.stellar.sdk.Signer} helper to create this
-     *     object.
-     * @param weight The weight to attach to the signer (0-255).
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setSigner(@NonNull SignerKey signer, @NonNull Integer weight) {
-      this.signer = signer;
-      signerWeight = weight & 0xFF;
-      return this;
-    }
-
-    /**
-     * Sets the source account for this operation.
-     *
-     * @param sourceAccount The operation's source account.
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setSourceAccount(String sourceAccount) {
-      this.sourceAccount = sourceAccount;
-      return this;
-    }
-
-    /** Builds an operation */
+  private static final class SetOptionsOperationBuilderImpl
+      extends SetOptionsOperationBuilder<SetOptionsOperation, SetOptionsOperationBuilderImpl> {
     public SetOptionsOperation build() {
-      SetOptionsOperation operation =
-          new SetOptionsOperation(
-              inflationDestination,
-              clearFlags,
-              setFlags,
-              masterKeyWeight,
-              lowThreshold,
-              mediumThreshold,
-              highThreshold,
-              homeDomain,
-              signer,
-              signerWeight);
-      if (sourceAccount != null) {
-        operation.setSourceAccount(sourceAccount);
+      SetOptionsOperation op = new SetOptionsOperation(this);
+      if (op.homeDomain != null && new XdrString(op.homeDomain).getBytes().length > 32) {
+        throw new IllegalArgumentException("home domain cannot exceed 32 bytes");
       }
-      return operation;
+      if (op.signer != null && op.signerWeight == null) {
+        throw new IllegalArgumentException("signer weight cannot be null if signer is not null");
+      }
+      if (op.signer == null && op.signerWeight != null) {
+        throw new IllegalArgumentException("signer cannot be null if signer weight is not null");
+      }
+      if (op.signerWeight != null && (op.signerWeight < 0 || op.signerWeight > 255)) {
+        throw new IllegalArgumentException("signer weight must be between 0 and 255");
+      }
+      return op;
     }
   }
 }

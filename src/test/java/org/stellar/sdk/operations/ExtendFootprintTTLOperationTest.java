@@ -33,8 +33,9 @@ public class ExtendFootprintTTLOperationTest {
     ExtendFootprintTTLOperation originOp =
         ExtendFootprintTTLOperation.builder().extendTo(123L).sourceAccount(source).build();
     org.stellar.sdk.xdr.Operation xdrObject = originOp.toXdr();
-    Operation restartOp = Operation.fromXdr(xdrObject);
-    Assert.assertEquals(restartOp, originOp);
+    ExtendFootprintTTLOperation restoreOp =
+        (ExtendFootprintTTLOperation) Operation.fromXdr(xdrObject);
+    Assert.assertEquals(restoreOp, originOp);
   }
 
   @Test

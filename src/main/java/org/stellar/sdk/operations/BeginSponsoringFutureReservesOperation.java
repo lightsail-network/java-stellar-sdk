@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.BeginSponsoringFutureReservesOp;
@@ -11,15 +13,29 @@ import org.stellar.sdk.xdr.OperationType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#begin-sponsoring-future-reserves"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#begin-sponsoring-future-reserves"
  * target="_blank">BeginSponsoringFutureReserves</a> operation.
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class BeginSponsoringFutureReservesOperation extends Operation {
   /** The sponsored account id. * */
   @NonNull private final String sponsoredId;
+
+  /**
+   * Construct a new {@link BeginSponsoringFutureReservesOperation} object from a {@link
+   * BeginSponsoringFutureReservesOp} XDR object.
+   *
+   * @param op {@link BeginSponsoringFutureReservesOp} XDR object
+   * @return {@link BeginSponsoringFutureReservesOperation} object
+   */
+  public static BeginSponsoringFutureReservesOperation fromXdr(BeginSponsoringFutureReservesOp op) {
+    return new BeginSponsoringFutureReservesOperation(
+        StrKey.encodeEd25519PublicKey(op.getSponsoredID()));
+  }
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -32,53 +48,5 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
     body.setBeginSponsoringFutureReservesOp(op);
 
     return body;
-  }
-
-  public static class Builder {
-
-    private final String sponsoredId;
-
-    private String sourceAccount;
-
-    /**
-     * Construct a new BeginSponsoringFutureReserves builder from a BeginSponsoringFutureReserves
-     * XDR.
-     *
-     * @param op {@link BeginSponsoringFutureReservesOp}
-     */
-    Builder(BeginSponsoringFutureReservesOp op) {
-      sponsoredId = StrKey.encodeEd25519PublicKey(op.getSponsoredID());
-    }
-
-    /**
-     * Creates a new BeginSponsoringFutureReserves builder.
-     *
-     * @param sponsoredId account id to sponsor
-     */
-    public Builder(String sponsoredId) {
-      this.sponsoredId = sponsoredId;
-    }
-
-    /**
-     * Sets the source account for this operation.
-     *
-     * @param sourceAccount The operation's source account.
-     * @return Builder object so you can chain methods.
-     */
-    public BeginSponsoringFutureReservesOperation.Builder setSourceAccount(
-        @NonNull String sourceAccount) {
-      this.sourceAccount = sourceAccount;
-      return this;
-    }
-
-    /** Builds an operation */
-    public BeginSponsoringFutureReservesOperation build() {
-      BeginSponsoringFutureReservesOperation operation =
-          new BeginSponsoringFutureReservesOperation(sponsoredId);
-      if (sourceAccount != null) {
-        operation.setSourceAccount(sourceAccount);
-      }
-      return operation;
-    }
   }
 }

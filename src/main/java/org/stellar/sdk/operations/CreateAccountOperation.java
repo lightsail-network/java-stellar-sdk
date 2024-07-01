@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.CreateAccountOp;
@@ -12,12 +14,14 @@ import org.stellar.sdk.xdr.OperationType;
 
 /**
  * Represents <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#create-account"
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-account"
  * target="_blank">CreateAccount</a> operation.
  */
 @Getter
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@SuperBuilder(toBuilder = true)
 public class CreateAccountOperation extends Operation {
 
   /** Account that is created and funded */
@@ -25,6 +29,19 @@ public class CreateAccountOperation extends Operation {
 
   /** Amount of XLM to send to the newly created account. */
   @NonNull private final String startingBalance;
+
+  /**
+   * Construct a new {@link CreateAccountOperation} object from a {@link CreateAccountOp} XDR
+   * object.
+   *
+   * @param op {@link CreateAccountOp} XDR object
+   * @return {@link CreateAccountOperation} object
+   */
+  public static CreateAccountOperation fromXdr(CreateAccountOp op) {
+    String destination = StrKey.encodeEd25519PublicKey(op.getDestination());
+    String startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64());
+    return new CreateAccountOperation(destination, startingBalance);
+  }
 
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
@@ -39,60 +56,5 @@ public class CreateAccountOperation extends Operation {
     body.setDiscriminant(OperationType.CREATE_ACCOUNT);
     body.setCreateAccountOp(op);
     return body;
-  }
-
-  /**
-   * Builds CreateAccount operation.
-   *
-   * @see CreateAccountOperation
-   */
-  public static class Builder {
-
-    private final String destination;
-    private final String startingBalance;
-
-    private String sourceAccount;
-
-    /**
-     * Construct a new CreateAccount builder from a CreateAccountOp XDR.
-     *
-     * @param op {@link CreateAccountOp}
-     */
-    Builder(CreateAccountOp op) {
-      destination = StrKey.encodeEd25519PublicKey(op.getDestination());
-      startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64());
-    }
-
-    /**
-     * Creates a new CreateAccount builder.
-     *
-     * @param destination The destination keypair (uses only the public key).
-     * @param startingBalance The initial balance to start with in lumens.
-     * @throws ArithmeticException when startingBalance has more than 7 decimal places.
-     */
-    public Builder(String destination, String startingBalance) {
-      this.destination = destination;
-      this.startingBalance = startingBalance;
-    }
-
-    /**
-     * Sets the source account for this operation.
-     *
-     * @param account The operation's source account.
-     * @return Builder object so you can chain methods.
-     */
-    public Builder setSourceAccount(String account) {
-      sourceAccount = account;
-      return this;
-    }
-
-    /** Builds an operation */
-    public CreateAccountOperation build() {
-      CreateAccountOperation operation = new CreateAccountOperation(destination, startingBalance);
-      if (sourceAccount != null) {
-        operation.setSourceAccount(sourceAccount);
-      }
-      return operation;
-    }
   }
 }
