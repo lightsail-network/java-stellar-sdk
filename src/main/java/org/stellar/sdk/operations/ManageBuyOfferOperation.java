@@ -40,7 +40,7 @@ public class ManageBuyOfferOperation extends Operation {
    * The ID of the offer, when it is 0, represents creating a new offer, otherwise updates an
    * existing offer.
    */
-  long offerId;
+  private final long offerId;
 
   /**
    * Construct a new {@link ManageBuyOfferOperation} object from a {@link ManageBuyOfferOp} XDR

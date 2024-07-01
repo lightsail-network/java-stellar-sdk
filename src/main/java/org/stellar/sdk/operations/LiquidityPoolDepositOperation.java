@@ -43,7 +43,10 @@ public class LiquidityPoolDepositOperation extends Operation {
   @NonNull private final Price maxPrice;
 
   public LiquidityPoolDepositOperation(
-      AssetAmount a, AssetAmount b, @NonNull Price minPrice, @NonNull Price maxPrice) {
+      @NonNull AssetAmount a,
+      @NonNull AssetAmount b,
+      @NonNull Price minPrice,
+      @NonNull Price maxPrice) {
     if (a.getAsset().compareTo(b.getAsset()) >= 0) {
       throw new IllegalArgumentException("AssetA must be < AssetB");
     }

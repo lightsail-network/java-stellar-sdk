@@ -38,7 +38,8 @@ public class LiquidityPoolWithdrawOperation extends Operation {
   /** Minimum amount of second asset to withdraw. * */
   @NonNull private final String minAmountB;
 
-  public LiquidityPoolWithdrawOperation(AssetAmount a, AssetAmount b, @NonNull String amount) {
+  public LiquidityPoolWithdrawOperation(
+      @NonNull AssetAmount a, @NonNull AssetAmount b, @NonNull String amount) {
     this.liquidityPoolID =
         new LiquidityPoolID(
             LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,

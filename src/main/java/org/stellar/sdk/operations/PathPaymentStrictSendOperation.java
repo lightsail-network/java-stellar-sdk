@@ -99,10 +99,4 @@ public class PathPaymentStrictSendOperation extends Operation {
     body.setPathPaymentStrictSendOp(op);
     return body;
   }
-
-  private void checkValidate() {
-    if (this.path.length > 5) {
-      throw new IllegalArgumentException("The maximum number of assets in the path is 5");
-    }
-  }
 }

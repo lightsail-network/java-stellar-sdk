@@ -1,8 +1,8 @@
 package org.stellar.sdk.operations;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
@@ -16,7 +16,7 @@ import org.stellar.sdk.xdr.OperationType;
 @Getter
 @AllArgsConstructor
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class InflationOperation extends Operation {
   @Override
