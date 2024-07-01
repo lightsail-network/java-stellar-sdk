@@ -13,8 +13,7 @@ import org.stellar.sdk.exception.UnexpectedException;
  * <p>note: For some reason we need to make it public, but I don't recommend to use it directly.
  */
 public class Util {
-  // TODO: make HEX_ARRAY private
-  public static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
   /**
    * Returns hex representation of <code>bytes</code> array.
