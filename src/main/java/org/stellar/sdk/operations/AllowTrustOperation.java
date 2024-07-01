@@ -89,21 +89,7 @@ public class AllowTrustOperation extends Operation {
       asset.setAssetCode12(assetCode12);
     }
     op.setAsset(asset);
-    Uint32 flag = new Uint32();
-    // authorize
-    switch (authorize) {
-      case UNAUTHORIZED_FLAG:
-        flag.setUint32(new XdrUnsignedInteger(0));
-        break;
-      case AUTHORIZED_FLAG:
-        flag.setUint32(new XdrUnsignedInteger(TrustLineFlags.AUTHORIZED_FLAG.getValue()));
-        break;
-      case AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG:
-        flag.setUint32(
-            new XdrUnsignedInteger(
-                TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue()));
-        break;
-    }
+    Uint32 flag = new Uint32(new XdrUnsignedInteger(authorize.value));
     op.setAuthorize(flag);
 
     org.stellar.sdk.xdr.Operation.OperationBody body =
@@ -129,12 +115,12 @@ public class AllowTrustOperation extends Operation {
      * The account can hold a balance, receive payments, send payments, maintain offers or manage
      * offers.
      */
-    AUTHORIZED_FLAG(1),
+    AUTHORIZED_FLAG(TrustLineFlags.AUTHORIZED_FLAG.getValue()),
     /**
      * The account can hold a balance and maintain offers but cannot receive payments, send payments
      * or manage offers.
      */
-    AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG(2);
+    AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG(TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG.getValue());
 
     private final int value;
 
