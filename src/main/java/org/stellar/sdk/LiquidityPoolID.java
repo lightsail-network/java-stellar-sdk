@@ -37,6 +37,10 @@ public final class LiquidityPoolID {
     }
   }
 
+  public String getPoolID() {
+    return Util.bytesToHex(hash).toLowerCase();
+  }
+
   /**
    * Generates LiquidityPoolID object from a given XDR object
    *
@@ -55,6 +59,6 @@ public final class LiquidityPoolID {
 
   @Override
   public String toString() {
-    return Util.bytesToHex(hash).toLowerCase();
+    return getPoolID();
   }
 }

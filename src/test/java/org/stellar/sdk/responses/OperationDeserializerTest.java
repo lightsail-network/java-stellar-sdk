@@ -587,10 +587,11 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(
         operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.getLimit(), "5.0000000");
-    // TODO: fix
-    //    assertEquals(
-    //        ((AssetTypePoolShare) operation.getAsset()).getPoolId(),
-    //        "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0");
+
+    assertNotNull(operation.getTrustLineAsset().getLiquidityPoolId());
+    assertEquals(
+            operation.getTrustLineAsset().getLiquidityPoolId().getPoolID(),
+            "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0");
   }
 
   @Test
