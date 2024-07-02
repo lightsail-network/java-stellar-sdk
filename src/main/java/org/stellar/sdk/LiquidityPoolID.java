@@ -4,7 +4,6 @@ import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import org.stellar.sdk.exception.UnexpectedException;
-import org.stellar.sdk.xdr.*;
 import org.stellar.sdk.xdr.LiquidityPoolParameters;
 
 /**
@@ -37,7 +36,7 @@ public final class LiquidityPoolID {
     }
   }
 
-  public String getPoolID() {
+  public String getPoolId() {
     return Util.bytesToHex(hash).toLowerCase();
   }
 
@@ -59,6 +58,6 @@ public final class LiquidityPoolID {
 
   @Override
   public String toString() {
-    return getPoolID();
+    return getPoolId();
   }
 }

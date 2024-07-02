@@ -590,7 +590,7 @@ public class OperationDeserializerTest extends TestCase {
 
     assertNotNull(operation.getTrustLineAsset().getLiquidityPoolId());
     assertEquals(
-        operation.getTrustLineAsset().getLiquidityPoolId().getPoolID(),
+        operation.getTrustLineAsset().getLiquidityPoolId().getPoolId(),
         "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0");
   }
 
