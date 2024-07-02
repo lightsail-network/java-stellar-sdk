@@ -44,7 +44,7 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
   }
 
   public StrictReceivePathsRequestBuilder destinationAsset(Asset asset) {
-    uriBuilder.setQueryParameter("destination_asset_type", asset.getType());
+    uriBuilder.setQueryParameter("destination_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.setQueryParameter("destination_asset_code", creditAlphaNumAsset.getCode());

@@ -1,13 +1,11 @@
 package org.stellar.sdk.responses.operations;
 
-import static org.stellar.sdk.Asset.create;
-
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.Asset;
+import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.responses.MuxedAccount;
 
 /**
@@ -55,7 +53,7 @@ public class ChangeTrustOperationResponse extends OperationResponse {
     return Optional.of(new MuxedAccount(this.trustorMuxed, this.trustor, this.trustorMuxedId));
   }
 
-  public Asset getAsset() {
-    return create(assetType, assetCode, assetIssuer, liquidityPoolId);
+  public TrustLineAsset getTrustLineAsset() {
+    return getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);
   }
 }

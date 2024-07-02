@@ -1,7 +1,5 @@
 package org.stellar.sdk.responses;
 
-import static org.stellar.sdk.Asset.create;
-
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.Optional;
@@ -9,10 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
-import org.stellar.sdk.Asset;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.TrustLineAsset;
 
 /**
  * Represents account response.
@@ -217,11 +215,12 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     String sponsor;
 
-    public Optional<Asset> getAsset() {
+    public Optional<TrustLineAsset> getTrustLineAsset() {
       if (liquidityPoolID != null) {
-        return Optional.of(create(assetType, assetCode, assetIssuer, liquidityPoolID.toString()));
+        return Optional.of(
+            Response.getTrustLineAsset(null, null, null, liquidityPoolID.toString()));
       } else {
-        return Optional.of(create(assetType, assetCode, assetIssuer));
+        return Optional.of(Response.getTrustLineAsset(assetType, assetCode, assetIssuer, null));
       }
     }
 

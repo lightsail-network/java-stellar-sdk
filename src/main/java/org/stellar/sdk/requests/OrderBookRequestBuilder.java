@@ -15,7 +15,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
   }
 
   public OrderBookRequestBuilder buyingAsset(Asset asset) {
-    uriBuilder.setQueryParameter("buying_asset_type", asset.getType());
+    uriBuilder.setQueryParameter("buying_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.setQueryParameter("buying_asset_code", creditAlphaNumAsset.getCode());
@@ -25,7 +25,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
   }
 
   public OrderBookRequestBuilder sellingAsset(Asset asset) {
-    uriBuilder.setQueryParameter("selling_asset_type", asset.getType());
+    uriBuilder.setQueryParameter("selling_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.setQueryParameter("selling_asset_code", creditAlphaNumAsset.getCode());

@@ -20,8 +20,7 @@ class AssetDeserializer implements JsonDeserializer<Asset> {
     return Asset.create(
         json.getAsJsonObject().get("asset_type").getAsString(),
         getValueAsString(json.getAsJsonObject().get("asset_code")),
-        getValueAsString(json.getAsJsonObject().get("asset_issuer")),
-        getValueAsString(json.getAsJsonObject().get("liquidity_pool_id")));
+        getValueAsString(json.getAsJsonObject().get("asset_issuer")));
   }
 
   private String getValueAsString(JsonElement element) {

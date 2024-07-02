@@ -9,7 +9,9 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
+import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.responses.effects.AccountCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.AccountCreditedEffectResponse;
 import org.stellar.sdk.responses.effects.AccountDebitedEffectResponse;
@@ -623,8 +625,9 @@ public class EffectDeserializerTest extends TestCase {
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
     TestCase.assertEquals(
-        effect.getAsset(),
-        create(null, "EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+        effect.getTrustLineAsset(),
+        new TrustLineAsset(
+            create(null, "EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
     assertEquals(effect.getLimit(), "1000.0");
 
     assertEquals(
@@ -667,12 +670,10 @@ public class EffectDeserializerTest extends TestCase {
         (TrustlineCreatedEffectResponse)
             GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
     TestCase.assertEquals(
-        effect.getAsset(),
-        create(
-            "liquidity_pool_shares",
-            null,
-            null,
-            "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0"));
+        effect.getTrustLineAsset(),
+        new TrustLineAsset(
+            new LiquidityPoolID(
+                "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0")));
   }
 
   @Test
@@ -707,8 +708,9 @@ public class EffectDeserializerTest extends TestCase {
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
     assertEquals(
-        effect.getAsset(),
-        create(null, "EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+        effect.getTrustLineAsset(),
+        new TrustLineAsset(
+            create(null, "EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
     assertEquals(effect.getLimit(), "0.0");
 
     assertEquals(
@@ -751,12 +753,10 @@ public class EffectDeserializerTest extends TestCase {
         (TrustlineRemovedEffectResponse)
             GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
     TestCase.assertEquals(
-        effect.getAsset(),
-        create(
-            "liquidity_pool_shares",
-            null,
-            null,
-            "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0"));
+        effect.getTrustLineAsset(),
+        new TrustLineAsset(
+            new LiquidityPoolID(
+                "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0")));
   }
 
   @Test
@@ -791,8 +791,9 @@ public class EffectDeserializerTest extends TestCase {
 
     assertEquals(effect.getAccount(), "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
     assertEquals(
-        effect.getAsset(),
-        create(null, "TESTTEST", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+        effect.getTrustLineAsset(),
+        new TrustLineAsset(
+            create(null, "TESTTEST", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA")));
     assertEquals(effect.getLimit(), "100.0");
 
     assertEquals(
@@ -835,12 +836,10 @@ public class EffectDeserializerTest extends TestCase {
         (TrustlineUpdatedEffectResponse)
             GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
     TestCase.assertEquals(
-        effect.getAsset(),
-        create(
-            "liquidity_pool_shares",
-            null,
-            null,
-            "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0"));
+        effect.getTrustLineAsset(),
+        new TrustLineAsset(
+            new LiquidityPoolID(
+                "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0")));
   }
 
   @Test

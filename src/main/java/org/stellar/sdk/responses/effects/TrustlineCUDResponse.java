@@ -1,14 +1,11 @@
 package org.stellar.sdk.responses.effects;
 
-import static org.stellar.sdk.Asset.create;
-
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.TrustLineAsset;
 
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -30,11 +27,7 @@ abstract class TrustlineCUDResponse extends EffectResponse {
   @SerializedName("liquidity_pool_id")
   private final String liquidityPoolId;
 
-  public Asset getAsset() {
-    if (assetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(assetType, assetCode, assetIssuer, liquidityPoolId);
-    }
+  public TrustLineAsset getTrustLineAsset() {
+    return getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);
   }
 }

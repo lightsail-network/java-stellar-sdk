@@ -4,6 +4,7 @@ import java.io.IOException;
 import lombok.NonNull;
 import org.stellar.sdk.exception.AssetCodeLengthInvalidException;
 import org.stellar.sdk.exception.UnexpectedException;
+import org.stellar.sdk.xdr.AssetType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
 import org.stellar.sdk.xdr.ContractIDPreimageType;
 import org.stellar.sdk.xdr.EnvelopeType;
@@ -48,51 +49,13 @@ public abstract class Asset implements Comparable<Asset> {
    * @return Asset
    */
   public static Asset create(String type, String code, String issuer) {
-    return create(type, code, issuer, null);
-  }
-
-  /**
-   * Creates Asset for Alpha4/Alpha12/Native/LiquidityPool
-   *
-   * @param type the type of asset. 'native' and 'liquidity_pool_shares' will generate their
-   *     respective asset sub-classes null or any other value will attempt to derive the asset
-   *     sub-class from code and issuer.
-   * @param code the asset code or null
-   * @param issuer the asset issuer or null
-   * @param liquidityPoolID required only if type is 'liquidity_pool_shares'
-   * @return Asset
-   */
-  public static Asset create(String type, String code, String issuer, String liquidityPoolID) {
     if (type == null) {
       return createNonNativeAsset(code, issuer);
     }
     if (type.equals("native")) {
       return new AssetTypeNative();
     }
-    if (type.equals("liquidity_pool_shares")) {
-      return new AssetTypePoolShare(liquidityPoolID);
-    }
     return createNonNativeAsset(code, issuer);
-  }
-
-  /**
-   * Create Asset from a ChangeTrustAsset
-   *
-   * @param wrapped the ChangeTrustAsset wrapper
-   * @return Asset
-   */
-  public static Asset create(ChangeTrustAsset.Wrapper wrapped) {
-    return wrapped.getAsset();
-  }
-
-  /**
-   * Create Asset from a TrustLineAsset
-   *
-   * @param wrapped the TrustLineAsset wrapper
-   * @return Asset
-   */
-  public static Asset create(TrustLineAsset.Wrapper wrapped) {
-    return wrapped.getAsset();
   }
 
   /**
@@ -120,17 +83,8 @@ public abstract class Asset implements Comparable<Asset> {
     }
   }
 
-  /**
-   * Returns asset type. Possible types:
-   *
-   * <ul>
-   *   <li><code>native</code>
-   *   <li><code>credit_alphanum4</code>
-   *   <li><code>credit_alphanum12</code>
-   *   <li><code>liquidity_pool_shares</code>
-   * </ul>
-   */
-  public abstract String getType();
+  /** Returns asset type. */
+  public abstract AssetType getType();
 
   /** Generates XDR object from a given Asset object */
   public abstract org.stellar.sdk.xdr.Asset toXdr();
@@ -138,6 +92,19 @@ public abstract class Asset implements Comparable<Asset> {
   @Override
   public abstract boolean equals(Object object);
 
+  /**
+   * Compares two assets.
+   *
+   * <ol>
+   *   <li>First compare the type (eg. native before alphanum4 before alphanum12).
+   *   <li>If the types are equal, compare the assets codes.
+   *   <li>If the asset codes are equal, compare the issuers.
+   * </ol>
+   *
+   * @param other the object to be compared.
+   * @return a negative integer, zero, or a positive integer as this object is less than, equal to,
+   *     or greater than the specified object.
+   */
   @Override
   public abstract int compareTo(@NonNull Asset other);
 

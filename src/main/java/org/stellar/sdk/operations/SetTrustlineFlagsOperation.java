@@ -23,6 +23,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-trustline-flags"
  * target="_blank">SetTrustlineFlags</a> operation.
  */
+// TODO: rename to SetTrustLineFlagsOperation
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)

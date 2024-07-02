@@ -9,9 +9,8 @@ import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.LiquidityPool;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.LiquidityPoolParameters;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class LiquidityPoolWithdrawOperationTest {
   // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
@@ -21,11 +20,7 @@ public class LiquidityPoolWithdrawOperationTest {
   Asset creditAsset =
       create(null, "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
   LiquidityPoolID liquidityPoolID =
-      new LiquidityPoolID(
-          LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-          nativeAsset,
-          creditAsset,
-          LiquidityPoolParameters.FEE);
+      new LiquidityPool(nativeAsset, creditAsset).getLiquidityPoolId();
 
   @Test
   public void testLiquidityPoolWithdrawOperationValid() {
@@ -96,7 +91,7 @@ public class LiquidityPoolWithdrawOperationTest {
           .setSourceAccount(source.getAccountId());
       fail();
     } catch (RuntimeException e) {
-      assertEquals("AssetA must be < AssetB", e.getMessage());
+      assertEquals("Assets are not in lexicographic order", e.getMessage());
     }
   }
 }
