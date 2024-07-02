@@ -1,8 +1,7 @@
 package org.stellar.sdk;
 
 import java.math.BigInteger;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Value;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
@@ -15,18 +14,17 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
  * to make it into the transaction set.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/operations-and-transactions#time-bounds"
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/transactions/operations-and-transactions#time-bounds"
  *     target="_blank">Time Bounds</a>
  * @see Transaction
  */
-@Getter
-@EqualsAndHashCode
-public final class TimeBounds {
+@Value
+public class TimeBounds {
   /** the UNIX timestamp (in seconds) */
-  private final BigInteger minTime;
+  BigInteger minTime;
 
   /** the UNIX timestamp (in seconds) */
-  private final BigInteger maxTime;
+  BigInteger maxTime;
 
   /**
    * @param minTime 64bit Unix timestamp
@@ -72,6 +70,13 @@ public final class TimeBounds {
     return new TimeBounds(0, endTime);
   }
 
+  /**
+   * Construct a new {@link TimeBounds} object from a {@link org.stellar.sdk.xdr.TimeBounds} XDR
+   * object.
+   *
+   * @param timeBounds {@link org.stellar.sdk.xdr.TimeBounds} XDR object
+   * @return {@link TimeBounds} object
+   */
   public static TimeBounds fromXdr(org.stellar.sdk.xdr.TimeBounds timeBounds) {
     if (timeBounds == null) {
       return null;
@@ -82,6 +87,9 @@ public final class TimeBounds {
         timeBounds.getMaxTime().getTimePoint().getUint64().getNumber());
   }
 
+  /**
+   * @return {@link org.stellar.sdk.xdr.TimeBounds} XDR object
+   */
   public org.stellar.sdk.xdr.TimeBounds toXdr() {
     org.stellar.sdk.xdr.TimeBounds timeBounds = new org.stellar.sdk.xdr.TimeBounds();
     TimePoint minTime = new TimePoint();

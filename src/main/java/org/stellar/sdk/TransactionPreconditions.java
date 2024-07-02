@@ -58,6 +58,11 @@ public class TransactionPreconditions {
   /** The time bounds for the transaction. */
   TimeBounds timeBounds;
 
+  /**
+   * Validates the preconditions.
+   *
+   * @throws IllegalArgumentException if the preconditions are invalid
+   */
   public void isValid() {
     if (timeBounds == null) {
       throw new IllegalArgumentException("Invalid preconditions, must define timebounds");
@@ -70,6 +75,9 @@ public class TransactionPreconditions {
     }
   }
 
+  /**
+   * @return <code>true</code> if the preconditions are v2.
+   */
   public boolean hasV2() {
     return (ledgerBounds != null
         || (minSeqLedgerGap > 0)
@@ -78,6 +86,12 @@ public class TransactionPreconditions {
         || !extraSigners.isEmpty());
   }
 
+  /**
+   * Creates a new {@link TransactionPreconditions} object from a {@link Preconditions} XDR object.
+   *
+   * @param preconditions the {@link Preconditions} object to convert
+   * @return a new {@link TransactionPreconditions} object from the given XDR object
+   */
   public static TransactionPreconditions fromXdr(Preconditions preconditions) {
     TransactionPreconditionsBuilder builder = new TransactionPreconditionsBuilder();
 
@@ -130,6 +144,9 @@ public class TransactionPreconditions {
     return builder.build();
   }
 
+  /**
+   * @return the XDR object of this {@link TransactionPreconditions}
+   */
   public Preconditions toXdr() {
     Preconditions.PreconditionsBuilder preconditionsBuilder = Preconditions.builder();
 

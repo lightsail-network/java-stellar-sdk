@@ -234,6 +234,12 @@ public class StrKey {
     return aid;
   }
 
+  /**
+   * Encodes strkey Stellar account ID (G...) to {@link AccountID}.
+   *
+   * @param data the data to encode
+   * @return {@link AccountID} representation of the key
+   */
   public static AccountID encodeToXDRAccountId(String data) {
     AccountID accountID = new AccountID();
     PublicKey publicKey = new PublicKey();
@@ -247,6 +253,12 @@ public class StrKey {
     return accountID;
   }
 
+  /**
+   * Encodes strkey Stellar account ID (G...) or muxed account ID (M...) to {@link MuxedAccount}.
+   *
+   * @param data the data to encode
+   * @return {@link MuxedAccount} representation of the key
+   */
   public static MuxedAccount encodeToXDRMuxedAccount(String data) {
     MuxedAccount muxed = new MuxedAccount();
 

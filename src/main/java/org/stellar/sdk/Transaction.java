@@ -29,7 +29,8 @@ import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 /**
- * Represents <a href="https://developers.stellar.org/docs/glossary/transactions/"
+ * Represents <a
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/operations-and-transactions#transactions"
  * target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction extends AbstractTransaction {
@@ -56,6 +57,21 @@ public class Transaction extends AbstractTransaction {
 
   private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;
 
+  /**
+   * Creates a new transaction.
+   *
+   * <p>In general, we suggest you use {@link TransactionBuilder} to build transactions.
+   *
+   * @param accountConverter the account converter
+   * @param sourceAccount The source account for the transaction.
+   * @param fee The fee paid for the transaction in stroops (1 stroop = 0.0000001 XLM).
+   * @param sequenceNumber The sequence number of the account creating this transaction.
+   * @param operations The operations to include in the transaction.
+   * @param memo The memo for the transaction.
+   * @param preconditions The preconditions for the transaction.
+   * @param sorobanData The Soroban data for the transaction.
+   * @param network The network that the transaction is to be submitted to.
+   */
   Transaction(
       AccountConverter accountConverter,
       @NonNull String sourceAccount,
@@ -106,6 +122,10 @@ public class Transaction extends AbstractTransaction {
   /**
    * Returns the claimable balance ID for the CreateClaimableBalanceOperation at the given index
    * within the transaction.
+   *
+   * @param index The index of the CreateClaimableBalanceOperation within the transaction, starting
+   *     at 0
+   * @return The claimable balance ID for the CreateClaimableBalanceOperation at the given index
    */
   public String getClaimableBalanceId(int index) {
     if (index < 0 || index >= operations.length) {
@@ -186,7 +206,6 @@ public class Transaction extends AbstractTransaction {
   }
 
   private org.stellar.sdk.xdr.Transaction toV1Xdr(AccountConverter accountConverter) {
-
     // fee
     Uint32 fee = new Uint32();
     fee.setUint32((new XdrUnsignedInteger(this.fee)));
@@ -315,27 +334,6 @@ public class Transaction extends AbstractTransaction {
     }
 
     return xdr;
-  }
-
-  /**
-   * Maintain backwards compatibility references to Transaction.Builder
-   *
-   * @see org.stellar.sdk.TransactionBuilder
-   * @deprecated will be removed in upcoming releases. Use <code>TransactionBuilder</code> instead.
-   */
-  @Deprecated
-  public static class Builder extends TransactionBuilder {
-    // TODO: remove this class in the next release
-    public Builder(
-        AccountConverter accountConverter,
-        TransactionBuilderAccount sourceAccount,
-        Network network) {
-      super(accountConverter, sourceAccount, network);
-    }
-
-    public Builder(TransactionBuilderAccount sourceAccount, Network network) {
-      super(sourceAccount, network);
-    }
   }
 
   /**

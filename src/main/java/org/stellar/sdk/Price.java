@@ -6,39 +6,20 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.Value;
 import org.stellar.sdk.xdr.Int32;
 
 /** Represents Price. Price in Stellar is represented as a fraction. */
-@EqualsAndHashCode
+@Value
 public class Price {
+  /** numerator */
   @SerializedName("n")
-  private final int n;
+  int numerator;
 
+  /** denominator */
   @SerializedName("d")
-  private final int d;
-
-  /**
-   * Create a new price. Price in Stellar is represented as a fraction.
-   *
-   * @param n numerator
-   * @param d denominator
-   */
-  public Price(int n, int d) {
-    this.n = n;
-    this.d = d;
-  }
-
-  /** Returns numerator. */
-  public int getNumerator() {
-    return n;
-  }
-
-  /** Returns denominator */
-  public int getDenominator() {
-    return d;
-  }
+  int denominator;
 
   /**
    * Approximates <code>price</code> to a fraction. Please remember that this function can give
@@ -89,8 +70,8 @@ public class Price {
     org.stellar.sdk.xdr.Price xdr = new org.stellar.sdk.xdr.Price();
     Int32 n = new Int32();
     Int32 d = new Int32();
-    n.setInt32(this.n);
-    d.setInt32(this.d);
+    n.setInt32(this.numerator);
+    d.setInt32(this.denominator);
     xdr.setN(n);
     xdr.setD(d);
     return xdr;
@@ -99,7 +80,7 @@ public class Price {
   /** Returns price as a string. */
   public String toString() {
     MathContext mc = MathContext.DECIMAL64;
-    BigDecimal result = new BigDecimal(this.n).divide(new BigDecimal(this.d), mc);
+    BigDecimal result = new BigDecimal(this.numerator).divide(new BigDecimal(this.denominator), mc);
 
     return result.toString();
   }

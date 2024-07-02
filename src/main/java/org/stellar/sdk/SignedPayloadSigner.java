@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
@@ -14,8 +15,10 @@ import org.stellar.sdk.xdr.Uint256;
  * target="_blank">signed payload signer</a>
  */
 @Getter
+@ToString
 @EqualsAndHashCode
 public class SignedPayloadSigner {
+  /** The maximum length of a signed payload */
   public static final int SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH = 64;
 
   /** The account that represents the signed payload signer */

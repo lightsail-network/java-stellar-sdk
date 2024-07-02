@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import lombok.Getter;
 import org.stellar.sdk.xdr.AccountFlags;
 
+// TODO: move to operations?
 /**
  * AccountFlag is the <code>enum</code> that can be used in {@link
  * org.stellar.sdk.operations.SetOptionsOperation}.
@@ -26,8 +27,7 @@ public enum AccountFlag {
    * Authorization immutable (0x4): If this is set then none of the authorization flags can be set
    * and the account can never be deleted.
    */
-  AUTH_IMMUTABLE_FLAG(AccountFlags.AUTH_IMMUTABLE_FLAG.getValue()),
-  ;
+  AUTH_IMMUTABLE_FLAG(AccountFlags.AUTH_IMMUTABLE_FLAG.getValue());
 
   private final int value;
 
