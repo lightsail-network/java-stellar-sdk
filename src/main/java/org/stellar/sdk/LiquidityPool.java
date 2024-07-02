@@ -7,7 +7,7 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
 
 @Value
 public class LiquidityPool {
-  public static Integer FEE = 30;
+  public static int FEE = 30;
 
   @NonNull Asset assetA;
   @NonNull Asset assetB;
