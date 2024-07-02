@@ -1,26 +1,58 @@
 package org.stellar.sdk;
 
+import lombok.NonNull;
 import lombok.Value;
+import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.xdr.AssetType;
 
+/**
+ * Represents an asset in a change trust operation on the Stellar network. This class can represent
+ * both regular assets and liquidity pool share for change trustline operation.
+ */
 @Value
 public class ChangeTrustAsset {
-  AssetType assetType;
-  Asset asset;
-  LiquidityPool liquidityPool; // LiquidityPoolParameters
+  /** The type of the asset. */
+  @NonNull AssetType assetType;
 
-  public ChangeTrustAsset(Asset asset) {
+  /**
+   * The asset for which the trustline is being changed. This is null if the change trust operation
+   * is for a liquidity pool share.
+   */
+  @Nullable Asset asset;
+
+  /**
+   * The liquidity pool for which the trustline is being changed. This is null if the change trust
+   * operation is for a regular asset.
+   */
+  @Nullable LiquidityPool liquidityPool;
+
+  /**
+   * Creates a ChangeTrustAsset for a regular asset.
+   *
+   * @param asset The asset for which the trust is being changed.
+   */
+  public ChangeTrustAsset(@NonNull Asset asset) {
     this.assetType = asset.getType();
     this.asset = asset;
     this.liquidityPool = null;
   }
 
-  public ChangeTrustAsset(LiquidityPool liquidityPool) {
+  /**
+   * Creates a ChangeTrustAsset for a liquidity pool share.
+   *
+   * @param liquidityPool The liquidity pool for which the trust is being changed.
+   */
+  public ChangeTrustAsset(@NonNull LiquidityPool liquidityPool) {
     this.assetType = AssetType.ASSET_TYPE_POOL_SHARE;
     this.asset = null;
     this.liquidityPool = liquidityPool;
   }
 
+  /**
+   * Converts this ChangeTrustAsset to its XDR representation.
+   *
+   * @return The XDR representation of this ChangeTrustAsset.
+   */
   public org.stellar.sdk.xdr.ChangeTrustAsset toXdr() {
     org.stellar.sdk.xdr.ChangeTrustAsset xdr = new org.stellar.sdk.xdr.ChangeTrustAsset();
     if (asset != null) {
@@ -36,6 +68,13 @@ public class ChangeTrustAsset {
     return xdr;
   }
 
+  /**
+   * Creates a ChangeTrustAsset from its XDR representation.
+   *
+   * @param changeTrustAsset The XDR representation of the ChangeTrustAsset.
+   * @return A new ChangeTrustAsset instance.
+   * @throws IllegalArgumentException if the asset type is unknown.
+   */
   public static ChangeTrustAsset fromXdr(org.stellar.sdk.xdr.ChangeTrustAsset changeTrustAsset) {
     switch (changeTrustAsset.getDiscriminant()) {
       case ASSET_TYPE_NATIVE:

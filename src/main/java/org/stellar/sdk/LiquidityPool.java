@@ -1,8 +1,11 @@
 package org.stellar.sdk;
 
+import java.io.IOException;
 import lombok.NonNull;
 import lombok.Value;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters;
+import org.stellar.sdk.xdr.LiquidityPoolParameters;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 @Value
@@ -55,6 +58,12 @@ public class LiquidityPool {
   }
 
   public LiquidityPoolID getLiquidityPoolId() {
-    return new LiquidityPoolID(this);
+    LiquidityPoolParameters liquidityPoolParameters = toXdr();
+    try {
+      byte[] poolId = Util.hash(liquidityPoolParameters.toXdrByteArray());
+      return new LiquidityPoolID(poolId);
+    } catch (IOException e) {
+      throw new UnexpectedException(e);
+    }
   }
 }

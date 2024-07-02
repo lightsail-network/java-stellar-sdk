@@ -1,13 +1,10 @@
 package org.stellar.sdk;
 
-import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.stellar.sdk.exception.UnexpectedException;
-import org.stellar.sdk.xdr.LiquidityPoolParameters;
 
 /**
- * Base LiquidityPoolID class.
+ * Represents a Liquidity Pool ID on the Stellar network.
  *
  * @see <a
  *     href="https://developers.stellar.org/docs/learn/encyclopedia/sdex/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools"
@@ -16,28 +13,25 @@ import org.stellar.sdk.xdr.LiquidityPoolParameters;
 @EqualsAndHashCode
 @AllArgsConstructor
 public final class LiquidityPoolID {
-  private final byte[] hash;
+  /** The pool id. */
+  private final byte[] poolId;
 
   /**
-   * Creates LiquidityPoolID object from a given hex-encoded pool ID.
+   * Creates a LiquidityPoolID object from a given hex-encoded pool ID.
    *
-   * @param hex hex string
+   * @param hex A hex-encoded string representing the pool ID
    */
   public LiquidityPoolID(String hex) {
-    hash = Util.hexToBytes(hex.toUpperCase());
+    poolId = Util.hexToBytes(hex.toUpperCase());
   }
 
-  public LiquidityPoolID(LiquidityPool pool) {
-    LiquidityPoolParameters liquidityPoolParameters = pool.toXdr();
-    try {
-      hash = Util.hash(liquidityPoolParameters.toXdrByteArray());
-    } catch (IOException e) {
-      throw new UnexpectedException(e);
-    }
-  }
-
+  /**
+   * Returns the pool ID as a lowercase hex-encoded string.
+   *
+   * @return The pool ID as a hex string
+   */
   public String getPoolId() {
-    return Util.bytesToHex(hash).toLowerCase();
+    return Util.bytesToHex(poolId).toLowerCase();
   }
 
   /**
@@ -52,7 +46,7 @@ public final class LiquidityPoolID {
   /** Generates XDR object from a given LiquidityPoolID object */
   public org.stellar.sdk.xdr.PoolID toXdr() {
     org.stellar.sdk.xdr.PoolID xdr = new org.stellar.sdk.xdr.PoolID();
-    xdr.setPoolID(new org.stellar.sdk.xdr.Hash(hash));
+    xdr.setPoolID(new org.stellar.sdk.xdr.Hash(poolId));
     return xdr;
   }
 

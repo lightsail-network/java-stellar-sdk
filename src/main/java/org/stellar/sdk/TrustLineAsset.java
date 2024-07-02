@@ -6,25 +6,56 @@ import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.xdr.AssetType;
 
+/**
+ * Represents a trustline asset in the Stellar network. A trustline is a declaration that an account
+ * trusts an issuer of an asset up to a certain limit. This class can represent both regular assets
+ * and liquidity pool shares.
+ */
 @EqualsAndHashCode
 @Getter
 public class TrustLineAsset {
+  /** The type of the asset. */
   @NonNull private final AssetType assetType;
+
+  /**
+   * The asset for which the trustline is established. This is null if the trustline is for a
+   * liquidity pool share.
+   */
   @Nullable private final Asset asset;
+
+  /**
+   * The ID of the liquidity pool for which the trustline is established. This is null if the
+   * trustline is for a regular asset.
+   */
   @Nullable private final LiquidityPoolID liquidityPoolId;
 
+  /**
+   * Creates a TrustLineAsset for a regular asset.
+   *
+   * @param asset The asset for which the trustline is created.
+   */
   public TrustLineAsset(@NonNull Asset asset) {
     this.assetType = asset.getType();
     this.asset = asset;
     this.liquidityPoolId = null;
   }
 
+  /**
+   * Creates a TrustLineAsset for a liquidity pool share.
+   *
+   * @param liquidityPoolId The ID of the liquidity pool.
+   */
   public TrustLineAsset(@NonNull LiquidityPoolID liquidityPoolId) {
     this.assetType = AssetType.ASSET_TYPE_POOL_SHARE;
     this.asset = null;
     this.liquidityPoolId = liquidityPoolId;
   }
 
+  /**
+   * Converts this TrustLineAsset to its XDR representation.
+   *
+   * @return The XDR representation of this TrustLineAsset.
+   */
   public org.stellar.sdk.xdr.TrustLineAsset toXdr() {
     org.stellar.sdk.xdr.TrustLineAsset xdr = new org.stellar.sdk.xdr.TrustLineAsset();
     if (asset != null) {
@@ -40,6 +71,13 @@ public class TrustLineAsset {
     return xdr;
   }
 
+  /**
+   * Creates a TrustLineAsset from its XDR representation.
+   *
+   * @param trustLineAsset The XDR representation of the TrustLineAsset.
+   * @return A new TrustLineAsset instance.
+   * @throws IllegalArgumentException if the asset type is unknown.
+   */
   public static TrustLineAsset fromXdr(org.stellar.sdk.xdr.TrustLineAsset trustLineAsset) {
     switch (trustLineAsset.getDiscriminant()) {
       case ASSET_TYPE_NATIVE:
