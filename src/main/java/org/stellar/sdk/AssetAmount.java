@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import com.google.gson.annotations.SerializedName;
 import lombok.Value;
 
+// TODO: move to resp?
 /** Represents an amount of asset. */
 @Value
 public class AssetAmount {

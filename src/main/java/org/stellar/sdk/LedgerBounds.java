@@ -10,7 +10,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21</a>
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/operations-and-transactions#ledger-bounds"
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/transactions/operations-and-transactions#ledger-bounds"
  *     target="_blank">LedgerBounds</a>
  */
 @Value

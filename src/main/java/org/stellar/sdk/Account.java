@@ -16,7 +16,10 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class Account implements TransactionBuilderAccount {
 
+  /** The account ID. */
   @NonNull private final String accountId;
+
+  /** The sequence number of the account. */
   @NonNull private Long sequenceNumber;
 
   @Override

@@ -30,6 +30,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
     .sourceAccount(source)
     .build();
   ```
+- refactor!: `TransactionBuilder.IncrementedSequenceNumberFunc` has been removed.
+- refactor!: `Transaction.Builder` has been removed, use `TransactionBuilder` instead.
 
 ## 0.44.0
 ### Update

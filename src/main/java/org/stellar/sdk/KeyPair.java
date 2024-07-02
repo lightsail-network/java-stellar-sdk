@@ -171,6 +171,7 @@ public class KeyPair {
     return StrKey.encodeEd25519SecretSeed(privateKey.getSeed());
   }
 
+  /** Returns the raw 32 byte public key. */
   public byte[] getPublicKey() {
     return publicKey.getAbyte();
   }

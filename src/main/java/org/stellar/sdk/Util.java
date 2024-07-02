@@ -121,6 +121,7 @@ public class Util {
    *
    * @param asset The asset to check
    */
+  // TODO: remove the func
   public static AssetTypeCreditAlphaNum assertNonNativeAsset(Asset asset) {
     if (asset instanceof AssetTypeCreditAlphaNum) {
       return (AssetTypeCreditAlphaNum) asset;

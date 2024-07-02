@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import lombok.NonNull;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.xdr.SorobanTransactionData;
@@ -240,13 +239,6 @@ public class TransactionBuilder {
     sourceAccount.setSequenceNumber(sequenceNumber);
     return transaction;
   }
-
-  /**
-   * A default implementation of sequence number generation which will derive a sequence number
-   * based on sourceAccount's current sequence number + 1.
-   */
-  public static Function<TransactionBuilderAccount, Long> IncrementedSequenceNumberFunc =
-      TransactionBuilderAccount::getIncrementedSequenceNumber;
 
   /**
    * Sets the transaction's internal Soroban transaction data (resources, footprint, etc.).

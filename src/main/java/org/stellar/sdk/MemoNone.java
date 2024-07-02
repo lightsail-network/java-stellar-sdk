@@ -13,7 +13,6 @@ public class MemoNone extends Memo {
     return memo;
   }
 
-  // TODO: return a more meaningful value?
   @Override
   public String toString() {
     return "";
