@@ -1525,10 +1525,7 @@ public class Sep10ChallengeTest {
 
     transaction.sign(server);
     FeeBumpTransaction feeBumpTransaction =
-        new FeeBumpTransaction.Builder(transaction)
-            .setBaseFee(500)
-            .setFeeAccount(server.getAccountId())
-            .build();
+        new FeeBumpTransaction(server.getAccountId(), 500, transaction);
     String challenge = feeBumpTransaction.toEnvelopeXdrBase64();
     try {
       Sep10Challenge.readChallengeTransaction(

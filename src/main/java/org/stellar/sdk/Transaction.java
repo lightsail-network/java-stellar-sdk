@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.operations.CreateClaimableBalanceOperation;
 import org.stellar.sdk.operations.ExtendFootprintTTLOperation;
@@ -33,6 +34,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/operations-and-transactions#transactions"
  * target="_blank">Transaction</a> in Stellar network.
  */
+@ToString(callSuper = true)
 public class Transaction extends AbstractTransaction {
   /** fee paid for transaction in stroops (1 stroop = 0.0000001 XLM). */
   @Getter private final long fee;
