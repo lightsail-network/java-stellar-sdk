@@ -12,24 +12,54 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
 public class LiquidityPool {
   public static int FEE = 30;
 
+  /**
+   * The first asset in the pool, it must respect the rule assetA < assetB. Check {@link
+   * Asset#compareTo(Asset)} for details.
+   */
   @NonNull Asset assetA;
+
+  /**
+   * The second asset in the pool, it must respect the rule assetA < assetB. Check {@link
+   * Asset#compareTo(Asset)} for details.
+   */
   @NonNull Asset assetB;
+
+  /** The liquidity pool fee. For now the only fee supported is {@link LiquidityPool#FEE}. */
   int fee;
 
-  public LiquidityPool(@NonNull Asset assetA, @NonNull Asset assetB, int fee) {
+  /**
+   * Constructs a new LiquidityPool with specified assets and fee.
+   *
+   * @param assetA The first asset in the pool, it must respect the rule assetA < assetB.
+   * @param assetB The second asset in the pool, it must respect the rule assetA < assetB.
+   * @param fee The liquidity pool fee. For now the only fee supported is {@link LiquidityPool#FEE}.
+   * @throws IllegalArgumentException if assets are not in lexicographic order.
+   */
+  private LiquidityPool(@NonNull Asset assetA, @NonNull Asset assetB, int fee) {
     if (assetA.compareTo(assetB) >= 0) {
       throw new IllegalArgumentException("Assets are not in lexicographic order");
     }
-
     this.assetA = assetA;
     this.assetB = assetB;
     this.fee = fee;
   }
 
+  /**
+   * Constructs a new LiquidityPool with specified assets and default fee.
+   *
+   * @param assetA The first asset in the pool, it must respect the rule assetA < assetB.
+   * @param assetB The second asset in the pool, it must respect the rule assetA < assetB.
+   * @throws IllegalArgumentException if assets are not in lexicographic order.
+   */
   public LiquidityPool(Asset assetA, Asset assetB) {
     this(assetA, assetB, FEE);
   }
 
+  /**
+   * Converts this LiquidityPool to its XDR representation.
+   *
+   * @return The XDR object representing this LiquidityPool.
+   */
   public org.stellar.sdk.xdr.LiquidityPoolParameters toXdr() {
     org.stellar.sdk.xdr.LiquidityPoolParameters xdr =
         new org.stellar.sdk.xdr.LiquidityPoolParameters();
@@ -44,6 +74,14 @@ public class LiquidityPool {
     return xdr;
   }
 
+  /**
+   * Creates a LiquidityPool from its XDR representation.
+   *
+   * @param xdr The XDR object to convert from.
+   * @return A new LiquidityPool object.
+   * @throws IllegalArgumentException if the XDR object is not of type
+   *     LIQUIDITY_POOL_CONSTANT_PRODUCT.
+   */
   public static LiquidityPool fromXdr(org.stellar.sdk.xdr.LiquidityPoolParameters xdr) {
 
     if (xdr.getDiscriminant() != LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT) {
@@ -57,11 +95,16 @@ public class LiquidityPool {
         parameters.getFee().getInt32());
   }
 
-  public LiquidityPoolID getLiquidityPoolId() {
+  /**
+   * Generates the LiquidityPoolID for this LiquidityPool.
+   *
+   * @return The LiquidityPoolID object.
+   */
+  public LiquidityPoolId getLiquidityPoolId() {
     LiquidityPoolParameters liquidityPoolParameters = toXdr();
     try {
       byte[] poolId = Util.hash(liquidityPoolParameters.toXdrByteArray());
-      return new LiquidityPoolID(poolId);
+      return new LiquidityPoolId(poolId);
     } catch (IOException e) {
       throw new UnexpectedException(e);
     }

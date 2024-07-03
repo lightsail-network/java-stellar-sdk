@@ -8,6 +8,8 @@ import org.stellar.sdk.xdr.AssetType;
 /**
  * Represents an asset in a change trust operation on the Stellar network. This class can represent
  * both regular assets and liquidity pool share for change trustline operation.
+ *
+ * @see org.stellar.sdk.operations.ChangeTrustOperation
  */
 @Value
 public class ChangeTrustAsset {

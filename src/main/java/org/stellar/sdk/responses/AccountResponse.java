@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.LiquidityPoolId;
 import org.stellar.sdk.TrustLineAsset;
 
 /**
@@ -186,7 +186,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     String assetIssuer;
 
     @SerializedName("liquidity_pool_id")
-    LiquidityPoolID liquidityPoolID;
+    LiquidityPoolId liquidityPoolID;
 
     @SerializedName("limit")
     String limit;
@@ -232,7 +232,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
       return Optional.ofNullable(assetIssuer);
     }
 
-    public Optional<LiquidityPoolID> getLiquidityPoolID() {
+    public Optional<LiquidityPoolId> getLiquidityPoolID() {
       return Optional.ofNullable(liquidityPoolID);
     }
 

@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPool;
-import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.LiquidityPoolId;
 import org.stellar.sdk.Price;
 import org.stellar.sdk.xdr.LiquidityPoolDepositOp;
 import org.stellar.sdk.xdr.Operation.OperationBody;
@@ -27,7 +27,7 @@ import org.stellar.sdk.xdr.OperationType;
 @SuperBuilder(toBuilder = true)
 public class LiquidityPoolDepositOperation extends Operation {
   /** The liquidity pool ID. * */
-  @NonNull private final LiquidityPoolID liquidityPoolID;
+  @NonNull private final LiquidityPoolId liquidityPoolID;
 
   /** Maximum amount of first asset to deposit. * */
   @NonNull private final String maxAmountA;
@@ -64,7 +64,7 @@ public class LiquidityPoolDepositOperation extends Operation {
    * @return {@link LiquidityPoolDepositOperation} object
    */
   public static LiquidityPoolDepositOperation fromXdr(LiquidityPoolDepositOp op) {
-    LiquidityPoolID liquidityPoolID = LiquidityPoolID.fromXdr(op.getLiquidityPoolID());
+    LiquidityPoolId liquidityPoolID = LiquidityPoolId.fromXdr(op.getLiquidityPoolID());
     String maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64());
     String maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64());
     Price minPrice = Price.fromXdr(op.getMinPrice());

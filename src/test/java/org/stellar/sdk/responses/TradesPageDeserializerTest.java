@@ -8,7 +8,7 @@ import java.util.Optional;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.LiquidityPoolId;
 
 public class TradesPageDeserializerTest extends TestCase {
   @Test
@@ -39,8 +39,8 @@ public class TradesPageDeserializerTest extends TestCase {
         create(null, "JPY", "GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM"));
     assertEquals(tradesPage.getRecords().get(0).getPrice().getNumerator(), valueOf(267));
     assertEquals(tradesPage.getRecords().get(0).getPrice().getDenominator(), valueOf(1000));
-    assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.empty());
-    assertEquals(tradesPage.getRecords().get(0).getBaseLiquidityPoolID(), Optional.empty());
+    assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolId(), Optional.empty());
+    assertEquals(tradesPage.getRecords().get(0).getBaseLiquidityPoolId(), Optional.empty());
 
     assertEquals(
         tradesPage.getRecords().get(1).getBaseAccount(),
@@ -54,18 +54,18 @@ public class TradesPageDeserializerTest extends TestCase {
             .fromJson(jsonLiquidityPool, new TypeToken<Page<TradeResponse>>() {}.getType());
 
     assertEquals(
-        tradesPage.getRecords().get(0).getBaseLiquidityPoolID(),
+        tradesPage.getRecords().get(0).getBaseLiquidityPoolId(),
         Optional.of(
-            new LiquidityPoolID(
+            new LiquidityPoolId(
                 "a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7bbase")));
     assertEquals(tradesPage.getRecords().get(0).getTradeType(), "liquidity_pool");
     assertEquals(tradesPage.getRecords().get(0).getLiquidityPoolFeeBP().longValue(), 30);
-    assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolID(), Optional.empty());
-    assertEquals(tradesPage.getRecords().get(1).getBaseLiquidityPoolID(), Optional.empty());
+    assertEquals(tradesPage.getRecords().get(0).getCounterLiquidityPoolId(), Optional.empty());
+    assertEquals(tradesPage.getRecords().get(1).getBaseLiquidityPoolId(), Optional.empty());
     assertEquals(
-        tradesPage.getRecords().get(1).getCounterLiquidityPoolID(),
+        tradesPage.getRecords().get(1).getCounterLiquidityPoolId(),
         Optional.of(
-            new LiquidityPoolID(
+            new LiquidityPoolId(
                 "a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088")));
   }
 

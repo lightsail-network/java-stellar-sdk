@@ -3,7 +3,7 @@ package org.stellar.sdk.responses.effects;
 import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.LiquidityPoolId;
 
 /**
  * Represents liquidity_pool_removed effect response.
@@ -17,5 +17,5 @@ import org.stellar.sdk.LiquidityPoolID;
 @EqualsAndHashCode(callSuper = true)
 public class LiquidityPoolRemovedEffectResponse extends EffectResponse {
   @SerializedName("liquidity_pool_id")
-  LiquidityPoolID liquidityPoolID;
+  LiquidityPoolId liquidityPoolID;
 }

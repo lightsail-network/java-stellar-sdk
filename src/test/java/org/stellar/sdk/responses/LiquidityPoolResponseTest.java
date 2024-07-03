@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotEquals;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.LiquidityPoolId;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class LiquidityPoolResponseTest extends TestCase {
@@ -54,7 +54,7 @@ public class LiquidityPoolResponseTest extends TestCase {
     LiquidityPoolResponse liquidityPool =
         GsonSingleton.getInstance().fromJson(json, LiquidityPoolResponse.class);
     assertEquals(
-        new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
+        new LiquidityPoolId("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
         liquidityPool.getID());
     assertEquals("113725249324879873", liquidityPool.getPagingToken());
     assertEquals(Integer.valueOf(30), liquidityPool.getFeeBP());

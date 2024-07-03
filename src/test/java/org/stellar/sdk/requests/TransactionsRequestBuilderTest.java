@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import okhttp3.HttpUrl;
 import org.junit.Test;
-import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.LiquidityPoolId;
 import org.stellar.sdk.Server;
 
 public class TransactionsRequestBuilderTest {
@@ -69,7 +69,7 @@ public class TransactionsRequestBuilderTest {
         server
             .transactions()
             .forLiquidityPool(
-                new LiquidityPoolID(
+                new LiquidityPoolId(
                     "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"))
             .buildUri();
     assertEquals(

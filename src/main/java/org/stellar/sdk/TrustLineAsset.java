@@ -27,7 +27,7 @@ public class TrustLineAsset {
    * The ID of the liquidity pool for which the trustline is established. This is null if the
    * trustline is for a regular asset.
    */
-  @Nullable private final LiquidityPoolID liquidityPoolId;
+  @Nullable private final LiquidityPoolId liquidityPoolId;
 
   /**
    * Creates a TrustLineAsset for a regular asset.
@@ -45,7 +45,7 @@ public class TrustLineAsset {
    *
    * @param liquidityPoolId The ID of the liquidity pool.
    */
-  public TrustLineAsset(@NonNull LiquidityPoolID liquidityPoolId) {
+  public TrustLineAsset(@NonNull LiquidityPoolId liquidityPoolId) {
     this.assetType = AssetType.ASSET_TYPE_POOL_SHARE;
     this.asset = null;
     this.liquidityPoolId = liquidityPoolId;
@@ -88,7 +88,7 @@ public class TrustLineAsset {
         return new TrustLineAsset(
             AssetTypeCreditAlphaNum12.fromXdr(trustLineAsset.getAlphaNum12()));
       case ASSET_TYPE_POOL_SHARE:
-        return new TrustLineAsset(LiquidityPoolID.fromXdr(trustLineAsset.getLiquidityPoolID()));
+        return new TrustLineAsset(LiquidityPoolId.fromXdr(trustLineAsset.getLiquidityPoolID()));
       default:
         throw new IllegalArgumentException(
             "Unknown asset type " + trustLineAsset.getDiscriminant());

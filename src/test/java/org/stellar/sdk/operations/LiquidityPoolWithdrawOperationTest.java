@@ -10,7 +10,7 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPool;
-import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.LiquidityPoolId;
 
 public class LiquidityPoolWithdrawOperationTest {
   // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
@@ -19,7 +19,7 @@ public class LiquidityPoolWithdrawOperationTest {
   Asset nativeAsset = create("native");
   Asset creditAsset =
       create(null, "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
-  LiquidityPoolID liquidityPoolID =
+  LiquidityPoolId liquidityPoolID =
       new LiquidityPool(nativeAsset, creditAsset).getLiquidityPoolId();
 
   @Test

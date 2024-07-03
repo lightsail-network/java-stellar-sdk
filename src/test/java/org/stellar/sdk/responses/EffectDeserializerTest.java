@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.LiquidityPoolId;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.responses.effects.AccountCreatedEffectResponse;
@@ -672,7 +672,7 @@ public class EffectDeserializerTest extends TestCase {
     TestCase.assertEquals(
         effect.getTrustLineAsset(),
         new TrustLineAsset(
-            new LiquidityPoolID(
+            new LiquidityPoolId(
                 "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0")));
   }
 
@@ -755,7 +755,7 @@ public class EffectDeserializerTest extends TestCase {
     TestCase.assertEquals(
         effect.getTrustLineAsset(),
         new TrustLineAsset(
-            new LiquidityPoolID(
+            new LiquidityPoolId(
                 "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0")));
   }
 
@@ -838,7 +838,7 @@ public class EffectDeserializerTest extends TestCase {
     TestCase.assertEquals(
         effect.getTrustLineAsset(),
         new TrustLineAsset(
-            new LiquidityPoolID(
+            new LiquidityPoolId(
                 "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0")));
   }
 
