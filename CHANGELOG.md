@@ -32,6 +32,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor!: `TransactionBuilder.IncrementedSequenceNumberFunc` has been removed.
 - refactor!: `Transaction.Builder` has been removed, use `TransactionBuilder` instead.
 - refactor!: refactor asset classes. `LiquidityPoolParameters`, `LiquidityPoolConstantProductParameters`, `AssetTypePoolShare`, `LiquidityPoolShareChangeTrustAsset` and `LiquidityPoolShareTrustLineAsset` have been removed. Use `ChangeTrustAsset` and `TrustLineAsset` instead.
+- refactor!: `Asset.getType()` returns `org.stellar.sdk.xdr.AssetType` instead of `String`.
 
 ## 0.44.0
 ### Update
