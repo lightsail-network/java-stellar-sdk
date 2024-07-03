@@ -384,10 +384,7 @@ public class ServerTest {
     KeyPair signer =
         KeyPair.fromSecretSeed("SA5ZEFDVFZ52GRU7YUGR6EDPBNRU2WLA6IQFQ7S2IH2DG3VFV3DOMV2Q");
     FeeBumpTransaction tx =
-        new FeeBumpTransaction.Builder(inner)
-            .setFeeAccount(signer.getAccountId())
-            .setBaseFee(FeeBumpTransaction.MIN_BASE_FEE * 10)
-            .build();
+        new FeeBumpTransaction(signer.getAccountId(), FeeBumpTransaction.MIN_BASE_FEE * 10, inner);
     tx.sign(signer);
     return tx;
   }

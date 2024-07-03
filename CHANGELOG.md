@@ -33,6 +33,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor!: `Transaction.Builder` has been removed, use `TransactionBuilder` instead.
 - refactor!: refactor asset classes. `LiquidityPoolParameters`, `LiquidityPoolConstantProductParameters`, `AssetTypePoolShare`, `LiquidityPoolShareChangeTrustAsset` and `LiquidityPoolShareTrustLineAsset` have been removed. Use `ChangeTrustAsset` and `TrustLineAsset` instead.
 - refactor!: `Asset.getType()` returns `org.stellar.sdk.xdr.AssetType` instead of `String`.
+- refactor!: `FeeBumpTransaction.Builder` has been removed, use `FeeBumpTransaction#FeeBumpTransaction(String, long, Transaction)` instead.
+- refactor!: `FeeBumpTransaction.getFeeAccount` has been removed, use `FeeBumpTransaction.getFeeSource` instead.
 
 ## 0.44.0
 ### Update

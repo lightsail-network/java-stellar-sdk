@@ -20,24 +20,92 @@ import org.stellar.sdk.xdr.TransactionSignaturePayload;
  */
 @Getter
 public class FeeBumpTransaction extends AbstractTransaction {
+  /** The account paying for the transaction fee. */
+  @NonNull private final String feeSource;
+
   /** The max fee willing to be paid for this transaction. */
   private final long fee;
-
-  /** The account paying for the transaction fee. */
-  @NonNull private final String feeAccount;
 
   /** The inner transaction that is being wrapped by this fee bump transaction. */
   @NonNull private final Transaction innerTransaction;
 
-  FeeBumpTransaction(
+  /**
+   * Creates a new FeeBumpTransaction object, enabling you to resubmit an existing transaction with
+   * a higher fee.
+   *
+   * @param feeSource The account paying for the transaction fee.
+   * @param baseFee Max fee willing to pay per operation in inner transaction (in stroops)
+   * @param innerTransaction The inner transaction that is being wrapped by this fee bump
+   *     transaction.
+   */
+  public FeeBumpTransaction(
+      @NonNull String feeSource, long baseFee, @NonNull Transaction innerTransaction) {
+    this(AccountConverter.enableMuxed(), feeSource, baseFee, innerTransaction);
+  }
+
+  /**
+   * Creates a new FeeBumpTransaction object, enabling you to resubmit an existing transaction with
+   * a higher fee.
+   *
+   * @param accountConverter The {@link AccountConverter} for this transaction.
+   * @param feeSource The account paying for the transaction fee.
+   * @param baseFee Max fee willing to pay per operation in inner transaction (in stroops)
+   * @param innerTransaction The inner transaction that is being wrapped by this fee bump
+   *     transaction.
+   */
+  public FeeBumpTransaction(
       AccountConverter accountConverter,
-      @NonNull String feeAccount,
-      long fee,
+      @NonNull String feeSource,
+      long baseFee,
       @NonNull Transaction innerTransaction) {
     super(accountConverter, innerTransaction.getNetwork());
-    this.feeAccount = feeAccount;
-    this.innerTransaction = innerTransaction;
-    this.fee = fee;
+    this.feeSource = feeSource;
+
+    // set fee
+    if (baseFee < MIN_BASE_FEE) {
+      throw new IllegalArgumentException(
+          "baseFee cannot be smaller than the BASE_FEE (" + MIN_BASE_FEE + "): " + baseFee);
+    }
+
+    long innerBaseFee = innerTransaction.getFee();
+    long numOperations = innerTransaction.getOperations().length;
+    if (numOperations > 0) {
+      innerBaseFee = innerBaseFee / numOperations;
+    }
+
+    if (baseFee < innerBaseFee) {
+      throw new IllegalArgumentException(
+          "base fee cannot be lower than provided inner transaction base fee");
+    }
+
+    long maxFee = baseFee * (numOperations + 1);
+    if (maxFee < 0) {
+      throw new IllegalArgumentException("fee overflows 64 bit int");
+    }
+    fee = maxFee;
+
+    // set inner transaction
+    EnvelopeType txType = innerTransaction.toEnvelopeXdr().getDiscriminant();
+    if (txType == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
+      this.innerTransaction =
+          new TransactionBuilder(
+                  innerTransaction.accountConverter,
+                  new Account(
+                      innerTransaction.getSourceAccount(),
+                      innerTransaction.getSequenceNumber() - 1),
+                  innerTransaction.getNetwork())
+              .setBaseFee((int) innerTransaction.getFee())
+              .addOperations(Arrays.asList(innerTransaction.getOperations()))
+              .addMemo(innerTransaction.getMemo())
+              .addPreconditions(
+                  new TransactionPreconditions.TransactionPreconditionsBuilder()
+                      .timeBounds(innerTransaction.getTimeBounds())
+                      .build())
+              .build();
+      this.innerTransaction.signatures = new ArrayList<>(innerTransaction.signatures);
+    } else {
+      this.innerTransaction = innerTransaction;
+    }
   }
 
   public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(
@@ -45,11 +113,13 @@ public class FeeBumpTransaction extends AbstractTransaction {
     Transaction inner =
         Transaction.fromV1EnvelopeXdr(
             accountConverter, envelope.getTx().getInnerTx().getV1(), network);
-    String feeAccount = accountConverter.decode(envelope.getTx().getFeeSource());
+    String feeSource = accountConverter.decode(envelope.getTx().getFeeSource());
 
     long fee = envelope.getTx().getFee().getInt64();
+    long baseFee = fee / (inner.getOperations().length + 1);
 
-    FeeBumpTransaction feeBump = new FeeBumpTransaction(accountConverter, feeAccount, fee, inner);
+    FeeBumpTransaction feeBump =
+        new FeeBumpTransaction(accountConverter, feeSource, baseFee, inner);
     feeBump.signatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return feeBump;
@@ -68,9 +138,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
     Int64 xdrFee = new Int64();
     xdrFee.setInt64(fee);
     xdr.setFee(xdrFee);
-
-    xdr.setFeeSource(accountConverter.encode(this.feeAccount));
-
+    xdr.setFeeSource(accountConverter.encode(this.feeSource));
     org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx innerXDR =
         new org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx();
     innerXDR.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);
@@ -103,102 +171,6 @@ public class FeeBumpTransaction extends AbstractTransaction {
 
     xdr.setFeeBump(feeBumpEnvelope);
     return xdr;
-  }
-
-  /** Builds a new FeeBumpTransaction object. */
-  public static class Builder {
-    private final Transaction innerTransaction;
-    private Long baseFee;
-    private String feeAccount;
-    private final AccountConverter accountConverter;
-
-    /**
-     * Construct a new fee bump transaction builder.
-     *
-     * @param accountConverter The AccountConverter which will be used to encode the fee account.
-     * @param inner The inner transaction which will be fee bumped. read-only, the
-     */
-    public Builder(@NonNull AccountConverter accountConverter, @NonNull final Transaction inner) {
-      EnvelopeType txType = inner.toEnvelopeXdr().getDiscriminant();
-      this.accountConverter = accountConverter;
-      if (txType == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
-        this.innerTransaction =
-            new TransactionBuilder(
-                    inner.accountConverter,
-                    new Account(inner.getSourceAccount(), inner.getSequenceNumber() - 1),
-                    inner.getNetwork())
-                .setBaseFee((int) inner.getFee())
-                .addOperations(Arrays.asList(inner.getOperations()))
-                .addMemo(inner.getMemo())
-                .addPreconditions(
-                    new TransactionPreconditions.TransactionPreconditionsBuilder()
-                        .timeBounds(inner.getTimeBounds())
-                        .build())
-                .build();
-        this.innerTransaction.signatures = new ArrayList<>(inner.signatures);
-      } else {
-        this.innerTransaction = inner;
-      }
-    }
-
-    /**
-     * Construct a new fee bump transaction builder.
-     *
-     * @param inner The inner transaction which will be fee bumped.
-     */
-    public Builder(Transaction inner) {
-      this(AccountConverter.enableMuxed(), inner);
-    }
-
-    public FeeBumpTransaction.Builder setBaseFee(long baseFee) {
-      if (this.baseFee != null) {
-        throw new IllegalArgumentException("base fee has been already set.");
-      }
-
-      if (baseFee < MIN_BASE_FEE) {
-        throw new IllegalArgumentException(
-            "baseFee cannot be smaller than the BASE_FEE (" + MIN_BASE_FEE + "): " + baseFee);
-      }
-
-      long innerBaseFee = this.innerTransaction.getFee();
-      long numOperations = this.innerTransaction.getOperations().length;
-      if (numOperations > 0) {
-        innerBaseFee = innerBaseFee / numOperations;
-      }
-
-      if (baseFee < innerBaseFee) {
-        throw new IllegalArgumentException(
-            "base fee cannot be lower than provided inner transaction base fee");
-      }
-
-      long maxFee = baseFee * (numOperations + 1);
-      if (maxFee < 0) {
-        throw new IllegalArgumentException("fee overflows 64 bit int");
-      }
-
-      this.baseFee = maxFee;
-      return this;
-    }
-
-    public FeeBumpTransaction.Builder setFeeAccount(@NonNull String feeAccount) {
-      if (this.feeAccount != null) {
-        throw new IllegalArgumentException("fee account has been already been set.");
-      }
-
-      this.feeAccount = feeAccount;
-      return this;
-    }
-
-    public FeeBumpTransaction build() {
-      if (this.feeAccount == null) {
-        throw new NullPointerException("fee account has to be set. you must call setFeeAccount().");
-      }
-      if (this.baseFee == null) {
-        throw new NullPointerException("base fee has to be set. you must call setBaseFee().");
-      }
-      return new FeeBumpTransaction(
-          this.accountConverter, this.feeAccount, this.baseFee, this.innerTransaction);
-    }
   }
 
   @Override

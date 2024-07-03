@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import org.junit.Test;
 import org.stellar.sdk.operations.PaymentOperation;
 import org.stellar.sdk.xdr.EnvelopeType;
@@ -46,72 +45,14 @@ public class FeeBumpTransactionTest {
   }
 
   @Test
-  public void testRequiresFeeAccount() {
-    Transaction inner = createInnerTransaction();
-
-    try {
-      new FeeBumpTransaction.Builder(inner).setBaseFee(Transaction.MIN_BASE_FEE * 2).build();
-      fail();
-    } catch (RuntimeException e) {
-      assertEquals("fee account has to be set. you must call setFeeAccount().", e.getMessage());
-    }
-  }
-
-  @Test
-  public void testSetFeeAccountMultipleTimes() {
-    Transaction inner = createInnerTransaction();
-
-    try {
-      new FeeBumpTransaction.Builder(inner)
-          .setBaseFee(Transaction.MIN_BASE_FEE * 2)
-          .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-          .setFeeAccount("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")
-          .build();
-      fail();
-    } catch (RuntimeException e) {
-      assertEquals("fee account has been already been set.", e.getMessage());
-    }
-  }
-
-  @Test
-  public void testRequiresBaseFee() {
-    Transaction inner = createInnerTransaction();
-
-    try {
-      new FeeBumpTransaction.Builder(inner)
-          .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-          .build();
-      fail();
-    } catch (RuntimeException e) {
-      assertEquals("base fee has to be set. you must call setBaseFee().", e.getMessage());
-    }
-  }
-
-  @Test
-  public void testSetBaseFeeMultipleTimes() {
-    Transaction inner = createInnerTransaction();
-
-    try {
-      new FeeBumpTransaction.Builder(inner)
-          .setBaseFee(Transaction.MIN_BASE_FEE * 2)
-          .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-          .setBaseFee(Transaction.MIN_BASE_FEE)
-          .build();
-      fail();
-    } catch (RuntimeException e) {
-      assertEquals("base fee has been already set.", e.getMessage());
-    }
-  }
-
-  @Test
   public void testSetBaseFeeBelowNetworkMinimum() {
     Transaction inner = createInnerTransaction();
 
     try {
-      new FeeBumpTransaction.Builder(inner)
-          .setBaseFee(Transaction.MIN_BASE_FEE - 1)
-          .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-          .build();
+      new FeeBumpTransaction(
+          "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+          Transaction.MIN_BASE_FEE - 1,
+          inner);
       fail();
     } catch (RuntimeException e) {
       assertEquals("baseFee cannot be smaller than the BASE_FEE (100): 99", e.getMessage());
@@ -123,10 +64,10 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction(Transaction.MIN_BASE_FEE + 1);
 
     try {
-      new FeeBumpTransaction.Builder(inner)
-          .setBaseFee(Transaction.MIN_BASE_FEE)
-          .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-          .build();
+      new FeeBumpTransaction(
+          "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+          Transaction.MIN_BASE_FEE,
+          inner);
       fail();
     } catch (RuntimeException e) {
       assertEquals(
@@ -139,10 +80,8 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction(Transaction.MIN_BASE_FEE + 1);
 
     try {
-      new FeeBumpTransaction.Builder(inner)
-          .setBaseFee(Long.MAX_VALUE)
-          .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-          .build();
+      new FeeBumpTransaction(
+          "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", Long.MAX_VALUE, inner);
       fail();
     } catch (RuntimeException e) {
       assertEquals("fee overflows 64 bit int", e.getMessage());
@@ -154,10 +93,10 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction();
 
     FeeBumpTransaction feeBump =
-        new FeeBumpTransaction.Builder(inner)
-            .setBaseFee(Transaction.MIN_BASE_FEE)
-            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-            .build();
+        new FeeBumpTransaction(
+            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+            Transaction.MIN_BASE_FEE,
+            inner);
 
     assertEquals(Transaction.MIN_BASE_FEE * 2, feeBump.getFee());
   }
@@ -169,28 +108,27 @@ public class FeeBumpTransactionTest {
         "2a8ead3351faa7797b284f59027355ddd69c21adb8e4da0b9bb95531f7f32681", inner.hashHex());
 
     FeeBumpTransaction feeBump =
-        new FeeBumpTransaction.Builder(inner)
-            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
-            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-            .build();
-
+        new FeeBumpTransaction(
+            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+            Transaction.MIN_BASE_FEE * 2,
+            inner);
     assertEquals(
         "58266712c0c1d1cd98faa0e0159605a361cf2a5ca44ad69650eeb1d27ee62334", feeBump.hashHex());
   }
 
   @Test
-  public void testRoundTripXdr() throws IOException {
+  public void testRoundTripXdr() {
     Transaction inner = createInnerTransaction();
 
     FeeBumpTransaction feeBump =
-        new FeeBumpTransaction.Builder(inner)
-            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
-            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-            .build();
+        new FeeBumpTransaction(
+            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+            Transaction.MIN_BASE_FEE * 2,
+            inner);
 
     assertEquals(Transaction.MIN_BASE_FEE * 4, feeBump.getFee());
     assertEquals(
-        "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", feeBump.getFeeAccount());
+        "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", feeBump.getFeeSource());
     assertEquals(inner, feeBump.getInnerTransaction());
     assertEquals(0, feeBump.getSignatures().size());
 
@@ -215,19 +153,19 @@ public class FeeBumpTransactionTest {
   }
 
   @Test
-  public void testFeeBumpUpgradesInnerToV1() throws IOException {
+  public void testFeeBumpUpgradesInnerToV1() {
     Transaction innerV0 = createInnerTransaction();
     innerV0.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
 
     FeeBumpTransaction feeBump =
-        new FeeBumpTransaction.Builder(innerV0)
-            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
-            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-            .build();
+        new FeeBumpTransaction(
+            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+            Transaction.MIN_BASE_FEE * 2,
+            innerV0);
 
     assertEquals(Transaction.MIN_BASE_FEE * 4, feeBump.getFee());
     assertEquals(
-        "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", feeBump.getFeeAccount());
+        "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", feeBump.getFeeSource());
     assertEquals(0, feeBump.getSignatures().size());
 
     assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, innerV0.toEnvelopeXdr().getDiscriminant());
@@ -257,38 +195,42 @@ public class FeeBumpTransactionTest {
   @Test
   public void testHashCodeAndEquals() {
     Transaction inner = createInnerTransaction();
-
     FeeBumpTransaction feeBump0 =
-        new FeeBumpTransaction.Builder(AccountConverter.enableMuxed(), inner)
-            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
-            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-            .build();
+        new FeeBumpTransaction(
+            AccountConverter.enableMuxed(),
+            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+            Transaction.MIN_BASE_FEE * 2,
+            inner);
 
     // they get different account converters
     FeeBumpTransaction feeBump1 =
-        new FeeBumpTransaction.Builder(AccountConverter.disableMuxed(), inner)
-            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
-            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-            .build();
+        new FeeBumpTransaction(
+            AccountConverter.disableMuxed(),
+            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+            Transaction.MIN_BASE_FEE * 2,
+            inner);
+
     assertEquals(feeBump0.hashCode(), feeBump1.hashCode());
     assertEquals(feeBump0, feeBump1);
 
     // they get different base fee
     FeeBumpTransaction feeBump2 =
-        new FeeBumpTransaction.Builder(AccountConverter.enableMuxed(), inner)
-            .setBaseFee(Transaction.MIN_BASE_FEE * 3)
-            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-            .build();
+        new FeeBumpTransaction(
+            AccountConverter.enableMuxed(),
+            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+            Transaction.MIN_BASE_FEE * 3,
+            createInnerTransaction(Network.PUBLIC));
     System.out.println(feeBump2.toEnvelopeXdr());
     assertNotEquals(feeBump0, feeBump2);
 
     // they get different network
     FeeBumpTransaction feeBump3 =
-        new FeeBumpTransaction.Builder(
-                AccountConverter.enableMuxed(), createInnerTransaction(Network.PUBLIC))
-            .setBaseFee(Transaction.MIN_BASE_FEE * 2)
-            .setFeeAccount("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3")
-            .build();
+        new FeeBumpTransaction(
+            AccountConverter.enableMuxed(),
+            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
+            Transaction.MIN_BASE_FEE * 2,
+            createInnerTransaction(Network.PUBLIC));
+
     assertNotEquals(feeBump0, feeBump3);
   }
 }
