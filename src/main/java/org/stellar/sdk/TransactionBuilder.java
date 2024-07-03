@@ -45,9 +45,7 @@ public class TransactionBuilder {
    */
   public TransactionBuilder(Transaction transaction) {
     AbstractTransaction abstractTransaction =
-        Transaction.fromEnvelopeXdr(
-            transaction.toEnvelopeXdrBase64(),
-            transaction.getNetwork());
+        Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), transaction.getNetwork());
 
     if (!(abstractTransaction instanceof Transaction)) {
       // This should never happen
