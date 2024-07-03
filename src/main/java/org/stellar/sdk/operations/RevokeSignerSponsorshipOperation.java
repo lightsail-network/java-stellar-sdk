@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.*;
 
@@ -46,7 +45,7 @@ public class RevokeSignerSponsorshipOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
 
     RevokeSponsorshipOp.RevokeSponsorshipOpSigner xdrSigner =

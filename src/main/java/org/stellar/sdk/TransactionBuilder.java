@@ -14,7 +14,6 @@ import org.stellar.sdk.xdr.SorobanTransactionData;
 /** Builds a new Transaction object. */
 public class TransactionBuilder {
   private final TransactionBuilderAccount sourceAccount;
-  private final AccountConverter accountConverter;
   private Memo memo;
   private final List<Operation> operations;
   private Long baseFee;
@@ -26,33 +25,17 @@ public class TransactionBuilder {
   /**
    * Construct a new transaction builder.
    *
-   * @param accountConverter the account id formatter, choose to support muxed or not.
    * @param sourceAccount the source account for this transaction. This account is the account who
    *     will use a sequence number. When build() is called, the account object's sequence number
    *     will be incremented.
    * @param network the testnet or pubnet network to use
    */
   public TransactionBuilder(
-      @NonNull AccountConverter accountConverter,
-      @NonNull TransactionBuilderAccount sourceAccount,
-      @NonNull Network network) {
-    this.accountConverter = accountConverter;
+      @NonNull TransactionBuilderAccount sourceAccount, @NonNull Network network) {
     this.sourceAccount = sourceAccount;
     this.network = network;
     operations = new ArrayList<>();
     preconditions = TransactionPreconditions.builder().build();
-  }
-
-  /**
-   * Construct a new transaction builder.
-   *
-   * @param sourceAccount the source account for this transaction. This account is the account who
-   *     will use a sequence number. When build() is called, the account object's sequence number
-   *     will be incremented.
-   * @param network the testnet or pubnet network to use
-   */
-  public TransactionBuilder(TransactionBuilderAccount sourceAccount, Network network) {
-    this(AccountConverter.enableMuxed(), sourceAccount, network);
   }
 
   /**
@@ -63,7 +46,6 @@ public class TransactionBuilder {
   public TransactionBuilder(Transaction transaction) {
     AbstractTransaction abstractTransaction =
         Transaction.fromEnvelopeXdr(
-            transaction.getAccountConverter(),
             transaction.toEnvelopeXdrBase64(),
             transaction.getNetwork());
 
@@ -75,7 +57,6 @@ public class TransactionBuilder {
     Transaction tx = (Transaction) abstractTransaction;
 
     this.sourceAccount = new Account(tx.getSourceAccount(), tx.getSequenceNumber() - 1);
-    this.accountConverter = tx.accountConverter;
     this.memo = tx.getMemo();
     this.operations = Arrays.asList(tx.getOperations());
     this.baseFee = tx.getFee() / tx.getOperations().length;
@@ -227,7 +208,6 @@ public class TransactionBuilder {
     operations = this.operations.toArray(operations);
     Transaction transaction =
         new Transaction(
-            accountConverter,
             sourceAccount.getAccountId(),
             operations.length * baseFee,
             sequenceNumber,

@@ -23,8 +23,6 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 /**
  * StrKey is a helper class that allows encoding and decoding Stellar keys to/from strings, i.e.
  * between their binary and string (i.e. "GABCD...", etc.) representations.
- *
- * <p>For encoding and decoding MuxedAccount, please see {@link AccountConverter}.
  */
 public class StrKey {
 
@@ -197,7 +195,7 @@ public class StrKey {
    * @param muxedAccount the muxed account to encode
    * @return "M..." or "G..." representation of the key
    */
-  public static String encodeStellarMuxedAccount(MuxedAccount muxedAccount) {
+  public static String encodeMuxedAccount(MuxedAccount muxedAccount) {
     switch (muxedAccount.getDiscriminant()) {
       case KEY_TYPE_MUXED_ED25519:
         return String.valueOf(
@@ -208,6 +206,16 @@ public class StrKey {
       default:
         throw new IllegalArgumentException("invalid discriminant");
     }
+  }
+
+  /**
+   * Decodes strkey Stellar account ID (G...) or muxed account ID (M...) to {@link MuxedAccount}.
+   *
+   * @param address the address to decode
+   * @return {@link MuxedAccount} representation of the key
+   */
+  public static MuxedAccount decodeMuxedAccount(String address) {
+    return encodeToXDRMuxedAccount(address);
   }
 
   /**

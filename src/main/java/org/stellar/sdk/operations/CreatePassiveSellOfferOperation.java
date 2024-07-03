@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Price;
 import org.stellar.sdk.xdr.CreatePassiveSellOfferOp;
@@ -53,7 +52,7 @@ public class CreatePassiveSellOfferOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     CreatePassiveSellOfferOp op = new CreatePassiveSellOfferOp();
     op.setSelling(selling.toXdr());
     op.setBuying(buying.toXdr());

@@ -61,7 +61,6 @@ public class TransactionTest {
 
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -86,8 +85,7 @@ public class TransactionTest {
 
     Transaction parsed =
         (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.PUBLIC);
+            Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), Network.PUBLIC);
     assertEquals(parsed, transaction);
     assertEquals(EnvelopeType.ENVELOPE_TYPE_TX_V0, parsed.toEnvelopeXdr().getDiscriminant());
     assertEquals(transaction.toEnvelopeXdrBase64(), parsed.toEnvelopeXdrBase64());
@@ -108,7 +106,6 @@ public class TransactionTest {
 
     Transaction transaction =
         new Transaction(
-            AccountConverter.disableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -148,7 +145,6 @@ public class TransactionTest {
 
     Transaction transaction =
         new Transaction(
-            AccountConverter.disableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -189,7 +185,6 @@ public class TransactionTest {
 
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -207,8 +202,7 @@ public class TransactionTest {
 
     Transaction parsed =
         (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.TESTNET);
+            Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), Network.TESTNET);
     assertEquals(parsed, transaction);
     assertEquals(
         "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAO3gUmG83C+VCqO6FztuMtXJF/l7grZA7MjRzqdZ9W8QAAAABKgXyAAAAAAAAAAAAA==",
@@ -277,7 +271,6 @@ public class TransactionTest {
         InvokeHostFunctionOperation.builder().hostFunction(hostFunction).build();
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -290,8 +283,7 @@ public class TransactionTest {
 
     Transaction parsed =
         (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.TESTNET);
+            Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), Network.TESTNET);
     assertEquals(parsed, transaction);
     String expectedXdr =
         "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAQAAAAAAAAAAAAAAAH8wYjTJienWf2nf2TEZi2APPWzmtkwiQHAftisIgyuHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAAfzBiNMmJ6dZ/ad/ZMRmLYA89bOa2TCJAcB+2KwiDK4cAAAAAAACHBwAAArsAAAAAAAAAAAAAAGQAAAAA";
@@ -315,7 +307,6 @@ public class TransactionTest {
 
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -353,7 +344,6 @@ public class TransactionTest {
         ExtendFootprintTTLOperation.builder().extendTo(4096L).build();
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -390,7 +380,6 @@ public class TransactionTest {
     RestoreFootprintOperation operation = RestoreFootprintOperation.builder().build();
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -420,7 +409,6 @@ public class TransactionTest {
 
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -443,7 +431,6 @@ public class TransactionTest {
 
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -466,7 +453,6 @@ public class TransactionTest {
 
     Transaction transaction1 =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -480,7 +466,6 @@ public class TransactionTest {
     // they get different account converters
     Transaction transaction2 =
         new Transaction(
-            AccountConverter.disableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -496,7 +481,6 @@ public class TransactionTest {
     // they get different memo
     Transaction transaction3 =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),
@@ -511,7 +495,6 @@ public class TransactionTest {
     // they get different network
     Transaction transaction4 =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             Transaction.MIN_BASE_FEE,
             account.getIncrementedSequenceNumber(),

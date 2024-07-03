@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.exception.FormatException;
 
@@ -24,17 +23,16 @@ public class ManageDataOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
 
-    ManageDataOperation parsedOperation =
-        (ManageDataOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    ManageDataOperation parsedOperation = (ManageDataOperation) Operation.fromXdr(xdr);
 
     assertEquals("test", parsedOperation.getName());
     assertArrayEquals(new byte[] {0, 1, 2, 3, 4}, parsedOperation.getValue());
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAEAAAAFAAECAwQAAAA=",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test
@@ -50,16 +48,15 @@ public class ManageDataOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
 
-    ManageDataOperation parsedOperation =
-        (ManageDataOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    ManageDataOperation parsedOperation = (ManageDataOperation) Operation.fromXdr(xdr);
 
     assertEquals("test", parsedOperation.getName());
     assertNull(parsedOperation.getValue());
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAA=",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 }

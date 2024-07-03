@@ -6,7 +6,6 @@ import static org.stellar.sdk.Asset.create;
 
 import java.io.IOException;
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
@@ -42,10 +41,9 @@ public class ManageSellOfferOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     ManageSellOfferOperation parsedOperation =
-        (ManageSellOfferOperation)
-            ManageSellOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (ManageSellOfferOperation) ManageSellOfferOperation.fromXdr(xdr);
 
     assertEquals(100L, xdr.getBody().getManageSellOfferOp().getAmount().getInt64().longValue());
     assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
@@ -59,7 +57,7 @@ public class ManageSellOfferOperationTest {
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAMAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test
@@ -88,10 +86,9 @@ public class ManageSellOfferOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     ManageSellOfferOperation parsedOperation =
-        (ManageSellOfferOperation)
-            ManageSellOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (ManageSellOfferOperation) ManageSellOfferOperation.fromXdr(xdr);
     assertEquals(operation, parsedOperation);
   }
 
@@ -108,9 +105,7 @@ public class ManageSellOfferOperationTest {
 
     ManageSellOfferOperation op =
         (ManageSellOfferOperation)
-            Operation.fromXdr(
-                AccountConverter.enableMuxed(),
-                transactionEnvelope.getV0().getTx().getOperations()[0]);
+            Operation.fromXdr(transactionEnvelope.getV0().getTx().getOperations()[0]);
 
     assertEquals(Price.fromString("3397.893306099996"), op.getPrice());
   }
@@ -128,9 +123,7 @@ public class ManageSellOfferOperationTest {
 
     ManageBuyOfferOperation op =
         (ManageBuyOfferOperation)
-            Operation.fromXdr(
-                AccountConverter.enableMuxed(),
-                transactionEnvelope.getV0().getTx().getOperations()[0]);
+            Operation.fromXdr(transactionEnvelope.getV0().getTx().getOperations()[0]);
 
     assertEquals(Price.fromString("3397.893306099996"), op.getPrice());
   }

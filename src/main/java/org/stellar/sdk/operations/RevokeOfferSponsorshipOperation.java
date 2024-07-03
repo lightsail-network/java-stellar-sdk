@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerEntryType;
@@ -51,7 +50,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     RevokeSponsorshipOp op = new RevokeSponsorshipOp();
     LedgerKey key = new LedgerKey();
     key.setDiscriminant(LedgerEntryType.OFFER);

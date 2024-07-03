@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Price;
 import org.stellar.sdk.xdr.Int64;
@@ -60,7 +59,7 @@ public class ManageSellOfferOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ManageSellOfferOp op = new ManageSellOfferOp();
     op.setSelling(selling.toXdr());
     op.setBuying(buying.toXdr());

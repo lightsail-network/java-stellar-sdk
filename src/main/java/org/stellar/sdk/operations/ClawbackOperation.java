@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.StrKey;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.ClawbackOp;
 import org.stellar.sdk.xdr.Int64;
@@ -33,25 +33,24 @@ public class ClawbackOperation extends Operation {
   @NonNull private final String amount;
 
   /**
-   * Construct a new {@link ClawbackOperation} object from the {@link AccountConverter} object and
-   * the {@link ClawbackOp} XDR object.
+   * Construct a new {@link ClawbackOperation} object from the {@link ClawbackOp} XDR object.
    *
    * @param op {@link ClawbackOp} XDR object
    * @return {@link ClawbackOperation} object
    */
-  public static ClawbackOperation fromXdr(AccountConverter accountConverter, ClawbackOp op) {
-    String from = accountConverter.decode(op.getFrom());
+  public static ClawbackOperation fromXdr(ClawbackOp op) {
+    String from = StrKey.encodeMuxedAccount(op.getFrom());
     String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     AssetTypeCreditAlphaNum asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
     return new ClawbackOperation(from, asset, amount);
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ClawbackOp op = new ClawbackOp();
 
     // trustor
-    op.setFrom(accountConverter.encode(from));
+    op.setFrom(StrKey.encodeToXDRMuxedAccount(from));
 
     Int64 amount = new Int64();
     amount.setInt64(Operation.toXdrAmount(this.amount));

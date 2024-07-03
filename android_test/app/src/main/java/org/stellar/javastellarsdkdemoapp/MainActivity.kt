@@ -227,7 +227,7 @@ private fun testSDK(): String {
         val sequenceNumber = 2908908335136768L
         val account = Account(source.accountId, sequenceNumber)
         val transaction: Transaction =
-            TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+            TransactionBuilder(account, Network.TESTNET)
                 .addOperation(invokeHostFunctionOperation)
                 .addPreconditions(
                     TransactionPreconditions.builder().timeBounds(TimeBounds(0, 0)).build()

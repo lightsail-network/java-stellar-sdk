@@ -5,7 +5,6 @@ import static org.stellar.sdk.Asset.create;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
@@ -48,7 +47,7 @@ public class CreatePassiveSellOfferOperationTest {
 
     Assert.assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAQAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZAIweX0Avrwg",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test

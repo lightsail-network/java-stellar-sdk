@@ -7,7 +7,6 @@ import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.Nullable;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.xdr.DataValue;
 import org.stellar.sdk.xdr.ManageDataOp;
 import org.stellar.sdk.xdr.OperationType;
@@ -47,7 +46,7 @@ public class ManageDataOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ManageDataOp op = new ManageDataOp();
     String64 name = new String64();
     name.setString64(new XdrString(this.name));

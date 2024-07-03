@@ -6,7 +6,6 @@ import static org.stellar.sdk.Asset.create;
 
 import java.io.IOException;
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
@@ -41,10 +40,9 @@ public class ManageBuyOfferOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     ManageBuyOfferOperation parsedOperation =
-        (ManageBuyOfferOperation)
-            ManageBuyOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (ManageBuyOfferOperation) ManageBuyOfferOperation.fromXdr(xdr);
 
     assertEquals(100L, xdr.getBody().getManageBuyOfferOp().getBuyAmount().getInt64().longValue());
     assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
@@ -58,7 +56,7 @@ public class ManageBuyOfferOperationTest {
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAwAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test
@@ -87,10 +85,9 @@ public class ManageBuyOfferOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     ManageBuyOfferOperation parsedOperation =
-        (ManageBuyOfferOperation)
-            ManageBuyOfferOperation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (ManageBuyOfferOperation) ManageBuyOfferOperation.fromXdr(xdr);
     assertEquals(operation, parsedOperation);
   }
 }

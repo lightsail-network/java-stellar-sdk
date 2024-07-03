@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.CreateAccountOp;
 import org.stellar.sdk.xdr.Int64;
@@ -44,7 +43,7 @@ public class CreateAccountOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     CreateAccountOp op = new CreateAccountOp();
     op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
     Int64 startingBalance = new Int64();

@@ -16,7 +16,7 @@ public class FeeBumpTransactionTest {
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction inner =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, network)
+        new TransactionBuilder(account, network)
             .addOperation(
                 PaymentOperation.builder()
                     .destination("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ")
@@ -134,8 +134,7 @@ public class FeeBumpTransactionTest {
 
     FeeBumpTransaction fromXdr =
         (FeeBumpTransaction)
-            AbstractTransaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), feeBump.toEnvelopeXdrBase64(), Network.TESTNET);
+            AbstractTransaction.fromEnvelopeXdr(feeBump.toEnvelopeXdrBase64(), Network.TESTNET);
 
     assertEquals(feeBump, fromXdr);
 
@@ -143,8 +142,7 @@ public class FeeBumpTransactionTest {
     feeBump.sign(signer);
     fromXdr =
         (FeeBumpTransaction)
-            AbstractTransaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), feeBump.toEnvelopeXdrBase64(), Network.TESTNET);
+            AbstractTransaction.fromEnvelopeXdr(feeBump.toEnvelopeXdrBase64(), Network.TESTNET);
     assertEquals(feeBump, fromXdr);
     assertEquals(inner, fromXdr.getInnerTransaction());
 
@@ -174,8 +172,7 @@ public class FeeBumpTransactionTest {
 
     FeeBumpTransaction fromXdr =
         (FeeBumpTransaction)
-            AbstractTransaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), feeBump.toEnvelopeXdrBase64(), Network.TESTNET);
+            AbstractTransaction.fromEnvelopeXdr(feeBump.toEnvelopeXdrBase64(), Network.TESTNET);
 
     assertEquals(feeBump, fromXdr);
 
@@ -183,8 +180,7 @@ public class FeeBumpTransactionTest {
     feeBump.sign(signer);
     fromXdr =
         (FeeBumpTransaction)
-            AbstractTransaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), feeBump.toEnvelopeXdrBase64(), Network.TESTNET);
+            AbstractTransaction.fromEnvelopeXdr(feeBump.toEnvelopeXdrBase64(), Network.TESTNET);
     assertEquals(feeBump, fromXdr);
     assertEquals(feeBump.getInnerTransaction(), fromXdr.getInnerTransaction());
 
@@ -197,26 +193,13 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction();
     FeeBumpTransaction feeBump0 =
         new FeeBumpTransaction(
-            AccountConverter.enableMuxed(),
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 2,
             inner);
-
-    // they get different account converters
-    FeeBumpTransaction feeBump1 =
-        new FeeBumpTransaction(
-            AccountConverter.disableMuxed(),
-            "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
-            Transaction.MIN_BASE_FEE * 2,
-            inner);
-
-    assertEquals(feeBump0.hashCode(), feeBump1.hashCode());
-    assertEquals(feeBump0, feeBump1);
 
     // they get different base fee
     FeeBumpTransaction feeBump2 =
         new FeeBumpTransaction(
-            AccountConverter.enableMuxed(),
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 3,
             createInnerTransaction(Network.PUBLIC));
@@ -226,7 +209,6 @@ public class FeeBumpTransactionTest {
     // they get different network
     FeeBumpTransaction feeBump3 =
         new FeeBumpTransaction(
-            AccountConverter.enableMuxed(),
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 2,
             createInnerTransaction(Network.PUBLIC));

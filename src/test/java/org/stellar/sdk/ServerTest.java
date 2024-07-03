@@ -199,7 +199,7 @@ public class ServerTest {
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     TransactionBuilder builder =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, network)
+        new TransactionBuilder(account, network)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -401,7 +401,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
@@ -454,7 +454,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_ID)
@@ -505,7 +505,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
@@ -556,7 +556,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
@@ -623,7 +623,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
@@ -689,7 +689,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
@@ -755,7 +755,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
@@ -821,7 +821,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
@@ -887,7 +887,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 ManageDataOperation.builder().name("Hello").value("Stellar".getBytes()).build())
             .addOperation(
@@ -956,7 +956,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_FOUND)
@@ -1006,7 +1006,7 @@ public class ServerTest {
         KeyPair.fromSecretSeed("SDQXFKA32UVQHUTLYJ42N56ZUEM5PNVVI4XE7EA5QFMLA2DHDCQX3GPY");
     Account account = new Account(source.getAccountId(), 1L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_FETCH_ERROR)

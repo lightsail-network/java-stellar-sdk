@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.RestoreFootprintOp;
@@ -32,7 +31,7 @@ public class RestoreFootprintOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     RestoreFootprintOp op = new RestoreFootprintOp();
     op.setExt(ExtensionPoint.builder().discriminant(0).build());
 
