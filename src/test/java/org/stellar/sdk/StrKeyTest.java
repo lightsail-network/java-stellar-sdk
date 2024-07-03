@@ -311,15 +311,7 @@ public class StrKeyTest {
         -9223372036854775808L,
         muxedAccount.getMed25519().getId().getUint64().getNumber().longValue());
 
-    assertEquals(muxedAddress, StrKey.encodeStellarMuxedAccount(muxedAccount));
-
-    assertEquals(muxedAddress, AccountConverter.enableMuxed().decode(muxedAccount));
-    assertEquals(unmuxedAddress, AccountConverter.disableMuxed().decode(muxedAccount));
-
-    assertEquals(muxedAccount, AccountConverter.enableMuxed().encode(muxedAddress));
-    assertEquals(
-        account.getAccountID().getEd25519(),
-        AccountConverter.disableMuxed().encode(muxedAddress).getEd25519());
+    assertEquals(muxedAddress, StrKey.encodeMuxedAccount(muxedAccount));
   }
 
   @Test

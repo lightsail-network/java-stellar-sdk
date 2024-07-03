@@ -6,7 +6,6 @@ import static org.stellar.sdk.Asset.create;
 
 import java.io.IOException;
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.exception.FormatException;
@@ -29,11 +28,10 @@ public class ClawbackOperationTest {
             .build();
     assertEquals(
         "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABMAAAABREVNTwAAAACs9Aq+RXfSw0yuZEGt0TkYxAHDjB9RkQrLraMLSTGGKwAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAA7msoA",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
-    ClawbackOperation parsedOperation =
-        (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    ClawbackOperation parsedOperation = (ClawbackOperation) Operation.fromXdr(xdr);
     assertEquals(accountId, parsedOperation.getFrom());
     assertEquals(asset, parsedOperation.getAsset());
     assertEquals(amt, parsedOperation.getAmount());
@@ -59,14 +57,13 @@ public class ClawbackOperationTest {
             .sourceAccount(source)
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
-    ClawbackOperation parsedOperation =
-        (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    ClawbackOperation parsedOperation = (ClawbackOperation) Operation.fromXdr(xdr);
 
     assertEquals(from, parsedOperation.getFrom());
     assertEquals(source, parsedOperation.getSourceAccount());
 
-    parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    parsedOperation = (ClawbackOperation) Operation.fromXdr(xdr);
     assertEquals(
         "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO",
         parsedOperation.getFrom());
@@ -92,14 +89,13 @@ public class ClawbackOperationTest {
             .sourceAccount(source)
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
-    ClawbackOperation parsedOperation =
-        (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    ClawbackOperation parsedOperation = (ClawbackOperation) Operation.fromXdr(xdr);
 
     assertEquals(from, parsedOperation.getFrom());
     assertEquals(source, parsedOperation.getSourceAccount());
 
-    parsedOperation = (ClawbackOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    parsedOperation = (ClawbackOperation) Operation.fromXdr(xdr);
     assertEquals(from, parsedOperation.getFrom());
     assertEquals(
         "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK",

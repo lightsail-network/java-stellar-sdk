@@ -278,9 +278,7 @@ public class Sep10ChallengeTest {
         "MCAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITKNOG");
     Transaction withMuxedClient =
         new TransactionBuilder(
-                AccountConverter.disableMuxed(),
-                new Account(transaction.getSourceAccount(), 100L),
-                transaction.getNetwork())
+                new Account(transaction.getSourceAccount(), 100L), transaction.getNetwork())
             .setBaseFee((int) transaction.getFee())
             .addMemo(transaction.getMemo())
             .addOperations(Arrays.asList(operations))
@@ -364,7 +362,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -474,7 +472,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -521,7 +519,7 @@ public class Sep10ChallengeTest {
     Operation[] operations = new Operation[] {operation};
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -647,7 +645,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {setOptionsOperation};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -689,7 +687,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -736,7 +734,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -780,7 +778,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -828,7 +826,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -870,7 +868,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -923,7 +921,7 @@ public class Sep10ChallengeTest {
             .build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -975,7 +973,7 @@ public class Sep10ChallengeTest {
             .build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -1023,7 +1021,7 @@ public class Sep10ChallengeTest {
         ManageDataOperation.builder().name("key").value("value".getBytes()).build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -1070,7 +1068,7 @@ public class Sep10ChallengeTest {
         BumpSequenceOperation.builder().bumpTo(0L).sourceAccount(server.getAccountId()).build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -1327,7 +1325,7 @@ public class Sep10ChallengeTest {
             .build();
     Operation[] operations = new Operation[] {domainNameOperation, webAuthDomainOperation};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -1387,7 +1385,7 @@ public class Sep10ChallengeTest {
     Operation[] operations =
         new Operation[] {domainNameOperation, webAuthDomainOperation, otherDomainOperation};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -1471,7 +1469,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(memo)
@@ -1517,7 +1515,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
@@ -1564,7 +1562,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
@@ -1611,7 +1609,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addPreconditions(TransactionPreconditions.builder().timeBounds(timeBounds).build())
@@ -1851,7 +1849,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -2402,7 +2400,7 @@ public class Sep10ChallengeTest {
 
     Operation[] operations = new Operation[] {manageDataOperation1};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -3005,7 +3003,7 @@ public class Sep10ChallengeTest {
             .build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -3062,7 +3060,7 @@ public class Sep10ChallengeTest {
             .build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -3118,7 +3116,7 @@ public class Sep10ChallengeTest {
         ManageDataOperation.builder().name("key").value("value".getBytes()).build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())
@@ -3172,7 +3170,7 @@ public class Sep10ChallengeTest {
         BumpSequenceOperation.builder().bumpTo(0L).sourceAccount(server.getAccountId()).build();
     Operation[] operations = new Operation[] {operation1, operation2};
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.disableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .setBaseFee(100 * operations.length)
             .addOperations(Arrays.asList(operations))
             .addMemo(Memo.none())

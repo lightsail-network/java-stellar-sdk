@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.BeginSponsoringFutureReservesOp;
 import org.stellar.sdk.xdr.OperationType;
@@ -38,7 +37,7 @@ public class BeginSponsoringFutureReservesOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     BeginSponsoringFutureReservesOp op = new BeginSponsoringFutureReservesOp();
     op.setSponsoredID(StrKey.encodeToXDRAccountId(sponsoredId));
 

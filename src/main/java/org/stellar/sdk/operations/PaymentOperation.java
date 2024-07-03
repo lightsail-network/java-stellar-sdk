@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PaymentOp;
@@ -33,25 +33,24 @@ public class PaymentOperation extends Operation {
   @NonNull private final String amount;
 
   /**
-   * Construct a new {@link PaymentOperation} object from the {@link AccountConverter} object and
-   * the {@link PaymentOp} XDR object.
+   * Construct a new {@link PaymentOperation} object from the {@link PaymentOp} XDR object.
    *
    * @param op {@link PaymentOp} XDR object
    * @return {@link PaymentOperation} object
    */
-  public static PaymentOperation fromXdr(AccountConverter accountConverter, PaymentOp op) {
-    String destination = accountConverter.decode(op.getDestination());
+  public static PaymentOperation fromXdr(PaymentOp op) {
+    String destination = StrKey.encodeMuxedAccount(op.getDestination());
     Asset asset = Asset.fromXdr(op.getAsset());
     String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     return new PaymentOperation(destination, asset, amount);
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     PaymentOp op = new PaymentOp();
 
     // destination
-    op.setDestination(accountConverter.encode(this.destination));
+    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
     // asset
     op.setAsset(asset.toXdr());
     // amount

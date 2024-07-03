@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentStrictReceiveOp;
@@ -49,16 +49,15 @@ public class PathPaymentStrictReceiveOperation extends Operation {
 
   /**
    * Construct a new {@link PathPaymentStrictReceiveOperation} object from the {@link
-   * AccountConverter} object and the {@link PathPaymentStrictReceiveOp} XDR object.
+   * PathPaymentStrictReceiveOp} XDR object.
    *
    * @param op {@link PathPaymentStrictReceiveOp} XDR object
    * @return {@link PathPaymentStrictReceiveOperation} object
    */
-  public static PathPaymentStrictReceiveOperation fromXdr(
-      AccountConverter accountConverter, PathPaymentStrictReceiveOp op) {
+  public static PathPaymentStrictReceiveOperation fromXdr(PathPaymentStrictReceiveOp op) {
     Asset sendAsset = Asset.fromXdr(op.getSendAsset());
     String sendMax = Operation.fromXdrAmount(op.getSendMax().getInt64());
-    String destination = accountConverter.decode(op.getDestination());
+    String destination = StrKey.encodeMuxedAccount(op.getDestination());
     Asset destAsset = Asset.fromXdr(op.getDestAsset());
     String destAmount = Operation.fromXdrAmount(op.getDestAmount().getInt64());
     Asset[] path = new Asset[op.getPath().length];
@@ -70,7 +69,7 @@ public class PathPaymentStrictReceiveOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     PathPaymentStrictReceiveOp op = new PathPaymentStrictReceiveOp();
 
     // sendAsset
@@ -80,7 +79,7 @@ public class PathPaymentStrictReceiveOperation extends Operation {
     sendMax.setInt64(Operation.toXdrAmount(this.sendMax));
     op.setSendMax(sendMax);
     // destination
-    op.setDestination(accountConverter.encode(this.destination));
+    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
     // destAsset
     op.setDestAsset(destAsset.toXdr());
     // destAmount

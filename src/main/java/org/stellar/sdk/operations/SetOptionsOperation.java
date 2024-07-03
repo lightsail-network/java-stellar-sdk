@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.Nullable;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.AccountFlag;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.*;
@@ -113,7 +112,7 @@ public class SetOptionsOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     SetOptionsOp op = new SetOptionsOp();
     if (inflationDestination != null) {
       op.setInflationDest(StrKey.encodeToXDRAccountId(this.inflationDestination));

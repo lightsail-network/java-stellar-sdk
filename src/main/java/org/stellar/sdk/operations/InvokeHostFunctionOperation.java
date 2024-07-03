@@ -13,7 +13,6 @@ import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.Nullable;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Address;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Util;
@@ -273,7 +272,7 @@ public class InvokeHostFunctionOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     InvokeHostFunctionOp op = new InvokeHostFunctionOp();
     op.setHostFunction(this.hostFunction);
     op.setAuth(this.auth.toArray(new SorobanAuthorizationEntry[0]));

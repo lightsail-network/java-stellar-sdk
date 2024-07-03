@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.xdr.ExtendFootprintTTLOp;
 import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.OperationType;
@@ -46,7 +45,7 @@ public class ExtendFootprintTTLOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     ExtendFootprintTTLOp op = new ExtendFootprintTTLOp();
     op.setExt(ExtensionPoint.builder().discriminant(0).build());
     op.setExtendTo(new Uint32(new XdrUnsignedInteger(extendTo)));

@@ -3,7 +3,6 @@ package org.stellar.sdk.operations;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.TrustLineAsset;
@@ -22,11 +21,11 @@ public class RevokeSponsorshipOperationTest {
             .build();
     assertEquals(
         "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAAAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7Sw==",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     RevokeAccountSponsorshipOperation parsedOperation =
-        (RevokeAccountSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (RevokeAccountSponsorshipOperation) Operation.fromXdr(xdr);
     assertEquals(accountId, parsedOperation.getAccountId());
     assertEquals(source, parsedOperation.getSourceAccount());
   }
@@ -44,11 +43,11 @@ public class RevokeSponsorshipOperationTest {
             .build();
     assertEquals(
         "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAwAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAlkYXRhX25hbWUAAAA=",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     RevokeDataSponsorshipOperation parsedOperation =
-        (RevokeDataSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (RevokeDataSponsorshipOperation) Operation.fromXdr(xdr);
     assertEquals(accountId, parsedOperation.getAccountId());
     assertEquals(source, parsedOperation.getSourceAccount());
     assertEquals(dataName, parsedOperation.getDataName());
@@ -65,12 +64,11 @@ public class RevokeSponsorshipOperationTest {
             .build();
     assertEquals(
         "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAABAAAAABVDhSsva/NMIkok2OzsMi+ybTt2HKYxpBlW0skVtaLoA==",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     RevokeClaimableBalanceSponsorshipOperation parsedOperation =
-        (RevokeClaimableBalanceSponsorshipOperation)
-            Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (RevokeClaimableBalanceSponsorshipOperation) Operation.fromXdr(xdr);
     assertEquals(balanceId, parsedOperation.getBalanceId());
     assertEquals(source, parsedOperation.getSourceAccount());
   }
@@ -88,11 +86,11 @@ public class RevokeSponsorshipOperationTest {
             .build();
     assertEquals(
         "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAgAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAAAAeJA",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     RevokeOfferSponsorshipOperation parsedOperation =
-        (RevokeOfferSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (RevokeOfferSponsorshipOperation) Operation.fromXdr(xdr);
     assertEquals(offerId, parsedOperation.getOfferId());
     assertEquals(seller, parsedOperation.getSeller());
     assertEquals(source, parsedOperation.getSourceAccount());
@@ -113,11 +111,11 @@ public class RevokeSponsorshipOperationTest {
             .build();
     assertEquals(
         "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAABAAAAAA0PjbClYR862HI77a+kYknlCAd8JFFkq8deOOGREDtLAAAAAF0oJRXlUssx9Xh+QtURTP4PyAAAeFBreRpjRl2YOHFs",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     RevokeSignerSponsorshipOperation parsedOperation =
-        (RevokeSignerSponsorshipOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (RevokeSignerSponsorshipOperation) Operation.fromXdr(xdr);
     assertEquals(accountId, parsedOperation.getAccountId());
     assertEquals(source, parsedOperation.getSourceAccount());
     assertEquals(signerKey, parsedOperation.getSigner());
@@ -138,12 +136,11 @@ public class RevokeSponsorshipOperationTest {
             .build();
     assertEquals(
         "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAAAQAAAAAND42wpWEfOthyO+2vpGJJ5QgHfCRRZKvHXjjhkRA7SwAAAAFERU1PAAAAAKz0Cr5Fd9LDTK5kQa3RORjEAcOMH1GRCsutowtJMYYr",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     RevokeTrustlineSponsorshipOperation parsedOperation =
-        (RevokeTrustlineSponsorshipOperation)
-            Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (RevokeTrustlineSponsorshipOperation) Operation.fromXdr(xdr);
     assertEquals(accountId, parsedOperation.getAccountId());
     assertEquals(source, parsedOperation.getSourceAccount());
     assertEquals(asset, parsedOperation.getAsset());

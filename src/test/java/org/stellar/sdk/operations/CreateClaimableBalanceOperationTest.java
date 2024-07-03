@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Collections;
 import org.junit.Test;
 import org.stellar.sdk.Account;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Claimant;
 import org.stellar.sdk.KeyPair;
@@ -41,8 +40,7 @@ public class CreateClaimableBalanceOperationTest {
                         new Predicate.Unconditional())))
             .build();
     Transaction transaction =
-        new TransactionBuilder(
-                AccountConverter.enableMuxed(), new Account(sourceAccount, 123l), Network.TESTNET)
+        new TransactionBuilder(new Account(sourceAccount, 123l), Network.TESTNET)
             .addOperation(op0)
             .addOperation(BumpSequenceOperation.builder().bumpTo(2).build())
             .addOperation(op0)
@@ -74,8 +72,7 @@ public class CreateClaimableBalanceOperationTest {
             .build();
 
     transaction =
-        new TransactionBuilder(
-                AccountConverter.enableMuxed(), new Account(sourceAccount, 123l), Network.TESTNET)
+        new TransactionBuilder(new Account(sourceAccount, 123l), Network.TESTNET)
             .addOperation(opWithSourceAccount)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -85,8 +82,7 @@ public class CreateClaimableBalanceOperationTest {
     assertEquals(expectedIdIndex0, transaction.getClaimableBalanceId(0));
 
     transaction =
-        new TransactionBuilder(
-                AccountConverter.enableMuxed(), new Account(sourceAccount, 124l), Network.TESTNET)
+        new TransactionBuilder(new Account(sourceAccount, 124l), Network.TESTNET)
             .addOperation(opWithSourceAccount)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -105,9 +101,7 @@ public class CreateClaimableBalanceOperationTest {
 
     transaction =
         new TransactionBuilder(
-                AccountConverter.enableMuxed(),
-                new Account(StrKey.encodeStellarMuxedAccount(muxedAccount), 123l),
-                Network.TESTNET)
+                new Account(StrKey.encodeMuxedAccount(muxedAccount), 123l), Network.TESTNET)
             .addOperation(op0)
             .addOperation(BumpSequenceOperation.builder().bumpTo(2).build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)

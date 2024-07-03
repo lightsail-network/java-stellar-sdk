@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.ClaimClaimableBalanceOp;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
@@ -44,7 +43,7 @@ public class ClaimClaimableBalanceOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     byte[] balanceIdBytes = Util.hexToBytes(this.balanceId);
     ClaimableBalanceID balanceId;
     try {

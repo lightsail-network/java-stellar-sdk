@@ -522,7 +522,6 @@ public class SorobanServer implements Closeable {
     }
 
     return new Transaction(
-        transaction.getAccountConverter(),
         transaction.getSourceAccount(),
         fee,
         transaction.getSequenceNumber(),

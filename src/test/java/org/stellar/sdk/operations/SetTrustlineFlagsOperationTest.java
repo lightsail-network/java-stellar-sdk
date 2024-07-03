@@ -6,7 +6,6 @@ import static org.stellar.sdk.Asset.create;
 
 import java.util.EnumSet;
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.xdr.TrustLineFlags;
@@ -36,9 +35,9 @@ public class SetTrustlineFlagsOperationTest {
             .build();
     assertEquals(
         "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABUAAAAADQ+NsKVhHzrYcjvtr6RiSeUIB3wkUWSrx1444ZEQO0sAAAABREVNTwAAAACs9Aq+RXfSw0yuZEGt0TkYxAHDjB9RkQrLraMLSTGGKwAAAAEAAAAG",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     assertEquals(
         TrustLineFlags.AUTHORIZED_FLAG.getValue(),
         xdr.getBody().getSetTrustLineFlagsOp().getClearFlags().getUint32().getNumber().intValue());
@@ -47,7 +46,7 @@ public class SetTrustlineFlagsOperationTest {
             | TrustLineFlags.TRUSTLINE_CLAWBACK_ENABLED_FLAG.getValue(),
         xdr.getBody().getSetTrustLineFlagsOp().getSetFlags().getUint32().getNumber().intValue());
     SetTrustlineFlagsOperation parsedOperation =
-        (SetTrustlineFlagsOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (SetTrustlineFlagsOperation) Operation.fromXdr(xdr);
     assertEquals(accountId, parsedOperation.getTrustor());
     assertEquals(asset, parsedOperation.getAsset());
     assertEquals(toClear, parsedOperation.getClearFlags());

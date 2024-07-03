@@ -22,7 +22,7 @@ public class TransactionBuilderTest {
     Account account =
         new Account("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR", sequenceNumber);
     try {
-      new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+      new TransactionBuilder(account, Network.TESTNET)
           .addOperation(
               CreateAccountOperation.builder()
                   .destination("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")
@@ -47,7 +47,7 @@ public class TransactionBuilderTest {
     long sequenceNumber = 2908908335136768L;
     Account account = new Account(source.getAccountId(), sequenceNumber);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -75,9 +75,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
   }
 
@@ -91,7 +89,7 @@ public class TransactionBuilderTest {
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -108,9 +106,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
 
     assertEquals(
@@ -128,7 +124,7 @@ public class TransactionBuilderTest {
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -173,9 +169,7 @@ public class TransactionBuilderTest {
         1337);
 
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
   }
 
@@ -189,7 +183,7 @@ public class TransactionBuilderTest {
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -205,9 +199,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
 
     assertEquals(
@@ -222,8 +214,7 @@ public class TransactionBuilderTest {
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
-    TransactionBuilder builder =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET);
+    TransactionBuilder builder = new TransactionBuilder(account, Network.TESTNET);
     try {
       builder.setBaseFee(99);
       fail("expected IllegalArgumentException");
@@ -236,7 +227,7 @@ public class TransactionBuilderTest {
   public void testBuilderTimebounds() throws IOException {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(KeyPair.random().getAccountId())
@@ -255,9 +246,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
   }
 
@@ -265,7 +254,7 @@ public class TransactionBuilderTest {
   public void testBuilderRequiresTimeoutOrTimeBounds() throws IOException {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     try {
-      new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+      new TransactionBuilder(account, Network.TESTNET)
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
@@ -283,7 +272,7 @@ public class TransactionBuilderTest {
   public void testBuilderTimeoutNegative() throws IOException {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     try {
-      new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+      new TransactionBuilder(account, Network.TESTNET)
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
@@ -304,7 +293,7 @@ public class TransactionBuilderTest {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     long currentUnix = System.currentTimeMillis() / 1000L;
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(KeyPair.random().getAccountId())
@@ -322,9 +311,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
   }
 
@@ -337,7 +324,7 @@ public class TransactionBuilderTest {
         KeyPair.fromAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
@@ -358,9 +345,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
 
     assertEquals(
@@ -384,7 +369,7 @@ public class TransactionBuilderTest {
     preconditionsV2.minSeqNum(seqNum);
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
@@ -405,9 +390,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
 
     assertEquals(
@@ -424,7 +407,7 @@ public class TransactionBuilderTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
@@ -445,9 +428,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
 
     assertEquals(
@@ -464,7 +445,7 @@ public class TransactionBuilderTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
@@ -485,9 +466,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
 
     assertEquals(
@@ -519,7 +498,7 @@ public class TransactionBuilderTest {
             .build();
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
@@ -551,9 +530,7 @@ public class TransactionBuilderTest {
     org.stellar.sdk.xdr.TransactionEnvelope decodedTransaction =
         org.stellar.sdk.xdr.TransactionEnvelope.fromXdrBase64(transaction.toEnvelopeXdrBase64());
     Transaction transaction2 =
-        (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), decodedTransaction, Network.TESTNET);
+        (Transaction) Transaction.fromEnvelopeXdr(decodedTransaction, Network.TESTNET);
     assertEquals(transaction, transaction2);
 
     assertEquals(
@@ -566,7 +543,7 @@ public class TransactionBuilderTest {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
 
     try {
-      new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+      new TransactionBuilder(account, Network.TESTNET)
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
@@ -594,7 +571,7 @@ public class TransactionBuilderTest {
   public void testBuilderUsesAccountSequence() throws IOException {
     Account account = new Account(KeyPair.random().getAccountId(), 3L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(KeyPair.random().getAccountId())
@@ -621,7 +598,7 @@ public class TransactionBuilderTest {
   public void testBuilderFailsWhenNoTimeBoundsOrTimeoutSet() throws IOException {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     try {
-      new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+      new TransactionBuilder(account, Network.TESTNET)
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
@@ -640,7 +617,7 @@ public class TransactionBuilderTest {
   public void testBuilderFailsWhenTimeBoundsAndTimeoutBothSet() throws IOException {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     try {
-      new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+      new TransactionBuilder(account, Network.TESTNET)
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
@@ -671,7 +648,7 @@ public class TransactionBuilderTest {
     long currentUnix = System.currentTimeMillis() / 1000L;
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -753,7 +730,7 @@ public class TransactionBuilderTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -806,7 +783,7 @@ public class TransactionBuilderTest {
     long currentUnix = System.currentTimeMillis() / 1000L;
 
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -860,7 +837,7 @@ public class TransactionBuilderTest {
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.PUBLIC)
+        new TransactionBuilder(account, Network.PUBLIC)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -874,8 +851,7 @@ public class TransactionBuilderTest {
 
     Transaction decodedTransaction =
         (Transaction)
-            Transaction.fromEnvelopeXdr(
-                AccountConverter.enableMuxed(), transaction.toEnvelopeXdrBase64(), Network.PUBLIC);
+            Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), Network.PUBLIC);
     assertEquals(
         "AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADt4FJhvNwvlQqjuhc7bjLVyRf5e4K2QOzI0c6nWfVvEAAAAASoF8gAAAAAAAAAAAG2h5ViAAAAQOFMVS3lQ1gtqY0a3VPsZXCNVGC/h8dANFiUS7hYPWSbyzi4Ob1ir5R256mOwX+B6vE552+y8JAFaAFPR0bDyAw=",
         transaction.toEnvelopeXdrBase64());
@@ -892,7 +868,7 @@ public class TransactionBuilderTest {
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     try {
       Transaction transaction =
-          new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+          new TransactionBuilder(account, Network.TESTNET)
               .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
               .setBaseFee(Transaction.MIN_BASE_FEE)
               .build();
@@ -913,7 +889,7 @@ public class TransactionBuilderTest {
 
     try {
       Account account = new Account(source.getAccountId(), 2908908335136768L);
-      new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+      new TransactionBuilder(account, Network.TESTNET)
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(destination.getAccountId())
@@ -938,7 +914,7 @@ public class TransactionBuilderTest {
 
     Account account = new Account(source.getAccountId(), 2908908335136768L);
     try {
-      new TransactionBuilder(AccountConverter.enableMuxed(), account, null)
+      new TransactionBuilder(account, null)
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(destination.getAccountId())
@@ -992,7 +968,6 @@ public class TransactionBuilderTest {
 
     Transaction transaction =
         new Transaction(
-            AccountConverter.enableMuxed(),
             account.getAccountId(),
             980,
             account.getIncrementedSequenceNumber(),
@@ -1045,7 +1020,7 @@ public class TransactionBuilderTest {
     long sequenceNumber = 2908908335136768L;
     Account account = new Account(source.getAccountId(), sequenceNumber);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
@@ -1131,7 +1106,7 @@ public class TransactionBuilderTest {
     long sequenceNumber = 2908908335136768L;
     Account account = new Account(source.getAccountId(), sequenceNumber);
     Transaction transaction =
-        new TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+        new TransactionBuilder(account, Network.TESTNET)
             .addOperation(invokeHostFunctionOperation)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)

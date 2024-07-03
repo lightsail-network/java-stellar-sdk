@@ -40,25 +40,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
    */
   public FeeBumpTransaction(
       @NonNull String feeSource, long baseFee, @NonNull Transaction innerTransaction) {
-    this(AccountConverter.enableMuxed(), feeSource, baseFee, innerTransaction);
-  }
-
-  /**
-   * Creates a new FeeBumpTransaction object, enabling you to resubmit an existing transaction with
-   * a higher fee.
-   *
-   * @param accountConverter The {@link AccountConverter} for this transaction.
-   * @param feeSource The account paying for the transaction fee.
-   * @param baseFee Max fee willing to pay per operation in inner transaction (in stroops)
-   * @param innerTransaction The inner transaction that is being wrapped by this fee bump
-   *     transaction.
-   */
-  public FeeBumpTransaction(
-      AccountConverter accountConverter,
-      @NonNull String feeSource,
-      long baseFee,
-      @NonNull Transaction innerTransaction) {
-    super(accountConverter, innerTransaction.getNetwork());
+    super(innerTransaction.getNetwork());
     this.feeSource = feeSource;
 
     // set fee
@@ -89,7 +71,6 @@ public class FeeBumpTransaction extends AbstractTransaction {
     if (txType == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
       this.innerTransaction =
           new TransactionBuilder(
-                  innerTransaction.accountConverter,
                   new Account(
                       innerTransaction.getSourceAccount(),
                       innerTransaction.getSequenceNumber() - 1),
@@ -109,25 +90,18 @@ public class FeeBumpTransaction extends AbstractTransaction {
   }
 
   public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(
-      AccountConverter accountConverter, FeeBumpTransactionEnvelope envelope, Network network) {
+      FeeBumpTransactionEnvelope envelope, Network network) {
     Transaction inner =
-        Transaction.fromV1EnvelopeXdr(
-            accountConverter, envelope.getTx().getInnerTx().getV1(), network);
-    String feeSource = accountConverter.decode(envelope.getTx().getFeeSource());
+        Transaction.fromV1EnvelopeXdr(envelope.getTx().getInnerTx().getV1(), network);
+    String feeSource = StrKey.encodeMuxedAccount(envelope.getTx().getFeeSource());
 
     long fee = envelope.getTx().getFee().getInt64();
     long baseFee = fee / (inner.getOperations().length + 1);
 
-    FeeBumpTransaction feeBump =
-        new FeeBumpTransaction(accountConverter, feeSource, baseFee, inner);
+    FeeBumpTransaction feeBump = new FeeBumpTransaction(feeSource, baseFee, inner);
     feeBump.signatures.addAll(Arrays.asList(envelope.getSignatures()));
 
     return feeBump;
-  }
-
-  public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(
-      FeeBumpTransactionEnvelope envelope, Network network) {
-    return fromFeeBumpTransactionEnvelope(AccountConverter.enableMuxed(), envelope, network);
   }
 
   private org.stellar.sdk.xdr.FeeBumpTransaction toXdr() {
@@ -138,7 +112,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
     Int64 xdrFee = new Int64();
     xdrFee.setInt64(fee);
     xdr.setFee(xdrFee);
-    xdr.setFeeSource(accountConverter.encode(this.feeSource));
+    xdr.setFeeSource(StrKey.decodeMuxedAccount(this.feeSource));
     org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx innerXDR =
         new org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx();
     innerXDR.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);

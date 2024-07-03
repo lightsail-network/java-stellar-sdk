@@ -115,7 +115,7 @@ public class Sep10Challenge {
             .build();
 
     TransactionBuilder builder =
-        new TransactionBuilder(AccountConverter.enableMuxed(), sourceAccount, network)
+        new TransactionBuilder(sourceAccount, network)
             .addPreconditions(TransactionPreconditions.builder().timeBounds(timebounds).build())
             .setBaseFee(100)
             .addOperation(domainNameOperation)
@@ -226,8 +226,7 @@ public class Sep10Challenge {
 
     // decode the received input as a base64-urlencoded XDR representation of Stellar transaction
     // envelope
-    AbstractTransaction parsed =
-        Transaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), challengeXdr, network);
+    AbstractTransaction parsed = Transaction.fromEnvelopeXdr(challengeXdr, network);
     if (!(parsed instanceof Transaction)) {
       throw new InvalidSep10ChallengeException("Transaction cannot be a fee bump transaction");
     }

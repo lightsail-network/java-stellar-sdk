@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentStrictSendOp;
@@ -47,17 +47,16 @@ public class PathPaymentStrictSendOperation extends Operation {
   @NonNull @Builder.Default private final Asset[] path = new Asset[0];
 
   /**
-   * Construct a new {@link PathPaymentStrictSendOperation} object from the {@link AccountConverter}
-   * object and the {@link PathPaymentStrictSendOp} XDR object.
+   * Construct a new {@link PathPaymentStrictSendOperation} object from the {@link
+   * PathPaymentStrictSendOp} XDR object.
    *
    * @param op {@link PathPaymentStrictSendOp} XDR object
    * @return {@link PathPaymentStrictSendOperation} object
    */
-  public static PathPaymentStrictSendOperation fromXdr(
-      AccountConverter accountConverter, PathPaymentStrictSendOp op) {
+  public static PathPaymentStrictSendOperation fromXdr(PathPaymentStrictSendOp op) {
     Asset sendAsset = Asset.fromXdr(op.getSendAsset());
     String sendAmount = Operation.fromXdrAmount(op.getSendAmount().getInt64());
-    String destination = accountConverter.decode(op.getDestination());
+    String destination = StrKey.encodeMuxedAccount(op.getDestination());
     Asset destAsset = Asset.fromXdr(op.getDestAsset());
     String destMin = Operation.fromXdrAmount(op.getDestMin().getInt64());
     Asset[] path = new Asset[op.getPath().length];
@@ -69,7 +68,7 @@ public class PathPaymentStrictSendOperation extends Operation {
   }
 
   @Override
-  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody(AccountConverter accountConverter) {
+  org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     PathPaymentStrictSendOp op = new PathPaymentStrictSendOp();
 
     // sendAsset
@@ -79,7 +78,7 @@ public class PathPaymentStrictSendOperation extends Operation {
     sendAmount.setInt64(Operation.toXdrAmount(this.sendAmount));
     op.setSendAmount(sendAmount);
     // destination
-    op.setDestination(accountConverter.encode(this.destination));
+    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
     // destAsset
     op.setDestAsset(destAsset.toXdr());
     // destMin

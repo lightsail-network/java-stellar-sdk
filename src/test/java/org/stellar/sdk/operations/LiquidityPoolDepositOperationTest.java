@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 import static org.stellar.sdk.Asset.create;
 
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.KeyPair;
@@ -39,9 +38,9 @@ public class LiquidityPoolDepositOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     LiquidityPoolDepositOperation parsedOperation =
-        (LiquidityPoolDepositOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (LiquidityPoolDepositOperation) Operation.fromXdr(xdr);
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
@@ -52,7 +51,7 @@ public class LiquidityPoolDepositOperationTest {
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAABb5NUX4ubtAgBk7zCsrbB/oCH2ADwtupaNB0FyfhxedxwAAAAJUC+QAAAAABKgXyAAAAAABAAAAZAAAAAEAAAAy",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test
@@ -69,9 +68,9 @@ public class LiquidityPoolDepositOperationTest {
             maxPrice);
     operation.setSourceAccount(source.getAccountId());
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     LiquidityPoolDepositOperation parsedOperation =
-        (LiquidityPoolDepositOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (LiquidityPoolDepositOperation) Operation.fromXdr(xdr);
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
@@ -82,7 +81,7 @@ public class LiquidityPoolDepositOperationTest {
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAABb5NUX4ubtAgBk7zCsrbB/oCH2ADwtupaNB0FyfhxedxwAAAAJUC+QAAAAABKgXyAAAAAABAAAAZAAAAAEAAAAy",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test

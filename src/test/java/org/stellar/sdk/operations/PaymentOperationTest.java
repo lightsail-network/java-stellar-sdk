@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
@@ -30,9 +29,8 @@ public class PaymentOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
-    PaymentOperation parsedOperation =
-        (PaymentOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    PaymentOperation parsedOperation = (PaymentOperation) Operation.fromXdr(xdr);
 
     assertEquals(10000000000L, xdr.getBody().getPaymentOp().getAmount().getInt64().longValue());
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
@@ -42,7 +40,7 @@ public class PaymentOperationTest {
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAEAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAAAAAAlQL5AA=",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test
@@ -61,13 +59,12 @@ public class PaymentOperationTest {
             .sourceAccount(source)
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
-    PaymentOperation parsedOperation =
-        (PaymentOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    PaymentOperation parsedOperation = (PaymentOperation) Operation.fromXdr(xdr);
     assertEquals(destination, parsedOperation.getDestination());
     assertEquals(source, parsedOperation.getSourceAccount());
 
-    parsedOperation = (PaymentOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    parsedOperation = (PaymentOperation) Operation.fromXdr(xdr);
     assertEquals(
         "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO",
         parsedOperation.getDestination());

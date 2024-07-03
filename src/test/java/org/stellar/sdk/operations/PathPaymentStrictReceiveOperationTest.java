@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum12;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
@@ -52,9 +51,9 @@ public class PathPaymentStrictReceiveOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     PathPaymentStrictReceiveOperation parsedOperation =
-        (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (PathPaymentStrictReceiveOperation) Operation.fromXdr(xdr);
 
     assertEquals(
         1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getSendMax().getInt64().longValue());
@@ -70,7 +69,7 @@ public class PathPaymentStrictReceiveOperationTest {
     assertArrayEquals(path, parsedOperation.getPath());
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAIAAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAgAAAAFVU0QAAAAAACoIKnpnw8rtrfxa276dFZo1C19mDqWXtG4ufhWrLUd1AAAAAlRFU1RURVNUAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIg==",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test
@@ -100,9 +99,9 @@ public class PathPaymentStrictReceiveOperationTest {
             .sourceAccount(source.getAccountId())
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     PathPaymentStrictReceiveOperation parsedOperation =
-        (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (PathPaymentStrictReceiveOperation) Operation.fromXdr(xdr);
 
     assertEquals(
         1000L, xdr.getBody().getPathPaymentStrictReceiveOp().getSendMax().getInt64().longValue());
@@ -119,7 +118,7 @@ public class PathPaymentStrictReceiveOperationTest {
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAIAAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAA==",
-        operation.toXdrBase64(AccountConverter.enableMuxed()));
+        operation.toXdrBase64());
   }
 
   @Test
@@ -146,15 +145,14 @@ public class PathPaymentStrictReceiveOperationTest {
             .sourceAccount(source)
             .build();
 
-    org.stellar.sdk.xdr.Operation xdr = operation.toXdr(AccountConverter.enableMuxed());
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
     PathPaymentStrictReceiveOperation parsedOperation =
-        (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+        (PathPaymentStrictReceiveOperation) Operation.fromXdr(xdr);
 
     assertEquals(destination, parsedOperation.getDestination());
     assertEquals(source, parsedOperation.getSourceAccount());
 
-    parsedOperation =
-        (PathPaymentStrictReceiveOperation) Operation.fromXdr(AccountConverter.enableMuxed(), xdr);
+    parsedOperation = (PathPaymentStrictReceiveOperation) Operation.fromXdr(xdr);
     assertEquals(
         "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO",
         parsedOperation.getDestination());

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPool;
 import org.stellar.sdk.LiquidityPoolID;
@@ -46,8 +45,8 @@ public class LiquidityPoolWithdrawOperation extends Operation {
   }
 
   /**
-   * Construct a new {@link LiquidityPoolWithdrawOperation} object from the {@link AccountConverter}
-   * object and the {@link LiquidityPoolWithdrawOp} XDR object.
+   * Construct a new {@link LiquidityPoolWithdrawOperation} object from the {@link
+   * LiquidityPoolWithdrawOp} XDR object.
    *
    * @param op {@link LiquidityPoolWithdrawOp} XDR object
    * @return {@link LiquidityPoolWithdrawOperation} object
@@ -61,7 +60,7 @@ public class LiquidityPoolWithdrawOperation extends Operation {
   }
 
   @Override
-  OperationBody toOperationBody(AccountConverter accountConverter) {
+  OperationBody toOperationBody() {
     LiquidityPoolWithdrawOp op = new LiquidityPoolWithdrawOp();
     op.setLiquidityPoolID(this.getLiquidityPoolID().toXdr());
     op.setAmount(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getAmount())));

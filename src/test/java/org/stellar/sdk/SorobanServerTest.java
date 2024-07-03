@@ -970,7 +970,6 @@ public class SorobanServerTest {
             .build();
     Transaction expectedTx =
         new Transaction(
-            transaction.getAccountConverter(),
             transaction.getSourceAccount(),
             transaction.getFee() + 58181L,
             transaction.getSequenceNumber(),
@@ -1085,7 +1084,6 @@ public class SorobanServerTest {
             .build();
     Transaction expectedTx =
         new Transaction(
-            transaction.getAccountConverter(),
             transaction.getSourceAccount(),
             transaction.getFee() + 58181L,
             transaction.getSequenceNumber(),
@@ -1208,7 +1206,6 @@ public class SorobanServerTest {
             .build();
     Transaction expectedTx =
         new Transaction(
-            transaction.getAccountConverter(),
             transaction.getSourceAccount(),
             transaction.getFee() + 58181L,
             transaction.getSequenceNumber(),
@@ -1463,7 +1460,7 @@ public class SorobanServerTest {
             .build();
 
     TransactionBuilder transactionBuilder =
-        new TransactionBuilder(AccountConverter.enableMuxed(), source, Network.STANDALONE)
+        new TransactionBuilder(source, Network.STANDALONE)
             .setBaseFee(50000)
             .addPreconditions(
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(0, 0)).build())

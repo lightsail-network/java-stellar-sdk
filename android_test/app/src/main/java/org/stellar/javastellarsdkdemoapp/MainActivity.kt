@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.stellar.javastellarsdkdemoapp.ui.theme.JavaStellarSDKDemoAppTheme
 import org.stellar.sdk.Account
-import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.Address
 import org.stellar.sdk.Auth
 import org.stellar.sdk.operations.InvokeHostFunctionOperation
@@ -227,7 +226,7 @@ private fun testSDK(): String {
         val sequenceNumber = 2908908335136768L
         val account = Account(source.accountId, sequenceNumber)
         val transaction: Transaction =
-            TransactionBuilder(AccountConverter.enableMuxed(), account, Network.TESTNET)
+            TransactionBuilder(account, Network.TESTNET)
                 .addOperation(invokeHostFunctionOperation)
                 .addPreconditions(
                     TransactionPreconditions.builder().timeBounds(TimeBounds(0, 0)).build()
