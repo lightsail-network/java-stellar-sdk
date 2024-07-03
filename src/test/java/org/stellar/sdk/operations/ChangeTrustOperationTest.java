@@ -8,7 +8,7 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum12;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.ChangeTrustAsset;
-import org.stellar.sdk.LiquidityPoolParameters;
+import org.stellar.sdk.LiquidityPool;
 
 public class ChangeTrustOperationTest {
   @Test
@@ -55,13 +55,13 @@ public class ChangeTrustOperationTest {
     //    source="GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW",
     // )
     // print(op.to_xdr_object().to_xdr())
-    LiquidityPoolParameters liquidityPoolParameters =
-        new LiquidityPoolParameters(
+    LiquidityPool liquidityPool =
+        new LiquidityPool(
             new AssetTypeCreditAlphaNum4(
                 "USD", "GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY"),
             new AssetTypeCreditAlphaNum12(
                 "CATCOIN", "GDJVFDG5OCW5PYWHB64MGTHGFF57DRRJEDUEFDEL2SLNIOONHYJWHA3Z"));
-    ChangeTrustAsset changeTrustAsset = new ChangeTrustAsset(liquidityPoolParameters);
+    ChangeTrustAsset changeTrustAsset = new ChangeTrustAsset(liquidityPool);
     String limit = "922337203685.4775807";
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     ChangeTrustOperation op =
@@ -98,13 +98,13 @@ public class ChangeTrustOperationTest {
 
   @Test
   public void testFromXdrWithLiquidityPoolAsset() {
-    LiquidityPoolParameters liquidityPoolParameters =
-        new LiquidityPoolParameters(
+    LiquidityPool liquidityPool =
+        new LiquidityPool(
             new AssetTypeCreditAlphaNum4(
                 "USD", "GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY"),
             new AssetTypeCreditAlphaNum12(
                 "CATCOIN", "GDJVFDG5OCW5PYWHB64MGTHGFF57DRRJEDUEFDEL2SLNIOONHYJWHA3Z"));
-    ChangeTrustAsset changeTrustAsset = new ChangeTrustAsset(liquidityPoolParameters);
+    ChangeTrustAsset changeTrustAsset = new ChangeTrustAsset(liquidityPool);
     String limit = "922337203685.4775807";
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     ChangeTrustOperation op =

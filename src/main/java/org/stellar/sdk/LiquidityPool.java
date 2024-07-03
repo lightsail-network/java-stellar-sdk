@@ -7,8 +7,15 @@ import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.LiquidityPoolConstantProductParameters;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
+/**
+ * Represents a LiquidityPoolParameters object on the Stellar network.
+ *
+ * <p>See: <a
+ * href="https://developers.stellar.org/docs/learn/encyclopedia/sdex/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools">Liquidity
+ * Pool</a>
+ */
 @Value
-public class LiquidityPoolParameters {
+public class LiquidityPool {
   public static int FEE = 30;
 
   /**
@@ -23,9 +30,7 @@ public class LiquidityPoolParameters {
    */
   @NonNull Asset assetB;
 
-  /**
-   * The liquidity pool fee. For now the only fee supported is {@link LiquidityPoolParameters#FEE}.
-   */
+  /** The liquidity pool fee. For now the only fee supported is {@link LiquidityPool#FEE}. */
   int fee;
 
   /**
@@ -33,11 +38,10 @@ public class LiquidityPoolParameters {
    *
    * @param assetA The first asset in the pool, it must respect the rule assetA < assetB.
    * @param assetB The second asset in the pool, it must respect the rule assetA < assetB.
-   * @param fee The liquidity pool fee. For now the only fee supported is {@link
-   *     LiquidityPoolParameters#FEE}.
+   * @param fee The liquidity pool fee. For now the only fee supported is {@link LiquidityPool#FEE}.
    * @throws IllegalArgumentException if assets are not in lexicographic order.
    */
-  private LiquidityPoolParameters(@NonNull Asset assetA, @NonNull Asset assetB, int fee) {
+  private LiquidityPool(@NonNull Asset assetA, @NonNull Asset assetB, int fee) {
     if (assetA.compareTo(assetB) >= 0) {
       throw new IllegalArgumentException("Assets are not in lexicographic order");
     }
@@ -53,7 +57,7 @@ public class LiquidityPoolParameters {
    * @param assetB The second asset in the pool, it must respect the rule assetA < assetB.
    * @throws IllegalArgumentException if assets are not in lexicographic order.
    */
-  public LiquidityPoolParameters(Asset assetA, Asset assetB) {
+  public LiquidityPool(Asset assetA, Asset assetB) {
     this(assetA, assetB, FEE);
   }
 
@@ -84,14 +88,14 @@ public class LiquidityPoolParameters {
    * @throws IllegalArgumentException if the XDR object is not of type
    *     LIQUIDITY_POOL_CONSTANT_PRODUCT.
    */
-  public static LiquidityPoolParameters fromXdr(org.stellar.sdk.xdr.LiquidityPoolParameters xdr) {
+  public static LiquidityPool fromXdr(org.stellar.sdk.xdr.LiquidityPoolParameters xdr) {
 
     if (xdr.getDiscriminant() != LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT) {
       throw new IllegalArgumentException(
           String.format("Invalid LiquidityPoolType: %s", xdr.getDiscriminant()));
     }
     LiquidityPoolConstantProductParameters parameters = xdr.getConstantProduct();
-    return new LiquidityPoolParameters(
+    return new LiquidityPool(
         Asset.fromXdr(parameters.getAssetA()),
         Asset.fromXdr(parameters.getAssetB()),
         parameters.getFee().getInt32());

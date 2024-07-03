@@ -8,7 +8,7 @@ import org.stellar.sdk.xdr.AssetType;
 
 public class TrustLineAssetTest {
   @Test
-  public void testTrustLineWithNativeAsset() throws IOException {
+  public void testTrustLineAssetWithNativeAsset() throws IOException {
     // from stellar_sdk import *
     //
     // asset = Asset.native()
@@ -25,7 +25,7 @@ public class TrustLineAssetTest {
   }
 
   @Test
-  public void testTrustLineWithANum4Asset() throws IOException {
+  public void testTrustLineAssetWithANum4Asset() throws IOException {
     // from stellar_sdk import *
     //
     // asset = Asset("ARST", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -42,7 +42,7 @@ public class TrustLineAssetTest {
   }
 
   @Test
-  public void testTrustLineWithANum12Asset() throws IOException {
+  public void testTrustLineAssetWithANum12Asset() throws IOException {
     // from stellar_sdk import *
     //
     // asset = Asset("ARST123123", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
@@ -60,7 +60,7 @@ public class TrustLineAssetTest {
   }
 
   @Test
-  public void testTrustLineWithLiquidityPoolShareAsset() throws IOException {
+  public void testTrustLineAssetWithLiquidityPoolShareAsset() throws IOException {
     // from stellar_sdk import *
     //
     // pool_id = LiquidityPoolId("dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca")

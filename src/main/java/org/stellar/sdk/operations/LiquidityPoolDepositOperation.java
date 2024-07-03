@@ -8,8 +8,8 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.AssetAmount;
+import org.stellar.sdk.LiquidityPool;
 import org.stellar.sdk.LiquidityPoolId;
-import org.stellar.sdk.LiquidityPoolParameters;
 import org.stellar.sdk.Price;
 import org.stellar.sdk.xdr.LiquidityPoolDepositOp;
 import org.stellar.sdk.xdr.Operation.OperationBody;
@@ -49,8 +49,7 @@ public class LiquidityPoolDepositOperation extends Operation {
     if (a.getAsset().compareTo(b.getAsset()) >= 0) {
       throw new IllegalArgumentException("AssetA must be < AssetB");
     }
-    this.liquidityPoolID =
-        new LiquidityPoolParameters(a.getAsset(), b.getAsset()).getLiquidityPoolId();
+    this.liquidityPoolID = new LiquidityPool(a.getAsset(), b.getAsset()).getLiquidityPoolId();
     this.maxAmountA = a.getAmount();
     this.maxAmountB = b.getAmount();
     this.minPrice = minPrice;

@@ -7,25 +7,25 @@ import java.io.IOException;
 import lombok.Value;
 import org.junit.Test;
 
-public class LiquidityPoolParametersTest {
+public class LiquidityPoolTest {
   @Test
   public void testLiquidityPool() throws IOException {
     Asset assetA = Asset.create("ARST:GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
     Asset assetB = Asset.create("USD:GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
-    LiquidityPoolParameters liquidityPoolParameters = new LiquidityPoolParameters(assetA, assetB);
+    LiquidityPool liquidityPool = new LiquidityPool(assetA, assetB);
     String expectedXdr =
         "AAAAAAAAAAFBUlNUAAAAAH8wYjTJienWf2nf2TEZi2APPWzmtkwiQHAftisIgyuHAAAAAVVTRAAAAAAAiZsoQO1WNsVt3F8Usjl1958bojiNJpTkxW7N3clg5e8AAAAe";
-    assertEquals(liquidityPoolParameters.toXdr().toXdrBase64(), expectedXdr);
-    org.stellar.sdk.xdr.LiquidityPoolParameters xdr = liquidityPoolParameters.toXdr();
-    LiquidityPoolParameters parsedLiquidityPoolParameters = LiquidityPoolParameters.fromXdr(xdr);
-    assertEquals(liquidityPoolParameters, parsedLiquidityPoolParameters);
+    assertEquals(liquidityPool.toXdr().toXdrBase64(), expectedXdr);
+    org.stellar.sdk.xdr.LiquidityPoolParameters xdr = liquidityPool.toXdr();
+    LiquidityPool parsedLiquidityPool = LiquidityPool.fromXdr(xdr);
+    assertEquals(liquidityPool, parsedLiquidityPool);
     assertEquals(
-        liquidityPoolParameters.getLiquidityPoolId().getPoolId(),
+        liquidityPool.getLiquidityPoolId().getPoolId(),
         "dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380fac7");
-    assertEquals(liquidityPoolParameters.getAssetA(), assetA);
-    assertEquals(liquidityPoolParameters.getAssetB(), assetB);
-    assertEquals(liquidityPoolParameters.getFee(), LiquidityPoolParameters.FEE);
-    assertEquals(liquidityPoolParameters.getFee(), 30);
+    assertEquals(liquidityPool.getAssetA(), assetA);
+    assertEquals(liquidityPool.getAssetB(), assetB);
+    assertEquals(liquidityPool.getFee(), LiquidityPool.FEE);
+    assertEquals(liquidityPool.getFee(), 30);
   }
 
   @Test
@@ -46,7 +46,7 @@ public class LiquidityPoolParametersTest {
     };
     for (OrderTestCase testCase : testCases) {
       try {
-        new LiquidityPoolParameters(testCase.assetA, testCase.assetB);
+        new LiquidityPool(testCase.assetA, testCase.assetB);
         if (!testCase.valid) {
           fail(
               "Expected exception for invalid asset order: "
@@ -78,7 +78,7 @@ public class LiquidityPoolParametersTest {
     };
     for (OrderTestCase testCase : testCases) {
       try {
-        new LiquidityPoolParameters(testCase.assetA, testCase.assetB);
+        new LiquidityPool(testCase.assetA, testCase.assetB);
         if (!testCase.valid) {
           fail(
               "Expected exception for invalid asset code order: "
@@ -110,7 +110,7 @@ public class LiquidityPoolParametersTest {
     };
     for (OrderTestCase testCase : testCases) {
       try {
-        new LiquidityPoolParameters(testCase.assetA, testCase.assetB);
+        new LiquidityPool(testCase.assetA, testCase.assetB);
         if (!testCase.valid) {
           fail(
               "Expected exception for invalid asset issuer order: "
