@@ -19,14 +19,20 @@ public class ChangeTrustAsset {
   /**
    * The asset for which the trustline is being changed. This is null if the change trust operation
    * is for a liquidity pool share.
+   *
+   * <p>If assetType is one of {@link AssetType#ASSET_TYPE_NATIVE}, {@link
+   * AssetType#ASSET_TYPE_CREDIT_ALPHANUM4} or {@link AssetType#ASSET_TYPE_CREDIT_ALPHANUM12} then
+   * this field will be set.
    */
   @Nullable Asset asset;
 
   /**
    * The liquidity pool for which the trustline is being changed. This is null if the change trust
    * operation is for a regular asset.
+   *
+   * <p>If assetType is {@link AssetType#ASSET_TYPE_POOL_SHARE} then this field will be set.
    */
-  @Nullable LiquidityPool liquidityPool;
+  @Nullable LiquidityPoolParameters liquidityPool;
 
   /**
    * Creates a ChangeTrustAsset for a regular asset.
@@ -44,7 +50,7 @@ public class ChangeTrustAsset {
    *
    * @param liquidityPool The liquidity pool for which the trust is being changed.
    */
-  public ChangeTrustAsset(@NonNull LiquidityPool liquidityPool) {
+  public ChangeTrustAsset(@NonNull LiquidityPoolParameters liquidityPool) {
     this.assetType = AssetType.ASSET_TYPE_POOL_SHARE;
     this.asset = null;
     this.liquidityPool = liquidityPool;
@@ -88,7 +94,8 @@ public class ChangeTrustAsset {
         return new ChangeTrustAsset(
             AssetTypeCreditAlphaNum12.fromXdr(changeTrustAsset.getAlphaNum12()));
       case ASSET_TYPE_POOL_SHARE:
-        return new ChangeTrustAsset(LiquidityPool.fromXdr(changeTrustAsset.getLiquidityPool()));
+        return new ChangeTrustAsset(
+            LiquidityPoolParameters.fromXdr(changeTrustAsset.getLiquidityPool()));
       default:
         throw new IllegalArgumentException(
             "Unknown asset type " + changeTrustAsset.getDiscriminant());

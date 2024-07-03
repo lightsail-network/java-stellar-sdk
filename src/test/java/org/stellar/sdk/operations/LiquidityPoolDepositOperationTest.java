@@ -9,8 +9,8 @@ import org.stellar.sdk.AccountConverter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.LiquidityPool;
 import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolParameters;
 import org.stellar.sdk.Price;
 
 public class LiquidityPoolDepositOperationTest {
@@ -21,7 +21,7 @@ public class LiquidityPoolDepositOperationTest {
   Asset creditAsset =
       create(null, "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
   LiquidityPoolId liquidityPoolID =
-      new LiquidityPool(nativeAsset, creditAsset).getLiquidityPoolId();
+      new LiquidityPoolParameters(nativeAsset, creditAsset).getLiquidityPoolId();
 
   @Test
   public void testLiquidityPoolDepositOperationValid() {

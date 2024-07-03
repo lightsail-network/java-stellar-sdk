@@ -8,7 +8,7 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum12;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.ChangeTrustAsset;
-import org.stellar.sdk.LiquidityPool;
+import org.stellar.sdk.LiquidityPoolParameters;
 
 public class ChangeTrustOperationTest {
   @Test
@@ -55,8 +55,8 @@ public class ChangeTrustOperationTest {
     //    source="GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW",
     // )
     // print(op.to_xdr_object().to_xdr())
-    LiquidityPool liquidityPoolParameters =
-        new LiquidityPool(
+    LiquidityPoolParameters liquidityPoolParameters =
+        new LiquidityPoolParameters(
             new AssetTypeCreditAlphaNum4(
                 "USD", "GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY"),
             new AssetTypeCreditAlphaNum12(
@@ -98,8 +98,8 @@ public class ChangeTrustOperationTest {
 
   @Test
   public void testFromXdrWithLiquidityPoolAsset() {
-    LiquidityPool liquidityPoolParameters =
-        new LiquidityPool(
+    LiquidityPoolParameters liquidityPoolParameters =
+        new LiquidityPoolParameters(
             new AssetTypeCreditAlphaNum4(
                 "USD", "GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY"),
             new AssetTypeCreditAlphaNum12(

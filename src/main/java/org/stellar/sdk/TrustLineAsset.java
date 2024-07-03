@@ -20,12 +20,18 @@ public class TrustLineAsset {
   /**
    * The asset for which the trustline is established. This is null if the trustline is for a
    * liquidity pool share.
+   *
+   * <p>If assetType is one of {@link AssetType#ASSET_TYPE_NATIVE}, {@link
+   * AssetType#ASSET_TYPE_CREDIT_ALPHANUM4} or {@link AssetType#ASSET_TYPE_CREDIT_ALPHANUM12} then
+   * this field will be set.
    */
   @Nullable private final Asset asset;
 
   /**
    * The ID of the liquidity pool for which the trustline is established. This is null if the
    * trustline is for a regular asset.
+   *
+   * <p>If assetType is {@link AssetType#ASSET_TYPE_POOL_SHARE} then this field will be set.
    */
   @Nullable private final LiquidityPoolId liquidityPoolId;
 
