@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class LiquidityPoolWithdrawOperationResponse extends OperationResponse {
   @SerializedName("liquidity_pool_id")
-  LiquidityPoolId liquidityPoolId;
+  LiquidityPoolID liquidityPoolId;
 
   @SerializedName("reserves_min")
   AssetAmount[] reservesMin;

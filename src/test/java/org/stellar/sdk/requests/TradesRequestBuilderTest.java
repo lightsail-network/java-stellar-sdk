@@ -5,7 +5,7 @@ import static org.stellar.sdk.Asset.create;
 
 import okhttp3.HttpUrl;
 import org.junit.Test;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Server;
 
 public class TradesRequestBuilderTest {
@@ -67,7 +67,7 @@ public class TradesRequestBuilderTest {
         server
             .trades()
             .forLiquidityPool(
-                new LiquidityPoolId(
+                new LiquidityPoolID(
                     "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"))
             .buildUri();
     assertEquals(

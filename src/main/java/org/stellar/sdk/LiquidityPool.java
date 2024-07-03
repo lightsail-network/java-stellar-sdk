@@ -106,11 +106,11 @@ public class LiquidityPool {
    *
    * @return The LiquidityPoolID object.
    */
-  public LiquidityPoolId getLiquidityPoolId() {
+  public LiquidityPoolID getLiquidityPoolId() {
     org.stellar.sdk.xdr.LiquidityPoolParameters liquidityPoolParameters = toXdr();
     try {
       byte[] poolId = Util.hash(liquidityPoolParameters.toXdrByteArray());
-      return new LiquidityPoolId(poolId);
+      return new LiquidityPoolID(poolId);
     } catch (IOException e) {
       throw new UnexpectedException(e);
     }

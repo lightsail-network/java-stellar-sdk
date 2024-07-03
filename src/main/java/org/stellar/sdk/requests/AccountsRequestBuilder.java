@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.TooManyRequestsException;
@@ -121,7 +121,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @return current {@link AccountsRequestBuilder} instance
    * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
-  public AccountsRequestBuilder forLiquidityPool(LiquidityPoolId liquidityPoolID) {
+  public AccountsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
     return this.forLiquidityPool(liquidityPoolID.toString());
   }
 

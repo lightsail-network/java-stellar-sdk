@@ -6,7 +6,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
@@ -58,7 +58,7 @@ public class TradesRequestBuilder extends RequestBuilder {
    *     Liquidity Pool</a>
    * @param liquidityPoolID Liquidity pool for which to get trades
    */
-  public TradesRequestBuilder forLiquidityPool(LiquidityPoolId liquidityPoolID) {
+  public TradesRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
     return this.forLiquidityPool(String.valueOf(liquidityPoolID));
   }
 

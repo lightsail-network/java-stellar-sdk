@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 /**
@@ -21,7 +21,7 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
 @EqualsAndHashCode(callSuper = false)
 public class LiquidityPoolResponse extends Response {
   @SerializedName("id")
-  LiquidityPoolId id;
+  LiquidityPoolID id;
 
   @SerializedName("paging_token")
   String pagingToken;
@@ -50,7 +50,7 @@ public class LiquidityPoolResponse extends Response {
   @SerializedName("_links")
   Links links;
 
-  public LiquidityPoolId getID() {
+  public LiquidityPoolID getID() {
     // For backwards compatibility
     return id;
   }

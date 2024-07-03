@@ -4,7 +4,7 @@ import lombok.Getter;
 import okhttp3.Headers;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
 
 @Getter
@@ -56,7 +56,7 @@ public abstract class Response {
       return new TrustLineAsset(new AssetTypeNative());
     }
     if (type.equals("liquidity_pool_shares")) {
-      return new TrustLineAsset(new LiquidityPoolId(liquidityPoolID));
+      return new TrustLineAsset(new LiquidityPoolID(liquidityPoolID));
     }
     return new TrustLineAsset(Asset.create(type, code, issuer));
   }

@@ -5,7 +5,7 @@ import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 
 /**
  * Represents trades response.
@@ -37,7 +37,7 @@ public class TradeResponse extends Response implements Pageable {
   Long liquidityPoolFeeBP;
 
   @SerializedName("base_liquidity_pool_id")
-  LiquidityPoolId baseLiquidityPoolId;
+  LiquidityPoolID baseLiquidityPoolID;
 
   @SerializedName("base_offer_id")
   Long baseOfferId;
@@ -58,7 +58,7 @@ public class TradeResponse extends Response implements Pageable {
   String baseAssetIssuer;
 
   @SerializedName("counter_liquidity_pool_id")
-  LiquidityPoolId counterLiquidityPoolId;
+  LiquidityPoolID counterLiquidityPoolID;
 
   @SerializedName("counter_offer_id")
   Long counterOfferId;
@@ -99,8 +99,8 @@ public class TradeResponse extends Response implements Pageable {
     return Optional.ofNullable(baseAccount);
   }
 
-  public Optional<LiquidityPoolId> getBaseLiquidityPoolId() {
-    return Optional.ofNullable(baseLiquidityPoolId);
+  public Optional<LiquidityPoolID> getBaseLiquidityPoolID() {
+    return Optional.ofNullable(baseLiquidityPoolID);
   }
 
   public Asset getBaseAsset() {
@@ -111,8 +111,8 @@ public class TradeResponse extends Response implements Pageable {
     return Optional.ofNullable(counterAccount);
   }
 
-  public Optional<LiquidityPoolId> getCounterLiquidityPoolId() {
-    return Optional.ofNullable(counterLiquidityPoolId);
+  public Optional<LiquidityPoolID> getCounterLiquidityPoolID() {
+    return Optional.ofNullable(counterLiquidityPoolID);
   }
 
   public Optional<Long> getCounterOfferId() {

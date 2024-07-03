@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.Optional;
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 
 public class AccountsPageDeserializerTest extends TestCase {
   @Test
@@ -40,7 +40,7 @@ public class AccountsPageDeserializerTest extends TestCase {
     assertEquals(
         accountsPage.getRecords().get(0).getBalances()[0].getLiquidityPoolID(),
         Optional.of(
-            new LiquidityPoolId(
+            new LiquidityPoolID(
                 "a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088")));
     assertEquals(
         accountsPage.getRecords().get(0).getBalances()[1].getLiquidityPoolID(), Optional.empty());

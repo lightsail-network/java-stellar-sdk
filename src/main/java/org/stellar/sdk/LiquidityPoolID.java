@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class LiquidityPoolId {
+public final class LiquidityPoolID {
   /** The pool id. */
   private final byte[] poolId;
 
@@ -21,7 +21,7 @@ public final class LiquidityPoolId {
    *
    * @param hex A hex-encoded string representing the pool ID
    */
-  public LiquidityPoolId(String hex) {
+  public LiquidityPoolID(String hex) {
     poolId = Util.hexToBytes(hex.toUpperCase());
   }
 
@@ -39,8 +39,8 @@ public final class LiquidityPoolId {
    *
    * @param xdr XDR object
    */
-  public static LiquidityPoolId fromXdr(org.stellar.sdk.xdr.PoolID xdr) {
-    return new LiquidityPoolId(xdr.getPoolID().getHash());
+  public static LiquidityPoolID fromXdr(org.stellar.sdk.xdr.PoolID xdr) {
+    return new LiquidityPoolID(xdr.getPoolID().getHash());
   }
 
   /** Generates XDR object from a given LiquidityPoolID object */

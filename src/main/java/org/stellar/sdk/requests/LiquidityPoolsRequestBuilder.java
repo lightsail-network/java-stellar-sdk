@@ -3,7 +3,7 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.LiquidityPoolResponse;
 import org.stellar.sdk.responses.Page;
@@ -77,7 +77,7 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
    *     Pool Details</a>
    */
-  public LiquidityPoolResponse liquidityPool(LiquidityPoolId liquidityPoolID) {
+  public LiquidityPoolResponse liquidityPool(LiquidityPoolID liquidityPoolID) {
     return this.liquidityPool(liquidityPoolID.toString());
   }
 

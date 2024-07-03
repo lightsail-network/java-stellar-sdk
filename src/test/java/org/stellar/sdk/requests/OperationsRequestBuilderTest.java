@@ -8,7 +8,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
@@ -123,7 +123,7 @@ public class OperationsRequestBuilderTest {
         server
             .operations()
             .forLiquidityPool(
-                new LiquidityPoolId(
+                new LiquidityPoolID(
                     "67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"))
             .buildUri();
     assertEquals(

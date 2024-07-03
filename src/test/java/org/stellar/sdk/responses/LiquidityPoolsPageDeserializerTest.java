@@ -5,7 +5,7 @@ import static org.junit.Assert.assertArrayEquals;
 import com.google.gson.reflect.TypeToken;
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class LiquidityPoolsPageDeserializerTest extends TestCase {
@@ -27,7 +27,7 @@ public class LiquidityPoolsPageDeserializerTest extends TestCase {
 
     LiquidityPoolResponse liquidityPool = liquidityPoolsPage.getRecords().get(0);
     assertEquals(
-        new LiquidityPoolId("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
+        new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
         liquidityPool.getID());
     assertEquals("113725249324879873", liquidityPool.getPagingToken());
     assertEquals(Integer.valueOf(30), liquidityPool.getFeeBP());
@@ -53,7 +53,7 @@ public class LiquidityPoolsPageDeserializerTest extends TestCase {
         liquidityPool.getLinks().getTransactions().getHref());
 
     assertEquals(
-        new LiquidityPoolId("14be5a5b3d3f5e1e74380ab0a3bf9c172b7246fdf7753b172cbacd4d66143c08"),
+        new LiquidityPoolID("14be5a5b3d3f5e1e74380ab0a3bf9c172b7246fdf7753b172cbacd4d66143c08"),
         liquidityPoolsPage.getRecords().get(1).getID());
   }
 

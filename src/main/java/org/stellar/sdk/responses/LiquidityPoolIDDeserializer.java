@@ -5,13 +5,13 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 
-class LiquidityPoolIDDeserializer implements JsonDeserializer<LiquidityPoolId> {
+class LiquidityPoolIDDeserializer implements JsonDeserializer<LiquidityPoolID> {
   @Override
-  public LiquidityPoolId deserialize(
+  public LiquidityPoolID deserialize(
       JsonElement json, Type typeOfT, JsonDeserializationContext context)
       throws JsonParseException {
-    return new LiquidityPoolId(json.getAsString());
+    return new LiquidityPoolID(json.getAsString());
   }
 }

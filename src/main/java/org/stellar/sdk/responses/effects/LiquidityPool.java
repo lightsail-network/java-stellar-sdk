@@ -3,13 +3,13 @@ package org.stellar.sdk.responses.effects;
 import com.google.gson.annotations.SerializedName;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
-import org.stellar.sdk.LiquidityPoolId;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 @Value
 public class LiquidityPool {
   @SerializedName("id")
-  LiquidityPoolId id;
+  LiquidityPoolID id;
 
   @SerializedName("fee_bp")
   Integer feeBP;
@@ -26,7 +26,7 @@ public class LiquidityPool {
   @SerializedName("reserves")
   AssetAmount[] reserves;
 
-  public LiquidityPoolId getID() {
+  public LiquidityPoolID getID() {
     // For backwards compatibility
     return id;
   }
