@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.stellar.javastellarsdkdemoapp.ui.theme.JavaStellarSDKDemoAppTheme
 import org.stellar.sdk.Account
-import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.Address
 import org.stellar.sdk.Auth
 import org.stellar.sdk.operations.InvokeHostFunctionOperation
