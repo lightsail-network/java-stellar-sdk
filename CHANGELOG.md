@@ -21,7 +21,6 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
     - Renamed `SorobanRpcErrorResponse` to `SorobanRpcException`.
 - refactor!: `Server.submitTransactionXdr` and `Server.submitTransaction` now return `TransactionResponse` instead of `SubmitTransactionResponse`. An exception will be thrown when the transaction submission fails. Please refer to the documentation for more information.
 - refactor!: `Server.root()` now returns `RootRequestBuilder`.
-- refactor!: `LiquidityPoolParameters.Fee` has been renamed to `LiquidityPoolParameters.FEE`.
 - refactor!: In `AllowTrustOperation`, `authorizeToMaintainLiabilities` has been removed and the type of `authorize` has been changed to `TrustLineEntryFlag`. Please refer to the documentation for details.
 - refactor!: Previously, operations could be constructed through many methods; now, we have standardized them. Here is an example, please refer to the documentation for more details:
   ```java
@@ -32,6 +31,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   ```
 - refactor!: `TransactionBuilder.IncrementedSequenceNumberFunc` has been removed.
 - refactor!: `Transaction.Builder` has been removed, use `TransactionBuilder` instead.
+- refactor!: refactor asset classes. `LiquidityPoolParameters`, `LiquidityPoolConstantProductParameters`, `AssetTypePoolShare`, `LiquidityPoolShareChangeTrustAsset` and `LiquidityPoolShareTrustLineAsset` have been removed. Use `ChangeTrustAsset` and `TrustLineAsset` instead.
+- refactor!: `Asset.getType()` returns `org.stellar.sdk.xdr.AssetType` instead of `String`.
 
 ## 0.44.0
 ### Update

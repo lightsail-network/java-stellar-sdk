@@ -27,8 +27,14 @@ public final class AssetTypeCreditAlphaNum4 extends AssetTypeCreditAlphaNum {
   }
 
   @Override
-  public String getType() {
-    return "credit_alphanum4";
+  public AssetType getType() {
+    return AssetType.ASSET_TYPE_CREDIT_ALPHANUM4;
+  }
+
+  public static AssetTypeCreditAlphaNum4 fromXdr(org.stellar.sdk.xdr.AlphaNum4 alphaNum4) {
+    String assetCode4 = Util.paddedByteArrayToString(alphaNum4.getAssetCode().getAssetCode4());
+    String accountId = StrKey.encodeEd25519PublicKey(alphaNum4.getIssuer());
+    return new AssetTypeCreditAlphaNum4(assetCode4, accountId);
   }
 
   @Override
@@ -46,9 +52,9 @@ public final class AssetTypeCreditAlphaNum4 extends AssetTypeCreditAlphaNum {
 
   @Override
   public int compareTo(@NonNull Asset other) {
-    if ("credit_alphanum12".equals(other.getType())) {
+    if (AssetType.ASSET_TYPE_CREDIT_ALPHANUM12.equals(other.getType())) {
       return -1;
-    } else if ("native".equals(other.getType())) {
+    } else if (AssetType.ASSET_TYPE_NATIVE.equals(other.getType())) {
       return 1;
     }
 

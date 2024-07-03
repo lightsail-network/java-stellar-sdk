@@ -181,4 +181,22 @@ public abstract class RequestBuilder {
     }
     return responseHandler.handleResponse(response);
   }
+
+  String getAssetType(Asset asset) {
+    String assetType;
+    switch (asset.getType()) {
+      case ASSET_TYPE_NATIVE:
+        assetType = "native";
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        assetType = "credit_alphanum4";
+        break;
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        assetType = "credit_alphanum12";
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid asset type");
+    }
+    return assetType;
+  }
 }

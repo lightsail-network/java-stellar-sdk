@@ -10,9 +10,9 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.AssetTypePoolShare;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.Price;
+import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;
 import org.stellar.sdk.responses.operations.AllowTrustOperationResponse;
 import org.stellar.sdk.responses.operations.BumpSequenceOperationResponse;
@@ -533,15 +533,15 @@ public class OperationDeserializerTest extends TestCase {
         (ChangeTrustOperationResponse)
             GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
-    operation.getAsset();
     assertEquals(
         operation.getTrustee(), "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM");
     assertEquals(
         operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.getLimit(), "922337203685.4775807");
     assertEquals(
-        operation.getAsset(),
-        create(null, "EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
+        operation.getTrustLineAsset(),
+        new TrustLineAsset(
+            create(null, "EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM")));
     assertFalse(operation.getTrustorMuxed().isPresent());
   }
 
@@ -587,8 +587,10 @@ public class OperationDeserializerTest extends TestCase {
     assertEquals(
         operation.getTrustor(), "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
     assertEquals(operation.getLimit(), "5.0000000");
+
+    assertNotNull(operation.getTrustLineAsset().getLiquidityPoolId());
     assertEquals(
-        ((AssetTypePoolShare) operation.getAsset()).getPoolId(),
+        operation.getTrustLineAsset().getLiquidityPoolId().getPoolId(),
         "02449937ed825805b7a945bb6c027b53dfaf140983c1a1a64c42a81edd89b5e0");
   }
 

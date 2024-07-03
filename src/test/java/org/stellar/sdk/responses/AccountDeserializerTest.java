@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.TrustLineAsset;
 
 public class AccountDeserializerTest extends TestCase {
   @Test
@@ -20,10 +21,11 @@ public class AccountDeserializerTest extends TestCase {
         account.getBalances()[0].getAssetIssuer(),
         Optional.of("GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"));
     assertEquals(
-        account.getBalances()[0].getAsset(),
+        account.getBalances()[0].getTrustLineAsset(),
         Optional.of(
-            new AssetTypeCreditAlphaNum4(
-                "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU")));
+            new TrustLineAsset(
+                new AssetTypeCreditAlphaNum4(
+                    "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"))));
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
     assertEquals(account.getBalances()[0].getBuyingLiabilities(), Optional.of("100.1234567"));
@@ -33,7 +35,9 @@ public class AccountDeserializerTest extends TestCase {
     assertEquals(account.getBalances()[0].getClawbackEnabled(), Boolean.TRUE);
 
     assertEquals(account.getBalances()[1].getAssetType(), "native");
-    assertEquals(account.getBalances()[1].getAsset(), Optional.of(new AssetTypeNative()));
+    assertEquals(
+        account.getBalances()[1].getTrustLineAsset(),
+        Optional.of(new TrustLineAsset(new AssetTypeNative())));
     assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
     assertEquals(account.getBalances()[1].getBuyingLiabilities(), Optional.of("5.1234567"));
     assertEquals(account.getBalances()[1].getSellingLiabilities(), Optional.of("1.7654321"));
@@ -72,10 +76,11 @@ public class AccountDeserializerTest extends TestCase {
         account.getBalances()[0].getAssetIssuer(),
         Optional.of("GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"));
     assertEquals(
-        account.getBalances()[0].getAsset(),
+        account.getBalances()[0].getTrustLineAsset(),
         Optional.of(
-            new AssetTypeCreditAlphaNum4(
-                "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU")));
+            new TrustLineAsset(
+                new AssetTypeCreditAlphaNum4(
+                    "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"))));
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
     assertEquals(account.getBalances()[0].getBuyingLiabilities(), Optional.of("100.1234567"));
@@ -83,7 +88,9 @@ public class AccountDeserializerTest extends TestCase {
     assertFalse(account.getBalances()[0].getSponsor().isPresent());
 
     assertEquals(account.getBalances()[1].getAssetType(), "native");
-    assertEquals(account.getBalances()[1].getAsset(), Optional.of(new AssetTypeNative()));
+    assertEquals(
+        account.getBalances()[1].getTrustLineAsset(),
+        Optional.of(new TrustLineAsset(new AssetTypeNative())));
     assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
     assertEquals(account.getBalances()[1].getBuyingLiabilities(), Optional.of("5.1234567"));
     assertEquals(account.getBalances()[1].getSellingLiabilities(), Optional.of("1.7654321"));
@@ -164,17 +171,20 @@ public class AccountDeserializerTest extends TestCase {
         account.getBalances()[0].getAssetIssuer(),
         Optional.of("GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"));
     assertEquals(
-        account.getBalances()[0].getAsset(),
+        account.getBalances()[0].getTrustLineAsset(),
         Optional.of(
-            new AssetTypeCreditAlphaNum4(
-                "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU")));
+            new TrustLineAsset(
+                new AssetTypeCreditAlphaNum4(
+                    "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU"))));
     assertEquals(account.getBalances()[0].getBalance(), "1001.0000000");
     assertEquals(account.getBalances()[0].getLimit(), "12000.4775807");
     assertEquals(account.getBalances()[0].getBuyingLiabilities(), Optional.empty());
     assertEquals(account.getBalances()[0].getSellingLiabilities(), Optional.empty());
 
     assertEquals(account.getBalances()[1].getAssetType(), "native");
-    assertEquals(account.getBalances()[1].getAsset(), Optional.of(new AssetTypeNative()));
+    assertEquals(
+        account.getBalances()[1].getTrustLineAsset(),
+        Optional.of(new TrustLineAsset(new AssetTypeNative())));
     assertEquals(account.getBalances()[1].getBalance(), "20.0000300");
     assertEquals(account.getBalances()[1].getBuyingLiabilities(), Optional.empty());
     assertEquals(account.getBalances()[1].getSellingLiabilities(), Optional.empty());

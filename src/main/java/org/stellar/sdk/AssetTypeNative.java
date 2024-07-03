@@ -22,8 +22,8 @@ public final class AssetTypeNative extends Asset {
   }
 
   @Override
-  public String getType() {
-    return "native";
+  public AssetType getType() {
+    return AssetType.ASSET_TYPE_NATIVE;
   }
 
   @Override
@@ -49,7 +49,7 @@ public final class AssetTypeNative extends Asset {
 
   @Override
   public int compareTo(@NonNull Asset other) {
-    if ("native".equals(other.getType())) {
+    if (AssetType.ASSET_TYPE_NATIVE.equals(other.getType())) {
       return 0;
     }
     return -1;

@@ -78,10 +78,10 @@ public class Price {
   }
 
   /** Returns price as a string. */
+  @Override
   public String toString() {
     MathContext mc = MathContext.DECIMAL64;
     BigDecimal result = new BigDecimal(this.numerator).divide(new BigDecimal(this.denominator), mc);
-
     return result.toString();
   }
 }

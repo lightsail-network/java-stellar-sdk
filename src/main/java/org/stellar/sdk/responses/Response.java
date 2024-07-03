@@ -2,6 +2,10 @@ package org.stellar.sdk.responses;
 
 import lombok.Getter;
 import okhttp3.Headers;
+import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.TrustLineAsset;
 
 @Getter
 public abstract class Response {
@@ -44,5 +48,16 @@ public abstract class Response {
     if (resetHeader != null) {
       this.rateLimitReset = Integer.parseInt(resetHeader);
     }
+  }
+
+  protected static TrustLineAsset getTrustLineAsset(
+      String type, String code, String issuer, String liquidityPoolID) {
+    if (type == null) {
+      return new TrustLineAsset(new AssetTypeNative());
+    }
+    if (type.equals("liquidity_pool_shares")) {
+      return new TrustLineAsset(new LiquidityPoolID(liquidityPoolID));
+    }
+    return new TrustLineAsset(Asset.create(type, code, issuer));
   }
 }

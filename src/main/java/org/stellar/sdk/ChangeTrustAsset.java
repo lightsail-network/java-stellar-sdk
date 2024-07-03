@@ -1,164 +1,103 @@
 package org.stellar.sdk;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NonNull;
+import lombok.Value;
+import org.jetbrains.annotations.Nullable;
+import org.stellar.sdk.xdr.AssetType;
 
 /**
- * ChangeTrustAsset class.
+ * Represents an asset in a change trust operation on the Stellar network. This class can represent
+ * both regular assets and liquidity pool share for change trustline operation.
  *
- * @see <a
- *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
- *     target="_blank">Assets</a>
+ * @see org.stellar.sdk.operations.ChangeTrustOperation
  */
-public abstract class ChangeTrustAsset implements Comparable<ChangeTrustAsset> {
-  ChangeTrustAsset() {}
+@Value
+public class ChangeTrustAsset {
+  /** The type of the asset. */
+  @NonNull AssetType assetType;
 
   /**
-   * Parses an asset string and returns the equivalent ChangeTrustAsset instance. The asset string
-   * is expected to either be "native" or a string of the form "CODE:ISSUER"
+   * The asset for which the trustline is being changed. This is null if the change trust operation
+   * is for a liquidity pool share.
    *
-   * @param canonicalForm Canonical string representation of an asset
-   * @return ChangeTrustAsset
+   * <p>If assetType is one of {@link AssetType#ASSET_TYPE_NATIVE}, {@link
+   * AssetType#ASSET_TYPE_CREDIT_ALPHANUM4} or {@link AssetType#ASSET_TYPE_CREDIT_ALPHANUM12} then
+   * this field will be set.
    */
-  public static ChangeTrustAsset create(String canonicalForm) {
-    return new Wrapper(Asset.create(canonicalForm));
+  @Nullable Asset asset;
+
+  /**
+   * The liquidity pool for which the trustline is being changed. This is null if the change trust
+   * operation is for a regular asset.
+   *
+   * <p>If assetType is {@link AssetType#ASSET_TYPE_POOL_SHARE} then this field will be set.
+   */
+  @Nullable LiquidityPool liquidityPool;
+
+  /**
+   * Creates a ChangeTrustAsset for a regular asset.
+   *
+   * @param asset The asset for which the trust is being changed.
+   */
+  public ChangeTrustAsset(@NonNull Asset asset) {
+    this.assetType = asset.getType();
+    this.asset = asset;
+    this.liquidityPool = null;
   }
 
   /**
-   * Create ChangeTrustAsset from asset primitive values
+   * Creates a ChangeTrustAsset for a liquidity pool share.
    *
-   * @param type the asset type
-   * @param code the asset code
-   * @param issuer the asset issuer
-   * @return ChangeTrustAsset
+   * @param liquidityPool The liquidity pool for which the trust is being changed.
    */
-  public static ChangeTrustAsset create(String type, String code, String issuer) {
-    return new Wrapper(Asset.create(type, code, issuer));
+  public ChangeTrustAsset(@NonNull LiquidityPool liquidityPool) {
+    this.assetType = AssetType.ASSET_TYPE_POOL_SHARE;
+    this.asset = null;
+    this.liquidityPool = liquidityPool;
   }
 
   /**
-   * Create ChangeTrustAsset from another Asset
+   * Converts this ChangeTrustAsset to its XDR representation.
    *
-   * @param asset the Asset
-   * @return ChangeTrustAsset
+   * @return The XDR representation of this ChangeTrustAsset.
    */
-  public static ChangeTrustAsset create(Asset asset) {
-    return new Wrapper(asset);
-  }
-
-  /**
-   * Create a ChangeTrustAsset from LiquidityPoolParameters
-   *
-   * @param params the LiquidityPoolParameters
-   * @return ChangeTrustAsset
-   */
-  public static ChangeTrustAsset create(LiquidityPoolParameters params) {
-    return new LiquidityPoolShareChangeTrustAsset(params);
-  }
-
-  /**
-   * Create a ChangeTrustAsset from TrustLineAsset
-   *
-   * @param wrapper the TrustLineAsset wrapper
-   * @return ChangeTrustAsset
-   */
-  public static ChangeTrustAsset create(TrustLineAsset.Wrapper wrapper) {
-    return new Wrapper(wrapper.getAsset());
-  }
-
-  /**
-   * Creates one of AssetTypeCreditAlphaNum4 or AssetTypeCreditAlphaNum12 object based on a <code>
-   * code</code> length
-   *
-   * @param code ChangeTrustAsset code
-   * @param issuer ChangeTrustAsset issuer
-   */
-  public static ChangeTrustAsset createNonNativeAsset(String code, String issuer) {
-    return create(Asset.create(null, code, issuer));
-  }
-
-  /**
-   * Generates ChangeTrustAsset object from a given XDR object
-   *
-   * @param xdr XDR object
-   * @return ChangeTrustAsset
-   */
-  public static ChangeTrustAsset fromXdr(org.stellar.sdk.xdr.ChangeTrustAsset xdr) {
-    // TODO: Figure out how we can re-use Asset.fromXdr here
-    String accountId;
-    switch (xdr.getDiscriminant()) {
-      case ASSET_TYPE_NATIVE:
-        return ChangeTrustAsset.create(new AssetTypeNative());
-      case ASSET_TYPE_CREDIT_ALPHANUM4:
-        String assetCode4 =
-            Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode().getAssetCode4());
-        accountId = StrKey.encodeEd25519PublicKey(xdr.getAlphaNum4().getIssuer());
-        return ChangeTrustAsset.create(new AssetTypeCreditAlphaNum4(assetCode4, accountId));
-      case ASSET_TYPE_CREDIT_ALPHANUM12:
-        String assetCode12 =
-            Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode().getAssetCode12());
-        accountId = StrKey.encodeEd25519PublicKey(xdr.getAlphaNum12().getIssuer());
-        return ChangeTrustAsset.create(new AssetTypeCreditAlphaNum12(assetCode12, accountId));
-      case ASSET_TYPE_POOL_SHARE:
-        return new LiquidityPoolShareChangeTrustAsset(
-            LiquidityPoolParameters.fromXdr(xdr.getLiquidityPool()));
-      default:
-        throw new IllegalArgumentException("Unknown asset type " + xdr.getDiscriminant());
-    }
-  }
-
-  @Override
-  public abstract boolean equals(Object object);
-
-  @Override
-  public abstract int compareTo(@NonNull ChangeTrustAsset other);
-
-  /**
-   * Get the asset type
-   *
-   * @return the asset type
-   */
-  public abstract String getType();
-
-  /**
-   * Generates XDR object from a given ChangeTrustAsset object
-   *
-   * @return xdr model
-   */
-  public abstract org.stellar.sdk.xdr.ChangeTrustAsset toXdr();
-
-  @Getter
-  @AllArgsConstructor
-  @EqualsAndHashCode(callSuper = false)
-  // TODO: add docs
-  public static final class Wrapper extends ChangeTrustAsset {
-    @NonNull private final Asset asset;
-
-    @Override
-    public String getType() {
-      return asset.getType();
-    }
-
-    @Override
-    public int compareTo(@NonNull ChangeTrustAsset other) {
-      if ("pool_share".equals(other.getType())) {
-        return -1;
-      }
-      return this.getAsset().compareTo(((ChangeTrustAsset.Wrapper) other).getAsset());
-    }
-
-    @Override
-    public org.stellar.sdk.xdr.ChangeTrustAsset toXdr() {
-      org.stellar.sdk.xdr.ChangeTrustAsset xdr = new org.stellar.sdk.xdr.ChangeTrustAsset();
-
+  public org.stellar.sdk.xdr.ChangeTrustAsset toXdr() {
+    org.stellar.sdk.xdr.ChangeTrustAsset xdr = new org.stellar.sdk.xdr.ChangeTrustAsset();
+    if (asset != null) {
       org.stellar.sdk.xdr.Asset assetXdr = asset.toXdr();
       xdr.setDiscriminant(assetXdr.getDiscriminant());
       xdr.setAlphaNum4(assetXdr.getAlphaNum4());
       xdr.setAlphaNum12(assetXdr.getAlphaNum12());
+    }
+    if (liquidityPool != null) {
+      xdr.setDiscriminant(AssetType.ASSET_TYPE_POOL_SHARE);
+      xdr.setLiquidityPool(liquidityPool.toXdr());
+    }
+    return xdr;
+  }
 
-      return xdr;
+  /**
+   * Creates a ChangeTrustAsset from its XDR representation.
+   *
+   * @param changeTrustAsset The XDR representation of the ChangeTrustAsset.
+   * @return A new ChangeTrustAsset instance.
+   * @throws IllegalArgumentException if the asset type is unknown.
+   */
+  public static ChangeTrustAsset fromXdr(org.stellar.sdk.xdr.ChangeTrustAsset changeTrustAsset) {
+    switch (changeTrustAsset.getDiscriminant()) {
+      case ASSET_TYPE_NATIVE:
+        return new ChangeTrustAsset(new AssetTypeNative());
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        return new ChangeTrustAsset(
+            AssetTypeCreditAlphaNum4.fromXdr(changeTrustAsset.getAlphaNum4()));
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        return new ChangeTrustAsset(
+            AssetTypeCreditAlphaNum12.fromXdr(changeTrustAsset.getAlphaNum12()));
+      case ASSET_TYPE_POOL_SHARE:
+        return new ChangeTrustAsset(LiquidityPool.fromXdr(changeTrustAsset.getLiquidityPool()));
+      default:
+        throw new IllegalArgumentException(
+            "Unknown asset type " + changeTrustAsset.getDiscriminant());
     }
   }
 }

@@ -31,7 +31,7 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
   }
 
   private void baseAsset(Asset asset) {
-    uriBuilder.setQueryParameter("base_asset_type", asset.getType());
+    uriBuilder.setQueryParameter("base_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.setQueryParameter("base_asset_code", creditAlphaNumAsset.getCode());
@@ -40,7 +40,7 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
   }
 
   private void counterAsset(Asset asset) {
-    uriBuilder.setQueryParameter("counter_asset_type", asset.getType());
+    uriBuilder.setQueryParameter("counter_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
       AssetTypeCreditAlphaNum creditAlphaNumAsset = (AssetTypeCreditAlphaNum) asset;
       uriBuilder.setQueryParameter("counter_asset_code", creditAlphaNumAsset.getCode());

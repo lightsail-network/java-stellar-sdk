@@ -1,53 +1,37 @@
 package org.stellar.sdk;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.stellar.sdk.xdr.*;
 
 /**
- * Base LiquidityPoolID class.
+ * Represents a Liquidity Pool ID on the Stellar network.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/encyclopedia/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools"
+ *     href="https://developers.stellar.org/docs/learn/encyclopedia/sdex/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools"
  *     target="_blank">Liquidity Pool</a>
  */
 @EqualsAndHashCode
 @AllArgsConstructor
 public final class LiquidityPoolID {
-  private final byte[] hash;
+  /** The pool id. */
+  private final byte[] poolId;
 
   /**
-   * Creates LiquidityPoolID object from a given parameters.
+   * Creates a LiquidityPoolID object from a given hex-encoded pool ID.
    *
-   * @param type The type of the pool
-   * @param a First asset in the pool
-   * @param b Second asset in the pool
-   * @param fee Fee amount in base-points
+   * @param hex A hex-encoded string representing the pool ID
    */
-  public LiquidityPoolID(LiquidityPoolType type, Asset a, Asset b, int fee) {
-    if (a.compareTo(b) >= 0) {
-      throw new IllegalArgumentException("AssetA must be < AssetB");
-    }
-
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
-    try {
-      LiquidityPoolParameters.create(type, a, b, fee).toXdr().encode(xdrDataOutputStream);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid liquidity pool id.", e);
-    }
-    hash = Util.hash(byteArrayOutputStream.toByteArray());
+  public LiquidityPoolID(String hex) {
+    poolId = Util.hexToBytes(hex.toUpperCase());
   }
 
   /**
-   * Creates LiquidityPoolID object from a given hex-encoded pool ID.
+   * Returns the pool ID as a lowercase hex-encoded string.
    *
-   * @param hex hex string
+   * @return The pool ID as a hex string
    */
-  public LiquidityPoolID(String hex) {
-    hash = Util.hexToBytes(hex.toUpperCase());
+  public String getPoolId() {
+    return Util.bytesToHex(poolId).toLowerCase();
   }
 
   /**
@@ -59,15 +43,15 @@ public final class LiquidityPoolID {
     return new LiquidityPoolID(xdr.getPoolID().getHash());
   }
 
-  @Override
-  public String toString() {
-    return Util.bytesToHex(hash).toLowerCase();
-  }
-
   /** Generates XDR object from a given LiquidityPoolID object */
   public org.stellar.sdk.xdr.PoolID toXdr() {
     org.stellar.sdk.xdr.PoolID xdr = new org.stellar.sdk.xdr.PoolID();
-    xdr.setPoolID(new org.stellar.sdk.xdr.Hash(hash));
+    xdr.setPoolID(new org.stellar.sdk.xdr.Hash(poolId));
     return xdr;
+  }
+
+  @Override
+  public String toString() {
+    return getPoolId();
   }
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.stellar.sdk.AccountConverter;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.xdr.SignerKey;
@@ -127,8 +128,8 @@ public class RevokeSponsorshipOperationTest {
     String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
     String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
     TrustLineAsset asset =
-        TrustLineAsset.createNonNativeAsset(
-            "DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
+        new TrustLineAsset(
+            Asset.create("DEMO:GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV"));
     RevokeTrustlineSponsorshipOperation operation =
         RevokeTrustlineSponsorshipOperation.builder()
             .accountId(accountId)

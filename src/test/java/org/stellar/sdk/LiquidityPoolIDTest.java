@@ -1,53 +1,32 @@
 package org.stellar.sdk;
 
 import static org.junit.Assert.*;
-import static org.stellar.sdk.Asset.create;
 
+import java.io.IOException;
 import org.junit.Test;
-import org.stellar.sdk.xdr.LiquidityPoolType;
+import org.stellar.sdk.xdr.PoolID;
 
 public class LiquidityPoolIDTest {
-  private final Asset a = create("native");
-  private final Asset b =
-      create(null, "ABC", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
-  private final Asset c =
-      create(null, "ABCD", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
-
   @Test
-  public void testLiquidityPoolID() {
-    LiquidityPoolID id =
-        new LiquidityPoolID(
-            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.FEE);
-    assertEquals("cc22414997d7e3d9a9ac3b1d65ca9cc3e5f35ce33e0bd6a885648b11aaa3b72d", id.toString());
+  public void testLiquidityPoolIdFromHex() throws IOException {
+    String id = "dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380fac7";
+    LiquidityPoolID poolId = new LiquidityPoolID(id);
+    assertEquals(poolId.getPoolId(), id);
+    assertEquals(poolId.toXdr().toXdrBase64(), "3XsauDHCczEN2+xvl4cKqDwvvXjOIq3tN+y/TzOA+sc=");
+    PoolID xdr = poolId.toXdr();
+    LiquidityPoolID parsedPoolId = LiquidityPoolID.fromXdr(xdr);
+    assertEquals(poolId, parsedPoolId);
   }
 
   @Test
-  public void testLiquidityPoolIDMisorderedAssets() {
-    try {
-      new LiquidityPoolID(
-          LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, b, a, LiquidityPoolParameters.FEE);
-      fail();
-    } catch (RuntimeException e) {
-      assertEquals("AssetA must be < AssetB", e.getMessage());
-    }
-  }
-
-  @Test
-  public void testEquality() {
-    LiquidityPoolID pool1 =
-        new LiquidityPoolID(
-            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.FEE);
-    assertEquals(pool1, pool1);
-  }
-
-  @Test
-  public void testInequality() {
-    LiquidityPoolID pool1 =
-        new LiquidityPoolID(
-            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, a, b, LiquidityPoolParameters.FEE);
-    LiquidityPoolID pool2 =
-        new LiquidityPoolID(
-            LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, b, c, LiquidityPoolParameters.FEE);
-    assertNotEquals(pool1, pool2);
+  public void testLiquidityPoolIdFromBytes() throws IOException {
+    String idHex = "dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380fac7";
+    byte[] id = Util.hexToBytes(idHex);
+    LiquidityPoolID poolId = new LiquidityPoolID(id);
+    assertEquals(poolId.getPoolId(), idHex);
+    assertEquals(poolId.toXdr().toXdrBase64(), "3XsauDHCczEN2+xvl4cKqDwvvXjOIq3tN+y/TzOA+sc=");
+    PoolID xdr = poolId.toXdr();
+    LiquidityPoolID parsedPoolId = LiquidityPoolID.fromXdr(xdr);
+    assertEquals(poolId, parsedPoolId);
   }
 }
