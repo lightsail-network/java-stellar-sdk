@@ -16,8 +16,8 @@ import org.stellar.sdk.TrustLineAsset;
 
 public class AccountResponseTest {
   @Test
-  public void testDeserializeAccountResponse() throws IOException {
-    String filePath = "src/test/resources/account_response.json";
+  public void testDeserialize() throws IOException {
+    String filePath = "src/test/resources/responses/account_response.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountResponse account = GsonSingleton.getInstance().fromJson(json, AccountResponse.class);
     assertEquals(account.getId(), "GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3");
