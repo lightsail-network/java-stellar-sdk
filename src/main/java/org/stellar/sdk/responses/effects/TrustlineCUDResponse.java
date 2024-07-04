@@ -27,6 +27,7 @@ abstract class TrustlineCUDResponse extends EffectResponse {
   @SerializedName("liquidity_pool_id")
   private final String liquidityPoolId;
 
+  // TODO: get asset
   public TrustLineAsset getTrustLineAsset() {
     return getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);
   }

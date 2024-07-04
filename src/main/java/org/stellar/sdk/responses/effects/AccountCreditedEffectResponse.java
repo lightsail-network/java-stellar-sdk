@@ -30,6 +30,7 @@ public class AccountCreditedEffectResponse extends EffectResponse {
   @SerializedName("asset_issuer")
   String assetIssuer;
 
+  // TODO: fixme
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer);
   }

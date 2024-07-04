@@ -52,6 +52,7 @@ public abstract class EffectResponse extends Response implements Pageable {
   @SerializedName("_links")
   private Links links;
 
+  // TODO
   public Optional<MuxedAccount> getAccountMuxed() {
     if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
       return Optional.empty();

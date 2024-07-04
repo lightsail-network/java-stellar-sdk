@@ -57,6 +57,7 @@ public class TradeEffectResponse extends EffectResponse {
   @SerializedName("bought_asset_issuer")
   String boughtAssetIssuer;
 
+  // TODO
   public Optional<MuxedAccount> getSellerMuxed() {
     if (this.sellerMuxed == null || this.sellerMuxed.isEmpty()) {
       return Optional.empty();

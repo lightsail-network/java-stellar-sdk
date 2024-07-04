@@ -26,6 +26,7 @@ public class LiquidityPool {
   @SerializedName("reserves")
   AssetAmount[] reserves;
 
+  // TODO
   public LiquidityPoolID getID() {
     // For backwards compatibility
     return id;

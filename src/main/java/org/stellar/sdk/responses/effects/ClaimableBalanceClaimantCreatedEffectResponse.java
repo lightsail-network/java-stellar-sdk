@@ -29,6 +29,7 @@ public class ClaimableBalanceClaimantCreatedEffectResponse extends EffectRespons
   @SerializedName("predicate")
   Predicate predicate;
 
+  // TODO
   public Asset getAsset() {
     return Asset.create(assetString);
   }

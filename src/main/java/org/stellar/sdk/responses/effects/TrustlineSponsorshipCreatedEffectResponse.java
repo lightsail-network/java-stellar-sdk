@@ -22,6 +22,7 @@ public class TrustlineSponsorshipCreatedEffectResponse extends EffectResponse {
   @SerializedName("sponsor")
   String sponsor;
 
+  // TODO: fixme
   public Asset getAsset() {
     return Asset.create(assetString);
   }

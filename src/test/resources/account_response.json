@@ -1,0 +1,157 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3"
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3/transactions{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3/data/{key}",
+      "templated": true
+    }
+  },
+  "id": "GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3",
+  "account_id": "GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3",
+  "sequence": "160470889244710503",
+  "sequence_ledger": 52222212,
+  "sequence_time": "1718974099",
+  "subentry_count": 12,
+  "inflation_destination": "GDZMB4BTSFCRDXWQOG43WGX3Z4FUCEYJRTTQPXDR27PNNLU6RJT5V7LQ",
+  "home_domain": "example.com",
+  "last_modified_ledger": 52223288,
+  "last_modified_time": "2024-06-21T12:47:51Z",
+  "thresholds": {
+    "low_threshold": 1,
+    "med_threshold": 20,
+    "high_threshold": 30
+  },
+  "flags": {
+    "auth_required": true,
+    "auth_revocable": true,
+    "auth_immutable": false,
+    "auth_clawback_enabled": true
+  },
+  "balances": [
+    {
+      "balance": "2816.6567089",
+      "liquidity_pool_id": "59fa1dc57433dcfbd2db7319d26cb3da1f28f2d8095a3ec36ad4ef9cadb0013e",
+      "limit": "922337203685.4775807",
+      "last_modified_ledger": 39608341,
+      "is_authorized": false,
+      "is_authorized_to_maintain_liabilities": false,
+      "asset_type": "liquidity_pool_shares"
+    },
+    {
+      "balance": "85729.1030749",
+      "limit": "922337203685.4775807",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000",
+      "last_modified_ledger": 52414854,
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "asset_type": "credit_alphanum4",
+      "asset_code": "AQUA",
+      "asset_issuer": "GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA"
+    },
+    {
+      "balance": "0.0000000",
+      "limit": "922337203685.4775807",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000",
+      "last_modified_ledger": 37736999,
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "asset_type": "credit_alphanum4",
+      "asset_code": "BTC",
+      "asset_issuer": "GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH"
+    },
+    {
+      "balance": "0.0000000",
+      "limit": "922337203685.4775807",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000",
+      "last_modified_ledger": 49087929,
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "asset_type": "credit_alphanum4",
+      "asset_code": "USDC",
+      "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"
+    },
+    {
+      "balance": "0.0000000",
+      "limit": "922337203685.4775807",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000",
+      "last_modified_ledger": 38911289,
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "asset_type": "credit_alphanum4",
+      "asset_code": "USDT",
+      "asset_issuer": "GCQTGZQQ5G4PTM2GL7CDIFKUBIPEC52BROAQIAPW53XBRJVN6ZJVTG6V"
+    },
+    {
+      "balance": "0.0000000",
+      "limit": "922337203685.4775807",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000",
+      "last_modified_ledger": 39920318,
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "asset_type": "credit_alphanum4",
+      "asset_code": "yXLM",
+      "asset_issuer": "GARDNV3Q7YGT4AKSDF25LT32YSCCW4EV22Y2TV3I2PU2MMXJTEDL5T55"
+    },
+    {
+      "balance": "10025.7670792",
+      "buying_liabilities": "10000.0000000",
+      "selling_liabilities": "25.1000000",
+      "asset_type": "native"
+    }
+  ],
+  "signers": [
+    {
+      "weight": 255,
+      "key": "GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3",
+      "type": "ed25519_public_key"
+    },
+    {
+      "weight": 1,
+      "key": "GASAK3DMPMVB4G4447P32EA4PT5UCDLVEHFY2NRS32QXDVPIBUVXUWF4",
+      "type": "ed25519_public_key"
+    },
+    {
+      "weight": 10,
+      "key": "GDZMB4BTSFCRDXWQOG43WGX3Z4FUCEYJRTTQPXDR27PNNLU6RJT5V7LQ",
+      "type": "ed25519_public_key"
+    }
+  ],
+  "data": {
+    "v1": "djEgdmFsdWU=",
+    "v2": "djIgdmFsdWU="
+  },
+  "num_sponsoring": 1,
+  "num_sponsored": 2,
+  "paging_token": "GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3"
+}

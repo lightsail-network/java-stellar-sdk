@@ -39,14 +39,17 @@ public class TrustlineFlagsUpdatedEffectResponse extends EffectResponse {
   @SerializedName("clawback_enabled_flag")
   boolean clawbackEnabled;
 
+  // TODO
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer);
   }
 
+  // TODO: fixme
   public boolean getAuthorized() {
     return authorized;
   }
 
+  // TODO
   public boolean getAuthorizedToMaintainLiabilities() {
     return authorizedToMaintainLiabilities;
   }

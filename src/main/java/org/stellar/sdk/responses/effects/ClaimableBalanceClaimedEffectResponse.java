@@ -25,6 +25,7 @@ public class ClaimableBalanceClaimedEffectResponse extends EffectResponse {
   @SerializedName("balance_id")
   String balanceId;
 
+  // TODO
   public Asset getAsset() {
     return Asset.create(assetString);
   }
