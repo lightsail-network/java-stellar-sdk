@@ -48,9 +48,8 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
     Predicate.Or or =
         (Predicate.Or)
             claimableBalancePage.getRecords().get(0).getClaimants().get(0).getPredicate();
-    assertEquals(or.getInner().size(), 2);
-    Predicate.AbsBefore absBefore = (Predicate.AbsBefore) or.getInner().get(0);
-    Predicate.RelBefore relBefore = (Predicate.RelBefore) or.getInner().get(1);
+    Predicate.AbsBefore absBefore = (Predicate.AbsBefore) or.getLeft();
+    Predicate.RelBefore relBefore = (Predicate.RelBefore) or.getRight();
     assertEquals(absBefore.getDate().toString(), "2020-09-28T17:57:04Z");
     assertEquals(relBefore.getSecondsSinceClose(), 12L);
     assertEquals(
@@ -83,10 +82,9 @@ public class ClaimableBalancePageDeserializerTest extends TestCase {
     Predicate.And and =
         (Predicate.And)
             claimableBalancePage.getRecords().get(1).getClaimants().get(0).getPredicate();
-    assertEquals(and.getInner().size(), 2);
-    absBefore = (Predicate.AbsBefore) and.getInner().get(0);
+    absBefore = (Predicate.AbsBefore) and.getLeft();
     assertEquals(absBefore.getDate().toString(), "2020-09-28T17:57:04Z");
-    Predicate.Not not = (Predicate.Not) and.getInner().get(1);
+    Predicate.Not not = (Predicate.Not) and.getRight();
     assertEquals(new Predicate.Unconditional(), not.getInner());
 
     for (ClaimableBalanceResponse record : claimableBalancePage.getRecords()) {

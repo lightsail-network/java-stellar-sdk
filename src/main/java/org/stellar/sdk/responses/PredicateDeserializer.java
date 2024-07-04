@@ -29,7 +29,7 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
       for (JsonElement elt : obj.get("and").getAsJsonArray()) {
         inner.add(deserialize(elt, typeOfT, context));
       }
-      return new Predicate.And(inner);
+      return new Predicate.And(inner.get(0), inner.get(1));
     }
 
     if (obj.has("or")) {
@@ -37,7 +37,7 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
       for (JsonElement elt : obj.get("or").getAsJsonArray()) {
         inner.add(deserialize(elt, typeOfT, context));
       }
-      return new Predicate.Or(inner);
+      return new Predicate.Or(inner.get(0), inner.get(1));
     }
 
     // backwards compatible for abs before, uses the newer abs_before_epoch if available from server
