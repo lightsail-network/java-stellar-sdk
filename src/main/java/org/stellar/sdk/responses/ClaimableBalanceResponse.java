@@ -51,10 +51,6 @@ public class ClaimableBalanceResponse extends Response implements Pageable {
     return Asset.create(assetString);
   }
 
-  public Optional<String> getSponsor() {
-    return Optional.ofNullable(this.sponsor);
-  }
-
   @Value
   public static class Flags {
     @SerializedName("clawback_enabled")
