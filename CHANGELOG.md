@@ -36,6 +36,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor!: `FeeBumpTransaction.Builder` has been removed, use `FeeBumpTransaction#FeeBumpTransaction(String, long, Transaction)` instead.
 - refactor!: `FeeBumpTransaction.getFeeAccount` has been removed, use `FeeBumpTransaction.getFeeSource` instead.
 - refactor!: remove `AccountConverter`, this means that we no longer support disabling support for MuxedAccount.
+- refactor!: refactor the way of constructing `Predicate.Or` and `Predicate.And`. The `inner` inside has been removed, and in its place are `left` and `right`, used to represent two predicates.
 
 ## 0.44.0
 ### Update

@@ -51,7 +51,7 @@ public class Payment {
             .setBaseFee(MIN_BASE_FEE) // set base fee, see
             // https://developers.stellar.org/docs/learn/glossary#base-fee
             .addMemo(Memo.text("Hello Stellar!")) // Add a text memo
-            .setTimeout(180) // Make this transaction valid for the next 30 seconds only
+            .setTimeout(30) // Make this transaction valid for the next 30 seconds only
             .addOperation(paymentOperation) // Add the payment operation to the transaction
             .build();
 
