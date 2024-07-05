@@ -3,10 +3,7 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.Memo;
@@ -24,115 +21,93 @@ import org.stellar.sdk.xdr.TransactionResult;
  * @see org.stellar.sdk.requests.TransactionsRequestBuilder
  * @see org.stellar.sdk.Server#transactions()
  */
-@AllArgsConstructor
+@Value
 @EqualsAndHashCode(callSuper = false)
 public class TransactionResponse extends Response implements Pageable {
-  @Getter
+
   @SerializedName("id")
-  private final String id;
+  String id;
 
-  @Getter
   @SerializedName("paging_token")
-  private final String pagingToken;
+  String pagingToken;
 
-  @Getter
   @SerializedName("successful")
-  private final Boolean successful;
+  Boolean successful;
 
-  @Getter
   @SerializedName("hash")
-  private final String hash;
+  String hash;
 
-  @Getter
   @SerializedName("ledger")
-  private final Long ledger;
+  Long ledger;
 
-  @Getter
   @SerializedName("created_at")
-  private final String createdAt;
+  String createdAt;
 
-  @Getter
   @SerializedName("source_account")
-  private final String sourceAccount;
+  String sourceAccount;
 
-  @Getter
   @SerializedName("account_muxed")
-  private final String accountMuxed;
+  String accountMuxed;
 
-  @Getter
   @SerializedName("account_muxed_id")
-  private final BigInteger accountMuxedId;
+  BigInteger accountMuxedId;
 
-  @Getter
   @SerializedName("source_account_sequence")
-  private final Long sourceAccountSequence;
+  Long sourceAccountSequence;
 
-  @Getter
   @SerializedName("fee_account")
-  private final String feeAccount;
+  String feeAccount;
 
   @SerializedName("fee_account_muxed")
-  private final String feeAccountMuxed;
+  String feeAccountMuxed;
 
-  @Getter
   @SerializedName("fee_account_muxed_id")
-  private final BigInteger feeAccountMuxedId;
+  BigInteger feeAccountMuxedId;
 
-  @Getter
   @SerializedName("fee_charged")
-  private final Long feeCharged;
+  Long feeCharged;
 
-  @Getter
   @SerializedName("max_fee")
-  private final Long maxFee;
+  Long maxFee;
 
-  @Getter
   @SerializedName("operation_count")
-  private final Integer operationCount;
+  Integer operationCount;
 
-  @Getter
   @SerializedName("envelope_xdr")
-  private final String envelopeXdr;
+  String envelopeXdr;
 
-  @Getter
   @SerializedName("result_xdr")
-  private final String resultXdr;
+  String resultXdr;
 
-  @Getter
   @SerializedName("result_meta_xdr")
-  private final String resultMetaXdr;
+  String resultMetaXdr;
 
-  @Getter
   @SerializedName("fee_meta_xdr")
-  private final String feeMetaXdr;
+  String feeMetaXdr;
 
-  @Getter
   @SerializedName("signatures")
-  private final List<String> signatures;
+  List<String> signatures;
 
   @SerializedName("preconditions")
-  private final Preconditions preconditions;
+  Preconditions preconditions;
 
-  @Getter
   @SerializedName("fee_bump_transaction")
-  private final FeeBumpTransaction feeBumpTransaction;
+  FeeBumpTransaction feeBumpTransaction;
 
-  @Getter
   @SerializedName("inner_transaction")
-  private final InnerTransaction innerTransaction;
+  InnerTransaction innerTransaction;
 
   @SerializedName("memo_type")
-  private final String memoType;
+  String memoType;
 
   @SerializedName("memo_bytes")
-  private final String memoBytes;
+  String memoBytes;
 
   @SerializedName("memo")
-  private final String memoValue;
+  String memoValue;
 
-  @Getter
   @SerializedName("_links")
-  private final Links links;
+  Links links;
 
   /**
    * Parses the {@code envelopeXdr} field from a string to an {@link
@@ -191,38 +166,6 @@ public class TransactionResponse extends Response implements Pageable {
     } else {
       throw new IllegalArgumentException("Invalid memo type: " + memoType);
     }
-  }
-
-  public Optional<MuxedAccount> getSourceAccountMuxed() {
-    if (this.accountMuxed == null || this.accountMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(
-        new MuxedAccount(this.accountMuxed, this.sourceAccount, this.accountMuxedId));
-  }
-
-  public Optional<MuxedAccount> getFeeAccountMuxed() {
-    if (this.feeAccountMuxed == null || this.feeAccountMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(
-        new MuxedAccount(this.feeAccountMuxed, this.feeAccount, this.feeAccountMuxedId));
-  }
-
-  public Optional<FeeBumpTransaction> getFeeBump() {
-    return Optional.ofNullable(this.feeBumpTransaction);
-  }
-
-  public Optional<InnerTransaction> getInner() {
-    return Optional.ofNullable(this.innerTransaction);
-  }
-
-  public Optional<Preconditions> getPreconditions() {
-    return Optional.ofNullable(this.preconditions);
-  }
-
-  public Boolean isSuccessful() {
-    return successful;
   }
 
   /**
