@@ -1,18 +1,18 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.Price;
 
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class TradeAggregationResponse extends Response {
   @SerializedName("timestamp")
-  long timestamp;
+  Long timestamp;
 
   @SerializedName("trade_count")
-  int tradeCount;
+  Integer tradeCount;
 
   @SerializedName("base_volume")
   String baseVolume;
@@ -27,27 +27,23 @@ public class TradeAggregationResponse extends Response {
   String high;
 
   @SerializedName("high_r")
-  TradePrice highR;
+  Price highR;
 
   @SerializedName("low")
   String low;
 
   @SerializedName("low_r")
-  TradePrice lowR;
+  Price lowR;
 
   @SerializedName("open")
   String open;
 
   @SerializedName("open_r")
-  TradePrice openR;
+  Price openR;
 
   @SerializedName("close")
   String close;
 
   @SerializedName("close_r")
-  TradePrice closeR;
-
-  public Date getDate() {
-    return new Date(this.timestamp);
-  }
+  Price closeR;
 }
