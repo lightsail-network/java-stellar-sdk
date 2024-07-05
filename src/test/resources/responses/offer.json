@@ -1,0 +1,29 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/offers/1577055064"
+    },
+    "offer_maker": {
+      "href": "https://horizon.stellar.org/accounts/GAXXBGVWDE5BA74QCLEMOXXNXJ7XYPHWAE5FUOMCMD3D75LXEDRZTZVU"
+    }
+  },
+  "id": "1577055064",
+  "paging_token": "1577055064",
+  "seller": "GAXXBGVWDE5BA74QCLEMOXXNXJ7XYPHWAE5FUOMCMD3D75LXEDRZTZVU",
+  "selling": {
+    "asset_type": "credit_alphanum12",
+    "asset_code": "CANNACOIN",
+    "asset_issuer": "GBLJ4223KUWIMV7RAPQKBA7YGR4I7H2BIV4KIMMXMQWYQBOZ6HLZR3RQ"
+  },
+  "buying": {
+    "asset_type": "native"
+  },
+  "amount": "30.3261978",
+  "price_r": {
+    "n": 572849,
+    "d": 878046827
+  },
+  "price": "0.0006524",
+  "last_modified_ledger": 52425928,
+  "last_modified_time": "2024-07-05T00:50:03Z"
+}
