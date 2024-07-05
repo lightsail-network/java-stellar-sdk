@@ -2,7 +2,6 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;

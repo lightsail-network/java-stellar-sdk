@@ -13,6 +13,7 @@ public class FeeStatsResponse extends Response {
   @SerializedName("last_ledger_base_fee")
   Long lastLedgerBaseFee;
 
+  // TODO: string?
   @SerializedName("ledger_capacity_usage")
   Float ledgerCapacityUsage;
 

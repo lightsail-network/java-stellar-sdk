@@ -1,6 +1,7 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
+import java.math.BigDecimal;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Util;
@@ -55,10 +56,10 @@ public class LedgerResponse extends Response implements Pageable {
   String feePool;
 
   @SerializedName("base_fee_in_stroops")
-  String baseFeeInStroops;
+  BigDecimal baseFeeInStroops;
 
   @SerializedName("base_reserve_in_stroops")
-  String baseReserveInStroops;
+  BigDecimal baseReserveInStroops;
 
   @SerializedName("max_tx_set_size")
   Integer maxTxSetSize;
