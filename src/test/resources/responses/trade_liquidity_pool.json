@@ -1,0 +1,35 @@
+{
+  "_links": {
+    "self": {
+      "href": ""
+    },
+    "base": {
+      "href": "https://horizon-testnet.stellar.org/accounts/GCUGVB6HXX56LMAYLTD2OJRJYGRGQRHQ4H5WFZRCWG4WOPCJSLFCWUZA"
+    },
+    "counter": {
+      "href": "https://horizon-testnet.stellar.org/liquidity_pools/2389378a6156eedfac66daa000d24c926431c3e667b9f754771964f27a6da6ab"
+    },
+    "operation": {
+      "href": "https://horizon-testnet.stellar.org/operations/1567602933510145"
+    }
+  },
+  "id": "1567602933510145-0",
+  "paging_token": "1567602933510145-0",
+  "ledger_close_time": "2021-10-07T14:13:20Z",
+  "trade_type": "liquidity_pool",
+  "liquidity_pool_fee_bp": 30,
+  "base_offer_id": "4613253621360898049",
+  "base_account": "GCUGVB6HXX56LMAYLTD2OJRJYGRGQRHQ4H5WFZRCWG4WOPCJSLFCWUZA",
+  "base_amount": "10.0000000",
+  "base_asset_type": "native",
+  "counter_liquidity_pool_id": "2389378a6156eedfac66daa000d24c926431c3e667b9f754771964f27a6da6ab",
+  "counter_amount": "6475.7567056",
+  "counter_asset_type": "credit_alphanum12",
+  "counter_asset_code": "BTCLN",
+  "counter_asset_issuer": "GD4UTLD46SWG5KCUVBRWFSFCUDISYNEJ2AF5FNB67ORAE6K7ZSAXH5O7",
+  "base_is_seller": false,
+  "price": {
+    "n": "140271366",
+    "d": "21661"
+  }
+}

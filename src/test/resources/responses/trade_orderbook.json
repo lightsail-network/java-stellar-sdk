@@ -1,0 +1,36 @@
+{
+  "_links": {
+    "self": {
+      "href": ""
+    },
+    "base": {
+      "href": "https://horizon.stellar.org/accounts/GAREHPOLONP4N5WJPF6EG676FAH3IEDUF5AXMZXGSVU3262XJETXOTLW"
+    },
+    "counter": {
+      "href": "https://horizon.stellar.org/accounts/GB4FWDMQZEMDNAYUHOUOOXCG4TOWCNDUUEAI7ZUHNNPAK2236444OXHD"
+    },
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150615114272284677"
+    }
+  },
+  "id": "150615114272284677-0",
+  "paging_token": "150615114272284677-0",
+  "ledger_close_time": "2021-04-23T13:55:52Z",
+  "trade_type": "orderbook",
+  "offer_id": "544656471",
+  "base_offer_id": "4762301132699672581",
+  "base_account": "GAREHPOLONP4N5WJPF6EG676FAH3IEDUF5AXMZXGSVU3262XJETXOTLW",
+  "base_amount": "0.4355160",
+  "base_asset_type": "native",
+  "counter_offer_id": "544656471",
+  "counter_account": "GB4FWDMQZEMDNAYUHOUOOXCG4TOWCNDUUEAI7ZUHNNPAK2236444OXHD",
+  "counter_amount": "0.1841505",
+  "counter_asset_type": "credit_alphanum4",
+  "counter_asset_code": "USD",
+  "counter_asset_issuer": "GDUKMGUGDZQK6YHYA5Z6AY2G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEX",
+  "base_is_seller": false,
+  "price": {
+    "n": 200,
+    "d": 473
+  }
+}
