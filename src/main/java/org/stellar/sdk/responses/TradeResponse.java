@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.Price;
 
 /**
  * Represents trades response.
@@ -82,7 +83,7 @@ public class TradeResponse extends Response implements Pageable {
   boolean baseIsSeller;
 
   @SerializedName("price")
-  TradePrice price;
+  Price price;
 
   @SerializedName("_links")
   TradeResponse.Links links;

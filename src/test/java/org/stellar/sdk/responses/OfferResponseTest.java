@@ -30,8 +30,8 @@ public class OfferResponseTest {
     assertEquals(AssetType.ASSET_TYPE_NATIVE, offerResponse.getBuying().getType());
 
     assertEquals("30.3261978", offerResponse.getAmount());
-    assertEquals(572849L, offerResponse.getPriceR().getNumerator().longValue());
-    assertEquals(878046827L, offerResponse.getPriceR().getDenominator().longValue());
+    assertEquals(572849L, offerResponse.getPriceR().getNumerator());
+    assertEquals(878046827L, offerResponse.getPriceR().getDenominator());
     assertEquals("0.0006524", offerResponse.getPrice());
     assertEquals(52425928L, offerResponse.getLastModifiedLedger().longValue());
     assertEquals("2024-07-05T00:50:03Z", offerResponse.getLastModifiedTime());

@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.Price;
 
 /**
  * Represents offer response.
@@ -34,9 +35,8 @@ public class OfferResponse extends Response implements Pageable {
   @SerializedName("amount")
   String amount;
 
-  // TODO: Price?
   @SerializedName("price_r")
-  TradePrice priceR;
+  Price priceR;
 
   @SerializedName("price")
   String price;

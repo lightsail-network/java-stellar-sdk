@@ -115,7 +115,7 @@ public class AccountResponseTest {
 
   @Test
   public void testTransactionBuilderAccount() throws IOException {
-    String filePath = "src/test/resources/account.json";
+    String filePath = "src/test/resources/responses/account.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountResponse account = GsonSingleton.getInstance().fromJson(json, AccountResponse.class);
 
