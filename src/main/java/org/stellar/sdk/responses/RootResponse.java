@@ -22,28 +22,28 @@ public class RootResponse extends Response {
   Long ingestLatestLedger;
 
   @SerializedName("history_latest_ledger")
-  int historyLatestLedger;
+  Long historyLatestLedger;
 
   @SerializedName("history_latest_ledger_closed_at")
   String historyLatestLedgerClosedAt;
 
   @SerializedName("history_elder_ledger")
-  int historyElderLedger;
+  Long historyElderLedger;
 
   @SerializedName("core_latest_ledger")
-  int coreLatestLedger;
+  Long coreLatestLedger;
 
   @SerializedName("network_passphrase")
   String networkPassphrase;
 
   @SerializedName("current_protocol_version")
-  int currentProtocolVersion;
+  Integer currentProtocolVersion;
 
   @SerializedName("supported_protocol_version")
   Long supportedProtocolVersion;
 
   @SerializedName("core_supported_protocol_version")
-  int coreSupportedProtocolVersion;
+  Integer coreSupportedProtocolVersion;
 
   @SerializedName("_links")
   Links links;

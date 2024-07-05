@@ -1,0 +1,20 @@
+{
+  "source_asset_type": "credit_alphanum4",
+  "source_asset_code": "CNY",
+  "source_asset_issuer": "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX",
+  "source_amount": "39.9854243",
+  "destination_asset_type": "credit_alphanum4",
+  "destination_asset_code": "BB1",
+  "destination_asset_issuer": "GD5J6HLF5666X4AZLTFTXLY46J5SW7EXRKBLEYPJP33S33MXZGV6CWFN",
+  "destination_amount": "5.0000000",
+  "path": [
+    {
+      "asset_type": "native"
+    },
+    {
+      "asset_type": "credit_alphanum4",
+      "asset_code": "USD",
+      "asset_issuer": "GDUKMGUGDZQK6YHYA5Z6AY2G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEX"
+    }
+  ]
+}
