@@ -2,10 +2,8 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents ClaimClaimableBalance operation response.
@@ -27,11 +25,4 @@ public class ClaimClaimableBalanceOperationResponse extends OperationResponse {
 
   @SerializedName("claimant_muxed_id")
   BigInteger claimantMuxedId;
-
-  public Optional<MuxedAccount> getClaimantMuxed() {
-    if (this.claimantMuxed == null || this.claimantMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(new MuxedAccount(this.claimantMuxed, this.claimant, this.claimantMuxedId));
-  }
 }

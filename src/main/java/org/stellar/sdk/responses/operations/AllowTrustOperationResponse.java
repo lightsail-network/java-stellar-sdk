@@ -4,12 +4,9 @@ import static org.stellar.sdk.Asset.create;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * @deprecated As of release 0.24.0, replaced by {@link SetTrustLineFlagsOperationResponse}

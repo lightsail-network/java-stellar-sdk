@@ -2,11 +2,9 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.TrustLineAsset;
-import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents ChangeTrust operation response.
