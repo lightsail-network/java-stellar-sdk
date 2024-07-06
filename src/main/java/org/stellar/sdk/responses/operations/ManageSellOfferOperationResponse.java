@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.Price;
 
 /**
  * Represents ManageSellOffer operation response.
@@ -25,9 +26,11 @@ public class ManageSellOfferOperationResponse extends OperationResponse {
   @SerializedName("amount")
   String amount;
 
-  // Price is not implemented yet in horizon
   @SerializedName("price")
   String price;
+
+  @SerializedName("price_r")
+  Price priceR;
 
   @SerializedName("buying_asset_type")
   String buyingAssetType;

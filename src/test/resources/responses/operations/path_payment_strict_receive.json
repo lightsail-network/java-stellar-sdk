@@ -10,10 +10,10 @@
       "href": "https://horizon.stellar.org/operations/150661572933464065/effects"
     },
     "succeeds": {
-      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150661572933464065"
+      "href": "https://horizon.stellar.org/effects?order=desc\u0026cursor=150661572933464065"
     },
     "precedes": {
-      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150661572933464065"
+      "href": "https://horizon.stellar.org/effects?order=asc\u0026cursor=150661572933464065"
     }
   },
   "id": "150661572933464065",

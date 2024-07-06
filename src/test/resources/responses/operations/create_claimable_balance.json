@@ -1,46 +1,65 @@
 {
   "_links": {
     "self": {
-      "href": "https://horizon.stellar.org/operations/150684654087864322"
+      "href": "https://horizon.stellar.org/operations/225236773721128961"
     },
     "transaction": {
-      "href": "https://horizon.stellar.org/transactions/bc00281659b1b3d25674fd078c294036476dbbde37403e70ab66b651fd829c18"
+      "href": "https://horizon.stellar.org/transactions/0e640e8485810f57170c91b52bd41e727d75496926420209b4aa737abcc58c2a"
     },
     "effects": {
-      "href": "https://horizon.stellar.org/operations/150684654087864322/effects"
+      "href": "https://horizon.stellar.org/operations/225236773721128961/effects"
     },
     "succeeds": {
-      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150684654087864322"
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=225236773721128961"
     },
     "precedes": {
-      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150684654087864322"
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=225236773721128961"
     }
   },
-  "id": "150684654087864322",
-  "paging_token": "150684654087864322",
+  "id": "225236773721128961",
+  "paging_token": "225236773721128961",
   "transaction_successful": true,
-  "source_account": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+  "source_account": "GCS4PXWRDKC5445PEKTJHIOEOVTCIQK2YMGPXDZLDXUIPK4HOHLQVYXL",
   "type": "create_claimable_balance",
   "type_i": 14,
-  "created_at": "2021-04-24T14:16:59Z",
-  "transaction_hash": "bc00281659b1b3d25674fd078c294036476dbbde37403e70ab66b651fd829c18",
-  "sponsor": "GBGJB2WEIQCCUZYISUKAFRPR46LQ62O7W6CDKN52NVROG44LLL3L73X2",
-  "asset": "USDPEND:GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
-  "amount": "900.0000000",
+  "created_at": "2024-07-06T02:39:03Z",
+  "transaction_hash": "0e640e8485810f57170c91b52bd41e727d75496926420209b4aa737abcc58c2a",
+  "sponsor": "GCS4PXWRDKC5445PEKTJHIOEOVTCIQK2YMGPXDZLDXUIPK4HOHLQVYXL",
+  "asset": "native",
+  "amount": "1.2345000",
   "claimants": [
     {
-      "destination": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+      "destination": "GDMTVHLWJTHSUDMZVVMXXH6VJHA2ZV3HNG5LYNAZ6RTWB7GISM6PGTUV",
       "predicate": {
-        "unconditional": true
+        "and": [
+          {
+            "or": [
+              {
+                "abs_before": "1970-01-01T00:10:00Z",
+                "abs_before_epoch": "600"
+              },
+              {
+                "or": [
+                  {
+                    "unconditional": true
+                  },
+                  {
+                    "rel_before": "300"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "unconditional": true
+          }
+        ]
       }
     },
     {
-      "destination": "GCBMP2WKIAX7KVDRCSFXJWFM5P7HDCGTCC76U5XR52OYII6AOWS7G3DT",
+      "destination": "GCS4PXWRDKC5445PEKTJHIOEOVTCIQK2YMGPXDZLDXUIPK4HOHLQVYXL",
       "predicate": {
-        "not": {
-          "abs_before": "2021-04-26T04:00:00Z",
-          "abs_before_epoch": 1619409600
-        }
+        "unconditional": true
       }
     }
   ]

@@ -16,16 +16,15 @@ import org.stellar.sdk.Claimant;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class CreateClaimableBalanceOperationResponse extends OperationResponse {
+  @SerializedName("sponsor")
+  String sponsor;
+
   @SerializedName("asset")
-  String assetString;
+  Asset asset;
 
   @SerializedName("amount")
   String amount;
 
   @SerializedName("claimants")
   List<Claimant> claimants;
-
-  public Asset getAsset() {
-    return Asset.create(assetString);
-  }
 }

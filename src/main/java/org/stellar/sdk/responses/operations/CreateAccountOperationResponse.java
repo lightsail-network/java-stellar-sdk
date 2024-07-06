@@ -2,10 +2,8 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents CreateAccount operation response.
@@ -32,12 +30,4 @@ public class CreateAccountOperationResponse extends OperationResponse {
 
   @SerializedName("starting_balance")
   String startingBalance;
-
-  public Optional<MuxedAccount> getFunderMuxed() {
-    if (this.funderAccountMuxed == null || this.funderAccountMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(
-        new MuxedAccount(this.funderAccountMuxed, this.funder, this.funderAccountMuxedId));
-  }
 }

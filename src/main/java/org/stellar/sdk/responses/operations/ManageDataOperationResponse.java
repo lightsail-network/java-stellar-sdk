@@ -20,4 +20,6 @@ public class ManageDataOperationResponse extends OperationResponse {
 
   @SerializedName("value")
   String value;
+
+  // TODO: decode value
 }
