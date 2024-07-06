@@ -56,6 +56,7 @@ public class PredicateDeserializer implements JsonDeserializer<Predicate> {
                   new XdrUnsignedHyperInteger(Instant.parse(formattedDate).getEpochSecond()))));
     }
 
+    // TODO: I believe that in the response, "rel_before" will be converted to "abs_before".
     if (obj.has("rel_before")) {
       return new Predicate.RelBefore(
           new Duration(
