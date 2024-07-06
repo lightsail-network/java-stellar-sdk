@@ -33,6 +33,7 @@ import org.stellar.sdk.responses.operations.CreatePassiveSellOfferOperationRespo
 import org.stellar.sdk.responses.operations.EndSponsoringFutureReservesOperationResponse;
 import org.stellar.sdk.responses.operations.ExtendFootprintTTLOperationResponse;
 import org.stellar.sdk.responses.operations.InflationOperationResponse;
+import org.stellar.sdk.responses.operations.InvokeHostFunctionOperationResponse;
 import org.stellar.sdk.responses.operations.LiquidityPoolDepositOperationResponse;
 import org.stellar.sdk.responses.operations.LiquidityPoolWithdrawOperationResponse;
 import org.stellar.sdk.responses.operations.ManageBuyOfferOperationResponse;
@@ -339,7 +340,38 @@ public class TestOperationResponse {
   }
 
   @Test
-  public void testInvokeHostFunctionOperation() throws IOException {}
+  public void testInvokeHostFunctionOperation() throws IOException {
+    String filePath = "src/test/resources/responses/operations/invoke_host_function.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    InvokeHostFunctionOperationResponse response =
+        GsonSingleton.getInstance().fromJson(json, InvokeHostFunctionOperationResponse.class);
+
+    assertEquals("invoke_host_function", response.getType());
+    assertEquals("HostFunctionTypeHostFunctionTypeInvokeContract", response.getFunction());
+    assertEquals(5, response.getParameters().size());
+    assertEquals(
+        "AAAAEgAAAAGw7oy+G8a9SeTIE5E/EuJYl5JfwF0eZJWk8S7LmE7fwA==",
+        response.getParameters().get(0).getValue());
+    assertEquals("Address", response.getParameters().get(0).getType());
+    assertEquals("AAAACgAAAAAAAAAAAAAAASoF8gA=", response.getParameters().get(4).getValue());
+    assertEquals("I128", response.getParameters().get(4).getType());
+    assertEquals("", response.getAddress());
+    assertEquals("", response.getSalt());
+    assertEquals(1, response.getAssetBalanceChanges().size());
+    assertEquals("credit_alphanum12", response.getAssetBalanceChanges().get(0).getAssetType());
+    assertEquals("Hello", response.getAssetBalanceChanges().get(0).getAssetCode());
+    assertEquals(
+        "GDJKBIYIPBE2NC5XIZX6GCFZHVWFUA7ONMQUOOVTLIM3BESTI4BYADAN",
+        response.getAssetBalanceChanges().get(0).getAssetIssuer());
+    assertEquals("transfer", response.getAssetBalanceChanges().get(0).getType());
+    assertEquals(
+        "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54",
+        response.getAssetBalanceChanges().get(0).getFrom());
+    assertEquals(
+        "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM",
+        response.getAssetBalanceChanges().get(0).getTo());
+    assertEquals("500.0000000", response.getAssetBalanceChanges().get(0).getAmount());
+  }
 
   @Test
   public void testLiquidityPoolDepositOperation() throws IOException {
