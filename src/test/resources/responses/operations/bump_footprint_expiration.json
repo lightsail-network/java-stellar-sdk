@@ -1,0 +1,28 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://127.0.0.1:8000/operations/2224793063426"
+    },
+    "transaction": {
+      "href": "http://127.0.0.1:8000/transactions/c452cd9d1ff9692499d0d2aa2f8e898b8c38025300c0f293f4a2adde7295c82f"
+    },
+    "effects": {
+      "href": "http://127.0.0.1:8000/operations/2224793063426/effects"
+    },
+    "succeeds": {
+      "href": "http://127.0.0.1:8000/effects?order=desc&cursor=2224793063426"
+    },
+    "precedes": {
+      "href": "http://127.0.0.1:8000/effects?order=asc&cursor=2224793063426"
+    }
+  },
+  "id": "2224793063426",
+  "paging_token": "2224793063426",
+  "transaction_successful": true,
+  "source_account": "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54",
+  "type": "bump_footprint_expiration",
+  "type_i": 25,
+  "created_at": "2023-07-20T10:44:56Z",
+  "transaction_hash": "c452cd9d1ff9692499d0d2aa2f8e898b8c38025300c0f293f4a2adde7295c82f",
+  "extend_to": "2343241"
+}

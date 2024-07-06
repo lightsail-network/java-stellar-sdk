@@ -1,0 +1,35 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/1578868632723457"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/4ebd36d6ae43622d606a0b7c59fd28d1c0b07d96bae7deb5c86e7b93a9c1c5c3"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/1578868632723457/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=1578868632723457"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=1578868632723457"
+    }
+  },
+  "id": "1578868632723457",
+  "paging_token": "1578868632723457",
+  "transaction_successful": true,
+  "source_account": "GAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2V2K",
+  "source_account_muxed": "MAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2AAAAAAAAE4DUGF2O",
+  "source_account_muxed_id": "1278881",
+  "type": "change_trust",
+  "type_i": 6,
+  "created_at": "2021-10-07T18:02:57Z",
+  "transaction_hash": "4ebd36d6ae43622d606a0b7c59fd28d1c0b07d96bae7deb5c86e7b93a9c1c5c3",
+  "asset_type": "liquidity_pool_shares",
+  "liquidity_pool_id": "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
+  "limit": "922337203685.4775807",
+  "trustor": "GAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2V2K",
+  "trustor_muxed": "MAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2AAAAAAAAE4DUGF2O",
+  "trustor_muxed_id": "1278881"
+}

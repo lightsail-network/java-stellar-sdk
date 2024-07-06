@@ -1,0 +1,47 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/operations/150684654087864322"
+    },
+    "transaction": {
+      "href": "https://horizon.stellar.org/transactions/bc00281659b1b3d25674fd078c294036476dbbde37403e70ab66b651fd829c18"
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/operations/150684654087864322/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150684654087864322"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150684654087864322"
+    }
+  },
+  "id": "150684654087864322",
+  "paging_token": "150684654087864322",
+  "transaction_successful": true,
+  "source_account": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+  "type": "create_claimable_balance",
+  "type_i": 14,
+  "created_at": "2021-04-24T14:16:59Z",
+  "transaction_hash": "bc00281659b1b3d25674fd078c294036476dbbde37403e70ab66b651fd829c18",
+  "sponsor": "GBGJB2WEIQCCUZYISUKAFRPR46LQ62O7W6CDKN52NVROG44LLL3L73X2",
+  "asset": "USDPEND:GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+  "amount": "900.0000000",
+  "claimants": [
+    {
+      "destination": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+      "predicate": {
+        "unconditional": true
+      }
+    },
+    {
+      "destination": "GCBMP2WKIAX7KVDRCSFXJWFM5P7HDCGTCC76U5XR52OYII6AOWS7G3DT",
+      "predicate": {
+        "not": {
+          "abs_before": "2021-04-26T04:00:00Z",
+          "abs_before_epoch": 1619409600
+        }
+      }
+    }
+  ]
+}

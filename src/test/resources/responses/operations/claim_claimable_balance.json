@@ -1,0 +1,29 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/2730894825627649"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/ebf78969b439f9b6c0777695c76a668e5baabe747696fbef7fc7d40b5cbe9a6d"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/2730894825627649/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=2730894825627649"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=2730894825627649"
+    }
+  },
+  "id": "2730894825627649",
+  "paging_token": "2730894825627649",
+  "transaction_successful": true,
+  "source_account": "GAEY7JFLBBDD6PAUPVRVKMBNSL5W6GYMUOGJKNGHGFSFGJU6CT2IUARS",
+  "type": "claim_claimable_balance",
+  "type_i": 15,
+  "created_at": "2021-04-25T01:37:30Z",
+  "transaction_hash": "ebf78969b439f9b6c0777695c76a668e5baabe747696fbef7fc7d40b5cbe9a6d",
+  "balance_id": "00000000a5c8c85c12a32ec1b30fc1792a542ca38702afd78eb4fe524d028887cf6b6952",
+  "claimant": "GAEY7JFLBBDD6PAUPVRVKMBNSL5W6GYMUOGJKNGHGFSFGJU6CT2IUARS"
+}

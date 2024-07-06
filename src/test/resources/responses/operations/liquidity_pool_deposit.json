@@ -1,0 +1,61 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/1579044726386689"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/81e9fb3781ece5031b304d0ced21b5f673cfc4581861de99b7751f2f4c905b50"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/1579044726386689/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=1579044726386689"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=1579044726386689"
+    }
+  },
+  "id": "1579044726386689",
+  "paging_token": "1579044726386689",
+  "transaction_successful": true,
+  "source_account": "GAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2V2K",
+  "source_account_muxed": "MAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2AAAAAAAAE4DUGF2O",
+  "source_account_muxed_id": "1278881",
+  "type": "liquidity_pool_deposit",
+  "type_i": 22,
+  "created_at": "2021-10-07T18:06:32Z",
+  "transaction_hash": "81e9fb3781ece5031b304d0ced21b5f673cfc4581861de99b7751f2f4c905b50",
+  "liquidity_pool_id": "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
+  "reserves_max": [
+    {
+      "asset": "COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL",
+      "amount": "250.0000000"
+    },
+    {
+      "asset": "SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB",
+      "amount": "250.0000000"
+    }
+  ],
+  "min_price": "1.0000000",
+  "min_price_r": {
+    "n": 1,
+    "d": 1
+  },
+  "max_price": "2.0000000",
+  "max_price_r": {
+    "n": 2,
+    "d": 1
+  },
+  "reserves_deposited": [
+    {
+      "asset": "COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL",
+      "amount": "250.0000000"
+    },
+    {
+      "asset": "SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB",
+      "amount": "250.0000000"
+    }
+  ],
+  "shares_received": "250.0000000"
+}

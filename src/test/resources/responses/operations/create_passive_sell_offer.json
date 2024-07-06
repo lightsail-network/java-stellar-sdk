@@ -1,0 +1,39 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/operations/150701833957081089"
+    },
+    "transaction": {
+      "href": "https://horizon.stellar.org/transactions/b18f88e11353f60532eabbef17d76ed25eebc31f9448e765cf1cfdbbf4451e54"
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/operations/150701833957081089/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150701833957081089"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150701833957081089"
+    }
+  },
+  "id": "150701833957081089",
+  "paging_token": "150701833957081089",
+  "transaction_successful": true,
+  "source_account": "GCQPF34D4NP66RYULISYRSBS52M5FFZ2JVJ4LMQTQXDI2XGP6UDSE3IB",
+  "type": "create_passive_sell_offer",
+  "type_i": 4,
+  "created_at": "2021-04-24T20:17:32Z",
+  "transaction_hash": "b18f88e11353f60532eabbef17d76ed25eebc31f9448e765cf1cfdbbf4451e54",
+  "amount": "0.0001000",
+  "price": "1.0000000",
+  "price_r": {
+    "n": 1,
+    "d": 1
+  },
+  "buying_asset_type": "credit_alphanum4",
+  "buying_asset_code": "USA",
+  "buying_asset_issuer": "GCQPF34D4NP66RYULISYRSBS52M5FFZ2JVJ4LMQTQXDI2XGP6UDSE3IB",
+  "selling_asset_type": "credit_alphanum12",
+  "selling_asset_code": "MONEY",
+  "selling_asset_issuer": "GA2KQTETIRREL66P64GV6KCVICPULLDVHWJDZSIJKDLIAGBXUCIZ6P6E"
+}

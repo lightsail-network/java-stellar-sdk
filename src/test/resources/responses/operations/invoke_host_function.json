@@ -1,0 +1,63 @@
+{
+    "_links": {
+        "self": {
+            "href": "http://127.0.0.1:8000/operations/2224793063425"
+        },
+        "transaction": {
+            "href": "http://127.0.0.1:8000/transactions/4ef3d81fba4b7db959080e4894cb8b2575418b8da9aa484f6306a79a3f63de3d"
+        },
+        "effects": {
+            "href": "http://127.0.0.1:8000/operations/2224793063425/effects"
+        },
+        "succeeds": {
+            "href": "http://127.0.0.1:8000/effects?order=desc&cursor=2224793063425"
+        },
+        "precedes": {
+            "href": "http://127.0.0.1:8000/effects?order=asc&cursor=2224793063425"
+        }
+    },
+    "id": "2224793063425",
+    "paging_token": "2224793063425",
+    "transaction_successful": true,
+    "source_account": "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54",
+    "type": "invoke_host_function",
+    "type_i": 24,
+    "created_at": "2023-07-20T10:44:56Z",
+    "transaction_hash": "4ef3d81fba4b7db959080e4894cb8b2575418b8da9aa484f6306a79a3f63de3d",
+    "function": "HostFunctionTypeHostFunctionTypeInvokeContract",
+    "parameters": [
+        {
+            "value": "AAAAEgAAAAGw7oy+G8a9SeTIE5E/EuJYl5JfwF0eZJWk8S7LmE7fwA==",
+            "type": "Address"
+        },
+        {
+            "value": "AAAADwAAAAh0cmFuc2Zlcg==",
+            "type": "Sym"
+        },
+        {
+            "value": "AAAAEgAAAAAAAAAAwT6e0zIpycpZ5/unUFyQAjXNeSxfmidj8tQWkeD9dCQ=",
+            "type": "Address"
+        },
+        {
+            "value": "AAAAEgAAAAAAAAAAWLfEosjyl6qPPSRxKB/fzOyv5I5WYzE+wY4Spz7KmKE=",
+            "type": "Address"
+        },
+        {
+            "value": "AAAACgAAAAAAAAAAAAAAASoF8gA=",
+            "type": "I128"
+        }
+    ],
+    "address": "",
+    "salt": "",
+    "asset_balance_changes": [
+        {
+            "asset_type": "credit_alphanum12",
+            "asset_code": "Hello",
+            "asset_issuer": "GDJKBIYIPBE2NC5XIZX6GCFZHVWFUA7ONMQUOOVTLIM3BESTI4BYADAN",
+            "type": "transfer",
+            "from": "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54",
+            "to": "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM",
+            "amount": "500.0000000"
+        }
+    ]
+}

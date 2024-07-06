@@ -2,7 +2,7 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
@@ -51,22 +51,6 @@ public abstract class OperationResponse extends Response implements Pageable {
 
   @SerializedName("transaction")
   private TransactionResponse transaction;
-
-  public Optional<MuxedAccount> getSourceAccountMuxed() {
-    if (this.sourceAccountMuxed == null || this.sourceAccountMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(
-        new MuxedAccount(this.sourceAccountMuxed, this.sourceAccount, this.sourceAccountMuxedId));
-  }
-
-  public Boolean isTransactionSuccessful() {
-    return transactionSuccessful;
-  }
-
-  public Optional<TransactionResponse> getTransaction() {
-    return Optional.ofNullable(transaction);
-  }
 
   /** Represents operation links. */
   @Value

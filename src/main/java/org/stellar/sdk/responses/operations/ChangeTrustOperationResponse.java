@@ -46,14 +46,7 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   @SerializedName("liquidity_pool_id")
   String liquidityPoolId;
 
-  public Optional<MuxedAccount> getTrustorMuxed() {
-    if (this.trustorMuxed == null || this.trustorMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(new MuxedAccount(this.trustorMuxed, this.trustor, this.trustorMuxedId));
-  }
-
-  public TrustLineAsset getTrustLineAsset() {
+  public TrustLineAsset getAsset() {
     return getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);
   }
 }

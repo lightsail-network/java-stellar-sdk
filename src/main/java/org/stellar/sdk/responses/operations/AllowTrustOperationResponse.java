@@ -45,27 +45,12 @@ public class AllowTrustOperationResponse extends OperationResponse {
   String assetIssuer;
 
   @SerializedName("authorize")
-  boolean authorize;
+  Boolean authorize;
 
   @SerializedName("authorize_to_maintain_liabilities")
-  boolean authorizeToMaintainLiabilities;
-
-  public Optional<MuxedAccount> getTrusteeMuxed() {
-    if (this.trusteeMuxed == null || this.trusteeMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(new MuxedAccount(this.trusteeMuxed, this.trustee, this.trusteeMuxedId));
-  }
-
-  public boolean isAuthorizedToMaintainLiabilities() {
-    return authorizeToMaintainLiabilities;
-  }
+  Boolean authorizeToMaintainLiabilities;
 
   public Asset getAsset() {
-    if (assetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(assetType, assetCode, assetIssuer);
-    }
+    return create(assetType, assetCode, assetIssuer);
   }
 }
