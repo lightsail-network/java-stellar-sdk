@@ -42,6 +42,7 @@ public class SetOptionsOperationResponse extends OperationResponse {
   @SerializedName("clear_flags_s")
   String[] clearFlags;
 
+  // TODO: int
   @SerializedName("set_flags_s")
   String[] setFlags;
 }
