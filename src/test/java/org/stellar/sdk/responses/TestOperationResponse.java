@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -39,6 +40,10 @@ import org.stellar.sdk.responses.operations.ManageDataOperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentStrictReceiveOperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentStrictSendOperationResponse;
 import org.stellar.sdk.responses.operations.PaymentOperationResponse;
+import org.stellar.sdk.responses.operations.RestoreFootprintOperationResponse;
+import org.stellar.sdk.responses.operations.RevokeSponsorshipOperationResponse;
+import org.stellar.sdk.responses.operations.SetOptionsOperationResponse;
+import org.stellar.sdk.responses.operations.SetTrustLineFlagsOperationResponse;
 
 public class TestOperationResponse {
   @Test
@@ -568,14 +573,72 @@ public class TestOperationResponse {
   }
 
   @Test
-  public void testRestoreFootprintOperation() throws IOException {}
+  public void testRestoreFootprintOperation() throws IOException {
+    String filePath = "src/test/resources/responses/operations/restore_footprint.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    RestoreFootprintOperationResponse response =
+        GsonSingleton.getInstance().fromJson(json, RestoreFootprintOperationResponse.class);
+
+    assertEquals("restore_footprint", response.getType());
+  }
 
   @Test
-  public void testRevokeSponsorshipOperation() throws IOException {}
+  public void testRevokeSponsorshipOperation() throws IOException {
+    String filePath = "src/test/resources/responses/operations/revoke_sponsorship.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    RevokeSponsorshipOperationResponse response =
+        GsonSingleton.getInstance().fromJson(json, RevokeSponsorshipOperationResponse.class);
+
+    assertEquals("revoke_sponsorship", response.getType());
+    assertEquals(
+        "GBAG5JOFNNE7B2FXLZGLV56U5NR2ZFHRS6FALKCX3W5CND27W4DM7TBX", response.getAccountId());
+    // TODO: other types.
+  }
 
   @Test
-  public void testSetOptionsOperation() throws IOException {}
+  public void testSetOptionsOperation() throws IOException {
+    String filePath = "src/test/resources/responses/operations/set_options.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    SetOptionsOperationResponse response =
+        GsonSingleton.getInstance().fromJson(json, SetOptionsOperationResponse.class);
+
+    assertEquals("set_options", response.getType());
+    assertEquals("example.com", response.getHomeDomain());
+    assertEquals(
+        "GDLSZ37Q6AJN6UNQPXIWNRAB3LETWAASA2H3OWNHRUWMG2LVU3A45S6D",
+        response.getInflationDestination());
+    assertEquals(10, response.getMasterKeyWeight().intValue());
+    assertEquals(
+        "GDLSZ37Q6AJN6UNQPXIWNRAB3LETWAASA2H3OWNHRUWMG2LVU3A45S6D", response.getSignerKey());
+    assertEquals(10, response.getSignerWeight().intValue());
+    // TODO: add int?
+    assertArrayEquals(new String[] {"auth_required"}, response.getSetFlags());
+    assertArrayEquals(new String[] {"auth_revocable"}, response.getClearFlags());
+    assertEquals(1, response.getLowThreshold().intValue());
+    assertEquals(10, response.getMedThreshold().intValue());
+    assertEquals(20, response.getHighThreshold().intValue());
+  }
 
   @Test
-  public void testSetTrustLineFlagsOperation() throws IOException {}
+  public void testSetTrustLineFlagsOperation() throws IOException {
+    String filePath = "src/test/resources/responses/operations/set_trust_line_flags.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    SetTrustLineFlagsOperationResponse response =
+        GsonSingleton.getInstance().fromJson(json, SetTrustLineFlagsOperationResponse.class);
+
+    assertEquals("set_trust_line_flags", response.getType());
+    assertEquals("credit_alphanum12", response.getAssetType());
+    assertEquals("Hello", response.getAssetCode());
+    assertEquals(
+        "GD5YHBKE7FSUUZIOSL4ED6UKMM2HZAYBYGZI7KRCTMFDTOO6SGZCQB4Z", response.getAssetIssuer());
+    assertEquals(
+        new AssetTypeCreditAlphaNum12(
+            "Hello", "GD5YHBKE7FSUUZIOSL4ED6UKMM2HZAYBYGZI7KRCTMFDTOO6SGZCQB4Z"),
+        response.getAsset());
+    assertEquals("GAYWF2KJ4RVFBACNI7W2YVSLEQOUHEMPGJIZCDXHCF2BFR2V7O55UWBB", response.getTrustor());
+    assertArrayEquals(new Integer[] {1}, response.getSetFlags().toArray());
+    assertArrayEquals(new String[] {"authorized"}, response.getSetFlagStrings().toArray());
+    assertArrayEquals(new Integer[] {4}, response.getClearFlags().toArray());
+    assertArrayEquals(new String[] {"clawback_enabled"}, response.getClearFlagStrings().toArray());
+  }
 }

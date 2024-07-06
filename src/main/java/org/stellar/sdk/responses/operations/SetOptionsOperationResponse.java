@@ -44,27 +44,4 @@ public class SetOptionsOperationResponse extends OperationResponse {
 
   @SerializedName("set_flags_s")
   String[] setFlags;
-
-  SetOptionsOperationResponse(
-      Integer lowThreshold,
-      Integer medThreshold,
-      Integer highThreshold,
-      String inflationDestination,
-      String homeDomain,
-      String signerKey,
-      Integer signerWeight,
-      Integer masterKeyWeight,
-      String[] clearFlags,
-      String[] setFlags) {
-    this.lowThreshold = lowThreshold;
-    this.medThreshold = medThreshold;
-    this.highThreshold = highThreshold;
-    this.inflationDestination = inflationDestination;
-    this.homeDomain = homeDomain;
-    this.signerKey = signerKey;
-    this.signerWeight = signerWeight;
-    this.masterKeyWeight = masterKeyWeight;
-    this.clearFlags = clearFlags;
-    this.setFlags = setFlags;
-  }
 }
