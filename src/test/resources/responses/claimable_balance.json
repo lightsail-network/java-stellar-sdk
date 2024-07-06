@@ -1,0 +1,62 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/claimable_balances/000000002a409ac949579731ca1f89d8e9edca661861219bd278b2fccb451bd2643eb795"
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/claimable_balances/000000002a409ac949579731ca1f89d8e9edca661861219bd278b2fccb451bd2643eb795/transactions{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/claimable_balances/000000002a409ac949579731ca1f89d8e9edca661861219bd278b2fccb451bd2643eb795/operations{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "id": "000000002a409ac949579731ca1f89d8e9edca661861219bd278b2fccb451bd2643eb795",
+  "asset": "native",
+  "amount": "1.2345000",
+  "sponsor": "GCS4PXWRDKC5445PEKTJHIOEOVTCIQK2YMGPXDZLDXUIPK4HOHLQVYXL",
+  "last_modified_ledger": 52442023,
+  "last_modified_time": "2024-07-06T02:39:03Z",
+  "claimants": [
+    {
+      "destination": "GDMTVHLWJTHSUDMZVVMXXH6VJHA2ZV3HNG5LYNAZ6RTWB7GISM6PGTUV",
+      "predicate": {
+        "and": [
+          {
+            "or": [
+              {
+                "abs_before": "1970-01-01T00:10:00Z",
+                "abs_before_epoch": "600"
+              },
+              {
+                "or": [
+                  {
+                    "unconditional": true
+                  },
+                  {
+                    "abs_before": "2024-07-06T02:44:03Z",
+                    "abs_before_epoch": "1720233843"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "unconditional": true
+          }
+        ]
+      }
+    },
+    {
+      "destination": "GCS4PXWRDKC5445PEKTJHIOEOVTCIQK2YMGPXDZLDXUIPK4HOHLQVYXL",
+      "predicate": {
+        "unconditional": true
+      }
+    }
+  ],
+  "flags": {
+    "clawback_enabled": false
+  },
+  "paging_token": "52442023-000000002a409ac949579731ca1f89d8e9edca661861219bd278b2fccb451bd2643eb795"
+}
