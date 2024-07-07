@@ -1,0 +1,20 @@
+{
+  "_links": {
+      "operation": {
+          "href": "https://ubiquity-fullnode-4-mainnet.stellar.bdnodes.net/operations/179972298072752130"
+      },
+      "succeeds": {
+          "href": "https://ubiquity-fullnode-4-mainnet.stellar.bdnodes.net/effects?order=desc&cursor=179972298072752130-2"
+      },
+      "precedes": {
+          "href": "https://ubiquity-fullnode-4-mainnet.stellar.bdnodes.net/effects?order=asc&cursor=179972298072752130-2"
+      }
+  },
+  "id": "0179972298072752130-0000000002",
+  "paging_token": "179972298072752130-2",
+  "account": "GBKM2YMDONW2XPZH5PJXVDFKC4U4AXRV4TZXP53YSAJPA6ZWGCJ7YGVZ",
+  "type": "liquidity_pool_removed",
+  "type_i": 94,
+  "created_at": "2022-07-24T12:40:09Z",
+  "liquidity_pool_id": "89c11017d16552c152536092d7440a2cd4cf4bf7df2c7e7552b56e6bcac98d95"
+}

@@ -1,0 +1,21 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150661749027127297"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150661749027127297-2"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150661749027127297-2"
+    }
+  },
+  "id": "0150661749027127297-0000000002",
+  "paging_token": "150661749027127297-2",
+  "account": "GDYG6NVTFCY6HPBRQ3SQNKTDZUR7SS6WAWNEAKAFJW5EMKDGQLPG523C",
+  "type": "account_credited",
+  "type_i": 2,
+  "created_at": "2021-04-24T06:15:44Z",
+  "asset_type": "native",
+  "amount": "3.9999700"
+}

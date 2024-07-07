@@ -1,0 +1,27 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150660580796153857"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150660580796153857-1"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150660580796153857-1"
+    }
+  },
+  "id": "0150660580796153857-0000000001",
+  "paging_token": "150660580796153857-1",
+  "account": "GBRFGFQF2JAJ5C4HHYLBA3S342ASPXVJRUK2DVEQH67733M2OJMTBM5E",
+  "type": "trade",
+  "type_i": 33,
+  "created_at": "2021-04-24T05:51:16Z",
+  "seller": "GCMYQPCR2FZ44ARPCWDX65TEYIQFXPOWTMHZCXAT4MDDEOBPI5S5EBX2",
+  "offer_id": "545489795",
+  "sold_amount": "1.9295894",
+  "sold_asset_type": "credit_alphanum12",
+  "sold_asset_code": "BUSD1",
+  "sold_asset_issuer": "GCIEGKAZ4ZUM4PEBTDXUMG6N4ZXOTCCK3UMSJCJ33QE5SVMCTTBKCVNY",
+  "bought_amount": "4.3525833",
+  "bought_asset_type": "native"
+}

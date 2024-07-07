@@ -1,0 +1,20 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon-testnet.stellar.org/operations/3513936083165185"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=3513936083165185-1"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=3513936083165185-1"
+    }
+  },
+  "id": "0003513936083165185-0000000001",
+  "paging_token": "3513936083165185-1",
+  "account": "GD5YHBKE7FSUUZIOSL4ED6UKMM2HZAYBYGZI7KRCTMFDTOO6SGZCQB4Z",
+  "type": "claimable_balance_clawed_back",
+  "type_i": 80,
+  "created_at": "2021-05-06T03:48:05Z",
+  "balance_id": "000000001fe36f3ce6ab6a6423b18b5947ce8890157ae77bb17faeb765814ad040b74ce1"
+}

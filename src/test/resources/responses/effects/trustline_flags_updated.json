@@ -1,0 +1,24 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150660791249526785"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150660791249526785-2"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150660791249526785-2"
+    }
+  },
+  "id": "0150660791249526785-0000000002",
+  "paging_token": "150660791249526785-2",
+  "account": "GBRDHSZL4ZKOI2PTUMM53N3NICZXC5OX3KPCD4WD4NG4XGCBC2ZA3KAG",
+  "type": "trustline_flags_updated",
+  "type_i": 26,
+  "created_at": "2021-04-24T05:55:41Z",
+  "asset_type": "credit_alphanum12",
+  "asset_code": "MSCIW",
+  "asset_issuer": "GBRDHSZL4ZKOI2PTUMM53N3NICZXC5OX3KPCD4WD4NG4XGCBC2ZA3KAG",
+  "trustor": "GBL73HAKZGDGPSLOHI543CSK7FVJSMLHSIRUZRBH7SV43GM7IQWS7QET",
+  "authorized_flag": true
+}

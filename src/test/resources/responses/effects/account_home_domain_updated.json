@@ -1,0 +1,20 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150665691807358978"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150665691807358978-1"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150665691807358978-1"
+    }
+  },
+  "id": "0150665691807358978-0000000001",
+  "paging_token": "150665691807358978-1",
+  "account": "GBTNTMWPIGH3JCJQNMO3FG36YB6XHSL2TSXX74KXTRWXBRWHDMEWN6NB",
+  "type": "account_home_domain_updated",
+  "type_i": 5,
+  "created_at": "2021-04-24T07:38:27Z",
+  "home_domain": "lobstr.co"
+}

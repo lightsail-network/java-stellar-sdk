@@ -1,0 +1,22 @@
+{
+  "_links": {
+    "operation": {
+      "href": "http://100.83.15.43:8000/operations/21517786157057"
+    },
+    "succeeds": {
+      "href": "http://100.83.15.43:8000/effects?order=desc&cursor=21517786157057-2"
+    },
+    "precedes": {
+      "href": "http://100.83.15.43:8000/effects?order=asc&cursor=21517786157057-2"
+    }
+  },
+  "id": "0000021517786157057-0000000002",
+  "paging_token": "21517786157057-2",
+  "account": "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54",
+  "type": "contract_debited",
+  "type_i": 97,
+  "created_at": "2023-09-19T05:43:12Z",
+  "asset_type": "native",
+  "contract": "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK",
+  "amount": "100.0000000"
+}
