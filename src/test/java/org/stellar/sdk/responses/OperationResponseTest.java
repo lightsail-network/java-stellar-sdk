@@ -48,7 +48,7 @@ import org.stellar.sdk.responses.operations.RevokeSponsorshipOperationResponse;
 import org.stellar.sdk.responses.operations.SetOptionsOperationResponse;
 import org.stellar.sdk.responses.operations.SetTrustLineFlagsOperationResponse;
 
-public class TestOperationResponse {
+public class OperationResponseTest {
   @Test
   public void testBaseOperation() throws IOException {
     // TODO: test all fields
