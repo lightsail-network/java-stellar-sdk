@@ -8,8 +8,9 @@ import lombok.Value;
 /**
  * Represents AccountMerge operation response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation
- *     documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/account-merge"
+ *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */

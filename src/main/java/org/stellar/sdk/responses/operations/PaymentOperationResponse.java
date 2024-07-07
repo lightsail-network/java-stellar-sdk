@@ -14,7 +14,8 @@ import org.stellar.sdk.responses.MuxedAccount;
 /**
  * Represents Payment operation response.
  *
- * @see <a href="https://developers.stellar.org/api/horizon/resources/operations"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/payment"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()

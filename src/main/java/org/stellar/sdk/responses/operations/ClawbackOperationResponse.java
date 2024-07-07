@@ -4,12 +4,11 @@ import static org.stellar.sdk.Asset.create;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.responses.MuxedAccount;
 
+// TODO: add docs link
 /**
  * Represents a Clawback operation response.
  *
@@ -42,12 +41,5 @@ public class ClawbackOperationResponse extends OperationResponse {
 
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer);
-  }
-
-  public Optional<MuxedAccount> getFromMuxed() {
-    if (this.fromMuxed == null || this.fromMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(new MuxedAccount(this.fromMuxed, this.from, this.fromMuxedId));
   }
 }

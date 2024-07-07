@@ -5,10 +5,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 /**
- * Represents PATH_PAYMENT_STRICT_SEND operation response.
+ * Represents PathPaymentStrictSend operation response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation
- *     documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/path-payment-strict-send"
+ *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
