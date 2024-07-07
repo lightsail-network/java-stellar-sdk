@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Price;
 
 /**
@@ -52,18 +51,10 @@ public class ManageSellOfferOperationResponse extends OperationResponse {
   String sellingAssetIssuer;
 
   public Asset getBuyingAsset() {
-    if (buyingAssetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(buyingAssetType, buyingAssetCode, buyingAssetIssuer);
-    }
+    return create(buyingAssetType, buyingAssetCode, buyingAssetIssuer);
   }
 
   public Asset getSellingAsset() {
-    if (sellingAssetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(sellingAssetType, sellingAssetCode, sellingAssetIssuer);
-    }
+    return create(sellingAssetType, sellingAssetCode, sellingAssetIssuer);
   }
 }

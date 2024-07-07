@@ -7,8 +7,8 @@ import java.math.BigInteger;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 
 /**
  * Base class for operations that represent a path payment.
@@ -17,6 +17,7 @@ import org.stellar.sdk.AssetTypeNative;
  * @see PathPaymentStrictSendOperationResponse
  */
 @Getter
+@ToString
 @EqualsAndHashCode(callSuper = false)
 public abstract class PathPaymentBaseOperationResponse extends OperationResponse {
   @SerializedName("amount")
@@ -65,18 +66,10 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
   private List<Asset> path;
 
   public Asset getAsset() {
-    if (assetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(assetType, assetCode, assetIssuer);
-    }
+    return create(assetType, assetCode, assetIssuer);
   }
 
   public Asset getSourceAsset() {
-    if (sourceAssetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(sourceAssetType, sourceAssetCode, sourceAssetIssuer);
-    }
+    return create(sourceAssetType, sourceAssetCode, sourceAssetIssuer);
   }
 }

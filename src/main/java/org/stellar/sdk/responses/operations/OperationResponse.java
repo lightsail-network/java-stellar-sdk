@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.Value;
 import org.stellar.sdk.responses.*;
 
@@ -17,6 +18,7 @@ import org.stellar.sdk.responses.*;
  * @see org.stellar.sdk.Server#operations()
  */
 @Getter
+@ToString
 @EqualsAndHashCode(callSuper = false)
 public abstract class OperationResponse extends Response implements Pageable {
   @SerializedName("id")

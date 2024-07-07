@@ -1,6 +1,7 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
@@ -22,10 +23,10 @@ public class LiquidityPoolWithdrawOperationResponse extends OperationResponse {
   LiquidityPoolID liquidityPoolId;
 
   @SerializedName("reserves_min")
-  AssetAmount[] reservesMin;
+  List<AssetAmount> reservesMin;
 
   @SerializedName("reserves_received")
-  AssetAmount[] reservesReceived;
+  List<AssetAmount> reservesReceived;
 
   @SerializedName("shares")
   String shares;

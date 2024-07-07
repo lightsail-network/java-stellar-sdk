@@ -39,6 +39,7 @@ import org.stellar.sdk.responses.operations.LiquidityPoolDepositOperationRespons
 import org.stellar.sdk.responses.operations.LiquidityPoolWithdrawOperationResponse;
 import org.stellar.sdk.responses.operations.ManageBuyOfferOperationResponse;
 import org.stellar.sdk.responses.operations.ManageDataOperationResponse;
+import org.stellar.sdk.responses.operations.ManageSellOfferOperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentStrictReceiveOperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentStrictSendOperationResponse;
 import org.stellar.sdk.responses.operations.PaymentOperationResponse;
@@ -386,17 +387,17 @@ public class TestOperationResponse {
         new LiquidityPoolID("2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355"),
         response.getLiquidityPoolId());
 
-    assertEquals(2, response.getReservesMax().length);
-    assertEquals("250.0000000", response.getReservesMax()[0].getAmount());
+    assertEquals(2, response.getReservesMax().size());
+    assertEquals("250.0000000", response.getReservesMax().get(0).getAmount());
     assertEquals(
         new AssetTypeCreditAlphaNum4(
             "COOL", "GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
-        response.getReservesMax()[0].getAsset());
-    assertEquals("250.0000000", response.getReservesMax()[1].getAmount());
+        response.getReservesMax().get(0).getAsset());
+    assertEquals("250.0000000", response.getReservesMax().get(1).getAmount());
     assertEquals(
         new AssetTypeCreditAlphaNum12(
             "SONESO", "GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
-        response.getReservesMax()[1].getAsset());
+        response.getReservesMax().get(1).getAsset());
 
     assertEquals("1.0000000", response.getMinPrice());
     assertEquals(new Price(1, 1), response.getMinPriceR());
@@ -405,17 +406,17 @@ public class TestOperationResponse {
 
     assertEquals("250.0000000", response.getSharesReceived());
 
-    assertEquals(2, response.getReservesDeposited().length);
-    assertEquals("250.0000000", response.getReservesDeposited()[0].getAmount());
+    assertEquals(2, response.getReservesDeposited().size());
+    assertEquals("250.0000000", response.getReservesDeposited().get(0).getAmount());
     assertEquals(
         new AssetTypeCreditAlphaNum4(
             "COOL", "GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
-        response.getReservesDeposited()[0].getAsset());
-    assertEquals("250.0000000", response.getReservesDeposited()[1].getAmount());
+        response.getReservesDeposited().get(0).getAsset());
+    assertEquals("250.0000000", response.getReservesDeposited().get(1).getAmount());
     assertEquals(
         new AssetTypeCreditAlphaNum12(
             "SONESO", "GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
-        response.getReservesDeposited()[1].getAsset());
+        response.getReservesDeposited().get(1).getAsset());
   }
 
   @Test
@@ -430,31 +431,31 @@ public class TestOperationResponse {
         new LiquidityPoolID("2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355"),
         response.getLiquidityPoolId());
 
-    assertEquals(2, response.getReservesMin().length);
-    assertEquals("100.0000000", response.getReservesMin()[0].getAmount());
+    assertEquals(2, response.getReservesMin().size());
+    assertEquals("100.0000000", response.getReservesMin().get(0).getAmount());
     assertEquals(
         new AssetTypeCreditAlphaNum4(
             "COOL", "GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
-        response.getReservesMin()[0].getAsset());
-    assertEquals("100.0000000", response.getReservesMin()[1].getAmount());
+        response.getReservesMin().get(0).getAsset());
+    assertEquals("100.0000000", response.getReservesMin().get(1).getAmount());
     assertEquals(
         new AssetTypeCreditAlphaNum12(
             "SONESO", "GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
-        response.getReservesMin()[1].getAsset());
+        response.getReservesMin().get(1).getAsset());
 
     assertEquals("100.0000000", response.getShares());
 
-    assertEquals(2, response.getReservesReceived().length);
-    assertEquals("100.0000000", response.getReservesReceived()[0].getAmount());
+    assertEquals(2, response.getReservesReceived().size());
+    assertEquals("100.0000000", response.getReservesReceived().get(0).getAmount());
     assertEquals(
         new AssetTypeCreditAlphaNum4(
             "COOL", "GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
-        response.getReservesReceived()[0].getAsset());
-    assertEquals("100.0000000", response.getReservesReceived()[1].getAmount());
+        response.getReservesReceived().get(0).getAsset());
+    assertEquals("100.0000000", response.getReservesReceived().get(1).getAmount());
     assertEquals(
         new AssetTypeCreditAlphaNum12(
             "SONESO", "GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
-        response.getReservesReceived()[1].getAsset());
+        response.getReservesReceived().get(1).getAsset());
   }
 
   @Test
@@ -503,8 +504,8 @@ public class TestOperationResponse {
   public void testManageSellOfferOperation() throws IOException {
     String filePath = "src/test/resources/responses/operations/manage_sell_offer.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
-    ManageBuyOfferOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ManageBuyOfferOperationResponse.class);
+    ManageSellOfferOperationResponse response =
+        GsonSingleton.getInstance().fromJson(json, ManageSellOfferOperationResponse.class);
 
     assertEquals("manage_sell_offer", response.getType());
     assertEquals("478.6351404", response.getAmount());
@@ -647,9 +648,10 @@ public class TestOperationResponse {
     assertEquals(
         "GDLSZ37Q6AJN6UNQPXIWNRAB3LETWAASA2H3OWNHRUWMG2LVU3A45S6D", response.getSignerKey());
     assertEquals(10, response.getSignerWeight().intValue());
-    // TODO: add int?
-    assertArrayEquals(new String[] {"auth_required"}, response.getSetFlags());
-    assertArrayEquals(new String[] {"auth_revocable"}, response.getClearFlags());
+    assertArrayEquals(new Integer[] {1}, response.getSetFlags().toArray());
+    assertArrayEquals(new Integer[] {2}, response.getClearFlags().toArray());
+    assertArrayEquals(new String[] {"auth_required"}, response.getSetFlagStrings().toArray());
+    assertArrayEquals(new String[] {"auth_revocable"}, response.getClearFlagStrings().toArray());
     assertEquals(1, response.getLowThreshold().intValue());
     assertEquals(10, response.getMedThreshold().intValue());
     assertEquals(20, response.getHighThreshold().intValue());

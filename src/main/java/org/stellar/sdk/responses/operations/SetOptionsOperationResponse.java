@@ -1,6 +1,7 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -40,10 +41,15 @@ public class SetOptionsOperationResponse extends OperationResponse {
   @SerializedName("master_key_weight")
   Integer masterKeyWeight;
 
-  @SerializedName("clear_flags_s")
-  String[] clearFlags;
+  @SerializedName("clear_flags")
+  List<Integer> clearFlags;
 
-  // TODO: int
+  @SerializedName("clear_flags_s")
+  List<String> clearFlagStrings;
+
+  @SerializedName("set_flags")
+  List<Integer> setFlags;
+
   @SerializedName("set_flags_s")
-  String[] setFlags;
+  List<String> setFlagStrings;
 }

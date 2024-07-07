@@ -51,7 +51,7 @@ public class CreatePassiveSellOfferOperationResponse extends OperationResponse {
   String sellingAssetIssuer;
 
   public Asset getBuyingAsset() {
-    return create(sellingAssetType, sellingAssetCode, sellingAssetIssuer);
+    return create(buyingAssetType, buyingAssetCode, buyingAssetIssuer);
   }
 
   public Asset getSellingAsset() {
