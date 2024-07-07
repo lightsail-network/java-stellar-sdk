@@ -10,7 +10,12 @@ import lombok.Getter;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 
-// TODO: docs
+/**
+ * Base class for operations that represent a path payment.
+ *
+ * @see PathPaymentStrictReceiveOperationResponse
+ * @see PathPaymentStrictSendOperationResponse
+ */
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public abstract class PathPaymentBaseOperationResponse extends OperationResponse {
