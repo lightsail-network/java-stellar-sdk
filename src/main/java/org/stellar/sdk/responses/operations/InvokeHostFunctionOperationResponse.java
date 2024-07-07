@@ -1,9 +1,12 @@
 package org.stellar.sdk.responses.operations;
 
+import static org.stellar.sdk.Asset.create;
+
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.xdr.HostFunctionType;
 
 /**
@@ -44,7 +47,6 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
 
   @Value
   public static class HostFunctionParameter {
-
     @SerializedName("type")
     String type;
 
@@ -74,5 +76,9 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
 
     @SerializedName("amount")
     String amount;
+
+    public Asset getAsset() {
+      return create(assetType, assetCode, assetIssuer);
+    }
   }
 }

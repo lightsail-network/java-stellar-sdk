@@ -43,6 +43,7 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   String limit;
 
   @SerializedName("liquidity_pool_id")
+  // TODO: type
   String liquidityPoolId;
 
   public TrustLineAsset getAsset() {

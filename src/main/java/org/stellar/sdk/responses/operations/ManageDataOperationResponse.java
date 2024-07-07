@@ -3,6 +3,7 @@ package org.stellar.sdk.responses.operations;
 import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.Base64Factory;
 
 /**
  * Represents ManageDataoperation response.
@@ -22,5 +23,12 @@ public class ManageDataOperationResponse extends OperationResponse {
   @SerializedName("value")
   String value;
 
-  // TODO: decode value
+  /**
+   * Gets decoded value for the base64 encoded data value.
+   *
+   * @return decoded value
+   */
+  public byte[] getDecodedValue() {
+    return Base64Factory.getInstance().decode(value);
+  }
 }

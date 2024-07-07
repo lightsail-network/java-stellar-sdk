@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -493,6 +494,9 @@ public class TestOperationResponse {
     assertEquals("MESSAGE_DATA_0", response.getName());
     assertEquals(
         "UW1kaDJ5d2hmclJmWmQ2elFrcnpSdDdTM1dCOUFLQnJ3dHBIQ0RGUm5OWmhTcA==", response.getValue());
+    assertArrayEquals(
+        "Qmdh2ywhfrRfZd6zQkrzRt7S3WB9AKBrwtpHCDFRnNZhSp".getBytes(StandardCharsets.UTF_8),
+        response.getDecodedValue());
   }
 
   @Test
