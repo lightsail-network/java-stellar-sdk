@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
 
 /**
@@ -43,8 +44,7 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   String limit;
 
   @SerializedName("liquidity_pool_id")
-  // TODO: type
-  String liquidityPoolId;
+  LiquidityPoolID liquidityPoolId;
 
   public TrustLineAsset getAsset() {
     return getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);

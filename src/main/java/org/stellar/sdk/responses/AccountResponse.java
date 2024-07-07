@@ -193,12 +193,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     String sponsor;
 
     public TrustLineAsset getAsset() {
-      if (liquidityPoolID != null) {
-        return Response.getTrustLineAsset(
-            "liquidity_pool_shares", null, null, liquidityPoolID.toString());
-      } else {
-        return Response.getTrustLineAsset(assetType, assetCode, assetIssuer, null);
-      }
+      return Response.getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolID);
     }
   }
 

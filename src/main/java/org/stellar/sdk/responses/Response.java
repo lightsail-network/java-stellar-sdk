@@ -51,12 +51,12 @@ public abstract class Response {
   }
 
   protected static TrustLineAsset getTrustLineAsset(
-      String type, String code, String issuer, String liquidityPoolID) {
+      String type, String code, String issuer, LiquidityPoolID liquidityPoolID) {
     if (type == null) {
       return new TrustLineAsset(new AssetTypeNative());
     }
     if (type.equals("liquidity_pool_shares")) {
-      return new TrustLineAsset(new LiquidityPoolID(liquidityPoolID));
+      return new TrustLineAsset(liquidityPoolID);
     }
     return new TrustLineAsset(Asset.create(type, code, issuer));
   }
