@@ -7,8 +7,8 @@ import org.stellar.sdk.Asset;
 /**
  * Represents liquidity_pool_claimable_asset_amount used in effect responses.
  *
- * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect
- *     documentation</a>
+ * @see <a href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/effects"
+ *     target="_blank">Effect documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */

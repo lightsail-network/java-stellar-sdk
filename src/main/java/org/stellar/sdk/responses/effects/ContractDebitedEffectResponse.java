@@ -10,9 +10,8 @@ import org.stellar.sdk.Asset;
 /**
  * Represents contract_debited effect response.
  *
- * @see <a
- *     href="https://github.com/stellar/go/blob/d41faf8cd619718b9801a62254a513591f6cbc0a/protocols/horizon/effects/main.go#L323-L328"
- *     target="_blank">Effect definition</a>
+ * @see <a href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/effects"
+ *     target="_blank">Effect documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
