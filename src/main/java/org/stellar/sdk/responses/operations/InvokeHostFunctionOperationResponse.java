@@ -1,18 +1,19 @@
 package org.stellar.sdk.responses.operations;
 
+import static org.stellar.sdk.Asset.create;
+
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.xdr.HostFunctionType;
 
 /**
  * Represents InvokeHostFunction operation response.
  *
  * @see <a
- *     href="https://github.com/stellar/go/blob/7ff6ffae29d278f979fcd6c6bed8cd0d4b4d2e08/protocols/horizon/operations/main.go#L350-L367">Horizon
- *     Protocol</a>
- * @see <a href="https://developers.stellar.org/api/horizon/resources/operations"
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/invoke-host-function"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
@@ -46,7 +47,6 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
 
   @Value
   public static class HostFunctionParameter {
-
     @SerializedName("type")
     String type;
 
@@ -76,5 +76,9 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
 
     @SerializedName("amount")
     String amount;
+
+    public Asset getAsset() {
+      return create(assetType, assetCode, assetIssuer);
+    }
   }
 }

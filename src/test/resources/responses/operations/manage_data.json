@@ -1,0 +1,29 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/operations/150660585091022850"
+    },
+    "transaction": {
+      "href": "https://horizon.stellar.org/transactions/d050b7036b96b8eeb1735b9ed78b5d514b7f54126e519d8980c14b988ae6d479"
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/operations/150660585091022850/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150660585091022850"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150660585091022850"
+    }
+  },
+  "id": "150660585091022850",
+  "paging_token": "150660585091022850",
+  "transaction_successful": true,
+  "source_account": "GDPNHOQWJG6EFYCSSBJTNZH6L7YVQKIAQOKQDH6HDDV2OTDVTFVAF5GN",
+  "type": "manage_data",
+  "type_i": 10,
+  "created_at": "2021-04-24T05:51:21Z",
+  "transaction_hash": "d050b7036b96b8eeb1735b9ed78b5d514b7f54126e519d8980c14b988ae6d479",
+  "name": "MESSAGE_DATA_0",
+  "value": "UW1kaDJ5d2hmclJmWmQ2elFrcnpSdDdTM1dCOUFLQnJ3dHBIQ0RGUm5OWmhTcA=="
+}

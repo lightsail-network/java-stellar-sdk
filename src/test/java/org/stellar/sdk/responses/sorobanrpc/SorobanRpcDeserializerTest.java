@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import com.google.gson.reflect.TypeToken;
 import org.junit.Test;
-import org.stellar.sdk.responses.GsonSingleton;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 
 public class SorobanRpcDeserializerTest {
   @Test

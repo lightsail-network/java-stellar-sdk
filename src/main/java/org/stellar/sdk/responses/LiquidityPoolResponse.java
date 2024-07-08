@@ -1,13 +1,10 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 /**
  * Represents liquidity pool response.
@@ -21,7 +18,7 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
 @EqualsAndHashCode(callSuper = false)
 public class LiquidityPoolResponse extends Response {
   @SerializedName("id")
-  LiquidityPoolID id;
+  String id;
 
   @SerializedName("paging_token")
   String pagingToken;
@@ -30,7 +27,7 @@ public class LiquidityPoolResponse extends Response {
   Integer feeBP;
 
   @SerializedName("type")
-  LiquidityPoolType type;
+  String type;
 
   @SerializedName("total_trustlines")
   Long totalTrustlines;
@@ -39,7 +36,7 @@ public class LiquidityPoolResponse extends Response {
   String totalShares;
 
   @SerializedName("reserves")
-  Reserve[] reserves;
+  List<Reserve> reserves;
 
   @SerializedName("last_modified_ledger")
   Long lastModifiedLedger;
@@ -50,24 +47,14 @@ public class LiquidityPoolResponse extends Response {
   @SerializedName("_links")
   Links links;
 
-  public LiquidityPoolID getID() {
-    // For backwards compatibility
-    return id;
-  }
-
   /** Represents liquidity pool reserves. */
   @Value
-  @AllArgsConstructor
   public static class Reserve {
     @SerializedName("amount")
     String amount;
 
     @SerializedName("asset")
     Asset asset;
-
-    public Reserve(@NonNull String amount, @NonNull String asset) {
-      this(amount, Asset.create(asset));
-    }
   }
 
   /** Links connected to account. */

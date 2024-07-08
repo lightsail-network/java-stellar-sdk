@@ -20,8 +20,8 @@ import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.Util;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Pageable;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 
 public class SSEStream<T extends org.stellar.sdk.responses.Response> implements Closeable {
   static final long DEFAULT_RECONNECT_TIMEOUT = 15 * 1000L;

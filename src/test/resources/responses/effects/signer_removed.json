@@ -1,0 +1,22 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150661134846902279"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150661134846902279-2"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150661134846902279-2"
+    }
+  },
+  "id": "0150661134846902279-0000000002",
+  "paging_token": "150661134846902279-2",
+  "account": "GDUQFAHWHQ6AUP6Q5MDAHILRG222CRF35HPUVRI66L7HXKHFJAQGHICR",
+  "type": "signer_removed",
+  "type_i": 11,
+  "created_at": "2021-04-24T06:02:51Z",
+  "weight": 0,
+  "public_key": "GDUQFAHWHQ6AUP6Q5MDAHILRG222CRF35HPUVRI66L7HXKHFJAQGHICR",
+  "key": ""
+}

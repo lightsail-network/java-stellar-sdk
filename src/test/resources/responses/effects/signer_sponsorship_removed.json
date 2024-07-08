@@ -1,0 +1,21 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150661624473337857"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150661624473337857-2"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150661624473337857-2"
+    }
+  },
+  "id": "0150661624473337857-0000000002",
+  "paging_token": "150661624473337857-2",
+  "account": "GA26UJZUXR5Q2VMTJHAFS2DV6DKFRWBIN7JKDALGYFEXTRNGX5K6DEAZ",
+  "type": "signer_sponsorship_removed",
+  "type_i": 74,
+  "created_at": "2021-04-24T06:13:09Z",
+  "signer": "GBIQ43HRJ3HKDRR3AYV25VYWQAQHZ7RWFBNUOU755FNY2O5UIFQD5TRD",
+  "former_sponsor": "GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRCUC53SXSCAL44JV"
+}

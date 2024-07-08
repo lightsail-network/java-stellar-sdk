@@ -2,14 +2,15 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents EndSponsoringFutureReserves operation response.
  *
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/end-sponsoring-future-reserves"
+ *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
@@ -24,12 +25,4 @@ public class EndSponsoringFutureReservesOperationResponse extends OperationRespo
 
   @SerializedName("begin_sponsor_muxed_id")
   BigInteger beginSponsorMuxedId;
-
-  public Optional<MuxedAccount> getBeginSponsorMuxed() {
-    if (this.beginSponsorMuxed == null || this.beginSponsorMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(
-        new MuxedAccount(this.beginSponsorMuxed, this.beginSponsor, this.beginSponsorMuxedId));
-  }
 }

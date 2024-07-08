@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
 
+// TODO: add docs link.
 /**
  * Represents a Set Trustine Flags operation response.
  *

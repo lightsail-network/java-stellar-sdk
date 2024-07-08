@@ -2,17 +2,16 @@ package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.TrustLineAsset;
-import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents ChangeTrust operation response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation
- *     documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/change-trust"
+ *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
@@ -45,13 +44,6 @@ public class ChangeTrustOperationResponse extends OperationResponse {
 
   @SerializedName("liquidity_pool_id")
   String liquidityPoolId;
-
-  public Optional<MuxedAccount> getTrustorMuxed() {
-    if (this.trustorMuxed == null || this.trustorMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(new MuxedAccount(this.trustorMuxed, this.trustor, this.trustorMuxedId));
-  }
 
   public TrustLineAsset getTrustLineAsset() {
     return getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);

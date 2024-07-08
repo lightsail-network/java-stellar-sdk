@@ -1,0 +1,48 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/operations/150660589386170369"
+    },
+    "transaction": {
+      "href": "https://horizon.stellar.org/transactions/add2a945914c8090a8f889e6fe6177c58fea0fe2c361893612462d0601f2eb31"
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/operations/150660589386170369/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150660589386170369"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150660589386170369"
+    }
+  },
+  "id": "150660589386170369",
+  "paging_token": "150660589386170369",
+  "transaction_successful": true,
+  "source_account": "GDBKRQWEUJGRWWCAGK75L4PZXM2S3DQQIG6S43Y2GMN3IUFZWCLSRA46",
+  "type": "path_payment_strict_send",
+  "type_i": 13,
+  "created_at": "2021-04-24T05:51:27Z",
+  "transaction_hash": "add2a945914c8090a8f889e6fe6177c58fea0fe2c361893612462d0601f2eb31",
+  "asset_type": "credit_alphanum4",
+  "asset_code": "BTC",
+  "asset_issuer": "GAUTUYY2THLF7SGITDFMXJVYH3LHDSMGEAKSBU267M2K7A3W543CKUEF",
+  "from": "GDBKRQWEUJGRWWCAGK75L4PZXM2S3DQQIG6S43Y2GMN3IUFZWCLSRA46",
+  "to": "GDBKRQWEUJGRWWCAGK75L4PZXM2S3DQQIG6S43Y2GMN3IUFZWCLSRA46",
+  "amount": "0.0005045",
+  "path": [
+    {
+      "asset_type": "credit_alphanum4",
+      "asset_code": "ETH",
+      "asset_issuer": "GBDEVU63Y6NTHJQQZIKVTC23NWLQVP3WJ2RI2OTSJTNYOIGICST6DUXR"
+    },
+    {
+      "asset_type": "credit_alphanum4",
+      "asset_code": "USDT",
+      "asset_issuer": "GCQTGZQQ5G4PTM2GL7CDIFKUBIPEC52BROAQIAPW53XBRJVN6ZJVTG6V"
+    }
+  ],
+  "source_amount": "57.4988800",
+  "destination_min": "0.0004995",
+  "source_asset_type": "native"
+}

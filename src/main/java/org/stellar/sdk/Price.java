@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -14,11 +13,9 @@ import org.stellar.sdk.xdr.Int32;
 @Value
 public class Price {
   /** numerator */
-  @SerializedName("n")
   int numerator;
 
   /** denominator */
-  @SerializedName("d")
   int denominator;
 
   /**

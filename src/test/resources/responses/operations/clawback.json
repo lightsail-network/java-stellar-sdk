@@ -1,0 +1,32 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/3510036252856321"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/7c4b7f6ef383afba397b20628b1f2556d72eb092dc8b875093e9b92cde1b4889"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/3510036252856321/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=3510036252856321"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=3510036252856321"
+    }
+  },
+  "id": "3510036252856321",
+  "paging_token": "3510036252856321",
+  "transaction_successful": true,
+  "source_account": "GCHYD6AWPR2PN66JFFDR63OEFO5RMOUGFL7D3BBUEMTJDMUFHPLNX2SC",
+  "type": "clawback",
+  "type_i": 19,
+  "created_at": "2021-05-06T02:28:28Z",
+  "transaction_hash": "7c4b7f6ef383afba397b20628b1f2556d72eb092dc8b875093e9b92cde1b4889",
+  "asset_type": "credit_alphanum12",
+  "asset_code": "Hello",
+  "asset_issuer": "GCHYD6AWPR2PN66JFFDR63OEFO5RMOUGFL7D3BBUEMTJDMUFHPLNX2SC",
+  "from": "GCDG7N63GJMJDI4627LY3XKNZARQNX3QFY6HAWON3JDAS3SCGINGQHEQ",
+  "amount": "1234.0000000"
+}

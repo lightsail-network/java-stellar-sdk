@@ -1,10 +1,10 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Price;
 
 /**
  * Represents order book response.
@@ -24,10 +24,10 @@ public class OrderBookResponse extends Response {
   Asset counter;
 
   @SerializedName("asks")
-  Row[] asks;
+  List<Row> asks;
 
   @SerializedName("bids")
-  Row[] bids;
+  List<Row> bids;
 
   /** Represents order book row. */
   @Value

@@ -9,9 +9,9 @@ import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.exception.UnknownResponseException;
-import org.stellar.sdk.responses.GsonSingleton;
 import org.stellar.sdk.responses.Problem;
-import org.stellar.sdk.responses.TypedResponse;
+import org.stellar.sdk.responses.gson.GsonSingleton;
+import org.stellar.sdk.responses.gson.TypedResponse;
 
 @SuppressWarnings("unchecked")
 public class ResponseHandler<T> {

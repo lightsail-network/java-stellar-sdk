@@ -1,0 +1,49 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/223514693699710977"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=223514693699710977-7"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=223514693699710977-7"
+    }
+  },
+  "id": "0223514693699710977-0000000007",
+  "paging_token": "223514693699710977-7",
+  "account": "GAMQXNIL2IV7YV3GIBQG56RCJAGTCW3WU64XDOM2M5N7A3OJWQZT5BNB",
+  "type": "liquidity_pool_revoked",
+  "type_i": 95,
+  "created_at": "2024-06-09T06:26:06Z",
+  "liquidity_pool": {
+    "id": "a6cad36777565bf0d52f89319416fb5e73149d07b9814c5baaddea0d53ef2baa",
+    "fee_bp": 30,
+    "type": "constant_product",
+    "total_trustlines": "1",
+    "total_shares": "1.0000000",
+    "reserves": [
+      {
+        "asset": "native",
+        "amount": "0.0000011"
+      },
+      {
+        "asset": "BTC:GAMQXNIL2IV7YV3GIBQG56RCJAGTCW3WU64XDOM2M5N7A3OJWQZT5BNB",
+        "amount": "1000502.0030091"
+      }
+    ]
+  },
+  "reserves_revoked": [
+    {
+      "asset": "native",
+      "amount": "0.0000011",
+      "claimable_balance_id": "00000000b69563dc3491932aa21baf799f7f1831831c7fc4b21ea8eac97578b48ddc884c"
+    },
+    {
+      "asset": "BTC:GAMQXNIL2IV7YV3GIBQG56RCJAGTCW3WU64XDOM2M5N7A3OJWQZT5BNB",
+      "amount": "1000502.0030091",
+      "claimable_balance_id": "000000006708d006dc9d6b8601249383b25ac17198596493ff80c8dd8e6218b0c44ef472"
+    }
+  ],
+  "shares_revoked": "0.5000000"
+}

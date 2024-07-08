@@ -1,7 +1,6 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
@@ -22,22 +21,22 @@ public class AssetResponse extends Response implements Pageable {
   String pagingToken;
 
   @SerializedName("contract_id")
-  String contractID;
+  String contractId;
 
   @SerializedName("num_accounts")
-  int numAccounts;
+  Integer numAccounts;
 
   @SerializedName("num_claimable_balances")
-  int numClaimableBalances;
+  Integer numClaimableBalances;
 
   @SerializedName("num_liquidity_pools")
-  int numLiquidityPools;
+  Integer numLiquidityPools;
 
   @SerializedName("num_contracts")
-  int numContracts;
+  Integer numContracts;
 
   @SerializedName("num_archived_contracts")
-  int numArchivedContracts;
+  Integer numArchivedContracts;
 
   @SerializedName("amount")
   String amount;
@@ -71,34 +70,20 @@ public class AssetResponse extends Response implements Pageable {
   }
 
   /** Accounts describe asset accounts. */
-  @EqualsAndHashCode
-  @AllArgsConstructor
+  @Value
   public static class Accounts {
     @SerializedName("authorized")
-    int authorized;
+    Integer authorized;
 
     @SerializedName("authorized_to_maintain_liabilities")
-    int authorizedToMaintainLiabilities;
+    Integer authorizedToMaintainLiabilities;
 
     @SerializedName("unauthorized")
-    int unauthorized;
-
-    public int authorized() {
-      return authorized;
-    }
-
-    public int authorizedToMaintainLiabilities() {
-      return authorizedToMaintainLiabilities;
-    }
-
-    public int unauthorized() {
-      return unauthorized;
-    }
+    Integer unauthorized;
   }
 
   /** Balances describe asset balances. */
-  @EqualsAndHashCode
-  @AllArgsConstructor
+  @Value
   public static class Balances {
     @SerializedName("authorized")
     String authorized;
@@ -108,34 +93,22 @@ public class AssetResponse extends Response implements Pageable {
 
     @SerializedName("unauthorized")
     String unauthorized;
-
-    public String authorized() {
-      return authorized;
-    }
-
-    public String authorizedToMaintainLiabilities() {
-      return authorizedToMaintainLiabilities;
-    }
-
-    public String unauthorized() {
-      return unauthorized;
-    }
   }
 
   /** Flags describe asset flags. */
   @Value
   public static class Flags {
     @SerializedName("auth_required")
-    boolean authRequired;
+    Boolean authRequired;
 
     @SerializedName("auth_revocable")
-    boolean authRevocable;
+    Boolean authRevocable;
 
     @SerializedName("auth_immutable")
-    boolean authImmutable;
+    Boolean authImmutable;
 
     @SerializedName("auth_clawback_enabled")
-    boolean authClawbackEnabled;
+    Boolean authClawbackEnabled;
   }
 
   /** Links connected to asset. */

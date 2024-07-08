@@ -1,0 +1,23 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150660636630859777"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150660636630859777-1"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150660636630859777-1"
+    }
+  },
+  "id": "0150660636630859777-0000000001",
+  "paging_token": "150660636630859777-1",
+  "account": "GCAD67WM4IFVEEJ2Q3IPHUFKVORXLD7MOHUBLYNSCU3ERKOJQD52YZ7J",
+  "type": "trustline_created",
+  "type_i": 20,
+  "created_at": "2021-04-24T05:52:27Z",
+  "asset_type": "credit_alphanum12",
+  "asset_code": "DOGET",
+  "asset_issuer": "GDOEVDDBU6OBWKL7VHDAOKD77UP4DKHQYKOKJJT5PR3WRDBTX35HUEUX",
+  "limit": "922337203685.4775807"
+}

@@ -10,8 +10,8 @@ import org.stellar.sdk.Asset;
 /**
  * Represents trustline_flags_updated effect response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect
- *     documentation</a>
+ * @see <a href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/effects"
+ *     target="_blank">Effect documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
@@ -31,27 +31,16 @@ public class TrustlineFlagsUpdatedEffectResponse extends EffectResponse {
   String assetIssuer;
 
   @SerializedName("authorized_flag")
-  boolean authorized;
+  Boolean authorizedFlag;
 
+  // A typo in Go implementation
   @SerializedName("authorized_to_maintain_liabilites_flag")
-  boolean authorizedToMaintainLiabilities;
+  Boolean authorizedToMaintainLiabilitiesFlag;
 
   @SerializedName("clawback_enabled_flag")
-  boolean clawbackEnabled;
+  Boolean clawbackEnabledFlag;
 
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer);
-  }
-
-  public boolean getAuthorized() {
-    return authorized;
-  }
-
-  public boolean getAuthorizedToMaintainLiabilities() {
-    return authorizedToMaintainLiabilities;
-  }
-
-  public boolean getClawbackEnabled() {
-    return clawbackEnabled;
   }
 }

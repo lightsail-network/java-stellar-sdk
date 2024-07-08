@@ -5,14 +5,19 @@ import static org.stellar.sdk.Asset.create;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.responses.MuxedAccount;
 
+/**
+ * Base class for operations that represent a path payment.
+ *
+ * @see PathPaymentStrictReceiveOperationResponse
+ * @see PathPaymentStrictSendOperationResponse
+ */
 @Getter
+@ToString
 @EqualsAndHashCode(callSuper = false)
 public abstract class PathPaymentBaseOperationResponse extends OperationResponse {
   @SerializedName("amount")
@@ -60,33 +65,11 @@ public abstract class PathPaymentBaseOperationResponse extends OperationResponse
   @SerializedName("path")
   private List<Asset> path;
 
-  public Optional<MuxedAccount> getFromMuxed() {
-    if (this.fromMuxed == null || this.fromMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(new MuxedAccount(this.fromMuxed, this.from, this.fromMuxedId));
-  }
-
-  public Optional<MuxedAccount> getToMuxed() {
-    if (this.toMuxed == null || this.toMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(new MuxedAccount(this.toMuxed, this.to, this.toMuxedId));
-  }
-
   public Asset getAsset() {
-    if (assetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(assetType, assetCode, assetIssuer);
-    }
+    return create(assetType, assetCode, assetIssuer);
   }
 
   public Asset getSourceAsset() {
-    if (sourceAssetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(sourceAssetType, sourceAssetCode, sourceAssetIssuer);
-    }
+    return create(sourceAssetType, sourceAssetCode, sourceAssetIssuer);
   }
 }

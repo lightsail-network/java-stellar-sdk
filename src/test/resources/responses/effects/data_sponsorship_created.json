@@ -1,0 +1,21 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon-testnet.stellar.org/operations/3520460138483714"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=3520460138483714-2"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=3520460138483714-2"
+    }
+  },
+  "id": "0003520460138483714-0000000002",
+  "paging_token": "3520460138483714-2",
+  "account": "GAJADTBH23KY25XZPBZDS5NKV5ZXTIMDGORKSQCHE4DVVLEHSXSV2EQK",
+  "type": "data_sponsorship_created",
+  "type_i": 66,
+  "created_at": "2021-05-06T06:01:13Z",
+  "data_name": "hello",
+  "sponsor": "GDDQTK5V3E3JFGLZZTJTKURTVY7QJPNQLTR5QS5HIWZWY5XPYIO5YELN"
+}

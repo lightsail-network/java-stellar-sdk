@@ -14,4 +14,6 @@ abstract class SignerEffectResponse extends EffectResponse {
 
   @SerializedName("public_key")
   private final String publicKey;
+
+  // Note: Key       string `json:"key"` in Go
 }

@@ -1,11 +1,9 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolID;
 
 /**
  * Represents trades response.
@@ -27,17 +25,17 @@ public class TradeResponse extends Response implements Pageable {
   @SerializedName("ledger_close_time")
   String ledgerCloseTime;
 
-  @SerializedName("offer_id")
-  Long offerId;
-
   @SerializedName("trade_type")
   String tradeType;
 
+  @SerializedName("offer_id")
+  Long offerId;
+
   @SerializedName("liquidity_pool_fee_bp")
-  Long liquidityPoolFeeBP;
+  Integer liquidityPoolFeeBP;
 
   @SerializedName("base_liquidity_pool_id")
-  LiquidityPoolID baseLiquidityPoolID;
+  String baseLiquidityPoolId;
 
   @SerializedName("base_offer_id")
   Long baseOfferId;
@@ -58,7 +56,7 @@ public class TradeResponse extends Response implements Pageable {
   String baseAssetIssuer;
 
   @SerializedName("counter_liquidity_pool_id")
-  LiquidityPoolID counterLiquidityPoolID;
+  String counterLiquidityPoolId;
 
   @SerializedName("counter_offer_id")
   Long counterOfferId;
@@ -79,44 +77,16 @@ public class TradeResponse extends Response implements Pageable {
   String counterAssetIssuer;
 
   @SerializedName("base_is_seller")
-  boolean baseIsSeller;
+  Boolean baseIsSeller;
 
   @SerializedName("price")
-  TradePrice price;
+  Price price;
 
   @SerializedName("_links")
   TradeResponse.Links links;
 
-  public boolean isBaseSeller() {
-    return baseIsSeller;
-  }
-
-  public Optional<Long> getBaseOfferId() {
-    return Optional.ofNullable(baseOfferId);
-  }
-
-  public Optional<String> getBaseAccount() {
-    return Optional.ofNullable(baseAccount);
-  }
-
-  public Optional<LiquidityPoolID> getBaseLiquidityPoolID() {
-    return Optional.ofNullable(baseLiquidityPoolID);
-  }
-
   public Asset getBaseAsset() {
     return Asset.create(this.baseAssetType, this.baseAssetCode, this.baseAssetIssuer);
-  }
-
-  public Optional<String> getCounterAccount() {
-    return Optional.ofNullable(counterAccount);
-  }
-
-  public Optional<LiquidityPoolID> getCounterLiquidityPoolID() {
-    return Optional.ofNullable(counterLiquidityPoolID);
-  }
-
-  public Optional<Long> getCounterOfferId() {
-    return Optional.ofNullable(counterOfferId);
   }
 
   public Asset getCounterAsset() {

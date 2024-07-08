@@ -1,0 +1,28 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/2731345797189633"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/8a9cb28209126c9ac3691eca753f492606318268a0c3d27359e28ccd9bad0588"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/2731345797189633/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=2731345797189633"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=2731345797189633"
+    }
+  },
+  "id": "2731345797189633",
+  "paging_token": "2731345797189633",
+  "transaction_successful": true,
+  "source_account": "GDD6DIT7PDSB6PZ5B5SBUKQBIHZDWWBZN4LCFDEHYIYI4DNTC4WXL4ZO",
+  "type": "revoke_sponsorship",
+  "type_i": 18,
+  "created_at": "2021-04-25T01:46:45Z",
+  "transaction_hash": "8a9cb28209126c9ac3691eca753f492606318268a0c3d27359e28ccd9bad0588",
+  "account_id": "GBAG5JOFNNE7B2FXLZGLV56U5NR2ZFHRS6FALKCX3W5CND27W4DM7TBX"
+}

@@ -48,6 +48,7 @@ public abstract class Asset implements Comparable<Asset> {
    * @param issuer the asset issuer or null
    * @return Asset
    */
+  // TODO: remove the func
   public static Asset create(String type, String code, String issuer) {
     if (type == null) {
       return createNonNativeAsset(code, issuer);

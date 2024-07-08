@@ -8,21 +8,23 @@ import org.stellar.sdk.Asset;
 /**
  * Represents trustline_sponsorship_removed effect response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect
- *     documentation</a>
+ * @see <a href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/effects"
+ *     target="_blank">Effect documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class TrustlineSponsorshipRemovedEffectResponse extends EffectResponse {
+  @SerializedName("asset_type")
+  String assetType;
+
   @SerializedName("asset")
-  String assetString;
+  Asset asset;
+
+  @SerializedName("liquidity_pool_id")
+  String liquidityPoolId;
 
   @SerializedName("former_sponsor")
   String formerSponsor;
-
-  public Asset getAsset() {
-    return Asset.create(assetString);
-  }
 }

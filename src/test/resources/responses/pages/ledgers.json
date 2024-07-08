@@ -1,0 +1,137 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/ledgers?cursor=&limit=3&order=asc"
+    },
+    "next": {
+      "href": "https://horizon.stellar.org/ledgers?cursor=17179869184&limit=3&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon.stellar.org/ledgers?cursor=8589934592&limit=3&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/ledgers/2"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/ledgers/2/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/ledgers/2/operations{?cursor,limit,order}",
+            "templated": true
+          },
+          "payments": {
+            "href": "https://horizon.stellar.org/ledgers/2/payments{?cursor,limit,order}",
+            "templated": true
+          },
+          "effects": {
+            "href": "https://horizon.stellar.org/ledgers/2/effects{?cursor,limit,order}",
+            "templated": true
+          }
+        },
+        "id": "fe0f6bea5f341344fdb5bc6fc4ad719dd63071d9203e9a1e7f17c68ea1ecebde",
+        "paging_token": "8589934592",
+        "hash": "fe0f6bea5f341344fdb5bc6fc4ad719dd63071d9203e9a1e7f17c68ea1ecebde",
+        "prev_hash": "39c2a3cd4141b2853e70d84601faa44744660334b48f3228e0309342e3f4eb48",
+        "sequence": 2,
+        "successful_transaction_count": 0,
+        "failed_transaction_count": 0,
+        "operation_count": 0,
+        "tx_set_operation_count": 0,
+        "closed_at": "2015-09-30T16:46:54Z",
+        "total_coins": "100000000000.0000000",
+        "fee_pool": "0.0000000",
+        "base_fee_in_stroops": 100,
+        "base_reserve_in_stroops": 100000000,
+        "max_tx_set_size": 500,
+        "protocol_version": 1,
+        "header_xdr": "AAAAATnCo81BQbKFPnDYRgH6pEdEZgM0tI8yKOAwk0Lj9OtIzUjr/foF3Zu1Snl7gIUXUGqhoUJG2tzUKbNoPAsFhpEAAAAAVgwR/gAAAAIAAAAIAAAAAQAAAAEAAAAIAAAAAwAAAfQAAAAA3z9hmASpL9tAVxktxD3XSOp3itxSvEmM6AUkwBS4ERmR2QgH0N3bkOnEnemuBV73KfTL2fMONrNcU1pXRKIkMgAAAAIN4Lazp2QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAX14QAAAAH0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/ledgers/3"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/ledgers/3/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/ledgers/3/operations{?cursor,limit,order}",
+            "templated": true
+          },
+          "payments": {
+            "href": "https://horizon.stellar.org/ledgers/3/payments{?cursor,limit,order}",
+            "templated": true
+          },
+          "effects": {
+            "href": "https://horizon.stellar.org/ledgers/3/effects{?cursor,limit,order}",
+            "templated": true
+          }
+        },
+        "id": "ec168d452542589dbc2d0eb6d58c74b9bb2ccb93bba879a3b3fa73fdfa730182",
+        "paging_token": "12884901888",
+        "hash": "ec168d452542589dbc2d0eb6d58c74b9bb2ccb93bba879a3b3fa73fdfa730182",
+        "prev_hash": "fe0f6bea5f341344fdb5bc6fc4ad719dd63071d9203e9a1e7f17c68ea1ecebde",
+        "sequence": 3,
+        "successful_transaction_count": 1,
+        "failed_transaction_count": 0,
+        "operation_count": 3,
+        "tx_set_operation_count": 3,
+        "closed_at": "2015-09-30T17:15:54Z",
+        "total_coins": "100000000000.0000000",
+        "fee_pool": "0.0000300",
+        "base_fee_in_stroops": 100,
+        "base_reserve_in_stroops": 100000000,
+        "max_tx_set_size": 500,
+        "protocol_version": 1,
+        "header_xdr": "AAAAAf4Pa+pfNBNE/bW8b8StcZ3WMHHZID6aHn8Xxo6h7OveT8tCuFMOgNdZYJOIRVDug1f8O8Px/nC6paZHVl6SYykAAAAAVgwYygAAAAAAAAAAxAXcAjsE7UPy10Zx5GA7wF8NZPwXAURqCwJYjORMFD1ShdgmDrQnA6TSdmQnqUysyyhS7Px10zUmUf01qfuKPgAAAAMN4Lazp2QAAAAAAAAAAAEsAAAAAAAAAAAAAAAAAAAAZAX14QAAAAH0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/ledgers/4"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/ledgers/4/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/ledgers/4/operations{?cursor,limit,order}",
+            "templated": true
+          },
+          "payments": {
+            "href": "https://horizon.stellar.org/ledgers/4/payments{?cursor,limit,order}",
+            "templated": true
+          },
+          "effects": {
+            "href": "https://horizon.stellar.org/ledgers/4/effects{?cursor,limit,order}",
+            "templated": true
+          }
+        },
+        "id": "393942249f55db38ac9ef3619fe9a0d9b922fc422903b7371f2c2f05a0937b8b",
+        "paging_token": "17179869184",
+        "hash": "393942249f55db38ac9ef3619fe9a0d9b922fc422903b7371f2c2f05a0937b8b",
+        "prev_hash": "ec168d452542589dbc2d0eb6d58c74b9bb2ccb93bba879a3b3fa73fdfa730182",
+        "sequence": 4,
+        "successful_transaction_count": 0,
+        "failed_transaction_count": 0,
+        "operation_count": 0,
+        "tx_set_operation_count": 0,
+        "closed_at": "2015-09-30T17:15:59Z",
+        "total_coins": "100000000000.0000000",
+        "fee_pool": "0.0000300",
+        "base_fee_in_stroops": 100,
+        "base_reserve_in_stroops": 100000000,
+        "max_tx_set_size": 500,
+        "protocol_version": 1,
+        "header_xdr": "AAAAAewWjUUlQlidvC0OttWMdLm7LMuTu6h5o7P6c/36cwGCRU+1t1Te3wwtW898maV5hsxvzliknbkE/Ep2T06G/rEAAAAAVgwYzwAAAAAAAAAA3z9hmASpL9tAVxktxD3XSOp3itxSvEmM6AUkwBS4ERmbmFRlmsPAbAOXkgOE1GNZWfTFuXD0Z/LstEoZn1cT6AAAAAQN4Lazp2QAAAAAAAAAAAEsAAAAAAAAAAAAAAAAAAAAZAX14QAAAAH0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    ]
+  }
+}

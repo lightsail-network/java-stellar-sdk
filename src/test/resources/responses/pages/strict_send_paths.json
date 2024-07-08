@@ -1,0 +1,113 @@
+{
+  "_embedded": {
+    "records": [
+      {
+        "source_asset_type": "native",
+        "source_amount": "0.1000000",
+        "destination_asset_type": "credit_alphanum4",
+        "destination_asset_code": "USDC",
+        "destination_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "destination_amount": "0.0100343",
+        "path": [
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "GYEN",
+            "asset_issuer": "GDF6VOEGRWLOZ64PQQGKD2IYWA22RLT37GJKS2EJXZHT2VLAGWLC5TOB"
+          },
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "BASH",
+            "asset_issuer": "GDFQEHSE73OEQQA4M5P6HLSWDC6Q26YTO5KSNF33EJTBTCJJVCTMUSLX"
+          }
+        ]
+      },
+      {
+        "source_asset_type": "native",
+        "source_amount": "0.1000000",
+        "destination_asset_type": "credit_alphanum4",
+        "destination_asset_code": "USDC",
+        "destination_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "destination_amount": "0.0100244",
+        "path": [
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "GYEN",
+            "asset_issuer": "GDF6VOEGRWLOZ64PQQGKD2IYWA22RLT37GJKS2EJXZHT2VLAGWLC5TOB"
+          },
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "LFI",
+            "asset_issuer": "GDX4QYQYGNMZXFTYLFZWUJSP32ASCBVQVOIRV55IVMDZKTRSYGZ3TWNJ"
+          }
+        ]
+      },
+      {
+        "source_asset_type": "native",
+        "source_amount": "0.1000000",
+        "destination_asset_type": "credit_alphanum4",
+        "destination_asset_code": "USDC",
+        "destination_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "destination_amount": "0.0100232",
+        "path": [
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "GYEN",
+            "asset_issuer": "GDF6VOEGRWLOZ64PQQGKD2IYWA22RLT37GJKS2EJXZHT2VLAGWLC5TOB"
+          },
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "GQX",
+            "asset_issuer": "GD7TC72O5HML5UMZXQCIXGBR4KJ3MYM2ICPOR4BBN56K6JUSRVWTDAQF"
+          }
+        ]
+      },
+      {
+        "source_asset_type": "native",
+        "source_amount": "0.1000000",
+        "destination_asset_type": "credit_alphanum4",
+        "destination_asset_code": "USDC",
+        "destination_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "destination_amount": "0.0099993",
+        "path": [
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "GYEN",
+            "asset_issuer": "GDF6VOEGRWLOZ64PQQGKD2IYWA22RLT37GJKS2EJXZHT2VLAGWLC5TOB"
+          },
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "AMM",
+            "asset_issuer": "GARQ7O5JPBD2DDVEFFZ2LVWH77BYSC7K7RMGI7W5GLRVSWPHZBNGBDOQ"
+          }
+        ]
+      },
+      {
+        "source_asset_type": "native",
+        "source_amount": "0.1000000",
+        "destination_asset_type": "credit_alphanum4",
+        "destination_asset_code": "USDC",
+        "destination_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "destination_amount": "0.0096914",
+        "path": [
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "GYEN",
+            "asset_issuer": "GDF6VOEGRWLOZ64PQQGKD2IYWA22RLT37GJKS2EJXZHT2VLAGWLC5TOB"
+          },
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "AQUA",
+            "asset_issuer": "GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA"
+          }
+        ]
+      },
+      {
+        "source_asset_type": "native",
+        "source_amount": "0.1000000",
+        "destination_asset_type": "native",
+        "destination_amount": "0.1000000",
+        "path": []
+      }
+    ]
+  }
+}

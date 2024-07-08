@@ -1,7 +1,6 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
@@ -36,14 +35,14 @@ public class OfferResponse extends Response implements Pageable {
   String amount;
 
   @SerializedName("price_r")
-  TradePrice priceR;
+  Price priceR;
 
   @SerializedName("price")
   String price;
 
   /** Can be null if ledger adding an offer has not been ingested yet. * */
   @SerializedName("last_modified_ledger")
-  Integer lastModifiedLedger;
+  Long lastModifiedLedger;
 
   @SerializedName("last_modified_time")
   String lastModifiedTime;
@@ -53,11 +52,6 @@ public class OfferResponse extends Response implements Pageable {
 
   @SerializedName("_links")
   Links links;
-
-  public Optional<String> getSponsor() {
-    // For backwards compatibility
-    return Optional.ofNullable(this.sponsor);
-  }
 
   /** Links connected to ledger. */
   @Value

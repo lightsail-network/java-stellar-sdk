@@ -1,0 +1,106 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/offers?cursor=&limit=3&order=asc"
+    },
+    "next": {
+      "href": "https://horizon.stellar.org/offers?cursor=168&limit=3&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon.stellar.org/offers?cursor=2&limit=3&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/offers/2"
+          },
+          "offer_maker": {
+            "href": "https://horizon.stellar.org/accounts/GBPO4N6XOLOLW2EV6X2AEQMLKOBH3WF2IJCZEQU65SVVSN4JD44WORKD"
+          }
+        },
+        "id": "2",
+        "paging_token": "2",
+        "seller": "GBPO4N6XOLOLW2EV6X2AEQMLKOBH3WF2IJCZEQU65SVVSN4JD44WORKD",
+        "selling": {
+          "asset_type": "credit_alphanum4",
+          "asset_code": "CHP",
+          "asset_issuer": "GDW3CNKSP5AOTDQ2YCKNGC6L65CE4JDX3JS5BV427OB54HCF2J4PUEVG"
+        },
+        "buying": {
+          "asset_type": "credit_alphanum4",
+          "asset_code": "BEER",
+          "asset_issuer": "GDW3CNKSP5AOTDQ2YCKNGC6L65CE4JDX3JS5BV427OB54HCF2J4PUEVG"
+        },
+        "amount": "1.9991292",
+        "price_r": {
+          "n": 1903,
+          "d": 20
+        },
+        "price": "95.1500000",
+        "last_modified_ledger": 50044488,
+        "last_modified_time": "2024-01-23T09:12:04Z"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/offers/167"
+          },
+          "offer_maker": {
+            "href": "https://horizon.stellar.org/accounts/GAKC3P3LQKBRCPOQ3ACI6NHKDNHKTIPGTX7EPOC3SGCMLQK4K3WYICWK"
+          }
+        },
+        "id": "167",
+        "paging_token": "167",
+        "seller": "GAKC3P3LQKBRCPOQ3ACI6NHKDNHKTIPGTX7EPOC3SGCMLQK4K3WYICWK",
+        "selling": {
+          "asset_type": "native"
+        },
+        "buying": {
+          "asset_type": "credit_alphanum4",
+          "asset_code": "CNY",
+          "asset_issuer": "GDOT4WJYCDEEHC6WS42OWZD2IWNJSGE64IJIQNMYFCNS4KY6A4KIZFOX"
+        },
+        "amount": "1.0000000",
+        "price_r": {
+          "n": 1,
+          "d": 50
+        },
+        "price": "0.0200000",
+        "last_modified_ledger": 19967410,
+        "last_modified_time": "2018-09-13T16:00:06Z"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/offers/168"
+          },
+          "offer_maker": {
+            "href": "https://horizon.stellar.org/accounts/GAKC3P3LQKBRCPOQ3ACI6NHKDNHKTIPGTX7EPOC3SGCMLQK4K3WYICWK"
+          }
+        },
+        "id": "168",
+        "paging_token": "168",
+        "seller": "GAKC3P3LQKBRCPOQ3ACI6NHKDNHKTIPGTX7EPOC3SGCMLQK4K3WYICWK",
+        "selling": {
+          "asset_type": "credit_alphanum4",
+          "asset_code": "CNY",
+          "asset_issuer": "GDOT4WJYCDEEHC6WS42OWZD2IWNJSGE64IJIQNMYFCNS4KY6A4KIZFOX"
+        },
+        "buying": {
+          "asset_type": "native"
+        },
+        "amount": "9.9999990",
+        "price_r": {
+          "n": 100,
+          "d": 1
+        },
+        "price": "100.0000000",
+        "last_modified_ledger": 29957562,
+        "last_modified_time": "2020-06-03T20:34:18Z"
+      }
+    ]
+  }
+}

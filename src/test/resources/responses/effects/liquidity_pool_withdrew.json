@@ -1,0 +1,49 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon-testnet.stellar.org/operations/1579096265998337"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=1579096265998337-1"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=1579096265998337-1"
+    }
+  },
+  "id": "0001579096265998337-0000000001",
+  "paging_token": "1579096265998337-1",
+  "account": "GAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2V2K",
+  "account_muxed": "MAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2AAAAAAAAE4DUGF2O",
+  "account_muxed_id": "1278881",
+  "type": "liquidity_pool_withdrew",
+  "type_i": 91,
+  "created_at": "2021-10-07T18:07:37Z",
+  "liquidity_pool": {
+    "id": "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
+    "fee_bp": 30,
+    "type": "constant_product",
+    "total_trustlines": "1",
+    "total_shares": "400.0000000",
+    "reserves": [
+      {
+        "asset": "COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL",
+        "amount": "400.0000000"
+      },
+      {
+        "asset": "SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB",
+        "amount": "400.0000000"
+      }
+    ]
+  },
+  "reserves_received": [
+    {
+      "asset": "COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL",
+      "amount": "100.0000000"
+    },
+    {
+      "asset": "SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB",
+      "amount": "100.0000000"
+    }
+  ],
+  "shares_redeemed": "100.0000000"
+}

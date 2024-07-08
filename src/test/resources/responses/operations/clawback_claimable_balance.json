@@ -1,0 +1,28 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/3513936083165185"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/8820306ee424f47fd1c16b28ab034a3bdab0147fc16c65b145ba1df5f338c8a2"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/3513936083165185/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=3513936083165185"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=3513936083165185"
+    }
+  },
+  "id": "3513936083165185",
+  "paging_token": "3513936083165185",
+  "transaction_successful": true,
+  "source_account": "GD5YHBKE7FSUUZIOSL4ED6UKMM2HZAYBYGZI7KRCTMFDTOO6SGZCQB4Z",
+  "type": "clawback_claimable_balance",
+  "type_i": 20,
+  "created_at": "2021-05-06T03:48:05Z",
+  "transaction_hash": "8820306ee424f47fd1c16b28ab034a3bdab0147fc16c65b145ba1df5f338c8a2",
+  "balance_id": "000000001fe36f3ce6ab6a6423b18b5947ce8890157ae77bb17faeb765814ad040b74ce1"
+}

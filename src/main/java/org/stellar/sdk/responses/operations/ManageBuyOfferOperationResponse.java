@@ -6,13 +6,14 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.responses.Price;
 
 /**
  * Represents ManageBuyOffer operation response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/operations/" target="_blank">Operation
- *     documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/buy-offer"
+ *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()
  */
@@ -25,9 +26,11 @@ public class ManageBuyOfferOperationResponse extends OperationResponse {
   @SerializedName("amount")
   String amount;
 
-  // Price is not implemented yet in horizon
   @SerializedName("price")
   String price;
+
+  @SerializedName("price_r")
+  Price priceR;
 
   @SerializedName("buying_asset_type")
   String buyingAssetType;
@@ -48,18 +51,10 @@ public class ManageBuyOfferOperationResponse extends OperationResponse {
   String sellingAssetIssuer;
 
   public Asset getBuyingAsset() {
-    if (buyingAssetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(buyingAssetType, buyingAssetCode, buyingAssetIssuer);
-    }
+    return create(buyingAssetType, buyingAssetCode, buyingAssetIssuer);
   }
 
   public Asset getSellingAsset() {
-    if (sellingAssetType.equals("native")) {
-      return new AssetTypeNative();
-    } else {
-      return create(sellingAssetType, sellingAssetCode, sellingAssetIssuer);
-    }
+    return create(sellingAssetType, sellingAssetCode, sellingAssetIssuer);
   }
 }

@@ -1,0 +1,30 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/operations/150661852106629126"
+    },
+    "transaction": {
+      "href": "https://horizon.stellar.org/transactions/2d634bd0b1f5006a11555309fc812ff0ae21020c534697954631fd17b042eb06"
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/operations/150661852106629126/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150661852106629126"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150661852106629126"
+    }
+  },
+  "id": "150661852106629126",
+  "paging_token": "150661852106629126",
+  "transaction_successful": true,
+  "source_account": "GDYG6NVTFCY6HPBRQ3SQNKTDZUR7SS6WAWNEAKAFJW5EMKDGQLPG523C",
+  "type": "create_account",
+  "type_i": 0,
+  "created_at": "2021-04-24T06:17:55Z",
+  "transaction_hash": "2d634bd0b1f5006a11555309fc812ff0ae21020c534697954631fd17b042eb06",
+  "starting_balance": "4.0000000",
+  "funder": "GDYG6NVTFCY6HPBRQ3SQNKTDZUR7SS6WAWNEAKAFJW5EMKDGQLPG523C",
+  "account": "GCYXLFYRSJWRPQ7JYSPHDNFRNXQ377BNUHF3TDZCPCQMVJS2QKMXCT2E"
+}

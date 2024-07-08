@@ -1,20 +1,29 @@
 package org.stellar.sdk.responses.operations;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
-import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.Price;
+import org.stellar.sdk.responses.Price;
 
+/**
+ * Represents LiquidityPoolDeposit operation response.
+ *
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/liquidity-pool-deposit"
+ *     target="_blank">Operation documentation</a>
+ * @see org.stellar.sdk.requests.OperationsRequestBuilder
+ * @see org.stellar.sdk.Server#operations()
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class LiquidityPoolDepositOperationResponse extends OperationResponse {
   @SerializedName("liquidity_pool_id")
-  LiquidityPoolID liquidityPoolId;
+  String liquidityPoolId;
 
   @SerializedName("reserves_max")
-  AssetAmount[] reservesMax;
+  List<AssetAmount> reservesMax;
 
   @SerializedName("min_price")
   String minPrice;
@@ -29,7 +38,7 @@ public class LiquidityPoolDepositOperationResponse extends OperationResponse {
   Price maxPriceR;
 
   @SerializedName("reserves_deposited")
-  AssetAmount[] reservesDeposited;
+  List<AssetAmount> reservesDeposited;
 
   @SerializedName("shares_received")
   String sharesReceived;

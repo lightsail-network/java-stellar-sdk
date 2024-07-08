@@ -1,0 +1,20 @@
+{
+  "_links": {
+    "operation": {
+      "href": "https://horizon.stellar.org/operations/150660636630765572"
+    },
+    "succeeds": {
+      "href": "https://horizon.stellar.org/effects?order=desc&cursor=150660636630765572-1"
+    },
+    "precedes": {
+      "href": "https://horizon.stellar.org/effects?order=asc&cursor=150660636630765572-1"
+    }
+  },
+  "id": "0150660636630765572-0000000001",
+  "paging_token": "150660636630765572-1",
+  "account": "GBLZGNXYDTZN3Q2FP4WWEKFO5DZJ2ED43S6YMUFD7ZO6B6LNIEOKWUPX",
+  "type": "data_removed",
+  "type_i": 41,
+  "created_at": "2021-04-24T05:52:27Z",
+  "name": "MESSAGE_DATA_0"
+}

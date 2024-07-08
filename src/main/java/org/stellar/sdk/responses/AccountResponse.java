@@ -2,14 +2,13 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
-import java.util.Optional;
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
 
 /**
@@ -22,6 +21,7 @@ import org.stellar.sdk.TrustLineAsset;
  * @see org.stellar.sdk.Server#accounts()
  */
 @Getter
+@ToString
 @EqualsAndHashCode(callSuper = false)
 public class AccountResponse extends Response implements org.stellar.sdk.TransactionBuilderAccount {
   @SerializedName("id")
@@ -34,10 +34,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private Long sequenceNumber;
 
   @SerializedName("sequence_ledger")
-  private Long sequenceUpdatedAtLedger;
+  private Long sequenceLedger;
 
   @SerializedName("sequence_time")
-  private Long sequenceUpdatedAtTime;
+  private Long sequenceTime;
 
   @SerializedName("subentry_count")
   private Integer subentryCount;
@@ -61,10 +61,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private Flags flags;
 
   @SerializedName("balances")
-  private Balance[] balances;
+  private List<Balance> balances;
 
   @SerializedName("signers")
-  private Signer[] signers;
+  private List<Signer> signers;
 
   @SerializedName("data")
   private Data data;
@@ -83,15 +83,6 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
   @SerializedName("_links")
   private Links links;
-
-  AccountResponse(String accountId) {
-    this.accountId = accountId;
-  }
-
-  public AccountResponse(String accountId, Long sequenceNumber) {
-    this.accountId = accountId;
-    this.sequenceNumber = sequenceNumber;
-  }
 
   @Override
   public String getAccountId() {
@@ -123,54 +114,33 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     sequenceNumber++;
   }
 
-  public Optional<String> getSponsor() {
-    return Optional.ofNullable(this.sponsor);
-  }
-
   /** Represents account thresholds. */
   @Value
   public static class Thresholds {
     @SerializedName("low_threshold")
-    int lowThreshold;
+    Integer lowThreshold;
 
     @SerializedName("med_threshold")
-    int medThreshold;
+    Integer medThreshold;
 
     @SerializedName("high_threshold")
-    int highThreshold;
+    Integer highThreshold;
   }
 
   /** Represents account flags. */
-  @AllArgsConstructor
-  @EqualsAndHashCode
+  @Value
   public static class Flags {
     @SerializedName("auth_required")
-    private final boolean authRequired;
+    Boolean authRequired;
 
     @SerializedName("auth_revocable")
-    private final boolean authRevocable;
+    Boolean authRevocable;
 
     @SerializedName("auth_immutable")
-    private final boolean authImmutable;
+    Boolean authImmutable;
 
     @SerializedName("auth_clawback_enabled")
-    private final boolean authClawbackEnabled;
-
-    public boolean getAuthRequired() {
-      return authRequired;
-    }
-
-    public boolean getAuthRevocable() {
-      return authRevocable;
-    }
-
-    public boolean getAuthImmutable() {
-      return authImmutable;
-    }
-
-    public boolean getAuthClawbackEnabled() {
-      return authClawbackEnabled;
-    }
+    Boolean authClawbackEnabled;
   }
 
   /** Represents account balance. */
@@ -186,7 +156,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     String assetIssuer;
 
     @SerializedName("liquidity_pool_id")
-    LiquidityPoolID liquidityPoolID;
+    String liquidityPoolId;
 
     @SerializedName("limit")
     String limit;
@@ -215,49 +185,8 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     String sponsor;
 
-    public Optional<TrustLineAsset> getTrustLineAsset() {
-      if (liquidityPoolID != null) {
-        return Optional.of(
-            Response.getTrustLineAsset(null, null, null, liquidityPoolID.toString()));
-      } else {
-        return Optional.of(Response.getTrustLineAsset(assetType, assetCode, assetIssuer, null));
-      }
-    }
-
-    public Optional<String> getAssetCode() {
-      return Optional.ofNullable(assetCode);
-    }
-
-    public Optional<String> getAssetIssuer() {
-      return Optional.ofNullable(assetIssuer);
-    }
-
-    public Optional<LiquidityPoolID> getLiquidityPoolID() {
-      return Optional.ofNullable(liquidityPoolID);
-    }
-
-    public Optional<String> getBuyingLiabilities() {
-      return Optional.ofNullable(buyingLiabilities);
-    }
-
-    public Optional<String> getSellingLiabilities() {
-      return Optional.ofNullable(sellingLiabilities);
-    }
-
-    public Boolean getAuthorized() {
-      return isAuthorized;
-    }
-
-    public Boolean getAuthorizedToMaintainLiabilities() {
-      return isAuthorizedToMaintainLiabilities;
-    }
-
-    public Boolean getClawbackEnabled() {
-      return isClawbackEnabled;
-    }
-
-    public Optional<String> getSponsor() {
-      return Optional.ofNullable(this.sponsor);
+    public TrustLineAsset getTrustLineAsset() {
+      return Response.getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);
     }
   }
 
@@ -271,14 +200,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     String type;
 
     @SerializedName("weight")
-    int weight;
+    Integer weight;
 
     @SerializedName("sponsor")
     String sponsor;
-
-    public Optional<String> getSponsor() {
-      return Optional.ofNullable(this.sponsor);
-    }
   }
 
   /** Data connected to account. */

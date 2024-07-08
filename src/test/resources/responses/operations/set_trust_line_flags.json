@@ -1,0 +1,43 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/3513373442449409"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/b1e3090a209925e38cee64ce451a85e0a15cff311963b7548f1931dc3af5b7fb"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/3513373442449409/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=3513373442449409"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=3513373442449409"
+    }
+  },
+  "id": "3513373442449409",
+  "paging_token": "3513373442449409",
+  "transaction_successful": true,
+  "source_account": "GD5YHBKE7FSUUZIOSL4ED6UKMM2HZAYBYGZI7KRCTMFDTOO6SGZCQB4Z",
+  "type": "set_trust_line_flags",
+  "type_i": 21,
+  "created_at": "2021-05-06T03:36:35Z",
+  "transaction_hash": "b1e3090a209925e38cee64ce451a85e0a15cff311963b7548f1931dc3af5b7fb",
+  "asset_type": "credit_alphanum12",
+  "asset_code": "Hello",
+  "asset_issuer": "GD5YHBKE7FSUUZIOSL4ED6UKMM2HZAYBYGZI7KRCTMFDTOO6SGZCQB4Z",
+  "trustor": "GAYWF2KJ4RVFBACNI7W2YVSLEQOUHEMPGJIZCDXHCF2BFR2V7O55UWBB",
+  "set_flags": [
+    1
+  ],
+  "set_flags_s": [
+    "authorized"
+  ],
+  "clear_flags": [
+    4
+  ],
+  "clear_flags_s": [
+    "clawback_enabled"
+  ]
+}

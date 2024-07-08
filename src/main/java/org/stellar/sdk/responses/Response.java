@@ -3,7 +3,6 @@ package org.stellar.sdk.responses;
 import lombok.Getter;
 import okhttp3.Headers;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
 
@@ -51,12 +50,9 @@ public abstract class Response {
   }
 
   protected static TrustLineAsset getTrustLineAsset(
-      String type, String code, String issuer, String liquidityPoolID) {
-    if (type == null) {
-      return new TrustLineAsset(new AssetTypeNative());
-    }
-    if (type.equals("liquidity_pool_shares")) {
-      return new TrustLineAsset(new LiquidityPoolID(liquidityPoolID));
+      String type, String code, String issuer, String liquidityPoolId) {
+    if ("liquidity_pool_shares".equals(type)) {
+      return new TrustLineAsset(new LiquidityPoolID(liquidityPoolId));
     }
     return new TrustLineAsset(Asset.create(type, code, issuer));
   }

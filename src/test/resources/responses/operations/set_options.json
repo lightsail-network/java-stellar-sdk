@@ -1,0 +1,47 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/2696453482881025"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/125c35e68b82b2a77970f1ccfa737e3a2e7b12e6c6bc683f9d415ed77a98f54e"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/2696453482881025/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=2696453482881025"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=2696453482881025"
+    }
+  },
+  "id": "2696453482881025",
+  "paging_token": "2696453482881025",
+  "transaction_successful": true,
+  "source_account": "GASM5Q5QTMV7K45AWLFY7CAJGSPXVRH3MUNN7N3P7X4JHAFSB6RXHWCC",
+  "type": "set_options",
+  "type_i": 5,
+  "created_at": "2021-04-24T13:55:29Z",
+  "transaction_hash": "125c35e68b82b2a77970f1ccfa737e3a2e7b12e6c6bc683f9d415ed77a98f54e",
+  "home_domain": "example.com",
+  "inflation_dest": "GDLSZ37Q6AJN6UNQPXIWNRAB3LETWAASA2H3OWNHRUWMG2LVU3A45S6D",
+  "master_key_weight": 10,
+  "signer_key": "GDLSZ37Q6AJN6UNQPXIWNRAB3LETWAASA2H3OWNHRUWMG2LVU3A45S6D",
+  "signer_weight": 10,
+  "set_flags": [
+    1
+  ],
+  "set_flags_s": [
+    "auth_required"
+  ],
+  "clear_flags": [
+    2
+  ],
+  "clear_flags_s": [
+    "auth_revocable"
+  ],
+  "low_threshold": 1,
+  "med_threshold": 10,
+  "high_threshold": 20
+}

@@ -4,17 +4,15 @@ import static org.stellar.sdk.Asset.create;
 
 import com.google.gson.annotations.SerializedName;
 import java.math.BigInteger;
-import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.responses.MuxedAccount;
 
 /**
  * Represents trade effect response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/effects/" target="_blank">Effect
- *     documentation</a>
+ * @see <a href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/effects"
+ *     target="_blank">Effect documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()
  */
@@ -56,13 +54,6 @@ public class TradeEffectResponse extends EffectResponse {
 
   @SerializedName("bought_asset_issuer")
   String boughtAssetIssuer;
-
-  public Optional<MuxedAccount> getSellerMuxed() {
-    if (this.sellerMuxed == null || this.sellerMuxed.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(new MuxedAccount(this.sellerMuxed, this.seller, this.sellerMuxedId));
-  }
 
   public Asset getSoldAsset() {
     return create(soldAssetType, soldAssetCode, soldAssetIssuer);
