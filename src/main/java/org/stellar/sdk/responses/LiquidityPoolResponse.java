@@ -7,6 +7,8 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
+import java.util.List;
+
 /**
  * Represents liquidity pool response.
  *
@@ -38,7 +40,7 @@ public class LiquidityPoolResponse extends Response {
   String totalShares;
 
   @SerializedName("reserves")
-  Reserve[] reserves;
+  List<Reserve> reserves;
 
   @SerializedName("last_modified_ledger")
   Long lastModifiedLedger;

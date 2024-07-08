@@ -6,6 +6,8 @@ import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Price;
 
+import java.util.List;
+
 /**
  * Represents order book response.
  *
@@ -24,10 +26,10 @@ public class OrderBookResponse extends Response {
   Asset counter;
 
   @SerializedName("asks")
-  Row[] asks;
+  List<Row> asks;
 
   @SerializedName("bids")
-  Row[] bids;
+  List<Row> bids;
 
   /** Represents order book row. */
   @Value

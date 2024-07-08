@@ -14,13 +14,4 @@ public class Link {
 
   @SerializedName("templated")
   boolean templated;
-
-  public URI getUri() {
-    // TODO templated
-    try {
-      return new URI(href);
-    } catch (URISyntaxException e) {
-      throw new UnexpectedException(e);
-    }
-  }
 }

@@ -40,65 +40,65 @@ public class AccountResponseTest {
     assertEquals(account.getFlags().getAuthRevocable(), true);
     assertEquals(account.getFlags().getAuthImmutable(), false);
     assertEquals(account.getFlags().getAuthClawbackEnabled(), true);
-    assertEquals(account.getBalances().length, 7);
+    assertEquals(account.getBalances().size(), 7);
 
-    assertEquals(account.getBalances()[0].getBalance(), "2816.6567089");
+    assertEquals(account.getBalances().get(0).getBalance(), "2816.6567089");
     assertEquals(
-        account.getBalances()[0].getLiquidityPoolID().getPoolId(),
+        account.getBalances().get(0).getLiquidityPoolID().getPoolId(),
         "59fa1dc57433dcfbd2db7319d26cb3da1f28f2d8095a3ec36ad4ef9cadb0013e");
-    assertEquals(account.getBalances()[0].getLimit(), "922337203685.4775807");
-    assertEquals(account.getBalances()[0].getLastModifiedLedger().intValue(), 39608341);
-    assertEquals(account.getBalances()[0].getIsAuthorized(), false);
-    assertEquals(account.getBalances()[0].getIsAuthorizedToMaintainLiabilities(), false);
-    assertEquals(account.getBalances()[0].getAssetType(), "liquidity_pool_shares");
+    assertEquals(account.getBalances().get(0).getLimit(), "922337203685.4775807");
+    assertEquals(account.getBalances().get(0).getLastModifiedLedger().intValue(), 39608341);
+    assertEquals(account.getBalances().get(0).getIsAuthorized(), false);
+    assertEquals(account.getBalances().get(0).getIsAuthorizedToMaintainLiabilities(), false);
+    assertEquals(account.getBalances().get(0).getAssetType(), "liquidity_pool_shares");
     assertEquals(
-        account.getBalances()[0].getAsset(),
+        account.getBalances().get(0).getAsset(),
         new TrustLineAsset(
             new LiquidityPoolID(
                 "59fa1dc57433dcfbd2db7319d26cb3da1f28f2d8095a3ec36ad4ef9cadb0013e")));
 
-    assertEquals(account.getBalances()[1].getBalance(), "85729.1030749");
-    assertEquals(account.getBalances()[1].getLimit(), "922337203685.4775807");
-    assertEquals(account.getBalances()[1].getBuyingLiabilities(), "0.0000000");
-    assertEquals(account.getBalances()[1].getSellingLiabilities(), "0.0000000");
-    assertEquals(account.getBalances()[1].getLastModifiedLedger().intValue(), 52414854);
-    assertEquals(account.getBalances()[1].getIsAuthorized(), true);
-    assertEquals(account.getBalances()[1].getIsAuthorizedToMaintainLiabilities(), true);
-    assertEquals(account.getBalances()[1].getAssetType(), "credit_alphanum4");
-    assertEquals(account.getBalances()[1].getAssetCode(), "AQUA");
+    assertEquals(account.getBalances().get(1).getBalance(), "85729.1030749");
+    assertEquals(account.getBalances().get(1).getLimit(), "922337203685.4775807");
+    assertEquals(account.getBalances().get(1).getBuyingLiabilities(), "0.0000000");
+    assertEquals(account.getBalances().get(1).getSellingLiabilities(), "0.0000000");
+    assertEquals(account.getBalances().get(1).getLastModifiedLedger().intValue(), 52414854);
+    assertEquals(account.getBalances().get(1).getIsAuthorized(), true);
+    assertEquals(account.getBalances().get(1).getIsAuthorizedToMaintainLiabilities(), true);
+    assertEquals(account.getBalances().get(1).getAssetType(), "credit_alphanum4");
+    assertEquals(account.getBalances().get(1).getAssetCode(), "AQUA");
     assertEquals(
-        account.getBalances()[1].getAssetIssuer(),
+        account.getBalances().get(1).getAssetIssuer(),
         "GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA");
     assertEquals(
-        account.getBalances()[1].getAsset(),
+        account.getBalances().get(1).getAsset(),
         new TrustLineAsset(
             Asset.create("AQUA:GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA")));
 
-    assertEquals(account.getBalances()[6].getBalance(), "10025.7670792");
-    assertEquals(account.getBalances()[6].getBuyingLiabilities(), "10000.0000000");
-    assertEquals(account.getBalances()[6].getSellingLiabilities(), "25.1000000");
-    assertEquals(account.getBalances()[6].getAssetType(), "native");
-    assertEquals(account.getBalances()[6].getAsset(), new TrustLineAsset(new AssetTypeNative()));
+    assertEquals(account.getBalances().get(6).getBalance(), "10025.7670792");
+    assertEquals(account.getBalances().get(6).getBuyingLiabilities(), "10000.0000000");
+    assertEquals(account.getBalances().get(6).getSellingLiabilities(), "25.1000000");
+    assertEquals(account.getBalances().get(6).getAssetType(), "native");
+    assertEquals(account.getBalances().get(6).getAsset(), new TrustLineAsset(new AssetTypeNative()));
 
-    assertEquals(account.getSigners().length, 3);
+    assertEquals(account.getSigners().size(), 3);
     assertEquals(
-        account.getSigners()[0].getKey(),
+        account.getSigners().get(0).getKey(),
         "GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3");
-    assertEquals(account.getSigners()[0].getType(), "ed25519_public_key");
-    assertEquals(account.getSigners()[0].getWeight(), 255);
-    assertNull(account.getSigners()[0].getSponsor());
+    assertEquals(account.getSigners().get(0).getType(), "ed25519_public_key");
+    assertEquals(account.getSigners().get(0).getWeight(), 255);
+    assertNull(account.getSigners().get(0).getSponsor());
     assertEquals(
-        account.getSigners()[1].getKey(),
+        account.getSigners().get(1).getKey(),
         "GASAK3DMPMVB4G4447P32EA4PT5UCDLVEHFY2NRS32QXDVPIBUVXUWF4");
-    assertEquals(account.getSigners()[1].getType(), "ed25519_public_key");
-    assertEquals(account.getSigners()[1].getWeight(), 1);
-    assertNull(account.getSigners()[1].getSponsor());
+    assertEquals(account.getSigners().get(1).getType(), "ed25519_public_key");
+    assertEquals(account.getSigners().get(1).getWeight(), 1);
+    assertNull(account.getSigners().get(1).getSponsor());
     assertEquals(
-        account.getSigners()[2].getKey(),
+        account.getSigners().get(2).getKey(),
         "GDZMB4BTSFCRDXWQOG43WGX3Z4FUCEYJRTTQPXDR27PNNLU6RJT5V7LQ");
-    assertEquals(account.getSigners()[2].getType(), "ed25519_public_key");
-    assertEquals(account.getSigners()[2].getWeight(), 10);
-    assertNull(account.getSigners()[2].getSponsor());
+    assertEquals(account.getSigners().get(2).getType(), "ed25519_public_key");
+    assertEquals(account.getSigners().get(2).getWeight(), 10);
+    assertNull(account.getSigners().get(2).getSponsor());
 
     assertEquals(account.getData().keySet().size(), 2);
     assertEquals(account.getData().get("v1"), "djEgdmFsdWU=");

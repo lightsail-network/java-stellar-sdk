@@ -2,6 +2,8 @@ package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
+import java.util.List;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
@@ -59,10 +61,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private Flags flags;
 
   @SerializedName("balances")
-  private Balance[] balances;
+  private List<Balance> balances;
 
   @SerializedName("signers")
-  private Signer[] signers;
+  private List<Signer> signers;
 
   @SerializedName("data")
   private Data data;

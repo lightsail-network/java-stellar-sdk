@@ -31,13 +31,13 @@ public class LiquidityPoolResponseTest {
     assertEquals(885, liquidityPoolResponse.getTotalTrustlines().longValue());
     assertEquals("5787922.2796105", liquidityPoolResponse.getTotalShares());
 
-    assertEquals(2, liquidityPoolResponse.getReserves().length);
-    assertEquals(new AssetTypeNative(), liquidityPoolResponse.getReserves()[0].getAsset());
-    assertEquals("22548198.4301913", liquidityPoolResponse.getReserves()[0].getAmount());
+    assertEquals(2, liquidityPoolResponse.getReserves().size());
+    assertEquals(new AssetTypeNative(), liquidityPoolResponse.getReserves().get(0).getAsset());
+    assertEquals("22548198.4301913", liquidityPoolResponse.getReserves().get(0).getAmount());
     assertEquals(
         Asset.create("USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
-        liquidityPoolResponse.getReserves()[1].getAsset());
-    assertEquals("1897783.4547179", liquidityPoolResponse.getReserves()[1].getAmount());
+        liquidityPoolResponse.getReserves().get(1).getAsset());
+    assertEquals("1897783.4547179", liquidityPoolResponse.getReserves().get(1).getAmount());
 
     assertEquals(52426005L, liquidityPoolResponse.getLastModifiedLedger().longValue());
     assertEquals("2024-07-05T00:57:29Z", liquidityPoolResponse.getLastModifiedTime());

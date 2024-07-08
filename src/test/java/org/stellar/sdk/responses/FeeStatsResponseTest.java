@@ -17,7 +17,7 @@ public class FeeStatsResponseTest {
 
     assertEquals(35068310L, feeStatsResponse.getLastLedger().longValue());
     assertEquals(100L, feeStatsResponse.getLastLedgerBaseFee().longValue());
-    assertEquals(0.16, feeStatsResponse.getLedgerCapacityUsage(), 0.01);
+    assertEquals("0.16", feeStatsResponse.getLedgerCapacityUsage());
 
     assertEquals(500L, feeStatsResponse.getFeeCharged().getMax().longValue());
     assertEquals(100L, feeStatsResponse.getFeeCharged().getMin().longValue());
