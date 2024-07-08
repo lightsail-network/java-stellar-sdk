@@ -1,7 +1,7 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.ArrayList;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -16,7 +16,7 @@ public class Problem extends Response {
   String title;
 
   @SerializedName("status")
-  int status;
+  Integer status;
 
   @SerializedName("detail")
   String detail;
@@ -51,7 +51,7 @@ public class Problem extends Response {
       String innerTransactionResultCode;
 
       @SerializedName("operations")
-      ArrayList<String> operationsResultCodes;
+      List<String> operationsResultCodes;
     }
   }
 }

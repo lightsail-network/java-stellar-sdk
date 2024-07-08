@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.KeyPair;
@@ -20,6 +21,7 @@ import org.stellar.sdk.TrustLineAsset;
  * @see org.stellar.sdk.Server#accounts()
  */
 @Getter
+@ToString
 @EqualsAndHashCode(callSuper = false)
 public class AccountResponse extends Response implements org.stellar.sdk.TransactionBuilderAccount {
   @SerializedName("id")
@@ -116,13 +118,13 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   @Value
   public static class Thresholds {
     @SerializedName("low_threshold")
-    int lowThreshold;
+    Integer lowThreshold;
 
     @SerializedName("med_threshold")
-    int medThreshold;
+    Integer medThreshold;
 
     @SerializedName("high_threshold")
-    int highThreshold;
+    Integer highThreshold;
   }
 
   /** Represents account flags. */
@@ -198,7 +200,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     String type;
 
     @SerializedName("weight")
-    int weight;
+    Integer weight;
 
     @SerializedName("sponsor")
     String sponsor;

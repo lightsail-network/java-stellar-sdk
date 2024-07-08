@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
@@ -26,7 +26,7 @@ import org.stellar.sdk.responses.gson.TypedResponse;
 public class Page<T> extends Response implements TypedResponse<Page<T>> {
 
   @SerializedName("records")
-  private ArrayList<T> records;
+  private List<T> records;
 
   @SerializedName("links")
   private Links links;

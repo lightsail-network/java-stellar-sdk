@@ -3,7 +3,7 @@ package org.stellar.sdk.responses;
 import static org.stellar.sdk.Asset.create;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.ArrayList;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
@@ -46,7 +46,7 @@ public class PathResponse extends Response {
   String sourceAssetIssuer;
 
   @SerializedName("path")
-  ArrayList<Asset> path;
+  List<Asset> path;
 
   public Asset getDestinationAsset() {
     return create(destinationAssetType, destinationAssetCode, destinationAssetIssuer);

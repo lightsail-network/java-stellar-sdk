@@ -22,19 +22,19 @@ public class TradeAggregationResponseTest {
     assertEquals("0.3443179", tradeAggregationResponse.getAvg());
 
     assertEquals("0.3617180", tradeAggregationResponse.getHigh());
-    assertEquals(356909700, tradeAggregationResponse.getHighR().getNumerator());
-    assertEquals(986707000, tradeAggregationResponse.getHighR().getDenominator());
+    assertEquals(356909700, tradeAggregationResponse.getHighR().getNumerator().longValue());
+    assertEquals(986707000, tradeAggregationResponse.getHighR().getDenominator().longValue());
 
     assertEquals("0.3257225", tradeAggregationResponse.getLow());
-    assertEquals(130289, tradeAggregationResponse.getLowR().getNumerator());
-    assertEquals(400000, tradeAggregationResponse.getLowR().getDenominator());
+    assertEquals(130289, tradeAggregationResponse.getLowR().getNumerator().longValue());
+    assertEquals(400000, tradeAggregationResponse.getLowR().getDenominator().longValue());
 
     assertEquals("0.3268569", tradeAggregationResponse.getOpen());
-    assertEquals(548699500, tradeAggregationResponse.getOpenR().getNumerator());
-    assertEquals(1678715000, tradeAggregationResponse.getOpenR().getDenominator());
+    assertEquals(548699500, tradeAggregationResponse.getOpenR().getNumerator().longValue());
+    assertEquals(1678715000, tradeAggregationResponse.getOpenR().getDenominator().longValue());
 
     assertEquals("0.3517116", tradeAggregationResponse.getClose());
-    assertEquals(695836822, tradeAggregationResponse.getCloseR().getNumerator());
-    assertEquals(1978430375, tradeAggregationResponse.getCloseR().getDenominator());
+    assertEquals(695836822, tradeAggregationResponse.getCloseR().getNumerator().longValue());
+    assertEquals(1978430375, tradeAggregationResponse.getCloseR().getDenominator().longValue());
   }
 }

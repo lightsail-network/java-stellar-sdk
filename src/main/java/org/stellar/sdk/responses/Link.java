@@ -10,5 +10,5 @@ public class Link {
   String href;
 
   @SerializedName("templated")
-  boolean templated;
+  Boolean templated;
 }

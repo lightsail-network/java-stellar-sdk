@@ -59,8 +59,8 @@ public class TradeResponseTest {
             "USD", "GDUKMGUGDZQK6YHYA5Z6AY2G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEX"),
         tradeResponse.getCounterAsset());
     assertFalse(tradeResponse.getBaseIsSeller());
-    assertEquals(200, tradeResponse.getPrice().getNumerator());
-    assertEquals(473, tradeResponse.getPrice().getDenominator());
+    assertEquals(200, tradeResponse.getPrice().getNumerator().intValue());
+    assertEquals(473, tradeResponse.getPrice().getDenominator().intValue());
   }
 
   @Test
@@ -109,7 +109,7 @@ public class TradeResponseTest {
     assertFalse(tradeResponse.getBaseIsSeller());
 
     // Assert price
-    assertEquals(140271366, tradeResponse.getPrice().getNumerator());
-    assertEquals(21661, tradeResponse.getPrice().getDenominator());
+    assertEquals(140271366, tradeResponse.getPrice().getNumerator().intValue());
+    assertEquals(21661, tradeResponse.getPrice().getDenominator().intValue());
   }
 }

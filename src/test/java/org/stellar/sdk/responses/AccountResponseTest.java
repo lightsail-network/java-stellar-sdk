@@ -34,9 +34,9 @@ public class AccountResponseTest {
     assertEquals(account.getHomeDomain(), "example.com");
     assertEquals(account.getLastModifiedLedger().longValue(), 52223288);
     assertEquals(account.getLastModifiedTime(), "2024-06-21T12:47:51Z");
-    assertEquals(account.getThresholds().getLowThreshold(), 1);
-    assertEquals(account.getThresholds().getMedThreshold(), 20);
-    assertEquals(account.getThresholds().getHighThreshold(), 30);
+    assertEquals(account.getThresholds().getLowThreshold().intValue(), 1);
+    assertEquals(account.getThresholds().getMedThreshold().intValue(), 20);
+    assertEquals(account.getThresholds().getHighThreshold().intValue(), 30);
     assertEquals(account.getFlags().getAuthRequired(), true);
     assertEquals(account.getFlags().getAuthRevocable(), true);
     assertEquals(account.getFlags().getAuthImmutable(), false);
@@ -88,19 +88,19 @@ public class AccountResponseTest {
         account.getSigners().get(0).getKey(),
         "GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3");
     assertEquals(account.getSigners().get(0).getType(), "ed25519_public_key");
-    assertEquals(account.getSigners().get(0).getWeight(), 255);
+    assertEquals(account.getSigners().get(0).getWeight().intValue(), 255);
     assertNull(account.getSigners().get(0).getSponsor());
     assertEquals(
         account.getSigners().get(1).getKey(),
         "GASAK3DMPMVB4G4447P32EA4PT5UCDLVEHFY2NRS32QXDVPIBUVXUWF4");
     assertEquals(account.getSigners().get(1).getType(), "ed25519_public_key");
-    assertEquals(account.getSigners().get(1).getWeight(), 1);
+    assertEquals(account.getSigners().get(1).getWeight().intValue(), 1);
     assertNull(account.getSigners().get(1).getSponsor());
     assertEquals(
         account.getSigners().get(2).getKey(),
         "GDZMB4BTSFCRDXWQOG43WGX3Z4FUCEYJRTTQPXDR27PNNLU6RJT5V7LQ");
     assertEquals(account.getSigners().get(2).getType(), "ed25519_public_key");
-    assertEquals(account.getSigners().get(2).getWeight(), 10);
+    assertEquals(account.getSigners().get(2).getWeight().intValue(), 10);
     assertNull(account.getSigners().get(2).getSponsor());
 
     assertEquals(account.getData().keySet().size(), 2);

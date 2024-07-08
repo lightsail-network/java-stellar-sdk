@@ -184,10 +184,10 @@ public class TransactionResponse extends Response implements Pageable {
     Long minAccountSequence;
 
     @SerializedName("min_account_sequence_age")
-    long minAccountSequenceAge;
+    Long minAccountSequenceAge;
 
     @SerializedName("min_account_sequence_ledger_gap")
-    long minAccountSequenceLedgerGap;
+    Long minAccountSequenceLedgerGap;
 
     @SerializedName("extra_signers")
     List<String> signatures;
@@ -195,19 +195,19 @@ public class TransactionResponse extends Response implements Pageable {
     @Value
     public static class TimeBounds {
       @SerializedName("min_time")
-      long minTime;
+      BigInteger minTime;
 
       @SerializedName("max_time")
-      long maxTime;
+      BigInteger maxTime;
     }
 
     @Value
     public static class LedgerBounds {
       @SerializedName("min_ledger")
-      long minTime;
+      Long minTime;
 
       @SerializedName("max_ledger")
-      long maxTime;
+      Long maxTime;
     }
   }
 

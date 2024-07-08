@@ -10,9 +10,9 @@ import lombok.Value;
 public class Price {
   /** numerator */
   @SerializedName("n")
-  long numerator;
+  Long numerator;
 
   /** denominator */
   @SerializedName("d")
-  long denominator;
+  Long denominator;
 }

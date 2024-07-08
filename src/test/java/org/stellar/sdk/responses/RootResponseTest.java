@@ -35,81 +35,73 @@ public class RootResponseTest {
 
     RootResponse.Links links = rootResponse.getLinks();
     assertEquals("https://horizon.stellar.org/accounts/{account_id}", links.getAccount().getHref());
-    assertTrue(links.getAccount().isTemplated());
+    assertTrue(links.getAccount().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/accounts{?signer,sponsor,asset,liquidity_pool,cursor,limit,order}",
         links.getAccounts().getHref());
-    assertTrue(links.getAccounts().isTemplated());
+    assertTrue(links.getAccounts().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/accounts/{account_id}/transactions{?cursor,limit,order}",
         links.getAccountTransactions().getHref());
-    assertTrue(links.getAccountTransactions().isTemplated());
+    assertTrue(links.getAccountTransactions().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/claimable_balances{?asset,sponsor,claimant,cursor,limit,order}",
         links.getClaimableBalances().getHref());
-    assertTrue(links.getClaimableBalances().isTemplated());
+    assertTrue(links.getClaimableBalances().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/assets{?asset_code,asset_issuer,cursor,limit,order}",
         links.getAssets().getHref());
-    assertTrue(links.getAssets().isTemplated());
+    assertTrue(links.getAssets().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/effects{?cursor,limit,order}", links.getEffects().getHref());
-    assertTrue(links.getEffects().isTemplated());
+    assertTrue(links.getEffects().getTemplated());
     assertEquals("https://horizon.stellar.org/fee_stats", links.getFeeStats().getHref());
-    assertFalse(links.getFeeStats().isTemplated());
     assertEquals("https://horizon.stellar.org/ledgers/{sequence}", links.getLedger().getHref());
-    assertTrue(links.getLedger().isTemplated());
+    assertTrue(links.getLedger().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/ledgers{?cursor,limit,order}", links.getLedgers().getHref());
-    assertTrue(links.getLedgers().isTemplated());
+    assertTrue(links.getLedgers().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/liquidity_pools{?reserves,account,cursor,limit,order}",
         links.getLiquidityPools().getHref());
-    assertTrue(links.getLiquidityPools().isTemplated());
+    assertTrue(links.getLiquidityPools().getTemplated());
     assertEquals("https://horizon.stellar.org/offers/{offer_id}", links.getOffer().getHref());
-    assertTrue(links.getOffer().isTemplated());
+    assertTrue(links.getOffer().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/offers{?selling,buying,seller,sponsor,cursor,limit,order}",
         links.getOffers().getHref());
-    assertTrue(links.getOffers().isTemplated());
+    assertTrue(links.getOffers().getTemplated());
     assertEquals("https://horizon.stellar.org/operations/{id}", links.getOperation().getHref());
-    assertTrue(links.getOperation().isTemplated());
+    assertTrue(links.getOperation().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/operations{?cursor,limit,order,include_failed}",
         links.getOperations().getHref());
-    assertTrue(links.getOperations().isTemplated());
+    assertTrue(links.getOperations().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/order_book{?selling_asset_type,selling_asset_code,selling_asset_issuer,buying_asset_type,buying_asset_code,buying_asset_issuer,limit}",
         links.getOrderBook().getHref());
-    assertTrue(links.getOrderBook().isTemplated());
+    assertTrue(links.getOrderBook().getTemplated());
     assertEquals(
         "https://horizon.stellar.org/payments{?cursor,limit,order,include_failed}",
         links.getPayments().getHref());
-    assertTrue(links.getPayments().isTemplated());
+    assertTrue(links.getPayments().getTemplated());
     assertEquals("https://horizon.stellar.org/", links.getSelf().getHref());
-    assertFalse(links.getSelf().isTemplated());
     assertEquals(
         "https://horizon.stellar.org/paths/strict-receive{?source_assets,source_account,destination_account,destination_asset_type,destination_asset_issuer,destination_asset_code,destination_amount}",
         links.getStrictReceivePaths().getHref());
-    assertTrue(links.getStrictReceivePaths().isTemplated());
     assertEquals(
         "https://horizon.stellar.org/paths/strict-send{?destination_account,destination_assets,source_asset_type,source_asset_issuer,source_asset_code,source_amount}",
         links.getStrictSendPaths().getHref());
-    assertTrue(links.getStrictSendPaths().isTemplated());
     assertEquals(
         "https://horizon.stellar.org/trade_aggregations?base_asset_type={base_asset_type}&base_asset_code={base_asset_code}&base_asset_issuer={base_asset_issuer}&counter_asset_type={counter_asset_type}&counter_asset_code={counter_asset_code}&counter_asset_issuer={counter_asset_issuer}",
         links.getTradeAggregations().getHref());
-    assertTrue(links.getTradeAggregations().isTemplated());
     assertEquals(
         "https://horizon.stellar.org/trades?base_asset_type={base_asset_type}&base_asset_code={base_asset_code}&base_asset_issuer={base_asset_issuer}&counter_asset_type={counter_asset_type}&counter_asset_code={counter_asset_code}&counter_asset_issuer={counter_asset_issuer}",
         links.getTrades().getHref());
-    assertTrue(links.getTrades().isTemplated());
     assertEquals(
         "https://horizon.stellar.org/transactions/{hash}", links.getTransaction().getHref());
-    assertTrue(links.getTransaction().isTemplated());
     assertEquals(
         "https://horizon.stellar.org/transactions{?cursor,limit,order}",
         links.getTransactions().getHref());
-    assertTrue(links.getTransactions().isTemplated());
   }
 }

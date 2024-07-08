@@ -16,6 +16,7 @@ import org.stellar.sdk.Base64Factory;
 @EqualsAndHashCode(callSuper = true)
 public class DataUpdatedEffectResponse extends EffectResponse {
   String name;
+
   String value;
 
   /**

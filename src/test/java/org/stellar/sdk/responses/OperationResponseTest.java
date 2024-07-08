@@ -286,7 +286,7 @@ public class OperationResponseTest {
     assertEquals("create_passive_sell_offer", response.getType());
     assertEquals("0.0001000", response.getAmount());
     assertEquals("1.0000000", response.getPrice());
-    assertEquals(new Price(1, 1), response.getPriceR());
+    assertEquals(new Price(1L, 1L), response.getPriceR());
     assertEquals("credit_alphanum4", response.getBuyingAssetType());
     assertEquals("USA", response.getBuyingAssetCode());
     assertEquals(
@@ -400,9 +400,9 @@ public class OperationResponseTest {
         response.getReservesMax().get(1).getAsset());
 
     assertEquals("1.0000000", response.getMinPrice());
-    assertEquals(new Price(1, 1), response.getMinPriceR());
+    assertEquals(new Price(1L, 1L), response.getMinPriceR());
     assertEquals("2.0000000", response.getMaxPrice());
-    assertEquals(new Price(2, 1), response.getMaxPriceR());
+    assertEquals(new Price(2L, 1L), response.getMaxPriceR());
 
     assertEquals("250.0000000", response.getSharesReceived());
 
@@ -468,7 +468,7 @@ public class OperationResponseTest {
     assertEquals("manage_buy_offer", response.getType());
     assertEquals("389.4340658", response.getAmount());
     assertEquals("2.3058668", response.getPrice());
-    assertEquals(new Price(5764667, 2500000), response.getPriceR());
+    assertEquals(new Price(5764667L, 2500000L), response.getPriceR());
     assertEquals("native", response.getBuyingAssetType());
     assertEquals(new AssetTypeNative(), response.getBuyingAsset());
 
@@ -510,7 +510,7 @@ public class OperationResponseTest {
     assertEquals("manage_sell_offer", response.getType());
     assertEquals("478.6351404", response.getAmount());
     assertEquals("32.6639943", response.getPrice());
-    assertEquals(new Price(326639943, 10000000), response.getPriceR());
+    assertEquals(new Price(326639943L, 10000000L), response.getPriceR());
     assertEquals("credit_alphanum4", response.getBuyingAssetType());
     assertEquals("RMT", response.getBuyingAssetCode());
     assertEquals(
