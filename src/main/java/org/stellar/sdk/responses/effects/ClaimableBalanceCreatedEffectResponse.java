@@ -17,16 +17,11 @@ import org.stellar.sdk.Asset;
 @EqualsAndHashCode(callSuper = true)
 public class ClaimableBalanceCreatedEffectResponse extends EffectResponse {
   @SerializedName("asset")
-  String assetString;
+  Asset asset;
 
   @SerializedName("amount")
   String amount;
 
   @SerializedName("balance_id")
   String balanceId;
-
-  // TODO
-  public Asset getAsset() {
-    return Asset.create(assetString);
-  }
 }

@@ -69,7 +69,33 @@ import org.stellar.sdk.responses.effects.TrustlineUpdatedEffectResponse;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class EffectResponseTest {
-  // TODO: test common
+  @Test
+  public void testBaseEffect() throws IOException {
+    String filePath = "src/test/resources/responses/effects/liquidity_pool_withdrew.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    LiquidityPoolWithdrewEffectResponse response =
+        GsonSingleton.getInstance().fromJson(json, LiquidityPoolWithdrewEffectResponse.class);
+
+    assertEquals(
+        "https://horizon-testnet.stellar.org/operations/1579096265998337",
+        response.getLinks().getOperation().getHref());
+    assertEquals(
+        "https://horizon-testnet.stellar.org/effects?order=desc&cursor=1579096265998337-1",
+        response.getLinks().getSucceeds().getHref());
+    assertEquals(
+        "https://horizon-testnet.stellar.org/effects?order=asc&cursor=1579096265998337-1",
+        response.getLinks().getPrecedes().getHref());
+
+    assertEquals("0001579096265998337-0000000001", response.getId());
+    assertEquals("1579096265998337-1", response.getPagingToken());
+    assertEquals("GAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2V2K", response.getAccount());
+    assertEquals(
+        "MAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2AAAAAAAAE4DUGF2O",
+        response.getAccountMuxed());
+    assertEquals(1278881, response.getAccountMuxedId().longValue());
+    assertEquals("liquidity_pool_withdrew", response.getType());
+    assertEquals("2021-10-07T18:07:37Z", response.getCreatedAt());
+  }
 
   @Test
   public void testAccountCreated() throws IOException {
@@ -808,9 +834,9 @@ public class EffectResponseTest {
     assertEquals(
         "GBRDHSZL4ZKOI2PTUMM53N3NICZXC5OX3KPCD4WD4NG4XGCBC2ZA3KAG", response.getAssetIssuer());
     assertEquals("GBL73HAKZGDGPSLOHI543CSK7FVJSMLHSIRUZRBH7SV43GM7IQWS7QET", response.getTrustor());
-    assertTrue(response.getAuthorized());
-    assertFalse(response.getAuthorizedToMaintainLiabilities());
-    assertTrue(response.getClawbackEnabled());
+    assertTrue(response.getAuthorizedFlag());
+    assertFalse(response.getAuthorizedToMaintainLiabilitiesFlag());
+    assertTrue(response.getClawbackEnabledFlag());
   }
 
   @Test

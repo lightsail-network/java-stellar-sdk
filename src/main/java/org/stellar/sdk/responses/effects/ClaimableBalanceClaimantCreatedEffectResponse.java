@@ -18,7 +18,7 @@ import org.stellar.sdk.Predicate;
 @EqualsAndHashCode(callSuper = true)
 public class ClaimableBalanceClaimantCreatedEffectResponse extends EffectResponse {
   @SerializedName("asset")
-  String assetString;
+  Asset asset;
 
   @SerializedName("amount")
   String amount;
@@ -28,9 +28,4 @@ public class ClaimableBalanceClaimantCreatedEffectResponse extends EffectRespons
 
   @SerializedName("predicate")
   Predicate predicate;
-
-  // TODO
-  public Asset getAsset() {
-    return Asset.create(assetString);
-  }
 }

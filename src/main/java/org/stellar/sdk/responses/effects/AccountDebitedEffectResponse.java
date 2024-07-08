@@ -30,7 +30,6 @@ public class AccountDebitedEffectResponse extends EffectResponse {
   @SerializedName("asset_issuer")
   String assetIssuer;
 
-  // TODO
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer);
   }
