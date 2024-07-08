@@ -3,7 +3,6 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.Price;
 
 @Value
 @EqualsAndHashCode(callSuper = false)

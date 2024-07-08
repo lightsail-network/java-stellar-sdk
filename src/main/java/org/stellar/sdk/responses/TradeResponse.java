@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Price;
 
 /**
  * Represents trades response.

@@ -1,0 +1,287 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=&limit=3&order=asc"
+    },
+    "next": {
+      "href": "https://horizon.stellar.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH&limit=3&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon.stellar.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6&limit=3&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/accounts/GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/accounts/GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/accounts/GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6/operations{?cursor,limit,order}",
+            "templated": true
+          },
+          "payments": {
+            "href": "https://horizon.stellar.org/accounts/GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6/payments{?cursor,limit,order}",
+            "templated": true
+          },
+          "effects": {
+            "href": "https://horizon.stellar.org/accounts/GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6/effects{?cursor,limit,order}",
+            "templated": true
+          },
+          "offers": {
+            "href": "https://horizon.stellar.org/accounts/GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6/offers{?cursor,limit,order}",
+            "templated": true
+          },
+          "trades": {
+            "href": "https://horizon.stellar.org/accounts/GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6/trades{?cursor,limit,order}",
+            "templated": true
+          },
+          "data": {
+            "href": "https://horizon.stellar.org/accounts/GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6/data/{key}",
+            "templated": true
+          }
+        },
+        "id": "GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6",
+        "account_id": "GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6",
+        "sequence": "194013564070002690",
+        "sequence_ledger": 45173210,
+        "sequence_time": "1677700612",
+        "subentry_count": 1,
+        "last_modified_ledger": 50415380,
+        "last_modified_time": "2024-02-17T19:44:28Z",
+        "thresholds": {
+          "low_threshold": 0,
+          "med_threshold": 0,
+          "high_threshold": 0
+        },
+        "flags": {
+          "auth_required": false,
+          "auth_revocable": false,
+          "auth_immutable": false,
+          "auth_clawback_enabled": false
+        },
+        "balances": [
+          {
+            "balance": "0.0000000",
+            "limit": "922337203685.4775807",
+            "buying_liabilities": "0.0000000",
+            "selling_liabilities": "0.0000000",
+            "last_modified_ledger": 45173210,
+            "is_authorized": true,
+            "is_authorized_to_maintain_liabilities": true,
+            "asset_type": "credit_alphanum4",
+            "asset_code": "USDC",
+            "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"
+          },
+          {
+            "balance": "2.9975391",
+            "buying_liabilities": "0.0000000",
+            "selling_liabilities": "0.0000000",
+            "asset_type": "native"
+          }
+        ],
+        "signers": [
+          {
+            "weight": 1,
+            "key": "GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6",
+            "type": "ed25519_public_key"
+          }
+        ],
+        "data": {},
+        "num_sponsoring": 0,
+        "num_sponsored": 0,
+        "paging_token": "GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/accounts/GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/accounts/GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/accounts/GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS/operations{?cursor,limit,order}",
+            "templated": true
+          },
+          "payments": {
+            "href": "https://horizon.stellar.org/accounts/GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS/payments{?cursor,limit,order}",
+            "templated": true
+          },
+          "effects": {
+            "href": "https://horizon.stellar.org/accounts/GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS/effects{?cursor,limit,order}",
+            "templated": true
+          },
+          "offers": {
+            "href": "https://horizon.stellar.org/accounts/GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS/offers{?cursor,limit,order}",
+            "templated": true
+          },
+          "trades": {
+            "href": "https://horizon.stellar.org/accounts/GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS/trades{?cursor,limit,order}",
+            "templated": true
+          },
+          "data": {
+            "href": "https://horizon.stellar.org/accounts/GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS/data/{key}",
+            "templated": true
+          }
+        },
+        "id": "GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS",
+        "account_id": "GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS",
+        "sequence": "201054608901013505",
+        "sequence_ledger": 46812032,
+        "sequence_time": "1687103350",
+        "subentry_count": 4,
+        "last_modified_ledger": 50415380,
+        "last_modified_time": "2024-02-17T19:44:28Z",
+        "thresholds": {
+          "low_threshold": 1,
+          "med_threshold": 2,
+          "high_threshold": 2
+        },
+        "flags": {
+          "auth_required": false,
+          "auth_revocable": false,
+          "auth_immutable": false,
+          "auth_clawback_enabled": false
+        },
+        "balances": [
+          {
+            "balance": "0.0000000",
+            "limit": "922337203685.4775807",
+            "buying_liabilities": "0.0000000",
+            "selling_liabilities": "0.0000000",
+            "last_modified_ledger": 46812032,
+            "is_authorized": true,
+            "is_authorized_to_maintain_liabilities": true,
+            "asset_type": "credit_alphanum4",
+            "asset_code": "USDC",
+            "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"
+          },
+          {
+            "balance": "5.0000400",
+            "buying_liabilities": "0.0000000",
+            "selling_liabilities": "0.0000000",
+            "asset_type": "native"
+          }
+        ],
+        "signers": [
+          {
+            "weight": 1,
+            "key": "GBMUZ7DCFWJ47CI2FGFR4NIVSZNPPZENJJWNG7THSRWQWFZVNUNZJTR4",
+            "type": "ed25519_public_key"
+          },
+          {
+            "weight": 1,
+            "key": "GBURRLQSIS3V4QCCIAXEZ4T6DO5NNYNL6OXMCTMDNRBG6HBW3R63KW4N",
+            "type": "ed25519_public_key"
+          },
+          {
+            "weight": 1,
+            "key": "GALJ4WNVSXSEP5LISPS3EPWG6H7UMDYUBUO6GMX7WH754V3G5CMHTYQK",
+            "type": "ed25519_public_key"
+          },
+          {
+            "weight": 0,
+            "key": "GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS",
+            "type": "ed25519_public_key"
+          }
+        ],
+        "data": {},
+        "num_sponsoring": 0,
+        "num_sponsored": 0,
+        "paging_token": "GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/accounts/GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/accounts/GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/accounts/GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH/operations{?cursor,limit,order}",
+            "templated": true
+          },
+          "payments": {
+            "href": "https://horizon.stellar.org/accounts/GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH/payments{?cursor,limit,order}",
+            "templated": true
+          },
+          "effects": {
+            "href": "https://horizon.stellar.org/accounts/GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH/effects{?cursor,limit,order}",
+            "templated": true
+          },
+          "offers": {
+            "href": "https://horizon.stellar.org/accounts/GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH/offers{?cursor,limit,order}",
+            "templated": true
+          },
+          "trades": {
+            "href": "https://horizon.stellar.org/accounts/GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH/trades{?cursor,limit,order}",
+            "templated": true
+          },
+          "data": {
+            "href": "https://horizon.stellar.org/accounts/GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH/data/{key}",
+            "templated": true
+          }
+        },
+        "id": "GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH",
+        "account_id": "GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH",
+        "sequence": "193485519315795969",
+        "sequence_ledger": 45049359,
+        "sequence_time": "1676987334",
+        "subentry_count": 1,
+        "last_modified_ledger": 50415380,
+        "last_modified_time": "2024-02-17T19:44:28Z",
+        "thresholds": {
+          "low_threshold": 0,
+          "med_threshold": 0,
+          "high_threshold": 0
+        },
+        "flags": {
+          "auth_required": false,
+          "auth_revocable": false,
+          "auth_immutable": false,
+          "auth_clawback_enabled": false
+        },
+        "balances": [
+          {
+            "balance": "0.5000000",
+            "limit": "922337203685.4775807",
+            "buying_liabilities": "0.0000000",
+            "selling_liabilities": "0.0000000",
+            "last_modified_ledger": 45049361,
+            "is_authorized": true,
+            "is_authorized_to_maintain_liabilities": true,
+            "asset_type": "credit_alphanum4",
+            "asset_code": "USDC",
+            "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"
+          },
+          {
+            "balance": "2.9991157",
+            "buying_liabilities": "0.0000000",
+            "selling_liabilities": "0.0000000",
+            "asset_type": "native"
+          }
+        ],
+        "signers": [
+          {
+            "weight": 1,
+            "key": "GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH",
+            "type": "ed25519_public_key"
+          }
+        ],
+        "data": {},
+        "num_sponsoring": 0,
+        "num_sponsored": 0,
+        "paging_token": "GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH"
+      }
+    ]
+  }
+}

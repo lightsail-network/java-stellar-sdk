@@ -1,0 +1,98 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=USDC&counter_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&resolution=300000&limit=3&order=desc"
+    },
+    "next": {
+      "href": "https://horizon.stellar.org/trade_aggregations?base_asset_type=native&counter_asset_code=USDC&counter_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&counter_asset_type=credit_alphanum4&end_time=1720431300000&limit=3&order=desc&resolution=300000"
+    },
+    "prev": {
+      "href": ""
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "timestamp": "1720431900000",
+        "trade_count": "14",
+        "base_volume": "2032.1649479",
+        "counter_volume": "175.4193674",
+        "avg": "0.0863214",
+        "high": "0.0864117",
+        "high_r": {
+          "n": "5000000",
+          "d": "57862567"
+        },
+        "low": "0.0862938",
+        "low_r": {
+          "n": "456375714",
+          "d": "5288625969"
+        },
+        "open": "0.0862979",
+        "open_r": {
+          "n": "449235042",
+          "d": "5205631007"
+        },
+        "close": "0.0863476",
+        "close_r": {
+          "n": "103938461",
+          "d": "1203721052"
+        }
+      },
+      {
+        "timestamp": "1720431600000",
+        "trade_count": "154",
+        "base_volume": "33616.8908143",
+        "counter_volume": "2903.2698207",
+        "avg": "0.0863634",
+        "high": "0.0864528",
+        "high_r": {
+          "n": "1000",
+          "d": "11567"
+        },
+        "low": "0.0862999",
+        "low_r": {
+          "n": "1630158",
+          "d": "18889448"
+        },
+        "open": "0.0864528",
+        "open_r": {
+          "n": "179618750",
+          "d": "2077650591"
+        },
+        "close": "0.0862999",
+        "close_r": {
+          "n": "1630158",
+          "d": "18889448"
+        }
+      },
+      {
+        "timestamp": "1720431300000",
+        "trade_count": "103",
+        "base_volume": "61804.8076585",
+        "counter_volume": "5345.5362537",
+        "avg": "0.0864906",
+        "high": "0.0867614",
+        "high_r": {
+          "n": "116",
+          "d": "1337"
+        },
+        "low": "0.0864117",
+        "low_r": {
+          "n": "171998000",
+          "d": "1990448000"
+        },
+        "open": "0.0866000",
+        "open_r": {
+          "n": "433",
+          "d": "5000"
+        },
+        "close": "0.0864583",
+        "close_r": {
+          "n": "170791213",
+          "d": "1975416668"
+        }
+      }
+    ]
+  }
+}

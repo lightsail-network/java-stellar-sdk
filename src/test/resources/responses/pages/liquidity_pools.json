@@ -1,0 +1,116 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/liquidity_pools?cursor=&limit=3&order=asc"
+    },
+    "next": {
+      "href": "https://horizon.stellar.org/liquidity_pools?cursor=00038572bdc9b568ba564babaf39685ca18316e0d170080a1181e952b393162f&limit=3&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon.stellar.org/liquidity_pools?cursor=0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a&limit=3&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/liquidity_pools/0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/liquidity_pools/0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/liquidity_pools/0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a/operations{?cursor,limit,order}",
+            "templated": true
+          }
+        },
+        "id": "0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a",
+        "paging_token": "0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a",
+        "fee_bp": 30,
+        "type": "constant_product",
+        "total_trustlines": "1",
+        "total_shares": "5494.2144063",
+        "reserves": [
+          {
+            "asset": "native",
+            "amount": "2.6494450"
+          },
+          {
+            "asset": "GOLDBANK001:GDEUQ2MX3YXMITFOTC3CO3GW5V3XE3IVG7JKLZZAOZ7WFYIN256INDUS",
+            "amount": "16342845.4610607"
+          }
+        ],
+        "last_modified_ledger": 52471621,
+        "last_modified_time": "2024-07-08T01:36:50Z"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/liquidity_pools/00027e57b10c37b92854c439e2406c110a9b0a545c463aa1aefe4efe524090e0"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/liquidity_pools/00027e57b10c37b92854c439e2406c110a9b0a545c463aa1aefe4efe524090e0/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/liquidity_pools/00027e57b10c37b92854c439e2406c110a9b0a545c463aa1aefe4efe524090e0/operations{?cursor,limit,order}",
+            "templated": true
+          }
+        },
+        "id": "00027e57b10c37b92854c439e2406c110a9b0a545c463aa1aefe4efe524090e0",
+        "paging_token": "00027e57b10c37b92854c439e2406c110a9b0a545c463aa1aefe4efe524090e0",
+        "fee_bp": 30,
+        "type": "constant_product",
+        "total_trustlines": "1",
+        "total_shares": "2392.6143185",
+        "reserves": [
+          {
+            "asset": "native",
+            "amount": "0.0797434"
+          },
+          {
+            "asset": "OPAL:GCRNZGPSVIUDYJDQFQKP53GSJ77MPD36HQ7GKRMDKLSKJLD2AX3LDVOG",
+            "amount": "77863504.0271771"
+          }
+        ],
+        "last_modified_ledger": 52466338,
+        "last_modified_time": "2024-07-07T17:11:33Z"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://horizon.stellar.org/liquidity_pools/00038572bdc9b568ba564babaf39685ca18316e0d170080a1181e952b393162f"
+          },
+          "transactions": {
+            "href": "https://horizon.stellar.org/liquidity_pools/00038572bdc9b568ba564babaf39685ca18316e0d170080a1181e952b393162f/transactions{?cursor,limit,order}",
+            "templated": true
+          },
+          "operations": {
+            "href": "https://horizon.stellar.org/liquidity_pools/00038572bdc9b568ba564babaf39685ca18316e0d170080a1181e952b393162f/operations{?cursor,limit,order}",
+            "templated": true
+          }
+        },
+        "id": "00038572bdc9b568ba564babaf39685ca18316e0d170080a1181e952b393162f",
+        "paging_token": "00038572bdc9b568ba564babaf39685ca18316e0d170080a1181e952b393162f",
+        "fee_bp": 30,
+        "type": "constant_product",
+        "total_trustlines": "1",
+        "total_shares": "3162.2776601",
+        "reserves": [
+          {
+            "asset": "NRI:GCGW2BPSXEGXSKFMSR5LCA2LFOC4NW26PV4CCGNHOCUUZSHH7CPFRV3T",
+            "amount": "13873379.1177089"
+          },
+          {
+            "asset": "VELO:GDM4RQUQQUVSKQA7S6EM7XBZP3FCGH4Q7CL6TABQ7B2BEJ5ERARM2M5M",
+            "amount": "0.7607637"
+          }
+        ],
+        "last_modified_ledger": 52475976,
+        "last_modified_time": "2024-07-08T08:29:33Z"
+      }
+    ]
+  }
+}

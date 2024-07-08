@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Price;
+import org.stellar.sdk.responses.Price;
 
 /**
  * Represents ManageBuyOffer operation response.

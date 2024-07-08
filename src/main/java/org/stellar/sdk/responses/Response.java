@@ -3,7 +3,6 @@ package org.stellar.sdk.responses;
 import lombok.Getter;
 import okhttp3.Headers;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
 

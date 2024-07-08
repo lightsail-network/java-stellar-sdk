@@ -18,7 +18,6 @@ import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Claimant;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
-import org.stellar.sdk.Price;
 import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;

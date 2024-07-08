@@ -1,0 +1,128 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://horizon.stellar.org/assets?cursor=&limit=3&order=asc"
+    },
+    "next": {
+      "href": "https://horizon.stellar.org/assets?cursor=0_GD3OJBRBHR77ZCRCK5I7LNKHMWN4RYLEAUJ3EROF4PYO6FZZOQBCDION_credit_alphanum4&limit=3&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon.stellar.org/assets?cursor=0_GBBJZOYEGLOCW32Q4ZGWRWQ7UKIGMMIQXIRBBBOVJVFJTZW7CR2VQKAT_credit_alphanum4&limit=3&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "_links": {
+          "toml": {
+            "href": "https://emily.stellarskull.io/.well-known/stellar.toml"
+          }
+        },
+        "asset_type": "credit_alphanum4",
+        "asset_code": "0",
+        "asset_issuer": "GBBJZOYEGLOCW32Q4ZGWRWQ7UKIGMMIQXIRBBBOVJVFJTZW7CR2VQKAT",
+        "paging_token": "0_GBBJZOYEGLOCW32Q4ZGWRWQ7UKIGMMIQXIRBBBOVJVFJTZW7CR2VQKAT_credit_alphanum4",
+        "num_accounts": 25,
+        "num_claimable_balances": 0,
+        "num_liquidity_pools": 0,
+        "num_contracts": 0,
+        "num_archived_contracts": 0,
+        "amount": "988.9481303",
+        "accounts": {
+          "authorized": 25,
+          "authorized_to_maintain_liabilities": 0,
+          "unauthorized": 0
+        },
+        "claimable_balances_amount": "0.0000000",
+        "liquidity_pools_amount": "0.0000000",
+        "contracts_amount": "0.0000000",
+        "archived_contracts_amount": "0.0000000",
+        "balances": {
+          "authorized": "988.9481303",
+          "authorized_to_maintain_liabilities": "0.0000000",
+          "unauthorized": "0.0000000"
+        },
+        "flags": {
+          "auth_required": false,
+          "auth_revocable": false,
+          "auth_immutable": false,
+          "auth_clawback_enabled": false
+        }
+      },
+      {
+        "_links": {
+          "toml": {
+            "href": "https://rusnaka-1.litemint.store/.well-known/stellar.toml"
+          }
+        },
+        "asset_type": "credit_alphanum4",
+        "asset_code": "0",
+        "asset_issuer": "GCKHHE33Q64N7NVM2AEWLWK4T55VPZBFQ5WNU7E3TNO6LTGM6JR3GJGG",
+        "paging_token": "0_GCKHHE33Q64N7NVM2AEWLWK4T55VPZBFQ5WNU7E3TNO6LTGM6JR3GJGG_credit_alphanum4",
+        "num_accounts": 1,
+        "num_claimable_balances": 0,
+        "num_liquidity_pools": 0,
+        "num_contracts": 0,
+        "num_archived_contracts": 0,
+        "amount": "0.0000001",
+        "accounts": {
+          "authorized": 1,
+          "authorized_to_maintain_liabilities": 0,
+          "unauthorized": 0
+        },
+        "claimable_balances_amount": "0.0000000",
+        "liquidity_pools_amount": "0.0000000",
+        "contracts_amount": "0.0000000",
+        "archived_contracts_amount": "0.0000000",
+        "balances": {
+          "authorized": "0.0000001",
+          "authorized_to_maintain_liabilities": "0.0000000",
+          "unauthorized": "0.0000000"
+        },
+        "flags": {
+          "auth_required": false,
+          "auth_revocable": false,
+          "auth_immutable": false,
+          "auth_clawback_enabled": false
+        }
+      },
+      {
+        "_links": {
+          "toml": {
+            "href": ""
+          }
+        },
+        "asset_type": "credit_alphanum4",
+        "asset_code": "0",
+        "asset_issuer": "GD3OJBRBHR77ZCRCK5I7LNKHMWN4RYLEAUJ3EROF4PYO6FZZOQBCDION",
+        "paging_token": "0_GD3OJBRBHR77ZCRCK5I7LNKHMWN4RYLEAUJ3EROF4PYO6FZZOQBCDION_credit_alphanum4",
+        "num_accounts": 1,
+        "num_claimable_balances": 0,
+        "num_liquidity_pools": 0,
+        "num_contracts": 0,
+        "num_archived_contracts": 0,
+        "amount": "0.0000001",
+        "accounts": {
+          "authorized": 1,
+          "authorized_to_maintain_liabilities": 0,
+          "unauthorized": 0
+        },
+        "claimable_balances_amount": "0.0000000",
+        "liquidity_pools_amount": "0.0000000",
+        "contracts_amount": "0.0000000",
+        "archived_contracts_amount": "0.0000000",
+        "balances": {
+          "authorized": "0.0000001",
+          "authorized_to_maintain_liabilities": "0.0000000",
+          "unauthorized": "0.0000000"
+        },
+        "flags": {
+          "auth_required": false,
+          "auth_revocable": false,
+          "auth_immutable": false,
+          "auth_clawback_enabled": false
+        }
+      }
+    ]
+  }
+}

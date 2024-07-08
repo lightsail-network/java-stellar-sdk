@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
-import org.stellar.sdk.Price;
+import org.stellar.sdk.responses.Price;
 
 /**
  * Represents LiquidityPoolDeposit operation response.
