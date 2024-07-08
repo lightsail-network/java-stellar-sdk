@@ -33,10 +33,10 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
   private Long sequenceNumber;
 
   @SerializedName("sequence_ledger")
-  private Long sequenceUpdatedAtLedger;
+  private Long sequenceLedger;
 
   @SerializedName("sequence_time")
-  private Long sequenceUpdatedAtTime;
+  private Long sequenceTime;
 
   @SerializedName("subentry_count")
   private Integer subentryCount;
@@ -82,15 +82,6 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
 
   @SerializedName("_links")
   private Links links;
-
-  AccountResponse(String accountId) {
-    this.accountId = accountId;
-  }
-
-  public AccountResponse(String accountId, Long sequenceNumber) {
-    this.accountId = accountId;
-    this.sequenceNumber = sequenceNumber;
-  }
 
   @Override
   public String getAccountId() {

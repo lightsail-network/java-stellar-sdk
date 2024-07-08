@@ -25,8 +25,8 @@ public class AccountResponseTest {
     assertEquals(
         account.getAccountId(), "GDA2KZG7UB3C3KU4RYRGCQI6JPV2I2FYBWT434MQHPE36FH7CWGVR5X3");
     assertEquals(account.getSequenceNumber().longValue(), 160470889244710503L);
-    assertEquals(account.getSequenceUpdatedAtLedger().longValue(), 52222212);
-    assertEquals(account.getSequenceUpdatedAtTime().longValue(), 1718974099);
+    assertEquals(account.getSequenceLedger().longValue(), 52222212);
+    assertEquals(account.getSequenceTime().longValue(), 1718974099);
     assertEquals(account.getSubentryCount().intValue(), 12);
     assertEquals(
         account.getInflationDestination(),
