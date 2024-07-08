@@ -33,6 +33,7 @@ public class TrustlineFlagsUpdatedEffectResponse extends EffectResponse {
   @SerializedName("authorized_flag")
   Boolean authorizedFlag;
 
+  // A typo in Go implementation
   @SerializedName("authorized_to_maintain_liabilites_flag")
   Boolean authorizedToMaintainLiabilitiesFlag;
 
