@@ -466,7 +466,7 @@ public class EffectResponseTest {
     assertEquals("liquidity_pool_created", response.getType());
     assertEquals(
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
-        response.getLiquidityPool().getId().getPoolId());
+        response.getLiquidityPool().getId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
     assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
@@ -492,7 +492,7 @@ public class EffectResponseTest {
     assertEquals("liquidity_pool_deposited", response.getType());
     assertEquals(
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
-        response.getLiquidityPool().getId().getPoolId());
+        response.getLiquidityPool().getId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
     assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
@@ -528,7 +528,7 @@ public class EffectResponseTest {
     assertEquals("liquidity_pool_removed", response.getType());
     assertEquals(
         "89c11017d16552c152536092d7440a2cd4cf4bf7df2c7e7552b56e6bcac98d95",
-        response.getLiquidityPoolID().getPoolId());
+        response.getLiquidityPoolId());
   }
 
   @Test
@@ -541,7 +541,7 @@ public class EffectResponseTest {
     assertEquals("liquidity_pool_revoked", response.getType());
     assertEquals(
         "a6cad36777565bf0d52f89319416fb5e73149d07b9814c5baaddea0d53ef2baa",
-        response.getLiquidityPool().getId().getPoolId());
+        response.getLiquidityPool().getId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
     assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
@@ -580,7 +580,7 @@ public class EffectResponseTest {
     assertEquals("liquidity_pool_trade", response.getType());
     assertEquals(
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
-        response.getLiquidityPool().getId().getPoolId());
+        response.getLiquidityPool().getId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
     assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
@@ -614,7 +614,7 @@ public class EffectResponseTest {
     assertEquals("liquidity_pool_withdrew", response.getType());
     assertEquals(
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
-        response.getLiquidityPool().getId().getPoolId());
+        response.getLiquidityPool().getId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
     assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());

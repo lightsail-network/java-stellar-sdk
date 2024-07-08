@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.LiquidityPoolResponse;
 
 class LiquidityPoolDeserializer implements JsonDeserializer<LiquidityPoolResponse> {
@@ -18,10 +17,7 @@ class LiquidityPoolDeserializer implements JsonDeserializer<LiquidityPoolRespons
       throws JsonParseException {
     // Create new Gson object with adapters needed in Operation
     Gson gson =
-        new GsonBuilder()
-            .registerTypeAdapter(Asset.class, new AssetDeserializer())
-            .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
-            .create();
+        new GsonBuilder().registerTypeAdapter(Asset.class, new AssetDeserializer()).create();
 
     return gson.fromJson(json, LiquidityPoolResponse.class);
   }

@@ -95,7 +95,7 @@ public class TradeResponseTest {
     assertNull(tradeResponse.getBaseAssetIssuer());
     assertEquals(
         "2389378a6156eedfac66daa000d24c926431c3e667b9f754771964f27a6da6ab",
-        tradeResponse.getCounterLiquidityPoolID().getPoolId());
+        tradeResponse.getCounterLiquidityPoolId());
     assertEquals("6475.7567056", tradeResponse.getCounterAmount());
     assertEquals("credit_alphanum12", tradeResponse.getCounterAssetType());
     assertEquals("BTCLN", tradeResponse.getCounterAssetCode());

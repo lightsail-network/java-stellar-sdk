@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolID;
 
 /**
  * Represents liquidity pool response.
@@ -19,7 +18,7 @@ import org.stellar.sdk.LiquidityPoolID;
 @EqualsAndHashCode(callSuper = false)
 public class LiquidityPoolResponse extends Response {
   @SerializedName("id")
-  LiquidityPoolID id;
+  String id;
 
   @SerializedName("paging_token")
   String pagingToken;

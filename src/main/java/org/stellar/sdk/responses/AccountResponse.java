@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
 
 /**
@@ -155,7 +154,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     String assetIssuer;
 
     @SerializedName("liquidity_pool_id")
-    LiquidityPoolID liquidityPoolID;
+    String liquidityPoolId;
 
     @SerializedName("limit")
     String limit;
@@ -185,7 +184,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     String sponsor;
 
     public TrustLineAsset getTrustLineAsset() {
-      return Response.getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolID);
+      return Response.getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);
     }
   }
 

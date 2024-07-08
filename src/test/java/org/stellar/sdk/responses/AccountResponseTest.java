@@ -45,7 +45,7 @@ public class AccountResponseTest {
 
     assertEquals(account.getBalances().get(0).getBalance(), "2816.6567089");
     assertEquals(
-        account.getBalances().get(0).getLiquidityPoolID().getPoolId(),
+        account.getBalances().get(0).getLiquidityPoolId(),
         "59fa1dc57433dcfbd2db7319d26cb3da1f28f2d8095a3ec36ad4ef9cadb0013e");
     assertEquals(account.getBalances().get(0).getLimit(), "922337203685.4775807");
     assertEquals(account.getBalances().get(0).getLastModifiedLedger().intValue(), 39608341);

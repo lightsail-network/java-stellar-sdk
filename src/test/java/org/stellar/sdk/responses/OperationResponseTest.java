@@ -175,7 +175,7 @@ public class OperationResponseTest {
     assertEquals("liquidity_pool_shares", response.getAssetType());
     assertEquals(
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
-        response.getLiquidityPoolId().getPoolId());
+        response.getLiquidityPoolId());
     assertEquals(
         new TrustLineAsset(
             new LiquidityPoolID(
@@ -385,7 +385,7 @@ public class OperationResponseTest {
 
     assertEquals("liquidity_pool_deposit", response.getType());
     assertEquals(
-        new LiquidityPoolID("2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355"),
+        "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
         response.getLiquidityPoolId());
 
     assertEquals(2, response.getReservesMax().size());
@@ -429,7 +429,7 @@ public class OperationResponseTest {
 
     assertEquals("liquidity_pool_withdraw", response.getType());
     assertEquals(
-        new LiquidityPoolID("2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355"),
+        "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
         response.getLiquidityPoolId());
 
     assertEquals(2, response.getReservesMin().size());

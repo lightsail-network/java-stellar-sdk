@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
 
 @AllArgsConstructor
@@ -26,7 +25,7 @@ abstract class TrustlineCUDResponse extends EffectResponse {
   private final String assetIssuer;
 
   @SerializedName("liquidity_pool_id")
-  private final LiquidityPoolID liquidityPoolId;
+  private final String liquidityPoolId;
 
   public TrustLineAsset getTrustLineAsset() {
     return getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);

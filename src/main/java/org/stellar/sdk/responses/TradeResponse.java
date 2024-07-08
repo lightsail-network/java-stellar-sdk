@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Price;
 
 /**
@@ -37,7 +36,7 @@ public class TradeResponse extends Response implements Pageable {
   Integer liquidityPoolFeeBP;
 
   @SerializedName("base_liquidity_pool_id")
-  LiquidityPoolID baseLiquidityPoolID;
+  String baseLiquidityPoolId;
 
   @SerializedName("base_offer_id")
   Long baseOfferId;
@@ -58,7 +57,7 @@ public class TradeResponse extends Response implements Pageable {
   String baseAssetIssuer;
 
   @SerializedName("counter_liquidity_pool_id")
-  LiquidityPoolID counterLiquidityPoolID;
+  String counterLiquidityPoolId;
 
   @SerializedName("counter_offer_id")
   Long counterOfferId;

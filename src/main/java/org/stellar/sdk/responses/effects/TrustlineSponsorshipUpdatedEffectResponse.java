@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolID;
 
 /**
  * Represents trustline_sponsorship_updated effect response.
@@ -24,7 +23,7 @@ public class TrustlineSponsorshipUpdatedEffectResponse extends EffectResponse {
   Asset asset;
 
   @SerializedName("liquidity_pool_id")
-  LiquidityPoolID liquidityPoolID;
+  String liquidityPoolId;
 
   @SerializedName("former_sponsor")
   String formerSponsor;

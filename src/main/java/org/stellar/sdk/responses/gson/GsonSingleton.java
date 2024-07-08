@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.AssetResponse;
@@ -51,7 +50,6 @@ public class GsonSingleton {
               .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
               .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
               .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
-              .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
               .registerTypeAdapter(
                   accountPageType.getType(), new PageDeserializer<>(accountPageType))
               .registerTypeAdapter(assetPageType.getType(), new PageDeserializer<>(assetPageType))

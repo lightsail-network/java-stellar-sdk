@@ -2,7 +2,6 @@ package org.stellar.sdk.responses.effects;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.LiquidityPoolID;
 
 /**
  * Represents trustline_created effect response.
@@ -20,7 +19,7 @@ public class TrustlineCreatedEffectResponse extends TrustlineCUDResponse {
       String assetType,
       String assetCode,
       String assetIssuer,
-      LiquidityPoolID liquidityPoolId) {
+      String liquidityPoolId) {
     super(limit, assetType, assetCode, assetIssuer, liquidityPoolId);
   }
 }

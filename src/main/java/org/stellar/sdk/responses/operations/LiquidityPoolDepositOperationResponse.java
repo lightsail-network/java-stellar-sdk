@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Price;
 
 /**
@@ -21,7 +20,7 @@ import org.stellar.sdk.Price;
 @EqualsAndHashCode(callSuper = true)
 public class LiquidityPoolDepositOperationResponse extends OperationResponse {
   @SerializedName("liquidity_pool_id")
-  LiquidityPoolID liquidityPoolId;
+  String liquidityPoolId;
 
   @SerializedName("reserves_max")
   List<AssetAmount> reservesMax;

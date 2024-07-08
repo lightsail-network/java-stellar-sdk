@@ -4,12 +4,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
-import org.stellar.sdk.LiquidityPoolID;
 
 @Value
 public class LiquidityPool {
   @SerializedName("id")
-  LiquidityPoolID id;
+  String id;
 
   @SerializedName("fee_bp")
   Integer feeBP;
