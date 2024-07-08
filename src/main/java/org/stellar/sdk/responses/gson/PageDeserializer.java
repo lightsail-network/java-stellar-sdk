@@ -11,7 +11,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Predicate;
-import org.stellar.sdk.responses.LiquidityPoolResponse;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;

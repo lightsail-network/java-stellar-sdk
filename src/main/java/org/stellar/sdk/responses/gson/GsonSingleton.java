@@ -19,6 +19,12 @@ import org.stellar.sdk.responses.TransactionResponse;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
+/**
+ * GsonSingleton is a singleton class that provides a Gson instance with all the custom
+ * deserializers needed to parse Horizon responses.
+ *
+ * <p>Usually, you shouldn't need to use this class directly.
+ */
 public class GsonSingleton {
   private static Gson instance = null;
 
