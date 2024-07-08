@@ -21,7 +21,7 @@ public class AssetResponse extends Response implements Pageable {
   String pagingToken;
 
   @SerializedName("contract_id")
-  String contractID;
+  String contractId;
 
   @SerializedName("num_accounts")
   Integer numAccounts;

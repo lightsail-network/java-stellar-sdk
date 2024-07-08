@@ -21,5 +21,5 @@ public class LiquidityPoolClaimableAssetAmount {
   String amount;
 
   @SerializedName("claimable_balance_id")
-  String claimableBalanceID;
+  String claimableBalanceId;
 }

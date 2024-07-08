@@ -22,7 +22,7 @@ public class AssetResponseTest {
         assetResponse.getPagingToken(),
         "USDC_GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN_credit_alphanum4");
     assertEquals(
-        assetResponse.getContractID(), "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75");
+        assetResponse.getContractId(), "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75");
     assertEquals(assetResponse.getNumAccounts().intValue(), 918786);
     assertEquals(assetResponse.getNumClaimableBalances().intValue(), 415);
     assertEquals(assetResponse.getNumLiquidityPools().intValue(), 384);

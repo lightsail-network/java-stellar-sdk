@@ -559,14 +559,14 @@ public class EffectResponseTest {
     assertEquals("0.0000011", response.getReservesRevoked().get(0).getAmount());
     assertEquals(
         "00000000b69563dc3491932aa21baf799f7f1831831c7fc4b21ea8eac97578b48ddc884c",
-        response.getReservesRevoked().get(0).getClaimableBalanceID());
+        response.getReservesRevoked().get(0).getClaimableBalanceId());
     assertEquals(
         Asset.create("BTC:GAMQXNIL2IV7YV3GIBQG56RCJAGTCW3WU64XDOM2M5N7A3OJWQZT5BNB"),
         response.getReservesRevoked().get(1).getAsset());
     assertEquals("1000502.0030091", response.getReservesRevoked().get(1).getAmount());
     assertEquals(
         "000000006708d006dc9d6b8601249383b25ac17198596493ff80c8dd8e6218b0c44ef472",
-        response.getReservesRevoked().get(1).getClaimableBalanceID());
+        response.getReservesRevoked().get(1).getClaimableBalanceId());
     assertEquals("0.5000000", response.getSharesRevoked());
   }
 
