@@ -13,6 +13,23 @@ import org.stellar.sdk.responses.operations.OperationResponse;
 
 public class PagesTest {
   @Test
+  public void testLinks() throws IOException {
+    String filePath = "src/test/resources/responses/pages/accounts.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    TypeToken<Page<AccountResponse>> type = new TypeToken<Page<AccountResponse>>() {};
+    Page<AccountResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
+    assertEquals(
+        "https://horizon.stellar.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=&limit=3&order=asc",
+        page.getLinks().getSelf().getHref());
+    assertEquals(
+        "https://horizon.stellar.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=GA222HAPV3WEEFGWYXRHTLH4XYXPA2BNS74Q7J6XQPPRLYSFRHRLX7TH&limit=3&order=asc",
+        page.getLinks().getNext().getHref());
+    assertEquals(
+        "https://horizon.stellar.org/accounts/?asset=USDC%3AGA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&cursor=GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6&limit=3&order=desc",
+        page.getLinks().getPrev().getHref());
+  }
+
+  @Test
   public void testAccounts() throws IOException {
     String filePath = "src/test/resources/responses/pages/accounts.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
