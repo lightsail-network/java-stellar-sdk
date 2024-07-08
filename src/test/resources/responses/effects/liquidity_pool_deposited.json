@@ -23,7 +23,7 @@
     "fee_bp": 30,
     "type": "constant_product",
     "total_trustlines": "1",
-    "total_shares": "250.0000000",
+    "total_shares": "200.0000000",
     "reserves": [
       {
         "asset": "COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL",

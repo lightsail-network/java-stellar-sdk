@@ -2,6 +2,7 @@ package org.stellar.sdk.responses.effects;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.Base64Factory;
 
 /**
  * Represents data_created effect response.
@@ -13,4 +14,16 @@ import lombok.Value;
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class DataCreatedEffectResponse extends EffectResponse {}
+public class DataCreatedEffectResponse extends EffectResponse {
+  String name;
+  String value;
+
+  /**
+   * Gets decoded value for the base64 encoded data value.
+   *
+   * @return decoded value
+   */
+  public byte[] getDecodedValue() {
+    return Base64Factory.getInstance().decode(value);
+  }
+}

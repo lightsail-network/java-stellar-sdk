@@ -1,6 +1,7 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
@@ -20,7 +21,7 @@ public class LiquidityPoolDepositedEffectResponse extends EffectResponse {
   LiquidityPool liquidityPool;
 
   @SerializedName("reserves_deposited")
-  AssetAmount[] reservesDeposited;
+  List<AssetAmount> reservesDeposited;
 
   @SerializedName("shares_received")
   String sharesReceived;

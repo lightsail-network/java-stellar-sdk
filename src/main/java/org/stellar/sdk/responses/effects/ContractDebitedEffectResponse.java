@@ -1,8 +1,11 @@
 package org.stellar.sdk.responses.effects;
 
+import static org.stellar.sdk.Asset.create;
+
 import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.Asset;
 
 /**
  * Represents contract_debited effect response.
@@ -28,4 +31,8 @@ public class ContractDebitedEffectResponse extends EffectResponse {
   String contract;
 
   String amount;
+
+  public Asset getAsset() {
+    return create(assetType, assetCode, assetIssuer);
+  }
 }

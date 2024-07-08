@@ -13,4 +13,6 @@ import lombok.Value;
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class DataRemovedEffectResponse extends EffectResponse {}
+public class DataRemovedEffectResponse extends EffectResponse {
+  String name;
+}

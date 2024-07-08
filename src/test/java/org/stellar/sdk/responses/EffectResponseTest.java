@@ -1,11 +1,18 @@
 package org.stellar.sdk.responses;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Test;
+import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.effects.AccountCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.AccountCreditedEffectResponse;
 import org.stellar.sdk.responses.effects.AccountDebitedEffectResponse;
@@ -38,9 +45,6 @@ import org.stellar.sdk.responses.effects.LiquidityPoolRemovedEffectResponse;
 import org.stellar.sdk.responses.effects.LiquidityPoolRevokedEffectResponse;
 import org.stellar.sdk.responses.effects.LiquidityPoolTradeEffectResponse;
 import org.stellar.sdk.responses.effects.LiquidityPoolWithdrewEffectResponse;
-import org.stellar.sdk.responses.effects.OfferCreatedEffectResponse;
-import org.stellar.sdk.responses.effects.OfferRemovedEffectResponse;
-import org.stellar.sdk.responses.effects.OfferUpdatedEffectResponse;
 import org.stellar.sdk.responses.effects.SequenceBumpedEffectResponse;
 import org.stellar.sdk.responses.effects.SignerCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.SignerRemovedEffectResponse;
@@ -59,6 +63,7 @@ import org.stellar.sdk.responses.effects.TrustlineSponsorshipCreatedEffectRespon
 import org.stellar.sdk.responses.effects.TrustlineSponsorshipRemovedEffectResponse;
 import org.stellar.sdk.responses.effects.TrustlineSponsorshipUpdatedEffectResponse;
 import org.stellar.sdk.responses.effects.TrustlineUpdatedEffectResponse;
+import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class EffectResponseTest {
   // TODO: test common
@@ -71,6 +76,7 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, AccountCreatedEffectResponse.class);
 
     assertEquals("account_created", response.getType());
+    assertEquals("15.8675013", response.getStartingBalance());
   }
 
   @Test
@@ -81,6 +87,8 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, AccountCreditedEffectResponse.class);
 
     assertEquals("account_credited", response.getType());
+    assertEquals(new AssetTypeNative(), response.getAsset());
+    assertEquals("3.9999700", response.getAmount());
   }
 
   @Test
@@ -91,6 +99,8 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, AccountDebitedEffectResponse.class);
 
     assertEquals("account_debited", response.getType());
+    assertEquals(new AssetTypeNative(), response.getAsset());
+    assertEquals("15.8675013", response.getAmount());
   }
 
   @Test
@@ -101,6 +111,8 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, AccountFlagsUpdatedEffectResponse.class);
 
     assertEquals("account_flags_updated", response.getType());
+    assertTrue(response.getAuthRequiredFlag());
+    assertFalse(response.getAuthRevokableFlag());
   }
 
   @Test
@@ -143,6 +155,7 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, AccountSponsorshipCreatedEffectResponse.class);
 
     assertEquals("account_sponsorship_created", response.getType());
+    assertEquals("GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRCUC53SXSCAL44JV", response.getSponsor());
   }
 
   @Test
@@ -153,6 +166,8 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, AccountSponsorshipRemovedEffectResponse.class);
 
     assertEquals("account_sponsorship_removed", response.getType());
+    assertEquals(
+        "GA7PT6IPFVC4FGG273ZHGCNGG2O52F3B6CLVSI4SNIYOXLUNIOSFCK4F", response.getFormerSponsor());
   }
 
   @Test
@@ -163,6 +178,10 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, AccountSponsorshipUpdatedEffectResponse.class);
 
     assertEquals("account_sponsorship_updated", response.getType());
+    assertEquals(
+        "GA7PT6IPFVC4FGG273ZHGCNGG2O52F3B6CLVSI4SNIYOXLUNIOSFCK4F", response.getFormerSponsor());
+    assertEquals(
+        "GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRCUC53SXSCAL44JV", response.getNewSponsor());
   }
 
   @Test
@@ -173,6 +192,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, AccountThresholdsUpdatedEffectResponse.class);
 
     assertEquals("account_thresholds_updated", response.getType());
+    assertEquals(10, response.getLowThreshold().intValue());
+    assertEquals(20, response.getLowThreshold().intValue());
+    assertEquals(30, response.getLowThreshold().intValue());
   }
 
   @Test
@@ -185,6 +207,14 @@ public class EffectResponseTest {
             .fromJson(json, ClaimableBalanceClaimantCreatedEffectResponse.class);
 
     assertEquals("claimable_balance_claimant_created", response.getType());
+    assertEquals(
+        Asset.create("USDPEND:GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5"),
+        response.getAsset());
+    assertEquals(
+        "0000000048a70acdec712be9547d19f7e58adc22e35e0f5bcf3897a0353ab5dd4c5d61f4",
+        response.getBalanceId());
+    assertEquals("900.0000000", response.getAmount());
+    assertEquals(new Predicate.Not(new Predicate.AbsBefore(1619409600)), response.getPredicate());
   }
 
   @Test
@@ -195,6 +225,13 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, ClaimableBalanceClaimedEffectResponse.class);
 
     assertEquals("claimable_balance_claimed", response.getType());
+    assertEquals(
+        Asset.create("USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
+        response.getAsset());
+    assertEquals(
+        "0000000016cbeff27945d389e9123231ec916f7bb848c0579ceca12e2bfab5c34ce0da24",
+        response.getBalanceId());
+    assertEquals("1.0000000", response.getAmount());
   }
 
   @Test
@@ -205,6 +242,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, ClaimableBalanceClawedBackEffectResponse.class);
 
     assertEquals("claimable_balance_clawed_back", response.getType());
+    assertEquals(
+        "000000001fe36f3ce6ab6a6423b18b5947ce8890157ae77bb17faeb765814ad040b74ce1",
+        response.getBalanceId());
   }
 
   @Test
@@ -215,6 +255,13 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, ClaimableBalanceCreatedEffectResponse.class);
 
     assertEquals("claimable_balance_created", response.getType());
+    assertEquals(
+        Asset.create("USDPEND:GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5"),
+        response.getAsset());
+    assertEquals(
+        "0000000048a70acdec712be9547d19f7e58adc22e35e0f5bcf3897a0353ab5dd4c5d61f4",
+        response.getBalanceId());
+    assertEquals("900.0000000", response.getAmount());
   }
 
   @Test
@@ -227,6 +274,10 @@ public class EffectResponseTest {
             .fromJson(json, ClaimableBalanceSponsorshipCreatedEffectResponse.class);
 
     assertEquals("claimable_balance_sponsorship_created", response.getType());
+    assertEquals(
+        "0000000048a70acdec712be9547d19f7e58adc22e35e0f5bcf3897a0353ab5dd4c5d61f4",
+        response.getBalanceId());
+    assertEquals("GBGJB2WEIQCCUZYISUKAFRPR46LQ62O7W6CDKN52NVROG44LLL3L73X2", response.getSponsor());
   }
 
   @Test
@@ -239,6 +290,11 @@ public class EffectResponseTest {
             .fromJson(json, ClaimableBalanceSponsorshipRemovedEffectResponse.class);
 
     assertEquals("claimable_balance_sponsorship_removed", response.getType());
+    assertEquals(
+        "0000000016cbeff27945d389e9123231ec916f7bb848c0579ceca12e2bfab5c34ce0da24",
+        response.getBalanceId());
+    assertEquals(
+        "GDDGK5C7UQWC7AEFZZVO7KXRXZVP2BBQJ2IQFAIROKME2O3XQR2CMVC7", response.getFormerSponsor());
   }
 
   @Test
@@ -251,6 +307,13 @@ public class EffectResponseTest {
             .fromJson(json, ClaimableBalanceSponsorshipUpdatedEffectResponse.class);
 
     assertEquals("claimable_balance_sponsorship_updated", response.getType());
+    assertEquals(
+        "0000000016cbeff27945d389e9123231ec916f7bb848c0579ceca12e2bfab5c34ce0da24",
+        response.getBalanceId());
+    assertEquals(
+        "GDDGK5C7UQWC7AEFZZVO7KXRXZVP2BBQJ2IQFAIROKME2O3XQR2CMVC7", response.getFormerSponsor());
+    assertEquals(
+        "GBGJB2WEIQCCUZYISUKAFRPR46LQ62O7W6CDKN52NVROG44LLL3L73X2", response.getNewSponsor());
   }
 
   @Test
@@ -261,6 +324,10 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, ContractCreditedEffectResponse.class);
 
     assertEquals("contract_credited", response.getType());
+    assertEquals(new AssetTypeNative(), response.getAsset());
+    assertEquals("100.0000000", response.getAmount());
+    assertEquals(
+        "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK", response.getContract());
   }
 
   @Test
@@ -271,6 +338,10 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, ContractDebitedEffectResponse.class);
 
     assertEquals("contract_debited", response.getType());
+    assertEquals(new AssetTypeNative(), response.getAsset());
+    assertEquals("100.0000000", response.getAmount());
+    assertEquals(
+        "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK", response.getContract());
   }
 
   @Test
@@ -281,6 +352,12 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, DataCreatedEffectResponse.class);
 
     assertEquals("data_created", response.getType());
+    assertEquals("MESSAGE_DATA_0", response.getName());
+    assertEquals(
+        "UW1mNkhpemtkRTRWdDdrTmFDRzhiUnJ4WnlvamtQd2ZIcHdUUE1WQzlzZTNHbw==", response.getValue());
+    assertArrayEquals(
+        "Qmf6HizkdE4Vt7kNaCG8bRrxZyojkPwfHpwTPMVC9se3Go".getBytes(StandardCharsets.UTF_8),
+        response.getDecodedValue());
   }
 
   @Test
@@ -291,6 +368,7 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, DataRemovedEffectResponse.class);
 
     assertEquals("data_removed", response.getType());
+    assertEquals("MESSAGE_DATA_0", response.getName());
   }
 
   @Test
@@ -301,6 +379,8 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, DataSponsorshipCreatedEffectResponse.class);
 
     assertEquals("data_sponsorship_created", response.getType());
+    assertEquals("hello", response.getDataName());
+    assertEquals("GDDQTK5V3E3JFGLZZTJTKURTVY7QJPNQLTR5QS5HIWZWY5XPYIO5YELN", response.getSponsor());
   }
 
   @Test
@@ -311,6 +391,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, DataSponsorshipRemovedEffectResponse.class);
 
     assertEquals("data_sponsorship_removed", response.getType());
+    assertEquals("hello", response.getDataName());
+    assertEquals(
+        "GDDQTK5V3E3JFGLZZTJTKURTVY7QJPNQLTR5QS5HIWZWY5XPYIO5YELN", response.getFormerSponsor());
   }
 
   @Test
@@ -321,6 +404,11 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, DataSponsorshipUpdatedEffectResponse.class);
 
     assertEquals("data_sponsorship_updated", response.getType());
+    assertEquals("hello", response.getDataName());
+    assertEquals(
+        "GDDQTK5V3E3JFGLZZTJTKURTVY7QJPNQLTR5QS5HIWZWY5XPYIO5YELN", response.getFormerSponsor());
+    assertEquals(
+        "GBLZGNXYDTZN3Q2FP4WWEKFO5DZJ2ED43S6YMUFD7ZO6B6LNIEOKWUPX", response.getNewSponsor());
   }
 
   @Test
@@ -331,6 +419,12 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, DataUpdatedEffectResponse.class);
 
     assertEquals("data_updated", response.getType());
+    assertEquals("MESSAGE_DATA_1", response.getName());
+    assertEquals(
+        "UW1VNnU3UWZZcG9iZkRUTGt6N0VYTmpxZ1o5bkYza2lMTllQWHl1VzE0YTNGcw==", response.getValue());
+    assertArrayEquals(
+        "QmU6u7QfYpobfDTLkz7EXNjqgZ9nF3kiLNYPXyuW14a3Fs".getBytes(StandardCharsets.UTF_8),
+        response.getDecodedValue());
   }
 
   @Test
@@ -341,6 +435,23 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, LiquidityPoolCreatedEffectResponse.class);
 
     assertEquals("liquidity_pool_created", response.getType());
+    assertEquals(
+        "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
+        response.getLiquidityPool().getId().getPoolId());
+    assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
+    assertEquals(
+        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
+    assertEquals("0.0000000", response.getLiquidityPool().getTotalShares());
+    assertEquals(2, response.getLiquidityPool().getReserves().size());
+    assertEquals(
+        Asset.create("COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
+        response.getLiquidityPool().getReserves().get(0).getAsset());
+    assertEquals("0.0000000", response.getLiquidityPool().getReserves().get(0).getAmount());
+    assertEquals(
+        Asset.create("SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
+        response.getLiquidityPool().getReserves().get(1).getAsset());
+    assertEquals("0.0000000", response.getLiquidityPool().getReserves().get(1).getAmount());
   }
 
   @Test
@@ -351,6 +462,33 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, LiquidityPoolDepositedEffectResponse.class);
 
     assertEquals("liquidity_pool_deposited", response.getType());
+    assertEquals(
+        "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
+        response.getLiquidityPool().getId().getPoolId());
+    assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
+    assertEquals(
+        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
+    assertEquals("200.0000000", response.getLiquidityPool().getTotalShares());
+    assertEquals(2, response.getLiquidityPool().getReserves().size());
+    assertEquals(
+        Asset.create("COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
+        response.getLiquidityPool().getReserves().get(0).getAsset());
+    assertEquals("250.0000000", response.getLiquidityPool().getReserves().get(0).getAmount());
+    assertEquals(
+        Asset.create("SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
+        response.getLiquidityPool().getReserves().get(1).getAsset());
+    assertEquals("250.0000000", response.getLiquidityPool().getReserves().get(1).getAmount());
+    assertEquals(2, response.getReservesDeposited().size());
+    assertEquals(
+        Asset.create("COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
+        response.getReservesDeposited().get(0).getAsset());
+    assertEquals("250.0000000", response.getReservesDeposited().get(0).getAmount());
+    assertEquals(
+        Asset.create("SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
+        response.getReservesDeposited().get(1).getAsset());
+    assertEquals("250.0000000", response.getReservesDeposited().get(1).getAmount());
+    assertEquals("250.0000000", response.getSharesReceived());
   }
 
   @Test
@@ -361,6 +499,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, LiquidityPoolRemovedEffectResponse.class);
 
     assertEquals("liquidity_pool_removed", response.getType());
+    assertEquals(
+        "89c11017d16552c152536092d7440a2cd4cf4bf7df2c7e7552b56e6bcac98d95",
+        response.getLiquidityPoolID().getPoolId());
   }
 
   @Test
@@ -371,6 +512,36 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, LiquidityPoolRevokedEffectResponse.class);
 
     assertEquals("liquidity_pool_revoked", response.getType());
+    assertEquals(
+        "a6cad36777565bf0d52f89319416fb5e73149d07b9814c5baaddea0d53ef2baa",
+        response.getLiquidityPool().getId().getPoolId());
+    assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
+    assertEquals(
+        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
+    assertEquals("1.0000000", response.getLiquidityPool().getTotalShares());
+    assertEquals(2, response.getLiquidityPool().getReserves().size());
+    assertEquals(
+        Asset.create("native"), response.getLiquidityPool().getReserves().get(0).getAsset());
+    assertEquals("0.0000011", response.getLiquidityPool().getReserves().get(0).getAmount());
+    assertEquals(
+        Asset.create("BTC:GAMQXNIL2IV7YV3GIBQG56RCJAGTCW3WU64XDOM2M5N7A3OJWQZT5BNB"),
+        response.getLiquidityPool().getReserves().get(1).getAsset());
+    assertEquals("1000502.0030091", response.getLiquidityPool().getReserves().get(1).getAmount());
+    assertEquals(2, response.getReservesRevoked().size());
+    assertEquals(Asset.create("native"), response.getReservesRevoked().get(0).getAsset());
+    assertEquals("0.0000011", response.getReservesRevoked().get(0).getAmount());
+    assertEquals(
+        "00000000b69563dc3491932aa21baf799f7f1831831c7fc4b21ea8eac97578b48ddc884c",
+        response.getReservesRevoked().get(0).getClaimableBalanceID());
+    assertEquals(
+        Asset.create("BTC:GAMQXNIL2IV7YV3GIBQG56RCJAGTCW3WU64XDOM2M5N7A3OJWQZT5BNB"),
+        response.getReservesRevoked().get(1).getAsset());
+    assertEquals("1000502.0030091", response.getReservesRevoked().get(1).getAmount());
+    assertEquals(
+        "000000006708d006dc9d6b8601249383b25ac17198596493ff80c8dd8e6218b0c44ef472",
+        response.getReservesRevoked().get(1).getClaimableBalanceID());
+    assertEquals("0.5000000", response.getSharesRevoked());
   }
 
   @Test
@@ -393,35 +564,11 @@ public class EffectResponseTest {
     assertEquals("liquidity_pool_withdrew", response.getType());
   }
 
-  @Test
-  public void testOfferCreated() throws IOException {
-    String filePath = "src/test/resources/responses/effects/offer_created.json";
-    String json = new String(Files.readAllBytes(Paths.get(filePath)));
-    OfferCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, OfferCreatedEffectResponse.class);
-
-    assertEquals("offer_created", response.getType());
-  }
-
-  @Test
-  public void testOfferRemoved() throws IOException {
-    String filePath = "src/test/resources/responses/effects/offer_removed.json";
-    String json = new String(Files.readAllBytes(Paths.get(filePath)));
-    OfferRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, OfferRemovedEffectResponse.class);
-
-    assertEquals("offer_removed", response.getType());
-  }
-
-  @Test
-  public void testOfferUpdated() throws IOException {
-    String filePath = "src/test/resources/responses/effects/offer_updated.json";
-    String json = new String(Files.readAllBytes(Paths.get(filePath)));
-    OfferUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, OfferUpdatedEffectResponse.class);
-
-    assertEquals("offer_updated", response.getType());
-  }
+  // https://github.com/stellar/go/blob/188558412d74c122f9cbc6f76ff575d12f9a396d/protocols/horizon/effects/main.go#L96
+  // unused
+  // offer_created
+  // offer_removed
+  // offer_updated
 
   @Test
   public void testSequenceBumped() throws IOException {

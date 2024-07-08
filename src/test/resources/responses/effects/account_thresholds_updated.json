@@ -16,7 +16,7 @@
   "type": "account_thresholds_updated",
   "type_i": 4,
   "created_at": "2021-04-24T05:59:03Z",
-  "low_threshold": 20,
+  "low_threshold": 10,
   "med_threshold": 20,
-  "high_threshold": 20
+  "high_threshold": 30
 }

@@ -1,6 +1,7 @@
 package org.stellar.sdk.responses.effects;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPoolID;
@@ -14,6 +15,7 @@ public class LiquidityPool {
   @SerializedName("fee_bp")
   Integer feeBP;
 
+  // TODO: string?
   @SerializedName("type")
   LiquidityPoolType type;
 
@@ -24,5 +26,5 @@ public class LiquidityPool {
   String totalShares;
 
   @SerializedName("reserves")
-  AssetAmount[] reserves;
+  List<AssetAmount> reserves;
 }
