@@ -43,6 +43,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   - The types of some fields have been modified.
   - Removed some methods.
   - Some field names have been changed to maintain consistency with the Horizon API.
+  - Removed all functions that return `Optional` value.
 
 ## 0.44.0
 ### Update
