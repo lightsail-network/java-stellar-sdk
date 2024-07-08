@@ -1,9 +1,7 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Util;

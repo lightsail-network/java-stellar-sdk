@@ -90,8 +90,11 @@ public class TransactionResponseTest {
     assertEquals(
         "LbDjlPdLbiyGQnu7JGX8/nEPzpd+LupNjGZvy6Hw8RzCVvmipuclxOVRXa4mzb6DMyWKM20BusKbrA77ViwlDg==",
         transactionResponse.getSignatures().get(1));
-    assertEquals(0, transactionResponse.getPreconditions().getTimeBounds().getMinTime().longValue());
-    assertEquals(1720158787, transactionResponse.getPreconditions().getTimeBounds().getMaxTime().longValue());
+    assertEquals(
+        0, transactionResponse.getPreconditions().getTimeBounds().getMinTime().longValue());
+    assertEquals(
+        1720158787,
+        transactionResponse.getPreconditions().getTimeBounds().getMaxTime().longValue());
     assertEquals(Memo.text("0,075% Daily for Holders"), transactionResponse.getMemo());
   }
 
@@ -140,8 +143,11 @@ public class TransactionResponseTest {
     assertEquals(
         "rWzMRzkbVOTXv6rUONbf343/TUK2BD/nzhS8qNRJuiCqnwkefo/EwraJkLT32nkZVw8TnWQEqhuFeXjrIo9YCQ==",
         transactionResponse.getSignatures().get(1));
-    assertEquals(0, transactionResponse.getPreconditions().getTimeBounds().getMinTime().longValue());
-    assertEquals(1720159290, transactionResponse.getPreconditions().getTimeBounds().getMaxTime().longValue());
+    assertEquals(
+        0, transactionResponse.getPreconditions().getTimeBounds().getMinTime().longValue());
+    assertEquals(
+        1720159290,
+        transactionResponse.getPreconditions().getTimeBounds().getMaxTime().longValue());
     assertEquals(Memo.none(), transactionResponse.getMemo());
   }
 
