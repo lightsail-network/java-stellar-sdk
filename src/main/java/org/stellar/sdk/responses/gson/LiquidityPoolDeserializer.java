@@ -10,7 +10,6 @@ import java.lang.reflect.Type;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.responses.LiquidityPoolResponse;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 class LiquidityPoolDeserializer implements JsonDeserializer<LiquidityPoolResponse> {
   @Override
@@ -22,7 +21,6 @@ class LiquidityPoolDeserializer implements JsonDeserializer<LiquidityPoolRespons
         new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
             .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
-            .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
             .create();
 
     return gson.fromJson(json, LiquidityPoolResponse.class);

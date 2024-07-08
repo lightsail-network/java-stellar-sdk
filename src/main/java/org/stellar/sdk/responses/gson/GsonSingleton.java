@@ -19,7 +19,6 @@ import org.stellar.sdk.responses.TradeResponse;
 import org.stellar.sdk.responses.TransactionResponse;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class GsonSingleton {
   private static Gson instance = null;
@@ -53,7 +52,6 @@ public class GsonSingleton {
               .registerTypeAdapter(OperationResponse.class, new OperationDeserializer())
               .registerTypeAdapter(EffectResponse.class, new EffectDeserializer())
               .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
-              .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
               .registerTypeAdapter(
                   accountPageType.getType(), new PageDeserializer<>(accountPageType))
               .registerTypeAdapter(assetPageType.getType(), new PageDeserializer<>(assetPageType))

@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.responses.gson.GsonSingleton;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class LiquidityPoolResponseTest {
   @Test
@@ -27,8 +26,7 @@ public class LiquidityPoolResponseTest {
         "a468d41d8e9b8f3c7209651608b74b7db7ac9952dcae0cdf24871d1d9c7b0088",
         liquidityPoolResponse.getPagingToken());
     assertEquals(30, liquidityPoolResponse.getFeeBP().intValue());
-    assertEquals(
-        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, liquidityPoolResponse.getType());
+    assertEquals("constant_product", liquidityPoolResponse.getType());
     assertEquals(885, liquidityPoolResponse.getTotalTrustlines().longValue());
     assertEquals("5787922.2796105", liquidityPoolResponse.getTotalShares());
 

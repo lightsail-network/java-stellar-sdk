@@ -11,7 +11,6 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.effects.*;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 class EffectDeserializer implements JsonDeserializer<EffectResponse> {
   @Override
@@ -24,7 +23,6 @@ class EffectDeserializer implements JsonDeserializer<EffectResponse> {
         new GsonBuilder()
             .registerTypeAdapter(Asset.class, new AssetDeserializer())
             .registerTypeAdapter(LiquidityPoolID.class, new LiquidityPoolIDDeserializer())
-            .registerTypeAdapter(LiquidityPoolType.class, new LiquidityPoolTypeDeserializer())
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
             .create();
 

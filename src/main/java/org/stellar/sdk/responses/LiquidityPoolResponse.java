@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 /**
  * Represents liquidity pool response.
@@ -28,9 +27,8 @@ public class LiquidityPoolResponse extends Response {
   @SerializedName("fee_bp")
   Integer feeBP;
 
-  // TODO: String?
   @SerializedName("type")
-  LiquidityPoolType type;
+  String type;
 
   @SerializedName("total_trustlines")
   Long totalTrustlines;

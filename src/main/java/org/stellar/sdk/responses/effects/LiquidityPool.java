@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.Value;
 import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.LiquidityPoolID;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 @Value
 public class LiquidityPool {
@@ -15,9 +14,8 @@ public class LiquidityPool {
   @SerializedName("fee_bp")
   Integer feeBP;
 
-  // TODO: string?
   @SerializedName("type")
-  LiquidityPoolType type;
+  String type;
 
   @SerializedName("total_trustlines")
   Long totalTrustlines;

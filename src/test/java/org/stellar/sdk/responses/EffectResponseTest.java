@@ -67,7 +67,6 @@ import org.stellar.sdk.responses.effects.TrustlineSponsorshipRemovedEffectRespon
 import org.stellar.sdk.responses.effects.TrustlineSponsorshipUpdatedEffectResponse;
 import org.stellar.sdk.responses.effects.TrustlineUpdatedEffectResponse;
 import org.stellar.sdk.responses.gson.GsonSingleton;
-import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class EffectResponseTest {
   @Test
@@ -469,8 +468,7 @@ public class EffectResponseTest {
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
         response.getLiquidityPool().getId().getPoolId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
-    assertEquals(
-        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
     assertEquals("0.0000000", response.getLiquidityPool().getTotalShares());
     assertEquals(2, response.getLiquidityPool().getReserves().size());
@@ -496,8 +494,7 @@ public class EffectResponseTest {
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
         response.getLiquidityPool().getId().getPoolId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
-    assertEquals(
-        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
     assertEquals("200.0000000", response.getLiquidityPool().getTotalShares());
     assertEquals(2, response.getLiquidityPool().getReserves().size());
@@ -546,8 +543,7 @@ public class EffectResponseTest {
         "a6cad36777565bf0d52f89319416fb5e73149d07b9814c5baaddea0d53ef2baa",
         response.getLiquidityPool().getId().getPoolId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
-    assertEquals(
-        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
     assertEquals("1.0000000", response.getLiquidityPool().getTotalShares());
     assertEquals(2, response.getLiquidityPool().getReserves().size());
@@ -586,8 +582,7 @@ public class EffectResponseTest {
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
         response.getLiquidityPool().getId().getPoolId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
-    assertEquals(
-        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
     assertEquals("400.0000000", response.getLiquidityPool().getTotalShares());
     assertEquals(2, response.getLiquidityPool().getReserves().size());
@@ -621,8 +616,7 @@ public class EffectResponseTest {
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
         response.getLiquidityPool().getId().getPoolId());
     assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
-    assertEquals(
-        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals("constant_product", response.getLiquidityPool().getType());
     assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
     assertEquals("400.0000000", response.getLiquidityPool().getTotalShares());
     assertEquals(2, response.getLiquidityPool().getReserves().size());
