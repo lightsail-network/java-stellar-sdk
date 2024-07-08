@@ -46,7 +46,7 @@ public class ChangeTrustOperationResponse extends OperationResponse {
   @SerializedName("liquidity_pool_id")
   LiquidityPoolID liquidityPoolId;
 
-  public TrustLineAsset getAsset() {
+  public TrustLineAsset getTrustLineAsset() {
     return getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolId);
   }
 }

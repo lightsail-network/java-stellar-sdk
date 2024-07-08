@@ -154,7 +154,7 @@ public class OperationResponseTest {
         new TrustLineAsset(
             new AssetTypeCreditAlphaNum4(
                 "USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN")),
-        response.getAsset());
+        response.getTrustLineAsset());
     assertEquals("922337203685.4775807", response.getLimit());
   }
 
@@ -179,7 +179,7 @@ public class OperationResponseTest {
         new TrustLineAsset(
             new LiquidityPoolID(
                 "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355")),
-        response.getAsset());
+        response.getTrustLineAsset());
     assertEquals("922337203685.4775807", response.getLimit());
   }
 

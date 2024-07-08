@@ -52,7 +52,7 @@ public class AccountResponseTest {
     assertEquals(account.getBalances().get(0).getIsAuthorizedToMaintainLiabilities(), false);
     assertEquals(account.getBalances().get(0).getAssetType(), "liquidity_pool_shares");
     assertEquals(
-        account.getBalances().get(0).getAsset(),
+        account.getBalances().get(0).getTrustLineAsset(),
         new TrustLineAsset(
             new LiquidityPoolID(
                 "59fa1dc57433dcfbd2db7319d26cb3da1f28f2d8095a3ec36ad4ef9cadb0013e")));
@@ -70,7 +70,7 @@ public class AccountResponseTest {
         account.getBalances().get(1).getAssetIssuer(),
         "GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA");
     assertEquals(
-        account.getBalances().get(1).getAsset(),
+        account.getBalances().get(1).getTrustLineAsset(),
         new TrustLineAsset(
             Asset.create("AQUA:GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA")));
 
@@ -78,7 +78,7 @@ public class AccountResponseTest {
     assertEquals(account.getBalances().get(6).getBuyingLiabilities(), "10000.0000000");
     assertEquals(account.getBalances().get(6).getSellingLiabilities(), "25.1000000");
     assertEquals(account.getBalances().get(6).getAssetType(), "native");
-    assertEquals(account.getBalances().get(6).getAsset(), new TrustLineAsset(new AssetTypeNative()));
+    assertEquals(account.getBalances().get(6).getTrustLineAsset(), new TrustLineAsset(new AssetTypeNative()));
 
     assertEquals(account.getSigners().size(), 3);
     assertEquals(

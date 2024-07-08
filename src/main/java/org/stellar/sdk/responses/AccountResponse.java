@@ -194,7 +194,7 @@ public class AccountResponse extends Response implements org.stellar.sdk.Transac
     @SerializedName("sponsor")
     String sponsor;
 
-    public TrustLineAsset getAsset() {
+    public TrustLineAsset getTrustLineAsset() {
       return Response.getTrustLineAsset(assetType, assetCode, assetIssuer, liquidityPoolID);
     }
   }
