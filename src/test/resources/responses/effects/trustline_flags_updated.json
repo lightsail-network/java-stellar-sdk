@@ -20,5 +20,7 @@
   "asset_code": "MSCIW",
   "asset_issuer": "GBRDHSZL4ZKOI2PTUMM53N3NICZXC5OX3KPCD4WD4NG4XGCBC2ZA3KAG",
   "trustor": "GBL73HAKZGDGPSLOHI543CSK7FVJSMLHSIRUZRBH7SV43GM7IQWS7QET",
-  "authorized_flag": true
+  "authorized_flag": true,
+  "authorized_to_maintain_liabilites_flag": false,
+  "clawback_enabled_flag": true
 }

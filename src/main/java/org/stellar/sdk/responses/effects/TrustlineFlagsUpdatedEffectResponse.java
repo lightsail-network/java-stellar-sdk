@@ -31,30 +31,15 @@ public class TrustlineFlagsUpdatedEffectResponse extends EffectResponse {
   String assetIssuer;
 
   @SerializedName("authorized_flag")
-  boolean authorized;
+  Boolean authorized;
 
   @SerializedName("authorized_to_maintain_liabilites_flag")
-  boolean authorizedToMaintainLiabilities;
+  Boolean authorizedToMaintainLiabilities;
 
   @SerializedName("clawback_enabled_flag")
-  boolean clawbackEnabled;
+  Boolean clawbackEnabled;
 
-  // TODO
   public Asset getAsset() {
     return create(assetType, assetCode, assetIssuer);
-  }
-
-  // TODO: fixme
-  public boolean getAuthorized() {
-    return authorized;
-  }
-
-  // TODO
-  public boolean getAuthorizedToMaintainLiabilities() {
-    return authorizedToMaintainLiabilities;
-  }
-
-  public boolean getClawbackEnabled() {
-    return clawbackEnabled;
   }
 }

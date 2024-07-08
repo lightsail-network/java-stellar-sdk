@@ -11,8 +11,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeCreditAlphaNum12;
+import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Predicate;
+import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.responses.effects.AccountCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.AccountCreditedEffectResponse;
 import org.stellar.sdk.responses.effects.AccountDebitedEffectResponse;
@@ -193,8 +196,8 @@ public class EffectResponseTest {
 
     assertEquals("account_thresholds_updated", response.getType());
     assertEquals(10, response.getLowThreshold().intValue());
-    assertEquals(20, response.getLowThreshold().intValue());
-    assertEquals(30, response.getLowThreshold().intValue());
+    assertEquals(20, response.getMedThreshold().intValue());
+    assertEquals(30, response.getHighThreshold().intValue());
   }
 
   @Test
@@ -552,6 +555,31 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, LiquidityPoolTradeEffectResponse.class);
 
     assertEquals("liquidity_pool_trade", response.getType());
+    assertEquals(
+        "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
+        response.getLiquidityPool().getId().getPoolId());
+    assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
+    assertEquals(
+        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
+    assertEquals("400.0000000", response.getLiquidityPool().getTotalShares());
+    assertEquals(2, response.getLiquidityPool().getReserves().size());
+    assertEquals(
+        Asset.create("COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
+        response.getLiquidityPool().getReserves().get(0).getAsset());
+    assertEquals("381.0068105", response.getLiquidityPool().getReserves().get(0).getAmount());
+    assertEquals(
+        Asset.create("SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
+        response.getLiquidityPool().getReserves().get(1).getAsset());
+    assertEquals("420.0000000", response.getLiquidityPool().getReserves().get(1).getAmount());
+    assertEquals(
+        Asset.create("COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
+        response.getSold().getAsset());
+    assertEquals("18.9931895", response.getSold().getAmount());
+    assertEquals(
+        Asset.create("SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
+        response.getBought().getAsset());
+    assertEquals("20.0000000", response.getBought().getAmount());
   }
 
   @Test
@@ -562,6 +590,33 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, LiquidityPoolWithdrewEffectResponse.class);
 
     assertEquals("liquidity_pool_withdrew", response.getType());
+    assertEquals(
+        "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
+        response.getLiquidityPool().getId().getPoolId());
+    assertEquals(30, response.getLiquidityPool().getFeeBP().intValue());
+    assertEquals(
+        LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT, response.getLiquidityPool().getType());
+    assertEquals(1, response.getLiquidityPool().getTotalTrustlines().intValue());
+    assertEquals("400.0000000", response.getLiquidityPool().getTotalShares());
+    assertEquals(2, response.getLiquidityPool().getReserves().size());
+    assertEquals(
+        Asset.create("COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
+        response.getLiquidityPool().getReserves().get(0).getAsset());
+    assertEquals("400.0000000", response.getLiquidityPool().getReserves().get(0).getAmount());
+    assertEquals(
+        Asset.create("SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
+        response.getLiquidityPool().getReserves().get(1).getAsset());
+    assertEquals("400.0000000", response.getLiquidityPool().getReserves().get(1).getAmount());
+    assertEquals(2, response.getReservesReceived().size());
+    assertEquals(
+        Asset.create("COOL:GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL"),
+        response.getReservesReceived().get(0).getAsset());
+    assertEquals("100.0000000", response.getReservesReceived().get(0).getAmount());
+    assertEquals(
+        Asset.create("SONESO:GAOF7ARG3ZAVUA63GCLXG5JQTMBAH3ZFYHGLGJLDXGDSXQRHD72LLGOB"),
+        response.getReservesReceived().get(1).getAsset());
+    assertEquals("100.0000000", response.getReservesReceived().get(1).getAmount());
+    assertEquals("100.0000000", response.getSharesRedeemed());
   }
 
   // https://github.com/stellar/go/blob/188558412d74c122f9cbc6f76ff575d12f9a396d/protocols/horizon/effects/main.go#L96
@@ -578,6 +633,7 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, SequenceBumpedEffectResponse.class);
 
     assertEquals("sequence_bumped", response.getType());
+    assertEquals(108136397361122527L, response.getNewSequence().longValue());
   }
 
   @Test
@@ -588,6 +644,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, SignerCreatedEffectResponse.class);
 
     assertEquals("signer_created", response.getType());
+    assertEquals(1, response.getWeight().intValue());
+    assertEquals(
+        "GCQPKZEC6VNFPDJMK73ET7JKKMN65BWYHCWF3Z65ZZPAL4E7DPWHP3YY", response.getPublicKey());
   }
 
   @Test
@@ -598,6 +657,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, SignerRemovedEffectResponse.class);
 
     assertEquals("signer_removed", response.getType());
+    assertEquals(0, response.getWeight().intValue());
+    assertEquals(
+        "GDUQFAHWHQ6AUP6Q5MDAHILRG222CRF35HPUVRI66L7HXKHFJAQGHICR", response.getPublicKey());
   }
 
   @Test
@@ -608,6 +670,8 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, SignerSponsorshipCreatedEffectResponse.class);
 
     assertEquals("signer_sponsorship_created", response.getType());
+    assertEquals("GD6632TYLXUKGVFNQYSC2AC752YZWR7VFNJZ5X7HYPKBLZKK5YVWQ54S", response.getSigner());
+    assertEquals("GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRCUC53SXSCAL44JV", response.getSponsor());
   }
 
   @Test
@@ -618,6 +682,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, SignerSponsorshipRemovedEffectResponse.class);
 
     assertEquals("signer_sponsorship_removed", response.getType());
+    assertEquals("GBIQ43HRJ3HKDRR3AYV25VYWQAQHZ7RWFBNUOU755FNY2O5UIFQD5TRD", response.getSigner());
+    assertEquals(
+        "GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRCUC53SXSCAL44JV", response.getFormerSponsor());
   }
 
   @Test
@@ -628,6 +695,11 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, SignerSponsorshipUpdatedEffectResponse.class);
 
     assertEquals("signer_sponsorship_updated", response.getType());
+    assertEquals("GBIQ43HRJ3HKDRR3AYV25VYWQAQHZ7RWFBNUOU755FNY2O5UIFQD5TRD", response.getSigner());
+    assertEquals(
+        "GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRCUC53SXSCAL44JV", response.getFormerSponsor());
+    assertEquals(
+        "GAZKB7OEYRUVL6TSBXI74D2IZS4JRCPBXJZ37MDDYAEYBOMHXUYIX5YL", response.getNewSponsor());
   }
 
   @Test
@@ -638,6 +710,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, SignerUpdatedEffectResponse.class);
 
     assertEquals("signer_updated", response.getType());
+    assertEquals(10, response.getWeight().intValue());
+    assertEquals(
+        "GC52GNOWS6DHRDVNA3ZZ7J6S52FZAQR3V5GIKVJPNMD6MOSQINEP672L", response.getPublicKey());
   }
 
   @Test
@@ -648,6 +723,20 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TradeEffectResponse.class);
 
     assertEquals("trade", response.getType());
+    assertEquals("GCMYQPCR2FZ44ARPCWDX65TEYIQFXPOWTMHZCXAT4MDDEOBPI5S5EBX2", response.getSeller());
+    assertEquals(545489795L, response.getOfferId().longValue());
+    assertEquals("1.9295894", response.getSoldAmount());
+    assertEquals("credit_alphanum12", response.getSoldAssetType());
+    assertEquals("BUSD1", response.getSoldAssetCode());
+    assertEquals(
+        "GCIEGKAZ4ZUM4PEBTDXUMG6N4ZXOTCCK3UMSJCJ33QE5SVMCTTBKCVNY", response.getSoldAssetIssuer());
+    assertEquals(
+        new AssetTypeCreditAlphaNum12(
+            "BUSD1", "GCIEGKAZ4ZUM4PEBTDXUMG6N4ZXOTCCK3UMSJCJ33QE5SVMCTTBKCVNY"),
+        response.getSoldAsset());
+    assertEquals("4.3525833", response.getBoughtAmount());
+    assertEquals("native", response.getBoughtAssetType());
+    assertEquals(new AssetTypeNative(), response.getBoughtAsset());
   }
 
   @Test
@@ -658,6 +747,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineAuthorizedEffectResponse.class);
 
     assertEquals("trustline_authorized", response.getType());
+    assertEquals("GBL73HAKZGDGPSLOHI543CSK7FVJSMLHSIRUZRBH7SV43GM7IQWS7QET", response.getTrustor());
+    assertEquals("credit_alphanum12", response.getAssetType());
+    assertEquals("MSCIW", response.getAssetCode());
   }
 
   @Test
@@ -670,6 +762,9 @@ public class EffectResponseTest {
             .fromJson(json, TrustlineAuthorizedToMaintainLiabilitiesEffectResponse.class);
 
     assertEquals("trustline_authorized_to_maintain_liabilities", response.getType());
+    assertEquals("GBL73HAKZGDGPSLOHI543CSK7FVJSMLHSIRUZRBH7SV43GM7IQWS7QET", response.getTrustor());
+    assertEquals("credit_alphanum12", response.getAssetType());
+    assertEquals("MSCIW", response.getAssetCode());
   }
 
   @Test
@@ -680,6 +775,11 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineCreatedEffectResponse.class);
 
     assertEquals("trustline_created", response.getType());
+    assertEquals("credit_alphanum12", response.getAssetType());
+    assertEquals("DOGET", response.getAssetCode());
+    assertEquals(
+        "GDOEVDDBU6OBWKL7VHDAOKD77UP4DKHQYKOKJJT5PR3WRDBTX35HUEUX", response.getAssetIssuer());
+    assertEquals("922337203685.4775807", response.getLimit());
   }
 
   @Test
@@ -690,6 +790,9 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineDeauthorizedEffectResponse.class);
 
     assertEquals("trustline_deauthorized", response.getType());
+    assertEquals("GCLF6MCQFP2XJ7M46JUCO3CFZDNVXXC6NNKGFSPQXED6OVMUOUZ3HLNE", response.getTrustor());
+    assertEquals("credit_alphanum4", response.getAssetType());
+    assertEquals("LPTK", response.getAssetCode());
   }
 
   @Test
@@ -700,6 +803,14 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineFlagsUpdatedEffectResponse.class);
 
     assertEquals("trustline_flags_updated", response.getType());
+    assertEquals("credit_alphanum12", response.getAssetType());
+    assertEquals("MSCIW", response.getAssetCode());
+    assertEquals(
+        "GBRDHSZL4ZKOI2PTUMM53N3NICZXC5OX3KPCD4WD4NG4XGCBC2ZA3KAG", response.getAssetIssuer());
+    assertEquals("GBL73HAKZGDGPSLOHI543CSK7FVJSMLHSIRUZRBH7SV43GM7IQWS7QET", response.getTrustor());
+    assertTrue(response.getAuthorized());
+    assertFalse(response.getAuthorizedToMaintainLiabilities());
+    assertTrue(response.getClawbackEnabled());
   }
 
   @Test
@@ -710,6 +821,11 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineRemovedEffectResponse.class);
 
     assertEquals("trustline_removed", response.getType());
+    assertEquals("credit_alphanum4", response.getAssetType());
+    assertEquals("TERN", response.getAssetCode());
+    assertEquals(
+        "GDGQDVO6XPFSY4NMX75A7AOVYCF5JYGW2SHCJJNWCQWIDGOZB53DGP6C", response.getAssetIssuer());
+    assertEquals("0.0000000", response.getLimit());
   }
 
   @Test
@@ -720,6 +836,12 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineSponsorshipCreatedEffectResponse.class);
 
     assertEquals("trustline_sponsorship_created", response.getType());
+    assertEquals("credit_alphanum4", response.getAssetType());
+    assertEquals(
+        new AssetTypeCreditAlphaNum4(
+            "USDC", "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"),
+        response.getAsset());
+    assertEquals("GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRCUC53SXSCAL44JV", response.getSponsor());
   }
 
   @Test
@@ -730,6 +852,13 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineSponsorshipRemovedEffectResponse.class);
 
     assertEquals("trustline_sponsorship_removed", response.getType());
+    assertEquals("credit_alphanum12", response.getAssetType());
+    assertEquals(
+        new AssetTypeCreditAlphaNum12(
+            "SQ0202", "GCZODXV5HXRHHOZHWE57LMWIELKAXPKC64SOEBGTK7BV4GMRMOKYDIQQ"),
+        response.getAsset());
+    assertEquals(
+        "GA7PT6IPFVC4FGG273ZHGCNGG2O52F3B6CLVSI4SNIYOXLUNIOSFCK4F", response.getFormerSponsor());
   }
 
   @Test
@@ -740,6 +869,15 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineSponsorshipUpdatedEffectResponse.class);
 
     assertEquals("trustline_sponsorship_updated", response.getType());
+    assertEquals("credit_alphanum12", response.getAssetType());
+    assertEquals(
+        new AssetTypeCreditAlphaNum12(
+            "SQ0202", "GCZODXV5HXRHHOZHWE57LMWIELKAXPKC64SOEBGTK7BV4GMRMOKYDIQQ"),
+        response.getAsset());
+    assertEquals(
+        "GA7PT6IPFVC4FGG273ZHGCNGG2O52F3B6CLVSI4SNIYOXLUNIOSFCK4F", response.getFormerSponsor());
+    assertEquals(
+        "GB6JGOVUP3UXRPA2BUAUF6YGGZSRWQUMPTHVRSRATVYGFOYUYRPWJACK", response.getNewSponsor());
   }
 
   @Test
@@ -750,5 +888,16 @@ public class EffectResponseTest {
         GsonSingleton.getInstance().fromJson(json, TrustlineUpdatedEffectResponse.class);
 
     assertEquals("trustline_updated", response.getType());
+    assertEquals("credit_alphanum12", response.getAssetType());
+    assertEquals("DOGET", response.getAssetCode());
+    assertEquals(
+        "GDOEVDDBU6OBWKL7VHDAOKD77UP4DKHQYKOKJJT5PR3WRDBTX35HUEUX", response.getAssetIssuer());
+    assertEquals("922337203685.4775807", response.getLimit());
+    assertEquals(
+        new TrustLineAsset(
+            new AssetTypeCreditAlphaNum12(
+                "DOGET", "GDOEVDDBU6OBWKL7VHDAOKD77UP4DKHQYKOKJJT5PR3WRDBTX35HUEUX")),
+        response.getTrustLineAsset());
+    // TODO: test liquidity pool id
   }
 }
