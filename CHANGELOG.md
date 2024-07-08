@@ -44,6 +44,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   - Removed some methods.
   - Some field names have been changed to maintain consistency with the Horizon API.
   - Removed all functions that return `Optional` value.
+- refactor!: remove `rateLimitLimit`, `rateLimitRemaining`, and `rateLimitReset` from the `Response`.
 
 ## 0.44.0
 ### Update

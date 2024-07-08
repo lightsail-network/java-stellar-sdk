@@ -75,9 +75,6 @@ public class ResponseHandler<T> {
 
       if (response.code() >= 200 && response.code() < 300) {
         T object = GsonSingleton.getInstance().fromJson(content, type.getType());
-        if (object instanceof org.stellar.sdk.responses.Response) {
-          ((org.stellar.sdk.responses.Response) object).setHeaders(response.headers());
-        }
         if (object instanceof TypedResponse) {
           ((TypedResponse<T>) object).setType(type);
         }
