@@ -22,6 +22,9 @@ public class PagesTest {
     assertEquals(
         "GA2224DCGO3WHC4EALA2PR2BZEMAYZPBPTHS243ZYYWQMBWRPJSZH5A6",
         page.getRecords().get(0).getId());
+    assertEquals(
+        "GA222ALYG6Z7NREPQJVGW4M3ZSZCBGJUR5WJ3KD6QE3OWPXB3XZN6SYS",
+        page.getRecords().get(1).getId());
   }
 
   @Test
@@ -32,6 +35,7 @@ public class PagesTest {
     Page<AssetResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(3, page.getRecords().size());
     assertEquals(25, page.getRecords().get(0).getNumAccounts().intValue());
+    assertEquals(1, page.getRecords().get(1).getNumAccounts().intValue());
   }
 
   @Test
@@ -46,6 +50,9 @@ public class PagesTest {
     assertEquals(
         "00000000178826fbfe339e1f5c53417c6fedfe2c05e8bec14303143ec46b38981b09c3f9",
         page.getRecords().get(0).getId());
+    assertEquals(
+        "00000000446bbc79c503c759275d433b088a89b122981ff104a76bc4fdb8e212a87eae35",
+        page.getRecords().get(1).getId());
   }
 
   @Test
@@ -56,6 +63,7 @@ public class PagesTest {
     Page<EffectResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(3, page.getRecords().size());
     assertEquals("0000000012884905985-0000000001", page.getRecords().get(0).getId());
+    assertEquals("0000000012884905985-0000000002", page.getRecords().get(1).getId());
   }
 
   @Test
@@ -68,6 +76,9 @@ public class PagesTest {
     assertEquals(
         "fe0f6bea5f341344fdb5bc6fc4ad719dd63071d9203e9a1e7f17c68ea1ecebde",
         page.getRecords().get(0).getId());
+    assertEquals(
+        "ec168d452542589dbc2d0eb6d58c74b9bb2ccb93bba879a3b3fa73fdfa730182",
+        page.getRecords().get(1).getId());
   }
 
   @Test
@@ -80,6 +91,9 @@ public class PagesTest {
     assertEquals(
         "0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a",
         page.getRecords().get(0).getId());
+    assertEquals(
+        "00027e57b10c37b92854c439e2406c110a9b0a545c463aa1aefe4efe524090e0",
+        page.getRecords().get(1).getId());
   }
 
   @Test
@@ -90,6 +104,7 @@ public class PagesTest {
     Page<OfferResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(3, page.getRecords().size());
     assertEquals(2, page.getRecords().get(0).getId().longValue());
+    assertEquals(167, page.getRecords().get(1).getId().longValue());
   }
 
   @Test
@@ -100,6 +115,7 @@ public class PagesTest {
     Page<OperationResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(3, page.getRecords().size());
     assertEquals(12884905985L, page.getRecords().get(0).getId().longValue());
+    assertEquals(12884905986L, page.getRecords().get(1).getId().longValue());
   }
 
   @Test
@@ -110,6 +126,7 @@ public class PagesTest {
     Page<OperationResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(3, page.getRecords().size());
     assertEquals(12884905985L, page.getRecords().get(0).getId().longValue());
+    assertEquals(12884905986L, page.getRecords().get(1).getId().longValue());
   }
 
   @Test
@@ -120,6 +137,7 @@ public class PagesTest {
     Page<PathResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(4, page.getRecords().size());
     assertEquals("0.1000000", page.getRecords().get(0).getSourceAmount());
+    assertEquals("1.1574477", page.getRecords().get(1).getSourceAmount());
   }
 
   @Test
@@ -130,6 +148,7 @@ public class PagesTest {
     Page<PathResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(6, page.getRecords().size());
     assertEquals("0.0100343", page.getRecords().get(0).getDestinationAmount());
+    assertEquals("0.0100244", page.getRecords().get(1).getDestinationAmount());
   }
 
   @Test
@@ -141,7 +160,8 @@ public class PagesTest {
     Page<TradeAggregationResponse> page =
         GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(3, page.getRecords().size());
-    assertEquals("0.0862979", page.getRecords().get(0).getOpen());
+    assertEquals(1720431900000L, page.getRecords().get(0).getTimestamp().longValue());
+    assertEquals(1720431600000L, page.getRecords().get(1).getTimestamp().longValue());
   }
 
   @Test
@@ -152,6 +172,7 @@ public class PagesTest {
     Page<TradeResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(3, page.getRecords().size());
     assertEquals("3697472920621057-0", page.getRecords().get(0).getId());
+    assertEquals("3697472920621057-1", page.getRecords().get(1).getId());
   }
 
   @Test
