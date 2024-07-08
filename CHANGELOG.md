@@ -37,6 +37,12 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor!: `FeeBumpTransaction.getFeeAccount` has been removed, use `FeeBumpTransaction.getFeeSource` instead.
 - refactor!: remove `AccountConverter`, this means that we no longer support disabling support for MuxedAccount.
 - refactor!: refactor the way of constructing `Predicate.Or` and `Predicate.And`. The `inner` inside has been removed, and in its place are `left` and `right`, used to represent two predicates.
+- refactor!: Refactored response classes.
+  - Utilized wrapper classes, such as replacing `int` with `Integer`, `long` with `Long`, `boolean` with `Boolean`, etc.
+  - If a field is a list, we now use `List` instead of `arrays`.
+  - The types of some fields have been modified.
+  - Removed some methods.
+  - Some field names have been changed to maintain consistency with the Horizon API.
 
 ## 0.44.0
 ### Update
