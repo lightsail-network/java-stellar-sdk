@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 
 public class PathResponseTest {
   @Test

@@ -1,4 +1,4 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk.responses.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,6 +9,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
+import org.stellar.sdk.responses.LiquidityPoolResponse;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 class LiquidityPoolDeserializer implements JsonDeserializer<LiquidityPoolResponse> {

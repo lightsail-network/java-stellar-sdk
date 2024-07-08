@@ -66,6 +66,7 @@ import org.stellar.sdk.responses.effects.TrustlineSponsorshipCreatedEffectRespon
 import org.stellar.sdk.responses.effects.TrustlineSponsorshipRemovedEffectResponse;
 import org.stellar.sdk.responses.effects.TrustlineSponsorshipUpdatedEffectResponse;
 import org.stellar.sdk.responses.effects.TrustlineUpdatedEffectResponse;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class EffectResponseTest {

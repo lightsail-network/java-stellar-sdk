@@ -13,6 +13,7 @@ import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 
 public class AccountResponseTest {
   @Test
@@ -78,7 +79,9 @@ public class AccountResponseTest {
     assertEquals(account.getBalances().get(6).getBuyingLiabilities(), "10000.0000000");
     assertEquals(account.getBalances().get(6).getSellingLiabilities(), "25.1000000");
     assertEquals(account.getBalances().get(6).getAssetType(), "native");
-    assertEquals(account.getBalances().get(6).getTrustLineAsset(), new TrustLineAsset(new AssetTypeNative()));
+    assertEquals(
+        account.getBalances().get(6).getTrustLineAsset(),
+        new TrustLineAsset(new AssetTypeNative()));
 
     assertEquals(account.getSigners().size(), 3);
     assertEquals(

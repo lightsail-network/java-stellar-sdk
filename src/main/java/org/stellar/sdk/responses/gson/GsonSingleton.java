@@ -1,4 +1,4 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk.responses.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -6,6 +6,17 @@ import com.google.gson.reflect.TypeToken;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
+import org.stellar.sdk.responses.AccountResponse;
+import org.stellar.sdk.responses.AssetResponse;
+import org.stellar.sdk.responses.ClaimableBalanceResponse;
+import org.stellar.sdk.responses.LedgerResponse;
+import org.stellar.sdk.responses.LiquidityPoolResponse;
+import org.stellar.sdk.responses.OfferResponse;
+import org.stellar.sdk.responses.Page;
+import org.stellar.sdk.responses.PathResponse;
+import org.stellar.sdk.responses.TradeAggregationResponse;
+import org.stellar.sdk.responses.TradeResponse;
+import org.stellar.sdk.responses.TransactionResponse;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 import org.stellar.sdk.xdr.LiquidityPoolType;

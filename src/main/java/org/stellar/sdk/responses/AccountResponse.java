@@ -3,7 +3,6 @@ package org.stellar.sdk.responses;
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.List;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;

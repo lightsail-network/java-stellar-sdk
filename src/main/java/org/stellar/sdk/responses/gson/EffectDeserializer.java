@@ -1,4 +1,4 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk.responses.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

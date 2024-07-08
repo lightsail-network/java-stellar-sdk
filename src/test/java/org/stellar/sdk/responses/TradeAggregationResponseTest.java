@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Test;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 
 public class TradeAggregationResponseTest {
   @Test

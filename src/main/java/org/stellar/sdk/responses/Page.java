@@ -13,6 +13,7 @@ import okhttp3.Request;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.requests.ResponseHandler;
+import org.stellar.sdk.responses.gson.TypedResponse;
 
 /**
  * Represents page of objects.

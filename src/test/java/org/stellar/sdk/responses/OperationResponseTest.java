@@ -20,6 +20,7 @@ import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.Price;
 import org.stellar.sdk.TrustLineAsset;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.responses.operations.AccountMergeOperationResponse;
 import org.stellar.sdk.responses.operations.AllowTrustOperationResponse;
 import org.stellar.sdk.responses.operations.BeginSponsoringFutureReservesOperationResponse;

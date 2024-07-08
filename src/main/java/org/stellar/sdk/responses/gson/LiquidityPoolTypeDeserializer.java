@@ -1,10 +1,10 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk.responses.gson;
 
 import com.google.gson.*;
 import java.lang.reflect.Type;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
-public class LiquidityPoolTypeDeserializer implements JsonDeserializer<LiquidityPoolType> {
+class LiquidityPoolTypeDeserializer implements JsonDeserializer<LiquidityPoolType> {
   @Override
   public LiquidityPoolType deserialize(
       JsonElement json, Type typeOfT, JsonDeserializationContext context)

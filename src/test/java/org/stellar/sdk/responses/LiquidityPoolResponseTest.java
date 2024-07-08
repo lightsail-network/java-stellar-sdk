@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.xdr.LiquidityPoolType;
 
 public class LiquidityPoolResponseTest {

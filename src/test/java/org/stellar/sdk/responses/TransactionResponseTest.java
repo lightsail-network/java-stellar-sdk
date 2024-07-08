@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
 import org.stellar.sdk.Memo;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 
 public class TransactionResponseTest {
   @Test

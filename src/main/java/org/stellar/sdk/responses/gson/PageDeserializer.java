@@ -1,4 +1,4 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk.responses.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,6 +12,8 @@ import java.lang.reflect.Type;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
+import org.stellar.sdk.responses.LiquidityPoolResponse;
+import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 

@@ -1,13 +1,12 @@
 package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.xdr.LiquidityPoolType;
-
-import java.util.List;
 
 /**
  * Represents liquidity pool response.

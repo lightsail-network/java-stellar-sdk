@@ -1,4 +1,4 @@
-package org.stellar.sdk.responses;
+package org.stellar.sdk.responses.gson;
 
 import com.google.gson.*;
 import java.lang.reflect.Type;
@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
-public class PredicateDeserializer implements JsonDeserializer<Predicate> {
+class PredicateDeserializer implements JsonDeserializer<Predicate> {
   @Override
   public Predicate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
       throws JsonParseException {

@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeCreditAlphaNum12;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.xdr.AssetType;
 
 public class OfferResponseTest {

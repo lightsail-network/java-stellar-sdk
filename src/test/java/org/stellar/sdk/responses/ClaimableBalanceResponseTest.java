@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Claimant;
 import org.stellar.sdk.Predicate;
+import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.xdr.TimePoint;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
