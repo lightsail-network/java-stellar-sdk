@@ -94,7 +94,7 @@ public class SorobanServer implements Closeable {
    * number for the account, so you can build a successful transaction with {@link
    * TransactionBuilder}.
    *
-   * @param accountId The public address of the account to load.
+   * @param address The address of the account to load, muxed accounts are supported.
    * @return An {@link Account} object containing the sequence number and current state of the
    *     account.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
@@ -106,10 +106,11 @@ public class SorobanServer implements Closeable {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    */
-  public TransactionBuilderAccount getAccount(String accountId) {
+  public TransactionBuilderAccount getAccount(String address) {
+    MuxedAccount muxedAccount = new MuxedAccount(address);
     LedgerKey.LedgerKeyAccount ledgerKeyAccount =
         LedgerKey.LedgerKeyAccount.builder()
-            .accountID(KeyPair.fromAccountId(accountId).getXdrAccountId())
+            .accountID(KeyPair.fromAccountId(muxedAccount.getAccountId()).getXdrAccountId())
             .build();
     LedgerKey ledgerKey =
         LedgerKey.builder().account(ledgerKeyAccount).discriminant(LedgerEntryType.ACCOUNT).build();
@@ -118,7 +119,7 @@ public class SorobanServer implements Closeable {
     List<GetLedgerEntriesResponse.LedgerEntryResult> entries =
         getLedgerEntriesResponse.getEntries();
     if (entries == null || entries.isEmpty()) {
-      throw new AccountNotFoundException(accountId);
+      throw new AccountNotFoundException(muxedAccount.getAccountId());
     }
     LedgerEntry.LedgerEntryData ledgerEntryData;
     try {
@@ -127,7 +128,7 @@ public class SorobanServer implements Closeable {
       throw new IllegalArgumentException("Invalid ledgerEntryData: " + entries.get(0).getXdr(), e);
     }
     long sequence = ledgerEntryData.getAccount().getSeqNum().getSequenceNumber().getInt64();
-    return new Account(accountId, sequence);
+    return new Account(address, sequence);
   }
 
   /**
