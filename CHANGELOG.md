@@ -45,6 +45,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   - Some field names have been changed to maintain consistency with the Horizon API.
   - Removed all functions that return `Optional` value.
 - refactor!: remove `rateLimitLimit`, `rateLimitRemaining`, and `rateLimitReset` from the `Response`.
+- feat: add `MuxedAccount` class to represent a multiplexed account on Stellar's network.
 
 ## 0.44.0
 ### Update

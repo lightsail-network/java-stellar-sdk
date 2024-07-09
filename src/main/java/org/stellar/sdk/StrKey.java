@@ -219,30 +219,6 @@ public class StrKey {
   }
 
   /**
-   * Converts {@link MuxedAccount} to {@link AccountID}.
-   *
-   * @param account the account to convert
-   * @return {@link AccountID} representation of the key
-   */
-  static AccountID muxedAccountToAccountId(MuxedAccount account) {
-    AccountID aid = new AccountID();
-    PublicKey key = new PublicKey();
-    key.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
-
-    if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_ED25519)) {
-      key.setEd25519(account.getEd25519());
-    } else if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_MUXED_ED25519)) {
-      key.setEd25519(account.getMed25519().getEd25519());
-    } else {
-      throw new IllegalArgumentException(
-          "invalid muxed account type: " + account.getDiscriminant());
-    }
-
-    aid.setAccountID(key);
-    return aid;
-  }
-
-  /**
    * Encodes strkey Stellar account ID (G...) to {@link AccountID}.
    *
    * @param data the data to encode
