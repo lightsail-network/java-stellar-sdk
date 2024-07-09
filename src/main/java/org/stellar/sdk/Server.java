@@ -84,6 +84,33 @@ public class Server implements Closeable {
   }
 
   /**
+   * Fetches an account's most current state in the ledger, then creates and returns an {@link
+   * Account} object.
+   *
+   * @param address The address of the account to load, muxed accounts are supported.
+   * @return {@link Account} object
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
+   */
+  public TransactionBuilderAccount loadAccount(String address) {
+    MuxedAccount muxedAccount = new MuxedAccount(address);
+    AccountResponse accountResponse = this.accounts().account(muxedAccount.getAccountId());
+    return new Account(address, accountResponse.getSequenceNumber());
+  }
+
+  /**
    * @return {@link RootRequestBuilder} instance.
    */
   public RootRequestBuilder root() {

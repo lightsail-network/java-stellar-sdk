@@ -46,6 +46,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   - Removed all functions that return `Optional` value.
 - refactor!: remove `rateLimitLimit`, `rateLimitRemaining`, and `rateLimitReset` from the `Response`.
 - feat: add `MuxedAccount` class to represent a multiplexed account on Stellar's network.
+- feat: Add `Server.loadAccount` to load the `Account` object used for building transactions, supporting `MuxedAccount`.
+- feat: Add support for `MuxedAccount` to `SorobanServer.getAccount`.
 
 ## 0.44.0
 ### Update

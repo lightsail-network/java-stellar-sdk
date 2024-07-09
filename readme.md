@@ -36,7 +36,7 @@ For some examples on how to use this library, take a look at the [Get Started do
 Javadoc is available at https://javadoc.io/doc/network.lightsail/stellar-sdk
 
 ## Examples
-This repository contains a number of helpful examples. You can find them in the [examples](./examples) directory.
+This repository contains a number of helpful examples. You can find them in the [examples](./examples/src/main/java/network/lightsail) directory.
 
 ## Integrate into Android project
 If you want to integrate this SDK on Android platforms with API level 28 and above, you don't need any additional configuration. 

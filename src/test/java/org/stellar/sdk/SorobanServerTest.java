@@ -129,6 +129,61 @@ public class SorobanServerTest {
     mockWebServer.close();
   }
 
+  @Test
+  public void testGetAccountMuxed()
+      throws IOException, SorobanRpcException, AccountNotFoundException {
+    String accountId = "MDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIAAAAAAAAAPCIBOR2";
+    String json =
+        "{\n"
+            + "    \"jsonrpc\": \"2.0\",\n"
+            + "    \"id\": \"ecb18f82ec12484190673502d0486b98\",\n"
+            + "    \"result\": {\n"
+            + "        \"entries\": [\n"
+            + "            {\n"
+            + "                \"key\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==\",\n"
+            + "                \"xdr\": \"AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABdIcDhpAAADHAAAAAwAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAABfI8AAAAAZMK3qQ==\",\n"
+            + "                \"lastModifiedLedgerSeq\": \"97423\",\n"
+            + "                \"liveUntilLedgerSeq\": \"97673\"\n"
+            + "            }\n"
+            + "        ],\n"
+            + "        \"latestLedger\": \"108023\"\n"
+            + "    }\n"
+            + "}";
+
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            GetLedgerEntriesRequest expectedRequest =
+                new GetLedgerEntriesRequest(
+                    singletonList("AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA=="));
+            SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<GetLedgerEntriesRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("getLedgerEntries")
+                && sorobanRpcRequest.getParams().equals(expectedRequest)) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    TransactionBuilderAccount resp = server.getAccount(accountId);
+    assertEquals(resp.getAccountId(), accountId);
+    assertEquals(resp.getSequenceNumber().longValue(), 3418793967628L);
+    server.close();
+    mockWebServer.close();
+  }
+
   @Test(expected = AccountNotFoundException.class)
   public void testGetAccountNotFoundThrows()
       throws IOException, SorobanRpcException, AccountNotFoundException {
