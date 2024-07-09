@@ -13,7 +13,6 @@ import org.stellar.sdk.exception.BadRequestException;
 import org.stellar.sdk.exception.BadResponseException;
 import org.stellar.sdk.exception.NetworkException;
 import org.stellar.sdk.operations.PaymentOperation;
-import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.TransactionResponse;
 
 /** Create, sign, and submit a transaction using Java Stellar SDK. */
@@ -33,7 +32,7 @@ public class Payment {
 
     // Transactions require a valid sequence number that is specific to this account.
     // We can fetch the current sequence number for the source account from Horizon.
-    AccountResponse sourceAccount = server.accounts().account(sourceKeypair.getAccountId());
+    TransactionBuilderAccount sourceAccount = server.loadAccount(sourceKeypair.getAccountId());
 
     // Build a payment operation, send 350.1234567 XLM to receiver
     PaymentOperation paymentOperation =
