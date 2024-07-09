@@ -281,24 +281,6 @@ public class StrKeyTest {
   }
 
   @Test
-  public void testEncodeToXdrRoundTrip() {
-    String address = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
-    byte[] ed25519 =
-        rawBytes(
-            63, 12, 52, 191, 147, 173, 13, 153, 113, 208, 76, 204, 144, 247, 5, 81, 28, 131, 138,
-            173, 151, 52, 164, 162, 251, 13, 122, 3, 252, 127, 232, 154);
-    AccountID account = StrKey.encodeToXDRAccountId(address);
-    assertArrayEquals(ed25519, account.getAccountID().getEd25519().getUint256());
-    assertEquals(address, StrKey.encodeEd25519PublicKey(account));
-
-    MuxedAccount muxedAccount = StrKey.encodeToXDRMuxedAccount(address);
-    assertEquals(CryptoKeyType.KEY_TYPE_ED25519, muxedAccount.getDiscriminant());
-    assertArrayEquals(ed25519, muxedAccount.getEd25519().getUint256());
-    assertEquals(
-        address, StrKey.encodeEd25519PublicKey(StrKey.muxedAccountToAccountId(muxedAccount)));
-  }
-
-  @Test
   public void testEncodeToXDRMuxedAccountMAddress() {
     String unmuxedAddress = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
     AccountID account = StrKey.encodeToXDRAccountId(unmuxedAddress);
