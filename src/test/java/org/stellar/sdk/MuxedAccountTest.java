@@ -14,28 +14,28 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 public class MuxedAccountTest {
   @Test
-  public void testInitWithAccountIdId() {
+  public void testInitWithMuxedId() {
     String accountId = "GAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSTVY";
-    BigInteger accountIdId = BigInteger.valueOf(1234);
-    String accountIdMuxed = "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26";
+    BigInteger muxexId = BigInteger.valueOf(1234);
+    String muxedAddress = "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26";
 
     org.stellar.sdk.xdr.MuxedAccount.MuxedAccountMed25519 med25519 =
         new org.stellar.sdk.xdr.MuxedAccount.MuxedAccountMed25519(
-            new Uint64(new XdrUnsignedHyperInteger(accountIdId)),
+            new Uint64(new XdrUnsignedHyperInteger(muxexId)),
             new Uint256(StrKey.decodeEd25519PublicKey(accountId)));
     org.stellar.sdk.xdr.MuxedAccount muxedAccountXdr =
         new org.stellar.sdk.xdr.MuxedAccount(CryptoKeyType.KEY_TYPE_MUXED_ED25519, null, med25519);
 
-    MuxedAccount muxedAccount = new MuxedAccount(accountId, accountIdId);
-    assertEquals(accountIdMuxed, muxedAccount.getAddress());
+    MuxedAccount muxedAccount = new MuxedAccount(accountId, muxexId);
+    assertEquals(muxedAddress, muxedAccount.getAddress());
     assertEquals(muxedAccountXdr, muxedAccount.toXdr());
     assertEquals(muxedAccount, MuxedAccount.fromXdr(muxedAccountXdr));
   }
 
   @Test
-  public void testInitWithoutAccountIdId() {
+  public void testInitWithoutMuxedId() {
     String accountId = "GAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSTVY";
-    BigInteger accountIdId = null;
+    BigInteger muxedId = null;
 
     org.stellar.sdk.xdr.MuxedAccount muxedAccountXdr =
         new org.stellar.sdk.xdr.MuxedAccount(
@@ -43,7 +43,7 @@ public class MuxedAccountTest {
             new Uint256(StrKey.decodeEd25519PublicKey(accountId)),
             null);
 
-    MuxedAccount muxedAccount = new MuxedAccount(accountId, accountIdId);
+    MuxedAccount muxedAccount = new MuxedAccount(accountId, muxedId);
     assertEquals(muxedAccountXdr, muxedAccount.toXdr());
     assertEquals(muxedAccount, MuxedAccount.fromXdr(muxedAccountXdr));
     assertNull(muxedAccount.getMuxedId());
@@ -51,24 +51,24 @@ public class MuxedAccountTest {
   }
 
   @Test
-  public void testFromAccountMuxedAccount() {
+  public void testFromMuxedAddress() {
     String accountId = "GAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSTVY";
-    BigInteger accountIdId = BigInteger.valueOf(1234);
-    String accountIdMuxed = "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26";
+    BigInteger muxedId = BigInteger.valueOf(1234);
+    String muxedAddress = "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26";
 
-    MuxedAccount muxedAccount = new MuxedAccount(accountIdMuxed);
+    MuxedAccount muxedAccount = new MuxedAccount(muxedAddress);
     assertEquals(accountId, muxedAccount.getAccountId());
-    assertEquals(accountIdId, muxedAccount.getMuxedId());
+    assertEquals(muxedId, muxedAccount.getMuxedId());
   }
 
   @Test
   public void testFromAccountEd25519Account() {
     String accountId = "GAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSTVY";
-    BigInteger accountIdId = null;
+    BigInteger muxedId = null;
 
     MuxedAccount muxedAccount = new MuxedAccount(accountId);
     assertEquals(accountId, muxedAccount.getAccountId());
-    assertEquals(accountIdId, muxedAccount.getMuxedId());
+    assertEquals(muxedId, muxedAccount.getMuxedId());
   }
 
   @Test
