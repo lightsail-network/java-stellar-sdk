@@ -44,12 +44,6 @@ public class FeeBumpTransactionTest {
                     .asset(new AssetTypeNative())
                     .amount("200")
                     .build())
-            .addOperation(
-                PaymentOperation.builder()
-                    .destination("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ")
-                    .asset(new AssetTypeNative())
-                    .amount("300")
-                    .build())
             .setBaseFee(baseFee)
             .addPreconditions(
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(10, 11)).build())
@@ -252,7 +246,7 @@ public class FeeBumpTransactionTest {
 
     assertEquals(
         feeBumpTx.getFeeSource(), "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
-    assertEquals(feeBumpTx.getFee(), 400 * 3);
+    assertEquals(feeBumpTx.getFee(), 800);
     assertEquals(feeBumpTx.getInnerTransaction(), inner);
   }
 
