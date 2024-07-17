@@ -1048,8 +1048,8 @@ public class SorobanServerTest {
             + "  \"jsonrpc\": \"2.0\",\n"
             + "  \"id\": \"7a469b9d6ed4444893491be530862ce3\",\n"
             + "  \"result\": {\n"
-            + "    \"transactionData\": \"AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==\",\n"
-            + "    \"minResourceFee\": \"58181\",\n"
+            + "    \"transactionData\": \"AAAAAAAAAAEAAAAGAAAAAdeSi3LCcDzP6vfrn/TvTVBKVai5efybRQ6iyEK00c5hAAAAFAAAAAEAAAACAAAAAAAAAABPFZKkWLE8Tlrm5Jx81FUrXpm6EhpW/s8TXPUyf0D5PgAAAAAAAAAAbjEdZhNooxW4Z5oCpgPDCmGnVRwOxutuDO14EQ4kFmoAA3kUAAACGAAAASAAAAAAAAG4Sw==\",\n"
+            + "    \"minResourceFee\": \"12500\",\n"
             + "    \"events\": [\n"
             + "      \"AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=\",\n"
             + "      \"AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=\"\n"
@@ -1126,7 +1126,7 @@ public class SorobanServerTest {
 
     SorobanTransactionData sorobanData =
         SorobanTransactionData.fromXdrBase64(
-            "AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==");
+            "AAAAAAAAAAEAAAAGAAAAAdeSi3LCcDzP6vfrn/TvTVBKVai5efybRQ6iyEK00c5hAAAAFAAAAAEAAAACAAAAAAAAAABPFZKkWLE8Tlrm5Jx81FUrXpm6EhpW/s8TXPUyf0D5PgAAAAAAAAAAbjEdZhNooxW4Z5oCpgPDCmGnVRwOxutuDO14EQ4kFmoAA3kUAAACGAAAASAAAAAAAAG4Sw==");
     InvokeHostFunctionOperation operation =
         InvokeHostFunctionOperation.builder()
             .hostFunction(
@@ -1140,7 +1140,7 @@ public class SorobanServerTest {
     Transaction expectedTx =
         new Transaction(
             transaction.getSourceAccount(),
-            transaction.getFee() + 58181L,
+            50000 + 12500, // baseFee + Soroban Fee
             transaction.getSequenceNumber(),
             new Operation[] {operation},
             transaction.getMemo(),
