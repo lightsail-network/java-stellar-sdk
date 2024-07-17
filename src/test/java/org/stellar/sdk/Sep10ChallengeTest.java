@@ -1523,7 +1523,7 @@ public class Sep10ChallengeTest {
 
     transaction.sign(server);
     FeeBumpTransaction feeBumpTransaction =
-        new FeeBumpTransaction(server.getAccountId(), 500, transaction);
+        FeeBumpTransaction.createWithBaseFee(server.getAccountId(), 500, transaction);
     String challenge = feeBumpTransaction.toEnvelopeXdrBase64();
     try {
       Sep10Challenge.readChallengeTransaction(

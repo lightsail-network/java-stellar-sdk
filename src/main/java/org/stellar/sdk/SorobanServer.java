@@ -471,6 +471,7 @@ public class SorobanServer implements Closeable {
           "unsupported transaction: must contain exactly one InvokeHostFunctionOperation, BumpSequenceOperation, or RestoreFootprintOperation");
     }
 
+    // TODO: exclude exists soroban resource fee from tx fee
     long classicFeeNum = transaction.getFee();
     long minResourceFeeNum =
         Optional.ofNullable(simulateTransactionResponse.getMinResourceFee()).orElse(0L);
