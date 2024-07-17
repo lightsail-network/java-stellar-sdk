@@ -4,7 +4,6 @@ import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import lombok.NonNull;
@@ -36,31 +35,6 @@ public class TransactionBuilder {
     this.network = network;
     operations = new ArrayList<>();
     preconditions = TransactionPreconditions.builder().build();
-  }
-
-  /**
-   * Construct a new transaction builder from a transaction.
-   *
-   * @param transaction the transaction to rebuild
-   */
-  public TransactionBuilder(Transaction transaction) {
-    AbstractTransaction abstractTransaction =
-        Transaction.fromEnvelopeXdr(transaction.toEnvelopeXdrBase64(), transaction.getNetwork());
-
-    if (!(abstractTransaction instanceof Transaction)) {
-      // This should never happen
-      throw new IllegalArgumentException(
-          "TransactionBuilder can only be used to rebuild a Transaction");
-    }
-    Transaction tx = (Transaction) abstractTransaction;
-
-    this.sourceAccount = new Account(tx.getSourceAccount(), tx.getSequenceNumber() - 1);
-    this.memo = tx.getMemo();
-    this.operations = Arrays.asList(tx.getOperations());
-    this.baseFee = tx.getFee() / tx.getOperations().length;
-    this.network = tx.getNetwork();
-    this.preconditions = tx.getPreconditions();
-    this.sorobanData = tx.getSorobanData();
   }
 
   public int getOperationsCount() {
@@ -204,10 +178,16 @@ public class TransactionBuilder {
     long sequenceNumber = sourceAccount.getIncrementedSequenceNumber();
     Operation[] operations = new Operation[this.operations.size()];
     operations = this.operations.toArray(operations);
+
+    long fee = operations.length * baseFee;
+    if (sorobanData != null) {
+      fee += sorobanData.getResourceFee().getInt64();
+    }
+
     Transaction transaction =
         new Transaction(
             sourceAccount.getAccountId(),
-            operations.length * baseFee,
+            fee,
             sequenceNumber,
             operations,
             memo,

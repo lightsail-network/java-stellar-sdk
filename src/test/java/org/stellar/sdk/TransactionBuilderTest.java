@@ -4,12 +4,10 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
 import org.stellar.sdk.exception.FormatException;
-import org.stellar.sdk.operations.BumpSequenceOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.xdr.*;
@@ -928,58 +926,6 @@ public class TransactionBuilderTest {
     } catch (NullPointerException e) {
       assertTrue(e.getMessage().contains("network is marked non-null but is null"));
     }
-  }
-
-  @Test
-  public void testBuilderFromTx() {
-    KeyPair source =
-        KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
-
-    Account account = new Account(source.getAccountId(), 2908908335136768L);
-    BumpSequenceOperation operation0 = BumpSequenceOperation.builder().bumpTo(1L).build();
-    BumpSequenceOperation operation1 = BumpSequenceOperation.builder().bumpTo(2L).build();
-    LedgerKey ledgerKey =
-        LedgerKey.builder()
-            .discriminant(LedgerEntryType.ACCOUNT)
-            .account(
-                LedgerKey.LedgerKeyAccount.builder()
-                    .accountID(
-                        KeyPair.fromAccountId(
-                                "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO")
-                            .getXdrAccountId())
-                    .build())
-            .build();
-    SorobanTransactionData sorobanData =
-        SorobanTransactionData.builder()
-            .resources(
-                SorobanResources.builder()
-                    .footprint(
-                        LedgerFootprint.builder()
-                            .readOnly(new LedgerKey[] {ledgerKey})
-                            .readWrite(new LedgerKey[] {})
-                            .build())
-                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
-                    .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
-                    .instructions(new Uint32(new XdrUnsignedInteger(34567)))
-                    .build())
-            .resourceFee(new Int64(100L))
-            .ext(ExtensionPoint.builder().discriminant(0).build())
-            .build();
-
-    Transaction transaction =
-        new Transaction(
-            account.getAccountId(),
-            980,
-            account.getIncrementedSequenceNumber(),
-            new org.stellar.sdk.operations.Operation[] {operation0, operation1},
-            new MemoText("hello"),
-            new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<>(), new TimeBounds(100, 200)),
-            sorobanData, // For testing purposes, it is impossible to occur in a real environment.
-            Network.PUBLIC);
-
-    TransactionBuilder builder = new TransactionBuilder(transaction);
-    assertEquals(transaction, builder.build());
   }
 
   @Test
