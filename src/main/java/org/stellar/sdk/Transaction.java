@@ -36,7 +36,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction extends AbstractTransaction {
-  /** fee paid for transaction in stroops (1 stroop = 0.0000001 XLM). */
+  /** Max fee paid for transaction in stroops (1 stroop = 0.0000001 XLM). */
   @Getter private final long fee;
 
   /** The source account for this transaction. */

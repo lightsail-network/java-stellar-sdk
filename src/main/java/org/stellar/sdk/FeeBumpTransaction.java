@@ -29,6 +29,29 @@ public class FeeBumpTransaction extends AbstractTransaction {
   /** The inner transaction that is being wrapped by this fee bump transaction. */
   @NonNull private final Transaction innerTransaction;
 
+  private FeeBumpTransaction(
+      @NonNull String feeSource, long fee, @NonNull Transaction innerTransaction) {
+    super(innerTransaction.getNetwork());
+    this.feeSource = feeSource;
+    this.fee = fee;
+    this.innerTransaction = innerTransaction;
+  }
+
+  /**
+   * Creates a new FeeBumpTransaction object, enabling you to resubmit an existing transaction with
+   * a higher fee.
+   *
+   * @param feeSource The account paying for the transaction fee.
+   * @param fee Max fee willing to pay for this transaction (in stroops)
+   * @param innerTransaction The inner transaction that is being wrapped by this fee bump
+   *     transaction.
+   * @return {@link FeeBumpTransaction}
+   */
+  public static FeeBumpTransaction createWithFee(
+      @NonNull String feeSource, long fee, @NonNull Transaction innerTransaction) {
+    return new FeeBumpTransaction(feeSource, fee, innerTransaction);
+  }
+
   /**
    * Creates a new FeeBumpTransaction object, enabling you to resubmit an existing transaction with
    * a higher fee.
@@ -37,22 +60,25 @@ public class FeeBumpTransaction extends AbstractTransaction {
    * @param baseFee Max fee willing to pay per operation in inner transaction (in stroops)
    * @param innerTransaction The inner transaction that is being wrapped by this fee bump
    *     transaction.
+   * @return {@link FeeBumpTransaction}
    */
-  public FeeBumpTransaction(
+  public static FeeBumpTransaction createWithBaseFee(
       @NonNull String feeSource, long baseFee, @NonNull Transaction innerTransaction) {
-    super(innerTransaction.getNetwork());
-    this.feeSource = feeSource;
-
-    // set fee
     if (baseFee < MIN_BASE_FEE) {
       throw new IllegalArgumentException(
           "baseFee cannot be smaller than the BASE_FEE (" + MIN_BASE_FEE + "): " + baseFee);
     }
 
-    long innerBaseFee = innerTransaction.getFee();
+    long innerSorobanResourceFee = 0;
+    if (innerTransaction.getSorobanData() != null) {
+      innerSorobanResourceFee = innerTransaction.getSorobanData().getResourceFee().getInt64();
+    }
+
+    long innerBaseFee =
+        innerTransaction.getFee() - innerSorobanResourceFee; // dont include soroban resource fee
     long numOperations = innerTransaction.getOperations().length;
     if (numOperations > 0) {
-      innerBaseFee = innerBaseFee / numOperations;
+      innerBaseFee = (long) Math.ceil((double) innerBaseFee / numOperations);
     }
 
     if (baseFee < innerBaseFee) {
@@ -60,16 +86,16 @@ public class FeeBumpTransaction extends AbstractTransaction {
           "base fee cannot be lower than provided inner transaction base fee");
     }
 
-    long maxFee = baseFee * (numOperations + 1);
+    long maxFee = (baseFee * (numOperations + 1)) + innerSorobanResourceFee;
     if (maxFee < 0) {
       throw new IllegalArgumentException("fee overflows 64 bit int");
     }
-    fee = maxFee;
 
     // set inner transaction
+    Transaction tx;
     EnvelopeType txType = innerTransaction.toEnvelopeXdr().getDiscriminant();
     if (txType == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
-      this.innerTransaction =
+      tx =
           new TransactionBuilder(
                   new Account(
                       innerTransaction.getSourceAccount(),
@@ -83,10 +109,11 @@ public class FeeBumpTransaction extends AbstractTransaction {
                       .timeBounds(innerTransaction.getTimeBounds())
                       .build())
               .build();
-      this.innerTransaction.signatures = new ArrayList<>(innerTransaction.signatures);
+      tx.signatures = new ArrayList<>(innerTransaction.signatures);
     } else {
-      this.innerTransaction = innerTransaction;
+      tx = innerTransaction;
     }
+    return new FeeBumpTransaction(feeSource, maxFee, tx);
   }
 
   public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(
@@ -94,13 +121,9 @@ public class FeeBumpTransaction extends AbstractTransaction {
     Transaction inner =
         Transaction.fromV1EnvelopeXdr(envelope.getTx().getInnerTx().getV1(), network);
     String feeSource = StrKey.encodeMuxedAccount(envelope.getTx().getFeeSource());
-
     long fee = envelope.getTx().getFee().getInt64();
-    long baseFee = fee / (inner.getOperations().length + 1);
-
-    FeeBumpTransaction feeBump = new FeeBumpTransaction(feeSource, baseFee, inner);
+    FeeBumpTransaction feeBump = new FeeBumpTransaction(feeSource, fee, inner);
     feeBump.signatures.addAll(Arrays.asList(envelope.getSignatures()));
-
     return feeBump;
   }
 

@@ -49,7 +49,7 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction();
 
     try {
-      new FeeBumpTransaction(
+      FeeBumpTransaction.createWithBaseFee(
           "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
           Transaction.MIN_BASE_FEE - 1,
           inner);
@@ -64,7 +64,7 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction(Transaction.MIN_BASE_FEE + 1);
 
     try {
-      new FeeBumpTransaction(
+      FeeBumpTransaction.createWithBaseFee(
           "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
           Transaction.MIN_BASE_FEE,
           inner);
@@ -80,7 +80,7 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction(Transaction.MIN_BASE_FEE + 1);
 
     try {
-      new FeeBumpTransaction(
+      FeeBumpTransaction.createWithBaseFee(
           "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3", Long.MAX_VALUE, inner);
       fail();
     } catch (RuntimeException e) {
@@ -93,7 +93,7 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction();
 
     FeeBumpTransaction feeBump =
-        new FeeBumpTransaction(
+        FeeBumpTransaction.createWithBaseFee(
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE,
             inner);
@@ -108,7 +108,7 @@ public class FeeBumpTransactionTest {
         "2a8ead3351faa7797b284f59027355ddd69c21adb8e4da0b9bb95531f7f32681", inner.hashHex());
 
     FeeBumpTransaction feeBump =
-        new FeeBumpTransaction(
+        FeeBumpTransaction.createWithBaseFee(
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 2,
             inner);
@@ -121,7 +121,7 @@ public class FeeBumpTransactionTest {
     Transaction inner = createInnerTransaction();
 
     FeeBumpTransaction feeBump =
-        new FeeBumpTransaction(
+        FeeBumpTransaction.createWithBaseFee(
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 2,
             inner);
@@ -156,7 +156,7 @@ public class FeeBumpTransactionTest {
     innerV0.setEnvelopeType(EnvelopeType.ENVELOPE_TYPE_TX_V0);
 
     FeeBumpTransaction feeBump =
-        new FeeBumpTransaction(
+        FeeBumpTransaction.createWithBaseFee(
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 2,
             innerV0);
@@ -192,14 +192,14 @@ public class FeeBumpTransactionTest {
   public void testHashCodeAndEquals() {
     Transaction inner = createInnerTransaction();
     FeeBumpTransaction feeBump0 =
-        new FeeBumpTransaction(
+        FeeBumpTransaction.createWithBaseFee(
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 2,
             inner);
 
     // they get different base fee
     FeeBumpTransaction feeBump2 =
-        new FeeBumpTransaction(
+        FeeBumpTransaction.createWithBaseFee(
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 3,
             createInnerTransaction(Network.PUBLIC));
@@ -208,7 +208,7 @@ public class FeeBumpTransactionTest {
 
     // they get different network
     FeeBumpTransaction feeBump3 =
-        new FeeBumpTransaction(
+        FeeBumpTransaction.createWithBaseFee(
             "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3",
             Transaction.MIN_BASE_FEE * 2,
             createInnerTransaction(Network.PUBLIC));
