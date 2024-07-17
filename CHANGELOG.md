@@ -33,7 +33,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor!: `Transaction.Builder` has been removed, use `TransactionBuilder` instead.
 - refactor!: refactor asset classes. `LiquidityPoolParameters`, `LiquidityPoolConstantProductParameters`, `AssetTypePoolShare`, `LiquidityPoolShareChangeTrustAsset` and `LiquidityPoolShareTrustLineAsset` have been removed. Use `ChangeTrustAsset` and `TrustLineAsset` instead.
 - refactor!: `Asset.getType()` returns `org.stellar.sdk.xdr.AssetType` instead of `String`.
-- refactor!: `FeeBumpTransaction.Builder` has been removed, use `FeeBumpTransaction#FeeBumpTransaction(String, long, Transaction)` instead.
+- refactor!: `FeeBumpTransaction.Builder` has been removed, use `FeeBumpTransaction#createWithBaseFee(String, long, Transaction)` or `FeeBumpTransaction#createWithFee(String, long, Transaction)` instead.
 - refactor!: `FeeBumpTransaction.getFeeAccount` has been removed, use `FeeBumpTransaction.getFeeSource` instead.
 - refactor!: remove `AccountConverter`, this means that we no longer support disabling support for MuxedAccount.
 - refactor!: refactor the way of constructing `Predicate.Or` and `Predicate.And`. The `inner` inside has been removed, and in its place are `left` and `right`, used to represent two predicates.
@@ -48,6 +48,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - feat: add `MuxedAccount` class to represent a multiplexed account on Stellar's network.
 - feat: Add `Server.loadAccount` to load the `Account` object used for building transactions, supporting `MuxedAccount`.
 - feat: Add support for `MuxedAccount` to `SorobanServer.getAccount`.
+- feat: `FeeBumpTransaction` supports transactions that include Soroban operations.
 
 ## 0.44.0
 ### Update
