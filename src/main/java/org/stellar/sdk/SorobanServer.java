@@ -31,6 +31,7 @@ import org.stellar.sdk.requests.ResponseHandler;
 import org.stellar.sdk.requests.sorobanrpc.GetEventsRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetLedgerEntriesRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetTransactionRequest;
+import org.stellar.sdk.requests.sorobanrpc.GetTransactionsRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
@@ -41,6 +42,7 @@ import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SorobanRpcResponse;
@@ -160,8 +162,8 @@ public class SorobanServer implements Closeable {
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
-   * @see <a href="https://soroban.stellar.org/api/methods/getHealth" target="_blank">getHealth
-   *     documentation</a>
+   * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats"
+   *     target="_blank">getFeeStats documentation</a>
    */
   public GetFeeStatsResponse getFeeStats() {
     return this.<Void, GetFeeStatsResponse>sendRequest(
@@ -285,6 +287,31 @@ public class SorobanServer implements Closeable {
     GetTransactionRequest params = new GetTransactionRequest(hash);
     return this.sendRequest(
         "getTransaction", params, new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {});
+  }
+
+  /**
+   * Gets a detailed list of transactions starting from the user specified starting point that you
+   * can paginate as long as the pages fall within the history retention of their corresponding RPC
+   * provider.
+   *
+   * @param getTransactionsRequest The {@link GetEventsRequest} to use for the request.
+   * @return A {@link GetTransactionsResponse} object containing the transactions that match the
+   *     request.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @throws RequestTimeoutException If the request timed out.
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions"
+   *     target="_blank">getTransactions documentation</a>
+   */
+  public GetTransactionsResponse getTransactions(GetTransactionsRequest getTransactionsRequest) {
+    return this.sendRequest(
+        "getTransactions",
+        getTransactionsRequest,
+        new TypeToken<SorobanRpcResponse<GetTransactionsResponse>>() {});
   }
 
   /**
