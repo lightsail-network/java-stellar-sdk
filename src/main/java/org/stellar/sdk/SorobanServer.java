@@ -35,6 +35,7 @@ import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
 import org.stellar.sdk.responses.sorobanrpc.GetEventsResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetFeeStatsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
@@ -147,6 +148,24 @@ public class SorobanServer implements Closeable {
   public GetHealthResponse getHealth() {
     return this.<Void, GetHealthResponse>sendRequest(
         "getHealth", null, new TypeToken<SorobanRpcResponse<GetHealthResponse>>() {});
+  }
+
+  /**
+   * Get statistics for charged inclusion fees.
+   *
+   * @return A {@link GetFeeStatsResponse} object containing the fee stats.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @throws RequestTimeoutException If the request timed out.
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   * @see <a href="https://soroban.stellar.org/api/methods/getHealth" target="_blank">getHealth
+   *     documentation</a>
+   */
+  public GetFeeStatsResponse getFeeStats() {
+    return this.<Void, GetFeeStatsResponse>sendRequest(
+        "getFeeStats", null, new TypeToken<SorobanRpcResponse<GetFeeStatsResponse>>() {});
   }
 
   /**
