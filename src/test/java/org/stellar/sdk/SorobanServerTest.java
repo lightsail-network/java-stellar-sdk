@@ -36,6 +36,7 @@ import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
 import org.stellar.sdk.responses.sorobanrpc.GetEventsResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetFeeStatsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
@@ -268,6 +269,92 @@ public class SorobanServerTest {
     assertEquals(resp.getLatestLedger().longValue(), 50000L);
     assertEquals(resp.getOldestLedger().longValue(), 1L);
     assertEquals(resp.getLedgerRetentionWindow().longValue(), 10000L);
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testGetFeeStats() throws IOException, SorobanRpcException {
+    String json =
+        "{\n"
+            + "  \"jsonrpc\": \"2.0\",\n"
+            + "  \"id\": 8675309,\n"
+            + "  \"result\": {\n"
+            + "    \"sorobanInclusionFee\": {\n"
+            + "      \"max\": \"210\",\n"
+            + "      \"min\": \"100\",\n"
+            + "      \"mode\": \"100\",\n"
+            + "      \"p10\": \"100\",\n"
+            + "      \"p20\": \"100\",\n"
+            + "      \"p30\": \"100\",\n"
+            + "      \"p40\": \"100\",\n"
+            + "      \"p50\": \"100\",\n"
+            + "      \"p60\": \"100\",\n"
+            + "      \"p70\": \"100\",\n"
+            + "      \"p80\": \"100\",\n"
+            + "      \"p90\": \"120\",\n"
+            + "      \"p95\": \"190\",\n"
+            + "      \"p99\": \"200\",\n"
+            + "      \"transactionCount\": \"10\",\n"
+            + "      \"ledgerCount\": 50\n"
+            + "    },\n"
+            + "    \"inclusionFee\": {\n"
+            + "      \"max\": \"200\",\n"
+            + "      \"min\": \"100\",\n"
+            + "      \"mode\": \"125\",\n"
+            + "      \"p10\": \"100\",\n"
+            + "      \"p20\": \"100\",\n"
+            + "      \"p30\": \"100\",\n"
+            + "      \"p40\": \"100\",\n"
+            + "      \"p50\": \"100\",\n"
+            + "      \"p60\": \"100\",\n"
+            + "      \"p70\": \"100\",\n"
+            + "      \"p80\": \"100\",\n"
+            + "      \"p90\": \"100\",\n"
+            + "      \"p95\": \"100\",\n"
+            + "      \"p99\": \"100\",\n"
+            + "      \"transactionCount\": \"7\",\n"
+            + "      \"ledgerCount\": 10\n"
+            + "    },\n"
+            + "    \"latestLedger\": 4519945\n"
+            + "  }\n"
+            + "}";
+
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<Void> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<Void>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("getFeeStats")) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    GetFeeStatsResponse resp = server.getFeeStats();
+    assertEquals(resp.getLatestLedger().longValue(), 4519945L);
+    assertEquals(
+        resp.getInclusionFee(),
+        new GetFeeStatsResponse.FeeDistribution(
+            200L, 100L, 125L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 7L,
+            10L));
+    assertEquals(
+        resp.getSorobanInclusionFee(),
+        new GetFeeStatsResponse.FeeDistribution(
+            210L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L, 120L, 190L, 200L, 10L,
+            50L));
     server.close();
     mockWebServer.close();
   }
