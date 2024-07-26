@@ -26,6 +26,9 @@ public class Problem extends Response {
 
   @Value
   public static class Extras {
+    @SerializedName("hash")
+    String hash;
+
     @SerializedName("envelope_xdr")
     String envelopeXdr;
 

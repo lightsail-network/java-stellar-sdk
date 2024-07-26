@@ -54,6 +54,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - fix: fix the issue where invoking `SorobanServer.prepareTransaction` for transactions that have already set `SorobanData` could result in unexpected high fees.
 - feat: add support for Soroban PRC's `getTransactions` and `getFeeStats` API.
 - feat: add support for Horizon's 'transaction_async' API.
+- feat: optimize `RequestTimeoutException`, when a timeout occurs, if the server returns some information, you can read them.
 
 ## 0.44.0
 ### Update

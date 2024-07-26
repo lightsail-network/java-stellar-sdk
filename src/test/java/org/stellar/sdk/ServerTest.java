@@ -107,11 +107,14 @@ public class ServerTest {
 
   private final String timeoutResponse =
       "{\n"
-          + "  \"type\": \"https://developers.stellar.org/api/errors/http-status-codes/horizon-specific/transaction-failed/\",\n"
-          + "  \"title\": \"Timeout\",\n"
+          + "  \"type\": \"transaction_submission_timeout\",\n"
+          + "  \"title\": \"Transaction Submission Timeout\",\n"
           + "  \"status\": 504,\n"
-          + "  \"detail\": \"TODO\",\n"
-          + "  \"instance\": \"horizon-testnet-001.prd.stellar001.internal.stellar-ops.com/IxhaI70Tqo-112305\"\n"
+          + "  \"detail\": \"Your transaction submission request has timed out. This does not necessarily mean the submission has failed. Before resubmitting, please use the transaction hash provided in `extras.hash` to poll the GET /transactions endpoint for sometime and check if it was included in a ledger.\",\n"
+          + "  \"extras\": {\n"
+          + "    \"hash\": \"f899ee5f41390746ab79c2a0ecf964538524d6a07dac5260eb3c0e2975a90415\",\n"
+          + "    \"envelope_xdr\": \"AAAAAgAAAABexSIg06FtXzmFBQQtHZsrnyWxUzmthkBEhs/ktoeVYgAAAGQAClWjAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAxIZWxsbyB3b3JsZCEAAAABAAAAAAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAEqBfIAAAAAAAAAAABtoeVYgAAAEDteFqgiwKtjEmEc4Xx53zvB7C2M4KkPb4Ld6maPOIT11ktGIznRwPRjN1oWek/m7wA7Dkj2MwCPN8Esi3u38AC\"\n"
+          + "  }\n"
           + "}";
 
   private final String internalServerErrorResponse =
@@ -265,7 +268,7 @@ public class ServerTest {
     }
   }
 
-  @Test(expected = RequestTimeoutException.class)
+  @Test
   public void testSubmitTransactionTimeout() throws IOException, AccountRequiresMemoException {
     MockWebServer mockWebServer = new MockWebServer();
     mockWebServer.enqueue(
@@ -285,8 +288,19 @@ public class ServerTest {
             .retryOnConnectionFailure(false)
             .build();
     server.setSubmitHttpClient(testSubmitHttpClient);
-
-    server.submitTransaction(this.buildTransaction(), true);
+    Transaction tx = this.buildTransaction();
+    try {
+      server.submitTransaction(tx, true);
+      fail();
+    } catch (RequestTimeoutException requestTimeoutException) {
+      assertEquals(504, requestTimeoutException.getCode().intValue());
+      assertEquals(tx.hashHex(), requestTimeoutException.getProblem().getExtras().getHash());
+      assertEquals(
+          tx.toEnvelopeXdrBase64(),
+          requestTimeoutException.getProblem().getExtras().getEnvelopeXdr());
+    } catch (Exception e) {
+      fail("submitTransaction thrown invalid exception");
+    }
   }
 
   @Test(expected = RequestTimeoutException.class)

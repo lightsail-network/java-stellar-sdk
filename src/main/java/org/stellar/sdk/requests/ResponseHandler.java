@@ -77,10 +77,6 @@ public class ResponseHandler<T> {
         throw new TooManyRequestsException(retryAfter);
       }
 
-      if (response.code() == 504) {
-        throw new RequestTimeoutException();
-      }
-
       String content = null;
       if (response.body() == null) {
         throw new UnexpectedException("Unexpected empty response body");
@@ -119,7 +115,9 @@ public class ResponseHandler<T> {
           }
         }
 
-        if (response.code() < 500) {
+        if (response.code() == 504) {
+          throw new RequestTimeoutException(response.code(), content, problem);
+        } else if (response.code() < 500) {
           // Codes in the 4xx range indicate an error that failed given the information provided
           throw new BadRequestException(
               response.code(), content, problem, submitTransactionAsyncProblem);
