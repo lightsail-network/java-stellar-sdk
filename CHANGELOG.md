@@ -52,6 +52,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor: `TransactionBuilder#TransactionBuilder(Transaction)` has been removed, because the TransactionBuilder constructed from the transaction may be inconsistent with what the user expects.
 - fix: When calling `TransactionBuilder.build()`, the Soroban resource fee will be included in the `fee` of the built transaction.
 - fix: fix the issue where invoking `SorobanServer.prepareTransaction` for transactions that have already set `SorobanData` could result in unexpected high fees.
+- feat: optimize `RequestTimeoutException`, when a timeout occurs, if the server returns some information, you can read them.
 
 ## 0.44.0
 ### Update
