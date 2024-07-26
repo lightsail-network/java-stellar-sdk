@@ -24,6 +24,7 @@ import org.stellar.sdk.operations.PathPaymentStrictReceiveOperation;
 import org.stellar.sdk.operations.PathPaymentStrictSendOperation;
 import org.stellar.sdk.operations.PaymentOperation;
 import org.stellar.sdk.responses.Page;
+import org.stellar.sdk.responses.SubmitTransactionAsyncResponse;
 import org.stellar.sdk.responses.TransactionResponse;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
@@ -306,6 +307,146 @@ public class ServerTest {
     server.setSubmitHttpClient(testSubmitHttpClient);
 
     server.submitTransaction(this.buildTransaction(), true);
+  }
+
+  @Test
+  public void testSubmitTransactionAsyncPending() throws IOException {
+    String resp =
+        "{\n"
+            + "  \"tx_status\": \"PENDING\",\n"
+            + "  \"hash\": \"2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42\"\n"
+            + "}";
+    MockWebServer mockWebServer = new MockWebServer();
+    mockWebServer.enqueue(new MockResponse().setResponseCode(201).setBody(resp));
+    mockWebServer.start();
+    HttpUrl baseUrl = mockWebServer.url("");
+    Server server = new Server(baseUrl.toString());
+
+    SubmitTransactionAsyncResponse response =
+        server.submitTransactionAsync(this.buildTransaction());
+    assertEquals(
+        response.getHash(), "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
+    assertEquals(response.getTxStatus(), SubmitTransactionAsyncResponse.TransactionStatus.PENDING);
+  }
+
+  @Test
+  public void testSubmitTransactionAsyncTryAgainLater() throws IOException {
+    String resp =
+        "{\n"
+            + "  \"tx_status\": \"TRY_AGAIN_LATER\",\n"
+            + "  \"hash\": \"2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42\"\n"
+            + "}";
+    MockWebServer mockWebServer = new MockWebServer();
+    mockWebServer.enqueue(new MockResponse().setResponseCode(503).setBody(resp));
+    mockWebServer.start();
+    HttpUrl baseUrl = mockWebServer.url("");
+    Server server = new Server(baseUrl.toString());
+
+    try {
+      server.submitTransactionAsync(this.buildTransaction());
+      fail();
+    } catch (BadResponseException e) {
+      assertEquals(503, e.getCode().intValue());
+      assertEquals(
+          SubmitTransactionAsyncResponse.TransactionStatus.TRY_AGAIN_LATER,
+          e.getSubmitTransactionAsyncProblem().getTxStatus());
+      assertEquals(
+          "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42",
+          e.getSubmitTransactionAsyncProblem().getHash());
+    } catch (Exception e) {
+      fail("submitTransactionAsync thrown invalid exception");
+    }
+  }
+
+  @Test
+  public void testSubmitTransactionAsyncError() throws IOException {
+    String resp =
+        "{\n"
+            + "  \"errorResultXdr\": \"AAAAAAAAAGT////7AAAAAA==\",\n"
+            + "  \"tx_status\": \"ERROR\",\n"
+            + "  \"hash\": \"2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42\"\n"
+            + "}";
+    MockWebServer mockWebServer = new MockWebServer();
+    mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(resp));
+    mockWebServer.start();
+    HttpUrl baseUrl = mockWebServer.url("");
+    Server server = new Server(baseUrl.toString());
+
+    try {
+      server.submitTransactionAsync(this.buildTransaction());
+      fail();
+    } catch (BadRequestException e) {
+      assertEquals(400, e.getCode().intValue());
+      assertEquals(
+          SubmitTransactionAsyncResponse.TransactionStatus.ERROR,
+          e.getSubmitTransactionAsyncProblem().getTxStatus());
+      assertEquals(
+          "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42",
+          e.getSubmitTransactionAsyncProblem().getHash());
+      assertEquals(
+          "AAAAAAAAAGT////7AAAAAA==",
+          e.getSubmitTransactionAsyncProblem().parseErrorResultXdr().toXdrBase64());
+    } catch (Exception e) {
+      fail("submitTransactionAsync thrown invalid exception");
+    }
+  }
+
+  @Test
+  public void testSubmitTransactionAsyncDuplicate() throws IOException {
+    String resp =
+        "{\n"
+            + "  \"tx_status\": \"DUPLICATE\",\n"
+            + "  \"hash\": \"2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42\"\n"
+            + "}";
+    MockWebServer mockWebServer = new MockWebServer();
+    mockWebServer.enqueue(new MockResponse().setResponseCode(409).setBody(resp));
+    mockWebServer.start();
+    HttpUrl baseUrl = mockWebServer.url("");
+    Server server = new Server(baseUrl.toString());
+
+    try {
+      server.submitTransactionAsync(this.buildTransaction());
+      fail();
+    } catch (BadRequestException e) {
+      assertEquals(409, e.getCode().intValue());
+      assertEquals(
+          SubmitTransactionAsyncResponse.TransactionStatus.DUPLICATE,
+          e.getSubmitTransactionAsyncProblem().getTxStatus());
+      assertEquals(
+          "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42",
+          e.getSubmitTransactionAsyncProblem().getHash());
+    } catch (Exception e) {
+      fail("submitTransactionAsync thrown invalid exception");
+    }
+  }
+
+  @Test
+  public void testSubmitTransactionAsyncFail() throws IOException, AccountRequiresMemoException {
+    MockWebServer mockWebServer = new MockWebServer();
+    mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(failureResponse));
+    mockWebServer.start();
+    HttpUrl baseUrl = mockWebServer.url("");
+    Server server = new Server(baseUrl.toString());
+
+    try {
+      server.submitTransactionAsync(this.buildTransaction(), true);
+      fail("submitTransaction didn't throw exception");
+    } catch (BadRequestException e) {
+      assertEquals(400, e.getCode().intValue());
+      assertEquals(
+          e.getProblem().getExtras().getResultXdr(),
+          "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
+      assertEquals(
+          e.getProblem().getExtras().getEnvelopeXdr(),
+          "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
+      assertEquals(
+          e.getProblem().getExtras().getResultCodes().getTransactionResultCode(), "tx_failed");
+      assertEquals(
+          e.getProblem().getExtras().getResultCodes().getOperationsResultCodes().get(0),
+          "op_no_destination");
+    } catch (Exception e) {
+      fail("submitTransactionAsync thrown invalid exception");
+    }
   }
 
   @Test
@@ -609,6 +750,24 @@ public class ServerTest {
       assertEquals(0, e.getOperationIndex());
       assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
     }
+
+    try {
+      server.submitTransactionAsync(transaction);
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(0, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(feeBump(transaction));
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(0, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
+    }
   }
 
   @Test
@@ -670,6 +829,24 @@ public class ServerTest {
 
     try {
       server.submitTransaction(feeBump(transaction));
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(1, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_B, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(transaction);
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(1, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_B, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(feeBump(transaction));
       fail();
     } catch (AccountRequiresMemoException e) {
       assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -742,6 +919,24 @@ public class ServerTest {
       assertEquals(2, e.getOperationIndex());
       assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
     }
+
+    try {
+      server.submitTransactionAsync(transaction);
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(2, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(feeBump(transaction));
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(2, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
+    }
   }
 
   @Test
@@ -802,6 +997,24 @@ public class ServerTest {
 
     try {
       server.submitTransaction(feeBump(transaction));
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(3, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_D, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(transaction);
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(3, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_D, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(feeBump(transaction));
       fail();
     } catch (AccountRequiresMemoException e) {
       assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -874,6 +1087,24 @@ public class ServerTest {
       assertEquals(2, e.getOperationIndex());
       assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
     }
+
+    try {
+      server.submitTransactionAsync(transaction);
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(2, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(feeBump(transaction));
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(2, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_C, e.getAccountId());
+    }
   }
 
   @Test
@@ -936,6 +1167,24 @@ public class ServerTest {
 
     try {
       server.submitTransaction(feeBump(transaction));
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(1, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(transaction);
+      fail();
+    } catch (AccountRequiresMemoException e) {
+      assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
+      assertEquals(1, e.getOperationIndex());
+      assertEquals(DESTINATION_ACCOUNT_MEMO_REQUIRED_A, e.getAccountId());
+    }
+
+    try {
+      server.submitTransactionAsync(feeBump(transaction));
       fail();
     } catch (AccountRequiresMemoException e) {
       assertEquals("Destination account requires a memo in the transaction.", e.getMessage());
@@ -1063,6 +1312,20 @@ public class ServerTest {
 
     try {
       server.submitTransaction(feeBump(transaction));
+      fail();
+    } catch (BadRequestException e) {
+      assertEquals(400, e.getCode().intValue());
+    }
+
+    try {
+      server.submitTransactionAsync(transaction);
+      fail();
+    } catch (BadRequestException e) {
+      assertEquals(400, e.getCode().intValue());
+    }
+
+    try {
+      server.submitTransactionAsync(feeBump(transaction));
       fail();
     } catch (BadRequestException e) {
       assertEquals(400, e.getCode().intValue());

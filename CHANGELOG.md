@@ -52,6 +52,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor: `TransactionBuilder#TransactionBuilder(Transaction)` has been removed, because the TransactionBuilder constructed from the transaction may be inconsistent with what the user expects.
 - fix: When calling `TransactionBuilder.build()`, the Soroban resource fee will be included in the `fee` of the built transaction.
 - fix: fix the issue where invoking `SorobanServer.prepareTransaction` for transactions that have already set `SorobanData` could result in unexpected high fees.
+- feat: add support for Soroban PRC's `getTransactions` and `getFeeStats` API.
+- feat: add support for Horizon's 'transaction_async' API.
 
 ## 0.44.0
 ### Update

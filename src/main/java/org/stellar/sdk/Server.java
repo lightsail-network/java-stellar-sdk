@@ -403,6 +403,184 @@ public class Server implements Closeable {
     return submitTransaction(transaction, false);
   }
 
+  /**
+   * Submits a base64 asynchronous transaction to the network. Unlike the synchronous version, which
+   * blocks and waits for the transaction to be ingested in Horizon, this endpoint relays the
+   * response from core directly back to the user.
+   *
+   * @param transactionXdr base64 encoded transaction envelope to submit to the network
+   * @return {@link SubmitTransactionAsyncResponse}
+   * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+   *     account which requires a memo.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
+   */
+  public SubmitTransactionAsyncResponse submitTransactionXdrAsync(String transactionXdr) {
+    HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions_async").build();
+    RequestBody requestBody = new FormBody.Builder().add("tx", transactionXdr).build();
+    Request submitTransactionRequest =
+        new Request.Builder().url(transactionsURI).post(requestBody).build();
+    TypeToken<SubmitTransactionAsyncResponse> type =
+        new TypeToken<SubmitTransactionAsyncResponse>() {};
+
+    ResponseHandler<SubmitTransactionAsyncResponse> responseHandler = new ResponseHandler<>(type);
+    Response response;
+    try {
+      response = this.submitHttpClient.newCall(submitTransactionRequest).execute();
+    } catch (SocketTimeoutException e) {
+      throw new RequestTimeoutException(e);
+    } catch (IOException e) {
+      throw new ConnectionErrorException(e);
+    }
+    return responseHandler.handleResponse(response, true);
+  }
+
+  /**
+   * Submits a base64 asynchronous transaction to the network. Unlike the synchronous version, which
+   * blocks and waits for the transaction to be ingested in Horizon, this endpoint relays the
+   * response from core directly back to the user.
+   *
+   * @param transaction transaction to submit to the network
+   * @param skipMemoRequiredCheck set to true to skip memoRequiredCheck
+   * @return {@link TransactionResponse}
+   * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+   *     account which requires a memo.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
+   */
+  public SubmitTransactionAsyncResponse submitTransactionAsync(
+      Transaction transaction, boolean skipMemoRequiredCheck) {
+    if (!skipMemoRequiredCheck) {
+      checkMemoRequired(transaction);
+    }
+    return this.submitTransactionXdrAsync(transaction.toEnvelopeXdrBase64());
+  }
+
+  /**
+   * Submits a base64 asynchronous transaction to the network. Unlike the synchronous version, which
+   * blocks and waits for the transaction to be ingested in Horizon, this endpoint relays the
+   * response from core directly back to the user.
+   *
+   * @param transaction transaction to submit to the network
+   * @param skipMemoRequiredCheck set to true to skip memoRequiredCheck
+   * @return {@link SubmitTransactionAsyncResponse}
+   * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+   *     account which requires a memo.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
+   */
+  public SubmitTransactionAsyncResponse submitTransactionAsync(
+      FeeBumpTransaction transaction, boolean skipMemoRequiredCheck) {
+    if (!skipMemoRequiredCheck) {
+      checkMemoRequired(transaction.getInnerTransaction());
+    }
+    return this.submitTransactionXdrAsync(transaction.toEnvelopeXdrBase64());
+  }
+
+  /**
+   * Submits a base64 asynchronous transaction to the network. Unlike the synchronous version, which
+   * blocks and waits for the transaction to be ingested in Horizon, this endpoint relays the
+   * response from core directly back to the user.
+   *
+   * <p>This function will always check if the destination account requires a memo in the
+   * transaction as defined in <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md"
+   * target="_blank">SEP-0029</a> If you want to skip this check, use {@link
+   * Server#submitTransactionAsync(Transaction, boolean)}.
+   *
+   * @param transaction transaction to submit to the network.
+   * @return {@link SubmitTransactionAsyncResponse}
+   * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+   *     account which requires a memo.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
+   */
+  public SubmitTransactionAsyncResponse submitTransactionAsync(Transaction transaction) {
+    return submitTransactionAsync(transaction, false);
+  }
+
+  /**
+   * Submits a base64 asynchronous transaction to the network. Unlike the synchronous version, which
+   * blocks and waits for the transaction to be ingested in Horizon, this endpoint relays the
+   * response from core directly back to the user.
+   *
+   * <p>This function will always check if the destination account requires a memo in the
+   * transaction as defined in <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md"
+   * target="_blank">SEP-0029</a> If you want to skip this check, use {@link
+   * Server#submitTransactionAsync(Transaction, boolean)}.
+   *
+   * @param transaction transaction to submit to the network.
+   * @return {@link SubmitTransactionAsyncResponse}
+   * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
+   *     account which requires a memo.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
+   *     (4xx)
+   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
+   *     response from the server (5xx)
+   * @throws TooManyRequestsException if the request fails due to too many requests sent to the
+   *     server
+   * @throws org.stellar.sdk.exception.RequestTimeoutException When Horizon returns a <code>Timeout
+   *     </code> or connection timeout occurred
+   * @throws org.stellar.sdk.exception.UnknownResponseException if the server returns an unknown
+   *     status code
+   * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
+   *     due to cancellation or connectivity problems, etc.
+   */
+  public SubmitTransactionAsyncResponse submitTransactionAsync(FeeBumpTransaction transaction) {
+    return submitTransactionAsync(transaction, false);
+  }
+
   private boolean hashMemoId(String muxedAccount) {
     return StrKey.encodeToXDRMuxedAccount(muxedAccount).getDiscriminant()
         == CryptoKeyType.KEY_TYPE_MUXED_ED25519;
