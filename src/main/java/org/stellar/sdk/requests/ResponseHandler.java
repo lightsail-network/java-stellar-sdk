@@ -116,8 +116,8 @@ public class ResponseHandler<T> {
         }
 
         if (response.code() == 504) {
-              throw new RequestTimeoutException(response.code(), content, problem);
-          } else if (response.code() < 500) {
+          throw new RequestTimeoutException(response.code(), content, problem);
+        } else if (response.code() < 500) {
           // Codes in the 4xx range indicate an error that failed given the information provided
           throw new BadRequestException(
               response.code(), content, problem, submitTransactionAsyncProblem);
