@@ -10,6 +10,7 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.exception.UnknownResponseException;
 import org.stellar.sdk.responses.Problem;
+import org.stellar.sdk.responses.SubmitTransactionAsyncResponse;
 import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.responses.gson.TypedResponse;
 
@@ -43,6 +44,24 @@ public class ResponseHandler<T> {
    * @throws BadResponseException If the response code is in the 5xx range
    */
   public T handleResponse(final Response response) {
+    return handleResponse(response, false);
+  }
+
+  /**
+   * Handles the HTTP response and converts it to the appropriate object or throws exceptions based
+   * on the response status.
+   *
+   * @param response The HTTP response to handle
+   * @param submitTransactionAsync Only set it to true when calling {@link
+   *     org.stellar.sdk.Server#submitTransactionXdrAsync(String)}.
+   * @return The parsed object of type T
+   * @throws TooManyRequestsException If the response code is 429 (Too Many Requests)
+   * @throws UnexpectedException If the response body is empty or there's an unexpected error
+   *     reading the response
+   * @throws BadRequestException If the response code is in the 4xx range
+   * @throws BadResponseException If the response code is in the 5xx range
+   */
+  public T handleResponse(final Response response, boolean submitTransactionAsync) {
     try {
       // Too Many Requests
       if (response.code() == 429) {
@@ -84,18 +103,30 @@ public class ResponseHandler<T> {
       // Other errors
       if (response.code() >= 400 && response.code() < 600) {
         Problem problem = null;
+        SubmitTransactionAsyncResponse submitTransactionAsyncProblem = null;
         try {
           problem = GsonSingleton.getInstance().fromJson(content, Problem.class);
         } catch (Exception e) {
           // if we can't parse the response, we just ignore it
         }
 
+        if (submitTransactionAsync) {
+          try {
+            submitTransactionAsyncProblem =
+                GsonSingleton.getInstance().fromJson(content, SubmitTransactionAsyncResponse.class);
+          } catch (Exception e) {
+            // if we can't parse the response, we just ignore it
+          }
+        }
+
         if (response.code() < 500) {
           // Codes in the 4xx range indicate an error that failed given the information provided
-          throw new BadRequestException(response.code(), content, problem);
+          throw new BadRequestException(
+              response.code(), content, problem, submitTransactionAsyncProblem);
         } else {
           // Codes in the 5xx range indicate an error with the Horizon server.
-          throw new BadResponseException(response.code(), content, problem);
+          throw new BadResponseException(
+              response.code(), content, problem, submitTransactionAsyncProblem);
         }
       }
 
