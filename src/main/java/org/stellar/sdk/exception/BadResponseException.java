@@ -13,6 +13,13 @@ public class BadResponseException extends NetworkException {
   /** The parsed problem details, if available. */
   private final Problem problem;
 
+  /**
+   * The parsed async transaction submission problem details.
+   *
+   * <p>This field is only present when the exception is thrown as a result of calling the "Submit
+   * Transaction Asynchronously" API endpoint and the server returned an error response. In other
+   * cases, it will be null.
+   */
   private final SubmitTransactionAsyncResponse submitTransactionAsyncProblem;
 
   /**

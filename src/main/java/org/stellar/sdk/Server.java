@@ -426,6 +426,9 @@ public class Server implements Closeable {
    *     status code
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction">Submit
+   *     a Transaction Asynchronously</a>
    */
   public SubmitTransactionAsyncResponse submitTransactionXdrAsync(String transactionXdr) {
     HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions_async").build();
@@ -471,6 +474,9 @@ public class Server implements Closeable {
    *     status code
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction">Submit
+   *     a Transaction Asynchronously</a>
    */
   public SubmitTransactionAsyncResponse submitTransactionAsync(
       Transaction transaction, boolean skipMemoRequiredCheck) {
@@ -504,6 +510,9 @@ public class Server implements Closeable {
    *     status code
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction">Submit
+   *     a Transaction Asynchronously</a>
    */
   public SubmitTransactionAsyncResponse submitTransactionAsync(
       FeeBumpTransaction transaction, boolean skipMemoRequiredCheck) {
@@ -542,6 +551,9 @@ public class Server implements Closeable {
    *     status code
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction">Submit
+   *     a Transaction Asynchronously</a>
    */
   public SubmitTransactionAsyncResponse submitTransactionAsync(Transaction transaction) {
     return submitTransactionAsync(transaction, false);
@@ -576,6 +588,9 @@ public class Server implements Closeable {
    *     status code
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction">Submit
+   *     a Transaction Asynchronously</a>
    */
   public SubmitTransactionAsyncResponse submitTransactionAsync(FeeBumpTransaction transaction) {
     return submitTransactionAsync(transaction, false);
