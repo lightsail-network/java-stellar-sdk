@@ -1,7 +1,7 @@
 package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
-import static org.stellar.sdk.Asset.create;
+import static org.stellar.sdk.Asset.createNonNativeAsset;
 
 import okhttp3.HttpUrl;
 import org.junit.Test;
@@ -15,9 +15,11 @@ public class OrderBookRequestBuilderTest {
         server
             .orderBook()
             .buyingAsset(
-                create(null, "EUR", "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
+                createNonNativeAsset(
+                    "EUR", "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
             .sellingAsset(
-                create(null, "USD", "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
+                createNonNativeAsset(
+                    "USD", "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
             .buildUri();
 
     assertEquals(
@@ -29,5 +31,6 @@ public class OrderBookRequestBuilderTest {
             + "selling_asset_code=USD&"
             + "selling_asset_issuer=GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ",
         uri.toString());
+    server.close();
   }
 }

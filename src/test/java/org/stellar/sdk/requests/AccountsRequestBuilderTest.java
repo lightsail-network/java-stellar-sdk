@@ -21,6 +21,7 @@ public class AccountsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?cursor=13537736921089&limit=200&order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -34,6 +35,7 @@ public class AccountsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?signer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -47,6 +49,7 @@ public class AccountsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?sponsor=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -59,6 +62,7 @@ public class AccountsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?asset=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -71,6 +75,7 @@ public class AccountsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?asset=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -86,9 +91,10 @@ public class AccountsRequestBuilderTest {
           .forAsset(asset)
           .buildUri();
       fail();
-    } catch (RuntimeException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("cannot set both signer and asset", e.getMessage());
     }
+    server.close();
   }
 
   @Test
@@ -104,17 +110,15 @@ public class AccountsRequestBuilderTest {
           .forAsset(asset)
           .buildUri();
       fail();
-    } catch (RuntimeException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("cannot set both sponsor and asset", e.getMessage());
     }
+    server.close();
   }
 
   @Test
   public void testForSignerAndSponsorInvalid() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    AssetTypeCreditAlphaNum asset =
-        new AssetTypeCreditAlphaNum4(
-            "USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
     try {
       server
           .accounts()
@@ -122,9 +126,10 @@ public class AccountsRequestBuilderTest {
           .forSponsor("GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG")
           .buildUri();
       fail();
-    } catch (RuntimeException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("cannot set both signer and sponsor", e.getMessage());
     }
+    server.close();
   }
 
   @Test
@@ -136,5 +141,6 @@ public class AccountsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?liquidity_pool=dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca",
         uri.toString());
+    server.close();
   }
 }

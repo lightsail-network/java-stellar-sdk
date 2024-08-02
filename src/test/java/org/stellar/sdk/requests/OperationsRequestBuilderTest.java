@@ -52,6 +52,7 @@ public class OperationsRequestBuilderTest {
     HttpUrl uri = server.operations().limit(200).order(RequestBuilder.Order.DESC).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/operations?limit=200&order=desc", uri.toString());
+    server.close();
   }
 
   @Test
@@ -60,14 +61,15 @@ public class OperationsRequestBuilderTest {
     mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(operationResponse));
     mockWebServer.start();
     Server server = new Server(mockWebServer.url("").toString());
-    OperationResponse response = server.operations().operation(438086668289l);
+    OperationResponse response = server.operations().operation(438086668289L);
     assertEquals(response.getType(), "create_account");
-    assertEquals(response.getId(), Long.valueOf(438086668289l));
+    assertEquals(response.getId(), Long.valueOf(438086668289L));
     assertEquals(
         response.getSourceAccount(), "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H");
     RecordedRequest request = mockWebServer.takeRequest();
     assertEquals(request.getMethod(), "GET");
     assertEquals(request.getPath(), "/operations/438086668289");
+    server.close();
   }
 
   @Test
@@ -83,6 +85,7 @@ public class OperationsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts/GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H/operations?limit=200&order=desc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -99,6 +102,7 @@ public class OperationsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/claimable_balances/00000000846c047755e4a46912336f56096b48ece78ddb5fbf6d90f0eb4ecae5324fbddb/operations?limit=200&order=desc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -114,6 +118,7 @@ public class OperationsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/ledgers/200000000000/operations?limit=50&order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -129,6 +134,7 @@ public class OperationsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/operations",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -142,6 +148,7 @@ public class OperationsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3/operations",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -158,6 +165,7 @@ public class OperationsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/ledgers/200000000000/operations?include_failed=true&limit=50&order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -188,6 +196,7 @@ public class OperationsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/ledgers/200000000000/operations?limit=50&order=asc&join=transactions",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -205,5 +214,6 @@ public class OperationsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/ledgers/200000000000/operations?limit=50&order=asc",
         uri.toString());
+    server.close();
   }
 }

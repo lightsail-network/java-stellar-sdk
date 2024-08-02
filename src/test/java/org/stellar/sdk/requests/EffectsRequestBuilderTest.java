@@ -14,6 +14,7 @@ public class EffectsRequestBuilderTest {
     HttpUrl uri = server.effects().limit(200).order(RequestBuilder.Order.DESC).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/effects?limit=200&order=desc", uri.toString());
+    server.close();
   }
 
   @Test
@@ -29,6 +30,7 @@ public class EffectsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts/GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H/effects?limit=200&order=desc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -44,6 +46,7 @@ public class EffectsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/ledgers/200000000000/effects?limit=50&order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -59,6 +62,7 @@ public class EffectsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/effects",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -72,6 +76,7 @@ public class EffectsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3/effects",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -81,5 +86,6 @@ public class EffectsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/operations/28798257847/effects?cursor=85794837",
         uri.toString());
+    server.close();
   }
 }

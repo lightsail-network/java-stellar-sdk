@@ -14,7 +14,7 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 public class ResponseHandlerTest {
 
   @Test
-  public void testTooManyRequests() throws IOException, InterruptedException {
+  public void testTooManyRequests() throws IOException {
 
     MockResponse response = new MockResponse();
     response.setResponseCode(429);

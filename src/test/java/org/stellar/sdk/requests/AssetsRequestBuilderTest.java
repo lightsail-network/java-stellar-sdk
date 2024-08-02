@@ -22,5 +22,6 @@ public class AssetsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/assets?asset_code=USD&asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN&cursor=13537736921089&limit=200&order=asc",
         uri.toString());
+    server.close();
   }
 }

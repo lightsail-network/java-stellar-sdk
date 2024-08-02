@@ -14,6 +14,7 @@ public class TransactionsRequestBuilderTest {
     HttpUrl uri = server.transactions().limit(200).order(RequestBuilder.Order.DESC).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/transactions?limit=200&order=desc", uri.toString());
+    server.close();
   }
 
   @Test
@@ -29,6 +30,7 @@ public class TransactionsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts/GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H/transactions?limit=200&order=desc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -45,6 +47,7 @@ public class TransactionsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/claimable_balances/00000000846c047755e4a46912336f56096b48ece78ddb5fbf6d90f0eb4ecae5324fbddb/transactions?limit=200&order=desc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -60,6 +63,7 @@ public class TransactionsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/ledgers/200000000000/transactions?limit=50&order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -75,6 +79,7 @@ public class TransactionsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/transactions",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -91,5 +96,6 @@ public class TransactionsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/ledgers/200000000000/transactions?include_failed=true&limit=50&order=asc",
         uri.toString());
+    server.close();
   }
 }

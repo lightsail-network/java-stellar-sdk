@@ -1,7 +1,7 @@
 package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
-import static org.stellar.sdk.Asset.create;
+import static org.stellar.sdk.Asset.createNonNativeAsset;
 
 import okhttp3.HttpUrl;
 import org.junit.Test;
@@ -16,9 +16,11 @@ public class TradesRequestBuilderTest {
         server
             .trades()
             .baseAsset(
-                create(null, "EUR", "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
+                createNonNativeAsset(
+                    "EUR", "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
             .counterAsset(
-                create(null, "USD", "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
+                createNonNativeAsset(
+                    "USD", "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
             .cursor("13537736921089")
             .offerId(123L)
             .limit(200)
@@ -38,6 +40,7 @@ public class TradesRequestBuilderTest {
             + "limit=200&"
             + "order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -58,6 +61,7 @@ public class TradesRequestBuilderTest {
             + "limit=200&"
             + "order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -73,6 +77,7 @@ public class TradesRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/trades",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -89,5 +94,6 @@ public class TradesRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/trades?cursor=13537736921089&limit=200",
         uri.toString());
+    server.close();
   }
 }
