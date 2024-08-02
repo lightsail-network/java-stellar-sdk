@@ -3,7 +3,8 @@ package org.stellar.sdk.requests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.stellar.sdk.Asset.create;
+import static org.stellar.sdk.Asset.createNativeAsset;
+import static org.stellar.sdk.Asset.createNonNativeAsset;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +24,8 @@ public class PathsRequestBuilderTest {
             .sourceAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN")
             .destinationAmount("20.50")
             .destinationAsset(
-                create(null, "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+                createNonNativeAsset(
+                    "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
             .cursor("13537736921089")
             .limit(200)
             .order(RequestBuilder.Order.ASC)
@@ -41,21 +43,17 @@ public class PathsRequestBuilderTest {
             + "limit=200&"
             + "order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
   public void testStrictReceiveWithSourceAssets() {
     List<Asset> assets =
         Arrays.asList(
-            create("native", "", ""),
-            create(
-                "credit_alphanum4",
-                "USD",
-                "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
-            create(
-                "credit_alphanum4",
-                "EUR",
-                "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
+            createNativeAsset(),
+            createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+            createNonNativeAsset(
+                "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri =
         server
@@ -64,7 +62,8 @@ public class PathsRequestBuilderTest {
             .sourceAssets(assets)
             .destinationAmount("20.50")
             .destinationAsset(
-                create(null, "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+                createNonNativeAsset(
+                    "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
             .cursor("13537736921089")
             .limit(3)
             .order(RequestBuilder.Order.ASC)
@@ -82,21 +81,17 @@ public class PathsRequestBuilderTest {
             + "limit=3&"
             + "order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
   public void testStrictReceiveWithSourceAccountAndSourceAssets() {
     List<Asset> assets =
         Arrays.asList(
-            create("native", "", ""),
-            create(
-                "credit_alphanum4",
-                "USD",
-                "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
-            create(
-                "credit_alphanum4",
-                "EUR",
-                "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
+            createNativeAsset(),
+            createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+            createNonNativeAsset(
+                "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
     Server server = new Server("https://horizon-testnet.stellar.org");
 
     try {
@@ -118,6 +113,7 @@ public class PathsRequestBuilderTest {
     } catch (RuntimeException e) {
       assertTrue(e.getMessage().contains("cannot set both source_assets and source_account"));
     }
+    server.close();
   }
 
   @Test
@@ -129,7 +125,8 @@ public class PathsRequestBuilderTest {
             .destinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
             .sourceAmount("20.50")
             .sourceAsset(
-                create(null, "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+                createNonNativeAsset(
+                    "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
             .cursor("13537736921089")
             .limit(200)
             .order(RequestBuilder.Order.ASC)
@@ -146,21 +143,17 @@ public class PathsRequestBuilderTest {
             + "limit=200&"
             + "order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
   public void testStrictSendWithDestinationAssets() {
     List<Asset> assets =
         Arrays.asList(
-            create("native", "", ""),
-            create(
-                "credit_alphanum4",
-                "USD",
-                "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
-            create(
-                "credit_alphanum4",
-                "EUR",
-                "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
+            createNativeAsset(),
+            createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+            createNonNativeAsset(
+                "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri =
         server
@@ -168,7 +161,8 @@ public class PathsRequestBuilderTest {
             .destinationAssets(assets)
             .sourceAmount("20.50")
             .sourceAsset(
-                create(null, "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
+                createNonNativeAsset(
+                    "USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"))
             .cursor("13537736921089")
             .limit(3)
             .order(RequestBuilder.Order.ASC)
@@ -185,21 +179,17 @@ public class PathsRequestBuilderTest {
             + "limit=3&"
             + "order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
   public void testStrictSendWithDestinationAccountAndDestinationAssets() {
     List<Asset> assets =
         Arrays.asList(
-            create("native", "", ""),
-            create(
-                "credit_alphanum4",
-                "USD",
-                "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
-            create(
-                "credit_alphanum4",
-                "EUR",
-                "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
+            createNativeAsset(),
+            createNonNativeAsset("USD", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"),
+            createNonNativeAsset(
+                "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
     Server server = new Server("https://horizon-testnet.stellar.org");
 
     try {
@@ -223,5 +213,6 @@ public class PathsRequestBuilderTest {
       assertTrue(
           e.getMessage().contains("cannot set both destination_assets and destination_account"));
     }
+    server.close();
   }
 }

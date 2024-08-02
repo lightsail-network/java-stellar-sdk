@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -27,6 +26,7 @@ public class ClaimableBalancesRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/claimable_balances?sponsor=GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H&limit=200&order=desc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -34,6 +34,7 @@ public class ClaimableBalancesRequestBuilderTest {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.claimableBalances().buildUri();
     assertEquals("https://horizon-testnet.stellar.org/claimable_balances", uri.toString());
+    server.close();
   }
 
   @Test
@@ -47,6 +48,7 @@ public class ClaimableBalancesRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/claimable_balances?claimant=GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -55,6 +57,7 @@ public class ClaimableBalancesRequestBuilderTest {
     HttpUrl uri = server.claimableBalances().forAsset(Asset.create("native")).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/claimable_balances?asset=native", uri.toString());
+    server.close();
   }
 
   @Test
@@ -68,6 +71,7 @@ public class ClaimableBalancesRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/claimable_balances?asset=USD%3AGBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -82,10 +86,11 @@ public class ClaimableBalancesRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/claimable_balances?claimant=GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY&asset=USD%3AGBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H",
         uri.toString());
+    server.close();
   }
 
   @Test
-  public void testSingleClaimableBalance() throws IOException, InterruptedException {
+  public void testSingleClaimableBalance() throws InterruptedException {
     MockWebServer mockWebServer = new MockWebServer();
     mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(json));
     String mockUrl =
@@ -97,6 +102,7 @@ public class ClaimableBalancesRequestBuilderTest {
     assertEquals(String.format("/claimable_balances/%s", id), recordedRequest.getPath());
     assertEquals(response.getId(), id);
     assertEquals(response.getAmount(), "1000.0000000");
+    server.close();
   }
 
   String json =

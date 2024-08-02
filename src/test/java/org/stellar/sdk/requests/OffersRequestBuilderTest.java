@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -47,6 +46,7 @@ public class OffersRequestBuilderTest {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.offers().buildUri();
     assertEquals("https://horizon-testnet.stellar.org/offers", uri.toString());
+    server.close();
   }
 
   @Test
@@ -60,6 +60,7 @@ public class OffersRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?seller=GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -73,6 +74,7 @@ public class OffersRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?sponsor=GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -85,6 +87,7 @@ public class OffersRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?selling=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -97,6 +100,7 @@ public class OffersRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?buying=XCN%3AGCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -109,6 +113,7 @@ public class OffersRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?selling=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -121,6 +126,7 @@ public class OffersRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?buying=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -129,6 +135,7 @@ public class OffersRequestBuilderTest {
     Asset selling = new AssetTypeNative();
     HttpUrl uri = server.offers().forSellingAsset(selling).buildUri();
     assertEquals("https://horizon-testnet.stellar.org/offers?selling=native", uri.toString());
+    server.close();
   }
 
   @Test
@@ -137,6 +144,7 @@ public class OffersRequestBuilderTest {
     Asset buying = new AssetTypeNative();
     HttpUrl uri = server.offers().forBuyingAsset(buying).buildUri();
     assertEquals("https://horizon-testnet.stellar.org/offers?buying=native", uri.toString());
+    server.close();
   }
 
   @Test
@@ -152,10 +160,11 @@ public class OffersRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?selling=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&buying=XCN%3AGCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY",
         uri.toString());
+    server.close();
   }
 
   @Test
-  public void testOffer() throws IOException, InterruptedException {
+  public void testOffer() throws InterruptedException {
     MockWebServer mockWebServer = new MockWebServer();
     mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(offerResponse));
     String mockUrl =
@@ -165,5 +174,6 @@ public class OffersRequestBuilderTest {
     server.offers().offer(offerId);
     RecordedRequest recordedRequest = mockWebServer.takeRequest();
     assertEquals(String.format("/offers/%s", offerId), recordedRequest.getPath());
+    server.close();
   }
 }

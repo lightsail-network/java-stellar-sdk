@@ -12,5 +12,6 @@ public class FeeRequestBuilderTest {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri = server.feeStats().buildUri();
     assertEquals("https://horizon-testnet.stellar.org/fee_stats", uri.toString());
+    server.close();
   }
 }

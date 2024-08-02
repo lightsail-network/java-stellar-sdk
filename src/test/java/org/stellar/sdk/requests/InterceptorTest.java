@@ -29,5 +29,6 @@ public class InterceptorTest {
     assertEquals("dev", request.getHeader("X-Client-Version"));
 
     mockWebServer.shutdown();
+    mockWebServer.close();
   }
 }

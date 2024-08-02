@@ -20,6 +20,7 @@ public class LiquidityPoolsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/liquidity_pools?cursor=13537736921089&limit=200&order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -35,6 +36,7 @@ public class LiquidityPoolsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/liquidity_pools?reserves=EURT%3AGAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S%2CPHP%3AGAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -48,6 +50,7 @@ public class LiquidityPoolsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/liquidity_pools?account=GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -60,5 +63,6 @@ public class LiquidityPoolsRequestBuilderTest {
             .forAccount(null)
             .buildUri();
     assertEquals("https://horizon-testnet.stellar.org/liquidity_pools?account", uri.toString());
+    server.close();
   }
 }

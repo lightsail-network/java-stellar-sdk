@@ -13,6 +13,7 @@ public class PaymentsRequestBuilderTest {
     HttpUrl uri = server.payments().limit(200).order(RequestBuilder.Order.DESC).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/payments?limit=200&order=desc", uri.toString());
+    server.close();
   }
 
   @Test
@@ -28,6 +29,7 @@ public class PaymentsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts/GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H/payments?limit=200&order=desc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -43,6 +45,7 @@ public class PaymentsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/ledgers/200000000000/payments?limit=50&order=asc",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -56,6 +59,7 @@ public class PaymentsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3/payments",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -83,6 +87,7 @@ public class PaymentsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3/payments?order=asc&join=transactions",
         uri.toString());
+    server.close();
   }
 
   @Test
@@ -97,5 +102,6 @@ public class PaymentsRequestBuilderTest {
     assertEquals(
         "https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3/payments",
         uri.toString());
+    server.close();
   }
 }
