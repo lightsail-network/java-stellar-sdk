@@ -20,7 +20,7 @@ import org.stellar.sdk.xdr.TransactionSignaturePayload;
  */
 @Getter
 public class FeeBumpTransaction extends AbstractTransaction {
-  /** The account paying for the transaction fee. */
+  /** The account paying for the transaction fee. (in stroops) */
   @NonNull private final String feeSource;
 
   /** The max fee willing to be paid for this transaction. */

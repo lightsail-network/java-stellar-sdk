@@ -8,7 +8,7 @@ import org.stellar.sdk.xdr.*;
  * Represents all assets with codes 5-12 characters long.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/assets"
  *     target="_blank">Assets</a>
  */
 public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {

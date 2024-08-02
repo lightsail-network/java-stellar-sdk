@@ -27,8 +27,8 @@ public class TimeBounds {
   BigInteger maxTime;
 
   /**
-   * @param minTime 64bit Unix timestamp
-   * @param maxTime 64bit Unix timestamp
+   * @param minTime 64-bit Unix timestamp
+   * @param maxTime 64-bit Unix timestamp
    */
   public TimeBounds(BigInteger minTime, BigInteger maxTime) {
     if (minTime.compareTo(XdrUnsignedHyperInteger.MIN_VALUE) < 0
@@ -51,8 +51,8 @@ public class TimeBounds {
   }
 
   /**
-   * @param minTime 64bit Unix timestamp
-   * @param maxTime 64bit Unix timestamp
+   * @param minTime 64-bit Unix timestamp
+   * @param maxTime 64-bit Unix timestamp
    */
   public TimeBounds(long minTime, long maxTime) {
     this(BigInteger.valueOf(minTime), BigInteger.valueOf(maxTime));

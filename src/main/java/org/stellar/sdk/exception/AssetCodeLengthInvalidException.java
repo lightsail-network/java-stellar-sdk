@@ -9,6 +9,7 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum4;
  * @see AssetTypeCreditAlphaNum4
  * @see AssetTypeCreditAlphaNum12
  */
+// TODO: extends IllegalArgumentException?
 public class AssetCodeLengthInvalidException extends SdkException {
   public AssetCodeLengthInvalidException() {
     super();

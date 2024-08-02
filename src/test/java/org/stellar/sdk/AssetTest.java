@@ -2,10 +2,11 @@ package org.stellar.sdk;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.stellar.sdk.Asset.create;
+import static org.stellar.sdk.Asset.createNativeAsset;
+import static org.stellar.sdk.Asset.createNonNativeAsset;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import org.junit.Test;
 
 /** Created by andrewrogers on 7/1/15. */
 public class AssetTest {
-  Asset xlm = create("native");
+  Asset xlm = createNativeAsset();
 
   @Test
   public void testAssetTypeNative() {
@@ -92,35 +93,33 @@ public class AssetTest {
     String issuer1 = KeyPair.random().getAccountId();
     String issuer2 = KeyPair.random().getAccountId();
 
-    assertTrue(new AssetTypeNative().equals(new AssetTypeNative()));
-    assertTrue(
-        new AssetTypeCreditAlphaNum4("USD", issuer1)
-            .equals(new AssetTypeCreditAlphaNum4("USD", issuer1)));
-    assertTrue(
-        new AssetTypeCreditAlphaNum12("ABCDE", issuer1)
-            .equals(new AssetTypeCreditAlphaNum12("ABCDE", issuer1)));
+    assertEquals(new AssetTypeNative(), new AssetTypeNative());
+    assertEquals(
+        new AssetTypeCreditAlphaNum4("USD", issuer1), new AssetTypeCreditAlphaNum4("USD", issuer1));
+    assertEquals(
+        new AssetTypeCreditAlphaNum12("ABCDE", issuer1),
+        new AssetTypeCreditAlphaNum12("ABCDE", issuer1));
 
-    assertFalse(new AssetTypeNative().equals(new AssetTypeCreditAlphaNum4("USD", issuer1)));
-    assertFalse(new AssetTypeNative().equals(new AssetTypeCreditAlphaNum12("ABCDE", issuer1)));
-    assertFalse(
-        new AssetTypeCreditAlphaNum4("EUR", issuer1)
-            .equals(new AssetTypeCreditAlphaNum4("USD", issuer1)));
-    assertFalse(
-        new AssetTypeCreditAlphaNum4("EUR", issuer1)
-            .equals(new AssetTypeCreditAlphaNum4("EUR", issuer2)));
-    assertFalse(
-        new AssetTypeCreditAlphaNum12("ABCDE", issuer1)
-            .equals(new AssetTypeCreditAlphaNum12("EDCBA", issuer1)));
-    assertFalse(
-        new AssetTypeCreditAlphaNum12("ABCDE", issuer1)
-            .equals(new AssetTypeCreditAlphaNum12("ABCDE", issuer2)));
+    assertNotEquals(new AssetTypeNative(), new AssetTypeCreditAlphaNum4("USD", issuer1));
+    assertNotEquals(new AssetTypeNative(), new AssetTypeCreditAlphaNum12("ABCDE", issuer1));
+    assertNotEquals(
+        new AssetTypeCreditAlphaNum4("EUR", issuer1), new AssetTypeCreditAlphaNum4("USD", issuer1));
+    assertNotEquals(
+        new AssetTypeCreditAlphaNum4("EUR", issuer1), new AssetTypeCreditAlphaNum4("EUR", issuer2));
+    assertNotEquals(
+        new AssetTypeCreditAlphaNum12("ABCDE", issuer1),
+        new AssetTypeCreditAlphaNum12("EDCBA", issuer1));
+    assertNotEquals(
+        new AssetTypeCreditAlphaNum12("ABCDE", issuer1),
+        new AssetTypeCreditAlphaNum12("ABCDE", issuer2));
   }
 
   @Test
   public void testAssetCompareTo0IfAssetsEqual() {
-    Asset assetA = create(null, "ARST", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
-
-    Asset assetB = create(null, "USD", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
+    Asset assetA =
+        createNonNativeAsset("ARST", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+    Asset assetB =
+        createNonNativeAsset("USD", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
 
     assertEquals(0, xlm.compareTo(xlm));
     assertEquals(0, assetA.compareTo(assetA));
@@ -129,9 +128,11 @@ public class AssetTest {
 
   @Test
   public void testAssetCompareToOrderingByType() {
-    Asset anum4 = create(null, "ARSZ", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+    Asset anum4 =
+        createNonNativeAsset("ARSZ", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
     Asset anum12 =
-        create(null, "ARSTANUM12", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+        createNonNativeAsset(
+            "ARSTANUM12", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     assertEquals(0, xlm.compareTo(xlm));
     assertEquals(-1, xlm.compareTo(anum4));
@@ -149,9 +150,9 @@ public class AssetTest {
   @Test
   public void testAssetCompareToOrderingByCode() {
     Asset assetARST =
-        create(null, "ARST", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+        createNonNativeAsset("ARST", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
     Asset assetUSDX =
-        create(null, "USDX", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+        createNonNativeAsset("USDX", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     assertEquals(0, assetARST.compareTo(assetARST));
     assertTrue(assetARST.compareTo(assetUSDX) < 0);
@@ -163,10 +164,9 @@ public class AssetTest {
   @Test
   public void testAssetCompareToOrderingByIssuer() {
     Asset assetIssuerA =
-        create(
-            null, new String("ARST"), "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+        createNonNativeAsset("ARST", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
     Asset assetIssuerB =
-        create(null, "ARST", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
+        createNonNativeAsset("ARST", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
 
     assertTrue(assetIssuerA.compareTo(assetIssuerB) < 0);
     assertEquals(0, assetIssuerA.compareTo(assetIssuerA));
@@ -180,18 +180,20 @@ public class AssetTest {
     // Native is always first
     Asset a = create("native");
     // Type is Alphanum4
-    Asset b = create(null, "BCDE", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+    Asset b =
+        createNonNativeAsset("BCDE", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     // Type is Alphanum12
-    Asset c = create(null, "ABCD1", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+    Asset c =
+        createNonNativeAsset("ABCD1", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     // Code is >
     Asset d =
-        create(
-            null, new String("ABCD2"), "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
+        createNonNativeAsset("ABCD2", "GB7TAYRUZGE6TVT7NHP5SMIZRNQA6PLM423EYISAOAP3MKYIQMVYP2JO");
 
     // Issuer is >
-    Asset e = create(null, "ABCD2", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
+    Asset e =
+        createNonNativeAsset("ABCD2", "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
 
     Asset[] expected = {a, b, c, d, e};
 

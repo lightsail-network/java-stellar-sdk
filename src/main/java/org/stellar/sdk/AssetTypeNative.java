@@ -5,11 +5,11 @@ import org.stellar.sdk.xdr.AssetType;
 
 /**
  * Represents Stellar native asset - <a
- * href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
- * target="_blank">lumens (XLM)</a>
+ * href="https://developers.stellar.org/docs/learn/fundamentals/lumens" target="_blank">Lumens
+ * (XLM)</a>
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/assets"
  *     target="_blank">Assets</a>
  */
 public final class AssetTypeNative extends Asset {

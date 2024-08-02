@@ -19,13 +19,13 @@ public class LiquidityPool {
   public static int FEE = 30;
 
   /**
-   * The first asset in the pool, it must respect the rule assetA < assetB. Check {@link
+   * The first asset in the pool, it must respect the rule assetA &lt; assetB. Check {@link
    * Asset#compareTo(Asset)} for details.
    */
   @NonNull Asset assetA;
 
   /**
-   * The second asset in the pool, it must respect the rule assetA < assetB. Check {@link
+   * The second asset in the pool, it must respect the rule assetA &lt; assetB. Check {@link
    * Asset#compareTo(Asset)} for details.
    */
   @NonNull Asset assetB;
@@ -36,8 +36,8 @@ public class LiquidityPool {
   /**
    * Constructs a new LiquidityPool with specified assets and fee.
    *
-   * @param assetA The first asset in the pool, it must respect the rule assetA < assetB.
-   * @param assetB The second asset in the pool, it must respect the rule assetA < assetB.
+   * @param assetA The first asset in the pool, it must respect the rule assetA &lt; assetB.
+   * @param assetB The second asset in the pool, it must respect the rule assetA &lt; assetB.
    * @param fee The liquidity pool fee. For now the only fee supported is {@link LiquidityPool#FEE}.
    * @throws IllegalArgumentException if assets are not in lexicographic order.
    */
@@ -53,8 +53,8 @@ public class LiquidityPool {
   /**
    * Constructs a new LiquidityPool with specified assets and default fee.
    *
-   * @param assetA The first asset in the pool, it must respect the rule assetA < assetB.
-   * @param assetB The second asset in the pool, it must respect the rule assetA < assetB.
+   * @param assetA The first asset in the pool, it must respect the rule assetA &lt; assetB.
+   * @param assetB The second asset in the pool, it must respect the rule assetA &lt; assetB.
    * @throws IllegalArgumentException if assets are not in lexicographic order.
    */
   public LiquidityPool(Asset assetA, Asset assetB) {

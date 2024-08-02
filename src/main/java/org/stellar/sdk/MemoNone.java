@@ -15,6 +15,8 @@ public class MemoNone extends Memo {
 
   @Override
   public String toString() {
+    // I'm not sure if this is a good idea,
+    // but I'm worried that some users have already used it, so let's keep it.
     return "";
   }
 }

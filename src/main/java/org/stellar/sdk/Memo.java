@@ -17,6 +17,9 @@ import java.math.BigInteger;
  *
  * <p>Use static methods to generate any of above types.
  *
+ * @see <a
+ *     href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/memos"
+ *     target="_blank">Memos</a>
  * @see Transaction
  */
 public abstract class Memo {

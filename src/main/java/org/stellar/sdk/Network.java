@@ -32,7 +32,11 @@ public class Network {
     this.networkPassphrase = networkPassphrase;
   }
 
-  /** Returns network id (SHA-256 hashed <code>networkPassphrase</code>). */
+  /**
+   * Returns network id (SHA-256 hashed <code>networkPassphrase</code>).
+   *
+   * @return network id
+   */
   public byte[] getNetworkId() {
     return Util.hash(this.networkPassphrase.getBytes(StandardCharsets.UTF_8));
   }

@@ -22,6 +22,14 @@ public abstract class AbstractTransaction {
   /** List of signatures attached to this transaction. */
   @NonNull protected List<DecoratedSignature> signatures;
 
+  /**
+   * Minimum base fee for transactions. If this fee is below the network minimum, the transaction
+   * will fail. The more operations in the transaction, the greater the required fee.
+   *
+   * @see <a
+   *     href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering#inclusion-fee"
+   *     target="_blank">Fees</a>
+   */
   public static final int MIN_BASE_FEE = 100;
 
   AbstractTransaction(@NonNull Network network) {

@@ -24,6 +24,10 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
  *   <li>The ed25519 account ID, which starts with the letter "G".
  *   <li>An optional account multiplexing ID, which is a 64-bit unsigned integer.
  * </ul>
+ *
+ * @see <a
+ *     href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos#muxed-accounts"
+ *     target="_blank">Muxed Accounts</a>
  */
 @Getter
 @ToString
