@@ -6,17 +6,21 @@ import static org.junit.Assert.assertNull;
 
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.junit.Test;
 import org.stellar.sdk.responses.gson.GsonSingleton;
 
 public class GetTransactionDeserializerTest {
   @Test
   public void testDeserializeSuccess() throws IOException {
+    String filePath = "src/test/resources/responses/sorobanrpc/get_transaction_success.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+
     SorobanRpcResponse<GetTransactionResponse> getTransactionResponse =
         GsonSingleton.getInstance()
             .fromJson(
-                jsonSuccess,
-                new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {}.getType());
+                json, new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {}.getType());
     assertEquals(
         getTransactionResponse.getResult().getStatus(),
         GetTransactionResponse.GetTransactionStatus.SUCCESS);
@@ -51,12 +55,14 @@ public class GetTransactionDeserializerTest {
   }
 
   @Test
-  public void testDeserializeFailed() {
+  public void testDeserializeFailed() throws IOException {
+    String filePath = "src/test/resources/responses/sorobanrpc/get_transaction_failed.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+
     SorobanRpcResponse<GetTransactionResponse> getTransactionResponse =
         GsonSingleton.getInstance()
             .fromJson(
-                jsonFailed,
-                new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {}.getType());
+                json, new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {}.getType());
     assertEquals(
         getTransactionResponse.getResult().getStatus(),
         GetTransactionResponse.GetTransactionStatus.FAILED);
@@ -85,12 +91,14 @@ public class GetTransactionDeserializerTest {
   }
 
   @Test
-  public void testDeserializeNotFound() {
+  public void testDeserializeNotFound() throws IOException {
+    String filePath = "src/test/resources/responses/sorobanrpc/get_transaction_not_found.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+
     SorobanRpcResponse<GetTransactionResponse> getTransactionResponse =
         GsonSingleton.getInstance()
             .fromJson(
-                jsonNotFound,
-                new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {}.getType());
+                json, new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {}.getType());
     assertEquals(
         getTransactionResponse.getResult().getStatus(),
         GetTransactionResponse.GetTransactionStatus.NOT_FOUND);
@@ -112,55 +120,4 @@ public class GetTransactionDeserializerTest {
     assertNull(getTransactionResponse.getResult().parseResultXdr());
     assertNull(getTransactionResponse.getResult().parseResultMetaXdr());
   }
-
-  String jsonSuccess =
-      "{\n"
-          + "    \"jsonrpc\": \"2.0\",\n"
-          + "    \"id\": \"198cb1a8-9104-4446-a269-88bf000c2721\",\n"
-          + "    \"result\": {\n"
-          + "        \"status\": \"SUCCESS\",\n"
-          + "        \"latestLedger\": \"79289\",\n"
-          + "        \"latestLedgerCloseTime\": \"1690387240\",\n"
-          + "        \"oldestLedger\": \"77850\",\n"
-          + "        \"oldestLedgerCloseTime\": \"1690379694\",\n"
-          + "        \"applicationOrder\": 1,\n"
-          + "        \"envelopeXdr\": \"AAAAAgAAAADGFY14/R1KD0VGtTbi5Yp4d7LuMW0iQbLM/AUiGKj5owCpsoQAJY3OAAAjqgAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGAAAAAAAAAABhhOwI+RL18Zpk7cqI5pRRf0L96jE8i+0x3ekhuBh2cUAAAARc2V0X2N1cnJlbmN5X3JhdGUAAAAAAAACAAAADwAAAANldXIAAAAACQAAAAAAAAAAAAAAAAARCz4AAAABAAAAAAAAAAAAAAABhhOwI+RL18Zpk7cqI5pRRf0L96jE8i+0x3ekhuBh2cUAAAARc2V0X2N1cnJlbmN5X3JhdGUAAAAAAAACAAAADwAAAANldXIAAAAACQAAAAAAAAAAAAAAAAARCz4AAAAAAAAAAQAAAAAAAAABAAAAB4408vVXuLU3mry897TfPpYjjsSN7n42REos241RddYdAAAAAQAAAAYAAAABhhOwI+RL18Zpk7cqI5pRRf0L96jE8i+0x3ekhuBh2cUAAAAUAAAAAQFvcYAAAImAAAAHxAAAAAAAAAACAAAAARio+aMAAABATbFMyom/TUz87wHex0LoYZA8jbNJkXbaDSgmOdk+wSBFJuMuta+/vSlro0e0vK2+1FqD/zWHZeYig4pKmM3rDA==\",\n"
-          + "        \"resultXdr\": \"AAAAAAABNCwAAAAAAAAAAQAAAAAAAAAYAAAAAJhEDjNV0Jj46jrxCj87qJ6JaYKJN4c+p5tvapkLwrn8AAAAAA==\",\n"
-          + "        \"resultMetaXdr\": \"AAAAAwAAAAAAAAACAAAAAwABNbYAAAAAAAAAANNgojN9rS5sqnuqM5wX5k7yyNC63OjWIe4OHx6yL2r7AAAAF0h1s9QAATW1AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQABNbYAAAAAAAAAANNgojN9rS5sqnuqM5wX5k7yyNC63OjWIe4OHx6yL2r7AAAAF0h1s9QAATW1AAAAAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAMAAAAAAAE1tgAAAABkwUMZAAAAAAAAAAEAAAAAAAAAAgAAAAMAATW2AAAAAAAAAADTYKIzfa0ubKp7qjOcF+ZO8sjQutzo1iHuDh8esi9q+wAAABdIdbPUAAE1tQAAAAEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAABNbYAAAAAZMFDGQAAAAAAAAABAAE1tgAAAAAAAAAA02CiM32tLmyqe6oznBfmTvLI0Lrc6NYh7g4fHrIvavsAAAAXSHWz/AABNbUAAAABAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAwAAAAAAATW2AAAAAGTBQxkAAAAAAAAAAQAAAAAAAAAAAAAADgAAAAZUb2tlbkEAAAAAAAIAAAABAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAPAAAAB2ZuX2NhbGwAAAAADQAAACC9x/ldchaDQwaY3uK3IcXmke/4UTUtggE9g4egPM+sawAAAA8AAAAEbmFtZQAAAAEAAAABAAAAAAAAAAG9x/ldchaDQwaY3uK3IcXmke/4UTUtggE9g4egPM+sawAAAAIAAAAAAAAAAgAAAA8AAAAJZm5fcmV0dXJuAAAAAAAADwAAAARuYW1lAAAADgAAAAZUb2tlbkEAAA==\",\n"
-          + "        \"ledger\": \"79286\",\n"
-          + "        \"createdAt\": \"1690387225\"\n"
-          + "    }\n"
-          + "}";
-
-  String jsonNotFound =
-      "{\n"
-          + "    \"jsonrpc\": \"2.0\",\n"
-          + "    \"id\": \"198cb1a8-9104-4446-a269-88bf000c2721\",\n"
-          + "    \"result\": {\n"
-          + "        \"status\": \"NOT_FOUND\",\n"
-          + "        \"latestLedger\": \"79285\",\n"
-          + "        \"latestLedgerCloseTime\": \"1690387220\",\n"
-          + "        \"oldestLedger\": \"77846\",\n"
-          + "        \"oldestLedgerCloseTime\": \"1690379672\"\n"
-          + "    }\n"
-          + "}";
-
-  String jsonFailed =
-      "{\n"
-          + "    \"jsonrpc\": \"2.0\",\n"
-          + "    \"id\": \"198cb1a8-9104-4446-a269-88bf000c2721\",\n"
-          + "    \"result\": {\n"
-          + "        \"status\": \"FAILED\",\n"
-          + "        \"latestLedger\": \"79289\",\n"
-          + "        \"latestLedgerCloseTime\": \"1690387240\",\n"
-          + "        \"oldestLedger\": \"77850\",\n"
-          + "        \"oldestLedgerCloseTime\": \"1690379694\",\n"
-          + "        \"applicationOrder\": 1,\n"
-          + "        \"envelopeXdr\": \"AAAAAgAAAADGFY14/R1KD0VGtTbi5Yp4d7LuMW0iQbLM/AUiGKj5owCpsoQAJY3OAAAjqgAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAGAAAAAAAAAABhhOwI+RL18Zpk7cqI5pRRf0L96jE8i+0x3ekhuBh2cUAAAARc2V0X2N1cnJlbmN5X3JhdGUAAAAAAAACAAAADwAAAANldXIAAAAACQAAAAAAAAAAAAAAAAARCz4AAAABAAAAAAAAAAAAAAABhhOwI+RL18Zpk7cqI5pRRf0L96jE8i+0x3ekhuBh2cUAAAARc2V0X2N1cnJlbmN5X3JhdGUAAAAAAAACAAAADwAAAANldXIAAAAACQAAAAAAAAAAAAAAAAARCz4AAAAAAAAAAQAAAAAAAAABAAAAB4408vVXuLU3mry897TfPpYjjsSN7n42REos241RddYdAAAAAQAAAAYAAAABhhOwI+RL18Zpk7cqI5pRRf0L96jE8i+0x3ekhuBh2cUAAAAUAAAAAQFvcYAAAImAAAAHxAAAAAAAAAACAAAAARio+aMAAABATbFMyom/TUz87wHex0LoYZA8jbNJkXbaDSgmOdk+wSBFJuMuta+/vSlro0e0vK2+1FqD/zWHZeYig4pKmM3rDA==\",\n"
-          + "        \"resultXdr\": \"AAAAAAABNCwAAAAAAAAAAQAAAAAAAAAYAAAAAJhEDjNV0Jj46jrxCj87qJ6JaYKJN4c+p5tvapkLwrn8AAAAAA==\",\n"
-          + "        \"resultMetaXdr\": \"AAAAAwAAAAAAAAACAAAAAwABNbYAAAAAAAAAANNgojN9rS5sqnuqM5wX5k7yyNC63OjWIe4OHx6yL2r7AAAAF0h1s9QAATW1AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQABNbYAAAAAAAAAANNgojN9rS5sqnuqM5wX5k7yyNC63OjWIe4OHx6yL2r7AAAAF0h1s9QAATW1AAAAAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAMAAAAAAAE1tgAAAABkwUMZAAAAAAAAAAEAAAAAAAAAAgAAAAMAATW2AAAAAAAAAADTYKIzfa0ubKp7qjOcF+ZO8sjQutzo1iHuDh8esi9q+wAAABdIdbPUAAE1tQAAAAEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAABNbYAAAAAZMFDGQAAAAAAAAABAAE1tgAAAAAAAAAA02CiM32tLmyqe6oznBfmTvLI0Lrc6NYh7g4fHrIvavsAAAAXSHWz/AABNbUAAAABAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAwAAAAAAATW2AAAAAGTBQxkAAAAAAAAAAQAAAAAAAAAAAAAADgAAAAZUb2tlbkEAAAAAAAIAAAABAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAPAAAAB2ZuX2NhbGwAAAAADQAAACC9x/ldchaDQwaY3uK3IcXmke/4UTUtggE9g4egPM+sawAAAA8AAAAEbmFtZQAAAAEAAAABAAAAAAAAAAG9x/ldchaDQwaY3uK3IcXmke/4UTUtggE9g4egPM+sawAAAAIAAAAAAAAAAgAAAA8AAAAJZm5fcmV0dXJuAAAAAAAADwAAAARuYW1lAAAADgAAAAZUb2tlbkEAAA==\",\n"
-          + "        \"ledger\": \"79286\",\n"
-          + "        \"createdAt\": \"1690387225\"\n"
-          + "    }\n"
-          + "}";
 }

@@ -1,0 +1,10 @@
+{
+  "jsonrpc": "2.0",
+  "id": "198cb1a8-9104-4446-a269-88bf000c2721",
+  "result": {
+    "status": "healthy",
+    "latestLedger": 50000,
+    "oldestLedger": 1,
+    "ledgerRetentionWindow": 10000
+  }
+}

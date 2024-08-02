@@ -1,0 +1,11 @@
+{
+  "jsonrpc": "2.0",
+  "id": "b96311af98d54d7cbb8736dbb0ed7730",
+  "result": {
+    "errorResultXdr": "AAAAAAAAf67////6AAAAAA==",
+    "diagnosticEventsXdr": ["AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAgr/p6gt6h8MrmSw+WNJnu3+sCP9dHXx7jR8IH0sG6Cy0AAAAPAAAABWhlbGxvAAAAAAAADwAAAAVBbG9oYQAAAA=="],        "status": "ERROR",
+    "hash": "3b0c982bb8245be869d34ec822f999deb68f3a8480cf6e663643cf2f6e397e64",
+    "latestLedger": "62",
+    "latestLedgerCloseTime": "1690447331"
+  }
+}

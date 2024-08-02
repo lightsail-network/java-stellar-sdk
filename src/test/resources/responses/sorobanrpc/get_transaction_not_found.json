@@ -1,0 +1,11 @@
+{
+  "jsonrpc": "2.0",
+  "id": "198cb1a8-9104-4446-a269-88bf000c2721",
+  "result": {
+    "status": "NOT_FOUND",
+    "latestLedger": "79285",
+    "latestLedgerCloseTime": "1690387220",
+    "oldestLedger": "77846",
+    "oldestLedgerCloseTime": "1690379672"
+  }
+}

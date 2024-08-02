@@ -1,0 +1,8 @@
+{
+  "jsonrpc": "2.0",
+  "id": 8675309,
+  "result": {
+    "entries": null,
+    "latestLedger": "1009"
+  }
+}

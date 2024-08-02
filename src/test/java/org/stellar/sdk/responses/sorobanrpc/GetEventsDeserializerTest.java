@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.junit.Test;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
 import org.stellar.sdk.responses.gson.GsonSingleton;
@@ -12,6 +14,9 @@ import org.stellar.sdk.responses.gson.GsonSingleton;
 public class GetEventsDeserializerTest {
   @Test
   public void testDeserialize() throws IOException {
+    String filePath = "src/test/resources/responses/sorobanrpc/get_events.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+
     SorobanRpcResponse<GetEventsResponse> getEventsResponse =
         GsonSingleton.getInstance()
             .fromJson(json, new TypeToken<SorobanRpcResponse<GetEventsResponse>>() {}.getType());
@@ -45,60 +50,4 @@ public class GetEventsDeserializerTest {
     GetEventsResponse.EventInfo eventInfo2 = getEventsResponse.getResult().getEvents().get(2);
     assertEquals(eventInfo2.getType(), EventFilterType.DIAGNOSTIC);
   }
-
-  String json =
-      "{\n"
-          + "    \"jsonrpc\": \"2.0\",\n"
-          + "    \"id\": \"198cb1a8-9104-4446-a269-88bf000c2721\",\n"
-          + "    \"result\": {\n"
-          + "        \"events\": [\n"
-          + "            {\n"
-          + "                \"type\": \"contract\",\n"
-          + "                \"ledger\": \"108\",\n"
-          + "                \"ledgerClosedAt\": \"2023-07-23T14:47:01Z\",\n"
-          + "                \"contractId\": \"CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K\",\n"
-          + "                \"id\": \"0000000463856472064-0000000000\",\n"
-          + "                \"pagingToken\": \"0000000463856472064-0000000000\",\n"
-          + "                \"topic\": [\n"
-          + "                    \"AAAADwAAAAdDT1VOVEVSAA==\",\n"
-          + "                    \"AAAADwAAAAlpbmNyZW1lbnQAAAA=\"\n"
-          + "                ],\n"
-          + "                \"value\": \"AAAAAwAAAAE=\",\n"
-          + "                \"inSuccessfulContractCall\": true,\n"
-          + "                \"txHash\": \"db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d\"\n"
-          + "            },\n"
-          + "            {\n"
-          + "                \"type\": \"system\",\n"
-          + "                \"ledger\": \"111\",\n"
-          + "                \"ledgerClosedAt\": \"2023-07-23T14:47:04Z\",\n"
-          + "                \"contractId\": \"CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K\",\n"
-          + "                \"id\": \"0000000476741373952-0000000000\",\n"
-          + "                \"pagingToken\": \"0000000476741373952-0000000000\",\n"
-          + "                \"topic\": [\n"
-          + "                    \"AAAADwAAAAdDT1VOVEVSAA==\",\n"
-          + "                    \"AAAADwAAAAlpbmNyZW1lbnQAAAA=\"\n"
-          + "                ],\n"
-          + "                \"value\": \"AAAAAwAAAAI=\",\n"
-          + "                \"inSuccessfulContractCall\": true,\n"
-          + "                \"txHash\": \"db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d\"\n"
-          + "            },\n"
-          + "            {\n"
-          + "                \"type\": \"diagnostic\",\n"
-          + "                \"ledger\": \"114\",\n"
-          + "                \"ledgerClosedAt\": \"2023-07-23T14:47:07Z\",\n"
-          + "                \"contractId\": \"CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K\",\n"
-          + "                \"id\": \"0000000489626275840-0000000000\",\n"
-          + "                \"pagingToken\": \"0000000489626275840-0000000000\",\n"
-          + "                \"topic\": [\n"
-          + "                    \"AAAADwAAAAdDT1VOVEVSAA==\",\n"
-          + "                    \"AAAADwAAAAlpbmNyZW1lbnQAAAA=\"\n"
-          + "                ],\n"
-          + "                \"value\": \"AAAAAwAAAAM=\",\n"
-          + "                \"inSuccessfulContractCall\": true,\n"
-          + "                \"txHash\": \"db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d\"\n"
-          + "            }\n"
-          + "        ],\n"
-          + "        \"latestLedger\": \"169\"\n"
-          + "    }\n"
-          + "}";
 }

@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.stellar.sdk.federation.exception.NotFoundException;
 
+// TODO: refactor
 public class FederationServerTest extends TestCase {
   private final String successResponse =
       "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}";
