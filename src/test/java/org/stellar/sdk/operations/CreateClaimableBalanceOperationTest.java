@@ -4,9 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
 import org.stellar.sdk.Account;
+import org.stellar.sdk.Asset;
+import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Claimant;
 import org.stellar.sdk.KeyPair;
@@ -23,6 +27,45 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 // TODO: refactor the test
 public class CreateClaimableBalanceOperationTest {
+
+  @Test
+  public void testCreateClaimableBalanceOperation() {
+    String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
+
+    Asset asset =
+        new AssetTypeCreditAlphaNum4(
+            "DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
+    String amt = "100";
+    List<Claimant> claimants =
+        Arrays.asList(
+            new Claimant(
+                "GABXJTV7ELEB2TQZKJYEGXBUIG6QODJULKJDI65KZMIZZG2EACJU5EA7",
+                new Predicate.Unconditional()),
+            new Claimant(
+                "GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR",
+                new Predicate.AbsBefore(1601391266)));
+    CreateClaimableBalanceOperation operation =
+        CreateClaimableBalanceOperation.builder()
+            .amount(amt)
+            .asset(asset)
+            .claimants(claimants)
+            .sourceAccount(source)
+            .build();
+
+    assertEquals(
+        "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAAA4AAAABREVNTwAAAACs9Aq+RXfSw0yuZEGt0TkYxAHDjB9RkQrLraMLSTGGKwAAAAA7msoAAAAAAgAAAAAAAAAAA3TOvyLIHU4ZUnBDXDRBvQcNNFqSNHuqyxGcm0QAk04AAAAAAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIgAAAAQAAAAAX3NKog==",
+        operation.toXdrBase64());
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    CreateClaimableBalanceOperation parsedOperation =
+        (CreateClaimableBalanceOperation) Operation.fromXdr(xdr);
+    assertEquals(claimants, parsedOperation.getClaimants());
+    assertEquals(asset, parsedOperation.getAsset());
+    assertEquals(amt, parsedOperation.getAmount());
+
+    assertEquals(source, parsedOperation.getSourceAccount());
+    assertEquals(operation, parsedOperation);
+  }
 
   @Test
   public void testClaimableBalanceIds() throws IOException {

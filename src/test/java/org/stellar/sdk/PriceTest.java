@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import static org.junit.Assert.assertEquals;
 
+import lombok.Value;
 import org.junit.Test;
 
 public class PriceTest {
@@ -41,13 +42,9 @@ public class PriceTest {
     }
   }
 
-  private class PriceTestCase {
+  @Value
+  private static class PriceTestCase {
     public String input;
     public Price expectedPrice;
-
-    public PriceTestCase(String input, Price expectedPrice) {
-      this.input = input;
-      this.expectedPrice = expectedPrice;
-    }
   }
 }
