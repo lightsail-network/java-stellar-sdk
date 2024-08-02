@@ -55,6 +55,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - feat: add support for Soroban PRC's `getTransactions` and `getFeeStats` API.
 - feat: add support for Horizon's 'transaction_async' API.
 - feat: optimize `RequestTimeoutException`, when a timeout occurs, if the server returns some information, you can read them.
+- refactor!: mark `Asset#create(String, String, String)` as deprecated, use `Asset.createNonNativeAsset(String, String)` or `Asset.createNativeAsset()` instead.
 
 ## 0.44.0
 ### Update

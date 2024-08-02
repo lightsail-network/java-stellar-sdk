@@ -15,7 +15,7 @@ import org.stellar.sdk.xdr.HashIDPreimage;
  * Base Asset class.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/assets"
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/assets"
  *     target="_blank">Assets</a>
  */
 public abstract class Asset implements Comparable<Asset> {
@@ -40,7 +40,10 @@ public abstract class Asset implements Comparable<Asset> {
   }
 
   /**
-   * Creates Asset for Alpha4/Alpha12/Native
+   * Deprecated: Use {@link Asset#createNonNativeAsset(String, String)} or {@link
+   * Asset#createNativeAsset()} instead.
+   *
+   * <p>Creates Asset for Alpha4/Alpha12/Native
    *
    * @param type the type of asset. 'native' will generate its respective asset sub-class, if null
    *     or any other value will attempt to derive the asset sub-class from code and issuer.
@@ -48,7 +51,7 @@ public abstract class Asset implements Comparable<Asset> {
    * @param issuer the asset issuer or null
    * @return Asset
    */
-  // TODO: remove the func
+  @Deprecated
   public static Asset create(String type, String code, String issuer) {
     if (type == null) {
       return createNonNativeAsset(code, issuer);
@@ -109,7 +112,14 @@ public abstract class Asset implements Comparable<Asset> {
   @Override
   public abstract int compareTo(@NonNull Asset other);
 
-  private static Asset createNonNativeAsset(String code, String issuer) {
+  /**
+   * Creates a new non-native asset.
+   *
+   * @param code The asset code.
+   * @param issuer The issuer account ID.
+   * @return Asset (alphanum4 or alphanum12)
+   */
+  public static Asset createNonNativeAsset(@NonNull String code, @NonNull String issuer) {
     if (!code.isEmpty() && code.length() <= 4) {
       return new AssetTypeCreditAlphaNum4(code, issuer);
     } else if (code.length() >= 5 && code.length() <= 12) {
@@ -117,6 +127,15 @@ public abstract class Asset implements Comparable<Asset> {
     } else {
       throw new AssetCodeLengthInvalidException();
     }
+  }
+
+  /**
+   * Creates a new native asset.
+   *
+   * @return Asset (native)
+   */
+  public static Asset createNativeAsset() {
+    return new AssetTypeNative();
   }
 
   /**
