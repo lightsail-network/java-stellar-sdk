@@ -1,11 +1,13 @@
 package org.stellar.sdk;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import org.junit.Test;
 import org.stellar.sdk.xdr.MemoType;
@@ -23,6 +25,7 @@ public class MemoTest {
     MemoText memo = Memo.text("test");
     assertEquals(MemoType.MEMO_TEXT, memo.toXdr().getDiscriminant());
     assertEquals("test", memo.getText());
+    assertArrayEquals("test".getBytes(StandardCharsets.UTF_8), memo.getBytes());
     assertEquals("test", memo.toString());
   }
 
@@ -31,6 +34,7 @@ public class MemoTest {
     MemoText memo = Memo.text("三");
     assertEquals(MemoType.MEMO_TEXT, memo.toXdr().getDiscriminant());
     assertEquals("三", memo.getText());
+    assertArrayEquals("三".getBytes(StandardCharsets.UTF_8), memo.getBytes());
     assertEquals("三", memo.toString());
   }
 

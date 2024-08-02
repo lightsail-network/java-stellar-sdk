@@ -42,6 +42,7 @@ import org.stellar.sdk.responses.effects.DataSponsorshipCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.DataSponsorshipRemovedEffectResponse;
 import org.stellar.sdk.responses.effects.DataSponsorshipUpdatedEffectResponse;
 import org.stellar.sdk.responses.effects.DataUpdatedEffectResponse;
+import org.stellar.sdk.responses.effects.EffectResponse;
 import org.stellar.sdk.responses.effects.LiquidityPoolCreatedEffectResponse;
 import org.stellar.sdk.responses.effects.LiquidityPoolDepositedEffectResponse;
 import org.stellar.sdk.responses.effects.LiquidityPoolRemovedEffectResponse;
@@ -74,7 +75,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/liquidity_pool_withdrew.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolWithdrewEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolWithdrewEffectResponse.class);
+        (LiquidityPoolWithdrewEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals(
         "https://horizon-testnet.stellar.org/operations/1579096265998337",
@@ -102,7 +104,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountCreatedEffectResponse.class);
+        (AccountCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_created", response.getType());
     assertEquals("15.8675013", response.getStartingBalance());
@@ -113,7 +116,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_credited.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountCreditedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountCreditedEffectResponse.class);
+        (AccountCreditedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_credited", response.getType());
     assertEquals(new AssetTypeNative(), response.getAsset());
@@ -125,7 +129,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_debited.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountDebitedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountDebitedEffectResponse.class);
+        (AccountDebitedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_debited", response.getType());
     assertEquals(new AssetTypeNative(), response.getAsset());
@@ -137,7 +142,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_flags_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountFlagsUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountFlagsUpdatedEffectResponse.class);
+        (AccountFlagsUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_flags_updated", response.getType());
     assertTrue(response.getAuthRequiredFlag());
@@ -149,7 +155,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_home_domain_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountHomeDomainUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountHomeDomainUpdatedEffectResponse.class);
+        (AccountHomeDomainUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_home_domain_updated", response.getType());
   }
@@ -160,8 +167,8 @@ public class EffectResponseTest {
         "src/test/resources/responses/effects/account_inflation_destination_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountInflationDestinationUpdatedEffectResponse response =
-        GsonSingleton.getInstance()
-            .fromJson(json, AccountInflationDestinationUpdatedEffectResponse.class);
+        (AccountInflationDestinationUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_inflation_destination_updated", response.getType());
   }
@@ -171,7 +178,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountRemovedEffectResponse.class);
+        (AccountRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_removed", response.getType());
   }
@@ -181,7 +189,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_sponsorship_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountSponsorshipCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountSponsorshipCreatedEffectResponse.class);
+        (AccountSponsorshipCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_sponsorship_created", response.getType());
     assertEquals("GCZGSFPITKVJPJERJIVLCQK5YIHYTDXCY45ZHU3IRCUC53SXSCAL44JV", response.getSponsor());
@@ -192,7 +201,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_sponsorship_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountSponsorshipRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountSponsorshipRemovedEffectResponse.class);
+        (AccountSponsorshipRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_sponsorship_removed", response.getType());
     assertEquals(
@@ -204,7 +214,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_sponsorship_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountSponsorshipUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountSponsorshipUpdatedEffectResponse.class);
+        (AccountSponsorshipUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_sponsorship_updated", response.getType());
     assertEquals(
@@ -218,7 +229,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/account_thresholds_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountThresholdsUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountThresholdsUpdatedEffectResponse.class);
+        (AccountThresholdsUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("account_thresholds_updated", response.getType());
     assertEquals(10, response.getLowThreshold().intValue());
@@ -232,8 +244,8 @@ public class EffectResponseTest {
         "src/test/resources/responses/effects/claimable_balance_claimant_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClaimableBalanceClaimantCreatedEffectResponse response =
-        GsonSingleton.getInstance()
-            .fromJson(json, ClaimableBalanceClaimantCreatedEffectResponse.class);
+        (ClaimableBalanceClaimantCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("claimable_balance_claimant_created", response.getType());
     assertEquals(
@@ -251,7 +263,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/claimable_balance_claimed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClaimableBalanceClaimedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, ClaimableBalanceClaimedEffectResponse.class);
+        (ClaimableBalanceClaimedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("claimable_balance_claimed", response.getType());
     assertEquals(
@@ -268,7 +281,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/claimable_balance_clawed_back.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClaimableBalanceClawedBackEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, ClaimableBalanceClawedBackEffectResponse.class);
+        (ClaimableBalanceClawedBackEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("claimable_balance_clawed_back", response.getType());
     assertEquals(
@@ -281,7 +295,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/claimable_balance_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClaimableBalanceCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, ClaimableBalanceCreatedEffectResponse.class);
+        (ClaimableBalanceCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("claimable_balance_created", response.getType());
     assertEquals(
@@ -299,8 +314,8 @@ public class EffectResponseTest {
         "src/test/resources/responses/effects/claimable_balance_sponsorship_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClaimableBalanceSponsorshipCreatedEffectResponse response =
-        GsonSingleton.getInstance()
-            .fromJson(json, ClaimableBalanceSponsorshipCreatedEffectResponse.class);
+        (ClaimableBalanceSponsorshipCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("claimable_balance_sponsorship_created", response.getType());
     assertEquals(
@@ -315,8 +330,8 @@ public class EffectResponseTest {
         "src/test/resources/responses/effects/claimable_balance_sponsorship_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClaimableBalanceSponsorshipRemovedEffectResponse response =
-        GsonSingleton.getInstance()
-            .fromJson(json, ClaimableBalanceSponsorshipRemovedEffectResponse.class);
+        (ClaimableBalanceSponsorshipRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("claimable_balance_sponsorship_removed", response.getType());
     assertEquals(
@@ -332,8 +347,8 @@ public class EffectResponseTest {
         "src/test/resources/responses/effects/claimable_balance_sponsorship_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClaimableBalanceSponsorshipUpdatedEffectResponse response =
-        GsonSingleton.getInstance()
-            .fromJson(json, ClaimableBalanceSponsorshipUpdatedEffectResponse.class);
+        (ClaimableBalanceSponsorshipUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("claimable_balance_sponsorship_updated", response.getType());
     assertEquals(
@@ -350,7 +365,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/contract_credited.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ContractCreditedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, ContractCreditedEffectResponse.class);
+        (ContractCreditedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("contract_credited", response.getType());
     assertEquals(new AssetTypeNative(), response.getAsset());
@@ -364,7 +380,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/contract_debited.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ContractDebitedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, ContractDebitedEffectResponse.class);
+        (ContractDebitedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("contract_debited", response.getType());
     assertEquals(new AssetTypeNative(), response.getAsset());
@@ -378,7 +395,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/data_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     DataCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, DataCreatedEffectResponse.class);
+        (DataCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("data_created", response.getType());
     assertEquals("MESSAGE_DATA_0", response.getName());
@@ -394,7 +412,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/data_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     DataRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, DataRemovedEffectResponse.class);
+        (DataRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("data_removed", response.getType());
     assertEquals("MESSAGE_DATA_0", response.getName());
@@ -405,7 +424,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/data_sponsorship_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     DataSponsorshipCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, DataSponsorshipCreatedEffectResponse.class);
+        (DataSponsorshipCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("data_sponsorship_created", response.getType());
     assertEquals("hello", response.getDataName());
@@ -417,7 +437,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/data_sponsorship_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     DataSponsorshipRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, DataSponsorshipRemovedEffectResponse.class);
+        (DataSponsorshipRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("data_sponsorship_removed", response.getType());
     assertEquals("hello", response.getDataName());
@@ -430,7 +451,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/data_sponsorship_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     DataSponsorshipUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, DataSponsorshipUpdatedEffectResponse.class);
+        (DataSponsorshipUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("data_sponsorship_updated", response.getType());
     assertEquals("hello", response.getDataName());
@@ -445,7 +467,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/data_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     DataUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, DataUpdatedEffectResponse.class);
+        (DataUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("data_updated", response.getType());
     assertEquals("MESSAGE_DATA_1", response.getName());
@@ -461,7 +484,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/liquidity_pool_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolCreatedEffectResponse.class);
+        (LiquidityPoolCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("liquidity_pool_created", response.getType());
     assertEquals(
@@ -487,7 +511,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/liquidity_pool_deposited.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolDepositedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolDepositedEffectResponse.class);
+        (LiquidityPoolDepositedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("liquidity_pool_deposited", response.getType());
     assertEquals(
@@ -523,7 +548,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/liquidity_pool_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolRemovedEffectResponse.class);
+        (LiquidityPoolRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("liquidity_pool_removed", response.getType());
     assertEquals(
@@ -536,7 +562,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/liquidity_pool_revoked.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolRevokedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolRevokedEffectResponse.class);
+        (LiquidityPoolRevokedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("liquidity_pool_revoked", response.getType());
     assertEquals(
@@ -575,7 +602,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/liquidity_pool_trade.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolTradeEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolTradeEffectResponse.class);
+        (LiquidityPoolTradeEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("liquidity_pool_trade", response.getType());
     assertEquals(
@@ -609,7 +637,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/liquidity_pool_withdrew.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolWithdrewEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolWithdrewEffectResponse.class);
+        (LiquidityPoolWithdrewEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("liquidity_pool_withdrew", response.getType());
     assertEquals(
@@ -651,7 +680,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/sequence_bumped.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SequenceBumpedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, SequenceBumpedEffectResponse.class);
+        (SequenceBumpedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("sequence_bumped", response.getType());
     assertEquals(108136397361122527L, response.getNewSequence().longValue());
@@ -662,7 +692,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/signer_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SignerCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, SignerCreatedEffectResponse.class);
+        (SignerCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("signer_created", response.getType());
     assertEquals(1, response.getWeight().intValue());
@@ -675,7 +706,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/signer_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SignerRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, SignerRemovedEffectResponse.class);
+        (SignerRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("signer_removed", response.getType());
     assertEquals(0, response.getWeight().intValue());
@@ -688,7 +720,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/signer_sponsorship_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SignerSponsorshipCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, SignerSponsorshipCreatedEffectResponse.class);
+        (SignerSponsorshipCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("signer_sponsorship_created", response.getType());
     assertEquals("GD6632TYLXUKGVFNQYSC2AC752YZWR7VFNJZ5X7HYPKBLZKK5YVWQ54S", response.getSigner());
@@ -700,7 +733,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/signer_sponsorship_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SignerSponsorshipRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, SignerSponsorshipRemovedEffectResponse.class);
+        (SignerSponsorshipRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("signer_sponsorship_removed", response.getType());
     assertEquals("GBIQ43HRJ3HKDRR3AYV25VYWQAQHZ7RWFBNUOU755FNY2O5UIFQD5TRD", response.getSigner());
@@ -713,7 +747,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/signer_sponsorship_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SignerSponsorshipUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, SignerSponsorshipUpdatedEffectResponse.class);
+        (SignerSponsorshipUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("signer_sponsorship_updated", response.getType());
     assertEquals("GBIQ43HRJ3HKDRR3AYV25VYWQAQHZ7RWFBNUOU755FNY2O5UIFQD5TRD", response.getSigner());
@@ -728,7 +763,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/signer_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SignerUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, SignerUpdatedEffectResponse.class);
+        (SignerUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("signer_updated", response.getType());
     assertEquals(10, response.getWeight().intValue());
@@ -741,7 +777,7 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trade.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TradeEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TradeEffectResponse.class);
+        (TradeEffectResponse) GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trade", response.getType());
     assertEquals("GCMYQPCR2FZ44ARPCWDX65TEYIQFXPOWTMHZCXAT4MDDEOBPI5S5EBX2", response.getSeller());
@@ -765,7 +801,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_authorized.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineAuthorizedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineAuthorizedEffectResponse.class);
+        (TrustlineAuthorizedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_authorized", response.getType());
     assertEquals("GBL73HAKZGDGPSLOHI543CSK7FVJSMLHSIRUZRBH7SV43GM7IQWS7QET", response.getTrustor());
@@ -779,8 +816,8 @@ public class EffectResponseTest {
         "src/test/resources/responses/effects/trustline_authorized_to_maintain_liabilities.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineAuthorizedToMaintainLiabilitiesEffectResponse response =
-        GsonSingleton.getInstance()
-            .fromJson(json, TrustlineAuthorizedToMaintainLiabilitiesEffectResponse.class);
+        (TrustlineAuthorizedToMaintainLiabilitiesEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_authorized_to_maintain_liabilities", response.getType());
     assertEquals("GBL73HAKZGDGPSLOHI543CSK7FVJSMLHSIRUZRBH7SV43GM7IQWS7QET", response.getTrustor());
@@ -793,7 +830,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineCreatedEffectResponse.class);
+        (TrustlineCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_created", response.getType());
     assertEquals("credit_alphanum12", response.getAssetType());
@@ -808,7 +846,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_deauthorized.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineDeauthorizedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineDeauthorizedEffectResponse.class);
+        (TrustlineDeauthorizedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_deauthorized", response.getType());
     assertEquals("GCLF6MCQFP2XJ7M46JUCO3CFZDNVXXC6NNKGFSPQXED6OVMUOUZ3HLNE", response.getTrustor());
@@ -821,7 +860,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_flags_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineFlagsUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineFlagsUpdatedEffectResponse.class);
+        (TrustlineFlagsUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_flags_updated", response.getType());
     assertEquals("credit_alphanum12", response.getAssetType());
@@ -839,7 +879,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineRemovedEffectResponse.class);
+        (TrustlineRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_removed", response.getType());
     assertEquals("credit_alphanum4", response.getAssetType());
@@ -854,7 +895,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_sponsorship_created.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineSponsorshipCreatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineSponsorshipCreatedEffectResponse.class);
+        (TrustlineSponsorshipCreatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_sponsorship_created", response.getType());
     assertEquals("credit_alphanum4", response.getAssetType());
@@ -870,7 +912,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_sponsorship_removed.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineSponsorshipRemovedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineSponsorshipRemovedEffectResponse.class);
+        (TrustlineSponsorshipRemovedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_sponsorship_removed", response.getType());
     assertEquals("credit_alphanum12", response.getAssetType());
@@ -887,7 +930,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_sponsorship_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineSponsorshipUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineSponsorshipUpdatedEffectResponse.class);
+        (TrustlineSponsorshipUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_sponsorship_updated", response.getType());
     assertEquals("credit_alphanum12", response.getAssetType());
@@ -906,7 +950,8 @@ public class EffectResponseTest {
     String filePath = "src/test/resources/responses/effects/trustline_updated.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     TrustlineUpdatedEffectResponse response =
-        GsonSingleton.getInstance().fromJson(json, TrustlineUpdatedEffectResponse.class);
+        (TrustlineUpdatedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
 
     assertEquals("trustline_updated", response.getType());
     assertEquals("credit_alphanum12", response.getAssetType());

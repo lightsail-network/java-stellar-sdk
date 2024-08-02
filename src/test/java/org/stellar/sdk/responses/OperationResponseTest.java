@@ -40,6 +40,7 @@ import org.stellar.sdk.responses.operations.LiquidityPoolWithdrawOperationRespon
 import org.stellar.sdk.responses.operations.ManageBuyOfferOperationResponse;
 import org.stellar.sdk.responses.operations.ManageDataOperationResponse;
 import org.stellar.sdk.responses.operations.ManageSellOfferOperationResponse;
+import org.stellar.sdk.responses.operations.OperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentStrictReceiveOperationResponse;
 import org.stellar.sdk.responses.operations.PathPaymentStrictSendOperationResponse;
 import org.stellar.sdk.responses.operations.PaymentOperationResponse;
@@ -77,7 +78,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/account_merge.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AccountMergeOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, AccountMergeOperationResponse.class);
+        (AccountMergeOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("account_merge", response.getType());
     assertEquals("GBMZ7GUHNHT6TG4ITOBG46TKA5YMNH7ZKHHJSQRU6PNYBSAELLXNOFDE", response.getAccount());
@@ -90,7 +92,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/allow_trust.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     AllowTrustOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, AllowTrustOperationResponse.class);
+        (AllowTrustOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("allow_trust", response.getType());
     assertEquals("GBRDHSZL4ZKOI2PTUMM53N3NICZXC5OX3KPCD4WD4NG4XGCBC2ZA3KAG", response.getTrustee());
@@ -114,8 +117,8 @@ public class OperationResponseTest {
         "src/test/resources/responses/operations/begin_sponsoring_future_reserves.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     BeginSponsoringFutureReservesOperationResponse response =
-        GsonSingleton.getInstance()
-            .fromJson(json, BeginSponsoringFutureReservesOperationResponse.class);
+        (BeginSponsoringFutureReservesOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("begin_sponsoring_future_reserves", response.getType());
     assertEquals(
@@ -127,21 +130,20 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/bump_sequence.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     BumpSequenceOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, BumpSequenceOperationResponse.class);
+        (BumpSequenceOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("bump_sequence", response.getType());
     assertEquals(136025045943191412L, response.getBumpTo().longValue());
   }
 
   @Test
-  public void testChangeTrustOperation() throws IOException {}
-
-  @Test
   public void testChangeTrustOperationWithAsset() throws IOException {
     String filePath = "src/test/resources/responses/operations/change_trust_asset.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ChangeTrustOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ChangeTrustOperationResponse.class);
+        (ChangeTrustOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("change_trust", response.getType());
     assertEquals("GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN", response.getTrustee());
@@ -163,7 +165,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/change_trust_liquidity_pool_id.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ChangeTrustOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ChangeTrustOperationResponse.class);
+        (ChangeTrustOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("change_trust", response.getType());
     assertEquals("GAQXAWHCM4A7SQCT3BOSVEGRI2OOB7LO2CMFOYFF6YRXU4VQSB5V2V2K", response.getTrustor());
@@ -188,7 +191,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/claim_claimable_balance.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClaimClaimableBalanceOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ClaimClaimableBalanceOperationResponse.class);
+        (ClaimClaimableBalanceOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("claim_claimable_balance", response.getType());
     assertEquals(
@@ -204,7 +208,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/clawback_claimable_balance.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClawbackClaimableBalanceOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ClawbackClaimableBalanceOperationResponse.class);
+        (ClawbackClaimableBalanceOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("clawback_claimable_balance", response.getType());
     assertEquals(
@@ -217,7 +222,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/clawback.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ClawbackOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ClawbackOperationResponse.class);
+        (ClawbackOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("clawback", response.getType());
     assertEquals("credit_alphanum12", response.getAssetType());
@@ -239,7 +245,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/create_account.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     CreateAccountOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, CreateAccountOperationResponse.class);
+        (CreateAccountOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("create_account", response.getType());
     assertEquals("4.0000000", response.getStartingBalance());
@@ -253,7 +260,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/create_claimable_balance.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     CreateClaimableBalanceOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, CreateClaimableBalanceOperationResponse.class);
+        (CreateClaimableBalanceOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("create_claimable_balance", response.getType());
     assertEquals("GCS4PXWRDKC5445PEKTJHIOEOVTCIQK2YMGPXDZLDXUIPK4HOHLQVYXL", response.getSponsor());
@@ -281,7 +289,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/create_passive_sell_offer.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     CreatePassiveSellOfferOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, CreatePassiveSellOfferOperationResponse.class);
+        (CreatePassiveSellOfferOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("create_passive_sell_offer", response.getType());
     assertEquals("0.0001000", response.getAmount());
@@ -312,8 +321,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/end_sponsoring_future_reserves.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     EndSponsoringFutureReservesOperationResponse response =
-        GsonSingleton.getInstance()
-            .fromJson(json, EndSponsoringFutureReservesOperationResponse.class);
+        (EndSponsoringFutureReservesOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("end_sponsoring_future_reserves", response.getType());
     assertEquals(
@@ -326,7 +335,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/extend_footprint_ttl.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ExtendFootprintTTLOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ExtendFootprintTTLOperationResponse.class);
+        (ExtendFootprintTTLOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("extend_footprint_ttl", response.getType());
     assertEquals(500000, response.getExtendTo().longValue());
@@ -337,7 +347,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/inflation.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     InflationOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, InflationOperationResponse.class);
+        (InflationOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
     assertEquals("inflation", response.getType());
   }
 
@@ -346,7 +357,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/invoke_host_function.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     InvokeHostFunctionOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, InvokeHostFunctionOperationResponse.class);
+        (InvokeHostFunctionOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("invoke_host_function", response.getType());
     assertEquals("HostFunctionTypeHostFunctionTypeInvokeContract", response.getFunction());
@@ -380,7 +392,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/liquidity_pool_deposit.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolDepositOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolDepositOperationResponse.class);
+        (LiquidityPoolDepositOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("liquidity_pool_deposit", response.getType());
     assertEquals(
@@ -424,7 +437,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/liquidity_pool_withdraw.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     LiquidityPoolWithdrawOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, LiquidityPoolWithdrawOperationResponse.class);
+        (LiquidityPoolWithdrawOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("liquidity_pool_withdraw", response.getType());
     assertEquals(
@@ -463,7 +477,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/manage_buy_offer.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ManageBuyOfferOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ManageBuyOfferOperationResponse.class);
+        (ManageBuyOfferOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("manage_buy_offer", response.getType());
     assertEquals("389.4340658", response.getAmount());
@@ -489,7 +504,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/manage_data.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ManageDataOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ManageDataOperationResponse.class);
+        (ManageDataOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("manage_data", response.getType());
     assertEquals("MESSAGE_DATA_0", response.getName());
@@ -505,7 +521,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/manage_sell_offer.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     ManageSellOfferOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, ManageSellOfferOperationResponse.class);
+        (ManageSellOfferOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("manage_sell_offer", response.getType());
     assertEquals("478.6351404", response.getAmount());
@@ -531,7 +548,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/path_payment_strict_receive.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     PathPaymentStrictReceiveOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, PathPaymentStrictReceiveOperationResponse.class);
+        (PathPaymentStrictReceiveOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("path_payment_strict_receive", response.getType());
     assertEquals("native", response.getAssetType());
@@ -559,7 +577,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/path_payment_strict_send.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     PathPaymentStrictSendOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, PathPaymentStrictSendOperationResponse.class);
+        (PathPaymentStrictSendOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("path_payment_strict_send", response.getType());
     assertEquals("credit_alphanum4", response.getAssetType());
@@ -593,7 +612,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/payment.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     PaymentOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, PaymentOperationResponse.class);
+        (PaymentOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("payment", response.getType());
     assertEquals("credit_alphanum4", response.getAssetType());
@@ -614,7 +634,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/restore_footprint.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     RestoreFootprintOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, RestoreFootprintOperationResponse.class);
+        (RestoreFootprintOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("restore_footprint", response.getType());
   }
@@ -624,7 +645,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/revoke_sponsorship.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     RevokeSponsorshipOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, RevokeSponsorshipOperationResponse.class);
+        (RevokeSponsorshipOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("revoke_sponsorship", response.getType());
     assertEquals(
@@ -637,7 +659,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/set_options.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SetOptionsOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, SetOptionsOperationResponse.class);
+        (SetOptionsOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("set_options", response.getType());
     assertEquals("example.com", response.getHomeDomain());
@@ -662,7 +685,8 @@ public class OperationResponseTest {
     String filePath = "src/test/resources/responses/operations/set_trust_line_flags.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     SetTrustLineFlagsOperationResponse response =
-        GsonSingleton.getInstance().fromJson(json, SetTrustLineFlagsOperationResponse.class);
+        (SetTrustLineFlagsOperationResponse)
+            GsonSingleton.getInstance().fromJson(json, OperationResponse.class);
 
     assertEquals("set_trust_line_flags", response.getType());
     assertEquals("credit_alphanum12", response.getAssetType());
