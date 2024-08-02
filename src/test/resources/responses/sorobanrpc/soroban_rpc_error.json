@@ -1,0 +1,8 @@
+{
+  "jsonrpc": "2.0",
+  "id": "e860b82a-1738-4646-a999-b97ea3e117eb",
+  "error": {
+    "code": -32602,
+    "message": "startLedger must be positive"
+  }
+}
