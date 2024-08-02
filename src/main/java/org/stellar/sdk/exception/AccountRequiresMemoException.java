@@ -6,8 +6,8 @@ import lombok.Getter;
  * AccountRequiresMemoException is thrown when a transaction is trying to submit an operation to an
  * account which requires a memo.
  *
- * <p>See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md"
- * target="_blank">SEP-0029</a> for more information.
+ * @see <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md"
+ *     target="_blank">SEP-0029</a>
  */
 @Getter
 public class AccountRequiresMemoException extends SdkException {

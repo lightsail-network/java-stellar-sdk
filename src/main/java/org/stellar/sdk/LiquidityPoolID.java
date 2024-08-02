@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
+// TODO: make this one protected? expose it as String?
 /**
  * Represents a Liquidity Pool ID on the Stellar network.
  *

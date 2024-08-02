@@ -2,6 +2,7 @@ package org.stellar.sdk.exception;
 
 import org.stellar.sdk.KeyPair;
 
+// TODO: remove the exception class?
 /**
  * Indicates that there was a problem decoding strkey encoded string.
  *

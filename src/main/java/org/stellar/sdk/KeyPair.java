@@ -30,6 +30,7 @@ import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
+// TODO: docs
 /** Holds a Stellar keypair. */
 @EqualsAndHashCode
 public class KeyPair {

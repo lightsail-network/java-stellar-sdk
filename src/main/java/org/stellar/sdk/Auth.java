@@ -19,7 +19,12 @@ import org.stellar.sdk.xdr.SorobanCredentialsType;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
-/** This class contains helper methods to sign {@link SorobanAuthorizationEntry}. */
+/**
+ * This class contains helper methods to sign {@link SorobanAuthorizationEntry}.
+ *
+ * @see <a href="https://developers.stellar.org/docs/learn/encyclopedia/security/authorization/"
+ *     target="_blank">Smart Contract Authorization</a>
+ */
 public class Auth {
   /**
    * Actually authorizes an existing authorization entry using the given the credentials and
@@ -194,7 +199,8 @@ public class Auth {
     }
 
     // This structure is defined here:
-    // https://soroban.stellar.org/docs/fundamentals-and-concepts/invoking-contracts-with-transactions#stellar-account-signatures
+    // https://developers.stellar.org/docs/learn/encyclopedia/contract-development/contract-interactions/stellar-transaction#stellar-account-signatures
+    // https://github.com/stellar/rs-soroban-env/blob/99d8c92cdc7e5cd0f5311df8f88d04658ecde7d2/soroban-env-host/src/native_contract/account_contract.rs#L51
     SCVal sigScVal =
         Scv.toMap(
             new LinkedHashMap<SCVal, SCVal>() {

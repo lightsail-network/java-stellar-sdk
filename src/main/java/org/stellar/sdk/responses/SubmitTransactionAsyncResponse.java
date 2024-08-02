@@ -8,9 +8,9 @@ import org.stellar.sdk.xdr.TransactionResult;
 /**
  * Represents the response from the "Submit a Transaction Asynchronously" endpoint of Horizon API.
  *
- * <p>See <a
- * href="https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction">
- * Submit Transaction Asynchronously</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/horizon/api-reference/submit-async-transaction">
+ *     Submit Transaction Asynchronously</a>
  */
 @Value
 public class SubmitTransactionAsyncResponse {

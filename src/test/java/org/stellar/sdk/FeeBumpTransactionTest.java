@@ -22,7 +22,6 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerFootprint;
 import org.stellar.sdk.xdr.LedgerKey;
-import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.SorobanResources;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.Uint256;
@@ -331,8 +330,7 @@ public class FeeBumpTransactionTest {
             account.getIncrementedSequenceNumber(),
             new org.stellar.sdk.operations.Operation[] {invokeHostFunctionOperation},
             null,
-            new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+            new TransactionPreconditions(null, null, BigInteger.ZERO, 0, new ArrayList<>(), null),
             sorobanData,
             Network.TESTNET);
 
