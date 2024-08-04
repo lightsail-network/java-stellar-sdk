@@ -332,7 +332,7 @@ public class TransactionBuilderTest {
                 TransactionPreconditions.builder()
                     .timeBounds(
                         new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
-                    .ledgerBounds(LedgerBounds.builder().minLedger(1).maxLedger(2).build())
+                    .ledgerBounds(new LedgerBounds(1, 2))
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .build();
@@ -654,9 +654,7 @@ public class TransactionBuilderTest {
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .addPreconditions(
-                TransactionPreconditions.builder()
-                    .ledgerBounds(LedgerBounds.builder().minLedger(123).maxLedger(456).build())
-                    .build())
+                TransactionPreconditions.builder().ledgerBounds(new LedgerBounds(123, 456)).build())
             .setTimeout(10)
             .build();
 
