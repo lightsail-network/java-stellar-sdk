@@ -6,7 +6,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
@@ -49,17 +48,6 @@ public class TradesRequestBuilder extends RequestBuilder {
   public TradesRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "trades");
     return this;
-  }
-
-  /**
-   * Builds request to <code>GET /liquidity_pools/{poolID}/trades</code>
-   *
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/trades/">Trades for
-   *     Liquidity Pool</a>
-   * @param liquidityPoolID Liquidity pool for which to get trades
-   */
-  public TradesRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
-    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
   }
 
   /**

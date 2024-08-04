@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.responses.gson.GsonSingleton;
 
@@ -54,9 +53,7 @@ public class AccountResponseTest {
     assertEquals(account.getBalances().get(0).getAssetType(), "liquidity_pool_shares");
     assertEquals(
         account.getBalances().get(0).getTrustLineAsset(),
-        new TrustLineAsset(
-            new LiquidityPoolID(
-                "59fa1dc57433dcfbd2db7319d26cb3da1f28f2d8095a3ec36ad4ef9cadb0013e")));
+        new TrustLineAsset("59fa1dc57433dcfbd2db7319d26cb3da1f28f2d8095a3ec36ad4ef9cadb0013e"));
 
     assertEquals(account.getBalances().get(1).getBalance(), "85729.1030749");
     assertEquals(account.getBalances().get(1).getLimit(), "922337203685.4775807");

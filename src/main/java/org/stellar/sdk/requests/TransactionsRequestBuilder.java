@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
@@ -102,18 +101,6 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   public TransactionsRequestBuilder forLedger(long ledgerSeq) {
     this.setSegments("ledgers", String.valueOf(ledgerSeq), "transactions");
     return this;
-  }
-
-  /**
-   * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/transactions</code>
-   *
-   * @see <a
-   *     href="https://developers.stellar.org/api/resources/liquiditypools/transactions/">Transactions
-   *     for Liquidity Pool</a>
-   * @param liquidityPoolID Liquidity pool for which to get transactions
-   */
-  public TransactionsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
-    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
   }
 
   /**

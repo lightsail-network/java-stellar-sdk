@@ -6,7 +6,6 @@ import java.util.Set;
 import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
@@ -119,18 +118,6 @@ public class OperationsRequestBuilder extends RequestBuilder {
   public OperationsRequestBuilder forTransaction(@NonNull String transactionId) {
     this.setSegments("transactions", transactionId, "operations");
     return this;
-  }
-
-  /**
-   * Builds request to <code>GET /liquidity_pools/{poolID}/operations</code>
-   *
-   * @see <a
-   *     href="https://developers.stellar.org/api/resources/liquiditypools/operations/">Operations
-   *     for Liquidity Pool</a>
-   * @param liquidityPoolID Liquidity pool for which to get operations
-   */
-  public OperationsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
-    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
   }
 
   /**

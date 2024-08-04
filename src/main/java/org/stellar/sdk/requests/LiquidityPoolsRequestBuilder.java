@@ -3,7 +3,6 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.LiquidityPoolResponse;
 import org.stellar.sdk.responses.Page;
@@ -60,25 +59,6 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
   public LiquidityPoolResponse liquidityPool(String liquidityPoolID) {
     this.setSegments("liquidity_pools", liquidityPoolID);
     return this.liquidityPool(this.buildUri());
-  }
-
-  /**
-   * Requests <code>GET /liquidity_pools/{liquidity_pool_id}</code>
-   *
-   * @param liquidityPoolID Liquidity Pool to fetch
-   * @return {@link LiquidityPoolResponse}
-   * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
-   *     (4xx)
-   * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
-   *     response from the server (5xx)
-   * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
-   *     IOException, including but not limited to a timeout, connection failure etc.
-   * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
-   *     Pool Details</a>
-   */
-  public LiquidityPoolResponse liquidityPool(LiquidityPoolID liquidityPoolID) {
-    return this.liquidityPool(liquidityPoolID.toString());
   }
 
   /**

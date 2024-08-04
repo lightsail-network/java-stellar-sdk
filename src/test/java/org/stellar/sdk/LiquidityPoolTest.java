@@ -20,7 +20,7 @@ public class LiquidityPoolTest {
     LiquidityPool parsedLiquidityPool = LiquidityPool.fromXdr(xdr);
     assertEquals(liquidityPool, parsedLiquidityPool);
     assertEquals(
-        liquidityPool.getLiquidityPoolId().getPoolId(),
+        liquidityPool.getLiquidityPoolId(),
         "dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380fac7");
     assertEquals(liquidityPool.getAssetA(), assetA);
     assertEquals(liquidityPool.getAssetB(), assetB);

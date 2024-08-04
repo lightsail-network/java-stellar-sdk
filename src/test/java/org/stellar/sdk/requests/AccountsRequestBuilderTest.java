@@ -135,8 +135,7 @@ public class AccountsRequestBuilderTest {
   @Test
   public void testForLiquidityPool() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    LiquidityPoolID liquidityPoolID =
-        new LiquidityPoolID("dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca");
+    String liquidityPoolID = "dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca";
     HttpUrl uri = server.accounts().forLiquidityPool(liquidityPoolID).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?liquidity_pool=dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca",
