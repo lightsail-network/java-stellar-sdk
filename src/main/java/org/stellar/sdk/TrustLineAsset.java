@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.xdr.AssetType;
+import org.stellar.sdk.xdr.Hash;
 
 /**
  * Represents a trustline asset in the Stellar network. A trustline is a declaration that an account
@@ -33,7 +34,7 @@ public class TrustLineAsset {
    *
    * <p>If assetType is {@link AssetType#ASSET_TYPE_POOL_SHARE} then this field will be set.
    */
-  @Nullable private final LiquidityPoolID liquidityPoolId;
+  @Nullable private final String liquidityPoolId;
 
   /**
    * Creates a TrustLineAsset for a regular asset.
@@ -51,10 +52,10 @@ public class TrustLineAsset {
    *
    * @param liquidityPoolId The ID of the liquidity pool.
    */
-  public TrustLineAsset(@NonNull LiquidityPoolID liquidityPoolId) {
+  public TrustLineAsset(@NonNull String liquidityPoolId) {
     this.assetType = AssetType.ASSET_TYPE_POOL_SHARE;
     this.asset = null;
-    this.liquidityPoolId = liquidityPoolId;
+    this.liquidityPoolId = liquidityPoolId.toLowerCase();
   }
 
   /**
@@ -72,7 +73,8 @@ public class TrustLineAsset {
     }
     if (liquidityPoolId != null) {
       xdr.setDiscriminant(AssetType.ASSET_TYPE_POOL_SHARE);
-      xdr.setLiquidityPoolID(liquidityPoolId.toXdr());
+      xdr.setLiquidityPoolID(
+          new org.stellar.sdk.xdr.PoolID(new Hash(Util.hexToBytes(liquidityPoolId))));
     }
     return xdr;
   }
@@ -94,7 +96,9 @@ public class TrustLineAsset {
         return new TrustLineAsset(
             AssetTypeCreditAlphaNum12.fromXdr(trustLineAsset.getAlphaNum12()));
       case ASSET_TYPE_POOL_SHARE:
-        return new TrustLineAsset(LiquidityPoolID.fromXdr(trustLineAsset.getLiquidityPoolID()));
+        return new TrustLineAsset(
+            Util.bytesToHex(trustLineAsset.getLiquidityPoolID().getPoolID().getHash())
+                .toLowerCase());
       default:
         throw new IllegalArgumentException(
             "Unknown asset type " + trustLineAsset.getDiscriminant());

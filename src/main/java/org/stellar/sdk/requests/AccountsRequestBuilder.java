@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.TooManyRequestsException;
@@ -112,17 +111,6 @@ public class AccountsRequestBuilder extends RequestBuilder {
     }
     setAssetParameter(ASSET_PARAMETER_NAME, asset);
     return this;
-  }
-
-  /**
-   * Returns all accounts who have trustlines to the specified liquidity pool.
-   *
-   * @param liquidityPoolID Liquidity Pool ID
-   * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
-   */
-  public AccountsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
-    return this.forLiquidityPool(liquidityPoolID.toString());
   }
 
   /**

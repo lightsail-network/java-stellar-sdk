@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
@@ -50,17 +49,6 @@ public class EffectsRequestBuilder extends RequestBuilder {
   public EffectsRequestBuilder forTransaction(@NonNull String transactionId) {
     this.setSegments("transactions", transactionId, "effects");
     return this;
-  }
-
-  /**
-   * Builds request to <code>GET /liquidity_pools/{poolID}/effects</code>
-   *
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/effects/">Effects for
-   *     Liquidity Pool</a>
-   * @param liquidityPoolID Liquidity pool for which to get effects
-   */
-  public EffectsRequestBuilder forLiquidityPool(LiquidityPoolID liquidityPoolID) {
-    return this.forLiquidityPool(String.valueOf(liquidityPoolID));
   }
 
   /**

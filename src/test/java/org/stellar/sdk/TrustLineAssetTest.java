@@ -65,8 +65,7 @@ public class TrustLineAssetTest {
     //
     // pool_id = LiquidityPoolId("dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca")
     // print(pool_id.to_trust_line_asset_xdr_object().to_xdr())
-    LiquidityPoolID poolId =
-        new LiquidityPoolID("dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca");
+    String poolId = "dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca";
     TrustLineAsset trustLineAsset = new TrustLineAsset(poolId);
     assertEquals(trustLineAsset.getAssetType(), AssetType.ASSET_TYPE_POOL_SHARE);
     assertEquals(trustLineAsset.getLiquidityPoolId(), poolId);

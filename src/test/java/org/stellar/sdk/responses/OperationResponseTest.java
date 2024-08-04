@@ -16,7 +16,6 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum12;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Claimant;
-import org.stellar.sdk.LiquidityPoolID;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.responses.gson.GsonSingleton;
@@ -179,9 +178,7 @@ public class OperationResponseTest {
         "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355",
         response.getLiquidityPoolId());
     assertEquals(
-        new TrustLineAsset(
-            new LiquidityPoolID(
-                "2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355")),
+        new TrustLineAsset("2c0bfa623845dd101cbf074a1ca1ae4b2458cc8d0104ad65939ebe2cd9054355"),
         response.getTrustLineAsset());
     assertEquals("922337203685.4775807", response.getLimit());
   }
