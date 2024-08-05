@@ -22,7 +22,8 @@ public abstract class Operation {
   private static final BigDecimal ONE = new BigDecimal(10).pow(7);
 
   protected static long toXdrAmount(@NonNull BigDecimal value) {
-    // see https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/assets#amount-precision
+    // see
+    // https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/assets#amount-precision
     BigDecimal amount = value.multiply(Operation.ONE);
     return amount.longValueExact();
   }
