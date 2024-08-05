@@ -21,14 +21,14 @@ public abstract class Operation {
 
   private static final BigDecimal ONE = new BigDecimal(10).pow(7);
 
-  protected static long toXdrAmount(@NonNull String value) {
-    BigDecimal amount = new BigDecimal(value).multiply(Operation.ONE);
+  protected static long toXdrAmount(@NonNull BigDecimal value) {
+    // see https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/assets#amount-precision
+    BigDecimal amount = value.multiply(Operation.ONE);
     return amount.longValueExact();
   }
 
-  protected static String fromXdrAmount(long value) {
-    BigDecimal amount = new BigDecimal(value).divide(Operation.ONE);
-    return amount.toPlainString();
+  protected static BigDecimal fromXdrAmount(long value) {
+    return BigDecimal.valueOf(value).divide(Operation.ONE);
   }
 
   /** Generates Operation XDR object. */

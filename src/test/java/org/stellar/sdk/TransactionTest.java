@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {
               CreateAccountOperation.builder()
                   .destination(destination.getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build()
             },
             null,
@@ -112,7 +113,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {
               CreateAccountOperation.builder()
                   .destination(destination.getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build()
             },
             null,
@@ -152,7 +153,7 @@ public class TransactionTest {
               PaymentOperation.builder()
                   .destination(destination.getAccountId())
                   .asset(new AssetTypeNative())
-                  .amount("2000")
+                  .amount(BigDecimal.valueOf(2000))
                   .build()
             },
             null,
@@ -191,7 +192,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {
               CreateAccountOperation.builder()
                   .destination(destination.getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build()
             },
             null,

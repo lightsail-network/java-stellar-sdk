@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.stellar.sdk.Asset.create;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
@@ -18,7 +19,7 @@ public class ClawbackOperationTest {
     Asset asset =
         new AssetTypeCreditAlphaNum4(
             "DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
-    String amt = "100";
+    BigDecimal amt = BigDecimal.valueOf(100);
     ClawbackOperation operation =
         ClawbackOperation.builder()
             .from(accountId)
@@ -41,14 +42,14 @@ public class ClawbackOperationTest {
   }
 
   @Test
-  public void testMuxedClawbackOperation() throws IOException, FormatException {
+  public void testMuxedClawbackOperation() throws FormatException {
     String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
     String from = "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO";
 
     Asset asset =
         new AssetTypeCreditAlphaNum4(
             "DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
-    String amt = "100";
+    BigDecimal amt = BigDecimal.valueOf(100);
     ClawbackOperation operation =
         ClawbackOperation.builder()
             .from(from)
@@ -80,7 +81,7 @@ public class ClawbackOperationTest {
     Asset asset =
         new AssetTypeCreditAlphaNum4(
             "DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
-    String amt = "100";
+    BigDecimal amt = BigDecimal.valueOf(100);
     ClawbackOperation operation =
         ClawbackOperation.builder()
             .from(from)
@@ -106,7 +107,7 @@ public class ClawbackOperationTest {
   public void testCantClawbackNativeAsset() {
     try {
       String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
-      String amt = "100";
+      BigDecimal amt = BigDecimal.valueOf(100);
       ClawbackOperation.builder().from(accountId).asset(create("native")).amount(amt).build();
       fail();
     } catch (IllegalArgumentException e) {

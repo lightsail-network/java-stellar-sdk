@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class FeeBumpTransactionTest {
                 PaymentOperation.builder()
                     .destination("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ")
                     .asset(new AssetTypeNative())
-                    .amount("200")
+                    .amount(BigDecimal.valueOf(200))
                     .build())
             .setBaseFee(baseFee)
             .addPreconditions(

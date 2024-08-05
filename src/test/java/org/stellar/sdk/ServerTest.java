@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 import okhttp3.HttpUrl;
@@ -207,7 +208,7 @@ public class ServerTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addMemo(Memo.text("Hello world!"))
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -562,27 +563,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_B)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
@@ -615,27 +616,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_ID)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_ID)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_ID)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder().destination(DESTINATION_ACCOUNT_MEMO_ID).build())
@@ -666,27 +667,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
@@ -717,27 +718,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
@@ -802,27 +803,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_B)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
@@ -886,27 +887,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
@@ -970,27 +971,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
@@ -1054,27 +1055,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_MEMO_REQUIRED)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
@@ -1140,27 +1141,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
@@ -1225,27 +1226,27 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_NO_FOUND)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_FOUND)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_NO_FOUND)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder().destination(DESTINATION_ACCOUNT_NO_FOUND).build())
@@ -1275,39 +1276,39 @@ public class ServerTest {
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_FETCH_ERROR)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_A)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PaymentOperation.builder()
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_B)
                     .asset(new AssetTypeNative())
-                    .amount("10")
+                    .amount(BigDecimal.valueOf(10))
                     .build())
             .addOperation(
                 PathPaymentStrictReceiveOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendMax("10")
+                    .sendMax(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_C)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destAmount("5")
+                    .destAmount(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 PathPaymentStrictSendOperation.builder()
                     .sendAsset(new AssetTypeNative())
-                    .sendAmount("10")
+                    .sendAmount(BigDecimal.valueOf(10))
                     .destination(DESTINATION_ACCOUNT_MEMO_REQUIRED_D)
                     .destAsset(
                         new AssetTypeCreditAlphaNum4(
                             "BTC", "GA7GYB3QGLTZNHNGXN3BMANS6TC7KJT3TCGTR763J4JOU4QHKL37RVV2"))
-                    .destMin("5")
+                    .destMin(BigDecimal.valueOf(5))
                     .build())
             .addOperation(
                 AccountMergeOperation.builder()
