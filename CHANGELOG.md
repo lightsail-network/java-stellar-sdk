@@ -59,7 +59,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor!: remove `LiquidityPoolID`. Use `String` to represent the liquidity pool ID.
 - refactor!: `LiquidityPoolWithdrawOperation#LiquidityPoolWithdrawOperation(AssetAmount, AssetAmount, String)` has been removed. Use `LiquidityPoolWithdrawOperation#LiquidityPoolWithdrawOperation(Asset, BigDecimal, Asset, BigDecimal, BigDecimal)` instead.
 - refactor!: `LiquidityPoolDepositOperation#LiquidityPoolDepositOperation(AssetAmount, AssetAmount, Price, Price)` has been removed. Use `LiquidityPoolDepositOperation#LiquidityPoolDepositOperation(Asset, BigDecimal, Asset, BigDecimal, Price, Price)` instead.
-- refactor!: the type of the following field has been changed from `String` to `Decimal`.
+- refactor!: the type of the following field has been changed from `String` to `BigDecimal`.
     - `ChangeTrustOperation.limit`
     - `ClawbackOperation.amount`
     - `CreateAccountOperation.startingBalance`
