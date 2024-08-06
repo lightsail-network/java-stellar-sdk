@@ -11,9 +11,11 @@ import lombok.Value;
  */
 @Value
 public class FederationResponse {
+  /** Stellar address (e.g. `bob*stellar.org`). */
   @SerializedName("stellar_address")
   String stellarAddress;
 
+  /** Account ID (e.g. `GAVHK7L...`). */
   @SerializedName("account_id")
   String accountId;
 
