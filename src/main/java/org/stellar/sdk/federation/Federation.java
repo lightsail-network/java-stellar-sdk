@@ -74,10 +74,9 @@ public class Federation {
       throw new MalformedAddressException(
           "address is malformed, it should be in the format `bob*stellar.org`");
     }
-    String q = tokens[0];
     String domain = tokens[1];
     QueryType queryType = QueryType.NAME;
-    return resolve(q, domain, queryType);
+    return resolve(address, domain, queryType);
   }
 
   /**
