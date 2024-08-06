@@ -72,7 +72,7 @@ public class TransactionTest {
             },
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.PUBLIC);
 
@@ -117,7 +117,7 @@ public class TransactionTest {
             },
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.PUBLIC);
 
@@ -157,7 +157,7 @@ public class TransactionTest {
             },
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.PUBLIC);
 
@@ -196,7 +196,7 @@ public class TransactionTest {
             },
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.TESTNET);
 
@@ -277,7 +277,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {invokeHostFunctionOperation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             sorobanData,
             Network.TESTNET);
 
@@ -313,7 +313,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.TESTNET);
     assertTrue(transaction.isSorobanTransaction());
@@ -350,7 +350,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             sorobanData,
             Network.TESTNET);
     assertTrue(transaction.isSorobanTransaction());
@@ -386,7 +386,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             sorobanData,
             Network.TESTNET);
     assertTrue(transaction.isSorobanTransaction());
@@ -415,7 +415,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation, operation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.TESTNET);
     assertFalse(transaction.isSorobanTransaction());
@@ -437,7 +437,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.TESTNET);
     assertFalse(transaction.isSorobanTransaction());
@@ -459,7 +459,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.TESTNET);
 
@@ -472,7 +472,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.TESTNET);
     assertEquals(transaction1.hashCode(), transaction2.hashCode());
@@ -487,7 +487,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation},
             Memo.text("not equal tx"),
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.TESTNET);
     assertNotEquals(transaction1, transaction3);
@@ -501,7 +501,7 @@ public class TransactionTest {
             new org.stellar.sdk.operations.Operation[] {operation},
             null,
             new TransactionPreconditions(
-                null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>(), null),
+                null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>()),
             null,
             Network.PUBLIC);
     assertNotEquals(transaction1, transaction4);
