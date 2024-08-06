@@ -331,7 +331,7 @@ public class FeeBumpTransactionTest {
             account.getIncrementedSequenceNumber(),
             new org.stellar.sdk.operations.Operation[] {invokeHostFunctionOperation},
             null,
-            new TransactionPreconditions(null, null, BigInteger.ZERO, 0, new ArrayList<>(), null),
+            new TransactionPreconditions(null, null, null, BigInteger.ZERO, 0, new ArrayList<>()),
             sorobanData,
             Network.TESTNET);
 

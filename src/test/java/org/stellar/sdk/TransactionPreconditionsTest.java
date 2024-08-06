@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -8,7 +9,9 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.LinkedList;
 import org.junit.Test;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
@@ -60,6 +63,7 @@ public class TransactionPreconditionsTest {
     assertEquals(transactionPreconditions.getLedgerBounds().getMaxLedger(), 2);
     assertEquals(transactionPreconditions.getMinSeqNumber(), Long.valueOf(4));
     assertEquals(transactionPreconditions.getMinSeqLedgerGap(), 0);
+    assertEquals(transactionPreconditions.getExtraSigners().size(), 0);
   }
 
   @Test
@@ -255,5 +259,33 @@ public class TransactionPreconditionsTest {
 
     TransactionPreconditions transactionPreconditions = TransactionPreconditions.fromXdr(xdr);
     assertTrue(transactionPreconditions.hasV2());
+  }
+
+  @Test
+  public void testSetTimeBoundsOnly() {
+    TimeBounds timeBounds = new TimeBounds(1, 2);
+    TransactionPreconditions preconditions =
+        TransactionPreconditions.builder().timeBounds(timeBounds).build();
+    assertEquals(timeBounds, preconditions.getTimeBounds());
+    assertEquals(0, preconditions.getExtraSigners().size());
+    assertEquals(BigInteger.ZERO, preconditions.getMinSeqAge());
+    assertNull(preconditions.getLedgerBounds());
+    assertNull(preconditions.getMinSeqNumber());
+    assertEquals(0, preconditions.getMinSeqLedgerGap());
+    assertFalse(preconditions.hasV2());
+  }
+
+  @Test
+  public void testEquals() {
+    TimeBounds timeBounds = new TimeBounds(1, 2);
+    TransactionPreconditions preconditions0 =
+        TransactionPreconditions.builder().timeBounds(timeBounds).build();
+    TransactionPreconditions preconditions1 =
+        TransactionPreconditions.fromXdr(preconditions0.toXdr());
+    assertEquals(preconditions0, preconditions1);
+    TransactionPreconditions preconditions2 =
+        new TransactionPreconditions(
+            timeBounds, null, null, BigInteger.ZERO, 0, new LinkedList<>());
+    assertEquals(preconditions0, preconditions2);
   }
 }

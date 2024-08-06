@@ -72,6 +72,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
     - `PathPaymentStrictReceiveOperation.sendMax` and `PathPaymentStrictReceiveOperation.destAmount`
     - `PathPaymentStrictSendOperation.sendAmount` and `PathPaymentStrictSendOperation.destMin`
     - `PaymentOperation.amount`
+- refactor!: `TransactionPreconditions#TransactionPreconditions(LedgerBounds, Long, BigInteger, long, List, TimeBounds)` has been removed, use `TransactionPreconditions#TransactionPreconditions(TimeBounds, LedgerBounds, Long, BigInteger, long, List)` instead.
+- refactor: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
 
 ## 0.44.0
 ### Update
