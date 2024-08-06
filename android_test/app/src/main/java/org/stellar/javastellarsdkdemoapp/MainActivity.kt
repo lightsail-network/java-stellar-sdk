@@ -151,7 +151,7 @@ private fun testSDK(): String {
         }
 
         // Test Federation
-        val fedResp = new Federation().resolveAddress("example*lobstr.co")
+        val fedResp = Federation().resolveAddress("example*lobstr.co")
         if (fedResp == null || fedResp.accountId == null) {
             throw Exception("Query Federation failed")
         }
