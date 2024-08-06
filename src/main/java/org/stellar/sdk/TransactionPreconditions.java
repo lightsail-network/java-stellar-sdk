@@ -1,12 +1,13 @@
 package org.stellar.sdk;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.Singular;
 import lombok.Value;
+import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.xdr.Duration;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.PreconditionType;
@@ -29,21 +30,24 @@ public class TransactionPreconditions {
   public static final long MAX_EXTRA_SIGNERS_COUNT = 2;
   public static final BigInteger TIMEOUT_INFINITE = BigInteger.ZERO;
 
+  /** The time bounds for the transaction. */
+  @Nullable TimeBounds timeBounds;
+
   /** The ledger bounds for the transaction. */
-  LedgerBounds ledgerBounds;
+  @Nullable LedgerBounds ledgerBounds;
 
   /**
    * The minimum source account sequence number this transaction is valid for. if <code>null</code>,
    * the transaction is valid when **source account's sequence number == tx.sequence - 1**.
    */
-  Long minSeqNumber; // int64
+  @Nullable Long minSeqNumber; // int64
 
   /**
    * The minimum amount of time between source account sequence time and the ledger time when this
    * transaction will become valid. If the value is <code>0</code>, the transaction is unrestricted
    * by the account sequence age. Cannot be negative.
    */
-  @Builder.Default BigInteger minSeqAge = BigInteger.ZERO; // uint64
+  @Builder.Default @NonNull BigInteger minSeqAge = BigInteger.ZERO; // uint64
 
   /**
    * The minimum number of ledgers between source account sequence and the ledger number when this
@@ -53,10 +57,7 @@ public class TransactionPreconditions {
   long minSeqLedgerGap; // uint32
 
   /** Required extra signers. */
-  @Singular @NonNull List<SignerKey> extraSigners;
-
-  /** The time bounds for the transaction. */
-  TimeBounds timeBounds;
+  @Builder.Default @NonNull List<SignerKey> extraSigners = new ArrayList<>();
 
   /**
    * Validates the preconditions.
