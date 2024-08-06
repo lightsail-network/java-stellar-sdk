@@ -30,7 +30,8 @@ public class TransactionPreconditions {
   public static final long MAX_EXTRA_SIGNERS_COUNT = 2;
   public static final BigInteger TIMEOUT_INFINITE = BigInteger.ZERO;
 
-  // We strongly recommend setting it, but in fact, a transaction without timebounds will also be accepted by stellar-core.
+  // We strongly recommend setting it, but in fact, a transaction without timebounds will also be
+  // accepted by stellar-core.
   /** The time bounds for the transaction. */
   TimeBounds timeBounds;
 
