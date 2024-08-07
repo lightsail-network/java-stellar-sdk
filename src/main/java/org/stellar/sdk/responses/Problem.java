@@ -42,7 +42,7 @@ public class Problem extends Response {
      * Contains result codes for this transaction.
      *
      * @see <a
-     *     href="https://github.com/stellar/horizon/blob/master/src/github.com/stellar/horizon/codes/main.go"
+     *     href="https://github.com/stellar/go/blob/master/services/horizon/internal/codes/main.go"
      *     target="_blank">Possible values</a>
      */
     @Value
