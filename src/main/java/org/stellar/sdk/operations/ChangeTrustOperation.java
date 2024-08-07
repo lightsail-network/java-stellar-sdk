@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,10 +30,10 @@ public class ChangeTrustOperation extends Operation {
   @NonNull private final ChangeTrustAsset asset;
 
   /**
-   * The limit of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a
-   * user, the limit is 200.
+   * The limit of the trustline (max of 7 decimal places). For example, if a gateway extends a
+   * trustline of up to 200 USD to a user, the limit is 200.
    */
-  @NonNull private final String limit;
+  @NonNull private final BigDecimal limit;
 
   /**
    * Construct a new {@link ChangeTrustOperation} object from a {@link ChangeTrustOp} XDR object.
@@ -42,7 +43,7 @@ public class ChangeTrustOperation extends Operation {
    */
   public static ChangeTrustOperation fromXdr(ChangeTrustOp op) {
     ChangeTrustAsset asset = ChangeTrustAsset.fromXdr(op.getLine());
-    String limit = Operation.fromXdrAmount(op.getLimit().getInt64());
+    BigDecimal limit = Operation.fromXdrAmount(op.getLimit().getInt64());
     return new ChangeTrustOperation(asset, limit);
   }
 

@@ -1,9 +1,9 @@
-package org.stellar.sdk;
+package org.stellar.sdk.responses;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Value;
+import org.stellar.sdk.Asset;
 
-// TODO: move to resp?
 /** Represents an amount of asset. */
 @Value
 public class AssetAmount {

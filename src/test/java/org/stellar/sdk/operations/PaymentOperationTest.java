@@ -3,6 +3,7 @@ package org.stellar.sdk.operations;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeNative;
@@ -19,7 +20,7 @@ public class PaymentOperationTest {
         KeyPair.fromSecretSeed("SDHZGHURAYXKU2KMVHPOXI6JG2Q4BSQUQCEOY72O3QQTCLR2T455PMII");
 
     Asset asset = new AssetTypeNative();
-    String amount = "1000";
+    BigDecimal amount = BigDecimal.valueOf(1000);
 
     PaymentOperation operation =
         PaymentOperation.builder()
@@ -49,7 +50,7 @@ public class PaymentOperationTest {
     String destination = "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO";
 
     Asset asset = new AssetTypeNative();
-    String amount = "1000";
+    BigDecimal amount = BigDecimal.valueOf(1000);
 
     PaymentOperation operation =
         PaymentOperation.builder()

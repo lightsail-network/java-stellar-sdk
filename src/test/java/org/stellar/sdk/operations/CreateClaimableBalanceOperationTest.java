@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +36,7 @@ public class CreateClaimableBalanceOperationTest {
     Asset asset =
         new AssetTypeCreditAlphaNum4(
             "DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
-    String amt = "100";
+    BigDecimal amt = BigDecimal.valueOf(100);
     List<Claimant> claimants =
         Arrays.asList(
             new Claimant(
@@ -75,7 +76,7 @@ public class CreateClaimableBalanceOperationTest {
     CreateClaimableBalanceOperation op0 =
         CreateClaimableBalanceOperation.builder()
             .asset(new AssetTypeNative())
-            .amount("420")
+            .amount(BigDecimal.valueOf(420))
             .claimants(
                 Collections.singletonList(
                     new Claimant(
@@ -105,7 +106,7 @@ public class CreateClaimableBalanceOperationTest {
     CreateClaimableBalanceOperation opWithSourceAccount =
         CreateClaimableBalanceOperation.builder()
             .asset(new AssetTypeNative())
-            .amount("420")
+            .amount(BigDecimal.valueOf(420))
             .claimants(
                 Collections.singletonList(
                     new Claimant(

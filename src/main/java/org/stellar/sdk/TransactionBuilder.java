@@ -42,7 +42,8 @@ public class TransactionBuilder {
   }
 
   /**
-   * Adds a new <a href="https://developers.stellar.org/docs/start/list-of-operations/"
+   * Adds a new <a
+   * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations"
    * target="_blank">operation</a> to this transaction.
    *
    * @param operation the operation to add
@@ -55,7 +56,8 @@ public class TransactionBuilder {
   }
 
   /**
-   * Adds <a href="https://developers.stellar.org/docs/start/list-of-operations/"
+   * Adds <a
+   * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations"
    * target="_blank">operation</a> to this transaction.
    *
    * @param operations list of operations

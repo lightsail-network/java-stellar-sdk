@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.stellar.sdk.Asset.create;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
@@ -26,7 +27,7 @@ public class ManageSellOfferOperationTest {
 
     Asset selling = new AssetTypeNative();
     Asset buying = create(null, "USD", issuer.getAccountId());
-    String amount = "0.00001";
+    BigDecimal amount = new BigDecimal("0.00001");
     String price = "0.85334384"; // n=5333399 d=6250000
     Price priceObj = Price.fromString(price);
     long offerId = 1;
@@ -72,7 +73,7 @@ public class ManageSellOfferOperationTest {
 
     Asset selling = new AssetTypeNative();
     Asset buying = create(null, "USD", issuer.getAccountId());
-    String amount = "0.00001";
+    BigDecimal amount = new BigDecimal("0.00001");
     Price price = new Price(10000000, 50);
     long offerId = 1;
 

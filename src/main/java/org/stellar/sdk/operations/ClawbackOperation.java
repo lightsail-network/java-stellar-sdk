@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,7 +16,8 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 
 /**
- * Represents <a href="https://developers.stellar.org/docs/start/list-of-operations/#clawback"
+ * Represents <a
+ * href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback"
  * target="_blank">Clawback</a> operation.
  */
 @Getter
@@ -27,10 +29,11 @@ public class ClawbackOperation extends Operation {
   /** The account owning of the trustline. */
   @NonNull private final String from;
 
+  /** Asset held by the destination account. */
   @NonNull private final Asset asset;
 
-  /** The amount to be clawed back. */
-  @NonNull private final String amount;
+  /** The amount to be clawed back (max of 7 decimal places). */
+  @NonNull private final BigDecimal amount;
 
   /**
    * Construct a new {@link ClawbackOperation} object from the {@link ClawbackOp} XDR object.
@@ -40,7 +43,7 @@ public class ClawbackOperation extends Operation {
    */
   public static ClawbackOperation fromXdr(ClawbackOp op) {
     String from = StrKey.encodeMuxedAccount(op.getFrom());
-    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    BigDecimal amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     AssetTypeCreditAlphaNum asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
     return new ClawbackOperation(from, asset, amount);
   }

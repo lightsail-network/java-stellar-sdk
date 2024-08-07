@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.stellar.sdk.Asset.create;
 
+import java.math.BigDecimal;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPool;
 
@@ -21,9 +21,9 @@ public class LiquidityPoolWithdrawOperationTest {
 
   @Test
   public void testLiquidityPoolWithdrawOperationValid() {
-    String amount = "5";
-    String minAmountA = "1000";
-    String minAmountB = "2000";
+    BigDecimal amount = BigDecimal.valueOf(5);
+    BigDecimal minAmountA = BigDecimal.valueOf(1000);
+    BigDecimal minAmountB = BigDecimal.valueOf(2000);
     LiquidityPoolWithdrawOperation operation =
         LiquidityPoolWithdrawOperation.builder()
             .liquidityPoolID(liquidityPoolID)
@@ -50,14 +50,12 @@ public class LiquidityPoolWithdrawOperationTest {
 
   @Test
   public void testConstructorPairs() {
-    String amount = "5";
-    String minAmountA = "1000";
-    String minAmountB = "2000";
+    BigDecimal amount = BigDecimal.valueOf(5);
+    BigDecimal minAmountA = BigDecimal.valueOf(1000);
+    BigDecimal minAmountB = BigDecimal.valueOf(2000);
     LiquidityPoolWithdrawOperation operation =
         new LiquidityPoolWithdrawOperation(
-            new AssetAmount(nativeAsset, minAmountA),
-            new AssetAmount(creditAsset, minAmountB),
-            amount);
+            nativeAsset, minAmountA, creditAsset, minAmountB, amount);
     operation.setSourceAccount(source.getAccountId());
 
     org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
@@ -77,14 +75,11 @@ public class LiquidityPoolWithdrawOperationTest {
 
   @Test
   public void testConstructorPairsMisorderedAssets() {
-    String amount = "5";
-    String minAmountA = "1000";
-    String minAmountB = "2000";
+    BigDecimal amount = BigDecimal.valueOf(5);
+    BigDecimal minAmountA = BigDecimal.valueOf(1000);
+    BigDecimal minAmountB = BigDecimal.valueOf(2000);
     try {
-      new LiquidityPoolWithdrawOperation(
-              new AssetAmount(creditAsset, minAmountA),
-              new AssetAmount(nativeAsset, minAmountB),
-              amount)
+      new LiquidityPoolWithdrawOperation(creditAsset, minAmountA, nativeAsset, minAmountB, amount)
           .setSourceAccount(source.getAccountId());
       fail();
     } catch (RuntimeException e) {

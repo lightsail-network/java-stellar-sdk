@@ -3,6 +3,7 @@ package org.stellar.sdk.operations;
 import static org.junit.Assert.assertTrue;
 import static org.stellar.sdk.Asset.create;
 
+import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
@@ -23,7 +24,7 @@ public class CreatePassiveSellOfferOperationTest {
 
     Asset selling = new AssetTypeNative();
     Asset buying = create(null, "USD", issuer.getAccountId());
-    String amount = "0.00001";
+    BigDecimal amount = new BigDecimal("0.00001");
     String price = "2.93850088"; // n=36731261 d=12500000
     Price priceObj = Price.fromString(price);
 
@@ -61,7 +62,7 @@ public class CreatePassiveSellOfferOperationTest {
 
     Asset selling = new AssetTypeNative();
     Asset buying = create(null, "USD", issuer.getAccountId());
-    String amount = "0.00001";
+    BigDecimal amount = new BigDecimal("0.00001");
     String price = "2.93850088"; // n=36731261 d=12500000
     Price priceObj = Price.fromString(price);
 

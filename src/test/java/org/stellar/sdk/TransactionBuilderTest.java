@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class TransactionBuilderTest {
           .addOperation(
               CreateAccountOperation.builder()
                   .destination("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build())
           .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
           .build();
@@ -49,7 +50,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -91,7 +92,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addMemo(Memo.text("Hello world!"))
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
@@ -126,7 +127,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addPreconditions(
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(42, 1337)).build())
@@ -185,7 +186,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setBaseFee(200)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
@@ -229,7 +230,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(KeyPair.random().getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addPreconditions(
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(42, 1337)).build())
@@ -256,7 +257,7 @@ public class TransactionBuilderTest {
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build())
           .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
           .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -274,7 +275,7 @@ public class TransactionBuilderTest {
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build())
           .addMemo(Memo.hash(Util.hash("abcdef".getBytes())))
           .setTimeout(-1)
@@ -295,7 +296,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(KeyPair.random().getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setTimeout(10)
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -326,7 +327,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
@@ -371,7 +372,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
@@ -409,7 +410,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
@@ -447,7 +448,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
@@ -500,7 +501,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(newAccount.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
@@ -545,7 +546,7 @@ public class TransactionBuilderTest {
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build())
           .addPreconditions(
               TransactionPreconditions.builder()
@@ -573,7 +574,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(KeyPair.random().getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .addPreconditions(
                 TransactionPreconditions.builder()
@@ -600,7 +601,7 @@ public class TransactionBuilderTest {
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .build();
@@ -619,7 +620,7 @@ public class TransactionBuilderTest {
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(KeyPair.random().getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .addPreconditions(
@@ -650,7 +651,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .addPreconditions(
@@ -730,7 +731,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
@@ -783,7 +784,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .setTimeout(10)
@@ -837,7 +838,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
@@ -889,7 +890,7 @@ public class TransactionBuilderTest {
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(destination.getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .addMemo(Memo.none())
@@ -914,7 +915,7 @@ public class TransactionBuilderTest {
           .addOperation(
               CreateAccountOperation.builder()
                   .destination(destination.getAccountId())
-                  .startingBalance("2000")
+                  .startingBalance(BigDecimal.valueOf(2000))
                   .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .addMemo(Memo.none())
@@ -968,7 +969,7 @@ public class TransactionBuilderTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)
