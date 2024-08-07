@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,8 +30,8 @@ public class ManageBuyOfferOperation extends Operation {
   /** The asset being bought in this operation */
   @NonNull private final Asset buying;
 
-  /** Amount of asset to be bought. */
-  @NonNull private final String amount;
+  /** Amount of asset to be bought (max of 7 decimal places). */
+  @NonNull private final BigDecimal amount;
 
   /** Price of thing being bought in terms of what you are selling. */
   @NonNull private final Price price;
@@ -51,7 +52,7 @@ public class ManageBuyOfferOperation extends Operation {
   public static ManageBuyOfferOperation fromXdr(ManageBuyOfferOp op) {
     Asset selling = Asset.fromXdr(op.getSelling());
     Asset buying = Asset.fromXdr(op.getBuying());
-    String amount = Operation.fromXdrAmount(op.getBuyAmount().getInt64());
+    BigDecimal amount = Operation.fromXdrAmount(op.getBuyAmount().getInt64());
     Price price = Price.fromXdr(op.getPrice());
     long offerId = op.getOfferID().getInt64();
     return new ManageBuyOfferOperation(selling, buying, amount, price, offerId);

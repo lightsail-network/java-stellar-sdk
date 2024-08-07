@@ -1,12 +1,13 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AssetAmount;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPool;
 import org.stellar.sdk.Price;
 import org.stellar.sdk.Util;
@@ -26,32 +27,31 @@ import org.stellar.sdk.xdr.OperationType;
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public class LiquidityPoolDepositOperation extends Operation {
-  /** The liquidity pool ID. * */
+  /** The liquidity pool ID. */
   @NonNull private final String liquidityPoolID;
 
-  /** Maximum amount of first asset to deposit. * */
-  @NonNull private final String maxAmountA;
+  /** Maximum amount of first asset to deposit (max of 7 decimal places). */
+  @NonNull private final BigDecimal maxAmountA;
 
-  /** Maximum amount of second asset to deposit. * */
-  @NonNull private final String maxAmountB;
+  /** Maximum amount of second asset to deposit (max of 7 decimal places). */
+  @NonNull private final BigDecimal maxAmountB;
 
-  /** Minimum deposit_a/deposit_b price. * */
+  /** Minimum deposit_a/deposit_b price. */
   @NonNull private final Price minPrice;
 
-  /** Maximum deposit_a/deposit_b price. * */
+  /** Maximum deposit_a/deposit_b price. */
   @NonNull private final Price maxPrice;
 
   public LiquidityPoolDepositOperation(
-      @NonNull AssetAmount a,
-      @NonNull AssetAmount b,
+      @NonNull Asset assetA,
+      @NonNull BigDecimal maxAmountA,
+      @NonNull Asset assetB,
+      @NonNull BigDecimal maxAmountB,
       @NonNull Price minPrice,
       @NonNull Price maxPrice) {
-    if (a.getAsset().compareTo(b.getAsset()) >= 0) {
-      throw new IllegalArgumentException("AssetA must be < AssetB");
-    }
-    this.liquidityPoolID = new LiquidityPool(a.getAsset(), b.getAsset()).getLiquidityPoolId();
-    this.maxAmountA = a.getAmount();
-    this.maxAmountB = b.getAmount();
+    this.liquidityPoolID = new LiquidityPool(assetA, assetB).getLiquidityPoolId();
+    this.maxAmountA = maxAmountA;
+    this.maxAmountB = maxAmountB;
     this.minPrice = minPrice;
     this.maxPrice = maxPrice;
   }
@@ -66,8 +66,8 @@ public class LiquidityPoolDepositOperation extends Operation {
   public static LiquidityPoolDepositOperation fromXdr(LiquidityPoolDepositOp op) {
     String liquidityPoolID =
         Util.bytesToHex(op.getLiquidityPoolID().getPoolID().getHash()).toLowerCase();
-    String maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64());
-    String maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64());
+    BigDecimal maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64());
+    BigDecimal maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64());
     Price minPrice = Price.fromXdr(op.getMinPrice());
     Price maxPrice = Price.fromXdr(op.getMaxPrice());
     return new LiquidityPoolDepositOperation(

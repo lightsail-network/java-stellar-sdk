@@ -2,6 +2,7 @@ package org.stellar.sdk.operations;
 
 import static junit.framework.TestCase.assertEquals;
 
+import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
@@ -24,7 +25,7 @@ public class ChangeTrustOperationTest {
     ChangeTrustAsset changeTrustAsset =
         new ChangeTrustAsset(
             Asset.create("USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"));
-    String limit = "922337203685.4775807";
+    BigDecimal limit = new BigDecimal("922337203685.4775807");
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     ChangeTrustOperation op =
         ChangeTrustOperation.builder()
@@ -62,7 +63,7 @@ public class ChangeTrustOperationTest {
             new AssetTypeCreditAlphaNum12(
                 "CATCOIN", "GDJVFDG5OCW5PYWHB64MGTHGFF57DRRJEDUEFDEL2SLNIOONHYJWHA3Z"));
     ChangeTrustAsset changeTrustAsset = new ChangeTrustAsset(liquidityPool);
-    String limit = "922337203685.4775807";
+    BigDecimal limit = new BigDecimal("922337203685.4775807");
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     ChangeTrustOperation op =
         ChangeTrustOperation.builder()
@@ -83,7 +84,7 @@ public class ChangeTrustOperationTest {
     ChangeTrustAsset changeTrustAsset =
         new ChangeTrustAsset(
             Asset.create("USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"));
-    String limit = "922337203685.4775807";
+    BigDecimal limit = new BigDecimal("922337203685.4775807");
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     ChangeTrustOperation op =
         ChangeTrustOperation.builder()
@@ -105,7 +106,7 @@ public class ChangeTrustOperationTest {
             new AssetTypeCreditAlphaNum12(
                 "CATCOIN", "GDJVFDG5OCW5PYWHB64MGTHGFF57DRRJEDUEFDEL2SLNIOONHYJWHA3Z"));
     ChangeTrustAsset changeTrustAsset = new ChangeTrustAsset(liquidityPool);
-    String limit = "922337203685.4775807";
+    BigDecimal limit = new BigDecimal("922337203685.4775807");
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     ChangeTrustOperation op =
         ChangeTrustOperation.builder()

@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,8 +27,8 @@ public class CreateAccountOperation extends Operation {
   /** Account that is created and funded */
   @NonNull private final String destination;
 
-  /** Amount of XLM to send to the newly created account. */
-  @NonNull private final String startingBalance;
+  /** Amount of XLM to send to the newly created account (max of 7 decimal places). */
+  @NonNull private final BigDecimal startingBalance;
 
   /**
    * Construct a new {@link CreateAccountOperation} object from a {@link CreateAccountOp} XDR
@@ -38,7 +39,7 @@ public class CreateAccountOperation extends Operation {
    */
   public static CreateAccountOperation fromXdr(CreateAccountOp op) {
     String destination = StrKey.encodeEd25519PublicKey(op.getDestination());
-    String startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64());
+    BigDecimal startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64());
     return new CreateAccountOperation(destination, startingBalance);
   }
 

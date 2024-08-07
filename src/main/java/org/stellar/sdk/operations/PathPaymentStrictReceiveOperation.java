@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -28,8 +29,8 @@ public class PathPaymentStrictReceiveOperation extends Operation {
   /** The asset deducted from the sender's account. */
   @NonNull private final Asset sendAsset;
 
-  /** The maximum amount of send asset to deduct (excluding fees) */
-  @NonNull private final String sendMax;
+  /** The maximum amount of send asset to deduct (excluding fees) (max of 7 decimal places). */
+  @NonNull private final BigDecimal sendMax;
 
   /** Account that receives the payment. */
   @NonNull private final String destination;
@@ -37,8 +38,8 @@ public class PathPaymentStrictReceiveOperation extends Operation {
   /** The asset the destination account receives. */
   @NonNull private final Asset destAsset;
 
-  /** The amount of destination asset the destination account receives. */
-  @NonNull private final String destAmount;
+  /** The amount of destination asset the destination account receives (max of 7 decimal places). */
+  @NonNull private final BigDecimal destAmount;
 
   /**
    * The assets (other than send asset and destination asset) involved in the offers the path takes.
@@ -56,10 +57,10 @@ public class PathPaymentStrictReceiveOperation extends Operation {
    */
   public static PathPaymentStrictReceiveOperation fromXdr(PathPaymentStrictReceiveOp op) {
     Asset sendAsset = Asset.fromXdr(op.getSendAsset());
-    String sendMax = Operation.fromXdrAmount(op.getSendMax().getInt64());
+    BigDecimal sendMax = Operation.fromXdrAmount(op.getSendMax().getInt64());
     String destination = StrKey.encodeMuxedAccount(op.getDestination());
     Asset destAsset = Asset.fromXdr(op.getDestAsset());
-    String destAmount = Operation.fromXdrAmount(op.getDestAmount().getInt64());
+    BigDecimal destAmount = Operation.fromXdrAmount(op.getDestAmount().getInt64());
     Asset[] path = new Asset[op.getPath().length];
     for (int i = 0; i < op.getPath().length; i++) {
       path[i] = Asset.fromXdr(op.getPath()[i]);

@@ -57,6 +57,21 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - feat: optimize `RequestTimeoutException`, when a timeout occurs, if the server returns some information, you can read them.
 - refactor!: mark `Asset#create(String, String, String)` as deprecated, use `Asset.createNonNativeAsset(String, String)` or `Asset.createNativeAsset()` instead.
 - refactor!: remove `LiquidityPoolID`. Use `String` to represent the liquidity pool ID.
+- refactor!: `LiquidityPoolWithdrawOperation#LiquidityPoolWithdrawOperation(AssetAmount, AssetAmount, String)` has been removed. Use `LiquidityPoolWithdrawOperation#LiquidityPoolWithdrawOperation(Asset, BigDecimal, Asset, BigDecimal, BigDecimal)` instead.
+- refactor!: `LiquidityPoolDepositOperation#LiquidityPoolDepositOperation(AssetAmount, AssetAmount, Price, Price)` has been removed. Use `LiquidityPoolDepositOperation#LiquidityPoolDepositOperation(Asset, BigDecimal, Asset, BigDecimal, Price, Price)` instead.
+- refactor!: the type of the following field has been changed from `String` to `BigDecimal`.
+    - `ChangeTrustOperation.limit`
+    - `ClawbackOperation.amount`
+    - `CreateAccountOperation.startingBalance`
+    - `CreateClaimableBalanceOperation.amount`
+    - `CreatePassiveSellOfferOperation.amount`
+    - `LiquidityPoolDepositOperation.maxAmountA` and `LiquidityPoolDepositOperation.maxAmountB`
+    - `LiquidityPoolWithdrawOperation.amount`, `LiquidityPoolWithdrawOperation.minAmountA`, and `LiquidityPoolWithdrawOperation.minAmountB`
+    - `ManageBuyOfferOperation.amount`
+    - `ManageSellOfferOperation.amount`
+    - `PathPaymentStrictReceiveOperation.sendMax` and `PathPaymentStrictReceiveOperation.destAmount`
+    - `PathPaymentStrictSendOperation.sendAmount` and `PathPaymentStrictSendOperation.destMin`
+    - `PaymentOperation.amount`
 - refactor!: `TransactionPreconditions#TransactionPreconditions(LedgerBounds, Long, BigInteger, long, List, TimeBounds)` has been removed, use `TransactionPreconditions#TransactionPreconditions(TimeBounds, LedgerBounds, Long, BigInteger, long, List)` instead.
 - refactor: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
 
